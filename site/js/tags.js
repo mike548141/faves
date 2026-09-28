@@ -30,6 +30,7 @@
 // records and never asserts safety — "no tag = not stated", never "free of it".
 
 import { el } from "./dom.js";
+import { disclosure } from "./disclosure.js";
 import { isSpicy, heatLabel } from "./heat.js";
 import { DIET_FILTERS } from "./dietary.js";
 
@@ -148,14 +149,38 @@ export function tagChip(t, { avoid, dietary } = {}) {
 }
 
 /**
+ * What a chip's tip says (owner, 2026-09-28: "if I touched Contains peanuts it
+ * could tell me the ingredients that caused the allergen warning").
+ *
+ * `note` is the dish's own `tagNotes[t]` — the words that fired, written by
+ * tools/tag_allergens.py --explain and never by hand. Without one the tip says
+ * only what is true of every tag: that it was recorded. A tag the dish does not
+ * carry itself came from an add-on the reader picked (`fromAddOn`).
+ */
+export function tagTip(t, { note, recipe = false, fromAddOn = false, avoid, dietary } = {}) {
+  const mine = isDeclared(t, avoid, dietary);
+  if (isAllergen(t)) {
+    const why = fromAddOn
+      ? "From an add-on you picked."
+      : note || (recipe ? "Marked on this recipe." : "Recorded when this menu was entered.");
+    // Never a safety claim (ADR 0025): a tag is what the data records.
+    const check = recipe ? "" : " If it matters, check with the venue.";
+    return `${mine ? "You asked to avoid this. " : ""}${why}${check}`;
+  }
+  if (isSpicy(t)) return recipe ? "Heat as marked on this recipe." : "Heat as the venue marks it.";
+  return `${mine ? "Matches your settings. " : ""}${recipe ? "Marked on this recipe." : "As the venue marks it."}`;
+}
+
+/**
  * A live tag row inside `container` (a `.dish-tags` element the caller owns).
  * `paint(tags)` redraws it — the menu calls it again whenever an add-on changes
  * the dish — and is a no-op when nothing visible would move, so a tap that
  * changes no tag does not flicker the row. Whether the reader opened the row is
  * kept across repaints: configuring a dish must not fold up what they unfolded.
  */
-export function tagRow(container, { avoid, dietary, limit = TAG_LIMIT } = {}) {
+export function tagRow(container, { avoid, dietary, limit = TAG_LIMIT, notes = {}, base = null, recipe = false, idPrefix = "tag" } = {}) {
   const ctx = { avoid, dietary };
+  const own = base ? new Set(base) : null;
   let expanded = false;
   let painted = null;
   let current = [];
@@ -166,7 +191,24 @@ export function tagRow(container, { avoid, dietary, limit = TAG_LIMIT } = {}) {
     const key = `${ordered.join(" ")}|${hidden.length}|${expanded}`;
     if (key === painted) return;
     painted = key;
-    const chips = (expanded ? ordered : shown).map((t) => tagChip(t, ctx));
+    // Every chip is a button opening its own tip — the same disclosure() the
+    // venue's "last checked" ⓘ uses, so tap / outside-tap / Escape behave the
+    // same everywhere (ADR 0059: click-only, never hover). The painted chip is
+    // kept whole and becomes the button's face.
+    const tips = [];
+    const chips = (expanded ? ordered : shown).map((t) => {
+      const face = tagChip(t, ctx);
+      const [btn, note] = disclosure({
+        noteId: `${idPrefix}-${t}`,
+        label: `${face.textContent} — why`,
+        text: tagTip(t, { ...ctx, note: notes?.[t], recipe, fromAddOn: own ? !own.has(t) : false }),
+        glyph: face.textContent,
+      });
+      btn.className = `${face.className} tag-tip-btn`;
+      note.classList.add("is-info");
+      tips.push(note);
+      return btn;
+    });
     if (hidden.length) {
       const more = el("button", {
         type: "button",
@@ -185,7 +227,7 @@ export function tagRow(container, { avoid, dietary, limit = TAG_LIMIT } = {}) {
       });
       chips.push(more);
     }
-    container.replaceChildren(...chips);
+    container.replaceChildren(...chips, ...tips);
   }
 
   return {

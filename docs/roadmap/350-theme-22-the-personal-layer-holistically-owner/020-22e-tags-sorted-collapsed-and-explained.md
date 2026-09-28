@@ -95,6 +95,16 @@ this goes back to him with that option rather than being applied.
 - ✅ Steps 1–2 — `site/js/tags.js`, one module for the menu row and the recipe
   page; order + labelled collapse (`TAG_LIMIT = 3`). tests/tags.test.js;
   recipe_check §13; addon_check opens the row before reading it.
+- ✅ Step 3 — every chip is a button opening a tip (`disclosure()`, the venue
+  ⓘ's control). Reasons are `tagNotes` on each dish, written by
+  `tag_allergens.py --explain --apply` from the same rules that write tags:
+  3,256 of 4,626 allergen tags quote the words that fired; the rest say only
+  "recorded". CI drift gate `--explain --check` + `tools/test_tag_notes.py`.
+  Payload: menus 1,416 → 1,668 KB raw, 185 → 205 KB gzipped (+20 KB), the cost
+  the owner accepted with "record the reason".
+  🚩 Chips are now 44px tap targets drawn at chip size (an invisible
+  `::after`); on a row that wraps, the stretched targets of two lines overlap
+  by a few pixels, so a tap in the gap goes to the lower line's chip.
 
 ## Build order (when claimed)
 

@@ -95,7 +95,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Samosa” — a wheat-flour wrapper."}
         },
         {
           "name": "Mixed Vegetable Pakora",
@@ -136,7 +137,8 @@
           "price": 22.0,
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Tandoori Chicken",
@@ -152,7 +154,8 @@
           "price": 23.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Roasted Poppadom",
@@ -180,7 +183,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Paneer”."}
         }
       ]
     },
@@ -195,7 +199,8 @@
           "price": 19.0,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Butter”."}
         },
         {
           "name": "Chicken Tikka Masala",
@@ -204,7 +209,8 @@
           "price": 19.0,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Tikka Masala” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Chicken Korma",
@@ -214,7 +220,8 @@
           "tags": [
             "contains-nuts",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Mango Chicken",
@@ -293,7 +300,8 @@
           "tags": [
             "contains-nuts",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-dairy": "The menu says “Korma” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Lamb Madras",
@@ -343,7 +351,8 @@
           "price": 19.0,
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Fish Malawari",
@@ -353,7 +362,8 @@
           "tags": [
             "contains-nuts",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Fish Madras",
@@ -362,7 +372,8 @@
           "price": 19.0,
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Prawn Masala",
@@ -371,7 +382,8 @@
           "price": 22.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Prawn Madras",
@@ -380,7 +392,8 @@
           "price": 22.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Prawn Jalfrezi",
@@ -389,7 +402,8 @@
           "price": 22.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         }
       ]
     },
@@ -405,7 +419,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Paneer”."}
         },
         {
           "name": "Shabnam Curry",
@@ -415,7 +430,8 @@
           "tags": [
             "v",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”."}
         },
         {
           "name": "Paneer Tikka Masala",
@@ -425,7 +441,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Paneer”."}
         },
         {
           "name": "Navrattan Korma",
@@ -435,7 +452,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Korma” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Broccoli and Mushroom Korma",
@@ -446,7 +464,8 @@
             "v",
             "contains-nuts",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-dairy": "The menu says “Korma” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Dal Makhani",
@@ -466,7 +485,8 @@
             "v",
             "contains-nuts",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Dal Fry",
@@ -494,7 +514,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Paneer”."}
         },
         {
           "name": "Channa Masala",
@@ -550,7 +571,8 @@
           "price": 20.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         }
       ]
     },
@@ -573,7 +595,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-egg": "The menu says “eggs”.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Chicken Noodles / Schezuan",
@@ -590,7 +613,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Vegetable Fried Rice / Schezuan",
@@ -607,7 +631,8 @@
             "v",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Vegetable Noodles / Schezuan",
@@ -624,7 +649,8 @@
             "v",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Chilli Chicken (dry / gravy)",
@@ -640,7 +666,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Egg Noodles / Schezuan / Egg Fried Rice",
@@ -657,7 +684,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg Noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Prawn Fried Rice / Schezuan",
@@ -674,7 +702,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Prawn Noodles / Schezuan",
@@ -691,7 +720,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Paneer Chilli (dry / gravy)",
@@ -709,7 +739,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-dairy": "The menu says “Paneer”.", "contains-soy": "The menu says “soy”."}
         }
       ]
     },
@@ -731,7 +762,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “naan”.", "contains-dairy": "The menu says “Butter”."}
         },
         {
           "name": "Goat Curry",
@@ -754,7 +786,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Samosa” — a wheat-flour wrapper.", "contains-dairy": "The menu says “Butter”."}
         }
       ]
     },
@@ -770,7 +803,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."}
         },
         {
           "name": "Butter Roti",
@@ -781,7 +815,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”.", "contains-dairy": "The menu says “Butter”."}
         },
         {
           "name": "Garlic Roti",
@@ -791,7 +826,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."}
         },
         {
           "name": "Plain Naan",
@@ -801,7 +837,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”."}
         },
         {
           "name": "Butter Naan",
@@ -812,7 +849,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”.", "contains-dairy": "The menu says “Butter”."}
         },
         {
           "name": "Garlic Naan",
@@ -822,7 +860,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”."}
         },
         {
           "name": "Plain Parantha",
@@ -833,7 +872,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Onion Kulcha",
@@ -843,7 +883,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”."}
         },
         {
           "name": "Potato Kulcha",
@@ -853,7 +894,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”."}
         },
         {
           "name": "Vegetable Paratha",
@@ -863,7 +905,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Paratha”."}
         },
         {
           "name": "Keema Naan",
@@ -872,7 +915,8 @@
           "price": 5.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”."}
         },
         {
           "name": "Cheese Naan",
@@ -883,7 +927,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”.", "contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Cheese and Garlic Naan",
@@ -894,7 +939,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”.", "contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Peshawari Naan",
@@ -905,7 +951,8 @@
             "v",
             "contains-nuts",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”."}
         },
         {
           "name": "Chicken Naan",
@@ -914,7 +961,8 @@
           "price": 5.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”."}
         }
       ]
     },
@@ -1059,7 +1107,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         }
       ]
     }

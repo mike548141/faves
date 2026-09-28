@@ -609,6 +609,12 @@ node tools/geo_check.mjs      # the location ask (ADR 0083). The tickbox on the
                               # pins the pill's ABSENCE, which is the assertion
                               # most likely to rot silently
 python3 tools/test_tag_allergens.py # the allergen tagger still writes what it finds
+python3 tools/tag_allergens.py --explain --check # every allergen tag's tip
+                              # (`tagNotes`) still quotes what the menu says now —
+                              # after ANY description or ingredient edit, run it
+                              # with --apply instead (roadmap 350/020). In CI
+python3 tools/test_tag_notes.py # …and the tip writer quotes, never guesses, and
+                              # touches no byte but the notes. In CI
 python3 tools/test_allergen_disagreements.py # …and the CLASS TABLE its read-only
                               # sibling reports from still says what it means
                               # (new 2026-09-24, in CI). Ten-plus claims about

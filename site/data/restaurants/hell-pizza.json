@@ -771,7 +771,8 @@
           "desc": "Double ham, double pineapple and double cheese. Free-range.",
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Creator",
@@ -780,7 +781,8 @@
           "desc": "Build your own with up to 8 toppings — tomato base and mozzarella, plus 1 meat, 1 vegetable and 1 sauce. Extra toppings priced individually.",
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Pride",
@@ -828,7 +830,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “camembert”."}
         },
         {
           "name": "Morning After Pizza",
@@ -840,7 +843,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item.", "contains-egg": "The menu says “hollandaise” — an egg emulsion."}
         },
         {
           "name": "Mordor",
@@ -860,7 +864,8 @@
             "contains-nuts",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “pine nuts”.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Burger Pizza",
@@ -870,7 +875,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheddar”."}
         },
         {
           "name": "Cursed",
@@ -880,7 +886,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
         },
         {
           "name": "The Beast",
@@ -890,7 +897,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "The Buffalo",
@@ -901,7 +909,8 @@
             "contains-nuts",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “pesto” — pesto is made with pine nuts.", "contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Half Buffalo Half Beast",
@@ -921,7 +930,8 @@
             "contains-peanuts",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Peanut”.", "contains-soy": "The menu says “satay” — the sauce is soy-based."}
         },
         {
           "name": "Mischief",
@@ -942,7 +952,8 @@
             "spicy-1",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Trouble",
@@ -952,7 +963,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “camembert”."}
         }
       ]
     },
@@ -969,7 +981,8 @@
             "spicy-1",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”."}
         },
         {
           "name": "Death by Chicken",
@@ -980,7 +993,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “buttermilk”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Lust Deluxe",
@@ -1000,7 +1014,8 @@
             "contains-dairy",
             "contains-fish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-fish": "The menu says “salmon”."}
         }
       ]
     },
@@ -1017,7 +1032,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”."}
         },
         {
           "name": "Damned",
@@ -1029,7 +1045,8 @@
             "contains-nuts",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashews”.", "contains-dairy": "The menu says “camembert”."}
         },
         {
           "name": "Limbo",
@@ -1040,7 +1057,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Blue cheese”."}
         },
         {
           "name": "Veggie Burger Pizza",
@@ -1051,7 +1069,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheddar”."}
         },
         {
           "name": "Veggie Mischief",
@@ -1063,7 +1082,8 @@
             "contains-egg",
             "spicy-1",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Veggie Wrath",
@@ -1086,7 +1106,8 @@
             "contains-egg",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-dairy": "The menu says “camembert”."}
         },
         {
           "name": "Veggie Grimm",
@@ -1099,7 +1120,8 @@
             "contains-nuts",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-nuts": "The menu says “pine nuts”.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Veggie Mayhem",
@@ -1112,7 +1134,8 @@
             "contains-peanuts",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-peanuts": "The menu says “peanut”.", "contains-soy": "The menu says “satay” — the sauce is soy-based."}
         },
         {
           "name": "Veggie Brimstone",
@@ -1125,7 +1148,8 @@
             "spicy-1",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Sinister",
@@ -1137,7 +1161,8 @@
             "spicy-1",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         }
       ]
     },
@@ -1163,7 +1188,8 @@
           "tags": [
             "vg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Plant-Based Damned",
@@ -1174,7 +1200,8 @@
             "vg",
             "contains-nuts",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashews”."}
         },
         {
           "name": "Plant-Based Mischief",
@@ -1185,7 +1212,8 @@
             "vg",
             "contains-gluten",
             "spicy-1"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Plant-Based Wrath",
@@ -1208,7 +1236,8 @@
             "contains-peanuts",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour.", "contains-soy": "The menu says “satay” — the sauce is soy-based."}
         },
         {
           "name": "Plant-Based Brimstone",
@@ -1219,7 +1248,8 @@
             "vg",
             "contains-gluten",
             "spicy-1"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Plant-Based Sinister",
@@ -1280,7 +1310,8 @@
           "desc": "6 crumbed and deep-fried chicken tenders with your choice of dip.",
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “crumbed” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Crumbed Camembert",
@@ -1291,7 +1322,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-dairy": "The menu says “Camembert”."}
         },
         {
           "name": "Corn Nuggets",
@@ -1301,7 +1333,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Nuggets” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Onion Rings",
@@ -1311,7 +1344,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Splatter Platter 1",
@@ -1320,7 +1354,8 @@
           "desc": "Broken Wings 6 pack, chicken tenders, corn nuggets, cajun wedges and a selection of dips.",
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Splatter Platter 2",
@@ -1329,7 +1364,8 @@
           "desc": "Broken Wings 6 pack, prawn horns, onion rings, cajun wedges and a selection of dips.",
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
         },
         {
           "name": "Hash Sticks",
@@ -1348,7 +1384,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “pastry”."}
         },
         {
           "name": "Jalapeno Poppers",
@@ -1360,7 +1397,8 @@
             "spicy-1",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “crumbed” — battered/crumbed coatings are wheat flour.", "contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Garlic Bread",
@@ -1371,7 +1409,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Vegan Nuggets",
@@ -1381,7 +1420,8 @@
           "tags": [
             "vg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Nuggets” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Gluten Free Garlic Bread",
@@ -1414,7 +1454,8 @@
           "desc": "Half a kilo of marinated NZ pork ribs with your choice of APA spicy, cola BBQ or smokey BBQ sauce.",
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
         },
         {
           "name": "Lamb Shank and Mash",
@@ -1431,7 +1472,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “penne”.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Chicken Demon",
@@ -1441,7 +1483,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “penne”.", "contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Green Demon",
@@ -1452,7 +1495,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “penne”.", "contains-dairy": "The menu says “parmesan”."}
         }
       ]
     },
@@ -1475,7 +1519,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Camembert”."}
         },
         {
           "name": "Greek Salad",
@@ -1485,7 +1530,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”."}
         },
         {
           "name": "Fresh Green Salad",
@@ -1511,7 +1557,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item.", "contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "333 - Hellthy Kids Pizza & Drink",
@@ -1522,7 +1569,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "Werewolf",
@@ -1562,7 +1610,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Donut” — a wheat bakery item.", "contains-dairy": "The menu says “milk”."}
         },
         {
           "name": "Chocolate Gelato",
@@ -1612,7 +1661,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesecake” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Hot Brownie",
@@ -1623,7 +1673,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Brownie” — a wheat bakery item.", "contains-dairy": "The menu says “ganache” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Unearthly",
@@ -1633,7 +1684,8 @@
           "tags": [
             "v",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “custard” — an egg emulsion."}
         }
       ]
     },

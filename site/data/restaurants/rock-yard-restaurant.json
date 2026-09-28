@@ -111,7 +111,8 @@
             "contains-peanuts",
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-gluten": "The note over this section says “All combos are served with jasmine rice & roti”."}
         },
         {
           "name": "Combo Saigon",
@@ -122,7 +123,8 @@
             "df",
             "gf-option",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “spring rolls” — a wheat-flour wrapper."}
         },
         {
           "name": "Combo Sapa",
@@ -136,7 +138,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-gluten": "The menu says “dumpling” — a wheat-flour wrapper."}
         },
         {
           "name": "Combo Hoian",
@@ -150,7 +153,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-gluten": "The menu says “dumpling” — a wheat-flour wrapper.", "contains-soy": "The menu says “Tofu”."}
         }
       ]
     },
@@ -168,7 +172,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Baguette”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Hue Spicy Beef Noodle Soup",
@@ -191,7 +196,8 @@
             "contains-peanuts",
             "v-option",
             "vg-option"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”."}
         },
         {
           "name": "Vietnamese Salad",
@@ -204,7 +210,8 @@
             "contains-peanuts",
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Roti Rolls",
@@ -218,7 +225,8 @@
             "contains-soy",
             "v-option",
             "vg-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “soy”."}
         }
       ]
     },
@@ -237,7 +245,8 @@
             "contains-peanuts",
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Freshly Rolled Rice Paper Roll (3 Rolls)",
@@ -250,7 +259,8 @@
             "contains-peanuts",
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Fried Spring Rolls",
@@ -260,7 +270,8 @@
           "tags": [
             "df",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper."}
         },
         {
           "name": "Pork & Prawn Shumai Dumplings",
@@ -273,7 +284,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Mushroom & Bamboo Dumplings",
@@ -285,7 +297,8 @@
             "contains-sesame",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
         }
       ]
     },
@@ -305,7 +318,8 @@
             "contains-peanuts",
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Freshly Rolled Rice Paper Roll (3 Rolls)",
@@ -318,7 +332,8 @@
             "contains-peanuts",
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Fried Spring Rolls",
@@ -328,7 +343,8 @@
           "tags": [
             "df",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper."}
         },
         {
           "name": "Pork & Prawn Shumai Dumplings",
@@ -341,7 +357,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Mushroom & Bamboo Dumplings",
@@ -353,7 +370,8 @@
             "contains-sesame",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
         },
         {
           "name": "Crispy Calamari",
@@ -365,7 +383,8 @@
             "contains-egg",
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Calamari”."}
         },
         {
           "name": "Soft-shell Crab Bao Buns",
@@ -376,7 +395,8 @@
             "contains-egg",
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Crab”.", "contains-gluten": "The menu says “Buns” — a wheat bakery item."}
         },
         {
           "name": "Crispy Pillows Dumplings",
@@ -386,7 +406,8 @@
           "tags": [
             "vg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
         },
         {
           "name": "Green Chicken Popcorn",
@@ -396,7 +417,8 @@
           "tags": [
             "df",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Saigon Crunch Eggplant Fritter",
@@ -421,7 +443,8 @@
             "contains-egg",
             "contains-sesame",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Traditional Tasting Platter (3 people)",
@@ -436,7 +459,8 @@
             "contains-egg",
             "contains-sesame",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Traditional Tasting Platter (4 people)",
@@ -451,7 +475,8 @@
             "contains-egg",
             "contains-sesame",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Traditional Tasting Platter (5 people)",
@@ -466,7 +491,8 @@
             "contains-egg",
             "contains-sesame",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Vegan Tasting Platter (2 people)",
@@ -480,7 +506,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Vegan Tasting Platter (3 people)",
@@ -494,7 +521,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Vegan Tasting Platter (4 people)",
@@ -508,7 +536,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Vegan Tasting Platter (5 people)",
@@ -522,7 +551,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         }
       ]
     },
@@ -540,7 +570,8 @@
             "gf",
             "vg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Braised Five-spice Pork Belly",
@@ -551,7 +582,8 @@
             "gf",
             "df",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Salt & Pepper Prawn",
@@ -564,7 +596,8 @@
             "contains-egg",
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “roti”."}
         },
         {
           "name": "Yin & Yang Pan-fried Salmon",
@@ -576,7 +609,8 @@
             "df",
             "contains-nuts",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “pesto” — pesto is made with pine nuts.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Chilli Lemongrass Chicken",
@@ -596,7 +630,8 @@
           "tags": [
             "gf",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Stuffed Tofu Delights",
@@ -607,7 +642,8 @@
             "gf",
             "vg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         }
       ]
     },
@@ -625,7 +661,8 @@
             "gf",
             "df",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The note over this section says “All curries contain peanuts and cannot be removed”."}
         },
         {
           "name": "Tofu & Mushroom Curry",
@@ -637,7 +674,8 @@
             "vg",
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The note over this section says “All curries contain peanuts and cannot be removed”.", "contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Kaffir Lime Seafood Curry",
@@ -650,7 +688,8 @@
             "contains-peanuts",
             "contains-shellfish",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The note over this section says “All curries contain peanuts and cannot be removed”.", "contains-shellfish": "The menu says “prawns”.", "contains-fish": "The menu says “tarakihi”."}
         }
       ]
     },
@@ -668,7 +707,8 @@
             "vg",
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Hue Spicy Beef Noodle Soup",
@@ -689,7 +729,8 @@
             "gf",
             "df",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”."}
         },
         {
           "name": "Soy-Glazed Tofu Noodles",
@@ -701,7 +742,8 @@
             "vg",
             "contains-soy",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Soy”.", "contains-peanuts": "The menu says “peanuts”."}
         },
         {
           "name": "Chicken Salad",
@@ -712,7 +754,8 @@
             "gf",
             "df",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”."}
         }
       ]
     },
@@ -758,7 +801,8 @@
           "tags": [
             "vg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."}
         },
         {
           "name": "Peanut Sauce",
@@ -769,7 +813,8 @@
             "vg",
             "gf",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Peanut”."}
         },
         {
           "name": "Stir-fried Garlic Bok Choy",
@@ -791,7 +836,8 @@
             "gf",
             "df",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Fresh Chilli",
@@ -829,7 +875,8 @@
             "v",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesecake” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Coconut Creme Caramel",

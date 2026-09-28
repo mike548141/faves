@@ -129,7 +129,7 @@ SECTION_KEYS = {
 }
 ITEM_KEYS = {
     "name", "dishId", "formerIds", "code", "desc", "price", "prices", "available",
-    "revisions", "needs", "tags", "image", "alt", "rating", "goesWith",
+    "revisions", "needs", "tags", "tagNotes", "image", "alt", "rating", "goesWith",
     "addOns", "served", "translations",
     # Recipe-only fields (kind: "recipes"), all optional and all validated
     # above whether or not the record is a recipe collection.
@@ -2375,6 +2375,21 @@ def check_restaurant(path):
                     r"https://[^\s/]+\.[^\s]+$", attribution_url
                 ):
                     err(rid, f"attributionUrl for {name!r} must be an https:// URL")
+
+            # Why each allergen tag is there — the tag tips (roadmap 350/020).
+            # Written by `tag_allergens.py --explain --apply`, never by hand, and
+            # a note can only explain a tag the dish actually carries: a note
+            # for an absent tag would be a tip on a chip that does not exist.
+            tag_notes = item.get("tagNotes")
+            if tag_notes is not None:
+                if not isinstance(tag_notes, dict) or not tag_notes:
+                    err(rid, f"tagNotes for {name!r} must be a non-empty object or absent")
+                else:
+                    for t, why in tag_notes.items():
+                        if t not in (item.get("tags") or []) or not t.startswith("contains-"):
+                            err(rid, f"tagNotes for {name!r} explain {t!r}, which is not one of its allergen tags")
+                        if not isinstance(why, str) or not why.strip():
+                            err(rid, f"tagNotes[{t!r}] for {name!r} must be a non-empty sentence")
 
             # Dish photo (optional, self-hosted); alt required when set.
             check_image(rid, item, f"item {name!r}")

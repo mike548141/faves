@@ -112,7 +112,8 @@
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         },
         {
           "name": "Nasi Goreng",
@@ -153,7 +154,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumpling” — a wheat-flour wrapper."}
         },
         {
           "name": "Seafood Udon",
@@ -169,7 +171,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-gluten": "The menu says “Udon” — a wheat noodle."}
         },
         {
           "name": "Curry Laksa",
@@ -184,7 +187,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Laksa” — laksa paste contains belacan (dried shrimp)."}
         },
         {
           "name": "Mee Goreng",
@@ -199,7 +203,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Mee Goreng” — a wheat noodle."}
         },
         {
           "name": "Roti Chanai",
@@ -214,7 +219,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."}
         },
         {
           "name": "Chow Kueh Teow (BBQ Pork with Stir Fried Rice Noodle)",
@@ -243,7 +249,8 @@
           "tags": [
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg Noodle” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "BBQ Pork Wonton Noodle Soup",
@@ -258,7 +265,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."}
         }
       ]
     },
@@ -279,7 +287,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Soya”."}
         },
         {
           "name": "Honey BBQ Pork Ribs on Rice",
@@ -360,7 +369,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."}
         },
         {
           "name": "Prawn Wonton Noodle Soup or Noodle Dry",
@@ -376,7 +386,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."}
         },
         {
           "name": "Honey BBQ Pork Wontons Noodle Soup or Noodle Dry",
@@ -391,7 +402,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Wontons” — a wheat-flour wrapper."}
         },
         {
           "name": "Roast Duck or Crispy Roast Pork or BBQ Pork Noodle Dry",
@@ -419,7 +431,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Soya”."}
         },
         {
           "name": "Beef Brisket Noodle Soup or Noodle Dry",
@@ -518,7 +531,8 @@
           ],
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Hot & Sour Soup",
@@ -546,7 +560,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Shredded Duck Meat Soup",
@@ -574,7 +589,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."}
         },
         {
           "name": "Chinese Pork Dumpling Soup",
@@ -589,7 +605,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumpling” — a wheat-flour wrapper."}
         },
         {
           "name": "Chicken Feet and Mushroom Soup",
@@ -607,7 +624,8 @@
           "price": 17.3,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Seaweed, Pork and Egg Soup",
@@ -617,7 +635,8 @@
           "price": 14.5,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Chicken Salad",
@@ -690,7 +709,8 @@
           "price": 5.6,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pork Bun” — a wheat-flour wrapper."}
         },
         {
           "name": "Deep Fried Chicken Wing",
@@ -708,7 +728,8 @@
           "price": 4.2,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Roll” — a wheat-flour wrapper."}
         },
         {
           "name": "Deep Fried Wonton",
@@ -718,7 +739,8 @@
           "price": 1.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."}
         },
         {
           "name": "Deep Fried Squid",
@@ -728,7 +750,8 @@
           "price": 21.2,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”."}
         },
         {
           "name": "Pork and Preserved Egg Congee",
@@ -743,7 +766,8 @@
           ],
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Fish Congee",
@@ -758,7 +782,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Seafood Congee",
@@ -773,7 +798,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         }
       ]
     },
@@ -794,7 +820,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Roast Pork with Tofu & Vegetable",
@@ -809,7 +836,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Groper Wing with Tofu & Roast Pork",
@@ -825,7 +853,8 @@
           "tags": [
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-fish": "The menu says “Groper”."}
         },
         {
           "name": "Pork Maw with Pepper & Vegetable Pickle",
@@ -914,7 +943,8 @@
           "tags": [
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Chicken with Wine Soup",
@@ -943,7 +973,8 @@
           "tags": [
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “Soya”."}
         },
         {
           "name": "Lamb Flap with Oyster Sauce",
@@ -959,7 +990,8 @@
           "tags": [
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “Oyster Sauce” — the sauce is soy-based."}
         },
         {
           "name": "Lamb Flap with Taro in Coconut Cream",
@@ -1022,7 +1054,8 @@
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         },
         {
           "name": "Duck with Garlic and Oyster Sauce",
@@ -1038,7 +1071,8 @@
           "tags": [
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “Oyster Sauce” — the sauce is soy-based."}
         },
         {
           "name": "Seafood with Japanese Style Tofu",
@@ -1054,7 +1088,8 @@
           "tags": [
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Mix Vegetable with Vermicelli",
@@ -1088,7 +1123,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Tofu, Vegetable & Pork with Oyster Sauce",
@@ -1104,7 +1140,8 @@
           "tags": [
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Homestyle Tofu with Pork",
@@ -1119,7 +1156,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Belly Pork with Chilli Sauce",
@@ -1228,7 +1266,8 @@
           "price": 26.1,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “XO Sauce” — XO sauce is made with dried scallop and shrimp."}
         },
         {
           "name": "KC Homemade Tofu with Pork Mince",
@@ -1243,7 +1282,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Salt & Pepper Pork Spare Ribs",
@@ -1292,7 +1332,8 @@
           "price": 26.8,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Sweet & Sour Pork with Pineapple",
@@ -1403,7 +1444,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Soya Sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Soya”.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Pickle Cabbage with Fish Fillet",
@@ -1418,7 +1460,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Hot & Spicy Beef Soup",
@@ -1468,7 +1511,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based."}
         },
         {
           "name": "Orange Beef or Chicken",
@@ -1517,7 +1561,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”."}
         },
         {
           "name": "Salt and Pepper King Prawns",
@@ -1532,7 +1577,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”."}
         },
         {
           "name": "Stir Fried King Prawn with Chilli Bean Paste",
@@ -1547,7 +1593,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Salt & Pepper Squid",
@@ -1562,7 +1609,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”."}
         },
         {
           "name": "Stir Fried Squid with Shrimp Paste",
@@ -1577,7 +1625,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”."}
         },
         {
           "name": "Stir Fried Squid with Chinese Satay Sauce",
@@ -1594,7 +1643,8 @@
             "contains-shellfish",
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”.", "contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         },
         {
           "name": "Stir Fried Fish with Fish Flavour Sauce",
@@ -1609,7 +1659,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Stir Fried Beans with Dace Fish",
@@ -1624,7 +1675,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Tora Tora in Black Bean Sauce",
@@ -1634,7 +1686,8 @@
           "price": 27.3,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Black Bean Sauce” — the sauce is soy-based."}
         },
         {
           "name": "Tora Tora in Chef's Special Sauce",
@@ -1697,7 +1750,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Hot & Spicy Beef Brisket with Bean Curd",
@@ -1728,7 +1782,8 @@
           "price": 34.0,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Hot & Spicy Lamb with Tofu and Bean Curd",
@@ -1738,7 +1793,8 @@
           "price": 34.0,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Hot & Spicy Lamb Rib",
@@ -1756,7 +1812,8 @@
           "price": 34.0,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Chicken and Potato in Hot & Spicy Sauce",
@@ -1808,7 +1865,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         }
       ]
     },
@@ -1855,7 +1913,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Udon” — a wheat noodle."}
         },
         {
           "name": "Chow Mein Noodle with Chicken / Beef / BBQ Pork",
@@ -1870,7 +1929,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."}
         },
         {
           "name": "Chow Kueh Teow with Beef or Black Bean Sauce",
@@ -1885,7 +1945,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Black Bean Sauce” — the sauce is soy-based."}
         },
         {
           "name": "Seafood Soft Egg on Rice Noodle",
@@ -1901,7 +1962,8 @@
           "tags": [
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Singapore Fried Noodle with BBQ Pork and Shrimp",
@@ -1916,7 +1978,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."}
         },
         {
           "name": "Shredded Duck Meat with Vermicelli",
@@ -1944,7 +2007,8 @@
           ],
           "tags": [
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Pad Thai” — pad thai is finished with crushed peanuts."}
         },
         {
           "name": "Hot and Sour Noodle Soup with Pork Mince and Pickle",
@@ -1980,7 +2044,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Fried Rice with Chinese Pork & Vegetable",
@@ -2008,7 +2073,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."}
         },
         {
           "name": "Hokkien Fried Rice or Noodle",
@@ -2023,7 +2089,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Hokkien” — a wheat noodle."}
         },
         {
           "name": "Roast Pork Fried Rice with Shrimp Paste",
@@ -2038,7 +2105,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."}
         },
         {
           "name": "Pork Chop with Lemon Grass or Black Pepper",
@@ -2158,7 +2226,8 @@
           "tags": [
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Beef Tomato Egg on Rice",
@@ -2173,7 +2242,8 @@
           ],
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Sweet Corn with Soft Egg and Fish Fillet on Rice",
@@ -2189,7 +2259,8 @@
           "tags": [
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-fish": "The menu says “Fish”."}
         }
       ]
     },
@@ -2209,7 +2280,8 @@
           ],
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."}
         },
         {
           "name": "Hong Kong Style Coffee",
@@ -2271,7 +2343,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Soya”."}
         },
         {
           "name": "Chinese Tea",
@@ -2292,7 +2365,8 @@
           "price": 14.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”."}
         },
         {
           "name": "Tofu Far",
@@ -2306,7 +2380,8 @@
           ],
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Deep Fried Milk Cube",
@@ -2320,7 +2395,8 @@
           ],
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."}
         }
       ]
     }

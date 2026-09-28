@@ -88,7 +88,8 @@
           "tags": [
             "contains-soy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Katsu Sando",
@@ -99,7 +100,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “panko”.", "contains-dairy": "The menu says “milk”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Taiwanese Popcorn Chicken",
@@ -110,7 +112,8 @@
             "gf-option",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Edamame Hummus",
@@ -123,7 +126,8 @@
             "contains-soy",
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Edamame”.", "contains-sesame": "The menu says “sesame”.", "contains-gluten": "The menu says “crackers” — a wheat bakery item."}
         },
         {
           "name": "Pork and Chive Dumplings",
@@ -132,7 +136,8 @@
           "price": 20.9,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
         },
         {
           "name": "Thai Chicken Dumplings",
@@ -141,7 +146,8 @@
           "price": 20.9,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
         },
         {
           "name": "Mushroom & Tofu Dumpling",
@@ -153,7 +159,8 @@
             "vg",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-gluten": "The menu says “Dumpling” — a wheat-flour wrapper."}
         },
         {
           "name": "Seared Sesame Tuna",
@@ -164,7 +171,8 @@
             "gf",
             "contains-sesame",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “Sesame”.", "contains-fish": "The menu says “Tuna”."}
         },
         {
           "name": "Coconut Squid",
@@ -176,7 +184,8 @@
             "contains-sesame",
             "contains-egg",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-shellfish": "The menu says “Squid”."}
         }
       ]
     },
@@ -193,7 +202,8 @@
             "v",
             "vg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “miso”."}
         },
         {
           "name": "Ginger Soy Chicken",
@@ -203,7 +213,8 @@
           "tags": [
             "gf",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Soy”."}
         },
         {
           "name": "Sticky Pork Belly",
@@ -213,7 +224,8 @@
           "tags": [
             "gf",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Red Duck Curry",
@@ -235,7 +247,8 @@
             "vg",
             "contains-soy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “edamame”.", "contains-sesame": "The menu says “Sesame”."}
         },
         {
           "name": "55 Day Aged Beef Short Rib",
@@ -244,7 +257,8 @@
           "price": 48,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Salmon Two Ways",
@@ -254,7 +268,8 @@
           "tags": [
             "gf",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Lemongrass Chicken Salad",
@@ -292,7 +307,8 @@
             "v",
             "vg",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Massaman” — massaman is a peanut curry."}
         },
         {
           "name": "Duck Fat Fried Rice",
@@ -302,7 +318,8 @@
           "tags": [
             "gf",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”."}
         },
         {
           "name": "Edamame Beans",
@@ -315,7 +332,8 @@
             "vg",
             "contains-soy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Edamame”.", "contains-sesame": "The menu says “sesame”."}
         }
       ]
     },
@@ -334,7 +352,8 @@
             "vg",
             "contains-sesame",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”.", "contains-nuts": "The menu says “praline” — praline/marzipan/nougat are nut confections."}
         },
         {
           "name": "Korean Twisted Donuts",
@@ -345,7 +364,8 @@
             "v",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Donuts” — a wheat bakery item.", "contains-soy": "The menu says “miso”."}
         },
         {
           "name": "Dark Chocolate + Vietnamese Coffee Mousse",

@@ -109,6 +109,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "delivery": 24.0
           },
@@ -123,6 +124,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "delivery": 24.0
           },
@@ -169,6 +171,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper."},
           "prices": {
             "delivery": 15.5
           },
@@ -183,6 +186,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-soy": "The menu says “Tofu”."},
           "desc": "Deep fried tofu served with beansprouts, cucumbers and carrots sprinkled with peanuts and sweet chilli sauce.",
           "code": "5"
         },
@@ -193,6 +197,7 @@
           "tags": [
             "contains-egg"
           ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”."},
           "desc": "Sweet corn soup with chicken pieces and shredded eggs.",
           "code": "6"
         },
@@ -204,6 +209,7 @@
             "v",
             "contains-peanuts"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”."},
           "desc": "A mixture of pickled carrot, turnip, cabbages and cucumber blended with peanuts.",
           "code": "8"
         }
@@ -222,6 +228,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Mee Goreng” — a wheat noodle.", "contains-egg": "The menu says “egg”."},
           "prices": {
             "delivery": 25.0
           },
@@ -237,6 +244,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-gluten": "The menu says “Mee Goreng” — a wheat noodle.", "contains-egg": "The menu says “egg”."},
           "prices": {
             "delivery": 25.0
           },
@@ -251,6 +259,7 @@
             "contains-shellfish",
             "contains-egg"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-egg": "The menu says “eggs”."},
           "prices": {
             "delivery": 25.0
           },
@@ -266,6 +275,7 @@
             "contains-egg",
             "contains-fish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimps”.", "contains-egg": "The menu says “eggs”.", "contains-fish": "The menu says “fishcakes”."},
           "prices": {
             "delivery": 25.0
           },
@@ -281,6 +291,7 @@
             "contains-egg",
             "contains-fish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimps”.", "contains-gluten": "The menu says “Hokkien” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-fish": "The menu says “fishcakes”."},
           "desc": "Egg noodles cooked with chicken, shrimps, fishcakes, fishballs and cabbage in dark gravy.",
           "code": "26"
         },
@@ -293,6 +304,7 @@
             "contains-egg",
             "contains-fish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-egg": "The menu says “eggs”.", "contains-fish": "The menu says “fishcakes”."},
           "desc": "Thick flat rice noodles cooked with chicken, prawn, fishcakes, fishballs, cabbage and eggs in gravy.",
           "code": "28"
         },
@@ -305,6 +317,7 @@
             "contains-egg",
             "contains-fish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-egg": "The menu says “egg”.", "contains-fish": "The menu says “fishcakes”."},
           "desc": "Noodles with prawn, fishcakes, fishballs and chicken pieces in chicken soup. Choice of egg or rice noodles.",
           "code": "29"
         },
@@ -317,6 +330,7 @@
             "contains-egg",
             "contains-soy"
           ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-soy": "The menu says “tofu”."},
           "desc": "Stir fried rice noodles with beans, cabbages, carrots, tomatoes, cauliflower, broccoli, tofu and eggs.",
           "code": "31"
         },
@@ -330,6 +344,7 @@
             "contains-egg",
             "contains-soy"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Mee Goreng” — a wheat noodle.", "contains-egg": "The menu says “egg”.", "contains-soy": "The menu says “tofu”."},
           "desc": "Stir fried egg noodles with broccoli, cauliflower, carrots, beansprouts, tofu, tomatoes and eggs with Malaysian spices.",
           "code": "32"
         }
@@ -348,6 +363,7 @@
             "contains-shellfish",
             "contains-egg"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimps”.", "contains-egg": "The menu says “eggs”."},
           "prices": {
             "delivery": 25.0
           },
@@ -373,6 +389,7 @@
             "contains-peanuts",
             "contains-egg"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-egg": "The menu says “egg”."},
           "revisions": [
             {
               "recorded": "2026-08-26",
@@ -390,6 +407,7 @@
             "contains-peanuts",
             "contains-egg"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-egg": "The menu says “egg”."},
           "revisions": [
             {
               "recorded": "2026-08-26",
@@ -439,6 +457,7 @@
           "tags": [
             "contains-peanuts"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”."},
           "prices": {
             "delivery": 26.0
           },
@@ -452,6 +471,7 @@
           "tags": [
             "contains-peanuts"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”."},
           "prices": {
             "delivery": 26.0
           },
@@ -475,6 +495,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."},
           "desc": "Prawns cooked in sweet and sour chilli sauce. Served with steamed rice.",
           "code": "16"
         },
@@ -502,6 +523,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."},
           "prices": {
             "delivery": 19.0
           },
@@ -539,6 +561,7 @@
             "contains-shellfish",
             "contains-fish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squids”.", "contains-fish": "The menu says “fishballs”."},
           "desc": "Squids, prawns, mussels, fishballs, fishcakes, in creamy curry. Served with steamed rice.",
           "code": "19"
         },
@@ -568,6 +591,7 @@
             "contains-soy",
             "contains-fish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “squid”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”.", "contains-fish": "The menu says “fishcakes”."},
           "prices": {
             "delivery": 25.0
           },
@@ -585,6 +609,7 @@
             "contains-soy",
             "contains-fish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”.", "contains-fish": "The menu says “fishcakes”."},
           "prices": {
             "delivery": 26.0
           },
@@ -600,6 +625,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."},
           "prices": {
             "delivery": 24.5
           },
@@ -619,6 +645,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."},
           "prices": {
             "delivery": 5.0
           }
@@ -661,6 +688,7 @@
           "tags": [
             "contains-peanuts"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Peanut”."},
           "prices": {
             "delivery": 5.0
           }

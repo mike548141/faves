@@ -62,7 +62,8 @@
           "price": 16.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Chicken Kebab",
@@ -71,7 +72,8 @@
           "price": 14.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Lamb Kebab",
@@ -80,7 +82,8 @@
           "price": 14,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Mixed Kebab",
@@ -89,7 +92,8 @@
           "price": 14.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Vegetarian Kebab",
@@ -99,7 +103,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Falafel Kebab",
@@ -109,7 +114,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Halloumi Kebab",
@@ -120,7 +126,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-dairy": "The menu says “Halloumi”."}
         },
         {
           "name": "Diablo Kebab",
@@ -130,7 +137,8 @@
           "tags": [
             "spicy-3",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”."}
         }
       ]
     },
@@ -149,7 +157,8 @@
           "tags": [
             "contains-egg",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “tahini”."}
         }
       ]
     },
@@ -167,7 +176,8 @@
           "price": 17,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “roti”."}
         },
         {
           "name": "Lamb Shawarma",
@@ -176,7 +186,8 @@
           "price": 17,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “roti”."}
         },
         {
           "name": "Mixed Shawarma",
@@ -185,7 +196,8 @@
           "price": 17,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “roti”."}
         },
         {
           "name": "Vegetarian Shawarma",
@@ -195,7 +207,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “roti”."}
         },
         {
           "name": "Falafel Shawarma",
@@ -205,7 +218,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “roti”."}
         },
         {
           "name": "Halloumi Shawarma",
@@ -216,7 +230,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “roti”.", "contains-dairy": "The menu says “Halloumi”."}
         }
       ]
     },
@@ -234,7 +249,8 @@
           "price": 13.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Lamb Burger",
@@ -243,7 +259,8 @@
           "price": 12.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Mixed Burger",
@@ -252,7 +269,8 @@
           "price": 13.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Vegetarian Burger",
@@ -262,7 +280,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Falafel Burger",
@@ -272,7 +291,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Halloumi Burger",
@@ -283,7 +303,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “Halloumi”."}
         },
         {
           "name": "Diablo Burger",
@@ -293,7 +314,8 @@
           "tags": [
             "spicy-3",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         }
       ]
     },
@@ -312,7 +334,8 @@
           "tags": [
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Chicken Iskender",
@@ -322,7 +345,8 @@
           "tags": [
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Lamb Iskender",
@@ -332,7 +356,8 @@
           "tags": [
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Mixed Iskender",
@@ -342,7 +367,8 @@
           "tags": [
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Vegetarian Iskender",
@@ -353,7 +379,8 @@
             "v",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Falafel Iskender",
@@ -365,7 +392,8 @@
             "gf",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Diablo Iskender",
@@ -376,7 +404,8 @@
             "spicy-3",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         }
       ]
     },
@@ -396,7 +425,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pita”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Lamb Souvlaki",
@@ -407,7 +437,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pita”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Mixed Souvlaki",
@@ -418,7 +449,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pita”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Vegetarian Souvlaki",
@@ -430,7 +462,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pita”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Falafel Souvlaki",
@@ -442,7 +475,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pita”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Halloumi Souvlaki",
@@ -454,7 +488,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pita”.", "contains-dairy": "The menu says “Halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         }
       ]
     },
@@ -520,7 +555,8 @@
           "price": 14.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Lamb Kebab Nachos",
@@ -529,7 +565,8 @@
           "price": 14.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Mixed Kebab Nachos",
@@ -538,7 +575,8 @@
           "price": 14.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Vegetarian Kebab Nachos",
@@ -547,7 +585,8 @@
           "price": 14.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         }
       ]
     },
@@ -567,7 +606,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Chicken Shish",
@@ -578,7 +618,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Lamb Shish",
@@ -589,7 +630,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Kofta",
@@ -600,7 +642,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         }
       ]
     },
@@ -619,7 +662,8 @@
           "price": 18,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "Lamb Turkish Pizza",
@@ -628,7 +672,8 @@
           "price": 18,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "Mixed Turkish Pizza",
@@ -637,7 +682,8 @@
           "price": 18.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "Vegetarian Turkish Pizza",
@@ -647,7 +693,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "Cheese Lovers Turkish Pizza",
@@ -658,7 +705,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item.", "contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Diablo Turkish Pizza",
@@ -668,7 +716,8 @@
           "tags": [
             "spicy-3",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         }
       ]
     },
@@ -730,7 +779,8 @@
             "v",
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”."}
         },
         {
           "name": "Rice Bean Salad",
@@ -755,7 +805,8 @@
           "price": 12.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         },
         {
           "name": "Chicken Snack",
@@ -764,7 +815,8 @@
           "price": 12.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         },
         {
           "name": "Vegetarian Snack",
@@ -774,7 +826,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         }
       ]
     },
@@ -790,7 +843,8 @@
           "price": 12.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Nuggets” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Cheesy Toasties, Chips and a Drink",
@@ -801,7 +855,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesy”.", "contains-gluten": "The menu says “Toasties” — a wheat bakery item."}
         },
         {
           "name": "Rice, Meat and Sauce, Chips and a Drink",
@@ -824,7 +879,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”."}
         },
         {
           "name": "Turkish Garlic Bread",
@@ -834,7 +890,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”."}
         },
         {
           "name": "Turkish Cheese Bread",
@@ -845,7 +902,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Turkish Hummus Bread",
@@ -856,7 +914,8 @@
             "v",
             "contains-gluten",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-sesame": "The menu says “Hummus” — hummus is made with tahini."}
         },
         {
           "name": "Turkish Hummus + Tabouli Bread",
@@ -867,7 +926,8 @@
             "v",
             "contains-gluten",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-sesame": "The menu says “Hummus” — hummus is made with tahini."}
         },
         {
           "name": "Dips",
@@ -878,7 +938,8 @@
             "v",
             "contains-sesame",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “Hummus” — hummus is made with tahini.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Salad Plate",
@@ -896,7 +957,8 @@
           "price": 4,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "Chips",
@@ -921,7 +983,8 @@
           "tags": [
             "v",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “Baklava” — praline/marzipan/nougat are nut confections."}
         },
         {
           "name": "Turkish Delight",

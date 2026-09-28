@@ -88,7 +88,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”."}
         },
         {
           "name": "Buffalo Amatricella",
@@ -98,7 +99,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Porchetta",
@@ -108,7 +110,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”."}
         }
       ]
     },
@@ -125,7 +128,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Siciliana - Large",
@@ -136,7 +140,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Capricciosa - Small",
@@ -147,7 +152,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Capricciosa - Large",
@@ -158,7 +164,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Bambina - Small",
@@ -169,7 +176,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Bambina - Large",
@@ -180,7 +188,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Carne - Small",
@@ -191,7 +200,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Carne - Large",
@@ -202,7 +212,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Romana - Small",
@@ -214,7 +225,8 @@
             "contains-dairy",
             "gf-option",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”."}
         },
         {
           "name": "Romana - Large",
@@ -226,7 +238,8 @@
             "contains-dairy",
             "gf-option",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”."}
         },
         {
           "name": "Cardinale - Small",
@@ -237,7 +250,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Cardinale - Large",
@@ -248,7 +262,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Parma - Small",
@@ -259,7 +274,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Parma - Large",
@@ -270,7 +286,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Inferno - Small",
@@ -282,7 +299,8 @@
             "contains-dairy",
             "gf-option",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”."}
         },
         {
           "name": "Inferno - Large",
@@ -294,7 +312,8 @@
             "contains-dairy",
             "gf-option",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”."}
         },
         {
           "name": "Pomodorina - Small",
@@ -306,7 +325,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Pomodorina - Large",
@@ -318,7 +338,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Bufalina - Small",
@@ -330,7 +351,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Bufalina - Large",
@@ -342,7 +364,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Mediterranea - Small",
@@ -355,7 +378,8 @@
             "contains-dairy",
             "contains-nuts",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Mediterranea - Large",
@@ -368,7 +392,8 @@
             "contains-dairy",
             "contains-nuts",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Boschetta - Small",
@@ -406,7 +431,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Cinque Formaggi - Large",
@@ -418,7 +444,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Ortolana - Small",
@@ -430,7 +457,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Ortolana - Large",
@@ -442,7 +470,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Margherita - Small",
@@ -454,7 +483,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Margherita - Large",
@@ -466,7 +496,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Marinara - Small",
@@ -503,7 +534,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Cacciatore - Large",
@@ -514,7 +546,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Pepperoni - Small",
@@ -525,7 +558,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Pepperoni - Large",
@@ -536,7 +570,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Rustico Bosco - Small",
@@ -547,7 +582,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “provolone”."}
         },
         {
           "name": "Rustico Bosco - Large",
@@ -558,7 +594,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “provolone”."}
         }
       ]
     },
@@ -575,7 +612,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Salsiccia - Large",
@@ -586,7 +624,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Tartufo - Small",
@@ -597,7 +636,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Tartufo - Large",
@@ -608,7 +648,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Funghi Bianca - Small",
@@ -620,7 +661,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Funghi Bianca - Large",
@@ -632,7 +674,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Paesana - Small",
@@ -643,7 +686,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Paesana - Large",
@@ -654,7 +698,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Pizza Bread - Small",
@@ -665,7 +710,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Pizza Bread - Large",
@@ -676,7 +722,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Bomba - Small",
@@ -687,7 +734,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Bomba - Large",
@@ -698,7 +746,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Giardinella - Small",
@@ -711,7 +760,8 @@
             "contains-dairy",
             "contains-nuts",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Giardinella - Large",
@@ -724,7 +774,8 @@
             "contains-dairy",
             "contains-nuts",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         }
       ]
     },
@@ -742,7 +793,8 @@
             "contains-nuts",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item.", "contains-nuts": "The menu says “Nutella” — Nutella is a hazelnut spread.", "contains-egg": "The menu says “custard” — an egg emulsion."}
         },
         {
           "name": "Vanilla Panna Cotta",
@@ -751,7 +803,8 @@
           "price": 7.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Panna Cotta” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Chocolate Panna Cotta",
@@ -760,7 +813,8 @@
           "price": 7.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Panna Cotta” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Tiramisu Limone",
@@ -771,7 +825,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-egg": "The menu says “Tiramisu” — egg is in the batter or base."}
         },
         {
           "name": "Tiramisu Caffe",
@@ -782,7 +837,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-egg": "The menu says “Tiramisu” — egg is in the batter or base."}
         },
         {
           "name": "Tiramisu Pistacchio",
@@ -794,7 +850,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-egg": "The menu says “Tiramisu” — egg is in the batter or base."}
         }
       ]
     },

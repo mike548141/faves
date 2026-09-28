@@ -83,7 +83,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Korean-Fried Cauliflower",
@@ -103,7 +104,8 @@
           "tags": [
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Sticky Pork Belly Bites",
@@ -112,7 +114,8 @@
           "price": 24.0,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Loaded Fries",
@@ -122,7 +125,8 @@
           "tags": [
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheesy”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Garlic Chilli Prawns",
@@ -133,7 +137,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”.", "contains-gluten": "The menu says “roti”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Glazed Pork & Wagyu Brisket Meatballs",
@@ -142,7 +147,8 @@
           "price": 24.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Buttermilk Fried Chicken",
@@ -152,7 +158,8 @@
           "tags": [
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Buttermilk”."}
         },
         {
           "name": "Onion Rings",
@@ -162,7 +169,8 @@
           "tags": [
             "v",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Fries",
@@ -172,7 +180,8 @@
           "tags": [
             "v",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Tools Down Platter",
@@ -182,7 +191,8 @@
           "tags": [
             "contains-shellfish",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “squid”.", "contains-dairy": "The menu says “buttermilk”."}
         }
       ]
     },
@@ -197,7 +207,8 @@
           "price": 32.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Fish & Chips",
@@ -208,7 +219,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “tartare sauce” — an egg emulsion.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Potato Gnocchi",
@@ -218,7 +230,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “ricotta”."}
         },
         {
           "name": "Twice Cooked Pork Belly",
@@ -239,7 +252,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Fettuccine”.", "contains-dairy": "The menu says “Carbonara” — the sauce is cream- or butter-based.", "contains-egg": "The menu says “Carbonara” — egg is in the batter or base."}
         },
         {
           "name": "Classic Caesar",
@@ -252,7 +266,8 @@
             "contains-egg",
             "contains-fish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “egg”.", "contains-fish": "The menu says “anchovy”.", "contains-gluten": "The menu says “croutons”."}
         },
         {
           "name": "Green Tahini Bowl",
@@ -264,7 +279,8 @@
             "gf",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “ricotta”.", "contains-sesame": "The menu says “Tahini”."}
         }
       ]
     },
@@ -280,7 +296,8 @@
           "tags": [
             "gf-option",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         }
       ]
     },
@@ -297,7 +314,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Cheeseburger” — a wheat bakery item.", "contains-dairy": "The menu says “Cheeseburger”."}
         },
         {
           "name": "The Cluckerson",
@@ -308,7 +326,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bun” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "The Hallouminati",
@@ -321,7 +340,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bun” — a wheat bakery item.", "contains-dairy": "The menu says “halloumi”."}
         }
       ]
     },
@@ -348,7 +368,8 @@
             "v",
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         }
       ]
     },
@@ -365,7 +386,8 @@
             "gf-option",
             "contains-peanuts",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-gluten": "The menu says “Brownie” — a wheat bakery item."}
         },
         {
           "name": "Baked Cheesecake Pop",
@@ -374,7 +396,8 @@
           "price": 14.0,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesecake” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Sticky Date Pudding",
@@ -383,7 +406,8 @@
           "price": 15.0,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         }
       ]
     },
@@ -400,7 +424,8 @@
             "gf",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-fish": "The menu says “salmon”."}
         },
         {
           "name": "Eggs Your Way",
@@ -411,7 +436,8 @@
             "gf-option",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-gluten": "The menu says “sourdough”."}
         },
         {
           "name": "Avocado on Toast",
@@ -424,7 +450,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “sourdough”.", "contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Breakfast Burger",
@@ -436,7 +463,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Mushroom on Toast",
@@ -449,7 +477,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “sourdough”.", "contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “eggs”."}
         },
         {
           "name": "Chicken Waffles",
@@ -459,7 +488,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Waffles” — a wheat bakery item.", "contains-dairy": "The menu says “Buttermilk”."}
         },
         {
           "name": "Sweet Waffles",
@@ -470,7 +500,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Waffles” — a wheat bakery item.", "contains-dairy": "The menu says “mascarpone”."}
         },
         {
           "name": "Big Breakfast",
@@ -481,7 +512,8 @@
             "gf-option",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-gluten": "The menu says “sourdough”."}
         }
       ]
     },
@@ -496,7 +528,8 @@
           "price": 7.0,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Eggs”."}
         },
         {
           "name": "Bacon",
@@ -519,7 +552,8 @@
           "price": 8.0,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”."}
         },
         {
           "name": "Mushrooms",
@@ -542,7 +576,8 @@
           "price": 5.0,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Hollandaise” — an egg emulsion."}
         },
         {
           "name": "No Gluten Added Bread",
@@ -568,7 +603,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Chook & Chips",
@@ -577,14 +613,16 @@
           "price": 15.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Lil' Fish & Flicks",
           "dishId": "lil-fish-flicks",
           "desc": "Crispy fish bites, fries, tartare sauce.",
           "price": 15.5,
-          "tags": ["contains-egg", "contains-fish"]
+          "tags": ["contains-egg", "contains-fish"],
+          "tagNotes": {"contains-egg": "The menu says “tartare sauce” — an egg emulsion.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Meatballs",
@@ -593,7 +631,8 @@
           "price": 15.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Grilled Chicken & Mash",
@@ -612,7 +651,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Cheese & Bacon Loaded Fries",
@@ -622,7 +662,8 @@
           "tags": [
             "v-option",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         }
       ]
     },
@@ -658,7 +699,8 @@
           "price": 5.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Latte” — an espresso milk drink."}
         },
         {
           "name": "Flat White",
@@ -667,7 +709,8 @@
           "price": 5.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Flat White” — an espresso milk drink."}
         },
         {
           "name": "Cappuccino",
@@ -676,7 +719,8 @@
           "price": 5.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cappuccino” — an espresso milk drink."}
         },
         {
           "name": "Mocha",
@@ -685,7 +729,8 @@
           "price": 5.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mocha” — an espresso milk drink."}
         },
         {
           "name": "Chai Latte",
@@ -694,7 +739,8 @@
           "price": 5.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Latte” — an espresso milk drink."}
         },
         {
           "name": "Hot Chocolate",
@@ -710,7 +756,8 @@
           "price": 9.0,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mocha” — an espresso milk drink."}
         },
         {
           "name": "Tea",

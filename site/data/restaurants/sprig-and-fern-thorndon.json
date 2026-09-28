@@ -136,7 +136,8 @@
             "vg",
             "gf",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Edamame”."}
         },
         {
           "name": "Hummus / Dukkah / Toasted Ciabatta / Chilli Oil",
@@ -148,7 +149,8 @@
             "contains-gluten",
             "contains-nuts",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “Hummus” — hummus is made with tahini."}
         },
         {
           "name": "Beef Meatballs / Tomato + Roast Capsicum Ragu / Mozzarella",
@@ -158,7 +160,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”."}
         },
         {
           "name": "Baked Brie / Honey / Roasted Hazelnuts / Toasted Ciabatta",
@@ -170,7 +173,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Brie”.", "contains-nuts": "The menu says “Hazelnuts”."}
         },
         {
           "name": "Hand Cut Corn Chips / Guacamole / Salsa",
@@ -191,7 +195,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tartare Sauce” — an egg emulsion.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Cheese + Crackers / Brie / Creamy Blue / Olives",
@@ -202,7 +207,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crackers” — a wheat bakery item.", "contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Samosas + Poppadoms / Sweet Chilli Sauce / Mango + Peach Chutney",
@@ -212,7 +218,8 @@
           "tags": [
             "vg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Samosas” — a wheat-flour wrapper."}
         },
         {
           "name": "Curly Fries / Aioli",
@@ -222,7 +229,8 @@
           "tags": [
             "v",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
         },
         {
           "name": "Hot Chips / Tomato Sauce",
@@ -243,7 +251,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesecake” — the sauce is cream- or butter-based."}
         }
       ]
     },
@@ -266,7 +275,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-sesame": "The note over this section says “All burgers served with lettuce, tomato and pickle on a sesame bun with hot chips”."}
         },
         {
           "name": "Fish Burger",
@@ -279,7 +289,8 @@
             "contains-egg",
             "contains-sesame",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “tartare sauce” — an egg emulsion.", "contains-sesame": "The note over this section says “All burgers served with lettuce, tomato and pickle on a sesame bun with hot chips”.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Black Bean Burger",
@@ -291,7 +302,8 @@
             "gf-option",
             "contains-gluten",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-sesame": "The note over this section says “All burgers served with lettuce, tomato and pickle on a sesame bun with hot chips”."}
         }
       ]
     },
@@ -313,7 +325,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Kale / Blue Cheese / Pumpkin Seed / Mozzarella",
@@ -325,7 +338,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Blue Cheese”."}
         },
         {
           "name": "Pepperoni / Mozzarella",
@@ -336,7 +350,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”."}
         },
         {
           "name": "Chicken / Brie / Mango / Mozzarella",
@@ -347,7 +362,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Brie”."}
         },
         {
           "name": "Smoked Salmon / Cream Cheese / Capers / Mozzarella",
@@ -359,7 +375,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”.", "contains-fish": "The menu says “Salmon”."}
         }
       ]
     }

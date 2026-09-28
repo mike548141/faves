@@ -307,7 +307,8 @@
             "df-option",
             "vg-option",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "The Good Fella'",
@@ -319,7 +320,8 @@
             "v",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Paris for Ever",
@@ -329,7 +331,8 @@
           "tags": [
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "First Class",
@@ -340,7 +343,8 @@
             "gf",
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Taste of Provence",
@@ -351,7 +355,8 @@
             "gf",
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”."}
         },
         {
           "name": "Complete",
@@ -362,7 +367,8 @@
             "gf",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Rustique",
@@ -372,7 +378,8 @@
           "tags": [
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Croque Monsieur",
@@ -382,7 +389,8 @@
           "tags": [
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
         },
         {
           "name": "Blue Rdv",
@@ -393,7 +401,8 @@
             "gf",
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Uncle Green",
@@ -407,7 +416,8 @@
             "vg-option",
             "contains-nuts",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “walnuts”.", "contains-dairy": "The menu says “cheddar”."}
         },
         {
           "name": "Complete Deluxe",
@@ -418,7 +428,8 @@
             "gf",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Big is Good",
@@ -430,7 +441,8 @@
             "v",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Norvegian Catch",
@@ -441,7 +453,8 @@
             "gf",
             "contains-dairy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-fish": "The menu says “salmon”."}
         }
       ]
     },
@@ -473,7 +486,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Butter”."}
         },
         {
           "name": "Sweet Temptation",
@@ -495,7 +509,8 @@
             "vg-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Chocolate Addiction",
@@ -506,7 +521,8 @@
             "gf-option",
             "contains-gluten",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “Nutella” — Nutella is a hazelnut spread."}
         },
         {
           "name": "Canadian Delight",
@@ -519,7 +535,8 @@
             "vg-option",
             "contains-gluten",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “almonds”."}
         },
         {
           "name": "Banana Love",
@@ -542,7 +559,8 @@
             "contains-gluten",
             "contains-peanuts",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-nuts": "The menu says “Nutella” — Nutella is a hazelnut spread."}
         },
         {
           "name": "White Forrest",
@@ -573,7 +591,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “cookie” — a wheat bakery item.", "contains-dairy": "The menu says “Cream”."}
         },
         {
           "name": "Snicker",
@@ -584,7 +603,8 @@
             "gf-option",
             "contains-gluten",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”."}
         },
         {
           "name": "Exotica",
@@ -595,7 +615,8 @@
             "gf-option",
             "contains-gluten",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “Nutella” — Nutella is a hazelnut spread."}
         },
         {
           "name": "Choco Almonds",
@@ -606,7 +627,8 @@
             "gf-option",
             "contains-gluten",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “Almonds”."}
         },
         {
           "name": "Chocoberry",
@@ -617,7 +639,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Sweet Tooth",
@@ -628,7 +651,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Belle Helene",
@@ -639,7 +663,8 @@
             "gf-option",
             "contains-gluten",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “almonds”."}
         }
       ]
     }

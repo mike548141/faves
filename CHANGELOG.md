@@ -46,6 +46,11 @@ content freshness separately from this file.
   1 more"); anything you have declared is never folded away. The recipe page
   now uses the same tags as the menu, so an allergen you have not flagged is
   quieter there too.
+- **Tap a tag to see why.** Every allergen and diet tag on a dish or recipe
+  opens a note: for a recipe, the ingredient lines that caused it; for a
+  restaurant dish, the words on the menu that did ("The menu says “aioli” — an
+  egg emulsion"). Where nothing on the menu gives it away, it says only that it
+  was recorded.
 ### Fixed
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved
   before dishes had ids were all counted as one and matched nothing — KK

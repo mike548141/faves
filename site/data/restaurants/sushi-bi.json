@@ -173,7 +173,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Crispy Chicken Maki",
@@ -200,7 +201,8 @@
           "tags": [
             "contains-dairy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”.", "contains-fish": "The menu says “Tuna”."}
         },
         {
           "name": "Teriyaki Chicken + Cream Cheese Maki",
@@ -211,7 +213,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based."}
         },
         {
           "name": "Teriyaki Chicken + Avocado Maki",
@@ -221,7 +224,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based."}
         },
         {
           "name": "Seaweed Salad + Vegetables Maki",
@@ -240,7 +244,8 @@
           "tags": [
             "contains-dairy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Salmon + Avocado Maki",
@@ -250,7 +255,8 @@
           "tags": [
             "gf",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Kakiage Maki",
@@ -261,7 +267,8 @@
             "v",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base."}
         },
         {
           "name": "Crispy Prawn + Cream Cheese Maki",
@@ -271,7 +278,8 @@
           "tags": [
             "contains-shellfish",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-dairy": "The menu says “Cream”."}
         }
       ]
     },
@@ -287,7 +295,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based."}
         },
         {
           "name": "Salmon Avocado Uramaki",
@@ -296,7 +305,8 @@
           "price": 2.2,
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Spicy Chicken Uramaki",
@@ -306,7 +316,8 @@
           "tags": [
             "spicy-1",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Salmon + Seaweed + Avocado Dragon Roll",
@@ -315,7 +326,8 @@
           "price": 2.5,
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Salmon”."}
         }
       ]
     },
@@ -341,7 +353,8 @@
           "tags": [
             "gf",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Aburi Salmon Nigiri",
@@ -352,7 +365,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “teriyaki” — the sauce is soy-based.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Smoked Eel Nigiri",
@@ -363,7 +377,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “teriyaki” — the sauce is soy-based.", "contains-fish": "The menu says “Eel”."}
         },
         {
           "name": "Prawn Nigiri",
@@ -373,7 +388,8 @@
           "tags": [
             "gf",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Crispy Prawn Nigiri",
@@ -383,7 +399,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “panko”."}
         },
         {
           "name": "Aburi Prawn Nigiri",
@@ -394,7 +411,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “teriyaki” — the sauce is soy-based."}
         },
         {
           "name": "Aburi Scallop",
@@ -406,7 +424,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Scallop”.", "contains-gluten": "The menu says “teriyaki” — soy sauce is brewed with wheat.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “teriyaki” — the sauce is soy-based."}
         },
         {
           "name": "Crab Leg Kanikama Nigiri",
@@ -416,7 +435,8 @@
           "tags": [
             "contains-shellfish",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Crab”.", "contains-fish": "The menu says “Kanikama” — surimi is a minced white-fish paste."}
         }
       ]
     },
@@ -452,7 +472,8 @@
             "contains-shellfish",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Kanikama”.", "contains-soy": "The menu says “Tofu”.", "contains-fish": "The menu says “Tobiko”."}
         },
         {
           "name": "Rice Paper Roll Mixed Vegetables",
@@ -472,7 +493,8 @@
           "tags": [
             "gf",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Salmon”."}
         }
       ]
     },
@@ -502,7 +524,8 @@
           "price": 78.0,
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “salmon”."}
         },
         {
           "name": "Sushi Platter 2 (cocktail sushi)",
@@ -513,7 +536,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “teriyaki” — the sauce is soy-based.", "contains-fish": "The menu says “salmon”."}
         },
         {
           "name": "Sushi Platter 3",
@@ -522,7 +546,8 @@
           "price": 90.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
         },
         {
           "name": "Sushi Platter 4",
@@ -546,7 +571,8 @@
           "tags": [
             "contains-shellfish",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-fish": "The menu says “salmon”."}
         },
         {
           "name": "Sushi Platter 9",
@@ -555,7 +581,8 @@
           "price": 85.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
         }
       ]
     }

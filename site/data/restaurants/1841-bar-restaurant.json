@@ -93,7 +93,8 @@
           "tags": [
             "df",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Fries",
@@ -109,7 +110,8 @@
             "v",
             "df",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Corn Chips",
@@ -142,7 +144,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Wedges",
@@ -156,7 +159,8 @@
           ],
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Prawn Twisters",
@@ -173,7 +177,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Cajun Calamari",
@@ -189,7 +194,8 @@
             "df",
             "contains-egg",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-shellfish": "The menu says “Calamari”."}
         },
         {
           "name": "Nachos",
@@ -206,7 +212,8 @@
             "gf",
             "contains-dairy",
             "vg-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Local Platter",
@@ -222,7 +229,8 @@
             "contains-gluten",
             "contains-shellfish",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “spring rolls” — a wheat-flour wrapper.", "contains-shellfish": "The menu says “prawn”.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "West Park Wings",
@@ -238,7 +246,8 @@
             "gf",
             "contains-dairy",
             "spicy-1"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “blue cheese”."}
         },
         {
           "name": "Glenside Chowder",
@@ -255,7 +264,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”.", "contains-gluten": "The menu says “toast” — a wheat bakery item.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Cheerios",
@@ -286,7 +296,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pasta”.", "contains-dairy": "The menu says “parmesan”."}
         }
       ]
     },
@@ -309,7 +320,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Lasagne”.", "contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Roast Vegetable Salad",
@@ -344,7 +356,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "The Triple Double Burger",
@@ -359,7 +372,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Fraser Ave Fettuccine",
@@ -374,7 +388,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Fettuccine”.", "contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Hawtrey Farm Filo",
@@ -389,7 +404,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Filo”.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Burma Breast",
@@ -404,7 +420,8 @@
           "tags": [
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Bangers & Mash",
@@ -420,7 +437,8 @@
             "gf",
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Petherick Pork",
@@ -449,7 +467,8 @@
           ],
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Frank Shank Pie",
@@ -463,7 +482,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pie” — a wheat bakery item."}
         },
         {
           "name": "Frankmoore Fish",
@@ -478,7 +498,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Fish of the Day",
@@ -488,7 +509,8 @@
           "tags": [
             "gf",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Kaukau Salmon",
@@ -506,7 +528,8 @@
             "contains-dairy",
             "contains-nuts",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “hollandaise” — an egg emulsion.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "The Broadmeadow Beef Salad",
@@ -536,7 +559,8 @@
           "tags": [
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "The Ironside (200g)",
@@ -551,7 +575,8 @@
           "tags": [
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "The Ironside (400g)",
@@ -566,7 +591,8 @@
           "tags": [
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-dairy": "The menu says “butter”."}
         }
       ]
     },
@@ -631,7 +657,8 @@
           "tags": [
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”."}
         },
         {
           "name": "The Works",
@@ -646,7 +673,8 @@
           "tags": [
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”."}
         },
         {
           "name": "Veg Brekkie",
@@ -662,7 +690,8 @@
             "v",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”."}
         },
         {
           "name": "Eggs Benedict",
@@ -677,7 +706,8 @@
           "tags": [
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Eggs”."}
         },
         {
           "name": "Caesar",
@@ -693,7 +723,8 @@
             "contains-egg",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “croutons”.", "contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Steak Sammie",
@@ -725,7 +756,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “toast” — a wheat bakery item.", "contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Bubble 'n' Squeak",
@@ -741,7 +773,8 @@
             "gf",
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Fish",
@@ -756,7 +789,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Filo Parcel",
@@ -771,7 +805,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Filo”.", "contains-dairy": "The menu says “cream”."}
         }
       ]
     },
@@ -793,7 +828,8 @@
             "v",
             "gf-option",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”."}
         },
         {
           "name": "Double Chocolate Brownie",
@@ -810,7 +846,8 @@
             "gf",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Apple & Blueberry Pie",
@@ -826,7 +863,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pie” — a wheat bakery item.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Cheesecake",
@@ -842,7 +880,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Sticky Date Pudding",
@@ -859,7 +898,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Chocolate Tart",
@@ -875,7 +915,8 @@
             "v",
             "df",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tart” — a wheat bakery item."}
         }
       ]
     },
@@ -908,7 +949,8 @@
           "tags": [
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-dairy": "The menu says “Butter”."}
         },
         {
           "name": "House-made Salsa / Toast / GF Bread / Extra Sauce",
@@ -922,7 +964,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”."}
         },
         {
           "name": "1841 Slaw / Garden Salad / Mash / Onions / Tomatoes / Mushrooms",

@@ -1469,6 +1469,23 @@ async function run(opts) {
       tagOpened.chips.filter((c) => c.startsWith("⚠")).slice(1).every((c) => !/Contains/.test(c)),
       JSON.stringify(tagOpened.chips)
     );
+    // Tap a chip for WHY (roadmap 350/020): the tip quotes the ingredient
+    // lines the tagger matched — the dish's own tagNotes, word for word.
+    const [noteTag, noteText] = Object.entries(tagged.tagNotes || {})[0] || [];
+    const tipSel = `.recipe-detail-page .tag-tip-btn[aria-controls$="-${noteTag}"]`;
+    await click(tipSel);
+    const tip = await evalPage(`(() => {
+      const b = document.querySelector(${JSON.stringify(tipSel)});
+      const n = b && document.getElementById(b.getAttribute("aria-controls"));
+      return { expanded: b?.getAttribute("aria-expanded"), open: !!n?.classList.contains("is-open"),
+        text: n?.textContent ?? null, name: b?.getAttribute("aria-label") ?? null };
+    })()`);
+    report.check(
+      "tapping an allergen chip opens a tip quoting what caused it — the recipe's own ingredient lines",
+      !!noteText && noteText.startsWith("From the ingredients:") && tip.open && tip.expanded === "true" &&
+        (tip.text ?? "").includes(noteText),
+      `${noteTag}: ${JSON.stringify(tip)}`
+    );
     await evalPage(`localStorage.removeItem("faves.p.default.settings.v1")`);
 
     return report.summary(SITE) ? 0 : 1;

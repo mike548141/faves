@@ -241,6 +241,7 @@
             "v",
             "contains-egg"
           ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."},
           "addOns": [
             "side-gravy"
           ]
@@ -254,6 +255,7 @@
             "v",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour."},
           "addOns": [
             "add-cheese"
           ]
@@ -268,6 +270,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."},
           "addOns": [
             "side-gravy"
           ]
@@ -296,6 +299,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Nuggets” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “mayo” — an egg emulsion."},
           "addOns": [
             "side-gravy"
           ]
@@ -310,6 +314,7 @@
             "contains-dairy",
             "contains-soy"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-dairy": "The menu says “Cheeseburger”."},
           "addOns": [
             "side-gravy"
           ]
@@ -323,6 +328,7 @@
             "vg",
             "contains-sesame"
           ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."},
           "addOns": [
             "side-gravy"
           ]
@@ -355,7 +361,8 @@
           "tags": [
             "contains-gluten",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Antipasto Platter",
@@ -366,7 +373,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “breads”.", "contains-dairy": "The menu says “brie”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Vegetarian Antipasto Platter",
@@ -378,7 +386,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “breads”.", "contains-dairy": "The menu says “brie”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         }
       ]
     },
@@ -402,7 +411,8 @@
             "contains-dairy",
             "contains-nuts",
             "df-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The note over this section says “Our pizza bases contain dairy”.", "contains-dairy": "The menu says “mozzarella”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Prosciutto",
@@ -414,7 +424,8 @@
             "contains-gluten",
             "contains-dairy",
             "df-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The note over this section says “Our pizza bases contain dairy”.", "contains-dairy": "The menu says “Mozzarella”."}
         },
         {
           "name": "Super Salami",
@@ -426,7 +437,8 @@
             "contains-gluten",
             "contains-dairy",
             "df-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The note over this section says “Our pizza bases contain dairy”.", "contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Mediterranean",
@@ -439,7 +451,8 @@
             "contains-gluten",
             "contains-dairy",
             "df-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The note over this section says “Our pizza bases contain dairy”.", "contains-dairy": "The menu says “feta”."}
         }
       ]
     },
@@ -464,7 +477,8 @@
           "price": 12.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Nuggets” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Mini Pizza + Fries",
@@ -475,6 +489,7 @@
             "contains-gluten",
             "contains-dairy"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item.", "contains-dairy": "The menu says “mozzarella”."},
           "addOns": [
             "kids-pizza-toppings",
             "kids-sauce-swirl"

@@ -40,7 +40,8 @@
             "v",
             "gf",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Criss-cross Fries",
@@ -49,7 +50,8 @@
           "price": 11.0,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Hash Stix",
@@ -60,7 +62,8 @@
             "v",
             "gf",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Beef Loaded Fries",
@@ -70,7 +73,8 @@
           "tags": [
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Paprika Lemon Fried Chicken",
@@ -90,7 +94,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “tartare sauce” — an egg emulsion.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Calamari Strips",
@@ -101,7 +106,8 @@
             "gf",
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Calamari”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Falafel Bites",
@@ -123,7 +129,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         }
       ]
     },
@@ -138,7 +145,8 @@
           "price": 12.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Nuggets” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Junior Cheese Burger",
@@ -148,7 +156,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “Cheese”."}
         }
       ]
     },
@@ -165,7 +174,8 @@
           "tags": [
             "gf-option",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “beer” — beer is a barley product."}
         },
         {
           "name": "Fried Chicken Tacos",
@@ -174,7 +184,8 @@
           "price": 15.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “tortillas” — a wheat-flour wrapper."}
         },
         {
           "name": "Fish Tacos",
@@ -187,7 +198,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Vege Tacos",
@@ -216,7 +228,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “brioche”.", "contains-dairy": "The menu says “cheddar”."}
         }
       ]
     },
@@ -233,7 +246,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
         },
         {
           "name": "Vegerama",
@@ -255,7 +269,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
         }
       ]
     },
@@ -272,7 +287,8 @@
             "v",
             "contains-dairy",
             "vg-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         },
         {
           "name": "Fish & Chips",
@@ -283,7 +299,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “tartare sauce” — an egg emulsion.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Lamb Filo",
@@ -293,7 +310,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Filo”.", "contains-dairy": "The menu says “feta”."}
         }
       ]
     },
@@ -310,7 +328,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “brioche”.", "contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Cheese Burger Sliders",
@@ -321,7 +340,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “brioche”.", "contains-dairy": "The menu says “Cheese”."}
         }
       ]
     },
@@ -347,7 +367,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         }
       ]
     }

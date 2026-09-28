@@ -1357,7 +1357,14 @@ function renderDish(
   // (The guard lives in tagRow, which also keeps the row's "show all" open
   // across repaints — configuring a dish must not fold up what the reader
   // unfolded.)
-  const chipRow = tagRow(tags, { avoid, dietary });
+  const chipRow = tagRow(tags, {
+    avoid,
+    dietary,
+    notes: item.tagNotes,
+    base: item.tags,
+    recipe: isRecipeKind(r),
+    idPrefix: `tip-${r?.id ?? "menu"}-${dishId(item)}`,
+  });
   const paintChips = (list) => chipRow.paint(list);
   paintChips(item.tags);
   children.push(tags);

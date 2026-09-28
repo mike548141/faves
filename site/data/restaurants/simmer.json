@@ -137,7 +137,8 @@
           "price": 28.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pancakes” — a wheat bakery item."}
         },
         {
           "name": "Salmon bagel",
@@ -148,7 +149,8 @@
             "contains-fish",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Salmon”.", "contains-gluten": "The menu says “bagel”.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "The shizzle",
@@ -160,7 +162,8 @@
             "df-option",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “toast” — a wheat bakery item.", "contains-egg": "The menu says “eggs”."}
         }
       ]
     },
@@ -223,7 +226,8 @@
             "gf-option",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “toast” — a wheat bakery item.", "contains-egg": "The menu says “Eggs”."}
         },
         {
           "name": "Green eggs & ham",
@@ -235,7 +239,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bagel”.", "contains-dairy": "The menu says “mascarpone”.", "contains-egg": "The menu says “eggs”."}
         },
         {
           "name": "Benedict",
@@ -245,7 +250,8 @@
           "tags": [
             "gf-option",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”."}
         },
         {
           "name": "Montreal",
@@ -256,7 +262,8 @@
             "gf-option",
             "contains-fish",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “salmon”.", "contains-egg": "The menu says “eggs”."}
         },
         {
           "name": "Florentine",
@@ -267,7 +274,8 @@
             "v",
             "gf-option",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “eggs”."}
         }
       ]
     },
@@ -340,7 +348,8 @@
             "contains-fish",
             "contains-egg",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Malaysian fish curry",
@@ -350,7 +359,8 @@
           "tags": [
             "gf",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Open steak sandwich",
@@ -360,7 +370,8 @@
           "tags": [
             "gf-option",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “sandwich” — a wheat bakery item."}
         },
         {
           "name": "Chicken & avo burger",
@@ -369,7 +380,8 @@
           "price": 28.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         },
         {
           "name": "Gnocchi",
@@ -380,7 +392,8 @@
             "v",
             "vg-option",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Soup of the day",
@@ -450,7 +463,8 @@
             "vg-option",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         }
       ]
     },
@@ -509,7 +523,8 @@
           "price": 12.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Crumbed fish, fries",
@@ -518,7 +533,8 @@
           "tags": [
             "contains-fish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”.", "contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."}
         }
       ]
     },
@@ -577,7 +593,8 @@
           "price": 13.0,
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “salmon”."}
         },
         {
           "name": "Bacon, mushrooms, avocado, or crispy potatoes",
@@ -603,7 +620,8 @@
           "price": 3.0,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Hollandaise",
@@ -611,7 +629,8 @@
           "price": 4.0,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Hollandaise” — an egg emulsion."}
         }
       ]
     },
@@ -652,7 +671,8 @@
             "df",
             "gf-option",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Fried cauliflower",
@@ -663,7 +683,8 @@
             "df",
             "gf-option",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Hand cut or shoestring chips",
@@ -704,7 +725,8 @@
             "gf-option",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All with a tomato sauce base and mozzarella”."}
         },
         {
           "name": "Pepperoni & the sundried syndicate",
@@ -715,7 +737,8 @@
             "gf-option",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All with a tomato sauce base and mozzarella”."}
         },
         {
           "name": "Hei Hei Hawaiian",
@@ -726,7 +749,8 @@
             "gf-option",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All with a tomato sauce base and mozzarella”."}
         },
         {
           "name": "Plants are neat",
@@ -738,7 +762,8 @@
             "gf-option",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         }
       ]
     },
@@ -890,7 +915,8 @@
           "price": 9.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         }
       ]
     },
@@ -1078,7 +1104,8 @@
           "price": 10.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
         },
         {
           "name": "Parrotdog Birdseye Hazy IPA",
@@ -1086,7 +1113,8 @@
           "price": 10.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
         },
         {
           "name": "Garage Project Beer",
@@ -1094,7 +1122,8 @@
           "price": 10.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Beer” — beer is a barley product."}
         },
         {
           "name": "Parrotdog Black Stout",
@@ -1102,7 +1131,8 @@
           "price": 10.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Stout” — beer is a barley product."}
         },
         {
           "name": "Tiger",
@@ -1157,7 +1187,8 @@
           "price": 7.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “eclair” — a wheat bakery item."}
         },
         {
           "name": "Chocolate eclair",
@@ -1165,7 +1196,8 @@
           "price": 7.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “eclair” — a wheat bakery item."}
         },
         {
           "name": "Chocolate cake",
@@ -1174,7 +1206,8 @@
           "tags": [
             "vg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “cake” — a wheat bakery item."}
         },
         {
           "name": "Brownie",
@@ -1198,7 +1231,8 @@
           "price": 7.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “tart” — a wheat bakery item."}
         },
         {
           "name": "Passionfruit & lime tart",
@@ -1206,7 +1240,8 @@
           "price": 7.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “tart” — a wheat bakery item."}
         },
         {
           "name": "Caramel slice",
@@ -1221,7 +1256,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “slice” — a wheat bakery item."}
         },
         {
           "name": "Citrus slice",
@@ -1236,7 +1272,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “slice” — a wheat bakery item."}
         },
         {
           "name": "Bacon bagel",
@@ -1244,7 +1281,8 @@
           "price": 10.8,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bagel”."}
         },
         {
           "name": "Chicken bagel",
@@ -1252,7 +1290,8 @@
           "price": 10.8,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bagel”."}
         },
         {
           "name": "Corn & potato fritter",
@@ -1266,7 +1305,8 @@
           "price": 8.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pie” — a wheat bakery item."}
         },
         {
           "name": "Thai chicken filo",
@@ -1274,7 +1314,8 @@
           "price": 11.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “filo”."}
         },
         {
           "name": "Chicken Cabone",
@@ -1291,7 +1332,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”."}
         },
         {
           "name": "Breakfast bite",
@@ -1338,7 +1380,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Bacon pizza",
@@ -1347,7 +1390,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Pumpkin, beetroot, chickpea & feta salad",
@@ -1356,7 +1400,8 @@
           "price": 9.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”."}
         },
         {
           "name": "Roast vege salad",
@@ -1377,7 +1422,8 @@
           "price": 4.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Donut” — a wheat bakery item."}
         },
         {
           "name": "Blueberry muffin",
@@ -1385,7 +1431,8 @@
           "price": 6.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “muffin” — a wheat bakery item."}
         },
         {
           "name": "Date scone",
@@ -1393,7 +1440,8 @@
           "price": 6.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “scone” — a wheat bakery item."}
         },
         {
           "name": "Cinnamon pinwheel",
@@ -1410,7 +1458,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “muffin” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Cheese scone",
@@ -1419,7 +1468,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “scone” — a wheat bakery item.", "contains-dairy": "The menu says “Cheese”."}
         }
       ]
     }

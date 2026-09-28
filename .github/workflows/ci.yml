@@ -166,6 +166,14 @@ jobs:
         run: python3 tools/find_variants.py --selftest
       - name: Prove the allergen tagger still writes what it finds
         run: python3 tools/test_tag_allergens.py
+      # The tag tips quote the words behind each allergen (roadmap 350/020).
+      # A description edited without re-running the writer leaves a tip quoting
+      # words the menu no longer says — so the notes are a DERIVED artefact and
+      # this is their drift gate; the second step proves the writer itself.
+      - name: The allergen tag tips still match the menus they quote
+        run: python3 tools/tag_allergens.py --explain --check
+      - name: Prove the tag-tip writer quotes what it read and touches nothing else
+        run: python3 tools/test_tag_notes.py
       # …and its read-only sibling, whose CLASS TABLE had no test at all until
       # 2026-09-24 (roadmap 470/030). Same limit as the line above: it guards
       # the REPORT, so a failure means the corpus stopped being watched the way

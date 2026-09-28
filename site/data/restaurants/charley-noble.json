@@ -86,6 +86,7 @@
             "contains-gluten",
             "gf-option"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Oysters”.", "contains-gluten": "The menu says “rye”."},
           "needs": [
             {
               "what": "price",
@@ -104,6 +105,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Oysters”.", "contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour."},
           "needs": [
             {
               "what": "price",
@@ -131,7 +133,8 @@
             "contains-egg",
             "contains-gluten",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Market Fish Ceviche",
@@ -142,7 +145,8 @@
             "gf-option",
             "contains-dairy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “milk”.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Oscietra Caviar (10g or 14g)",
@@ -154,6 +158,7 @@
             "contains-gluten",
             "contains-fish"
           ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-fish": "The menu says “Caviar”."},
           "needs": [
             {
               "what": "price",
@@ -177,7 +182,8 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Focaccia",
@@ -196,7 +202,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Muhammara",
@@ -206,7 +213,8 @@
           "tags": [
             "contains-nuts",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “walnut”."}
         },
         {
           "name": "Chicken Liver Parfait",
@@ -237,7 +245,8 @@
             "contains-dairy",
             "contains-nuts",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Sourdough”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Arancini",
@@ -248,7 +257,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Smoked Fish Croquette",
@@ -260,7 +270,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         }
       ]
     },
@@ -287,7 +298,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Mussel”.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Focaccia (with Seafood Chowder)",
@@ -297,7 +309,8 @@
           "tags": [
             "contains-gluten",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         }
       ]
     },
@@ -332,7 +345,8 @@
           "tags": [
             "contains-nuts",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “Almond”."}
         },
         {
           "name": "Twice Cooked Beef Cheek",
@@ -354,7 +368,8 @@
             "contains-egg",
             "contains-gluten",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Charley Noble Veg Burger",
@@ -367,7 +382,8 @@
             "contains-egg",
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-dairy": "The menu says “halloumi”."}
         },
         {
           "name": "Roasted Pumpkin",
@@ -393,7 +409,8 @@
             "contains-gluten",
             "gf-option",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Local Line Caught Market Fish (Gluten Free)",
@@ -404,7 +421,8 @@
             "contains-dairy",
             "gf",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Beer Battered Fish & Chips",
@@ -415,7 +433,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "House Pot Pie",
@@ -426,7 +445,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pie” — a wheat bakery item."}
         },
         {
           "name": "Cappelletti (Entrée)",
@@ -438,7 +458,8 @@
             "contains-dairy",
             "contains-nuts",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “walnut”."}
         },
         {
           "name": "Cappelletti (Main)",
@@ -450,7 +471,8 @@
             "contains-dairy",
             "contains-nuts",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “walnut”."}
         },
         {
           "name": "Mafaldine (Entrée)",
@@ -462,7 +484,8 @@
             "contains-shellfish",
             "contains-egg",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Mafaldine (Main)",
@@ -474,7 +497,8 @@
             "contains-shellfish",
             "contains-egg",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Tagliatelle (Entrée, Gluten Free)",
@@ -485,7 +509,8 @@
             "contains-shellfish",
             "contains-egg",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
         },
         {
           "name": "Tagliatelle (Main, Gluten Free)",
@@ -496,7 +521,8 @@
             "contains-shellfish",
             "contains-egg",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
         }
       ]
     },
@@ -513,7 +539,8 @@
             "contains-dairy",
             "gf",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Buttermilk”."}
         },
         {
           "name": "Radicchio Chopped Salad",
@@ -523,7 +550,8 @@
           "tags": [
             "contains-nuts",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “hazelnut”."}
         },
         {
           "name": "French Peas",
@@ -533,7 +561,8 @@
           "tags": [
             "contains-dairy",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Sweetcorn",
@@ -543,7 +572,8 @@
           "tags": [
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Grilled Asparagus",
@@ -560,7 +590,8 @@
           "tags": [
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Parmesan”."}
         },
         {
           "name": "Zucchini",
@@ -571,7 +602,8 @@
             "contains-nuts",
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “almond”.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Spencer Potato",
@@ -580,7 +612,8 @@
           "price": 15,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Fries — Aioli",
@@ -590,7 +623,8 @@
           "tags": [
             "contains-egg",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
         },
         {
           "name": "Fries — Truffle Mayo",
@@ -599,7 +633,8 @@
           "price": 15,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Mayo” — an egg emulsion."}
         }
       ]
     },
@@ -616,7 +651,8 @@
           "tags": [
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All grill items served with a choice of sauce (peppercorn brandy, blue cheese, salsa verde — chimichurri on the Gluten Free menu) or butter (black garlic, Café de Paris, garlic/rosemary/chive, wasabi nori)”."}
         },
         {
           "name": "Greenstone Creek Scotch Fillet (300g)",
@@ -626,7 +662,8 @@
           "tags": [
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All grill items served with a choice of sauce (peppercorn brandy, blue cheese, salsa verde — chimichurri on the Gluten Free menu) or butter (black garlic, Café de Paris, garlic/rosemary/chive, wasabi nori)”."}
         },
         {
           "name": "Greenstone Creek Sirloin (300g)",
@@ -636,7 +673,8 @@
           "tags": [
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All grill items served with a choice of sauce (peppercorn brandy, blue cheese, salsa verde — chimichurri on the Gluten Free menu) or butter (black garlic, Café de Paris, garlic/rosemary/chive, wasabi nori)”."}
         },
         {
           "name": "Southern Stations NZ Wagyu Ribeye on the Bone",
@@ -646,7 +684,8 @@
           "tags": [
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All grill items served with a choice of sauce (peppercorn brandy, blue cheese, salsa verde — chimichurri on the Gluten Free menu) or butter (black garlic, Café de Paris, garlic/rosemary/chive, wasabi nori)”."}
         },
         {
           "name": "NZ Lamb Rump (300g)",
@@ -656,7 +695,8 @@
           "tags": [
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All grill items served with a choice of sauce (peppercorn brandy, blue cheese, salsa verde — chimichurri on the Gluten Free menu) or butter (black garlic, Café de Paris, garlic/rosemary/chive, wasabi nori)”."}
         },
         {
           "name": "NZ Lamb Rump (400g)",
@@ -666,7 +706,8 @@
           "tags": [
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All grill items served with a choice of sauce (peppercorn brandy, blue cheese, salsa verde — chimichurri on the Gluten Free menu) or butter (black garlic, Café de Paris, garlic/rosemary/chive, wasabi nori)”."}
         },
         {
           "name": "A5 Sirloin (Japanese Wagyu)",
@@ -676,7 +717,8 @@
           "tags": [
             "contains-dairy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The note over this section says “All grill items served with a choice of sauce (peppercorn brandy, blue cheese, salsa verde — chimichurri on the Gluten Free menu) or butter (black garlic, Café de Paris, garlic/rosemary/chive, wasabi nori)”."}
         }
       ]
     },
@@ -694,7 +736,8 @@
             "contains-nuts",
             "contains-egg",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mascarpone”.", "contains-nuts": "The menu says “pistachio”.", "contains-egg": "The menu says “Meringue” — an egg emulsion."}
         },
         {
           "name": "Chocolate Hazelnut Crackle Bar",
@@ -705,7 +748,8 @@
             "contains-nuts",
             "contains-dairy",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “Hazelnut”."}
         },
         {
           "name": "Layered Honey Cake",
@@ -716,7 +760,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Cake” — a wheat bakery item."}
         },
         {
           "name": "Apple Tarte Tatin",
@@ -727,7 +772,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Chocolate Raspberry Marshmallow",
@@ -747,7 +793,8 @@
           "tags": [
             "contains-peanuts",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Peanut”."}
         },
         {
           "name": "Seasonal Fruit Sorbet",
@@ -766,7 +813,8 @@
           "tags": [
             "contains-dairy",
             "gf"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         }
       ]
     },
@@ -783,7 +831,8 @@
             "contains-dairy",
             "contains-gluten",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Cheese Selection (Two)",
@@ -794,7 +843,8 @@
             "contains-dairy",
             "contains-gluten",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Cheese Selection (Three)",
@@ -805,7 +855,8 @@
             "contains-dairy",
             "contains-gluten",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Cheese Selection (Four)",
@@ -816,7 +867,8 @@
             "contains-dairy",
             "contains-gluten",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."}
         }
       ]
     },
@@ -835,6 +887,7 @@
             "contains-egg",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-gluten": "The menu says “Burger” — a wheat bakery item."},
           "needs": [
             {
               "what": "price",
@@ -852,6 +905,7 @@
             "contains-gluten",
             "contains-dairy"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Spaghetti”.", "contains-dairy": "The menu says “parmesan”."},
           "needs": [
             {
               "what": "price",
@@ -870,6 +924,7 @@
             "contains-egg",
             "contains-fish"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “Fish”."},
           "needs": [
             {
               "what": "price",
@@ -886,6 +941,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”."},
           "needs": [
             {
               "what": "price",
@@ -908,7 +964,8 @@
           "price": 10,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
         },
         {
           "name": "Kereru 'Maidstone' Lager (425ml)",
@@ -917,7 +974,8 @@
           "price": 14,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
         },
         {
           "name": "Abandoned Pilsner (285ml)",
@@ -926,7 +984,8 @@
           "price": 10,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
         },
         {
           "name": "Abandoned Pilsner (425ml)",
@@ -935,7 +994,8 @@
           "price": 14,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
         },
         {
           "name": "Double Vision Brewing 'Tiny Terror' (285ml)",
@@ -980,7 +1040,8 @@
           "price": 10,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
         },
         {
           "name": "Mount Brewing 'Mermaid's Mirth' APA (425ml)",
@@ -989,7 +1050,8 @@
           "price": 14,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
         },
         {
           "name": "Parrotdog 'Greyhound' Low Carb Hazy Pale Ale (285ml)",
@@ -998,7 +1060,8 @@
           "price": 10,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
         },
         {
           "name": "Parrotdog 'Greyhound' Low Carb Hazy Pale Ale (425ml)",
@@ -1007,7 +1070,8 @@
           "price": 14,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
         },
         {
           "name": "Double Vision Brewing 'Mouth Party' Hazy Pale Ale (285ml)",
@@ -1016,7 +1080,8 @@
           "price": 10,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
         },
         {
           "name": "Double Vision Brewing 'Mouth Party' Hazy Pale Ale (425ml)",
@@ -1025,7 +1090,8 @@
           "price": 14,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
         },
         {
           "name": "Morningcider 'Original Apple' Cider (285ml)",
@@ -1055,7 +1121,8 @@
           "price": 12,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
         },
         {
           "name": "Bach Brewing 'All Day' Pilsner (330ml)",
@@ -1064,7 +1131,8 @@
           "price": 12,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
         },
         {
           "name": "Kereru 'Flyboy' Gluten-Free Rice Lager (330ml)",
@@ -1082,7 +1150,8 @@
           "price": 13,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
         },
         {
           "name": "Parrotdog Black Stout (330ml)",
@@ -1091,7 +1160,8 @@
           "price": 13,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Stout” — beer is a barley product."}
         },
         {
           "name": "Double Vision Brewing 'Red Rascal' Red IPA (330ml)",
@@ -1100,7 +1170,8 @@
           "price": 13,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
         },
         {
           "name": "Abbaye de Leffe S.A. 'Blonde' (330ml)",
@@ -1118,7 +1189,8 @@
           "price": 17.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
         },
         {
           "name": "Brasserie de Rochefort 'Trappistes Rochefort 6' (330ml)",
@@ -1143,7 +1215,8 @@
           "price": 24,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “miso”."}
         },
         {
           "name": "Patea Maori Club • Poi E",
@@ -1152,7 +1225,8 @@
           "price": 19,
           "tags": [
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “hazelnut”."}
         },
         {
           "name": "Dave Dobbyn • Slice of Heaven",
@@ -1369,7 +1443,8 @@
           "price": 7.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Latte” — an espresso milk drink."}
         },
         {
           "name": "Callebaut 70% Hot Chocolate",

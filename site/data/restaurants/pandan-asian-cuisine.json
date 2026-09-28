@@ -170,7 +170,8 @@
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         },
         {
           "name": "Pan fried prawns",
@@ -179,7 +180,8 @@
           "price": 17,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”."}
         },
         {
           "name": "Garlic chilli prawns",
@@ -189,7 +191,8 @@
           "tags": [
             "contains-shellfish",
             "spicy-2"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”."}
         },
         {
           "name": "Garlic chilli squid",
@@ -199,7 +202,8 @@
           "tags": [
             "contains-shellfish",
             "spicy-2"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “squid”."}
         },
         {
           "name": "Curry puff samosa",
@@ -209,7 +213,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pastry”."}
         },
         {
           "name": "Spring roll",
@@ -219,7 +224,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring roll” — a wheat-flour wrapper."}
         },
         {
           "name": "Murtabak",
@@ -229,7 +235,8 @@
           "tags": [
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “Roti”."}
         }
       ]
     },
@@ -337,7 +344,8 @@
           "tags": [
             "spicy-1",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Fish lemak",
@@ -347,7 +355,8 @@
           "tags": [
             "contains-shellfish",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Prawn lemak",
@@ -356,7 +365,8 @@
           "price": 27,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Vegetable sambal",
@@ -395,7 +405,8 @@
           "price": 24,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Butter”."}
         },
         {
           "name": "Mango chicken",
@@ -411,7 +422,8 @@
           "price": 24,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “tikka masala” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Lamb tikka masala",
@@ -420,7 +432,8 @@
           "price": 26,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “tikka masala” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Chicken korma",
@@ -430,7 +443,8 @@
           "tags": [
             "contains-nuts",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-dairy": "The menu says “korma” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Lamb korma",
@@ -440,7 +454,8 @@
           "tags": [
             "contains-nuts",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-dairy": "The menu says “korma” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Beef varuval",
@@ -486,7 +501,8 @@
           "tags": [
             "contains-shellfish",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-nuts": "The menu says “cashew”."}
         },
         {
           "name": "Chicken biryani",
@@ -495,7 +511,8 @@
           "price": 25,
           "tags": [
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”."}
         },
         {
           "name": "Vegetable biryani",
@@ -505,7 +522,8 @@
           "tags": [
             "v",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”."}
         },
         {
           "name": "Lamb biryani",
@@ -514,7 +532,8 @@
           "price": 27,
           "tags": [
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”."}
         },
         {
           "name": "Egg biryani",
@@ -525,7 +544,8 @@
             "v",
             "contains-egg",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-nuts": "The menu says “cashew”."}
         }
       ]
     },
@@ -542,7 +562,8 @@
             "v",
             "contains-peanuts",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-gluten": "The menu says “Roti”."}
         },
         {
           "name": "Roti chanai (2 pieces) with curry sauce",
@@ -552,7 +573,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."}
         },
         {
           "name": "Plain roti chanai",
@@ -562,7 +584,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “roti”."}
         },
         {
           "name": "Garlic chanai",
@@ -581,7 +604,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Butter”."}
         },
         {
           "name": "Egg, onion and chilli chanai",
@@ -592,7 +616,8 @@
             "v",
             "contains-egg",
             "spicy-1"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Garlic, cheese and onion chanai",
@@ -602,7 +627,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         }
       ]
     },
@@ -617,7 +643,8 @@
           "price": 27,
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Sweet and sour chicken",
@@ -643,7 +670,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Gado-gado",
@@ -654,7 +682,8 @@
             "v",
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”."}
         },
         {
           "name": "Curry laksa",
@@ -664,7 +693,8 @@
           "tags": [
             "spicy-2",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         }
       ]
     },
@@ -680,7 +710,8 @@
           "tags": [
             "v",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Dhal spinach curry",
@@ -699,7 +730,8 @@
           "tags": [
             "v",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Bayam tofu curry",
@@ -709,7 +741,8 @@
           "tags": [
             "v",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Stir fried tofu",
@@ -719,7 +752,8 @@
           "tags": [
             "v",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “tofu”."}
         }
       ]
     },
@@ -734,7 +768,8 @@
           "price": 23,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Char kuay teow goreng",
@@ -743,7 +778,8 @@
           "price": 23,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Mamak mee goreng",
@@ -754,7 +790,8 @@
             "contains-soy",
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “tofu”.", "contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-gluten": "The menu says “mee goreng” — a wheat noodle."}
         },
         {
           "name": "Hokkien noodles",
@@ -764,7 +801,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-gluten": "The menu says “Hokkien” — a wheat noodle."}
         },
         {
           "name": "Kung foo char",
@@ -773,7 +811,8 @@
           "price": 27,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Mee hoon goreng",
@@ -782,7 +821,8 @@
           "price": 23,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         }
       ]
     },
@@ -857,7 +897,8 @@
           "tags": [
             "v",
             "contains-peanuts"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Peanut”."}
         },
         {
           "name": "Anchovy sambal",
@@ -867,7 +908,8 @@
           "tags": [
             "spicy-3",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Anchovy”."}
         }
       ]
     },
@@ -883,7 +925,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “milkshake”."}
         },
         {
           "name": "Lime milkshake",
@@ -893,7 +936,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “milkshake”."}
         },
         {
           "name": "Strawberry milkshake",
@@ -903,7 +947,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “milkshake”."}
         },
         {
           "name": "Mango lassi",

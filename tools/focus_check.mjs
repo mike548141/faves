@@ -501,6 +501,25 @@ async function run(opts) {
       `${plain.map((it) => it.name).join(", ")} · stripped ${stripped} ids · ${JSON.stringify(legacy)}`
     );
 
+    // A venue dish has no ingredient list, so its chip's tip quotes the MENU'S
+    // words that the tagger matched (roadmap 350/020: "record the reason").
+    const noted = venueData.menu.flatMap((sec) => sec.items || []).find((it) => it.tagNotes);
+    const [vTag, vNote] = Object.entries(noted?.tagNotes || {})[0] || [];
+    await openVenue(driver, cdp, sessionId, port, CONFIG_VENUE);
+    const vSel = `#dish-${dishId(noted)} .tag-tip-btn[aria-controls$="-${vTag}"]`;
+    await driver.evalPage(`document.querySelector(${JSON.stringify(`#dish-${dishId(noted)} .tag-more`)})?.click()`);
+    await driver.click(vSel);
+    const vTip = await driver.evalPage(`(() => {
+      const b = document.querySelector(${JSON.stringify(vSel)});
+      const n = b && document.getElementById(b.getAttribute("aria-controls"));
+      return { open: !!n?.classList.contains("is-open"), text: n?.textContent ?? null };
+    })()`);
+    report.check(
+      "a venue dish's allergen chip opens a tip quoting the menu words behind it",
+      !!vNote && vTip.open && (vTip.text ?? "").startsWith(vNote) && /check with the venue/.test(vTip.text ?? ""),
+      `${noted?.name} / ${vTag}: ${JSON.stringify(vTip)}`
+    );
+
     // ─── The GLOBAL search list ranks a property above a spelling ──────────
     //
     // Theme 27a / ADR 0106. This is a claim about ORDER, on the home screen's

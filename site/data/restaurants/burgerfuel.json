@@ -252,7 +252,8 @@
           "price": 15,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
         },
         {
           "name": "C N Cheese",
@@ -261,7 +262,8 @@
           "price": 16.7,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Bio Fuel",
@@ -270,7 +272,8 @@
           "price": 17.3,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Ford Freakout",
@@ -287,7 +290,8 @@
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Peanut”.", "contains-soy": "The menu says “satay” — the sauce is soy-based."}
         },
         {
           "name": "Ring Burner",
@@ -297,7 +301,8 @@
           "tags": [
             "spicy-2",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
         },
         {
           "name": "Bacon BBQ Roadster",
@@ -307,7 +312,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Bastard",
@@ -316,7 +322,8 @@
           "price": 20.9,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
         }
       ]
     },
@@ -331,7 +338,8 @@
           "price": 17.9,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
         },
         {
           "name": "Bacon Backfire",
@@ -340,7 +348,8 @@
           "price": 17.9,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “brie”."}
         },
         {
           "name": "Burnout",
@@ -350,7 +359,8 @@
           "tags": [
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Blue Cheese”.", "contains-egg": "The menu says “Aioli” — an egg emulsion."}
         },
         {
           "name": "T-Bird",
@@ -360,7 +370,8 @@
           "tags": [
             "spicy-2",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
         },
         {
           "name": "Flame Thrower",
@@ -370,7 +381,8 @@
           "tags": [
             "spicy-2",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
         }
       ]
     },
@@ -397,7 +409,8 @@
             "v",
             "contains-dairy",
             "vg-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mascarpone”."}
         }
       ]
     },
@@ -413,7 +426,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “bun” — a wheat bakery item."}
         },
         {
           "name": "Chook Royale",
@@ -422,7 +436,8 @@
           "price": 11,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bun” — a wheat bakery item."}
         },
         {
           "name": "Diablo",
@@ -432,7 +447,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “bun” — a wheat bakery item."}
         },
         {
           "name": "Chick Chevelle",
@@ -441,7 +457,8 @@
           "price": 10.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bun” — a wheat bakery item."}
         },
         {
           "name": "Bambina",
@@ -450,7 +467,8 @@
           "price": 10.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bun” — a wheat bakery item."}
         },
         {
           "name": "V-Rod (lightweight)",
@@ -461,7 +479,8 @@
             "v",
             "contains-dairy",
             "vg-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mascarpone”."}
         }
       ]
     },
@@ -478,7 +497,8 @@
           "tags": [
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-egg": "The menu says “Aioli” — an egg emulsion."}
         },
         {
           "name": "The Studnut",
@@ -487,7 +507,8 @@
           "price": 16.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Blue Cheese”."}
         },
         {
           "name": "Combustion Tofu",
@@ -501,7 +522,8 @@
             "contains-gluten",
             "contains-egg",
             "vg-option"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-soy": "The menu says “Tofu”.", "contains-gluten": "The menu says “bun” — a wheat bakery item.", "contains-egg": "The menu says “Aioli” — an egg emulsion."}
         }
       ]
     },
@@ -517,7 +539,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheeseburger”.", "contains-gluten": "The menu says “Cheeseburger” — a wheat bakery item."}
         },
         {
           "name": "Teeny Choppers meal",
@@ -561,7 +584,8 @@
             "contains-gluten",
             "contains-egg",
             "vg-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Aioli” — an egg emulsion."}
         },
         {
           "name": "Chicken Fenders",
@@ -570,7 +594,8 @@
           "price": 11,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Choppers",
@@ -579,7 +604,8 @@
           "price": 13.5,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
         }
       ]
     },
@@ -595,7 +621,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."}
         },
         {
           "name": "Organic juice",

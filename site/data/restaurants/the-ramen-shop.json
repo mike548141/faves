@@ -98,7 +98,8 @@
             "v-option",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “buns” — a wheat bakery item.", "contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Dumplings",
@@ -107,7 +108,8 @@
           "price": 12,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
         },
         {
           "name": "Karaage",
@@ -116,7 +118,8 @@
           "price": 12,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Takoyaki",
@@ -126,7 +129,8 @@
           "tags": [
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-fish": "The menu says “katsuobushi”."}
         },
         {
           "name": "Ebi katsu",
@@ -137,7 +141,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-gluten": "The menu says “katsu” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Okonomiyaki",
@@ -148,7 +153,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pancake” — a wheat bakery item.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-fish": "The menu says “katsuobushi”."}
         },
         {
           "name": "Potato croquette",
@@ -179,7 +185,8 @@
             "v",
             "vg",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Kinoko salad",
@@ -190,7 +197,8 @@
             "v",
             "vg",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Edamame",
@@ -201,7 +209,8 @@
             "v",
             "vg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Edamame”."}
         },
         {
           "name": "Korean shake shake fries",
@@ -211,7 +220,8 @@
           "tags": [
             "spicy-1",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         }
       ]
     },
@@ -226,7 +236,8 @@
           "price": 21,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Chicken rice bowl",
@@ -236,7 +247,8 @@
           "tags": [
             "contains-egg",
             "spicy-1"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Karaage rice bowl",
@@ -245,7 +257,8 @@
           "price": 21,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Curry rice bowl",
@@ -254,7 +267,8 @@
           "price": 21,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Unagi rice bowl",
@@ -265,7 +279,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “teriyaki” — the sauce is soy-based.", "contains-fish": "The menu says “Unagi”."}
         },
         {
           "name": "Yakiniku beef rice bowl",
@@ -275,7 +290,8 @@
           "tags": [
             "contains-egg",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Tofu rice bowl",
@@ -287,7 +303,8 @@
             "vg",
             "contains-soy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-sesame": "The menu says “sesame”."}
         }
       ]
     },
@@ -310,7 +327,8 @@
           "tags": [
             "contains-egg",
             "spicy-2"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Black garlic tonkotsu",
@@ -327,7 +345,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “teriyaki” — the sauce is soy-based."}
         },
         {
           "name": "Spicy chicken",
@@ -347,7 +366,8 @@
             "contains-peanuts",
             "contains-sesame",
             "spicy-2"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-sesame": "The menu says “sesame”."}
         },
         {
           "name": "Mala chicken",
@@ -359,7 +379,8 @@
             "contains-sesame",
             "contains-soy",
             "spicy-2"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-sesame": "The menu says “sesame”.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Paitan ramen",
@@ -369,7 +390,8 @@
           "tags": [
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”.", "contains-gluten": "The menu says “ramen” — a wheat noodle."}
         },
         {
           "name": "Gyu ramen",
@@ -379,7 +401,8 @@
           "tags": [
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”.", "contains-gluten": "The menu says “ramen” — a wheat noodle."}
         },
         {
           "name": "Spicy ebi ramen",
@@ -390,7 +413,8 @@
             "contains-shellfish",
             "spicy-2",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “katsu” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Miso ramen",
@@ -402,7 +426,8 @@
             "vg",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Miso”.", "contains-gluten": "The menu says “ramen” — a wheat noodle."}
         },
         {
           "name": "Spicy miso",
@@ -414,7 +439,8 @@
             "vg",
             "contains-soy",
             "spicy-2"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “miso”."}
         },
         {
           "name": "Kids ramen",
@@ -425,7 +451,8 @@
             "v-option",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “ramen” — a wheat noodle.", "contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Yakisoba",
@@ -435,7 +462,8 @@
           "tags": [
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-fish": "The menu says “katsuobushi”."}
         },
         {
           "name": "Pork abura ramen",
@@ -445,7 +473,8 @@
           "tags": [
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “ramen” — a wheat noodle."}
         }
       ]
     },
@@ -468,7 +497,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “katsu” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Chicken chashu",
@@ -484,7 +514,8 @@
           "price": 3.5,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Marinated tofu",
@@ -495,7 +526,8 @@
             "v",
             "vg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Pickled cucumber",
@@ -605,7 +637,8 @@
           "price": 2,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Extra noodles",

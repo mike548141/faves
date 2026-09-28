@@ -129,7 +129,8 @@
           "price": 12.0,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Calamari",
@@ -140,7 +141,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-shellfish": "The menu says “Calamari”."}
         },
         {
           "name": "Croquettes",
@@ -166,6 +168,7 @@
             "contains-dairy",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."},
           "addOns": [
             "add-bacon"
           ]
@@ -188,7 +191,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The note over this section says “All pizzas $24”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Three Little Pigs",
@@ -199,7 +203,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The note over this section says “All pizzas $24”."}
         },
         {
           "name": "Fungus Amongus",
@@ -210,7 +215,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The note over this section says “All pizzas $24”."}
         },
         {
           "name": "Omertà",
@@ -222,7 +228,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The note over this section says “All pizzas $24”."}
         },
         {
           "name": "Starman",
@@ -233,7 +240,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The note over this section says “All pizzas $24”.", "contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Trip to Arrakis",
@@ -244,7 +252,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item.", "contains-dairy": "The menu says “tzatziki” — tzatziki is a yoghurt dip."}
         }
       ]
     }

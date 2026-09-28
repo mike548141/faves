@@ -101,7 +101,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Classic Cheese with Pepperoni Stuffed Crust",
@@ -112,7 +113,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Pepperoni with Pepperoni Stuffed Crust",
@@ -123,7 +125,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Classic Cheese with Mozzarella Stuffed Crust",
@@ -134,7 +137,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Hot & Spicy Paneer",
@@ -146,7 +150,8 @@
             "contains-gluten",
             "contains-soy",
             "spicy-2"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Paneer”."}
         },
         {
           "name": "Tikka Paneer",
@@ -157,7 +162,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Paneer”."}
         },
         {
           "name": "Veg Peri Peri Paneer",
@@ -170,7 +176,8 @@
             "contains-gluten",
             "contains-soy",
             "spicy-1"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Paneer”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Chicken Tikka",
@@ -181,7 +188,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Roast Veggie & Caramelised Onion with Vegan Cheese",
@@ -193,7 +201,8 @@
             "contains-soy",
             "gf-option",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Margherita",
@@ -206,7 +215,8 @@
             "contains-soy",
             "gf-option",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Beef, Bacon & Caramelized Onion",
@@ -218,7 +228,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “sourdough”."}
         },
         {
           "name": "Meat Lovers",
@@ -230,7 +241,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Super Supreme",
@@ -242,7 +254,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "Loaded Pepperoni With Double Toppings",
@@ -254,7 +267,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Loaded Hawaiian With Double Toppings",
@@ -266,7 +280,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "BBQ Beef & Onion",
@@ -279,7 +294,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "BBQ Bacon & Mushroom",
@@ -315,7 +331,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Veggie Lovers",
@@ -328,7 +345,8 @@
             "contains-soy",
             "gf-option",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Chicken Cranberry",
@@ -341,7 +359,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheesy”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Buffalo Chicken",
@@ -354,7 +373,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Peri Peri Chicken",
@@ -367,7 +387,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Apricot Chicken Deluxe",
@@ -394,7 +415,8 @@
             "contains-soy",
             "gf-option",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion.", "contains-shellfish": "The menu says “Shrimp”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Mega Meat Lovers",
@@ -419,7 +441,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Parmesan”.", "contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "BBQ Chicken & Bacon Deluxe",
@@ -443,7 +466,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Big BBQ Bacon",
@@ -467,7 +491,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Classic Cheese",
@@ -479,7 +504,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Americano",
@@ -491,7 +517,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Ham & Cheese",
@@ -503,7 +530,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Classic Veggie",
@@ -515,7 +543,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Bacon & Aioli",
@@ -528,7 +557,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-egg": "The menu says “Aioli” — an egg emulsion."}
         },
         {
           "name": "Pepperoni",
@@ -540,7 +570,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "Hawaiian",
@@ -565,7 +596,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesy”."}
         },
         {
           "name": "Beef & Onion",
@@ -577,7 +609,8 @@
             "contains-gluten",
             "contains-soy",
             "gf-option"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Hot Honey, Chorizo & Pepperoni",
@@ -588,7 +621,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Hot Honey, Chicken, Green Capsicum & Jalapeño",
@@ -599,7 +633,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “Sourdough”."}
         },
         {
           "name": "Chorizo, Chicken & Green Capsicum",
@@ -611,7 +646,8 @@
             "contains-gluten",
             "contains-soy",
             "spicy-1"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “Sourdough”."}
         },
         {
           "name": "Classic Veggie with Hot Honey",
@@ -622,7 +658,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Sourdough”."}
         },
         {
           "name": "Hot & Spicy Vege with Hot Honey",
@@ -634,7 +671,8 @@
             "contains-gluten",
             "contains-soy",
             "spicy-2"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Sourdough”."}
         }
       ]
     },
@@ -659,7 +697,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizzas” — a wheat bakery item."}
         },
         {
           "name": "Chicken, Fries & a Drink Lunch Deal",
@@ -680,7 +719,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "3 Pizzas Delivered",
@@ -690,7 +730,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizzas” — a wheat bakery item."}
         },
         {
           "name": "The One Box",
@@ -700,7 +741,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "The One Box + Drink",
@@ -710,7 +752,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
         {
           "name": "3 Pizzas & 3 Sides - Delivered",
@@ -720,7 +763,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pizzas” — a wheat bakery item."}
         },
         {
           "name": "Triple Value Deal - Delivered",
@@ -730,7 +774,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizzas” — a wheat bakery item."}
         },
         {
           "name": "Mega Value Deal - Delivered",
@@ -740,7 +785,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pizzas” — a wheat bakery item."}
         },
         {
           "name": "Chicken Lovers Combo - Delivered",
@@ -751,7 +797,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”."}
         }
       ]
     },
@@ -1158,7 +1205,8 @@
             "contains-egg",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion.", "contains-gluten": "The menu says “Pizza” — a wheat bakery item."}
         },
         {
           "name": "Cheesy Garlic Bread with Dip",
@@ -1170,7 +1218,8 @@
             "contains-egg",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesy”.", "contains-egg": "The menu says “Aioli” — an egg emulsion.", "contains-gluten": "The menu says “Bread”."}
         },
         {
           "name": "Cheesy Garlic Tear and Share Delivered",
@@ -1182,7 +1231,8 @@
             "contains-egg",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesy”.", "contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Buffalo Tear and Share Delivered",
@@ -1193,7 +1243,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Cheesy Garlic Tear & Share with The Dipper",
@@ -1205,7 +1256,8 @@
             "contains-egg",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesy”."}
         },
         {
           "name": "Buffalo Tear & Share with The Dipper",
@@ -1241,7 +1293,8 @@
             "contains-egg",
             "contains-gluten",
             "spicy-1"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Seasoned Wedges",
@@ -1261,7 +1314,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Bread”."}
         },
         {
           "name": "Onion Rings",
@@ -1347,7 +1401,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
         }
       ]
     },
@@ -1363,7 +1418,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-gluten": "The menu says “Brownie” — a wheat bakery item."}
         },
         {
           "name": "Half Baked - Pint (473ml)",
@@ -1374,7 +1430,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Creams”.", "contains-gluten": "The menu says “Cookie” — a wheat bakery item."}
         },
         {
           "name": "Choc Chip Cookie Dough - Pint (473ml)",
@@ -1385,7 +1442,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-gluten": "The menu says “Cookie” — a wheat bakery item."}
         },
         {
           "name": "Choc Fudge Brownie - Mini Tub (100ml)",
@@ -1395,7 +1453,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-gluten": "The menu says “Brownie” — a wheat bakery item."}
         },
         {
           "name": "Choc Chip Cookie Dough - Mini Tub (100ml)",
@@ -1406,7 +1465,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-gluten": "The menu says “Cookie” — a wheat bakery item."}
         },
         {
           "name": "The Ultimate Chocolate Chip Cookie",
@@ -1418,7 +1478,8 @@
             "contains-egg",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Cookie” — a wheat bakery item."}
         },
         {
           "name": "Chocolate Mousse",
@@ -1440,7 +1501,8 @@
             "contains-egg",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Cake” — a wheat bakery item."}
         },
         {
           "name": "Strawberry Cheesecake..",
@@ -1451,7 +1513,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesecake” — the sauce is cream- or butter-based.", "contains-gluten": "The menu says “biscuit” — a wheat bakery item."}
         }
       ]
     },
@@ -1578,7 +1641,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Breads”."}
         },
         {
           "name": "Feed 25",
@@ -1588,7 +1652,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Breads”."}
         },
         {
           "name": "Feed 30",
@@ -1598,7 +1663,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Breads”."}
         }
       ]
     }

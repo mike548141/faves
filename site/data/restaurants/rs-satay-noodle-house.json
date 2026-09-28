@@ -107,6 +107,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."},
           "prices": {
             "online": 33.8
           },
@@ -132,6 +133,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 32.8
           },
@@ -145,6 +147,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."},
           "prices": {
             "online": 38.8
           },
@@ -165,6 +168,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 31.2
           },
@@ -179,6 +183,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 32.8
           },
@@ -193,6 +198,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 32.8
           },
@@ -208,6 +214,7 @@
             "contains-gluten",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 17.3
           },
@@ -223,6 +230,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 29.7
           },
@@ -237,6 +245,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 14.0
           },
@@ -267,6 +276,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."},
           "prices": {
             "online": 33.8
           },
@@ -316,6 +326,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Laksa” — laksa paste contains belacan (dried shrimp)."},
           "prices": {
             "online": 32.8
           },
@@ -351,6 +362,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Hokkien” — a wheat noodle."},
           "prices": {
             "online": 37.1
           },
@@ -387,6 +399,7 @@
             "contains-shellfish",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."},
           "prices": {
             "online": 17.3
           },
@@ -412,6 +425,7 @@
             "v",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper."},
           "prices": {
             "online": 10.7
           },
@@ -425,6 +439,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."},
           "prices": {
             "online": 30.5
           },
@@ -438,6 +453,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."},
           "prices": {
             "online": 34.7
           },
@@ -462,6 +478,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."},
           "prices": {
             "online": 21.5
           },
@@ -475,6 +492,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."},
           "prices": {
             "online": 7.4
           }
@@ -572,6 +590,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."},
           "code": "S27",
           "revisions": [
             {
@@ -592,6 +611,7 @@
             "contains-shellfish",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Mee Goreng” — a wheat noodle."},
           "code": "S28",
           "revisions": [
             {
@@ -612,6 +632,7 @@
             "contains-shellfish",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-gluten": "The menu says “Mee Goreng” — a wheat noodle."},
           "code": "S28",
           "revisions": [
             {
@@ -650,6 +671,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."},
           "code": "S29",
           "revisions": [
             {
@@ -703,7 +725,8 @@
             "contains-peanuts",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-gluten": "The menu says “Roti”.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         }
       ]
     },
@@ -764,6 +787,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 37.1
           },
@@ -799,6 +823,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”."},
           "prices": {
             "online": 37.1
           },
@@ -856,6 +881,7 @@
           "tags": [
             "contains-fish"
           ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."},
           "prices": {
             "online": 41.3
           },
@@ -869,6 +895,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”."},
           "prices": {
             "online": 41.3
           },
@@ -882,6 +909,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”."},
           "prices": {
             "online": 41.3
           },
@@ -895,6 +923,7 @@
           "tags": [
             "contains-fish"
           ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."},
           "prices": {
             "online": 41.3
           },
@@ -920,6 +949,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 30.5
           },
@@ -934,6 +964,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "prices": {
             "online": 30.5
           },
@@ -948,6 +979,7 @@
             "contains-shellfish",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”.", "contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."},
           "prices": {
             "online": 30.5
           },
@@ -962,6 +994,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg Noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."},
           "prices": {
             "online": 42.9
           },
@@ -1031,6 +1064,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."},
           "prices": {
             "online": 7.2
           }

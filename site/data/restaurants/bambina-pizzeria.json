@@ -105,7 +105,8 @@
             "vg-option",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Italian Sausage & Hot Honey",
@@ -124,7 +125,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Provolone”."}
         },
         {
           "name": "Pepperoni",
@@ -134,7 +136,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Provolone”."}
         },
         {
           "name": "Prosciutto Cotto",
@@ -152,7 +155,8 @@
             "contains-nuts",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “pesto” — pesto is made with pine nuts.", "contains-dairy": "The menu says “Provolone”."}
         },
         {
           "name": "Funghi",
@@ -170,7 +174,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Provolone”."}
         },
         {
           "name": "Mediterranean",
@@ -188,7 +193,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Caramelised Onions",
@@ -199,7 +205,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”."}
         }
       ]
     },
@@ -224,7 +231,8 @@
             "contains-nuts",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “pesto” — pesto is made with pine nuts.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Deli",
@@ -235,7 +243,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “provolone”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Italian Beef",
@@ -246,7 +255,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mascarpone”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Chicken Salad",
@@ -257,7 +267,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “crème fraîche”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Mushroom",
@@ -276,7 +287,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         }
       ]
     },
@@ -293,7 +305,8 @@
             "v",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “mascarpone”.", "contains-egg": "The menu says “Tiramisu” — egg is in the batter or base."}
         },
         {
           "name": "Lemon Cake",
@@ -304,7 +317,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Cake” — a wheat bakery item.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Cookie",
@@ -314,7 +328,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Cookie” — a wheat bakery item."}
         }
       ]
     },

@@ -303,7 +303,8 @@
           "price": 16.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb kebab",
@@ -312,7 +313,8 @@
           "price": 16.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed kebab",
@@ -321,7 +323,8 @@
           "price": 16.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Falafel kebab",
@@ -331,7 +334,8 @@
           "tags": [
             "v",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Muciver kebab",
@@ -341,7 +345,8 @@
           "tags": [
             "v",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mix vege kebab",
@@ -351,7 +356,8 @@
           "tags": [
             "v",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Halloumi kebab",
@@ -362,7 +368,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Gluten free kebab",
@@ -372,7 +379,8 @@
           "tags": [
             "gf",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb shish kebab",
@@ -381,7 +389,8 @@
           "price": 19.9,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Chicken shish kebab",
@@ -390,7 +399,8 @@
           "price": 19.9,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed shish kebab",
@@ -399,7 +409,8 @@
           "price": 19.9,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         }
       ]
     },
@@ -419,7 +430,8 @@
           "price": 18.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb & falafel kebab",
@@ -428,7 +440,8 @@
           "price": 18.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed & falafel kebab",
@@ -437,7 +450,8 @@
           "price": 18.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Chicken & muciver kebab",
@@ -446,7 +460,8 @@
           "price": 18.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb & muciver kebab",
@@ -455,7 +470,8 @@
           "price": 18.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed & muciver kebab",
@@ -464,7 +480,8 @@
           "price": 18.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Chicken & halloumi kebab",
@@ -474,7 +491,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb & halloumi kebab",
@@ -484,7 +502,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed & halloumi kebab",
@@ -494,7 +513,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Chicken gyrus",
@@ -503,7 +523,8 @@
           "price": 18.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb gyrus",
@@ -512,7 +533,8 @@
           "price": 18.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mix gyrus",
@@ -521,7 +543,8 @@
           "price": 18.5,
           "tags": [
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         }
       ]
     },
@@ -541,7 +564,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb iskender",
@@ -551,7 +575,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed iskender",
@@ -561,7 +586,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Falafel iskender",
@@ -572,7 +598,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Muciver iskender",
@@ -583,7 +610,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mix vege iskender",
@@ -594,7 +622,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Halloumi iskender",
@@ -605,7 +634,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb shish iskender",
@@ -615,7 +645,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Chicken shish iskender",
@@ -625,7 +656,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed shish iskender",
@@ -635,7 +667,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed grill iskender",
@@ -645,7 +678,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         }
       ]
     },
@@ -665,7 +699,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb salad",
@@ -675,7 +710,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed salad",
@@ -685,7 +721,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Falafel salad",
@@ -696,7 +733,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Muciver salad",
@@ -707,7 +745,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mix vege salad",
@@ -718,7 +757,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Halloumi salad",
@@ -729,7 +769,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb shish salad",
@@ -739,7 +780,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Chicken shish salad",
@@ -749,7 +791,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed shish salad",
@@ -759,7 +802,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed grill salad",
@@ -769,7 +813,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         }
       ]
     },
@@ -785,7 +830,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Lamb shawarmama box",
@@ -795,7 +841,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mixed shawarmama box",
@@ -805,7 +852,8 @@
           "tags": [
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Falafel shawarmama box",
@@ -816,7 +864,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Muciver shawarmama box",
@@ -827,7 +876,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Mix vege shawarmama box",
@@ -838,7 +888,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Halloumi shawarmama box",
@@ -849,7 +900,8 @@
             "v",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         }
       ]
     },
@@ -865,7 +917,8 @@
           "tags": [
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Lamb Greek pita",
@@ -875,7 +928,8 @@
           "tags": [
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Mixed Greek pita",
@@ -885,7 +939,8 @@
           "tags": [
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Falafel Greek pita",
@@ -896,7 +951,8 @@
             "v",
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Muciver Greek pita",
@@ -907,7 +963,8 @@
             "v",
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Mix vege Greek pita",
@@ -918,7 +975,8 @@
             "v",
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Halloumi Greek pita",
@@ -930,7 +988,8 @@
             "contains-dairy",
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         }
       ]
     },
@@ -946,7 +1005,8 @@
           "tags": [
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Lamb Turkish pita",
@@ -956,7 +1016,8 @@
           "tags": [
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Mixed Turkish pita",
@@ -966,7 +1027,8 @@
           "tags": [
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Falafel Turkish pita",
@@ -977,7 +1039,8 @@
             "v",
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Muciver Turkish pita",
@@ -988,7 +1051,8 @@
             "v",
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Mix vege Turkish pita",
@@ -999,7 +1063,8 @@
             "v",
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         },
         {
           "name": "Halloumi Turkish pita",
@@ -1011,7 +1076,8 @@
             "contains-dairy",
             "contains-sesame",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “pita”."}
         }
       ]
     },
@@ -1026,7 +1092,8 @@
           "price": 18.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Lamb on chips",
@@ -1035,7 +1102,8 @@
           "price": 18.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Mixed on chips",
@@ -1044,7 +1112,8 @@
           "price": 18.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Falafel on chips",
@@ -1054,7 +1123,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Muciver on chips",
@@ -1064,7 +1134,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Mix vege on chips",
@@ -1074,7 +1145,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Halloumi on chips",
@@ -1084,7 +1156,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”."}
         },
         {
           "name": "Add salad",
@@ -1153,7 +1226,8 @@
           "price": 13.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         },
         {
           "name": "Lamb burger",
@@ -1162,7 +1236,8 @@
           "price": 13.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         },
         {
           "name": "Mixed burger",
@@ -1171,7 +1246,8 @@
           "price": 13.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         },
         {
           "name": "Falafel burger",
@@ -1181,7 +1257,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         },
         {
           "name": "Muciver burger",
@@ -1191,7 +1268,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         },
         {
           "name": "Mix vege burger",
@@ -1201,7 +1279,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “burger” — a wheat bakery item."}
         },
         {
           "name": "Halloumi burger",
@@ -1212,7 +1291,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Halloumi”.", "contains-gluten": "The menu says “burger” — a wheat bakery item."}
         }
       ]
     },
@@ -1268,7 +1348,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Loaded chips",
@@ -1293,7 +1374,8 @@
           "tags": [
             "v",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “Baklava” — praline/marzipan/nougat are nut confections."}
         },
         {
           "name": "Tiramisu",
@@ -1304,7 +1386,8 @@
             "v",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Tiramisu” — the sauce is cream- or butter-based.", "contains-egg": "The menu says “Tiramisu” — egg is in the batter or base."}
         },
         {
           "name": "Black forest",
@@ -1339,7 +1422,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Yoghurt”."}
         },
         {
           "name": "Apple tea",
@@ -1399,7 +1483,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “halloumi”."}
         },
         {
           "name": "Extra cheese",
@@ -1409,7 +1494,8 @@
           "tags": [
             "v",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         }
       ]
     }

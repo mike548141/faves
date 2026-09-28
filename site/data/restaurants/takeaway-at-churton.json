@@ -86,6 +86,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."},
           "code": "1"
         },
         {
@@ -101,6 +102,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."},
           "code": "2"
         },
         {
@@ -215,6 +217,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."},
           "code": "10"
         },
         {
@@ -230,6 +233,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."},
           "code": "11"
         }
       ]
@@ -318,6 +322,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."},
           "code": "17"
         },
         {
@@ -333,6 +338,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."},
           "code": "18"
         }
       ]
@@ -399,6 +405,7 @@
           "tags": [
             "contains-egg"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."},
           "code": "22"
         },
         {
@@ -414,6 +421,7 @@
           "tags": [
             "contains-egg"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."},
           "code": "23"
         },
         {
@@ -429,6 +437,7 @@
           "tags": [
             "contains-egg"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."},
           "code": "24"
         },
         {
@@ -444,6 +453,7 @@
           "tags": [
             "contains-egg"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."},
           "code": "25"
         },
         {
@@ -460,6 +470,7 @@
             "v",
             "contains-egg"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."},
           "code": "26"
         },
         {
@@ -475,6 +486,7 @@
           "tags": [
             "contains-egg"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."},
           "code": "27"
         },
         {
@@ -491,6 +503,7 @@
             "contains-shellfish",
             "contains-egg"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”.", "contains-egg": "The menu says “Egg”."},
           "code": "28"
         },
         {
@@ -507,6 +520,7 @@
             "contains-shellfish",
             "contains-egg"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-egg": "The menu says “Egg”."},
           "code": "29"
         }
       ]
@@ -528,6 +542,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
           "code": "30"
         },
         {
@@ -543,6 +558,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
           "code": "31"
         },
         {
@@ -558,6 +574,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
           "code": "32"
         },
         {
@@ -573,6 +590,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
           "code": "33"
         },
         {
@@ -589,6 +607,7 @@
             "v",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
           "code": "34"
         },
         {
@@ -604,6 +623,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
           "code": "35"
         },
         {
@@ -620,6 +640,7 @@
             "contains-shellfish",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”.", "contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
           "code": "36"
         },
         {
@@ -636,6 +657,7 @@
             "contains-shellfish",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
           "code": "37"
         }
       ]
@@ -737,6 +759,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."},
           "code": "44"
         },
         {
@@ -752,6 +775,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."},
           "code": "45"
         }
       ]
@@ -799,6 +823,7 @@
           "tags": [
             "contains-fish"
           ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."},
           "code": "48"
         },
         {
@@ -814,6 +839,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Wontons” — a wheat-flour wrapper."},
           "code": "49"
         },
         {
@@ -869,6 +895,7 @@
           "tags": [
             "contains-soy"
           ],
+          "tagNotes": {"contains-soy": "The menu says “black bean sauce” — the sauce is soy-based."},
           "code": "52"
         },
         {
@@ -884,6 +911,7 @@
           "tags": [
             "contains-soy"
           ],
+          "tagNotes": {"contains-soy": "The menu says “black bean sauce” — the sauce is soy-based."},
           "code": "53"
         },
         {
@@ -899,6 +927,7 @@
           "tags": [
             "contains-soy"
           ],
+          "tagNotes": {"contains-soy": "The menu says “black bean sauce” — the sauce is soy-based."},
           "code": "54"
         },
         {
@@ -914,6 +943,7 @@
           "tags": [
             "contains-soy"
           ],
+          "tagNotes": {"contains-soy": "The menu says “black bean sauce” — the sauce is soy-based."},
           "code": "55"
         },
         {
@@ -930,6 +960,7 @@
             "contains-shellfish",
             "contains-soy"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”.", "contains-soy": "The menu says “black bean sauce” — the sauce is soy-based."},
           "code": "56"
         },
         {
@@ -946,6 +977,7 @@
             "contains-shellfish",
             "contains-soy"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-soy": "The menu says “black bean sauce” — the sauce is soy-based."},
           "code": "57"
         }
       ]
@@ -968,6 +1000,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "code": "58"
         },
         {
@@ -984,6 +1017,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "code": "59"
         },
         {
@@ -1000,6 +1034,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "code": "60"
         },
         {
@@ -1016,6 +1051,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "code": "61"
         },
         {
@@ -1033,6 +1069,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”.", "contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "code": "62"
         },
         {
@@ -1050,6 +1087,7 @@
             "contains-peanuts",
             "contains-soy"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
           "code": "63"
         }
       ]
@@ -1071,6 +1109,7 @@
           "tags": [
             "contains-nuts"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”."},
           "code": "64"
         },
         {
@@ -1086,6 +1125,7 @@
           "tags": [
             "contains-nuts"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”."},
           "code": "65"
         },
         {
@@ -1101,6 +1141,7 @@
           "tags": [
             "contains-nuts"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”."},
           "code": "66"
         },
         {
@@ -1116,6 +1157,7 @@
           "tags": [
             "contains-nuts"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”."},
           "code": "67"
         },
         {
@@ -1132,6 +1174,7 @@
             "contains-nuts",
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”.", "contains-shellfish": "The menu says “Shrimp”."},
           "code": "68"
         },
         {
@@ -1148,6 +1191,7 @@
             "contains-nuts",
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”.", "contains-shellfish": "The menu says “Prawn”."},
           "code": "69"
         }
       ]
@@ -1182,6 +1226,7 @@
           "tags": [
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Bami Goreng” — a wheat noodle."},
           "code": "71"
         },
         {
@@ -1197,6 +1242,7 @@
           "tags": [
             "contains-nuts"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”."},
           "code": "72"
         },
         {
@@ -1212,6 +1258,7 @@
           "tags": [
             "contains-nuts"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”."},
           "code": "73"
         }
       ]
@@ -1260,6 +1307,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg Noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."},
           "code": "76"
         },
         {
@@ -1277,6 +1325,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-gluten": "The menu says “chow mein” — a wheat noodle.", "contains-egg": "The menu says “egg”."},
           "code": "77"
         },
         {
@@ -1300,6 +1349,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Laksa” — laksa paste contains belacan (dried shrimp)."},
           "code": "101"
         },
         {
@@ -1342,6 +1392,7 @@
           "tags": [
             "contains-shellfish"
           ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."},
           "code": "80"
         },
         {
@@ -1357,6 +1408,7 @@
           "tags": [
             "contains-nuts"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”."},
           "code": "81"
         },
         {
@@ -1391,7 +1443,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Fish - Crumbed",
@@ -1406,7 +1459,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Fish Fillet - Battered",
@@ -1421,7 +1475,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Fish Fillet - Crumbed",
@@ -1436,7 +1491,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Fish Fillet - Grilled",
@@ -1450,7 +1506,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Fish - Grilled",
@@ -1464,7 +1521,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Chips - One Scoop",
@@ -1557,7 +1615,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Hot Dog on Stick",
@@ -1599,7 +1658,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Prawn Cutlet",
@@ -1613,7 +1673,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Crab Stick",
@@ -1627,7 +1688,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Crab”."}
         },
         {
           "name": "Fish Cake",
@@ -1641,7 +1703,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Spring Roll",
@@ -1655,7 +1718,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Roll” — a wheat-flour wrapper."}
         },
         {
           "name": "Curry Roll",
@@ -1707,7 +1771,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Lasagne”."}
         },
         {
           "name": "Meat Pattie",
@@ -1733,7 +1798,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Paua”."}
         },
         {
           "name": "Mini Spring Rolls",
@@ -1742,7 +1808,8 @@
           "price": 1.6,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper."}
         },
         {
           "name": "Corn Fritter",
@@ -1768,7 +1835,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Mussel”."}
         },
         {
           "name": "Pineapple Fritter",
@@ -1818,7 +1886,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Donut” — a wheat bakery item."}
         },
         {
           "name": "Jam Rap",
@@ -1868,7 +1937,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Schnitzel” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Chicken Nugget (each)",
@@ -1882,7 +1952,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Nugget” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Calamari Ring (each)",
@@ -1896,7 +1967,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Calamari”."}
         },
         {
           "name": "Battered Mussel (each)",
@@ -1911,7 +1983,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Mussel”.", "contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Scallop (each)",
@@ -1925,7 +1998,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Scallop”."}
         },
         {
           "name": "Prawn Twister",
@@ -1934,7 +2008,8 @@
           "price": 3.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
         },
         {
           "name": "Bluff Oysters",
@@ -1943,7 +2018,8 @@
           "price": null,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Oysters”."}
         },
         {
           "name": "Onion Rings (6)",
@@ -1969,7 +2045,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Wontons” — a wheat-flour wrapper."}
         },
         {
           "name": "Dim Sim (each)",
@@ -1983,7 +2060,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dim Sim” — a wheat-flour wrapper."}
         },
         {
           "name": "Pork Bun",
@@ -1997,7 +2075,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pork Bun” — a wheat-flour wrapper."}
         },
         {
           "name": "Plain Roti",
@@ -2011,7 +2090,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”."}
         },
         {
           "name": "Vegetarian Pattie",
@@ -2039,7 +2119,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
         },
         {
           "name": "Vegetarian Dumplings (6)",
@@ -2054,7 +2135,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
         },
         {
           "name": "Curly Fries",
@@ -2081,7 +2163,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Kids Beef Burger (no salad)",
@@ -2095,7 +2178,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Kids Fish Burger (no salad)",
@@ -2110,7 +2194,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Kids Chicken Burger (no salad)",
@@ -2124,7 +2209,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Ham Burger",
@@ -2138,7 +2224,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Cheese Burger",
@@ -2153,7 +2240,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Egg Burger",
@@ -2168,7 +2256,8 @@
           "tags": [
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Mushroom Burger",
@@ -2182,7 +2271,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Hawaiian Burger",
@@ -2196,7 +2286,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Chicken Burger",
@@ -2210,7 +2301,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Fish Burger",
@@ -2225,7 +2317,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Crumb Fish Burger",
@@ -2240,7 +2333,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Bacon Egg Burger",
@@ -2255,7 +2349,8 @@
           "tags": [
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Vegetarian Burger",
@@ -2270,7 +2365,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Works Burger",
@@ -2286,7 +2382,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”."}
         }
       ]
     },
@@ -2306,7 +2403,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Beef & Egg",
@@ -2321,7 +2419,8 @@
           "tags": [
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Beef & Cheese",
@@ -2336,7 +2435,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Beef Cheese & Chilli",
@@ -2351,7 +2451,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Beef, Bacon & Egg",
@@ -2366,7 +2467,8 @@
           "tags": [
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Crumb Chicken Fillet",
@@ -2395,7 +2497,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesy”."}
         },
         {
           "name": "Gourmet Vegetarian Burger",
@@ -2410,7 +2513,8 @@
           "tags": [
             "v",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Gourmet Fish Burger",
@@ -2425,7 +2529,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Lamb Burger",
@@ -2439,7 +2544,8 @@
           ],
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
           "name": "Chicken Bacon & Avo",
@@ -2482,7 +2588,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Camembert”."}
         },
         {
           "name": "Beef & Blue Cheese",
@@ -2497,7 +2604,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Blue Cheese”."}
         },
         {
           "name": "Fillet of the Day",
@@ -2526,7 +2634,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”."}
         },
         {
           "name": "Churton Whopper",
@@ -2556,7 +2665,8 @@
           "tags": [
             "contains-egg",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         },
         {
           "name": "Chicken Schnitzel & Bacon Wrap",
@@ -2572,7 +2682,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Schnitzel” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
         }
       ]
     },
@@ -2621,7 +2732,8 @@
           "tags": [
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
         }
       ]
     },
@@ -2643,7 +2755,8 @@
             "contains-shellfish",
             "contains-fish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “crab”.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Family Pack 2",
@@ -2657,7 +2770,8 @@
           ],
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Family Pack 3",
@@ -2673,7 +2787,8 @@
             "contains-shellfish",
             "contains-fish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “crab”.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Fish Dinner",
@@ -2685,7 +2800,8 @@
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg", "contains-fish"]
+          "tags": ["contains-egg", "contains-fish"],
+          "tagNotes": {"contains-egg": "The menu says “tartare sauce” — an egg emulsion.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Seafood Pack",
@@ -2700,7 +2816,8 @@
           "tags": [
             "contains-shellfish",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “calamari”.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Calamari Pack",
@@ -2714,7 +2831,8 @@
           ],
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Calamari”."}
         },
         {
           "name": "Fish Burger Pack",
@@ -2730,7 +2848,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “crab”.", "contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Pack 4",
@@ -2740,7 +2859,8 @@
           "tags": [
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Kids Packs",
@@ -2755,7 +2875,8 @@
           "tags": [
             "contains-fish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”.", "contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour."}
         }
       ]
     }

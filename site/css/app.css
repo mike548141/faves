@@ -4301,10 +4301,27 @@ body.faves-view .to-top {
   line-height: 1.4;
 }
 .dish-tags {
+  position: relative; /* anchors each chip's tip (tags.js) under the row */
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
   margin-top: var(--space-2);
+}
+/* A chip is a BUTTON since 2026-09-28 (roadmap 350/020): tap it for why the
+   dish carries it. Painted exactly as the chip it replaced; the tap target is
+   stretched to 44px by an invisible ::after, as the "+N" control's is. */
+.tag-tip-btn {
+  position: relative;
+  font-family: inherit;
+  cursor: pointer;
+}
+.tag-tip-btn:not(.tag-allergen) {
+  border: 0;
+}
+.tag-tip-btn::after {
+  content: "";
+  position: absolute;
+  inset: -12px -2px;
 }
 /* The row is now built unconditionally, because configuring a dish can ADD a
    tag to one that had none (roadmap 200/060) and there has to be somewhere to

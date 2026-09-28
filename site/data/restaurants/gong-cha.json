@@ -612,6 +612,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "toppings-classic-3"
           ]
@@ -624,6 +625,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "toppings-classic-3"
           ]
@@ -636,6 +638,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "toppings-classic-3"
           ]
@@ -715,7 +718,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Waffle” — a wheat bakery item."}
         },
         {
           "name": "Milkfoam Caramel Waffle",
@@ -726,7 +730,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Waffle” — a wheat bakery item."}
         },
         {
           "name": "QQ Passionfruit Eggette Waffle",
@@ -736,7 +741,8 @@
           "tags": [
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Waffle” — a wheat bakery item."}
         },
         {
           "name": "Eureka Caramel Popcorn",
@@ -761,7 +767,8 @@
           "price": 7.9,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
         },
         {
           "name": "Eureka Sour Cream & Onion Popcorn",
@@ -770,7 +777,8 @@
           "price": 7.9,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”."}
         },
         {
           "name": "Eureka Wasabi Popcorn",
@@ -800,6 +808,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -813,6 +822,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -826,6 +836,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -839,6 +850,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -852,6 +864,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -865,6 +878,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size"
           ]
@@ -877,6 +891,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size"
           ]
@@ -895,6 +910,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-2"
           ]
@@ -907,6 +923,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-2"
           ]
@@ -919,6 +936,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-2"
           ]
@@ -931,6 +949,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-2"
           ]
@@ -943,6 +962,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-2"
           ]
@@ -1369,6 +1389,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1382,6 +1403,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1395,6 +1417,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1408,6 +1431,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -1421,6 +1445,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -1434,6 +1459,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -1447,6 +1473,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1460,6 +1487,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -1473,6 +1501,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1487,6 +1516,7 @@
             "contains-dairy",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-1"
@@ -1500,6 +1530,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size"
           ]
@@ -1514,6 +1545,7 @@
             "contains-gluten",
             "contains-soy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1527,6 +1559,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1540,6 +1573,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -1566,6 +1600,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -1579,6 +1614,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1592,6 +1628,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1611,6 +1648,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1623,6 +1661,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1635,6 +1674,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1647,6 +1687,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-2"
           ]
@@ -1659,6 +1700,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-2"
           ]
@@ -1671,6 +1713,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1683,6 +1726,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1695,6 +1739,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1707,6 +1752,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1725,6 +1771,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1738,6 +1785,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1751,6 +1799,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1764,6 +1813,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1777,6 +1827,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1791,6 +1842,7 @@
             "contains-dairy",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size"
           ]
@@ -1803,6 +1855,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size"
           ]
@@ -1815,6 +1868,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1846,6 +1900,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1858,6 +1913,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1870,6 +1926,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1882,6 +1939,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1894,6 +1952,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1906,6 +1965,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "toppings-simple-3"
           ]
@@ -1924,6 +1984,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1937,6 +1998,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1950,6 +2012,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1963,6 +2026,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1976,6 +2040,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -1989,6 +2054,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -2002,6 +2068,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -2054,6 +2121,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -2067,6 +2135,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Yogurt”."},
           "addOns": [
             "size",
             "toppings-classic-2"
@@ -2149,6 +2218,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -2162,6 +2232,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -2175,6 +2246,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size",
             "toppings-classic-3"
@@ -2188,6 +2260,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Milk”."},
           "addOns": [
             "size"
           ]

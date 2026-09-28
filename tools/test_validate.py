@@ -252,11 +252,28 @@ CASES = {
     # All four dietary claims have an `-option` form (owner ruling, 2026-08-16).
     # Asserted as ACCEPTED here and as load-bearing in SOURCE_CASES below: this
     # case alone would still pass if the tags were legal but nothing used them.
+    # (Its tag tips go with the allergen tags it replaces: since roadmap
+    # 350/020 a tip for a tag the dish no longer carries is an error of its own.)
     "every `-option` tag is legal": (
-        lambda d: _first_item(d).update(
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
             tags=["gf-option", "v-option", "df-option", "vg-option"]
+        )),
+        "clean", None,
+    ),
+    # --- the tag tips (roadmap 350/020) -----------------------------------
+    "a tag tip explaining a tag the dish carries": (
+        lambda d: _first_item(d).update(
+            tags=["contains-egg"], tagNotes={"contains-egg": "The menu says “aioli”."}
         ),
         "clean", None,
+    ),
+    "a tag tip for a tag the dish does not carry": (
+        lambda d: _first_item(d).update(tags=["v"], tagNotes={"contains-egg": "x"}),
+        "error", r"tagNotes for .* explain 'contains-egg', which is not one of its allergen tags",
+    ),
+    "an empty tag tip": (
+        lambda d: _first_item(d).update(tags=["contains-egg"], tagNotes={"contains-egg": " "}),
+        "error", r"tagNotes\['contains-egg'\] for .* must be a non-empty sentence",
     ),
     # --- the credit's source link (owner, 2026-09-28) ----------------------
     # The positive case first, so a gate broken into refusing every link fails.

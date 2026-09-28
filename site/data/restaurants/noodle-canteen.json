@@ -123,7 +123,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         },
         {
           "name": "Hokkien mee",
@@ -137,7 +138,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-gluten": "The menu says “Hokkien” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Fried kuai teow",
@@ -149,7 +151,8 @@
             "spicy-1",
             "contains-shellfish",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Combination noodles",
@@ -162,7 +165,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “oyster sauce” — the sauce is soy-based."}
         },
         {
           "name": "Black bean beef",
@@ -174,7 +178,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “black bean sauce” — the sauce is soy-based."}
         },
         {
           "name": "Singapore fried noodles",
@@ -184,7 +189,8 @@
           "price": 19,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”."}
         },
         {
           "name": "Sweet box",
@@ -195,7 +201,8 @@
           "tags": [
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Hot box",
@@ -207,7 +214,8 @@
             "spicy-1",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Teriyaki",
@@ -218,7 +226,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Udon” — a wheat noodle.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based."}
         },
         {
           "name": "Seafood mee goreng",
@@ -233,7 +242,8 @@
             "contains-egg",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “mee goreng” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Thai sweet chilli beef",
@@ -245,7 +255,8 @@
             "spicy-1",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Sambal chicken",
@@ -284,7 +295,8 @@
           "tags": [
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Garlic prawns",
@@ -296,7 +308,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Honey chicken noodle",
@@ -306,7 +319,8 @@
           "price": 19,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour."}
         },
         {
           "name": "Chilli beef",
@@ -318,7 +332,8 @@
             "spicy-1",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Seafood combination noodles",
@@ -332,7 +347,8 @@
             "contains-egg",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “oyster sauce” — the sauce is soy-based.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Chicken chow mee",
@@ -345,7 +361,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “oyster”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “oyster sauce” — the sauce is soy-based."}
         }
       ]
     },
@@ -364,7 +381,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “soy”."}
         },
         {
           "name": "Vegetarian mee goreng",
@@ -378,7 +396,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “mee goreng” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Vegetarian Singapore noodles",
@@ -389,7 +408,8 @@
           "tags": [
             "v",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Vegetarian soup",
@@ -402,7 +422,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”."}
         }
       ]
     },
@@ -420,7 +441,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
         },
         {
           "name": "Curry laksa",
@@ -433,7 +455,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”."}
         },
         {
           "name": "Tom yum",
@@ -459,7 +482,8 @@
           "price": 19,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”."}
         },
         {
           "name": "Sambal fried rice",
@@ -487,7 +511,8 @@
           "price": 21,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Honey chicken fried rice",
@@ -497,7 +522,8 @@
           "price": 19,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour."}
         }
       ]
     },
@@ -514,7 +540,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “Udon” — a wheat noodle."}
         },
         {
           "name": "Cashew chicken chow mee",
@@ -524,7 +551,8 @@
           "price": 21,
           "tags": [
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”."}
         },
         {
           "name": "Wonton noodle soup",
@@ -534,7 +562,8 @@
           "price": 20.3,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."}
         },
         {
           "name": "Malaysian fried rice",
@@ -560,7 +589,8 @@
           "price": 22.5,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
         },
         {
           "name": "Vege fried rice",
@@ -580,7 +610,8 @@
           "price": 22,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
         },
         {
           "name": "Honey king prawn fried rice",
@@ -590,7 +621,8 @@
           "price": 22,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
         },
         {
           "name": "Sweet & sour pork noodle",
@@ -617,7 +649,8 @@
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         },
         {
           "name": "Chicken mee goreng",
@@ -627,7 +660,8 @@
           "price": 19,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “mee goreng” — a wheat noodle."}
         },
         {
           "name": "Sweet & sour chicken noodles",
@@ -653,7 +687,8 @@
           "price": 22,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”."}
         },
         {
           "name": "Sweet & sour prawns fried rice",
@@ -663,7 +698,8 @@
           "price": 22,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”."}
         },
         {
           "name": "Honey pork noodle",
@@ -714,7 +750,8 @@
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         },
         {
           "name": "Hot box fried rice",
@@ -734,7 +771,8 @@
           "price": 21,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Shanghai noodles",

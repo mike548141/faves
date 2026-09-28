@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { orderTags, splitTags, moreLabel, isDeclared, TAG_LIMIT } from "../site/js/tags.js";
+import { orderTags, splitTags, moreLabel, isDeclared, tagTip, TAG_LIMIT } from "../site/js/tags.js";
 
 const LAVA = ["v", "contains-gluten", "contains-dairy", "contains-egg", "contains-nuts", "contains-peanuts", "contains-soy"];
 const none = { avoid: new Set(), dietary: new Set() };
@@ -76,4 +76,17 @@ test("the control SAYS what it hides, so a hidden allergen is never silent", () 
   assert.equal(moreLabel(["contains-soy"]), "⚠ +1 allergen");
   assert.equal(moreLabel(["contains-soy", "contains-nuts", "v"]), "⚠ +2 allergens, 1 more");
   assert.equal(moreLabel(["v", "gf"]), "+2 more");
+});
+
+test("a tip quotes the dish's own note, and says only 'recorded' without one", () => {
+  const note = "The menu says “aioli” — an egg emulsion.";
+  assert.equal(tagTip("contains-egg", { note }), `${note} If it matters, check with the venue.`);
+  assert.equal(tagTip("contains-egg", {}), "Recorded when this menu was entered. If it matters, check with the venue.");
+  assert.equal(tagTip("contains-egg", { recipe: true }), "Marked on this recipe.");
+});
+
+test("a tip leads with the reader's own reason, and names an add-on's tag as the add-on's", () => {
+  const avoid = new Set(["contains-egg"]);
+  assert.match(tagTip("contains-egg", { avoid, recipe: true }), /^You asked to avoid this\. /);
+  assert.match(tagTip("contains-fish", { fromAddOn: true, note: "ignored" }), /^From an add-on you picked\./);
 });

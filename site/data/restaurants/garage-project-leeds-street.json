@@ -132,7 +132,8 @@
           "price": 12,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Triple Cooked Hand Cut Fries with Café de Paris Butter & Beef Jus",
@@ -142,7 +143,8 @@
           "tags": [
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Butter”."}
         },
         {
           "name": "Triple Cooked Hand Cut Fries with Truffle Mayo & Aged Parmesan",
@@ -154,7 +156,8 @@
             "gf",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Parmesan”.", "contains-egg": "The menu says “Mayo” — an egg emulsion."}
         },
         {
           "name": "Triple Cooked Hand Cut Fries with Gochujang, Chilli Crisp and Kewpie Mayo",
@@ -165,7 +168,8 @@
             "v",
             "df",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Mayo” — an egg emulsion."}
         },
         {
           "name": "Proper Crisps",
@@ -197,7 +201,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “beer” — beer is a barley product.", "contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "Crispy Spiced Potato & Onion Bhaji",
@@ -229,7 +234,8 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-dairy": "The menu says “Cheese”."}
         }
       ]
     },
@@ -250,6 +256,7 @@
             "contains-dairy",
             "contains-sesame"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-sesame": "The menu says “sesame”."},
           "addOns": [
             "double-patty"
           ]
@@ -262,7 +269,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-gluten": "The menu says “Baguette”."}
         },
         {
           "name": "Crispy Bhaji & Paneer Burger",
@@ -273,7 +281,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “Paneer”."}
         },
         {
           "name": "Lamb Merguez Sub",
@@ -283,7 +292,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”.", "contains-gluten": "The menu says “hoagie”."}
         },
         {
           "name": "Corn Cheese Toastie",
@@ -295,7 +305,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “sourdough”.", "contains-dairy": "The menu says “Cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         }
       ]
     }

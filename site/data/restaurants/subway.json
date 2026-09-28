@@ -84,6 +84,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -103,6 +104,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -122,6 +124,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-dairy": "The menu says “cheese”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -141,6 +144,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “wheat”."},
           "needs": [
             {
               "what": "price",
@@ -160,6 +164,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -178,6 +183,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “rye”."},
           "needs": [
             {
               "what": "price",
@@ -197,6 +203,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -216,6 +223,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “bread”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -235,6 +243,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -253,6 +262,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -271,6 +281,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -290,6 +301,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -309,6 +321,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “wheat”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -328,6 +341,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -347,6 +361,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-dairy": "The menu says “cheese”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -367,6 +382,7 @@
             "contains-gluten",
             "contains-fish"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Mayo” — an egg emulsion.", "contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “wheat”.", "contains-fish": "The menu says “Tuna”."},
           "needs": [
             {
               "what": "price",
@@ -385,6 +401,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “rye”."},
           "needs": [
             {
               "what": "price",
@@ -404,6 +421,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-gluten": "The menu says “wheat”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -514,6 +532,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."},
           "needs": [
             {
               "what": "price",
@@ -533,6 +552,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -552,6 +572,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-dairy": "The menu says “cheese”."},
           "needs": [
             {
               "what": "price",
@@ -571,6 +592,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -590,6 +612,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."},
           "needs": [
             {
               "what": "price",
@@ -608,6 +631,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -626,6 +650,7 @@
             "contains-dairy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “mozzarella”."},
           "needs": [
             {
               "what": "price",
@@ -645,6 +670,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -662,6 +688,7 @@
             "contains-dairy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “Pizza” — a wheat bakery item."},
           "needs": [
             {
               "what": "price",
@@ -680,6 +707,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -698,6 +726,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -717,6 +746,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -736,6 +766,7 @@
             "contains-gluten",
             "contains-soy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based."},
           "needs": [
             {
               "what": "price",
@@ -754,6 +785,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -774,6 +806,7 @@
             "contains-gluten",
             "contains-fish"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Mayo” — an egg emulsion.", "contains-dairy": "The menu says “cheddar”.", "contains-fish": "The menu says “Tuna”."},
           "needs": [
             {
               "what": "price",
@@ -792,6 +825,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -811,6 +845,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -849,6 +884,7 @@
             "contains-gluten",
             "contains-soy"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based."},
           "needs": [
             {
               "what": "price",
@@ -985,6 +1021,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."},
           "needs": [
             {
               "what": "price",
@@ -1004,6 +1041,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -1023,6 +1061,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-dairy": "The menu says “cheese”."},
           "needs": [
             {
               "what": "price",
@@ -1041,6 +1080,7 @@
             "contains-dairy",
             "contains-soy"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -1059,6 +1099,7 @@
             "contains-dairy",
             "contains-soy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."},
           "needs": [
             {
               "what": "price",
@@ -1076,6 +1117,7 @@
             "contains-dairy",
             "contains-soy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -1093,6 +1135,7 @@
             "contains-egg",
             "contains-dairy"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “mozzarella”."},
           "needs": [
             {
               "what": "price",
@@ -1112,6 +1155,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -1129,6 +1173,7 @@
             "contains-dairy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “Pizza” — a wheat bakery item."},
           "needs": [
             {
               "what": "price",
@@ -1147,6 +1192,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -1165,6 +1211,7 @@
             "contains-dairy",
             "contains-soy"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -1184,6 +1231,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -1203,6 +1251,7 @@
             "contains-gluten",
             "contains-soy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Teriyaki” — the sauce is soy-based."},
           "needs": [
             {
               "what": "price",
@@ -1222,6 +1271,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-dairy": "The menu says “cheese”."},
           "needs": [
             {
               "what": "price",
@@ -1241,6 +1291,7 @@
             "contains-soy",
             "contains-fish"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Mayo” — an egg emulsion.", "contains-dairy": "The menu says “cheddar”.", "contains-fish": "The menu says “Tuna”."},
           "needs": [
             {
               "what": "price",
@@ -1258,6 +1309,7 @@
             "contains-dairy",
             "contains-soy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
           "needs": [
             {
               "what": "price",
@@ -1276,6 +1328,7 @@
             "contains-soy",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -1358,6 +1411,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -1377,6 +1431,7 @@
             "contains-gluten",
             "contains-dairy"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-gluten": "The menu says “bread”.", "contains-dairy": "The menu says “cheese”."},
           "needs": [
             {
               "what": "price",
@@ -1396,6 +1451,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -1414,6 +1470,7 @@
             "contains-dairy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “flour”."},
           "needs": [
             {
               "what": "price",
@@ -1433,6 +1490,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “flour”."},
           "needs": [
             {
               "what": "price",
@@ -1593,6 +1651,7 @@
             "contains-gluten",
             "contains-nuts"
           ],
+          "tagNotes": {"contains-nuts": "The menu says “Macadamia”."},
           "needs": [
             {
               "what": "price",
@@ -1618,6 +1677,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “Bread”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -1635,6 +1695,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -1654,6 +1715,7 @@
             "contains-gluten",
             "contains-egg"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-gluten": "The menu says “Bread”.", "contains-egg": "The menu says “aioli” — an egg emulsion."},
           "needs": [
             {
               "what": "price",
@@ -1673,6 +1735,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-egg": "The menu says “mayonnaise” — an egg emulsion.", "contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."},
           "needs": [
             {
               "what": "price",
@@ -1718,6 +1781,7 @@
             "contains-dairy",
             "contains-soy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."},
           "needs": [
             {
               "what": "price",
@@ -1737,6 +1801,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-gluten": "The menu says “flour”."},
           "needs": [
             {
               "what": "price",
@@ -1817,6 +1882,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."},
           "needs": [
             {
               "what": "price",
@@ -1852,6 +1918,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”."},
           "needs": [
             {
               "what": "price",
@@ -1892,6 +1959,7 @@
           "tags": [
             "contains-dairy"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Cream”."},
           "needs": [
             {
               "what": "price",
@@ -1921,6 +1989,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."},
           "needs": [
             {
               "what": "price",
@@ -1939,6 +2008,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."},
           "needs": [
             {
               "what": "price",
@@ -1957,6 +2027,7 @@
             "contains-soy",
             "contains-gluten"
           ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."},
           "needs": [
             {
               "what": "price",

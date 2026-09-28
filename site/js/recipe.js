@@ -160,7 +160,13 @@ function render(collection, item) {
     // collapse — both halves, where this page used to read only `avoid`.
     const { avoid, dietary } = settings.get().diet;
     const tags = el("div", { className: "dish-tags" });
-    tagRow(tags, { avoid: new Set(avoid), dietary: new Set(dietary) }).paint(item.tags);
+    tagRow(tags, {
+      avoid: new Set(avoid),
+      dietary: new Set(dietary),
+      notes: item.tagNotes,
+      recipe: true,
+      idPrefix: "tip-recipe",
+    }).paint(item.tags);
     parts.push(tags);
   }
 

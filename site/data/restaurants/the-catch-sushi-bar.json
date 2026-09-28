@@ -138,7 +138,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Veg Tempura Soba Noodle Soup",
@@ -149,7 +150,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base."}
         },
         {
           "name": "Normal Tempura Soba Noodle Soup",
@@ -160,7 +162,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base."}
         }
       ]
     },
@@ -176,7 +179,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Udon” — a wheat noodle."}
         },
         {
           "name": "Beef Udon Noodle Soup",
@@ -186,7 +190,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Udon” — a wheat noodle."}
         },
         {
           "name": "Vegetable Udon Noodle Soup",
@@ -196,7 +201,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Udon” — a wheat noodle."}
         },
         {
           "name": "Seafood Udon Noodle Soup",
@@ -207,7 +213,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Udon” — a wheat noodle.", "contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Veg Tempura Udon Noodle Soup",
@@ -218,7 +225,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base."}
         },
         {
           "name": "Normal Tempura Udon Noodle Soup",
@@ -229,7 +237,8 @@
             "contains-gluten",
             "contains-soy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base."}
         }
       ]
     },
@@ -246,7 +255,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Tuna Sashimi",
@@ -257,7 +267,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Tuna”."}
         },
         {
           "name": "Tarakihi Sashimi",
@@ -268,7 +279,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Tarakihi”."}
         },
         {
           "name": "Oyster on Shell",
@@ -279,7 +291,8 @@
             "contains-shellfish",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Salmon Nigiri",
@@ -290,7 +303,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Tuna Nigiri",
@@ -301,7 +315,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Tuna”."}
         },
         {
           "name": "Tarakihi Nigiri",
@@ -312,7 +327,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Tarakihi”."}
         },
         {
           "name": "Oyster Nigiri",
@@ -323,7 +339,8 @@
             "contains-shellfish",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Egg Sushi",
@@ -334,7 +351,8 @@
             "contains-egg",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Unagi Sushi",
@@ -345,7 +363,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Unagi”."}
         },
         {
           "name": "Inari Sushi",
@@ -355,7 +374,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Ebi Sushi",
@@ -366,7 +386,8 @@
             "contains-shellfish",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Squid Sushi",
@@ -377,7 +398,8 @@
             "contains-shellfish",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Scallop Sushi",
@@ -388,7 +410,8 @@
             "contains-shellfish",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Scallop”.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Salmon and Avocado Roll",
@@ -399,7 +422,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Teriyaki Chicken Roll",
@@ -409,7 +433,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Canned Tuna Roll",
@@ -421,7 +446,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Tuna”."}
         },
         {
           "name": "Long California Roll",
@@ -433,7 +459,8 @@
             "contains-egg",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Round California Roll",
@@ -445,7 +472,8 @@
             "contains-egg",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Egg Roll",
@@ -456,7 +484,8 @@
             "contains-egg",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Veggie Roll",
@@ -466,7 +495,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Seafood Salad Sushi",
@@ -478,7 +508,8 @@
             "contains-egg",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Seaweed Salad Sushi",
@@ -489,7 +520,8 @@
             "contains-sesame",
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Chopped Salmon and Avocado Sushi",
@@ -500,7 +532,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Salmon Roll",
@@ -511,7 +544,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Avocado Roll",
@@ -521,7 +555,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Tempura Prawn Roll",
@@ -533,7 +568,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base.", "contains-soy": "The menu says “soya”."}
         }
       ]
     },
@@ -555,7 +591,8 @@
           "price": 4.0,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Miso”."}
         },
         {
           "name": "Japanese Green Salad",
@@ -574,7 +611,8 @@
           "price": 9.8,
           "tags": [
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Beef Skewer",
@@ -600,7 +638,8 @@
           "tags": [
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Tempura Veggie",
@@ -610,7 +649,8 @@
           "tags": [
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base."}
         },
         {
           "name": "Tempura Plate",
@@ -621,7 +661,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base.", "contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Teriyaki Chicken Nibbles",
@@ -631,7 +672,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Tempura Fish",
@@ -642,7 +684,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base.", "contains-fish": "The menu says “Fish”."}
         },
         {
           "name": "Homemade Spring Roll",
@@ -651,7 +694,8 @@
           "price": 6.9,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Roll” — a wheat-flour wrapper."}
         },
         {
           "name": "Homemade Veg Spring Roll",
@@ -660,7 +704,8 @@
           "price": 6.9,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Roll” — a wheat-flour wrapper."}
         },
         {
           "name": "Veg Mini Spring Roll",
@@ -669,7 +714,8 @@
           "price": 6.9,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Roll” — a wheat-flour wrapper."}
         },
         {
           "name": "Deep Fried Squid",
@@ -680,7 +726,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”."}
         },
         {
           "name": "Agedashi Tofu",
@@ -690,7 +737,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour.", "contains-soy": "The menu says “Tofu”."}
         },
         {
           "name": "Edamame Soy Beans",
@@ -699,7 +747,8 @@
           "price": 7.5,
           "tags": [
             "contains-soy"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Edamame”."}
         },
         {
           "name": "Takoyaki",
@@ -712,7 +761,8 @@
             "contains-egg",
             "contains-soy",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “bonito”."}
         },
         {
           "name": "Shrimp Cocktail",
@@ -721,7 +771,8 @@
           "price": 8.6,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."}
         },
         {
           "name": "Deep Fried Salmon Dumplings",
@@ -732,7 +783,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-fish": "The menu says “Salmon”."}
         }
       ]
     },
@@ -749,7 +801,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Fresh Tuna Hand Roll",
@@ -760,7 +813,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Tuna”."}
         },
         {
           "name": "Canned Tuna Hand Roll",
@@ -772,7 +826,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Tuna”."}
         },
         {
           "name": "Vegetable Hand Roll",
@@ -793,7 +848,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Eel”."}
         },
         {
           "name": "Teriyaki Chicken Hand Roll",
@@ -803,7 +859,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Teriyaki Beef Hand Roll",
@@ -813,7 +870,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Tempura Prawn Hand Roll",
@@ -824,7 +882,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base."}
         },
         {
           "name": "Seafood Salad Hand Roll",
@@ -834,14 +893,16 @@
           "tags": [
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
         },
         {
           "name": "Flying Fish Egg Hand Roll",
           "dishId": "flying-fish-egg-hand-roll",
           "desc": null,
           "price": 8.1,
-          "tags": ["contains-egg", "contains-fish"]
+          "tags": ["contains-egg", "contains-fish"],
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-fish": "The menu says “Fish”."}
         }
       ]
     },
@@ -858,7 +919,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “miso”.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Teriyaki Steak",
@@ -869,7 +931,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “miso”.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Teriyaki Salmon",
@@ -881,7 +944,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “miso”.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Teriyaki Tofu",
@@ -892,7 +956,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Unagi (Eel)",
@@ -904,7 +969,8 @@
             "contains-gluten",
             "contains-sesame",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “miso”.", "contains-fish": "The menu says “Unagi”."}
         }
       ]
     },
@@ -923,7 +989,8 @@
             "contains-gluten",
             "contains-shellfish",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-shellfish": "The menu says “seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-fish": "The menu says “salmon”."}
         },
         {
           "name": "Maki Lover",
@@ -936,7 +1003,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “teriyaki” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “salmon”."}
         },
         {
           "name": "Sushi and Sashimi",
@@ -949,7 +1017,8 @@
             "contains-shellfish",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “salmon”."}
         },
         {
           "name": "Sashimi Plate",
@@ -960,7 +1029,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “soya”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “salmon”."}
         }
       ]
     },
@@ -976,7 +1046,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Teriyaki Beef",
@@ -986,7 +1057,8 @@
           "tags": [
             "contains-soy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
         },
         {
           "name": "Teriyaki Salmon",
@@ -997,7 +1069,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat.", "contains-fish": "The menu says “Salmon”."}
         },
         {
           "name": "Roast Eel",
@@ -1008,7 +1081,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Eel”."}
         },
         {
           "name": "Chirashi",
@@ -1020,7 +1094,8 @@
             "contains-soy",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”."}
         }
       ]
     },
@@ -1037,7 +1112,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Tempura” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “Tempura” — egg is in the batter or base.", "contains-dairy": "The menu says “yogurt”."}
         },
         {
           "name": "Panna Cotta",
@@ -1046,7 +1122,8 @@
           "price": 9.2,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Panna Cotta” — the sauce is cream- or butter-based."}
         }
       ]
     },
@@ -1059,7 +1136,8 @@
           "dishId": "japanese-kids-beer",
           "desc": null,
           "price": 11.5,
-          "tags": ["contains-gluten"]
+          "tags": ["contains-gluten"],
+          "tagNotes": {"contains-gluten": "The menu says “Beer” — beer is a barley product."}
         },
         {
           "name": "Mogu Mogu",

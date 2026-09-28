@@ -1455,6 +1455,174 @@ def swap_findings():
             yield rec, dish, phrase, verdict, sorted(set(cancelled))
 
 
+# --- WHY a dish carries an allergen: the tag tips (roadmap 350/020) ----------
+#
+# Owner-ruled 2026-09-28: tapping "Contains peanuts" says what caused it, and
+# for a venue dish — which has no ingredient list — "the allergen tagger stores
+# its trigger word per tag … and the tip shows it". So the SAME rules that write
+# a tag also write one sentence per tag into the dish's `tagNotes`, and the
+# sentence quotes the words that fired: never a paraphrase, because a tip that
+# says "satay" where the menu says "peanut sauce" would be the tool inventing
+# evidence.
+#
+# 🔑 It explains tags the dish ALREADY carries, whoever put them there, and
+# writes nothing for a tag no rule accounts for — a venue's own allergen chart,
+# a hand correction. The tip then says only that it was recorded, which is true;
+# a guessed reason would not be. It never ADDS a tag: that is `--apply`'s job,
+# with its own tiers and gates, and the two must not blur.
+
+NOTE_CLAUSE = re.compile(r'^section note "(.*)" — ')
+
+
+def _quote(match):
+    return match.group(0).strip()
+
+
+def tag_note(tag, item, note_applies, recipes):
+    """One sentence saying why `item` carries `tag`, or None if no rule can say."""
+    rules = [(tier, why, pattern, exclude)
+             for t, tier, why, pattern, exclude in COMPILED if t == tag]
+    # A recipe names its ingredients, and the owner's ask was exactly "tell me
+    # the ingredients that caused it" — so quote the LINES, every one that fires.
+    if recipes:
+        lines = [line for line in ingredient_lines(item)
+                 if any(not (ex and ex.search(line)) and first_unhedged(tag, pat, line)
+                        for _, _, pat, ex in rules)]
+        if lines:
+            return "From the ingredients: " + "; ".join(lines) + "."
+    text = ingredient_text(item)
+    source = "The recipe says" if recipes else "The menu says"
+    for tier, why, pattern, exclude in rules:
+        if exclude and exclude.search(text):
+            continue
+        hit = first_unhedged(tag, pattern, text)
+        if hit:
+            return f"{source} “{_quote(hit)}”" + (f" — {why}." if tier == "DERIVED" else ".")
+    for t, _tier, why in note_applies:
+        if t == tag:
+            m = NOTE_CLAUSE.match(why)
+            return f"The note over this section says “{m.group(1)}”." if m else None
+    caption = photo_text(item)
+    for tier, why, pattern, exclude in rules:
+        if not caption or (exclude and exclude.search(caption)):
+            continue
+        hit = first_unhedged(tag, pattern, caption)
+        if hit:
+            return (f"The photo’s description says “{_quote(hit)}”"
+                    + (f" — {why}." if tier == "DERIVED" else "."))
+    return None
+
+
+def explain(record):
+    """Yield (flat item index, item, {tag: sentence}) for every dish."""
+    recipes = record.get("kind") == "recipes"
+    n = 0
+    for section in record.get("menu", []) or []:
+        note_applies, _ = read_section_note(section.get("note"))
+        for item in section.get("items") or []:
+            notes = {}
+            for tag in item.get("tags") or []:
+                if tag.startswith("contains-"):
+                    sentence = tag_note(tag, item, note_applies, recipes)
+                    if sentence:
+                        notes[tag] = sentence
+            yield n, item, notes
+            n += 1
+
+
+def patch_tag_notes(raw, items, wanted):
+    """Set each dish's `tagNotes` to `wanted[i]` (dropping it when empty),
+    touching no other byte. Placed straight after the dish's `tags` array, in
+    that array's own layout, so the diff is the notes and nothing else."""
+    root = _skip_ws(raw, 0)
+    menu = _member(raw, root, "menu")
+    spots = []
+    for sec_start, _ in _elements(raw, menu[0]) if menu else []:
+        its = _member(raw, sec_start, "items")
+        for item_start, _ in (_elements(raw, its[0]) if its else []):
+            spots.append((_member(raw, item_start, "tags"), _member(raw, item_start, "tagNotes")))
+    if len(spots) != len(items):
+        raise Unpatchable(f"scanned {len(spots)} dishes, parsed {len(items)}")
+    edits = []  # (start, end, replacement)
+    for i, (tags_span, notes_span) in enumerate(spots):
+        want = wanted.get(i) or {}
+        have = items[i].get("tagNotes") or {}
+        if want == have:
+            continue
+        value = json.dumps(want, ensure_ascii=False)
+        if notes_span is not None:
+            if want:
+                edits.append((notes_span[0], notes_span[1], value))
+            else:
+                # Remove the member AND the comma that introduced it.
+                key_at = raw.rfind('"tagNotes"', 0, notes_span[0])
+                comma = raw.rfind(",", 0, key_at)
+                edits.append((comma, notes_span[1], ""))
+            continue
+        if tags_span is None:
+            raise Unpatchable(f"no tags array on {items[i].get('name')!r}")
+        end = tags_span[1]
+        line_start = raw.rfind("\n", 0, tags_span[0]) + 1
+        indent = re.match(r"[ \t]*", raw[line_start:]).group(0)
+        tail = raw[end:end + 200]
+        if re.match(r"\s*,?\s*\n", tail):
+            edits.append((end, end, f',\n{indent}"tagNotes": {value}'))
+        else:
+            edits.append((end, end, f', "tagNotes": {value}'))
+    out, last = [], 0
+    for start, stop, rep in sorted(edits):
+        out.append(raw[last:start])
+        out.append(rep)
+        last = stop
+    out.append(raw[last:])
+    new = "".join(out)
+    # Prove it: the file must still parse, and say exactly what was wanted.
+    check = [it for sec in json.loads(new).get("menu", []) for it in sec["items"]]
+    for i, it in enumerate(check):
+        if (it.get("tagNotes") or {}) != (wanted.get(i) or {}):
+            raise Unpatchable(f"patched {items[i].get('name')!r} does not read back")
+    return new
+
+
+def run_explain(apply, check):
+    """--explain: report, write (--apply) or gate (--check) every tagNotes."""
+    stale, written, notes_total, tags_total, skipped = [], 0, 0, 0, []
+    for path in sorted(DATA.glob("*.json")):
+        raw = path.read_text()
+        record = json.loads(raw)
+        items = [it for sec in record.get("menu", []) for it in sec["items"]]
+        wanted = {}
+        for i, item, notes in explain(record):
+            tags_total += sum(1 for t in item.get("tags") or [] if t.startswith("contains-"))
+            notes_total += len(notes)
+            if notes:
+                wanted[i] = notes
+            if (item.get("tagNotes") or {}) != notes:
+                stale.append(f"{record['id']} / {item.get('name')}")
+        if apply and any((it.get("tagNotes") or {}) != (wanted.get(i) or {}) for i, it in enumerate(items)):
+            try:
+                path.write_text(patch_tag_notes(raw, items, wanted))
+                written += 1
+            except Unpatchable as exc:
+                skipped.append(f"{record['id']}: {exc}")
+    print(f"{notes_total} of {tags_total} allergen tag(s) have a reason a rule can quote.")
+    if apply:
+        print(f"Wrote tagNotes in {written} record(s).")
+        for s in skipped:
+            print(f"  SKIPPED (not written) — {s}")
+        return 1 if skipped else 0
+    if stale:
+        print(f"{len(stale)} dish(es) whose tagNotes do not match what the rules say now:")
+        for s in stale[:20]:
+            print(f"  {s}")
+        if len(stale) > 20:
+            print(f"  … and {len(stale) - 20} more")
+        print("Run: python3 tools/tag_allergens.py --explain --apply")
+        return 1 if check else 0
+    print("✓ every dish's tagNotes match what the rules say now.")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="write the tags (default: report only)")
@@ -1465,7 +1633,14 @@ def main():
                     help="words a rule ALMOST matches, and which boundary refused them")
     ap.add_argument("--swaps", action="store_true",
                     help="every substitution phrase, and whether the swap guard reads it")
+    ap.add_argument("--explain", action="store_true",
+                    help="the tag tips: why each allergen tag is there (tagNotes); "
+                         "with --apply writes them, with --check fails if they are stale")
+    ap.add_argument("--check", action="store_true", help="with --explain: exit 1 if stale")
     args = ap.parse_args()
+
+    if args.explain:
+        return run_explain(args.apply, args.check)
 
     if args.swaps:
         print("Substitution-shaped phrases in the corpus, and what the swap guard")
@@ -1618,4 +1793,10 @@ def main():
 
 
 if __name__ == "__main__":
+    # Which tree did this read (ADR 0113)? `--explain --check` is a CI gate, so
+    # the run says so as its last line whatever the exit path.
+    import sys
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+    from lib.tree import announce
+    announce(pathlib.Path(__file__).resolve().parent.parent)
     raise SystemExit(main())

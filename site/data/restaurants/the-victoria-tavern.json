@@ -126,7 +126,8 @@
             "df",
             "gf",
             "contains-shellfish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “oysters”."}
         },
         {
           "name": "Deep fried in a beer batter w/ chilli & lime mayo",
@@ -138,7 +139,8 @@
             "contains-gluten",
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “beer” — beer is a barley product.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         }
       ]
     },
@@ -155,7 +157,8 @@
             "v",
             "contains-dairy",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Moroccan spiced lamb koftas on flatbread w/ spiced tomato & red pepper chilli relish, tahini",
@@ -166,7 +169,8 @@
             "df",
             "contains-gluten",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “tahini”."}
         },
         {
           "name": "Roasted beetroot hummus, dukkah, crispy chickpeas, grilled flat bread",
@@ -178,7 +182,8 @@
             "contains-sesame",
             "contains-gluten",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-gluten": "The menu says “bread”."}
         },
         {
           "name": "Potato dauphine, pecorino & aioli",
@@ -190,7 +195,8 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “pecorino”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Wagyu meatballs, tomato ragu, parmesan, grilled sourdough",
@@ -202,7 +208,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-gluten": "The menu says “sourdough”."}
         },
         {
           "name": "Deep fried crumbed mozzarella sticks, salsa rosa, basil",
@@ -214,7 +221,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “crumbed” — battered/crumbed coatings are wheat flour.", "contains-dairy": "The menu says “mozzarella”."}
         },
         {
           "name": "Spiced crispy calamari, chilli & lime mayo",
@@ -226,7 +234,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “calamari”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Garlic & chive fish cake, cos lettuce & tartare slider",
@@ -237,7 +246,8 @@
             "contains-egg",
             "contains-gluten",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Samoan Oka – raw fish salad w/ tomato, cucumber, shallots, spring onion, vanilla bean, coconut cream and taro wafers",
@@ -248,7 +258,8 @@
             "df",
             "gf",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Faiai ia – Samoan style braised fish, coconut soubise, chopped hazelnuts, banana chips",
@@ -260,7 +271,8 @@
             "gf",
             "contains-nuts",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “hazelnuts”.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Chicken liver pate, caramelised onion jam, bread & butter pickles, crostini",
@@ -270,7 +282,8 @@
           "tags": [
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-dairy": "The menu says “butter”."}
         },
         {
           "name": "Extra crostini",
@@ -291,7 +304,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
         },
         {
           "name": "Palusami – Samoan coconut & taro leaf gratin, sweet potato crisp",
@@ -313,7 +327,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “blue cheese”."}
         }
       ]
     },
@@ -330,7 +345,8 @@
             "contains-egg",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “croutons”.", "contains-dairy": "The menu says “parmesan”."}
         },
         {
           "name": "Roasted pumpkin, chickpeas, feta, toasted pumpkin & sunflower seed, salad greens, pecorino & rocket mayo",
@@ -341,7 +357,8 @@
             "v",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "House made potato gnocchi w/ charred red pepper pesto, roasted cherry tomatoes & pecorino",
@@ -353,7 +370,8 @@
             "contains-gluten",
             "contains-nuts",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “pesto” — pesto is made with pine nuts.", "contains-dairy": "The menu says “pecorino”."}
         },
         {
           "name": "Beef cheek ragu, pappardelle w/ pecorino & gremolata",
@@ -364,7 +382,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “pecorino”."}
         },
         {
           "name": "Beetroot risotto w/ olives, feta, chopped hazelnuts & crispy sage",
@@ -376,7 +395,8 @@
             "gf",
             "contains-dairy",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”.", "contains-nuts": "The menu says “hazelnuts”."}
         },
         {
           "name": "Smokey pomodoro rigatoni, cherry tomatoes, basil & shaved parmesan",
@@ -387,7 +407,8 @@
             "v",
             "contains-gluten",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”."}
         }
       ]
     },
@@ -411,7 +432,8 @@
           "price": 20.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pasta”."}
         },
         {
           "name": "The Vic Surf & Turf",
@@ -467,7 +489,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheeseburger”.", "contains-gluten": "The menu says “brioche”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Beer battered fish, chunky chips, house tartare sauce & fennel slaw",
@@ -479,7 +502,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “tartare sauce” — an egg emulsion.", "contains-fish": "The menu says “fish”."}
         },
         {
           "name": "Braised beef cheek, mashed maple pumpkin, roasted brussel sprouts, jus",
@@ -502,7 +526,8 @@
             "contains-shellfish",
             "contains-egg",
             "contains-fish"
-          ]
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-fish": "The menu says “snapper”."}
         },
         {
           "name": "Rolled & roasted pork belly, garlic & herb mash, pork jus, fig & apple compote",
@@ -562,7 +587,8 @@
           "tags": [
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “yoghurt”."}
         }
       ]
     },
@@ -580,7 +606,8 @@
             "df",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
         },
         {
           "name": "Roasted herb potatoes",
@@ -603,7 +630,8 @@
             "v",
             "contains-dairy",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “feta”.", "contains-nuts": "The menu says “walnuts”."}
         },
         {
           "name": "Fennel Slaw",
@@ -625,7 +653,8 @@
             "v",
             "gf",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
         },
         {
           "name": "Roasted beetroot, avocado, chilli coconut yoghurt",
@@ -647,7 +676,8 @@
             "v",
             "gf",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “pecorino”."}
         },
         {
           "name": "Salad greens, cherry tomatoes, cucumber, red onion, raspberry vinaigrette",
@@ -675,7 +705,8 @@
             "contains-gluten",
             "contains-nuts",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-nuts": "The menu says “almond”.", "contains-dairy": "The menu says “cream”."}
         },
         {
           "name": "Baked raspberry & lemon cheesecake w/ tropical fruit coulis, candied nuts, dried raspberries",
@@ -687,7 +718,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cheesecake” — the sauce is cream- or butter-based."}
         },
         {
           "name": "Vanilla bean pannacotta, lemon ricotta donuts, citrus crumble",
@@ -698,7 +730,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “ricotta”.", "contains-gluten": "The menu says “donuts” — a wheat bakery item."}
         },
         {
           "name": "Dark chocolate & espresso torte, chocolate soil, raspberry sorbet, crushed roasted almonds",
@@ -710,7 +743,8 @@
             "vg",
             "df",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “almonds”."}
         },
         {
           "name": "Caramelised bananas, salted caramel ganache, cashew nut praline, vanilla bean ice cream",
@@ -721,7 +755,8 @@
             "gf",
             "contains-dairy",
             "contains-nuts"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-nuts": "The menu says “cashew”."}
         },
         {
           "name": "Deep fried chocolate filled doughnuts, orange caramel drizzle, vanilla bean ice cream",
@@ -732,7 +767,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “doughnuts” — a wheat bakery item.", "contains-dairy": "The menu says “cream”."}
         }
       ]
     },
@@ -756,7 +792,8 @@
           "price": 7.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
         },
         {
           "name": "Steinlager Ultra Low Carb",
@@ -774,7 +811,8 @@
           "price": 8.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
         },
         {
           "name": "Panhead Supercharger APA",
@@ -783,7 +821,8 @@
           "price": 8.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
         },
         {
           "name": "Panhead Sandman Hazy Pale Ale",
@@ -792,7 +831,8 @@
           "price": 8.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
         },
         {
           "name": "Panhead Pickup Hazy IPA",
@@ -801,7 +841,8 @@
           "price": 8.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
         },
         {
           "name": "Mac's Cloudy Apple Cider",
@@ -891,7 +932,8 @@
           "price": 12.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
         },
         {
           "name": "Zeffer Zero Cider",
@@ -1210,7 +1252,8 @@
           "price": 18.0,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "Rosebud",
@@ -1261,7 +1304,8 @@
           "price": 18.0,
           "tags": [
             "contains-egg"
-          ]
+          ],
+          "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
         {
           "name": "After Dinner Delight",
@@ -1270,7 +1314,8 @@
           "price": 17.0,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         }
       ]
     },
@@ -1346,7 +1391,8 @@
           "price": 14.0,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “cream”."}
         }
       ]
     },
@@ -1433,7 +1479,8 @@
           "price": 3.5,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “milk”."}
         },
         {
           "name": "Chai Latte",
@@ -1442,7 +1489,8 @@
           "price": 5.0,
           "tags": [
             "contains-dairy"
-          ]
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Latte” — an espresso milk drink."}
         },
         {
           "name": "Hot Chocolate",
