@@ -56,7 +56,7 @@ import { ratingControl, curatedRating } from "./ratings-ui.js";
 import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
 import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
-import { favourites } from "./favourites.js";
+import { favourites, favouriteDishIds } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
 import { isSpicy, heatLabel } from "./heat.js";
@@ -1745,13 +1745,7 @@ function render(r) {
   // three "Cheeseburger" rows would match together). Recomputed rather than
   // cached because the reader can heart a dish while "favourites" is typed, and
   // the row must leave or arrive on the spot.
-  const favouriteIds = () =>
-    new Set(
-      favourites
-        .dishes()
-        .filter((e) => e.venueId === r.id)
-        .map((e) => e.dishId || "")
-    );
+  const favouriteIds = () => favouriteDishIds(favourites.dishes(), r.id);
 
   // THERE IS NO CHIP ROW. Owner-ruled 2026-09-06, after seeing one:
   // *"I hate the chips for favourites, vegetarian, vegan etc. lose them."*

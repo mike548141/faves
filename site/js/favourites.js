@@ -64,6 +64,21 @@ export const favKey = (e) =>
   e.type === "venue" ? `v:${e.venueId}` : `d:${e.venueId} ${dishId(e)}`;
 
 /**
+ * The dish ids hearted at one venue — what the menu's "favourites" search
+ * filters on and counts. Keyed through `dishId(e)`, the SAME key the row's
+ * heart lights on (favKey), never the raw `e.dishId`: an entry saved before
+ * dish ids existed carries none, and reading `e.dishId || ""` collapsed every
+ * such heart into one empty string — the search offered "Favourites 1 dish"
+ * at a venue with four hearted rows and then showed none of them (owner,
+ * 2026-09-28).
+ */
+export function favouriteDishIds(entries, venueId) {
+  return new Set(
+    (entries || []).filter((e) => e.type !== "venue" && e.venueId === venueId).map((e) => dishId(e))
+  );
+}
+
+/**
  * Group a flat favourites list by venue for sharing (Theme 1b shortlist), in
  * first-seen order: `{ venueId, venueName, isRecipe, sub, venueFav, dishes }`.
  * `venueFav` marks a whole-place heart; `dishes` is `{ name, dishId? }` per

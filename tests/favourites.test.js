@@ -7,6 +7,7 @@ import {
   createFavourites,
   favKey,
   favHref,
+  favouriteDishIds,
   groupForShare,
   unresolvedReason,
   UNRESOLVED_VENUE,
@@ -286,4 +287,24 @@ test("unresolvedReason answers null when it has nothing to check against", () =>
   // not evidence of absence, so nothing gets marked.
   assert.equal(unresolvedReason(dish, null), null);
   assert.equal(unresolvedReason(null, loaded(RECORD)), null);
+});
+
+// Owner, 2026-09-28: "favourites" at KK offered "1 dish" and showed none, with
+// four hearted rows. Pre-id entries carry no dishId, and `e.dishId || ""`
+// collapsed all four into one empty string. The filter must key exactly as the
+// row's heart does.
+test("favouriteDishIds keys a pre-id heart by its name, exactly as the heart does", () => {
+  const entries = [
+    { type: "dish", venueId: "kk", name: "Chicken Curry" },
+    { type: "dish", venueId: "kk", name: "Nasi Goreng" },
+    { type: "dish", venueId: "kk", name: "Mocha", dishId: "mocha-hot" },
+    { type: "dish", venueId: "other", name: "Roti" },
+    { type: "venue", venueId: "kk" },
+  ];
+  const ids = favouriteDishIds(entries, "kk");
+  assert.deepEqual([...ids].sort(), ["chicken-curry", "mocha-hot", "nasi-goreng"]);
+  // …and every id is the one favKey (the heart) would light on.
+  for (const e of entries.filter((x) => x.venueId === "kk" && x.type === "dish")) {
+    assert.ok(ids.has(favKey(e).split(" ").slice(1).join(" ")));
+  }
 });

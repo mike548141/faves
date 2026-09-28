@@ -38,6 +38,10 @@ content freshness separately from this file.
   opens it — a recipe on its own page, a restaurant dish at its row in the
   full menu — instead of just filtering the list to it.
 ### Fixed
+- **Searching "favourites" on a menu found almost none of them.** Hearts saved
+  before dishes had ids were all counted as one and matched nothing — KK
+  offered "Favourites 1 dish" with four hearted, then showed none. It now
+  finds every dish whose heart is lit.
 - **Ticking a method step ticks the steps before it** — the method is a
   sequence, so ticking step 3 marks 1 and 2 done too, and unticking a step
   unticks the ones after it. Same on the recipe page and in cook mode.

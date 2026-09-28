@@ -72,6 +72,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
+import { dishId } from "../site/js/dish-id.js";
+import { slug } from "../site/js/slug.js";
 
 import {
   Cdp,
@@ -330,6 +332,7 @@ async function run(opts) {
       `${favOff.shown} still shown`
     );
 
+
     // A dish literally NAMED "Vegetarian…" must still be findable by name —
     // this venue has four, and a keyword that hijacked the query would lose
     // every one of them.
@@ -463,6 +466,39 @@ async function run(opts) {
       "submitting a home search with ONE result opens it",
       /dish=chocolate-self-saucing-pudding/.test(fromHome),
       fromHome
+    );
+
+
+    // A heart saved BEFORE dish ids existed carries no `dishId` (owner,
+    // 2026-09-28: KK offered "Favourites 1 dish" with four hearted rows, then
+    // showed none). Heart two rows whose id IS their name's slug (every dish
+    // carries an id now, ADR 0051; an old heart falls back to that slug) — strip the ids from what was stored, the
+    // exact shape an old device holds, reload, and ask again.
+    const venueData = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${CONFIG_VENUE}.json`), "utf8"));
+    const plain = venueData.menu.flatMap((sec) => sec.items || []).filter((it) => dishId(it) === slug(it.name)).slice(0, 2);
+    await openVenue(driver, cdp, sessionId, port, CONFIG_VENUE);
+    await driver.evalPage(`(() => { for (const id of ${JSON.stringify(plain.map((it) => dishId(it)))})
+      document.querySelector("#dish-" + id + " .dish-actions .heart").click(); })()`);
+    await sleep(150);
+    const stripped = await driver.evalPage(`(() => {
+      const k = Object.keys(localStorage).find((x) => x.endsWith(".favourites.v1"));
+      const a = JSON.parse(localStorage.getItem(k) || "[]");
+      const n = a.filter((e) => e.type === "dish" && e.dishId).length;
+      localStorage.setItem(k, JSON.stringify(a.map(({ dishId, ...rest }) => rest)));
+      return n;
+    })()`);
+    await openVenue(driver, cdp, sessionId, port, CONFIG_VENUE);
+    await typeQuery(driver, "favourites");
+    const legacy = await driver.evalPage(`(() => ({
+      shown: [...document.querySelectorAll("li.dish")].filter((d) => !d.hidden).length,
+      lit: document.querySelectorAll("li.dish .heart[aria-pressed='true']").length,
+      offered: [...document.querySelectorAll(".suggest-row")].map((r) => r.textContent.trim()),
+    }))()`);
+    report.check(
+      '"favourites" finds hearts saved before dish ids existed — as many as the rows that are lit',
+      plain.length === 2 && stripped === 2 && legacy.shown === 2 && legacy.lit === 2 &&
+        legacy.offered.some((t) => t.includes("2 dishes")),
+      `${plain.map((it) => it.name).join(", ")} · stripped ${stripped} ids · ${JSON.stringify(legacy)}`
     );
 
     // ─── The GLOBAL search list ranks a property above a spelling ──────────
