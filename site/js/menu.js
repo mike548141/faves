@@ -59,7 +59,7 @@ import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { favourites, favouriteDishIds } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
-import { tagRow } from "./tags.js";
+import { tagRow, traceEntries } from "./tags.js";
 import { summarise } from "./dish-filters.js";
 import { textCandidate } from "./suggest.js";
 import { attachSuggestions } from "./suggest-ui.js";
@@ -1364,6 +1364,10 @@ function renderDish(
     base: item.tags,
     recipe: isRecipeKind(r),
     idPrefix: `tip-${r?.id ?? "menu"}-${dishId(item)}`,
+    // The "may contain" tier (ADR 0136): a line in every tip, and a chip only
+    // for a reader who flagged it. Never fed to dishFlagged — the row accent
+    // is PRESENT-only by the same ruling.
+    trace: traceEntries(item),
   });
   const paintChips = (list) => chipRow.paint(list);
   paintChips(item.tags);

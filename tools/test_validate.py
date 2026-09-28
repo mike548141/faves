@@ -275,6 +275,46 @@ CASES = {
         lambda d: _first_item(d).update(tags=["contains-egg"], tagNotes={"contains-egg": " "}),
         "error", r"tagNotes\['contains-egg'\] for .* must be a non-empty sentence",
     ),
+    # --- the "may contain" tier (ADR 0136) ---------------------------------
+    # The positive case first: a gate broken into refusing every trace must fail.
+    "a dish carries a trace with its source": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["v"], trace=["contains-peanuts", "contains-nuts"], traceSource="Example label")),
+        "clean", None,
+    ),
+    "a diet label as a trace": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["v"], trace=["gf"], traceSource="Example label")),
+        "error", r"trace on .* holds 'gf'; only allergen tags",
+    ),
+    "an allergen both present and traced": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["contains-peanuts"], trace=["contains-peanuts"], traceSource="Example label")),
+        "error", r"'contains-peanuts' on .* is in both tags and trace",
+    ),
+    "a trace with no source": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["v"], trace=["contains-peanuts"])),
+        "error", r"trace on .* needs a traceSource",
+    ),
+    "a source with no trace": (
+        lambda d: _first_item(d).update(traceSource="Example label"),
+        "error", r"traceSource on .* names a source for a trace it does not carry",
+    ),
+    "an allergen traced twice": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["v"], trace=["contains-nuts", "contains-nuts"], traceSource="Example label")),
+        "error", r"trace on .* names an allergen twice",
+    ),
+    "an empty trace list": (
+        lambda d: _first_item(d).update(trace=[], traceSource="Example label"),
+        "error", r"trace on .* must be a non-empty list",
+    ),
+    "a trace spelled as a tag": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["trace:contains-peanuts"])),
+        "error", r"unknown tag 'trace:contains-peanuts'",
+    ),
     # --- the credit's source link (owner, 2026-09-28) ----------------------
     # The positive case first, so a gate broken into refusing every link fails.
     "a credit links to its source": (

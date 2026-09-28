@@ -47,6 +47,55 @@ TAGS = {
 # through `composeTags` from an OPTION's tags. `tagChip` in menu.js has no entry
 # for them, so on a dish they would render as a bare, unexplained chip.
 OPTION_ONLY_TAGS = {"has-meat", "has-fish"}
+# The allergen vocabulary alone — the only words a `trace` list may hold.
+ALLERGEN_TAGS = {t for t in TAGS if t.startswith("contains-")}
+
+
+def check_trace(rid, obj, where):
+    """The "may contain" tier (ADR 0136; owner rulings 110/020 and 350/020).
+
+    Only a PRESENT allergen is a `contains-*` tag. A trace statement — "may
+    contain peanuts", Pizza Hut's `T` — lives in `trace`, a separate field, so
+    no reader of `tags` can take it for a present one. Four rules make that
+    hold, and each is a way it was otherwise going to break:
+
+      • `trace` holds allergen words only. A diet label cannot be "traced", and
+        a `trace:`/`may-contain-` spelling would be a second vocabulary.
+      • An allergen in BOTH `tags` and `trace` is refused: present wins, and a
+        record saying both has not decided which the source said.
+      • `traceSource` is required with it and refused without it. The tip shows
+        it ("— Whittaker's label"), and a trace nobody can attribute is a
+        warning nobody can check or retire.
+      • `trace` never reaches `tagNotes`: those explain tags, and are written by
+        the tagger, which never writes trace (tools/tag_allergens.py).
+    """
+    trace = obj.get("trace")
+    source = obj.get("traceSource")
+    if trace is None:
+        if source is not None:
+            err(rid, f"traceSource on {where} names a source for a trace it does not carry")
+        return
+    if not isinstance(trace, list) or not trace:
+        err(rid, f"trace on {where} must be a non-empty list of allergen tags or absent")
+        return
+    tags = obj.get("tags") or []
+    for t in trace:
+        if t not in ALLERGEN_TAGS:
+            err(rid, f"trace on {where} holds {t!r}; only allergen tags "
+                     f"({', '.join(sorted(ALLERGEN_TAGS))}) can be a trace")
+        elif isinstance(tags, list) and t in tags:
+            err(rid, f"{t!r} on {where} is in both tags and trace — present wins; "
+                     "drop it from trace, or from tags if the source only said 'may contain'")
+    if len(set(map(str, trace))) != len(trace):
+        err(rid, f"trace on {where} names an allergen twice")
+    if not isinstance(source, str) or not source.strip():
+        err(rid, f"trace on {where} needs a traceSource — who said 'may contain' "
+                 "(e.g. \"Whittaker's label\"), shown in the tip")
+    notes = obj.get("tagNotes")
+    if isinstance(notes, dict):
+        for t in trace:
+            if t in notes:
+                err(rid, f"tagNotes on {where} explain {t!r}, which is a trace, not a tag")
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 # The time dimension (ADR 0023) allows reduced precision — "2019" and "2019-05"
@@ -129,7 +178,7 @@ SECTION_KEYS = {
 }
 ITEM_KEYS = {
     "name", "dishId", "formerIds", "code", "desc", "price", "prices", "available",
-    "revisions", "needs", "tags", "tagNotes", "image", "alt", "rating", "goesWith",
+    "revisions", "needs", "tags", "tagNotes", "trace", "traceSource", "image", "alt", "rating", "goesWith",
     "addOns", "served", "translations",
     # Recipe-only fields (kind: "recipes"), all optional and all validated
     # above whether or not the record is a recipe collection.
@@ -2306,6 +2355,7 @@ def check_restaurant(path):
                             "label for it, so on a dish it would paint a raw "
                             f"{t!r} chip",
                         )
+            check_trace(rid, item, repr(name))
 
             # Recipe-only item fields (all optional). Validated whenever
             # present so a stray field on a venue item is also caught.

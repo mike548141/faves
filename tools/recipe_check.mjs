@@ -1492,6 +1492,73 @@ async function run(opts) {
     );
     await evalPage(`localStorage.removeItem("faves.p.default.settings.v1")`);
 
+    // --- 14. The "may contain" tier (ADR 0136) --------------------------------
+    // Owner rulings 110/020 and 350/020 (2026-09-28): trace is NEVER a tag. It
+    // is a line in every tip, and a chip only for a reader who FLAGGED it —
+    // dashed, "May contain …", never folded away — and it never lights the
+    // dish row's accent. Fixture by the DATA: the first recipe carrying trace.
+    const traced = items.find((i) => Array.isArray(i.trace) && i.trace.length);
+    const tFlag = traced?.trace?.[0];
+    const tWord = tFlag ? ALLERGEN[tFlag].replace(/^Contains /, "").toLowerCase() : "";
+    const setAvoid = (list) => evalPage(`localStorage.setItem("faves.p.default.settings.v1",
+      JSON.stringify({ diet: { dietary: [], avoid: ${JSON.stringify(list)} } }))`);
+    // Reads the WHOLE row: the fold is opened first, so an assertion of absence
+    // cannot pass on a chip that is merely hidden behind "+N".
+    const traceRow = (scope) => evalPage(`(async () => {
+      const r = document.querySelector(${JSON.stringify(scope)} + " .dish-tags");
+      const folded = [...(r?.querySelectorAll(".tag:not(.tag-more)") || [])].map((c) => c.textContent);
+      const more = r?.querySelector(".tag-more");
+      if (more && more.getAttribute("aria-expanded") === "false") more.click();
+      await new Promise((ok) => requestAnimationFrame(() => ok()));
+      const chips = [...(r?.querySelectorAll(".tag:not(.tag-more)") || [])];
+      const first = chips.find((c) => !c.classList.contains("tag-trace"));
+      const tipOf = (b) => b ? document.getElementById(b.getAttribute("aria-controls"))?.textContent ?? null : null;
+      const trace = r?.querySelector(".tag-trace");
+      return { folded, all: chips.map((c) => c.textContent), traceChip: trace?.textContent ?? null,
+        traceTip: tipOf(trace), firstTip: tipOf(first) };
+    })()`);
+    await setAvoid([]);
+    await goto(url(traced), ".dish-tags");
+    const tUn = await traceRow(".recipe-detail-page");
+    report.check(
+      "a traced allergen the reader did NOT flag is no chip at all — not even behind the fold",
+      !!tFlag && tUn.traceChip === null && !tUn.all.some((c) => new RegExp(tWord, "i").test(c)),
+      `“${traced?.name}” trace ${JSON.stringify(traced?.trace)}: ${JSON.stringify(tUn.all)}`
+    );
+    report.check(
+      "…and every tip on the dish still says it: 'May contain traces of …' with its source",
+      (tUn.firstTip ?? "").includes(`May contain traces of`) && (tUn.firstTip ?? "").includes(traced?.traceSource ?? "∅") &&
+        new RegExp(tWord).test(tUn.firstTip ?? ""),
+      JSON.stringify(tUn.firstTip)
+    );
+    await setAvoid([tFlag]);
+    await goto(url(traced), ".dish-tags");
+    const tFl = await traceRow(".recipe-detail-page");
+    report.check(
+      "a traced allergen the reader FLAGGED gets a 'May contain' chip, on the FOLDED row, and never 'Contains'",
+      tFl.traceChip === `⚠ May contain ${tWord}` && tFl.folded.includes(tFl.traceChip) &&
+        !tFl.all.includes(`⚠ ${ALLERGEN[tFlag]}`),
+      JSON.stringify(tFl)
+    );
+    report.check(
+      "…whose tip names the source and says it is a warning, not an ingredient",
+      (tFl.traceTip ?? "").startsWith("You asked to avoid this.") && (tFl.traceTip ?? "").includes(traced.traceSource) &&
+        (tFl.traceTip ?? "").includes("Not listed as an ingredient"),
+      JSON.stringify(tFl.traceTip)
+    );
+    // The collection list draws the same row through menu.js. The row accent
+    // (`dish-flagged`) is PRESENT-only by ruling, so a trace must not light it.
+    await goto(`${base}/restaurant.html?id=${COLLECTION}`, ".dish-meta");
+    const listRow = `#dish-${traced.dishId ?? slug(traced.name)}`;
+    const tList = await traceRow(listRow);
+    const accent = await evalPage(`document.querySelector(${JSON.stringify(listRow)})?.classList.contains("dish-flagged") ?? null`);
+    report.check(
+      "on the collection list the same chip shows, and the row's warning accent stays OFF (present-only)",
+      tList.traceChip === `⚠ May contain ${tWord}` && accent === false,
+      `${JSON.stringify(tList.all)} dish-flagged=${accent}`
+    );
+    await evalPage(`localStorage.removeItem("faves.p.default.settings.v1")`);
+
     return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();

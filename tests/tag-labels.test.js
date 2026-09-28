@@ -451,6 +451,6 @@ test("neither screen keeps its own chip vocabulary — tags.js is the one", () =
   for (const [file, source] of [["site/js/menu.js", menuJs], ["site/js/recipe.js", recipeJs]]) {
     assert.ok(!/^const (DIETARY|ALLERGEN) = \{/m.test(source), `${file} defines its own tag table again`);
     assert.ok(!/^function tagChip\(/m.test(source), `${file} builds its own chip again`);
-    assert.match(source, /import \{ tagRow \} from "\.\/tags\.js";/, `${file} does not draw its row through tags.js`);
+    assert.match(source, /import \{[^}]*\btagRow\b[^}]*\} from "\.\/tags\.js";/, `${file} does not draw its row through tags.js`);
   }
 });

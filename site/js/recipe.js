@@ -24,7 +24,7 @@ import { ingredientBlocks } from "./ingredients.js";
 import { SCALES, DEFAULT_SCALE, scaleFor, scaleLineStatus, scaleServes } from "./quantity.js";
 import { el } from "./dom.js";
 import { disclosure } from "./disclosure.js";
-import { tagRow } from "./tags.js";
+import { tagRow, traceEntries } from "./tags.js";
 import { recipeStats } from "./recipe-stats.js";
 // The app chrome behind the ⋯ menu. Until 2026-08-16 this page had none of it:
 // a recipe could show CONTAINS GLUTEN chips with no route to the Settings that
@@ -150,9 +150,12 @@ function render(collection, item) {
   if (item.desc) parts.push(el("p", { className: "recipe-lede", textContent: item.desc }));
 
 
-  if (item.tags?.length) {
+  const trace = traceEntries(item);
+  if (item.tags?.length || trace.length) {
     // The reader's own allergens and diets drive loudness, order and what may
     // collapse — both halves, where this page used to read only `avoid`.
+    // `trace` is the "may contain" tier (ADR 0136): never a tag, shown as a
+    // line in every tip and as a chip only for a reader who flagged it.
     const { avoid, dietary } = settings.get().diet;
     const tags = el("div", { className: "dish-tags" });
     tagRow(tags, {
@@ -161,7 +164,8 @@ function render(collection, item) {
       notes: item.tagNotes,
       recipe: true,
       idPrefix: "tip-recipe",
-    }).paint(item.tags);
+      trace,
+    }).paint(item.tags || []);
     parts.push(tags);
   }
 

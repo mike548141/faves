@@ -9,6 +9,13 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **"May contain" allergens are shown, without turning into "Contains".** A
+  source's trace statement (a chocolate label's "may be present") is recorded
+  separately from the dish's allergens. Every tag tip on the dish now says
+  "May contain traces of … — <source>", and a reader who flagged that
+  allergen gets a dashed **May contain …** chip that is never folded away.
+  The Chocolate Lava Cakes and B's Dope-As Brownie no longer claim to contain
+  peanuts and nuts; the Whittaker's label only says they may (ADR 0136).
 - **Personal notes on a recipe** ("used half the sugar, better") — profile-
   scoped, up to 240 characters, on the recipe page under the cook/shopping
   controls, and echoed read-only in cook mode when there is one. Included in

@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { orderTags, splitTags, moreLabel, isDeclared, tagTip, TAG_LIMIT } from "../site/js/tags.js";
+import { orderTags, splitTags, moreLabel, isDeclared, tagTip, TAG_LIMIT, traceEntries, liveTrace, traceLine } from "../site/js/tags.js";
 
 const LAVA = ["v", "contains-gluten", "contains-dairy", "contains-egg", "contains-nuts", "contains-peanuts", "contains-soy"];
 const none = { avoid: new Set(), dietary: new Set() };
@@ -89,4 +89,66 @@ test("a tip leads with the reader's own reason, and names an add-on's tag as the
   const avoid = new Set(["contains-egg"]);
   assert.match(tagTip("contains-egg", { avoid, recipe: true }), /^You asked to avoid this\. /);
   assert.match(tagTip("contains-fish", { fromAddOn: true, note: "ignored" }), /^From an add-on you picked\./);
+});
+
+// ── The "may contain" tier (ADR 0136; owner rulings 110/020 and 350/020) ──
+// The lava cakes as they now read: peanuts and nuts only on the Whittaker's
+// label's "may be present", so they are TRACE, never tags.
+const LAVA_NOW = ["v", "contains-gluten", "contains-dairy", "contains-egg", "contains-soy"];
+const LAVA_TRACE = traceEntries({ trace: ["contains-peanuts", "contains-nuts"], traceSource: "Whittaker's label" });
+
+test("an unflagged reader gets NO trace chip — the row is the present allergens only", () => {
+  const o = orderTags(LAVA_NOW, { ...none, trace: LAVA_TRACE });
+  assert.equal(o.some((t) => t.startsWith("trace:")), false);
+  assert.equal(o.includes("contains-peanuts"), false);
+});
+
+test("a reader who FLAGGED a traced allergen gets a 'May contain' chip, after their present ones", () => {
+  const reader = { avoid: new Set(["contains-peanuts", "contains-dairy"]), dietary: new Set() };
+  const o = orderTags(LAVA_NOW, { ...reader, trace: LAVA_TRACE });
+  assert.deepEqual(o.slice(0, 2), ["contains-dairy", "trace:contains-peanuts"]);
+  // Only the flagged one: nuts is traced too, and this reader did not flag it.
+  assert.equal(o.includes("trace:contains-nuts"), false);
+});
+
+test("a flagged trace chip is declared, so it is never folded behind the control", () => {
+  const o = orderTags(LAVA_NOW, { ...peanutReader, trace: LAVA_TRACE });
+  const { shown } = splitTags(o, { ...peanutReader, limit: 1 });
+  assert.ok(shown.includes("trace:contains-peanuts"));
+  assert.ok(isDeclared("trace:contains-peanuts", peanutReader.avoid, new Set()));
+});
+
+test("present wins: an allergen in the tags is never also 'may contain'", () => {
+  const live = liveTrace(["contains-peanuts"], LAVA_TRACE);
+  assert.deepEqual(live.map((e) => e.tag), ["contains-nuts"]);
+  const o = orderTags(["contains-peanuts"], { ...peanutReader, trace: LAVA_TRACE });
+  assert.deepEqual(o, ["contains-peanuts"]);
+});
+
+test("every tip on the dish carries the trace line, naming its source", () => {
+  const live = liveTrace(LAVA_NOW, LAVA_TRACE);
+  assert.equal(traceLine(live), "May contain traces of peanuts and nuts — Whittaker's label.");
+  const tip = tagTip("contains-dairy", { ...none, recipe: true, note: "From the ingredients: butter.", trace: live });
+  assert.match(tip, /^From the ingredients: butter\. May contain traces of peanuts and nuts — Whittaker's label\.$/);
+  assert.match(tagTip("v", { ...none, recipe: true, trace: live }), /May contain traces of peanuts and nuts/);
+});
+
+test("the trace chip's own tip says it is a warning, not an ingredient", () => {
+  const live = liveTrace(LAVA_NOW, LAVA_TRACE);
+  const tip = tagTip("trace:contains-peanuts", { ...peanutReader, recipe: true, trace: live });
+  assert.match(tip, /^You asked to avoid this\. May contain traces of peanuts — Whittaker's label\. Not listed as an ingredient/);
+  assert.match(tip, /May contain traces of nuts — Whittaker's label\.$/);
+});
+
+test("two sources are never merged into one claim neither made", () => {
+  const live = liveTrace([], [
+    { tag: "contains-nuts", source: "Label A" },
+    { tag: "contains-sesame", source: "Label B" },
+  ]);
+  assert.equal(traceLine(live), "May contain traces of nuts — Label A. May contain traces of sesame — Label B.");
+});
+
+test("a dish with no trace carries no trace line — nothing moves for the other 4,000 dishes", () => {
+  assert.equal(traceLine(liveTrace(LAVA_NOW, traceEntries({}))), "");
+  assert.equal(tagTip("contains-dairy", { ...none, recipe: true, note: "x." }), "x.");
 });

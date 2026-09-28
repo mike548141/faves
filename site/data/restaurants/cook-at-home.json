@@ -150,10 +150,10 @@
             "v",
             "contains-gluten",
             "contains-dairy",
-            "contains-nuts",
-            "contains-peanuts",
             "contains-egg"
           ],
+          "trace": ["contains-peanuts", "contains-nuts"],
+          "traceSource": "Whittaker's label",
           "tagNotes": {"contains-gluten": "From the ingredients: ½ cup flour.", "contains-dairy": "From the ingredients: 100g butter.", "contains-egg": "From the ingredients: 2 eggs."}
         },
         {
@@ -961,10 +961,10 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg",
-            "contains-nuts",
-            "contains-peanuts",
             "contains-soy"
           ],
+          "trace": ["contains-peanuts", "contains-nuts"],
+          "traceSource": "Whittaker's label",
           "tagNotes": {"contains-gluten": "From the ingredients: ½ cup (75g) plain flour.", "contains-dairy": "From the ingredients: 50g butter, melted, for greasing; 225g salted butter, diced.", "contains-egg": "From the ingredients: 6 large eggs, at room temperature."},
           "image": "img/cook-at-home/chocolate-lava-cakes.webp",
           "alt": "A chocolate lava cake on a cream plate, dusted with icing sugar and topped with vanilla ice cream and chocolate shavings, its runny centre spilling out.",

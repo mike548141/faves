@@ -25,6 +25,16 @@
 //     allergen is never silent. A declared tag is NEVER hidden, even past the
 //     limit — 22d's safety half, kept verbatim. The control only appears when it
 //     would hide at least two: a "+1" costs the space of the chip it hid.
+//   • TRACE, "MAY CONTAIN" (110/020, 2026-08-16 and 2026-09-09; 350/020,
+//     2026-09-28; ADR 0136): only a PRESENT allergen is a `contains-*` tag. A
+//     trace statement lives beside the tags in `trace`, never in them, and
+//     reaches the screen two ways. Every tip on the dish carries a "May contain
+//     traces of …" line. And a trace allergen THIS READER FLAGGED gets its own
+//     chip — "May contain peanuts", dashed so it never reads as "Contains" —
+//     which, being declared, is never folded away. An unflagged reader gets no
+//     trace chip: a warning that fires on every pizza carries no information to
+//     someone it does not concern, which is why 110/020 kept trace off the row.
+//     The dish-row accent (`dish-flagged`) stays PRESENT-only, by the same ruling.
 //
 // Load-bearing framing, as everywhere tags surface: this renders what the data
 // records and never asserts safety — "no tag = not stated", never "free of it".
@@ -82,23 +92,99 @@ export function servesDeclaredDiet(t, dietary) {
   return DIET_FILTERS.some((f) => dietary.has(f.key) && f.satisfies.includes(t));
 }
 
+/**
+ * A trace chip's key inside this module: `trace:contains-peanuts`. Never a
+ * value in any dish's `tags` — validate.py refuses the prefix there — so a
+ * trace can only ever reach a row through `trace`, never be mistaken for a
+ * present allergen by code that reads `tags`.
+ */
+const TRACE = "trace:";
+export const isTraceChip = (k) => typeof k === "string" && k.startsWith(TRACE);
+const traceTag = (k) => k.slice(TRACE.length);
+
+/**
+ * A dish's trace statements as `[{ tag, source }]`, from the record's own
+ * `trace` / `traceSource` (ADR 0136). Composition (a recipe's ingredients, a
+ * picked add-on) passes more entries in; this is only the dish's own half.
+ */
+export function traceEntries(obj) {
+  const src = typeof obj?.traceSource === "string" ? obj.traceSource : "";
+  return (Array.isArray(obj?.trace) ? obj.trace : [])
+    .filter(isAllergen)
+    .map((tag) => ({ tag, source: src }));
+}
+
+/**
+ * The trace that still says something: an allergen already PRESENT is not also
+ * "may contain" — the stronger fact wins — and one allergen named by two
+ * sources is one entry carrying both. Order follows first mention.
+ */
+export function liveTrace(tags, entries) {
+  const present = new Set(tags || []);
+  const out = new Map();
+  for (const e of entries || []) {
+    if (!e || !isAllergen(e.tag) || present.has(e.tag)) continue;
+    const have = out.get(e.tag) || { tag: e.tag, sources: [] };
+    if (e.source && !have.sources.includes(e.source)) have.sources.push(e.source);
+    out.set(e.tag, have);
+  }
+  return [...out.values()];
+}
+
+/** "peanuts" from `contains-peanuts` — the allergen's own word. */
+const allergenWord = (t) => ALLERGEN[t].replace(/^Contains /, "").toLowerCase();
+
+/**
+ * The line every tip on a dish carries when the dish has live trace: "May
+ * contain traces of nuts and peanuts — Whittaker's label." One sentence per
+ * source, so two labels saying different things are never merged into one
+ * claim neither made. Empty string when there is no trace.
+ */
+export function traceLine(trace) {
+  const bySource = new Map();
+  for (const e of trace || []) {
+    const key = e.sources.length ? e.sources.join("; ") : "";
+    if (!bySource.has(key)) bySource.set(key, []);
+    bySource.get(key).push(allergenWord(e.tag));
+  }
+  return [...bySource.entries()]
+    .map(([src, words]) => {
+      const list = words.length > 1 ? `${words.slice(0, -1).join(", ")} and ${words.at(-1)}` : words[0];
+      return `May contain traces of ${list}${src ? ` — ${src}` : ""}.`;
+    })
+    .join(" ");
+}
+
 /** Is this tag the reader's own — flagged allergen or declared diet? */
 export const isDeclared = (t, avoid, dietary) =>
-  isAllergen(t) ? !!avoid?.has(t) : t in DIETARY && servesDeclaredDiet(t, dietary);
+  isTraceChip(t)
+    ? !!avoid?.has(traceTag(t))
+    : isAllergen(t)
+      ? !!avoid?.has(t)
+      : t in DIETARY && servesDeclaredDiet(t, dietary);
 
 /** The words on a chip, before any "Contains" is dropped. */
 export const tagLabel = (t) =>
-  isAllergen(t) ? ALLERGEN[t] : isSpicy(t) ? heatLabel(t) : DIETARY[t] ?? t;
+  isTraceChip(t)
+    ? `May contain ${allergenWord(traceTag(t))}`
+    : isAllergen(t) ? ALLERGEN[t] : isSpicy(t) ? heatLabel(t) : DIETARY[t] ?? t;
 
 /**
  * The row's order: allergens, then preferences; within each, the reader's own
  * first; within THAT, alphabetical by the words on the chip. Pure, so the rule
  * is unit-tested rather than eyeballed. Non-chip tags are dropped here.
  */
-export function orderTags(tags, { avoid, dietary } = {}) {
-  const rank = (t) => (isAllergen(t) ? 0 : 2) + (isDeclared(t, avoid, dietary) ? 0 : 1);
+export function orderTags(tags, { avoid, dietary, trace = [] } = {}) {
+  // A flagged trace chip sits straight after the flagged PRESENT allergens:
+  // still the reader's own, and still below the stronger fact. Only a flagged
+  // trace is a chip at all (ADR 0136), so an unflagged one never enters here.
+  const rank = (t) =>
+    isTraceChip(t) ? 0.5 : (isAllergen(t) ? 0 : 2) + (isDeclared(t, avoid, dietary) ? 0 : 1);
   const unique = [...new Set(tags || [])].filter(isChipTag);
-  return unique.sort(
+  const traceChips = liveTrace(unique, trace)
+    .filter((e) => avoid?.has(e.tag))
+    .map((e) => TRACE + e.tag);
+  return [...unique, ...traceChips].sort(
     (a, b) => rank(a) - rank(b) || tagLabel(a).localeCompare(tagLabel(b), "en-NZ")
   );
 }
@@ -121,7 +207,9 @@ export function splitTags(ordered, { avoid, dietary, limit = TAG_LIMIT } = {}) {
 
 /** What the collapse control says, so it never hides an allergen silently. */
 export function moreLabel(hidden) {
-  const a = hidden.filter(isAllergen).length;
+  // A trace chip is declared by construction, so it is never hidden; counted
+  // here only so a future change to that rule cannot hide one silently.
+  const a = hidden.filter((t) => isAllergen(t) || isTraceChip(t)).length;
   const rest = hidden.length - a;
   const allergens = a ? `⚠ +${a} allergen${a === 1 ? "" : "s"}` : "";
   if (!rest) return allergens;
@@ -130,6 +218,12 @@ export function moreLabel(hidden) {
 
 /** One tag → one chip, at the loudness this reader has earned (22d). */
 export function tagChip(t, { avoid, dietary } = {}) {
+  if (isTraceChip(t)) {
+    // Dashed, not filled: loud enough to be found — it is this reader's allergen
+    // — and shaped differently from "Contains", so the two are told apart by
+    // outline and by words, never by colour alone (WCAG 1.4.1).
+    return el("span", { className: "tag tag-allergen tag-trace is-flagged", textContent: `⚠ ${tagLabel(t)}` });
+  }
   if (isAllergen(t)) {
     const flagged = !!avoid?.has(t);
     // "Contains peanuts" → "peanuts" when it is not this reader's allergen. The
@@ -157,8 +251,22 @@ export function tagChip(t, { avoid, dietary } = {}) {
  * only what is true of every tag: that it was recorded. A tag the dish does not
  * carry itself came from an add-on the reader picked (`fromAddOn`).
  */
-export function tagTip(t, { note, recipe = false, fromAddOn = false, avoid, dietary } = {}) {
+export function tagTip(t, { note, recipe = false, fromAddOn = false, avoid, dietary, trace = [] } = {}) {
+  const tail = traceLine(trace);
+  const withTrace = (s) => (tail ? `${s} ${tail}` : s);
   const mine = isDeclared(t, avoid, dietary);
+  if (isTraceChip(t)) {
+    // Its own trace first, the dish's other trace (if any) after it.
+    const own = trace.filter((e) => e.tag === traceTag(t));
+    const rest = trace.filter((e) => e.tag !== traceTag(t));
+    const check = recipe ? "" : " If it matters, check with the venue.";
+    const more = traceLine(rest);
+    return `You asked to avoid this. ${traceLine(own)} Not listed as an ingredient — a warning that it may be present.${more ? ` ${more}` : ""}${check}`;
+  }
+  return withTrace(baseTip(t, { note, recipe, fromAddOn, mine }));
+}
+
+function baseTip(t, { note, recipe, fromAddOn, mine }) {
   if (isAllergen(t)) {
     const why = fromAddOn
       ? "From an add-on you picked."
@@ -178,17 +286,19 @@ export function tagTip(t, { note, recipe = false, fromAddOn = false, avoid, diet
  * changes no tag does not flicker the row. Whether the reader opened the row is
  * kept across repaints: configuring a dish must not fold up what they unfolded.
  */
-export function tagRow(container, { avoid, dietary, limit = TAG_LIMIT, notes = {}, base = null, recipe = false, idPrefix = "tag" } = {}) {
+export function tagRow(container, { avoid, dietary, limit = TAG_LIMIT, notes = {}, base = null, recipe = false, idPrefix = "tag", trace = [] } = {}) {
   const ctx = { avoid, dietary };
   const own = base ? new Set(base) : null;
   let expanded = false;
   let painted = null;
   let current = [];
+  let traceNow = trace;
 
   function draw() {
-    const ordered = orderTags(current, ctx);
+    const live = liveTrace(current, traceNow);
+    const ordered = orderTags(current, { ...ctx, trace: traceNow });
     const { shown, hidden } = splitTags(ordered, { ...ctx, limit });
-    const key = `${ordered.join(" ")}|${hidden.length}|${expanded}`;
+    const key = `${ordered.join(" ")}|${hidden.length}|${expanded}|${traceLine(live)}`;
     if (key === painted) return;
     painted = key;
     // Every chip is a button opening its own tip — the same disclosure() the
@@ -199,9 +309,9 @@ export function tagRow(container, { avoid, dietary, limit = TAG_LIMIT, notes = {
     const chips = (expanded ? ordered : shown).map((t) => {
       const face = tagChip(t, ctx);
       const [btn, note] = disclosure({
-        noteId: `${idPrefix}-${t}`,
+        noteId: `${idPrefix}-${t.replace(":", "-")}`,
         label: `${face.textContent} — why`,
-        text: tagTip(t, { ...ctx, note: notes?.[t], recipe, fromAddOn: own ? !own.has(t) : false }),
+        text: tagTip(t, { ...ctx, note: notes?.[t], recipe, fromAddOn: own ? !own.has(t) : false, trace: live }),
         glyph: face.textContent,
       });
       btn.className = `${face.className} tag-tip-btn`;
@@ -231,8 +341,11 @@ export function tagRow(container, { avoid, dietary, limit = TAG_LIMIT, notes = {
   }
 
   return {
-    paint(tags) {
+    /** `trace` replaces the row's trace entries when composition moved them
+     *  (an ingredient or add-on carrying its own); omitted, it keeps them. */
+    paint(tags, trace) {
       current = tags || [];
+      if (trace !== undefined) traceNow = trace || [];
       draw();
     },
   };

@@ -4551,6 +4551,20 @@ body.faves-view .to-top {
 }
 /* The whole dish row, when it carries a flagged allergen — a warning rail so
    it stands out while scanning a long menu. */
+/* A "may contain" allergen THIS READER FLAGGED (ADR 0136). Loud enough to be
+   found, and a different SHAPE from "Contains" — dashed, unfilled — so the two
+   are told apart without relying on colour (WCAG 1.4.1). The words differ too. */
+.tag-allergen.tag-trace.is-flagged {
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  border: 2px dashed var(--warn);
+  font-weight: 800;
+}
+@media (prefers-color-scheme: dark) {
+  .tag-allergen.tag-trace.is-flagged {
+    color: var(--warn);
+  }
+}
 .dish-flagged {
   border-left: 3px solid var(--warn);
   padding-left: var(--space-3);
