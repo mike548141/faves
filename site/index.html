@@ -220,10 +220,18 @@
 
       <div class="results-head browse-only">
         <h2 class="sr-only">Places</h2>
-        <!-- tabindex="-1" so clearing a filter can park focus here: the chip
-             that had focus is removed from the DOM by that very click, and
-             focus on a detached node falls to <body>. Not in the tab order. -->
-        <p id="result-count" class="result-count" role="status" aria-live="polite" tabindex="-1"></p>
+        <!-- What came of the location ask (ADR 0083): "open places near you
+             come first", or the blocked notice. The PILL IS GONE — the owner
+             removed it on 2026-08-17 — and on 2026-09-29 he moved this line up
+             onto the count's row ("the two rows of text are taking up space…
+             '57 places' should be aligned right"). So it leads the row and the
+             count is pushed to the right-hand end by .result-count's auto
+             margin; DOM order is kept equal to visual order so a screen reader
+             meets them in the order a sighted reader does. The ask itself is
+             #geo-dialog below (opens only AFTER the list has rendered) and
+             #geo-banner above; the way back for someone who turned the ask off
+             is Settings → Distance. -->
+        <p id="geo-status" class="geo-status" role="status" aria-live="polite" hidden></p>
         <!-- Every active filter, each with its own ✕ (app.js fills this).
              Arriving from a venue's subheading link narrows the list without
              the reader having chosen anything on this screen, so the way out
@@ -234,6 +242,10 @@
              overflow into a "+n more" button that opens the sheet. Empty and
              hidden whenever nothing is on. -->
         <div id="active-filters" class="active-filters" hidden></div>
+        <!-- tabindex="-1" so clearing a filter can park focus here: the chip
+             that had focus is removed from the DOM by that very click, and
+             focus on a detached node falls to <body>. Not in the tab order. -->
+        <p id="result-count" class="result-count" role="status" aria-live="polite" tabindex="-1"></p>
         <!-- Why the list is short for a reason no chip above can carry: the
              distance limit is a SETTING, not a view filter, so it has no
              control on this screen to wear a ✕ (ADR 0091). Since that dial now
@@ -241,17 +253,6 @@
              be quietly shorter than the collection with nothing on screen
              saying so. app.js fills and unhides it; empty means no cut. -->
         <p id="distance-note" class="distance-note" hidden></p>
-      </div>
-      <!-- What came of the location ask (ADR 0083). The PILL IS GONE — the
-           owner removed it on 2026-08-17 ("I don't like the pill button to
-           prompt for location data"), so this row now carries only the status
-           line: "open places near you come first", or the blocked notice.
-           The ask itself moved to #geo-dialog below, which opens only AFTER the
-           list has rendered, and to #geo-banner above it. The way back for
-           someone who turned the ask off is Settings → Distance, because with
-           no pill there would otherwise be no route at all. -->
-      <div id="geo-row" class="geo-row browse-only">
-        <p id="geo-status" class="geo-status" role="status" aria-live="polite" hidden></p>
       </div>
       <p id="tz-note" class="tz-note browse-only" data-i18n="tz.note" hidden>Open/closed times are New Zealand time.</p>
 

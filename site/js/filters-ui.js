@@ -199,7 +199,7 @@ export function initFiltersUI({ onClearAll } = {}) {
       queueMicrotask(() => setEntryLabel(n));
       // There is no sort group left to show or hide (ADR 0068): one ranking,
       // distance inside it, and the location that feeds it is asked for by
-      // #geo-row up beside the list rather than by a control in this sheet. The
+      // #geo-status up beside the list rather than by a control in this sheet. The
       // rule that outlived the group is the one worth keeping — whether a
       // control can exist at all is a browser-capability question, decided once
       // by app.js on the one path that proves the capability is there, never

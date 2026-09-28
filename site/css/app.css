@@ -215,6 +215,10 @@ main {
   flex-wrap: wrap;
 }
 .result-count {
+  /* Right-aligned (owner, 2026-09-29): the auto margin takes the row's spare
+     width, so the count sits at the far end whether the row also holds the
+     location line, the active-filter chips, both, or neither. */
+  margin-inline-start: auto;
   color: var(--ink-soft);
   font-size: var(--step-sub);
   font-weight: 600;
@@ -398,23 +402,17 @@ main {
 .list-toggle:active {
   transform: scale(0.97);
 }
-/* What came of the location ask (ADR 0083). The pill that used to sit here is
-   gone — the owner removed it — so this row now carries only the status line.
-   It still wraps rather than truncates, because the blocked message is a whole
-   instruction and a clipped instruction is no instruction. */
-.geo-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-}
-/* The row is 0 px when its child is not showing — an empty flex box with a gap
-   still reserves nothing, but the margin below would. So the margin lives on
-   the child, which is `hidden` until it has something to say. */
-.geo-status:not([hidden]) {
-  margin-bottom: var(--space-3);
-}
+/* What came of the location ask (ADR 0083): "open places near you come
+   first", or the blocked notice. It shares .results-head's row with the count
+   (owner, 2026-09-29), so it needs no margin of its own — the head's carries
+   the gap to the list. `flex: 1 1 12rem` lets the long blocked message wrap
+   within the row rather than truncate, because a clipped instruction is no
+   instruction; the count, which never wraps, drops below it only if the
+   message cannot leave it room. */
 .geo-status {
+  flex: 1 1 12rem;
+  min-width: 0;
+  margin: 0;
   color: var(--ink-soft);
   font-size: var(--step-sub);
 }

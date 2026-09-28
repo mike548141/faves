@@ -349,6 +349,9 @@ content freshness separately from this file.
   place the old wording could not paper over the gap.
 
 ### Changed
+- **The place count and the "open places near you come first" line share one
+  row.** The count now sits at the right-hand end of that row instead of on a
+  line of its own, which gives the list one more line of screen height.
 - **A place that trades past midnight now says so.** Opening hours could not
   express a close after midnight at all: a Friday running to 3am was stored as
   a segment that ended before it began, and the app answered "closed" for the
