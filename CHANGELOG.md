@@ -37,6 +37,9 @@ content freshness separately from this file.
   suggestions, or pressing Enter when only one dish, recipe or place is left,
   opens it — a recipe on its own page, a restaurant dish at its row in the
   full menu — instead of just filtering the list to it.
+- **A recipe's three actions sit in one row** — Start cooking, Add to shopping
+  list and Add a note, side by side (wrapping on a phone), with your note and
+  the note editor underneath.
 ### Fixed
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved
   before dishes had ids were all counted as one and matched nothing — KK

@@ -1407,6 +1407,21 @@ async function run(opts) {
       `“${uncredited.name}”: ${JSON.stringify(un)}`
     );
 
+    // --- 12. The three actions share ONE row (owner, 2026-09-28) ------------
+    // They were stacked down the page at three different widths. Measured at
+    // the wide layout, where there is room for all three: one top edge.
+    await goto(url(credited), ".recipe-actions");
+    await size(WIDE);
+    const actions = await evalPage(`["cook-start", "shop-add", "recipe-note-btn"].map((c) => {
+      const b = document.querySelector(".recipe-actions ." + c)?.getBoundingClientRect();
+      return b ? Math.round(b.top + b.height / 2) : null;
+    })`);
+    report.check(
+      `${WIDE}px: Start cooking, the shopping list and the note sit on one row`,
+      actions.every((y) => y !== null) && new Set(actions).size === 1,
+      `button midlines ${JSON.stringify(actions)}`
+    );
+
     return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();

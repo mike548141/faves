@@ -221,13 +221,18 @@ function render(collection, item) {
   // through as a getter for the same reason cook mode's does: a list built off a
   // stale scale is a wrong amount discovered in a supermarket.
   const shop = shoppingButton(item, { venueId: id, rid, scale: () => scaleKey });
-  if (cook || shop) parts.push(el("div", { className: "cook-start-row" }, [cook, shop]));
 
   // Personal notes on this recipe (17e, ADR 0131) — "used half the sugar,
   // better". Keyed on the same `rid` cook mode and the shopping list use, so a
   // recipe renamed on the page keeps its note (ADR 0051: `dishId` is a stored
   // fact, never derived from the name). Always offered, quiet when empty.
-  parts.push(noteControl(rid, item.name));
+  //
+  // All three actions sit in ONE row (owner, 2026-09-28 — they were stacked
+  // down the page at three widths). The row is CSS's job, not this code's: the
+  // shopping and note controls keep their own markup, and `.recipe-actions`
+  // lets their BUTTONS join the row while their status line, the note itself
+  // and the note editor drop below it, full width (app.css).
+  parts.push(el("div", { className: "cook-start-row recipe-actions" }, [cook, shop, noteControl(rid, item.name)]));
 
   const blocks = ingredientBlocks(item.ingredients);
   if (blocks.length) {

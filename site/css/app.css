@@ -4883,6 +4883,33 @@ body.faves-view .to-top {
   gap: var(--space-2);
   justify-items: start;
 }
+/* The recipe page's ONE action row (owner, 2026-09-28): Start cooking, the
+   shopping list and the note, side by side, wrapping on a phone. The shopping
+   and note controls are built by their own modules with their own wrappers, so
+   those wrappers step aside (`display: contents`) and their buttons become
+   items of this row; everything that is not a button — the shopping status
+   line, your note, the note editor — is sent below the buttons at full width
+   by `order`, which keeps the DOM (and so the reading order) untouched. */
+.recipe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.recipe-actions .shop-row,
+.recipe-actions .shop-row-actions,
+.recipe-actions .recipe-note {
+  display: contents;
+}
+.recipe-actions .shop-note,
+.recipe-actions .recipe-note > :not(.recipe-note-btn) {
+  order: 1;
+}
+.recipe-actions .shop-note,
+.recipe-actions .recipe-note-text,
+.recipe-actions .recipe-note-input,
+.recipe-actions .recipe-note-help {
+  flex-basis: 100%;
+}
 .cook-start {
   justify-content: center;
   border-color: transparent;
