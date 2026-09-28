@@ -128,23 +128,13 @@ export const DEFAULTS = {
   mapsApp: "auto",
   units: LOCAL,
   currency: LOCAL,
-  // Whether the recipe page's ingredient list starts folded away (37c, owner
-  // ruling 2026-08-16: remember it for ALL recipes, not one flag per recipe).
-  // It rides the settings store rather than a store of its own because a brand
-  // new `faves.` key is swept into the backup export by personal-data.js's
-  // catch-all and then never restored — exported but not restorable is the
-  // defect the "ticks must leave the backup export" item exists to fix, and one
-  // instance of it is enough. Deliberately NOT on the settings screen: it is
-  // set by folding the panel, which is where anyone would look for it.
-  ingredientsFolded: false,
   // Venue ids whose "If it's your first time, try…" block the viewer has closed
-  // with its ✕ (menu.js). PER VENUE, deliberately, and not the one global flag
-  // `ingredientsFolded` is: an ingredient fold reopens in a tap on the page it
-  // was closed on, whereas this block does not come back — so one ✕ silencing
-  // the suggestions on all 50-odd places would be an unrecoverable answer to a
-  // question that was only ever asked about one. Rides the settings store for
-  // the same reason ingredientsFolded does (a new `faves.` key is swept into
-  // the backup export and then never restored).
+  // with its ✕ (menu.js). PER VENUE, deliberately, not one global flag: the
+  // block does not come back once closed, so one ✕ silencing the suggestions
+  // on all 50-odd places would be an unrecoverable answer to a question that
+  // was only ever asked about one. It rides the settings store rather than a
+  // store of its own because a new `faves.` key is swept into the backup export
+  // by personal-data.js's catch-all and then never restored.
   picksClosed: [],
 };
 
@@ -387,7 +377,6 @@ function sanitise(obj) {
     mapsApp: MAPS_APP_KEYS.has(obj?.mapsApp) ? obj.mapsApp : DEFAULTS.mapsApp,
     units: obj?.units === LOCAL || UNITS.includes(obj?.units) ? obj.units : DEFAULTS.units,
     currency: validCurrency(obj?.currency) ? obj.currency : DEFAULTS.currency,
-    ingredientsFolded: obj?.ingredientsFolded === true,
     picksClosed: cleanVenueIds(obj?.picksClosed),
   };
 }

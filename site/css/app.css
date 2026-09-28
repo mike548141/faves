@@ -4747,38 +4747,8 @@ body.faves-view .to-top {
 .recipe-detail-page .dish-tags {
   margin-top: var(--space-3);
 }
-/* The ingredients fold (37c). The <summary> CARRIES the h2 rather than
-   replacing it: the page's heading outline must read the same whether the panel
-   is open or shut, so a screen-reader reader navigating by heading never loses
-   "Ingredients" by folding it away. Full width, unlike `.recipe-summary`'s chip,
-   because this one IS the section heading — a chip would demote it. */
-.ingredients-fold {
-  margin-bottom: var(--space-3);
-}
-.ingredients-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6em;
-  min-height: 44px;
-  cursor: pointer;
-  list-style: none;
-}
-.ingredients-summary::-webkit-details-marker {
-  display: none;
-}
-.ingredients-summary .recipe-head {
-  margin-bottom: 0;
-}
-.ingredients-summary::after {
-  content: "▾";
-  color: var(--ink-soft);
-}
-.ingredients-fold[open] .ingredients-summary::after {
-  content: "▴";
-}
 /* A recipe built from parts names them (37l, ADR 0070). A real h3 under the
-   summary's h2 — the list is navigable by heading, not just bolder text. */
+   "Ingredients" h2 — the list is navigable by heading, not just bolder text. */
 .ingredient-component {
   font-size: var(--step-sub);
   font-weight: 700;
@@ -4786,7 +4756,7 @@ body.faves-view .to-top {
   margin-top: var(--space-2);
   margin-bottom: var(--space-1);
 }
-.ingredients-fold-body > .ingredient-component:first-child {
+.ingredients-body > .ingredient-component:first-child {
   margin-top: 0;
 }
 /* Scaling the ingredients (17a, ADR 0076). A radiogroup of four, each a full

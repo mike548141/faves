@@ -193,11 +193,9 @@ function render(collection, item) {
   // every tick onto the wrong line (checklist.js).
   const rid = recipeId(id, item);
 
-  // The shopping list (17e), beside cook mode rather than inside the ingredients
-  // fold — the fold is REMEMBERED and remembered for every recipe, so a reader
-  // who folded it away once would never see this control again. `scale` goes
-  // through as a getter for the same reason cook mode's does: a list built off a
-  // stale scale is a wrong amount discovered in a supermarket.
+  // The shopping list (17e), beside cook mode. `scale` goes through as a getter
+  // for the same reason cook mode's does: a list built off a stale scale is a
+  // wrong amount discovered in a supermarket.
   const shop = shoppingButton(item, { venueId: id, rid, scale: () => scaleKey });
 
   // Personal notes on this recipe (17e, ADR 0131) — "used half the sugar,
@@ -214,20 +212,15 @@ function render(collection, item) {
 
   const blocks = ingredientBlocks(item.ingredients);
   if (blocks.length) {
-    // Folded away once everything is in the bowl (37c). Native <details>, the
-    // same control the collection list and the add-on picker already use, so
-    // the platform gives the disclosure semantics and the keyboard for free.
-    //
-    // The fold is remembered for EVERY recipe, not per recipe — the owner's
-    // ruling, and he was told the cost he was accepting: opening an unfamiliar
-    // recipe now hides the list you have not shopped for yet. If that bites,
-    // the fix is per-recipe state, not abandoning the memory.
+    // Always shown. It used to fold away behind a ▴ that was remembered for
+    // every recipe (37c); the owner removed it on 2026-09-29: "I don't think we
+    // need this at all. The ingredients dont need a hide feature."
     const scale = scaleFor(scaleKey);
     // Every line's verdict, computed once so the picker and the list agree.
     const verdicts = blocks.flatMap((b) => b.lines.map((l) => scaleLineStatus(l.text, scale)));
     const blocked = verdicts.filter((v) => v.status === "blocked").length;
 
-    const foldBody = [];
+    const listBody = [];
     // The scale picker, offered only where it can do something. A recipe of
     // nothing but "Garlic" and "Herbs" — and the corpus has several — would get
     // a control that changes nothing on screen, which reads as a broken button
@@ -252,14 +245,14 @@ function render(collection, item) {
         });
         group.append(b);
       }
-      foldBody.push(group);
+      listBody.push(group);
       // 🚩 The honesty line. A recipe where some lines scaled and others could
       // not is HALF-SCALED, and nothing else on the page would say so — the
       // reader sees doubled flour beside un-doubled chocolate and no hint that
       // the second was a refusal rather than a quantity that happens to be
       // written that way. Counted, not listed: the lines carry their own mark.
       if (blocked && scaleKey !== DEFAULT_SCALE) {
-        foldBody.push(el("p", {
+        listBody.push(el("p", {
           className: "scale-note",
           textContent:
             blocked === 1
@@ -270,11 +263,11 @@ function render(collection, item) {
     }
     let vi = 0;
     for (const b of blocks) {
-      // A component heading is h3 under the h2 in the summary — a real heading,
+      // A component heading is h3 under the "Ingredients" h2 — a real heading,
       // so the list is navigable by heading on a screen reader rather than a
       // bolded line that only looks like one.
       if (b.component) {
-        foldBody.push(el("h3", { className: "ingredient-component", textContent: b.component }));
+        listBody.push(el("h3", { className: "ingredient-component", textContent: b.component }));
       }
       const ul = el("ul", { className: "ingredients" });
       // `line.key` carries the component, `line.text` does not: the tick is
@@ -313,27 +306,12 @@ function render(collection, item) {
         }
         ul.append(li);
       }
-      foldBody.push(ul);
+      listBody.push(ul);
     }
-    const fold = el("details", { className: "ingredients-fold", open: !settings.get().ingredientsFolded }, [
-      el("summary", { className: "ingredients-summary" }, [
-        el("h2", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }),
-      ]),
-      el("div", { className: "ingredients-fold-body" }, foldBody),
-    ]);
-    // Write the preference, never read it back here: `settings.subscribe` below
-    // re-renders on any change, and re-rendering the panel the reader is in the
-    // middle of opening would fight their own click.
-    fold.addEventListener("toggle", () => {
-      if (settings.get().ingredientsFolded === !fold.open) return;
-      foldWrite = true;
-      try {
-        settings.set({ ingredientsFolded: !fold.open });
-      } finally {
-        foldWrite = false;
-      }
-    });
-    body.push(el("section", { className: "recipe-ingredients" }, [fold]));
+    body.push(el("section", { className: "recipe-ingredients" }, [
+      el("h2", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }),
+      el("div", { className: "ingredients-body" }, listBody),
+    ]));
   }
   if (item.steps?.length) {
     const method = [el("h2", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" })];
@@ -401,14 +379,6 @@ function render(collection, item) {
 // fresh prefs — no separate, drift-prone update path). null until first render.
 let current = null;
 
-// True only for the instant the ingredients fold is writing its own preference
-// (37c). A fold toggle IS a settings change, but the panel is already in the
-// state the setting now records, so re-rendering would rebuild the element the
-// reader is mid-interaction with and take their keyboard focus off it with it
-// (WCAG 2.4.3). `commit()` calls subscribers synchronously, so this flag is
-// only ever raised inside that one call.
-let foldWrite = false;
-
 // The chosen ingredient scale (17a). Deliberately NOT persisted, and not in
 // `settings`: ADR 0034 refused to persist cook mode's step index on the
 // grounds that "where I am" is a position rather than a fact, and a recipe
@@ -419,7 +389,7 @@ let scaleKey = DEFAULT_SCALE;
 // Re-apply on any settings change — re-reads settings.get().diet.avoid and
 // rebuilds the tags. No-op until the recipe has rendered.
 function reRender() {
-  if (foldWrite || !current) return;
+  if (!current) return;
   render(current.collection, current.item);
 }
 

@@ -1072,9 +1072,9 @@ at 1pm and fails at 1am gets switched off within a week. Run it after touching
 `locations.js`, the contact card in `menu.js`, or per-branch hours data.
 
 `recipe_check.mjs` is the seventh. The recipe page is now three items' worth of
-layout — a fold that remembers, component headings, two columns above a
-breakpoint, and two tick columns that must agree down the page — none of which a
-unit test can see. It sweeps two widths and three text sizes and asserts the
+layout — component headings, no fold (removed by the owner 2026-09-29), two
+columns above a breakpoint, and two tick columns that must agree down the page
+— none of which a unit test can see. It sweeps two widths and three text sizes and asserts the
 tick columns share one left edge to the pixel, that a *wrapped* method step
 (measured, not assumed) keeps its number beside the first line, and that a list
 of under six lines stays one column where a list of eight splits. **29

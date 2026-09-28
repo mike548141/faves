@@ -357,6 +357,9 @@ content freshness separately from this file.
   place the old wording could not paper over the gap.
 
 ### Changed
+- **A recipe's ingredient list no longer folds away.** The ▴ beside
+  "Ingredients" is gone, and the list is always shown, including for anyone
+  who had folded it before.
 - **The recipe list's "Ingredients & method" preview is read-only** — no
   "Start cooking" and no ⓘ on ingredients there. Both stay on the recipe's own
   page, which also fixes an ingredient note that opened clipped in the list.

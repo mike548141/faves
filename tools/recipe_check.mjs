@@ -10,8 +10,9 @@
 //        regrouping. `ingredients.test.js` proves the pure function; nothing
 //        proved the render, and "the h3s appeared" is not the same claim as
 //        "all twelve lines are still tickable".
-//   37c  the fold is remembered. A preference is only remembered if it survives
-//        a real page load out of real storage — a re-render proves nothing.
+//   37c  REMOVED 2026-09-29 (owner: "The ingredients dont need a hide
+//        feature"). What is asserted now is that NO fold exists, and that a
+//        reader who folded the list under the old build still sees it.
 //   37m  the two tick columns line up. The bug was 1.6em of horizontal drift
 //        and a step number floating to the middle of a wrapped step. Both were
 //        invisible on a one-line step, which is why they survived so long.
@@ -48,12 +49,9 @@
 //      "consider it" and that judgement stayed his. This can only say a second
 //      column appears where the rule promises one and nowhere else.
 //   2. Anything about Safari/WebKit. The whole of 37d hangs on `:has()` and CSS
-//      multicol fragmentation, and 37c on `<details>`'s toggle timing — three
-//      features whose engines differ most. This is Chrome, and only Chrome.
-//   3. Whether the fold is remembered on a real phone. What is proven is that
-//      the preference survives a real navigation out of real localStorage in
-//      one profile; an evicted store, a fresh install or a second device is a
-//      different question (and the sync one, answered elsewhere).
+//      multicol fragmentation — features whose engines differ most. This is
+//      Chrome, and only Chrome.
+//   3. (Was: whether the fold is remembered on a real phone. The fold is gone.)
 //   4. Whether the component names are TRUE — that this pudding really has a
 //      "Sauce" and that those four lines belong to it. No browser checks data
 //      against a kitchen. The count is checked against the JSON, so nothing is
@@ -134,7 +132,7 @@ const HEIGHT = 844;
 // summary line cannot be reached by a run that fell out of the middle: this
 // repo has shipped a wall of PASS lines followed by a harness error and no
 // verdict more than once (sync_check.mjs, still). Add an assertion, bump this.
-const EXPECTED_ASSERTIONS = 55;
+const EXPECTED_ASSERTIONS = 52;
 
 const HELP = `Faves recipe-page check — verify the ingredient list's layout in a real browser.
 
@@ -144,14 +142,14 @@ Serves site/ locally, launches Google Chrome headless on a throwaway profile,
 and measures the recipe page at three explicit widths and two text sizes:
 
   · components render as real headings and no ingredient line is lost (37l)
-  · the fold is remembered across a real page load (37c)
+  · the ingredient list has no fold, even for a reader who folded it before
   · the ingredient and method tick columns share a left edge (37m)
   · a wrapped step's number sits beside its FIRST line, measured off the
     pseudo-element's own box over the DevTools protocol (37m)
   · two columns only where a second fits, and only on a list of six or more (37d)
   · the hero and side column: photo beside the title, ingredients beside the
     method, and no stat marked "est." — estimated or not (ADR 0135)
-  · the shopping list: reachable with the ingredients folded away, says when it
+  · the shopping list: reachable and 44 px, says when it
     disagrees with the scale on screen, updates without lying about what is
     already in the trolley, and can be emptied (17e)
   · personal notes: quiet when empty, the cap is stated and enforced, a saved
@@ -203,7 +201,7 @@ const LAYOUT = `(() => {
           : null,
     };
   });
-  const fold = document.querySelector("details.ingredients-fold");
+  const section = document.querySelector(".recipe-ingredients");
   const firstIngTick = document.querySelector(".recipe-body .ingredients .tick");
   const firstMethodTick = document.querySelector(".recipe-body .method .tick");
   return {
@@ -216,12 +214,12 @@ const LAYOUT = `(() => {
     ticks: document.querySelectorAll(".recipe-detail-page .tick-box").length,
     ingredientTicks: document.querySelectorAll(".recipe-body .ingredients .tick-box").length,
     methodTicks: document.querySelectorAll(".recipe-body .method .tick-box").length,
-    foldPresent: !!fold,
-    foldOpen: !!fold && fold.open,
-    // The h2 must live INSIDE the summary: the heading outline has to read the
-    // same folded or not, or a screen-reader reader loses "Ingredients" by
-    // folding it away.
-    headingInSummary: !!fold?.querySelector("summary h2.recipe-head"),
+    // The ingredients fold is gone (owner, 2026-09-29): no <details> or
+    // <summary> anywhere in the section, and its h2 is the section's own.
+    foldPresent: !!section?.querySelector("details, summary"),
+    headingInSection: section?.querySelector(":scope > h2.recipe-head")?.textContent ?? null,
+    ingredientsShown: [...(section?.querySelectorAll(".ingredients li") || [])]
+      .every((li) => li.getBoundingClientRect().height > 1),
     ingTickLeft: firstIngTick ? round(firstIngTick.getBoundingClientRect().left) : null,
     methodTickLeft: firstMethodTick ? round(firstMethodTick.getBoundingClientRect().left) : null,
     // Every method row, with the numbers the wrap assertion needs. The scroll
@@ -519,47 +517,33 @@ async function run(opts) {
         `${f.ingredientTicks} of ${ingredientCount(flatFixture.ingredients)} lines in ${f.lists.length} list`
     );
 
-    // --- 2. The fold is remembered across a real reload (37c) -------------
-    // A real navigation, not a re-render: the whole ask is a preference that
-    // survives, and only a document rebuilt from storage can show that. The
-    // profile is fresh for the RUN, not for the page load, so localStorage is
-    // still there on the other side of the navigate — which is exactly the
-    // property being leant on.
+    // --- 2. No fold (owner, 2026-09-29; 37c's fold removed) ---------------
+    // "The ingredients dont need a hide feature." The dangerous reader is the
+    // one who FOLDED it under the old build: `ingredientsFolded: true` is still
+    // in their storage, and a leftover read of it would hide the list with no
+    // control left to open it. So that exact state is planted and a real page
+    // load made out of it — a re-render would not read storage at all.
     await goto(url(groupFixture));
-    const fold0 = await layout();
+    await evalPage(`(() => {
+      const k = "faves.p.default.settings.v1";
+      const cur = JSON.parse(localStorage.getItem(k) || "{}");
+      localStorage.setItem(k, JSON.stringify({ ...cur, ingredientsFolded: true }));
+    })()`);
+    await goto(url(groupFixture));
+    const nofold = await layout();
     report.check(
-      "the ingredient list is a <details> that starts open, with the h2 inside its summary",
-      fold0.foldPresent && fold0.foldOpen === true && fold0.headingInSummary,
-      `present=${fold0.foldPresent}, open=${fold0.foldOpen}, h2 in summary=${fold0.headingInSummary}`
+      "the ingredient list has NO fold, and a reader who folded it under the old build still sees every line",
+      nofold.foldPresent === false && nofold.headingInSection === "Ingredients" && nofold.ingredientsShown &&
+        nofold.ingredientTicks === ingredientCount(groupFixture.ingredients),
+      `fold=${nofold.foldPresent} h2=${JSON.stringify(nofold.headingInSection)} shown=${nofold.ingredientsShown} ` +
+        `${nofold.ingredientTicks} of ${ingredientCount(groupFixture.ingredients)} lines`
     );
-
-    await click(".ingredients-summary");
-    const shut = await settleUntil(layout, (s) => s.foldOpen === false);
-    report.check(
-      "clicking the summary collapses it",
-      shut.foldOpen === false,
-      `open=${shut.foldOpen}`
-    );
-
-    await goto(url(groupFixture), "details.ingredients-fold");
-    const shutAgain = await layout();
-    report.check(
-      "collapsed survives a full page reload — the preference is genuinely stored",
-      shutAgain.foldPresent && shutAgain.foldOpen === false,
-      `open=${shutAgain.foldOpen} on a document rebuilt from localStorage`
-    );
-
-    // …and the other way, so the check cannot be passed by a fold that is
-    // simply always shut.
-    await click(".ingredients-summary");
-    const open = await settleUntil(layout, (s) => s.foldOpen === true);
-    await goto(url(groupFixture), "details.ingredients-fold");
-    const openAgain = await layout();
-    report.check(
-      "…and open survives one too, so the memory is the preference and not a default",
-      open.foldOpen === true && openAgain.foldOpen === true,
-      `reopened=${open.foldOpen}, still open after reload=${openAgain.foldOpen}`
-    );
+    await evalPage(`(() => {
+      const k = "faves.p.default.settings.v1";
+      const cur = JSON.parse(localStorage.getItem(k) || "{}");
+      delete cur.ingredientsFolded;
+      localStorage.setItem(k, JSON.stringify(cur));
+    })()`);
 
     // --- 3. The two tick columns share a left edge (37m, horizontal) ------
     // Measured at BOTH widths. The gutter is the fix; a gutter that only
@@ -883,28 +867,18 @@ async function run(opts) {
       ])
     )})`);
 
-    // (a) 🔑 REACHABLE WITH THE INGREDIENTS FOLDED AWAY. This is the entire
-    // reason the control sits beside "Start cooking" rather than inside the
-    // ingredients panel: the fold is remembered, and remembered for EVERY
-    // recipe (37c), so a reader who once folded it would never see this button
-    // again. Proven across a real page load out of real storage, because a
-    // preference that survives a re-render proves nothing.
-    await click(".ingredients-summary");
-    await settle();
+    // (a) Reachable, and a full tap target.
     await goto(url(shopFixture));
-    const folded = await evalPage(`(() => {
-      const fold = document.querySelector("details.ingredients-fold");
+    const reach = await evalPage(`(() => {
       const btn = document.querySelector(".shop-add");
       const r = btn ? btn.getBoundingClientRect() : null;
-      return { open: !!fold?.open, w: Math.round(r?.width ?? 0), h: Math.round(r?.height ?? 0) };
+      return { w: Math.round(r?.width ?? 0), h: Math.round(r?.height ?? 0) };
     })()`);
     report.check(
-      "the shopping control is reachable with the ingredients FOLDED AWAY, and clears 44px",
-      folded.open === false && folded.w > 1 && folded.h >= 44,
-      `fold open=${folded.open} · button ${folded.w}×${folded.h}px`
+      "the shopping control is on the page and clears 44px",
+      reach.w > 1 && reach.h >= 44,
+      `button ${reach.w}×${reach.h}px`
     );
-    await click(".ingredients-summary"); // back open for the scale picker below
-    await settle();
 
     // (b) Adding puts the recipe's WHOLE list on, at the scale on screen.
     const want1 = recipeLines(shopFixture, "one");
