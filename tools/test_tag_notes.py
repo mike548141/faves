@@ -64,16 +64,16 @@ VENUE = {
 print("What the tip says")
 cake = notes_for(RECIPES)["Cake"]
 check("a recipe tip quotes EVERY ingredient line that fired, grouped lines included",
-      cake.get("contains-dairy") == "From the ingredients: 100g butter; 50g butter, softened.",
+      cake.get("contains-dairy") == "From the ingredients: butter; butter, softened.",
       repr(cake.get("contains-dairy")))
 check("…and only the lines that fired",
-      cake.get("contains-gluten") == "From the ingredients: 1 cup plain flour.",
+      cake.get("contains-gluten") == "From the ingredients: plain flour.",
       repr(cake.get("contains-gluten")))
 check("a tag no rule accounts for gets NO sentence — never a guess (the chocolate-label peanut)",
       "contains-peanuts" not in cake, repr(cake))
 cookies = notes_for(RECIPES)["Cookies"]
 check("a non-part object line's `text` is what gets quoted, same as a plain string",
-      cookies.get("contains-egg") == "From the ingredients: 2 eggs.",
+      cookies.get("contains-egg") == "From the ingredients: eggs.",
       repr(cookies.get("contains-egg")))
 check("a PART's own tags are never quoted here — they compose onto the dish elsewhere",
       "contains-peanuts" not in cookies, repr(cookies))
@@ -83,6 +83,19 @@ check("a venue dish quotes the menu's own word and the rule's reason",
       repr(venue["Chicken Satay"]))
 check("a venue tag nothing on the menu explains stays unexplained",
       venue["Plain Rice"] == {}, repr(venue["Plain Rice"]))
+
+# The amount is dropped (owner, 2026-09-29), by the SAME table the app's JS
+# twin is tested against — the fixture, not a list typed out again here.
+FIX = json.loads((HERE.parent / "tests/fixtures/ingredient-names.json").read_text())
+bad = [(i, ta.ingredient_name(i), o) for i, o in FIX["cases"] if ta.ingredient_name(i) != o]
+check(f"every shared ingredient-name case strips the amount and nothing else ({len(FIX['cases'])})",
+      not bad, repr(bad[:3]))
+# Break-probe: a writer that kept the amount must fail the recipe tip above.
+saved_name = ta.ingredient_name
+ta.ingredient_name = lambda text: text
+check("break-probe: keeping the amount is caught",
+      notes_for(RECIPES)["Cake"].get("contains-gluten") != "From the ingredients: plain flour.")
+ta.ingredient_name = saved_name
 
 # Break-probe for claim 1: a writer that explained every tag it could not
 # account for would turn the peanut case into a guess.

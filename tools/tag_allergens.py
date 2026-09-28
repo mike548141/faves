@@ -1528,6 +1528,47 @@ def _quote(match):
     return match.group(0).strip()
 
 
+# Owner, 2026-09-29: "When you list ingredients I don't think we need to
+# include the quantities". A tip names WHICH ingredient carries the allergen;
+# the amount is the recipe's business. This is site/js/quantity.js
+# `ingredientName` in Python — the app composes a part's note with that one, and
+# this writes the stored notes — and tests/fixtures/ingredient-names.json holds
+# the cases BOTH must pass (tools/test_tag_notes.py, tests/ingredient-name.test.js),
+# because two copies of one rule drift the moment only one is tested.
+_VULGAR = "½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞"
+_QTY = re.compile(
+    rf"^(?:\d+\s*[{_VULGAR}]|\d+\s+\d+/\d+|[{_VULGAR}]|\d+/\d+|\d+\.\d+|\d+)")
+_HEDGE_WORD = re.compile(r"^(?:approx\.?|approximately|about|around)\s+", re.I)
+_RANGE_TAIL = re.compile(r"^\s*(?:-|–|to)\s*")
+_UNIT = re.compile(
+    r"^(?:x\s+)?"
+    r"(?:(?:kg|g|mg|ml|l|litres?|liters?|cups?|tbsp|tablespoons?|tsp|teaspoons?|"
+    r"cans?|tins?|packets?|packs?|pkts?|sachets?|cloves?|pinch(?:es)?|handfuls?|bunch(?:es)?)\b\.?)?"
+    r"\s*(?:\([^)]*\)\s*)?(?:of\s+)?", re.I)
+
+
+def ingredient_name(text):
+    """`text` without the amount at its head; unchanged when there is none."""
+    rest = _HEDGE_WORD.sub("", text, count=1)
+    q = _QTY.match(rest)
+    if not q:
+        return text
+    rest = rest[q.end():]
+    rng = _RANGE_TAIL.match(rest)
+    if rng:
+        q2 = _QTY.match(rest[rng.end():])
+        if q2:
+            rest = rest[rng.end() + q2.end():]
+    # An amount must END here: a space or a unit follows it ("7-Up" is a name).
+    if not re.match(r"(?:\s|[a-z])", rest, re.I):
+        return text
+    name = _UNIT.sub("", rest.lstrip(), count=1).strip()
+    # Glued straight on ("50g"), only a real unit counts: "3rd" is not 3 + "rd".
+    if not rest[:1].isspace() and name == rest.strip():
+        return text
+    return name or text
+
+
 def tag_note(tag, item, note_applies, recipes):
     """One sentence saying why `item` carries `tag`, or None if no rule can say."""
     rules = [(tier, why, pattern, exclude)
@@ -1539,7 +1580,8 @@ def tag_note(tag, item, note_applies, recipes):
                  if any(not (ex and ex.search(line)) and first_unhedged(tag, pat, line)
                         for _, _, pat, ex in rules)]
         if lines:
-            return "From the ingredients: " + "; ".join(lines) + "."
+            names = list(dict.fromkeys(ingredient_name(line) for line in lines))
+            return "From the ingredients: " + "; ".join(names) + "."
     text = ingredient_text(item)
     source = "The recipe says" if recipes else "The menu says"
     for tier, why, pattern, exclude in rules:

@@ -44,6 +44,7 @@
 // the key.
 
 import { composeTags } from "./addons.js";
+import { ingredientName } from "./quantity.js";
 
 /**
  * `item.ingredients` normalised to blocks, in the recipe's own order.
@@ -162,7 +163,11 @@ export function composeRecipe(item) {
       if (!list.includes(p.name)) from.set(t, [...list, p.name]);
     }
   }
-  for (const [t, names] of from) notes[t] = `From the ingredients: ${names.join("; ")}.`;
+  // Named without their amounts (owner, 2026-09-29), and a name two lines share
+  // ("60g butter; 60g butter") is said once.
+  for (const [t, names] of from) {
+    notes[t] = `From the ingredients: ${[...new Set(names.map(ingredientName))].join("; ")}.`;
+  }
   const partTrace = parts.flatMap((p) =>
     (Array.isArray(p.trace) ? p.trace : []).map((tag) => ({ tag, source: p.traceSource || "" }))
   );

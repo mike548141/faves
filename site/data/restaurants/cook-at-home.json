@@ -75,7 +75,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 2¼ cups plain flour.", "contains-dairy": "From the ingredients: 2 cups milk; 2 tbsp melted butter, plus extra for frying; Butter or whipped cream, to serve.", "contains-egg": "From the ingredients: 3 free-range eggs."}
+          "tagNotes": {"contains-gluten": "From the ingredients: plain flour.", "contains-dairy": "From the ingredients: milk; melted butter, plus extra for frying; Butter or whipped cream, to serve.", "contains-egg": "From the ingredients: free-range eggs."}
         }
       ]
     },
@@ -115,7 +115,7 @@
             "contains-gluten",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 3 cups plain flour.", "contains-dairy": "From the ingredients: 250g butter, softened; 225g butter."}
+          "tagNotes": {"contains-gluten": "From the ingredients: plain flour.", "contains-dairy": "From the ingredients: butter, softened; butter."}
         },
         {
           "name": "B's Dope-As Brownie",
@@ -152,7 +152,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: ½ cup flour.", "contains-dairy": "From the ingredients: 100g butter.", "contains-egg": "From the ingredients: 2 eggs."}
+          "tagNotes": {"contains-gluten": "From the ingredients: flour.", "contains-dairy": "From the ingredients: butter.", "contains-egg": "From the ingredients: eggs."}
         },
         {
           "name": "Chocolate Chewy Cookies",
@@ -188,7 +188,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 2 cups flour.", "contains-dairy": "From the ingredients: 185g melted butter.", "contains-egg": "From the ingredients: 1 egg."}
+          "tagNotes": {"contains-gluten": "From the ingredients: flour.", "contains-dairy": "From the ingredients: melted butter.", "contains-egg": "From the ingredients: egg."}
         },
         {
           "name": "Gingerbread Cookies",
@@ -231,7 +231,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 5 cups flour.", "contains-dairy": "From the ingredients: 250g butter.", "contains-egg": "From the ingredients: 2 eggs."}
+          "tagNotes": {"contains-gluten": "From the ingredients: flour.", "contains-dairy": "From the ingredients: butter.", "contains-egg": "From the ingredients: eggs."}
         },
         {
           "name": "Liège Waffles",
@@ -271,7 +271,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 2¾ cups flour.", "contains-dairy": "From the ingredients: ¾ cup milk, warmed; ¼ cup melted butter.", "contains-egg": "From the ingredients: 3 large eggs."}
+          "tagNotes": {"contains-gluten": "From the ingredients: flour.", "contains-dairy": "From the ingredients: milk, warmed; melted butter.", "contains-egg": "From the ingredients: large eggs."}
         },
         {
           "name": "Orange Yoghurt Cake",
@@ -310,7 +310,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 2 cups self-raising flour.", "contains-dairy": "From the ingredients: 125g butter; 1 cup natural yoghurt.", "contains-egg": "From the ingredients: 3 eggs, separated."}
+          "tagNotes": {"contains-gluten": "From the ingredients: self-raising flour.", "contains-dairy": "From the ingredients: butter; natural yoghurt.", "contains-egg": "From the ingredients: eggs, separated."}
         },
         {
           "name": "Queen Cakes",
@@ -345,7 +345,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 175g flour.", "contains-dairy": "From the ingredients: 125g butter.", "contains-egg": "From the ingredients: 2 eggs."}
+          "tagNotes": {"contains-gluten": "From the ingredients: flour.", "contains-dairy": "From the ingredients: butter.", "contains-egg": "From the ingredients: eggs."}
         },
         {
           "name": "Upside-Down Plum Cake",
@@ -402,7 +402,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 1⅔ cups plain flour, sifted.", "contains-dairy": "From the ingredients: 2 tablespoons butter, melted; ½ cup butter, at room temperature; ¾ cup milk.", "contains-egg": "From the ingredients: 2 eggs."}
+          "tagNotes": {"contains-gluten": "From the ingredients: plain flour, sifted.", "contains-dairy": "From the ingredients: butter, melted; butter, at room temperature; milk.", "contains-egg": "From the ingredients: eggs."}
         }
       ]
     },
@@ -454,7 +454,7 @@
             "contains-egg",
             "contains-fish"
           ],
-          "tagNotes": {"contains-peanuts": "From the ingredients: 4 tablespoons peanut oil; ½ cup roasted peanuts.", "contains-shellfish": "From the ingredients: 1 cup finely chopped cooked chicken, cooked pork and/or prawns.", "contains-egg": "From the ingredients: 3 eggs, whisked.", "contains-fish": "From the ingredients: 2 tablespoons fish sauce."}
+          "tagNotes": {"contains-peanuts": "From the ingredients: peanut oil; roasted peanuts.", "contains-shellfish": "From the ingredients: finely chopped cooked chicken, cooked pork and/or prawns.", "contains-egg": "From the ingredients: eggs, whisked.", "contains-fish": "From the ingredients: fish sauce."}
         },
         {
           "name": "Famous Brade Green Chicken Curry",
@@ -535,7 +535,7 @@
             "spicy-1",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "From the ingredients: 1 can evaporated milk; 1 packet chicken cup-of-soup (cream of chicken)."}
+          "tagNotes": {"contains-dairy": "From the ingredients: evaporated milk; chicken cup-of-soup (cream of chicken)."}
         },
         {
           "name": "Shane's Ribs",
@@ -674,7 +674,7 @@
             "contains-shellfish",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-shellfish": "From the ingredients: Mussels, rinsed and scrubbed.", "contains-dairy": "From the ingredients: 6 tablespoons butter."},
+          "tagNotes": {"contains-shellfish": "From the ingredients: Mussels, rinsed and scrubbed.", "contains-dairy": "From the ingredients: butter."},
           "goesWith": [
             "Turkish Flatbread"
           ]
@@ -763,7 +763,7 @@
             "contains-gluten",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 185g flour.", "contains-dairy": "From the ingredients: 60g butter; 60g butter; 150ml cream."}
+          "tagNotes": {"contains-gluten": "From the ingredients: flour.", "contains-dairy": "From the ingredients: butter; cream."}
         },
         {
           "name": "Chocolate Self-Saucing Pudding",
@@ -811,7 +811,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 1¼ cups (310 ml) white flour.", "contains-dairy": "From the ingredients: 100g butter, softened; Water or milk, as required for a thick batter.", "contains-egg": "From the ingredients: 1 egg."},
+          "tagNotes": {"contains-gluten": "From the ingredients: white flour.", "contains-dairy": "From the ingredients: butter, softened; Water or milk, as required for a thick batter.", "contains-egg": "From the ingredients: egg."},
           "attribution": "Adapted from the Edmonds cookbook"
         },
         {
@@ -854,7 +854,7 @@
             "contains-egg",
             "contains-gluten"
           ],
-          "tagNotes": {"contains-dairy": "From the ingredients: 250g mascarpone; 500ml cream.", "contains-egg": "From the ingredients: 6 egg yolks.", "contains-gluten": "From the ingredients: 400g sponge finger biscuits."}
+          "tagNotes": {"contains-dairy": "From the ingredients: mascarpone; cream.", "contains-egg": "From the ingredients: egg yolks.", "contains-gluten": "From the ingredients: sponge finger biscuits."}
         },
         {
           "name": "Pumpkin Pie",
@@ -896,7 +896,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: 1 x 9-inch pie crust.", "contains-dairy": "From the ingredients: 1¼ cups half and half (or whole milk); 2 tablespoons butter, melted.", "contains-egg": "From the ingredients: 2 eggs."}
+          "tagNotes": {"contains-gluten": "From the ingredients: 9-inch pie crust.", "contains-dairy": "From the ingredients: half and half (or whole milk); butter, melted.", "contains-egg": "From the ingredients: eggs."}
         },
         {
           "name": "Caramel Banana",
@@ -960,7 +960,7 @@
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: ½ cup (75g) plain flour.", "contains-dairy": "From the ingredients: 50g butter, melted, for greasing; 225g salted butter, diced.", "contains-egg": "From the ingredients: 6 large eggs, at room temperature."},
+          "tagNotes": {"contains-gluten": "From the ingredients: plain flour.", "contains-dairy": "From the ingredients: butter, melted, for greasing; salted butter, diced.", "contains-egg": "From the ingredients: large eggs, at room temperature."},
           "image": "img/cook-at-home/chocolate-lava-cakes.webp",
           "alt": "A chocolate lava cake on a cream plate, dusted with icing sugar and topped with vanilla ice cream and chocolate shavings, its runny centre spilling out.",
           "attribution": "Adapted from Whittaker's (whittakers.co.nz)",
@@ -1002,7 +1002,7 @@
             "v",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "From the ingredients: 30g butter; 250ml cream; Parmesan cheese (optional)."}
+          "tagNotes": {"contains-dairy": "From the ingredients: butter; cream; Parmesan cheese (optional)."}
         },
         {
           "name": "Turkish Flatbread",
@@ -1041,7 +1041,7 @@
             "contains-gluten",
             "contains-sesame"
           ],
-          "tagNotes": {"contains-gluten": "From the ingredients: Approx. 2 cups flour.", "contains-sesame": "From the ingredients: A few tsp each of sesame seeds and black cumin seeds, for sprinkling."}
+          "tagNotes": {"contains-gluten": "From the ingredients: flour.", "contains-sesame": "From the ingredients: A few tsp each of sesame seeds and black cumin seeds, for sprinkling."}
         }
       ]
     }

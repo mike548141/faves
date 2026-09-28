@@ -1,0 +1,33 @@
+{
+  "_why": "One table, read by BOTH writers of a 'From the ingredients:' tip — site/js/quantity.js ingredientName (tests/ingredient-name.test.js) and tools/tag_allergens.py ingredient_name (tools/test_tag_notes.py). Two implementations of one rule each pass their own tests and drift; a shared table is what makes them agree. Owner, 2026-09-29: 'When you list ingredients I don't think we need to include the quantities'.",
+  "cases": [
+    ["50g butter, melted, for greasing", "butter, melted, for greasing"],
+    ["225g salted butter, diced", "salted butter, diced"],
+    ["1 cup plain flour", "plain flour"],
+    ["2 eggs", "eggs"],
+    ["1 egg", "egg"],
+    ["6 egg yolks", "egg yolks"],
+    ["3 large eggs", "large eggs"],
+    ["1¼ cups (310 ml) white flour", "white flour"],
+    ["½ cup (75g) plain flour", "plain flour"],
+    ["1⅔ cups plain flour, sifted", "plain flour, sifted"],
+    ["2 tablespoons butter, melted", "butter, melted"],
+    ["2 tbsp melted butter, plus extra for frying", "melted butter, plus extra for frying"],
+    ["4 tablespoons peanut oil", "peanut oil"],
+    ["500ml cream", "cream"],
+    ["1 can evaporated milk", "evaporated milk"],
+    ["1 packet chicken cup-of-soup (cream of chicken)", "chicken cup-of-soup (cream of chicken)"],
+    ["1 x 9-inch pie crust", "9-inch pie crust"],
+    ["Approx. 2 cups flour", "flour"],
+    ["2 cups of flour", "flour"],
+    ["2-3 cloves garlic", "garlic"],
+    ["1.5 kg lamb shoulder", "lamb shoulder"],
+    ["250g Whittaker's 72% Dark Ghana chocolate, roughly chopped", "Whittaker's 72% Dark Ghana chocolate, roughly chopped"],
+    ["Butter", "Butter"],
+    ["Vanilla ice cream, to serve", "Vanilla ice cream, to serve"],
+    ["A few tsp each of sesame seeds and black cumin seeds, for sprinkling", "A few tsp each of sesame seeds and black cumin seeds, for sprinkling"],
+    ["7-Up", "7-Up"],
+    ["3rd-generation sourdough starter", "3rd-generation sourdough starter"],
+    ["2", "2"]
+  ]
+}

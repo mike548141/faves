@@ -349,6 +349,9 @@ content freshness separately from this file.
   place the old wording could not paper over the gap.
 
 ### Changed
+- **A recipe's allergen tip names the ingredient, not the amount** —
+  *"From the ingredients: butter, melted, for greasing; salted butter, diced"*
+  rather than *"50g butter…; 225g salted butter…"*.
 - **The "May contain" warning is shorter and says each thing once.** It
   used to name the label twice and make the same point three times; it now
   reads *"You avoid peanuts. Whittaker's label warns of possible traces of

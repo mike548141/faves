@@ -116,6 +116,51 @@ export function readQuantity(text) {
   return value ? { value, raw } : null;
 }
 
+// --- An ingredient without its amount ---------------------------------------
+
+// Owner, 2026-09-29, of a tip reading "From the ingredients: 50g butter, melted,
+// for greasing; 225g salted butter, diced": "When you list ingredients I don't
+// think we need to include the quantities". A tip says WHICH ingredient carries
+// the allergen; the amount is the recipe's business, not the warning's.
+// tools/tag_allergens.py `ingredient_name` is the same rule in Python (it writes
+// the stored notes); tests/fixtures/ingredient-names.json holds the cases both
+// must pass, because two copies of one rule drift the moment only one is tested.
+const HEDGE_WORD = /^(?:approx\.?|approximately|about|around)\s+/i;
+const RANGE_TAIL = /^\s*(?:-|–|to)\s*/;
+const UNIT = new RegExp(
+  "^(?:x\\s+)?" +
+    "(?:(?:kg|g|mg|ml|l|litres?|liters?|cups?|tbsp|tablespoons?|tsp|teaspoons?|" +
+    "cans?|tins?|packets?|packs?|pkts?|sachets?|cloves?|pinch(?:es)?|handfuls?|bunch(?:es)?)\\b\\.?)?" +
+    "\\s*(?:\\([^)]*\\)\\s*)?(?:of\\s+)?",
+  "i"
+);
+
+/**
+ * `text` with any amount at its head removed: "225g salted butter, diced" →
+ * "salted butter, diced". Returns `text` unchanged when the head is not an
+ * amount followed by a space or a unit ("7-Up", "9-inch pie crust", "A few tsp
+ * …"), and when nothing would be left — never an empty name.
+ */
+export function ingredientName(text) {
+  if (typeof text !== "string") return text;
+  let rest = text.replace(HEDGE_WORD, "");
+  const q = readQuantity(rest);
+  if (!q) return text;
+  rest = rest.slice(q.raw.length);
+  const range = RANGE_TAIL.exec(rest);
+  if (range) {
+    const q2 = readQuantity(rest.slice(range[0].length));
+    if (q2) rest = rest.slice(range[0].length + q2.raw.length);
+  }
+  // An amount must END here: a space or a unit follows it. "7-Up" and
+  // "9-inch" are names, not amounts.
+  if (!/^(?:\s|[a-z])/i.test(rest)) return text;
+  const name = rest.trimStart().replace(UNIT, "").trim();
+  // Glued straight on ("50g"), only a real unit counts: "3rd" is not "3" + "rd".
+  if (!/^\s/.test(rest) && name === rest.trim()) return text;
+  return name || text;
+}
+
 // --- Writing one back out --------------------------------------------------
 
 /**

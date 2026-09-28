@@ -116,7 +116,8 @@ test("allergens union in from a part, and its tip names the part", () => {
   const c = composeRecipe({ name: "x", tags: ["v", "contains-dairy"], ingredients: ["butter", CHOC] });
   assert.deepEqual(c.tags, ["v", "contains-dairy", "contains-soy"]);
   assert.deepEqual(c.ownTags, ["v", "contains-dairy"]);
-  assert.equal(c.tagNotes["contains-soy"], `From the ingredients: ${CHOC.text}.`);
+  // Named without its amount (owner, 2026-09-29): CHOC.text is "250g dark chocolate".
+  assert.equal(c.tagNotes["contains-soy"], "From the ingredients: dark chocolate.");
   assert.deepEqual(c.partTrace, [{ tag: "contains-peanuts", source: "Example label" }]);
 });
 
