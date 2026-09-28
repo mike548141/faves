@@ -12378,3 +12378,8 @@ on `main`.
   as plain commands and routed around no git refusal. It turned a
   rebase-then-force-push into a merge of `origin/main`, because force-push is
   forbidden.
+- **Addendum, same session:** `cdbaa37` removes the recipe page's ingredient
+  fold (37c) at the owner's word: *"The ingredients dont need a hide
+  feature."* The `ingredientsFolded` setting went with it. `recipe_check` §2
+  plants the old stored `true` and reloads, so a reader who had folded it
+  still sees the list (break-probed against the old code).
