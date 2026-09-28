@@ -104,7 +104,7 @@ import {
 // produce. A second copy of either could drift and quietly test nothing.
 import { slug } from "../site/js/slug.js";
 import { ingredientBlocks, ingredientCount, composeRecipe, noteText as ingredientNoteText } from "../site/js/ingredients.js";
-import { SCALES, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
+import { SCALES, ingredientName, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
 // …and the shopping list's own view of a recipe, for the same reason: an
 // expectation hand-typed here would only prove the tool and the page agreed on
 // the day it was written.
@@ -1589,7 +1589,12 @@ async function run(opts) {
     })()`);
     report.check(
       "an allergen only an INGREDIENT carries is on the recipe's row, and its tip names that ingredient",
-      !!pTag && pRow.all.includes(`⚠ ${pWord}`) && (pChip ?? "").includes(`From the ingredients: ${pLine.text}`),
+      // Named WITHOUT its amount (owner, 2026-09-29) — and the amount must be
+      // gone, not merely the name present, or a tip still quoting "250g …"
+      // passes an `includes` on the bare name.
+      !!pTag && pRow.all.includes(`⚠ ${pWord}`) &&
+        (pChip ?? "").includes(`From the ingredients: ${ingredientName(pLine.text)}`) &&
+        (ingredientName(pLine.text) === pLine.text || !(pChip ?? "").includes(pLine.text)),
       `“${parted?.name}” part “${pLine?.text}” → ${pTag}: ${JSON.stringify({ all: pRow.all, tip: pChip })}`
     );
     // The same composition must reach menu.js — the row accent is the loudest
