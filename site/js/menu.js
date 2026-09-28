@@ -94,7 +94,7 @@ import { dishNeeds, priceUnknown } from "./needs.js";
 import { filterHref } from "./filters.js";
 import { initBackToTop } from "./to-top.js";
 import { el } from "./dom.js";
-import { ingredientBlocks, ingredientKeys, noteText } from "./ingredients.js";
+import { ingredientBlocks, ingredientKeys } from "./ingredients.js";
 import { wireSearchClear } from "./search-clear.js";
 import { toast } from "./toast.js";
 import { foldSearchText } from "./search.js";
@@ -106,7 +106,6 @@ import { initShoppingEntry } from "./shopping-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
 import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js";
 import { startSync } from "./sync-start.js";
-import { cookButton } from "./cook-ui.js";
 import { mountNotFound } from "./cache-refresh.js";
 import { totalTime } from "./recipe-stats.js";
 
@@ -1517,22 +1516,10 @@ function renderRecipeDetail(item) {
       }
       const ul = el("ul", { className: "ingredients" });
       for (const line of block.lines) {
+        // No ⓘ on an ingredient here (owner, 2026-09-29, ADR 0139): this row
+        // is a preview, a note's panel had no room to open in it, and the note
+        // still reads behind its ⓘ on the recipe's own page.
         const li = el("li", { textContent: line.text });
-        // The ingredient's note (22e step 4) reads here too, behind the same ⓘ
-        // as on the recipe page — one screen rendering it would quietly drop
-        // the fact from the other, the trap 37e's credit comment names above.
-        const said = noteText(line);
-        if (said) {
-          const [btn, note] = disclosure({
-            noteId: `ing-note-${dishId(item)}-${ul.childElementCount}`.replace(/[^\w-]/g, "-"),
-            label: `A note on ${line.text}`,
-            text: said,
-          });
-          btn.classList.add("is-info", "ingredient-note-btn");
-          note.classList.add("is-info");
-          li.classList.add("has-note");
-          li.append(btn, note);
-        }
         ul.append(li);
       }
       body.push(ul);
@@ -1549,13 +1536,9 @@ function renderRecipeDetail(item) {
     }
     body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" }), ol);
   }
-  // Cook mode is reachable from the list too, not only from the recipe's own
-  // page — this is where people are browsing when they decide to start cooking.
-  // At the TOP of the expanded body, not the bottom: you decide to cook from
-  // the ingredients, and burying it under the method meant scrolling the whole
-  // recipe to reach the one control that would have read it out to you.
-  const cook = cookButton(item, { quiet: true });
-  if (cook) body.unshift(el("div", { className: "cook-start-row cook-start-lead" }, [cook]));
+  // No "Start cooking" here (owner, 2026-09-29: "don't show the 'Start
+  // cooking' button to keep the UX simple"; ADR 0139 supersedes 0034 §6's
+  // second entry point). The recipe's own page is the one way into cook mode.
   return el("details", { className: "recipe-detail" }, [
     el("summary", { className: "recipe-summary", "data-i18n": "recipe.detail", textContent: "Ingredients & method" }),
     el("div", { className: "recipe-body" }, body),

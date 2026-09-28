@@ -4965,11 +4965,6 @@ body.faves-view .to-top {
   color: var(--ink);
   border-color: var(--line);
 }
-/* Leading the expanded recipe rather than trailing it, so it needs the margin
-   below rather than above. */
-.cook-start-lead {
-  margin: 0 0 var(--space-3);
-}
 
 /* Full-bleed: a <dialog>'s UA styles cap its width/height and centre it, so
    every one of these has to be undone before it can fill a phone. */

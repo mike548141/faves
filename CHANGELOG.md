@@ -349,6 +349,9 @@ content freshness separately from this file.
   place the old wording could not paper over the gap.
 
 ### Changed
+- **The recipe list's "Ingredients & method" preview is read-only** — no
+  "Start cooking" and no ⓘ on ingredients there. Both stay on the recipe's own
+  page, which also fixes an ingredient note that opened clipped in the list.
 - **A recipe's allergen tip names the ingredient, not the amount** —
   *"From the ingredients: butter, melted, for greasing; salted butter, diced"*
   rather than *"50g butter…; 225g salted butter…"*.

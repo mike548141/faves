@@ -1150,59 +1150,41 @@ async function run(opts) {
     await press("Escape");
     await closed();
 
-    // --- 12. The other entry point (ADR 0034 §6) --------------------------
+    // --- 12. ONE entry point now (ADR 0139, superseding 0034 §6) ----------
+    // The owner took "Start cooking" OFF the Cook at Home list's expanded
+    // preview on 2026-09-29 ("to keep the UX simple"), and the ingredient ⓘ
+    // with it — a note's panel had no room to open there. So this asserts
+    // their ABSENCE. An absence is satisfied by a preview that never opened,
+    // so the control is that the SAME opened preview shows its ingredient
+    // lines — and the recipe's own page, asserted above, still has the button.
     await goto(`${base}/restaurant.html?id=${COLLECTION}`, ".recipe-detail");
-    // Scope by the dish's OWN id (ADR 0051), never by its NAME. A name match
+    // Scope by the dish's OWN id (ADR 0051), never by its NAME: a name match
     // reads the whole card, and `goesWith` prints OTHER dishes' names onto a
-    // card: Shane's Ribs lists "Sticky Date Pudding" as a pairing and sits
-    // earlier in the list, so it won the match. The check then opened the
-    // WRONG recipe, started cook mode on it, and failed the "same checklist"
-    // assertion below — with a message accusing the APP of keeping a second
-    // copy of your ticks. Measured 2026-08-19: Sticky Date Pudding failed and
-    // Upside-Down Plum Cake passed for exactly this reason, and the pairing
-    // corpus decides which recipes are affected, so it grows silently.
-    //
-    // The old `|| d[0]` fallback went with it, and that half matters more: a
-    // silent retarget to the first recipe on the page is what turned "this
-    // tool cannot find its fixture" into "the product loses your ticks".
+    // card (measured 2026-08-19 — Shane's Ribs lists "Sticky Date Pudding").
     const listDetail = need(".recipe-detail", need(`#dish-${recipe.dishId}`));
-    await evalPage(`(() => {
-      const one = ${listDetail};
-      one.open = true;
-      // "instant" is load-bearing, not style. scrollIntoView's default
-      // behavior: "auto" RESOLVES TO THE CSS scroll-behavior, and app.css sets
-      // that to smooth — so this call used to return with the page still
-      // travelling, and what follows it is a CLICK. driver.click now waits for
-      // a stable box, so the click is safe either way; this stops the animation
-      // happening at all, which is cheaper than waiting it out and removes the
-      // one live site the 2026-09-07 sweep found (roadmap 210/070).
-      one.scrollIntoView({ block: "center", behavior: "instant" });
-    })()`);
+    await evalPage(`(() => { const one = ${listDetail}; one.open = true; })()`);
     await settle();
-    const listOpen = await evalPage(
-      `document.querySelectorAll("#dish-${recipe.dishId} .recipe-detail[open] .cook-start").length`
-    );
-    await openCook(`#dish-${recipe.dishId} .recipe-detail[open] .cook-start`);
-    const fromList = await settleUntil(snap, (s) => s.held === 1);
+    const preview = await evalPage(`(() => {
+      const d = document.querySelector("#dish-${recipe.dishId} .recipe-detail[open]");
+      return d && { lines: d.querySelectorAll(".ingredients li").length,
+        cook: d.querySelectorAll(".cook-start").length,
+        notes: d.querySelectorAll(".ingredient-note-btn").length,
+        anyCook: document.querySelectorAll(".recipe-detail .cook-start").length,
+        // Page-wide: a closed <details> still holds its built body, and the
+        // recipe that CARRIES a note (the lava cakes' chocolate) need not be
+        // the one opened above.
+        anyNotes: document.querySelectorAll(".recipe-detail .ingredient-note-btn").length,
+        notedLines: document.querySelectorAll(".recipe-detail .ingredients li").length };
+    })()`);
     report.check(
-      "the Cook at Home list is a second way in, and it works the same",
-      listOpen >= 1 && fromList.open && /^Step 1 of \d+$/.test(fromList.counter) && fromList.held === 1,
-      `“${fromList.counter}” from the expanded recipe, ${fromList.held} lock held`
+      "the Cook at Home list's expanded preview offers NO Start cooking — the recipe page is the one way in",
+      !!preview && preview.lines > 0 && preview.cook === 0 && preview.anyCook === 0,
+      JSON.stringify(preview)
     );
-    // The two entry points must key the checklist the same way, or a recipe
-    // started from the list would be a second, empty copy of the same recipe.
-    // Step 1 was ticked back in 4b, from the recipe page.
     report.check(
-      "the list's way in reaches the SAME checklist, not a second copy",
-      fromList.stepTicked === true,
-      `step 1 still ticked when cook mode is opened from the Cook at Home list`
-    );
-    await press("Escape");
-    const listClosed = await closed();
-    report.check(
-      "closing it from the list releases the lock too",
-      listClosed.open === false && listClosed.held === 0,
-      `${listClosed.held} held after close`
+      "…and no ingredient ⓘ in the preview (the recipe page keeps them)",
+      !!preview && preview.lines > 0 && preview.notes === 0 && preview.anyNotes === 0,
+      JSON.stringify(preview)
     );
 
     // --- 12b. The scale the reader chose has to come THROUGH (17a) --------

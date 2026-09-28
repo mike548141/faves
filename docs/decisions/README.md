@@ -1759,3 +1759,8 @@ deliberation those compact docs omit.
   `composeTags` at `data.js`'s load seam (allergens union, claims intersect).
   Notes say who wrote them; an inferred one says "Our suggestion". The brownie
   gained `contains-soy` (Whittaker's states it).
+- [0139](0139-the-recipe-list-preview-is-read-only.md) —
+  **the recipe list's preview is read-only** (owner-ruled 2026-09-29).
+  Supersedes 0034 §6's second entry point: the Cook at Home list's expanded
+  "Ingredients & method" has no Start cooking and no ingredient ⓘ; the recipe
+  page is the one way into cook mode and the one place a note reads.
