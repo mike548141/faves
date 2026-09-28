@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Halal, Kosher and Meatarian food preferences.** Choosing Halal flags
+  every dish the menu shows contains pork; Kosher flags pork and shellfish.
+  Neither hides or dims anything, and a dish only ever reads "Halal" or
+  "Kosher" when the place says so — Faves can't check slaughter, preparation
+  or alcohol. Meatarian can be selected and doesn't change any menu yet.
+  Behind it, 428 dishes and 11 extras now carry a pork tag, worked out from
+  the menu (sausage, pepperoni and salami count unless another meat is named;
+  plant-based versions never do) (ADR 0140).
 - **"May contain" allergens are shown, without turning into "Contains".** A
   source's trace statement (a chocolate label's "may be present") is recorded
   separately from the dish's allergens. Every tag tip on the dish now says

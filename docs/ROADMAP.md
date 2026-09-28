@@ -298,6 +298,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [✅ RULED AND SHIPPED (first half) 2026-08-17 — the answer is DULL, NOT](roadmap/350-theme-22-the-personal-layer-holistically-owner/010-22d-hide-what-does-not-apply-to-this-reader.md)
 - ✅ [✅ 22e — a dish's tags: sorted, collapsed, explained, and composed from](roadmap/350-theme-22-the-personal-layer-holistically-owner/020-22e-tags-sorted-collapsed-and-explained.md)
 - [ ] 🤔 [22f — a heat preference: "no spice" and "mild only"](roadmap/350-theme-22-the-personal-layer-holistically-owner/030-22f-a-heat-preference-no-spice-or-mild-only.md)
+- [ ] 🤔 [22g — which dishes should Meatarian affect?](roadmap/350-theme-22-the-personal-layer-holistically-owner/040-22g-which-dishes-should-meatarian-affect.md)
 
 ## Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)
 
