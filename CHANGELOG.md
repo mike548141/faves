@@ -349,6 +349,10 @@ content freshness separately from this file.
   place the old wording could not paper over the gap.
 
 ### Changed
+- **The "May contain" warning is shorter and says each thing once.** It
+  used to name the label twice and make the same point three times; it now
+  reads *"You avoid peanuts. Whittaker's label warns of possible traces of
+  peanuts and nuts. Not an ingredient."*
 - **A recipe's description now sits straight under its name**, above the
   Prep · Cook · Serves · Difficulty panel, so you read what the dish is before
   the numbers.

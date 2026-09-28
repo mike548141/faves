@@ -260,12 +260,31 @@ export function tagTip(t, { note, recipe = false, fromAddOn = false, avoid, diet
   const withTrace = (s) => (tail ? `${s} ${tail}` : s);
   const mine = isDeclared(t, avoid, dietary);
   if (isTraceChip(t)) {
-    // Its own trace first, the dish's other trace (if any) after it.
-    const own = trace.filter((e) => e.tag === traceTag(t));
-    const rest = trace.filter((e) => e.tag !== traceTag(t));
+    // Owner, 2026-09-29, of the tip this replaced ("You asked to avoid this.
+    // May contain traces of peanuts — Whittaker's label. Not listed as an
+    // ingredient — a warning that it may be present. May contain traces of nuts
+    // — Whittaker's label."): "repeating the point in an unhelpful way, is
+    // longer than necessary, and is difficult to read". So: name what the
+    // reader avoids, then ONE sentence per source with the source first — the
+    // same source is no longer said twice — and "not an ingredient" once, at
+    // the end. Still one sentence per source, so two labels are never merged
+    // into a claim neither made. Its own allergen leads its source's list.
+    const own = traceTag(t);
+    const ordered = [...trace].sort((a, b) => (b.tag === own) - (a.tag === own));
+    const bySource = new Map();
+    for (const e of ordered) {
+      const key = e.sources.length ? e.sources.join("; ") : "";
+      if (!bySource.has(key)) bySource.set(key, []);
+      bySource.get(key).push(allergenWord(e.tag));
+    }
+    const said = [...bySource.entries()]
+      .map(([src, words]) => {
+        const list = words.length > 1 ? `${words.slice(0, -1).join(", ")} and ${words.at(-1)}` : words[0];
+        return src ? `${src} warns of possible traces of ${list}.` : `Possible traces of ${list}.`;
+      })
+      .join(" ");
     const check = recipe ? "" : " If it matters, check with the venue.";
-    const more = traceLine(rest);
-    return `You asked to avoid this. ${traceLine(own)} Not listed as an ingredient — a warning that it may be present.${more ? ` ${more}` : ""}${check}`;
+    return `You avoid ${allergenWord(own)}. ${said} Not an ingredient.${check}`;
   }
   return withTrace(baseTip(t, { note, recipe, fromAddOn, mine }));
 }

@@ -1546,8 +1546,11 @@ async function run(opts) {
     );
     report.check(
       "…whose tip names the source and says it is a warning, not an ingredient",
-      (tFl.traceTip ?? "").startsWith("You asked to avoid this.") && (tFl.traceTip ?? "").includes(tSource || "∅") &&
-        (tFl.traceTip ?? "").includes("Not listed as an ingredient"),
+      (tFl.traceTip ?? "").startsWith("You avoid ") && (tFl.traceTip ?? "").includes(tSource || "∅") &&
+        (tFl.traceTip ?? "").includes("Not an ingredient") &&
+        // …and names its source ONCE (owner, 2026-09-29: the old tip said
+        // "Whittaker's label" twice and made the point three times).
+        (tFl.traceTip ?? "").split(tSource || "∅").length === 2,
       JSON.stringify(tFl.traceTip)
     );
     // The collection list draws the same row through menu.js. The row accent

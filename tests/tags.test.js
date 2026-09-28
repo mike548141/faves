@@ -136,8 +136,19 @@ test("every tip on the dish carries the trace line, naming its source", () => {
 test("the trace chip's own tip says it is a warning, not an ingredient", () => {
   const live = liveTrace(LAVA_NOW, LAVA_TRACE);
   const tip = tagTip("trace:contains-peanuts", { ...peanutReader, recipe: true, trace: live });
-  assert.match(tip, /^You asked to avoid this\. May contain traces of peanuts — Whittaker's label\. Not listed as an ingredient/);
-  assert.match(tip, /May contain traces of nuts — Whittaker's label\.$/);
+  // One sentence for the one source — the owner's complaint was the same
+  // label named twice and the point made three times (2026-09-29).
+  assert.equal(tip, "You avoid peanuts. Whittaker's label warns of possible traces of peanuts and nuts. Not an ingredient.");
+  assert.equal(tip.split("Whittaker's label").length - 1, 1);
+});
+
+test("the trace chip's tip keeps two sources apart and adds the venue check off a recipe", () => {
+  const live = liveTrace([], [
+    { tag: "contains-nuts", source: "Label A" },
+    { tag: "contains-sesame", source: "Label B" },
+  ]);
+  const tip = tagTip("trace:contains-sesame", { avoid: new Set(["contains-sesame"]), trace: live });
+  assert.equal(tip, "You avoid sesame. Label B warns of possible traces of sesame. Label A warns of possible traces of nuts. Not an ingredient. If it matters, check with the venue.");
 });
 
 test("two sources are never merged into one claim neither made", () => {
