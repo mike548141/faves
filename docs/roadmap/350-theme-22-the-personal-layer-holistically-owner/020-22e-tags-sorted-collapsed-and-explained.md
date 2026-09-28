@@ -1,4 +1,4 @@
-- [ ] 🤔 **22e — a dish's tags: sorted, collapsed, explained, and composed from
+- [~] 🤔 **22e — a dish's tags: sorted, collapsed, explained, and composed from
       its parts** `[L][design][schema]` ⚑ — owner-raised 2026-09-28 from the
       Chocolate Lava Cakes recipe. Four asks in one message; two ruled the same
       day, one open. **Build none of it piecemeal** — the chip row is rendered
@@ -92,8 +92,8 @@ this goes back to him with that option rather than being applied.
 
 ## Progress
 
-📌 **Claim released 2026-09-28 (`faves-3c`)** with steps 1–3 shipped; 4 and 5
-are open for the next session.
+📌 **Claimed 2026-09-28 (`faves-b8`)** for steps 5 then 4 (claim released by
+`faves-3c` with steps 1–3 shipped).
 
 
 - ✅ Steps 1–2 — `site/js/tags.js`, one module for the menu row and the recipe
