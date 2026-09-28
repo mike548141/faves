@@ -106,7 +106,8 @@
           "price": 8.0,
           "tags": [
             "has-meat",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ]
         },
         {
@@ -114,7 +115,8 @@
           "id": "bacon",
           "price": 8.0,
           "tags": [
-            "has-meat"
+            "has-meat",
+            "contains-pork"
           ]
         },
         {
@@ -408,9 +410,10 @@
           "price": 18.0,
           "tags": [
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “aioli” — an egg emulsion."}
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “aioli” — an egg emulsion.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Mash and Gravy",
@@ -555,9 +558,10 @@
           "price": 32.0,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour.", "contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Corn Fritters",
@@ -592,7 +596,10 @@
           "dishId": "pork-loin",
           "desc": "Roasted pork loin served with gnocchi, ratatouille, frisée lettuce and mustard gravy.",
           "price": 33.0,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Scallop Risotto",
@@ -668,9 +675,10 @@
           "tags": [
             "gf-option",
             "contains-dairy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Meatlovers",
@@ -680,9 +688,10 @@
           "tags": [
             "gf-option",
             "contains-dairy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Double Smoked Ham + Mushroom",
@@ -692,9 +701,10 @@
           "tags": [
             "gf-option",
             "contains-dairy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-pork": "The menu says “Ham”."}
         },
         {
           "name": "Prawns, Roast Capsicum + Rocket",
@@ -773,9 +783,10 @@
           "price": 28.5,
           "tags": [
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-gluten": "The menu says “sourdough”."}
+          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-gluten": "The menu says “sourdough”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "The Vegetarian Breakfast",
@@ -834,15 +845,20 @@
           "desc": null,
           "price": 8.0,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Sausages” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Bacon",
           "dishId": "bacon",
           "desc": null,
           "price": 8.0,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Salmon",
@@ -1023,8 +1039,10 @@
           "desc": "Warm mini sausages with tomato sauce, curly fries and carrot sticks.",
           "price": 15.0,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Cheerio” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Cheese Pizza",
@@ -1145,7 +1163,10 @@
           "dishId": "pork-loin-gold-card",
           "desc": "Gold Card portion.",
           "price": 26.0,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Summer Salad",

@@ -344,9 +344,10 @@
           "tags": [
             "contains-egg",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “croutons”.", "contains-dairy": "The menu says “parmesan”."}
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “croutons”.", "contains-dairy": "The menu says “parmesan”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Roasted pumpkin, chickpeas, feta, toasted pumpkin & sunflower seed, salad greens, pecorino & rocket mayo",
@@ -450,8 +451,10 @@
           "desc": "Sunday. Pork belly with roast vegetable salad, gravy & apple sauce.",
           "price": 29.5,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         }
       ]
     },
@@ -536,8 +539,10 @@
           "price": 39.0,
           "tags": [
             "gf",
-            "contains-dairy"
-          ]
+            "contains-dairy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         }
       ]
     },
@@ -576,8 +581,10 @@
           "price": 39.5,
           "tags": [
             "gf",
-            "contains-dairy"
-          ]
+            "contains-dairy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Mild harissa spiced ½ chicken w/ lemon & garlic yoghurt",

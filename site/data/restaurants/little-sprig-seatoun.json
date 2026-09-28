@@ -77,7 +77,8 @@
           "id": "prosciutto",
           "price": 5.0,
           "tags": [
-            "has-meat"
+            "has-meat",
+            "contains-pork"
           ]
         }
       ]
@@ -133,7 +134,8 @@
           "id": "bacon",
           "price": 5.0,
           "tags": [
-            "has-meat"
+            "has-meat",
+            "contains-pork"
           ]
         },
         {
@@ -363,8 +365,10 @@
           "desc": null,
           "price": 15.0,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
+          "tagNotes": {"contains-pork": "The menu says “Sausages” — is usually pork in NZ unless the menu names another meat."},
           "addOns": [
             "kids-gravy"
           ]

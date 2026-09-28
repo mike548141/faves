@@ -222,8 +222,10 @@
           "price": 15,
           "tags": [
             "gf",
-            "df"
-          ]
+            "df",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Kielbasa” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Cheese, Pickles & Charcuterie",

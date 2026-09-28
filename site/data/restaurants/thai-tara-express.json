@@ -278,9 +278,10 @@
           "price": 12.9,
           "tags": [
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat."}
+          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Prawns twister",
@@ -470,9 +471,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Mee goreng” — a wheat noodle."}
+          "tagNotes": {"contains-gluten": "The menu says “Mee goreng” — a wheat noodle.", "contains-pork": "The menu says “pork”."}
         }
       ]
     },
@@ -658,8 +660,10 @@
           "desc": "A tangy Thai-style spicy salad with crispy pork belly, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs. Served with rice.",
           "price": 28.5,
           "tags": [
-            "spicy-2"
-          ]
+            "spicy-2",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         }
       ]
     },
@@ -681,9 +685,10 @@
           "tags": [
             "contains-peanuts",
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Roasted duck on rice",
@@ -717,9 +722,10 @@
           "tags": [
             "contains-peanuts",
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soy”."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soy”.", "contains-pork": "The menu says “pork”."}
         }
       ]
     },
@@ -770,9 +776,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Duck noodle",
@@ -1029,9 +1036,10 @@
           ],
           "tags": [
             "contains-shellfish",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “Oyster sauce” — the sauce is soy-based."}
+          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “Oyster sauce” — the sauce is soy-based.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Roasted duck stir-fry vegetable",
@@ -1057,9 +1065,10 @@
           "desc": "The standard choice of meat — no charge.",
           "price": 0,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-soy": "The menu says “tofu”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Upgrade to combination, duck, crispy pork, BBQ pork, prawn or seafood",
@@ -1067,9 +1076,10 @@
           "desc": null,
           "price": 4,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Extra chicken, pork, beef or vegetable with tofu",
@@ -1077,9 +1087,10 @@
           "desc": null,
           "price": 4,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-soy": "The menu says “tofu”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Extra combination, crispy pork, BBQ pork, prawn or seafood",
@@ -1087,9 +1098,10 @@
           "desc": null,
           "price": 6.5,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-pork": "The menu says “pork”."}
         }
       ]
     },

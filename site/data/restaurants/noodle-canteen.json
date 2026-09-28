@@ -137,9 +137,10 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-gluten": "The menu says “Hokkien” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “soy”."}
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-gluten": "The menu says “Hokkien” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “soy”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Fried kuai teow",
@@ -150,9 +151,10 @@
           "tags": [
             "spicy-1",
             "contains-shellfish",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-soy": "The menu says “soy”."}
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-soy": "The menu says “soy”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Combination noodles",
@@ -164,9 +166,10 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “oyster sauce” — the sauce is soy-based."}
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “oyster sauce” — the sauce is soy-based.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Black bean beef",
@@ -188,9 +191,10 @@
           "desc": "Thin rice noodles with roast pork, shrimp, bean sprouts, onion, carrots and spring onion in a light curry sauce.",
           "price": 19,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “shrimp”."}
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Sweet box",
@@ -200,9 +204,10 @@
           "price": 19.5,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Hot box",
@@ -213,9 +218,10 @@
           "tags": [
             "spicy-1",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Teriyaki",
@@ -294,9 +300,10 @@
           "price": 19,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Garlic prawns",
@@ -440,9 +447,10 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Curry laksa",
@@ -481,9 +489,10 @@
           "desc": "Traditional rice dish comprising shrimp, roast pork, bean sprouts, onions, carrots, spring onions and peas.",
           "price": 19,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “shrimp”."}
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Sambal fried rice",
@@ -501,7 +510,10 @@
           "code": "30",
           "desc": "Malaysian style fried rice with roast pork, bean sprouts, onion, carrots, spring onion and peas.",
           "price": 19,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Seafood nasi goreng",
@@ -630,7 +642,10 @@
           "code": "42",
           "desc": null,
           "price": 19,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Sweet & sour pork rice",
@@ -638,7 +653,10 @@
           "code": "43",
           "desc": null,
           "price": 19,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Satay beef",
@@ -707,7 +725,10 @@
           "code": "50",
           "desc": null,
           "price": 19,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Honey pork fried rice",
@@ -715,7 +736,10 @@
           "code": "51",
           "desc": null,
           "price": 19,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Combination fried rice",
@@ -731,7 +755,10 @@
           "code": "53",
           "desc": null,
           "price": 19,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Beef fried rice",

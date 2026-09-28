@@ -113,9 +113,10 @@
           "desc": "Gochujang BBQ glaze, chilli, sesame seeds.",
           "price": 24.0,
           "tags": [
-            "contains-sesame"
+            "contains-sesame",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
+          "tagNotes": {"contains-sesame": "The menu says “sesame”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Loaded Fries",
@@ -146,9 +147,10 @@
           "desc": "Smoky herb butter jus, mustard cream, cheddar dust.",
           "price": 24.5,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “butter”."}
+          "tagNotes": {"contains-dairy": "The menu says “butter”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Buttermilk Fried Chicken",
@@ -190,9 +192,10 @@
           "price": 69.0,
           "tags": [
             "contains-shellfish",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “squid”.", "contains-dairy": "The menu says “buttermilk”."}
+          "tagNotes": {"contains-shellfish": "The menu says “squid”.", "contains-dairy": "The menu says “buttermilk”.", "contains-pork": "The menu says “pork”."}
         }
       ]
     },
@@ -239,8 +242,10 @@
           "desc": "Potato gratin, winter greens, pear & fig relish, jus.",
           "price": 38.0,
           "tags": [
-            "gf"
-          ]
+            "gf",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Fettuccine Carbonara",
@@ -251,9 +256,10 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Fettuccine”.", "contains-dairy": "The menu says “Carbonara” — the sauce is cream- or butter-based.", "contains-egg": "The menu says “Carbonara” — egg is in the batter or base."}
+          "tagNotes": {"contains-gluten": "The menu says “Fettuccine”.", "contains-dairy": "The menu says “Carbonara” — the sauce is cream- or butter-based.", "contains-egg": "The menu says “Carbonara” — egg is in the batter or base.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Classic Caesar",
@@ -265,9 +271,10 @@
             "contains-dairy",
             "contains-egg",
             "contains-fish",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “egg”.", "contains-fish": "The menu says “anchovy”.", "contains-gluten": "The menu says “croutons”."}
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “egg”.", "contains-fish": "The menu says “anchovy”.", "contains-gluten": "The menu says “croutons”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Green Tahini Bowl",
@@ -423,9 +430,10 @@
           "tags": [
             "gf",
             "contains-egg",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-fish": "The menu says “salmon”."}
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-fish": "The menu says “salmon”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Eggs Your Way",
@@ -462,9 +470,10 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Mushroom on Toast",
@@ -487,9 +496,10 @@
           "price": 27.0,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Waffles” — a wheat bakery item.", "contains-dairy": "The menu says “Buttermilk”."}
+          "tagNotes": {"contains-gluten": "The menu says “Waffles” — a wheat bakery item.", "contains-dairy": "The menu says “Buttermilk”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Sweet Waffles",
@@ -511,9 +521,10 @@
           "tags": [
             "gf-option",
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-gluten": "The menu says “sourdough”."}
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-gluten": "The menu says “sourdough”.", "contains-pork": "The menu says “Bacon”."}
         }
       ]
     },
@@ -536,7 +547,10 @@
           "dishId": "bacon",
           "desc": null,
           "price": 7.0,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Rosti",
@@ -661,9 +675,10 @@
           "price": 15.5,
           "tags": [
             "v-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-pork": "The menu says “Bacon”."}
         }
       ]
     },

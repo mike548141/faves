@@ -149,7 +149,8 @@
           "id": "ham",
           "price": 4,
           "tags": [
-            "has-meat"
+            "has-meat",
+            "contains-pork"
           ]
         },
         {
@@ -330,9 +331,10 @@
           "price": 14,
           "tags": [
             "gf",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "First Class",
@@ -366,9 +368,10 @@
           "tags": [
             "gf",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Rustique",
@@ -388,9 +391,10 @@
           "price": 16,
           "tags": [
             "gf",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Blue Rdv",
@@ -427,9 +431,10 @@
           "tags": [
             "gf",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “Ham”."}
         },
         {
           "name": "Big is Good",

@@ -10,7 +10,24 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { dishFlagged, dishSatisfiesDiet, DIET_FILTERS } from "../site/js/dietary.js";
+import { readFileSync, readdirSync } from "node:fs";
+import {
+  dishFlagged,
+  dishSatisfiesDiet,
+  DIET_FILTERS,
+  effectiveAvoid,
+  declaredClaims,
+  STATED_CLAIMS,
+} from "../site/js/dietary.js";
+
+/** Every dish in site/data, the way the menu reads them. */
+function* corpusDishes() {
+  const dir = new URL("../site/data/restaurants/", import.meta.url);
+  for (const f of readdirSync(dir).filter((n) => n.endsWith(".json"))) {
+    const r = JSON.parse(readFileSync(new URL(f, dir), "utf8"));
+    for (const s of r.menu || []) for (const item of s.items || []) yield item;
+  }
+}
 
 // --- dishFlagged ----------------------------------------------------
 test("dishFlagged: no flagged allergens ⇒ never flagged", () => {
@@ -136,5 +153,78 @@ test("dishSatisfiesDiet: an unknown filter key can never be satisfied", () => {
 });
 
 test("DIET_FILTERS exposes the four expected keys", () => {
+  // And ONLY those four: Halal, Kosher and Meatarian are food preferences that
+  // must never become filter keys (ADR 0140) — `dishSatisfiesDiet` answers false
+  // for a key it does not know, so a fifth entry here dims menus.
   assert.deepEqual(DIET_FILTERS.map((f) => f.key), ["v", "vg", "gf", "df"]);
+});
+
+// --- Halal / Kosher / Meatarian (ADR 0140) -----------------------------
+
+test("effectiveAvoid: the reader's own flags, plus what each observance implies", () => {
+  assert.deepEqual([...effectiveAvoid(["contains-nuts"], [])], ["contains-nuts"]);
+  assert.deepEqual([...effectiveAvoid([], ["halal"])].sort(), ["contains-pork"]);
+  assert.deepEqual([...effectiveAvoid([], ["kosher"])].sort(), ["contains-pork", "contains-shellfish"]);
+  assert.deepEqual(
+    [...effectiveAvoid(["contains-nuts", "contains-pork"], ["halal", "kosher"])].sort(),
+    ["contains-nuts", "contains-pork", "contains-shellfish"],
+  );
+});
+
+test("effectiveAvoid: Meatarian, an unknown key and junk add NOTHING", () => {
+  const base = ["contains-dairy"];
+  for (const prefs of [["meatarian"], ["pescatarian"], ["__proto__"], ["constructor"], null, undefined, []]) {
+    assert.deepEqual([...effectiveAvoid(base, prefs)], base, `${JSON.stringify(prefs)} changed the avoid set`);
+  }
+});
+
+test("effectiveAvoid: never mutates the stored list it was handed", () => {
+  const stored = ["contains-nuts"];
+  effectiveAvoid(stored, ["kosher"]);
+  assert.deepEqual(stored, ["contains-nuts"], "an implied warning leaked into storage");
+});
+
+test("declaredClaims: Halal/Kosher join for chip loudness; Meatarian never does", () => {
+  assert.deepEqual([...declaredClaims(["v"], ["halal", "meatarian"])].sort(), ["halal", "v"]);
+  assert.ok(!declaredClaims([], ["meatarian"]).has("meatarian"));
+});
+
+test("Meatarian is INERT on the real corpus: no dish flags, dims or changes", () => {
+  // The owner's words: "For now just add it to the food preferences as an option
+  // for users to select." Measured over every dish, not asserted of one.
+  let dishes = 0;
+  for (const item of corpusDishes()) {
+    dishes += 1;
+    const avoid = effectiveAvoid([], ["meatarian"]);
+    assert.equal(dishFlagged(item.tags, avoid), false, `${item.name} flagged by Meatarian`);
+    // The only set a food preference could ever reach that filters is the
+    // declared set, and it is never handed to dishSatisfiesDiet — but even if
+    // it were, Meatarian must not be in it.
+    assert.equal(dishSatisfiesDiet(item.tags, new Set([...declaredClaims([], ["meatarian"])])), true);
+  }
+  assert.ok(dishes > 3000, `swept only ${dishes} dishes`);
+});
+
+test("Halal on the real corpus flags EXACTLY the dishes tagged contains-pork, and dims none", () => {
+  let flagged = 0;
+  let pork = 0;
+  for (const item of corpusDishes()) {
+    const has = (item.tags || []).includes("contains-pork");
+    pork += has;
+    const f = dishFlagged(item.tags, effectiveAvoid([], ["halal"]));
+    flagged += f;
+    assert.equal(f, has, `${item.name}: Halal flagged=${f}, pork tag=${has}`);
+  }
+  assert.ok(pork > 400, `only ${pork} pork dishes — has the sweep been undone?`);
+  assert.equal(flagged, pork);
+});
+
+test("STATED_CLAIMS are never filters, and nothing but a venue writes them", () => {
+  // The absence-claim guard lives in three places, each tested where it lives:
+  // search (tests/search.test.js "'halal' finds ONLY…"), composition
+  // (tests/addons.test.js) and the taggers (tools/test_tag_allergens.py). Here:
+  // a stated claim is not a DIET_FILTERS key, so it can never dim a dish.
+  for (const c of STATED_CLAIMS) {
+    assert.ok(!DIET_FILTERS.some((f) => f.key === c.key || f.satisfies.includes(c.key)), `${c.key} is a filter`);
+  }
 });

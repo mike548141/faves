@@ -280,7 +280,10 @@
           "dishId": "ford-freakout",
           "desc": "Grass fed beef, bacon, avocado.",
           "price": 17,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Peanut Piston",
@@ -300,9 +303,10 @@
           "price": 18.9,
           "tags": [
             "spicy-2",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Bacon BBQ Roadster",
@@ -311,9 +315,10 @@
           "price": 20.7,
           "tags": [
             "contains-dairy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour."}
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-gluten": "The menu says “battered” — battered/crumbed coatings are wheat flour.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Bastard",
@@ -321,9 +326,10 @@
           "desc": "Grass fed beef, cheddar, bacon, avocado, pineapple, grated beetroot with chia seeds.",
           "price": 20.9,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-pork": "The menu says “bacon”."}
         }
       ]
     },
@@ -347,9 +353,10 @@
           "desc": "Grilled chicken, bacon, brie.",
           "price": 17.9,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “brie”."}
+          "tagNotes": {"contains-dairy": "The menu says “brie”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Burnout",
@@ -358,9 +365,10 @@
           "price": 17.9,
           "tags": [
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Blue Cheese”.", "contains-egg": "The menu says “Aioli” — an egg emulsion."}
+          "tagNotes": {"contains-dairy": "The menu says “Blue Cheese”.", "contains-egg": "The menu says “Aioli” — an egg emulsion.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "T-Bird",
@@ -496,9 +504,10 @@
           "price": 22.5,
           "tags": [
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-egg": "The menu says “Aioli” — an egg emulsion."}
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-egg": "The menu says “Aioli” — an egg emulsion.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "The Studnut",

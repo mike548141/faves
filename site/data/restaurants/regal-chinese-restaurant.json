@@ -150,9 +150,10 @@
           "tags": [
             "contains-peanuts",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “Peanuts”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-peanuts": "The menu says “Peanuts”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Dried Scallop & Pork Dumplings (4pc)",
@@ -162,9 +163,10 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Scallop”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-shellfish": "The menu says “Scallop”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Scallop Dumplings (3pc)",
@@ -222,9 +224,10 @@
           "price": 8.0,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chicken Sticky Rice (1pc)",
@@ -244,9 +247,10 @@
           "tags": [
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pork Buns” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Pork Buns” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Marinated Pork Spare Ribs",
@@ -255,8 +259,10 @@
           "price": 9.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Marinated Pig Intestine",
@@ -265,8 +271,10 @@
           "price": 9.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pig”."}
         },
         {
           "name": "Marinated Chicken Knuckle",
@@ -370,9 +378,10 @@
           "price": 7.0,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Deep Fried Prawn Won Tons (4pc)",
@@ -415,9 +424,10 @@
           "price": 8.0,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pan Fried Chive Cakes (3pc)",
@@ -479,8 +489,10 @@
           "desc": null,
           "price": 8.0,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Taro Pastries (3pc)",
@@ -540,8 +552,10 @@
           "price": 9.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Beef Rice Rolls (3pc)",
@@ -592,9 +606,10 @@
           "desc": null,
           "price": 11.5,
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Hong Kong Boat Porridge",
@@ -640,9 +655,10 @@
           "tags": [
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pork Buns” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Pork Buns” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Baked Coconut Buns (3pc)",
@@ -678,9 +694,10 @@
           "tags": [
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pastries”."}
+          "tagNotes": {"contains-gluten": "The menu says “Pastries”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Egg Tarts (3pc)",
@@ -877,9 +894,10 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Dumpling” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Dumpling” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Won Tons",
@@ -921,9 +939,10 @@
           "price": 10.0,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Wo Tip - Shanghai Style Pan Fried Pork Dumplings",
@@ -932,9 +951,10 @@
           "price": 9.0,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Deep Fried Prawn Balls",
@@ -989,8 +1009,10 @@
           "price": 10.0,
           "tags": [
             "contains-gluten",
-            "contains-egg"
-          ]
+            "contains-egg",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pan Fried Chive Cakes",
@@ -1090,9 +1112,10 @@
           "tags": [
             "contains-shellfish",
             "contains-egg",
-            "spicy-1"
+            "spicy-1",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Szechuan Hot & Sour Soup (Prawn & BBQ Pork) (For Ten)",
@@ -1102,9 +1125,10 @@
           "tags": [
             "contains-shellfish",
             "contains-egg",
-            "spicy-1"
+            "spicy-1",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Prawn Won Ton Soup (For One)",
@@ -1226,8 +1250,10 @@
           "desc": null,
           "price": 42.0,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Char Siu Honeyed Barbeque Pork",
@@ -1236,8 +1262,10 @@
           "price": 30.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Char Siu”."}
         },
         {
           "name": "Jellyfish & Spiced Pork Leg Slices (cold dish)",
@@ -1246,8 +1274,10 @@
           "price": 30.0,
           "tags": [
             "contains-sesame",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         }
       ]
     },
@@ -1375,9 +1405,10 @@
           "price": 34.0,
           "tags": [
             "contains-peanuts",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chicken with Ginger & Spring Onion",
@@ -1454,9 +1485,10 @@
           "price": 36.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Eight Treasures with Tofu",
@@ -1510,8 +1542,10 @@
           "price": 36.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chao Zhou Style Pork Tripe",
@@ -1520,8 +1554,10 @@
           "price": 36.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         }
       ]
     },
@@ -1642,8 +1678,10 @@
           "desc": null,
           "price": 38.0,
           "tags": [
-            "contains-soy"
-          ]
+            "contains-soy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Steamed Chicken Pieces & Chinese Mushrooms on Lotus Leaf",
@@ -1703,8 +1741,10 @@
           "price": 28.0,
           "tags": [
             "contains-gluten",
-            "contains-egg"
-          ]
+            "contains-egg",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Jing-Du Sweet & Sour Spare Ribs",
@@ -1713,8 +1753,10 @@
           "price": 30.0,
           "tags": [
             "contains-gluten",
-            "contains-egg"
-          ]
+            "contains-egg",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Spare Ribs” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Spicy Salt Spare Ribs",
@@ -1723,8 +1765,10 @@
           "price": 30.0,
           "tags": [
             "contains-gluten",
-            "spicy-1"
-          ]
+            "spicy-1",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Spare Ribs” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Garlic Spare Ribs",
@@ -1732,8 +1776,10 @@
           "desc": null,
           "price": 30.0,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Spare Ribs” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Steamed Spare Ribs in Black Bean Sauce",
@@ -1742,9 +1788,10 @@
           "price": 28.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Black Bean Sauce” — the sauce is soy-based."}
+          "tagNotes": {"contains-soy": "The menu says “Black Bean Sauce” — the sauce is soy-based.", "contains-pork": "The menu says “Spare Ribs” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Pork Belly & Taro Layers stewed in Thick Sauce",
@@ -1753,8 +1800,10 @@
           "price": 38.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Seasonal Round Beans stirfried with Minced Pork",
@@ -1762,8 +1811,10 @@
           "desc": null,
           "price": 28.0,
           "tags": [
-            "contains-soy"
-          ]
+            "contains-soy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork stirfried with Cashew Nuts & Vegetables in Basket",
@@ -1773,16 +1824,20 @@
           "tags": [
             "contains-nuts",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-nuts": "The menu says “Cashew”."}
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork stirfried with Seasonal Vegetables",
           "dishId": "pork-stirfried-with-seasonal-vegetables",
           "desc": null,
           "price": 26.0,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork stirfried with Black Bean Sauce & Capsicums",
@@ -1791,9 +1846,10 @@
           "price": 26.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Black Bean Sauce” — the sauce is soy-based."}
+          "tagNotes": {"contains-soy": "The menu says “Black Bean Sauce” — the sauce is soy-based.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork stirfried with Vegetables in Kwan Po Sauce",
@@ -1802,8 +1858,10 @@
           "price": 26.0,
           "tags": [
             "contains-soy",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Steam Salted Fish & Pork Mince Cakes",
@@ -1812,9 +1870,10 @@
           "price": 30.0,
           "tags": [
             "contains-gluten",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Cakes” — a wheat bakery item.", "contains-fish": "The menu says “Fish”."}
+          "tagNotes": {"contains-gluten": "The menu says “Cakes” — a wheat bakery item.", "contains-fish": "The menu says “Fish”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Grilled Salted Fish & Pork Mince Cakes",
@@ -1823,16 +1882,20 @@
           "price": 30.0,
           "tags": [
             "contains-gluten",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Cakes” — a wheat bakery item.", "contains-fish": "The menu says “Fish”."}
+          "tagNotes": {"contains-gluten": "The menu says “Cakes” — a wheat bakery item.", "contains-fish": "The menu says “Fish”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork Tripe with Pickled Chinese Vegetables",
           "dishId": "pork-tripe-with-pickled-chinese-vegetables",
           "desc": null,
           "price": 32.0,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chinese Sausage & Meat stirfried with Seasonal Vegetables",
@@ -1840,8 +1903,10 @@
           "desc": null,
           "price": 30.0,
           "tags": [
-            "contains-soy"
-          ]
+            "contains-soy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         }
       ]
     },
@@ -1953,9 +2018,10 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawns”.", "contains-soy": "The menu says “Tofu”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”.", "contains-soy": "The menu says “Tofu”.", "contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Spicy Szechuan Tofu with Diced Pork & Prawns",
@@ -1966,9 +2032,10 @@
             "contains-shellfish",
             "contains-soy",
             "contains-gluten",
-            "spicy-1"
+            "spicy-1",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawns”.", "contains-soy": "The menu says “Tofu”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”.", "contains-soy": "The menu says “Tofu”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Spicy Salt Tofu",
@@ -1989,9 +2056,10 @@
           "price": 28.0,
           "tags": [
             "contains-shellfish",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Shrimps”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimps”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Regal Silky Smooth Tofu served with Bak Choi, Chicken, Chinese Mushroom",
@@ -2134,9 +2202,10 @@
           "tags": [
             "contains-shellfish",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Shrimp Fried Rice",
@@ -2165,8 +2234,10 @@
           "price": 28.0,
           "tags": [
             "contains-egg",
-            "contains-soy"
-          ]
+            "contains-soy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Combination Fried Rice",
@@ -2228,9 +2299,10 @@
           "price": 25.0,
           "tags": [
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."}
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Beef Chow Mein",
@@ -2305,9 +2377,10 @@
             "contains-shellfish",
             "contains-soy",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Shrimp Dumpling Noodle Soup",
@@ -2341,8 +2414,10 @@
           "tags": [
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
-          ]
+            "contains-soy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Steamed Rice (For One)",
@@ -2530,9 +2605,10 @@
             "contains-egg",
             "contains-soy",
             "contains-nuts",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-nuts": "The menu says “Cashew”.", "contains-fish": "The menu says “Fish”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-nuts": "The menu says “Cashew”.", "contains-fish": "The menu says “Fish”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Regal Set Menu",
@@ -2544,9 +2620,10 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “Tofu”.", "contains-fish": "The menu says “Fish”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “Tofu”.", "contains-fish": "The menu says “Fish”.", "contains-pork": "The menu says “Pork”."}
         }
       ]
     },
@@ -2790,9 +2867,10 @@
             "contains-soy",
             "contains-gluten",
             "spicy-1",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-fish": "The menu says “Fish”."}
+          "tagNotes": {"contains-fish": "The menu says “Fish”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Sauteed Chicken with Chili and Black Fungus Slices",
@@ -2812,8 +2890,10 @@
           "tags": [
             "contains-soy",
             "contains-gluten",
-            "spicy-1"
-          ]
+            "spicy-1",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Steamed Blue Cod with Chopped Chili",
