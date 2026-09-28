@@ -187,12 +187,32 @@ def _escapes(words):
     return "".join(f"(?<!{w} )(?<!{w}-)" for w in words)
 
 
+# Words that can only mean "this is not pork", wherever they sit: they escape
+# every pork word, "pork" itself included ("mock pork", "plant-based pork").
 PORK_PLANT_ESCAPE = _escapes([
-    "vegan", "veggie", "vegetarian", "plant-based", "plant based", "plant",
-    "mock", "faux", "fake", "meatless", "meat-free", "meat free", "tofu",
-    "tempeh", "seitan", "soy", "coconut", "mushroom", "eggplant", "carrot",
-    "jackfruit", "halal", "kosher",
+    "vegan", "veggie", "vegetarian", "plant-based", "plant based",
+    "mock", "faux", "fake", "meatless", "meat-free", "meat free", "halal", "kosher",
 ])
+# 🛑 INGREDIENTS THAT NAME A SUBSTITUTE ONLY WHEN THEY SIT ON THE PRODUCT WORD.
+# "Coconut bacon", "tempeh bacon" and "soy chorizo" are vegan products; "Coconut
+# pork curry", "Sweet soy pork belly", "Mushroom pork dumplings" and "Tofu pork
+# mince" are PORK. These words escaped every pork word until the 2026-09-29
+# review ran the real regexes and found all four of those phrases untagged — a
+# miss, the one direction this tool may not move. So each is scoped to the
+# product it can actually replace, as a lookbehind on THAT alternative only, and
+# never reaches `pork`, `ham` or anything else.
+PORK_SUBSTITUTE_OF = {
+    "bacon": ["coconut", "tempeh", "tofu", "seitan", "soy", "mushroom", "shiitake",
+              "eggplant", "carrot", "rice paper", "plant"],
+    "chorizo": ["soy", "tofu", "tempeh", "seitan", "plant"],
+    "sausage": ["tofu", "tempeh", "seitan", "soy", "mushroom", "plant"],
+}
+
+
+def _sub(word):
+    return _escapes(PORK_SUBSTITUTE_OF[word])
+
+
 PORK_MEAT_ESCAPE = _escapes([
     "beef", "chicken", "lamb", "mutton", "hogget", "venison", "turkey", "veal",
     "goat", "duck", "wagyu", "angus", "fish", "seafood", "prawn",
@@ -338,22 +358,27 @@ RULES = [
     # water-chestnut reason: an item-level veto on "Plant-based chorizo, or
     # pepperoni" would lose the PEPPERONI — an over-warning traded for a miss.
     #
-    # The two escape lists differ ON PURPOSE. A plant or mock qualifier escapes
-    # BOTH rules ("plant-based chorizo", "vegan bacon"). Another MEAT escapes
+    # The escape lists differ ON PURPOSE. A plant or mock qualifier escapes
+    # BOTH rules ("plant-based chorizo", "vegan bacon"); a substitute INGREDIENT
+    # ("coconut", "tofu", "soy") escapes only the product it replaces ("coconut
+    # bacon"), never `pork` ("coconut pork curry"). Another MEAT escapes
     # only the usually-pork rule — the owner's "unless the menu names another
     # meat" — and NOT the named pig products, because "Chicken bacon ranch" is
     # chicken AND bacon: a lookbehind on `chicken ` in front of `bacon` would
     # read a menu's list of two meats as one.
     ("contains-pork", "STATED", "names pork or a pig product",
      PORK_PLANT_ESCAPE +
-     r"\b(pork|pigs?|bacon|hams?|prosciutto|pancetta|chorizo|speck|porchetta|"
-     r"n['’]?duja|char\s?siu|cha\s?siu|crackling|lard|lardons?|guanciale|"
+     r"\b(pork|pigs?|" + _sub("bacon") + r"bacon|streaky|hams?|gammon|prosciutto|pancetta|"
+     + _sub("chorizo") + r"chorizo|speck|porchetta|"
+     r"n['’]?duja|char\s?siu|cha\s?siu|crackling|lard|lardo|lardons?|guanciale|"
      r"mortadella|coppa|capicola|jam[oó]n|tonkotsu|tonkatsu(?!\s+sauce)|"
-     r"lap\s?cheong)\b", None),
+     r"lap\s?ch(?:e?o)ng)\b", None),
+    # `salumi` is here and not above: Italian cured meats are mostly pork but
+    # not all of them, so it is the "usually" rule's word, not the "names" one.
     ("contains-pork", "DERIVED", "is usually pork in NZ unless the menu names another meat",
      PORK_PLANT_ESCAPE + PORK_MEAT_ESCAPE +
-     r"\b(sausages?|pepperoni|salami|salame|sopp?ressat?a|spare\s?ribs?|"
-     r"hot\s?dogs?|cheerios?|saveloys?|frankfurters?|kransk(?:y|ies)|"
+     r"\b(" + _sub("sausage") + r"sausages?|pepperoni|salami|salame|salumi|sopp?ressat?a|"
+     r"spare\s?ribs?|hot\s?dogs?|cheerios?|saveloys?|frankfurters?|kransk(?:y|ies)|"
      r"cabanossi|kielbasa|bratwursts?)\b", None),
 
     # --- gluten -------------------------------------------------------

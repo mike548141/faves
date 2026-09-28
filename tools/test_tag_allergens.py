@@ -1034,6 +1034,35 @@ PROBES = {
         ("Mock pork buns", {"contains-gluten"}, {"contains-pork"}),
         ("Plant-based chorizo, or pepperoni", {"contains-pork"}, set()),
     ],
+    # 🛑 THE 2026-09-29 REVIEW'S FOUR MISSES. A substitute INGREDIENT (soy,
+    # coconut, mushroom, tofu) used to escape every pork word, so these four
+    # pork dishes went untagged. Each must be tagged; the substitute PRODUCTS
+    # below them must still not be — both halves, or a fix that simply dropped
+    # the escapes (tagging "coconut bacon") would pass the first four alone.
+    "pork: a substitute ingredient spares only the product it replaces": [
+        ("Sweet soy pork belly", {"contains-pork"}, set()),
+        ("Coconut pork curry", {"contains-pork"}, set()),
+        ("Mushroom pork dumplings", {"contains-pork"}, set()),
+        ("Tofu pork mince", {"contains-pork"}, set()),
+        ("Mushroom and bacon risotto", {"contains-pork"}, set()),
+        ("Coconut bacon", set(), {"contains-pork"}),
+        ("Tempeh bacon", set(), {"contains-pork"}),
+        ("Soy chorizo", {"contains-soy"}, {"contains-pork"}),
+        ("Tofu sausages", {"contains-soy"}, {"contains-pork"}),
+    ],
+    # The owner-review's additions to the table: none is in today's corpus,
+    # so these probes are the only thing that proves each word is read.
+    "pork: the added pig-product words are read": [
+        ("Gammon steak, pineapple", {"contains-pork"}, set()),
+        ("Lardo on toast", {"contains-pork", "contains-gluten"}, set()),
+        ("Lardons, frisée", {"contains-pork"}, set()),
+        ("Streaky, eggs, hash brown", {"contains-pork", "contains-egg"}, set()),
+        ("Lap chong fried rice", {"contains-pork"}, set()),
+        ("Salumi board", {"contains-pork"}, set()),
+        ("Mortadella, pistachio", {"contains-pork", "contains-nuts"}, set()),
+        ("Coppa and capicola", {"contains-pork"}, set()),
+        ("Guanciale carbonara", {"contains-pork"}, set()),
+    ],
     # The one-way rule, as ADR 0140 restates it for the two new claims: the
     # word "halal" on a menu line is NEVER turned into a `halal` tag by a tool —
     # a person writes that tag from the venue's own words — and no absence of
@@ -1703,8 +1732,22 @@ BREAKERS = {
         [(r"tonkatsu(?!\s+sauce)|", r"tonkatsu|")],
         ["pork: a named pig product is always tagged, and a near-miss never is"]),
     "sausage dropped from the usually-pork rule": (
-        [(r'r"\b(sausages?|pepperoni|', r'r"\b(pepperoni|')],
+        [(r'r"sausages?|pepperoni|', r'r"pepperoni|')],
         ["pork: a usually-pork food is tagged unless another meat is named"]),
+    # The review's defect, put back: substitute ingredients escaping EVERY pork
+    # word again. The four named misses must all come back as failures.
+    "substitute ingredients escape every pork word again": (
+        [('PORK_PLANT_ESCAPE = _escapes([\n    "vegan",',
+          'PORK_PLANT_ESCAPE = _escapes([\n    "soy", "coconut", "mushroom", "tofu", "vegan",')],
+        ["pork: a substitute ingredient spares only the product it replaces"]),
+    # …and the opposite over-correction: the substitute scoping deleted, so
+    # "coconut bacon" is tagged pork.
+    "the substitute-product lookbehind dropped from bacon": (
+        [('r"\\b(pork|pigs?|" + _sub("bacon") + r"bacon|', 'r"\\b(pork|pigs?|bacon|')],
+        ["pork: a substitute ingredient spares only the product it replaces"]),
+    "gammon dropped from the named pig products": (
+        [("bacon|streaky|hams?|gammon|prosciutto|", "bacon|streaky|hams?|prosciutto|")],
+        ["pork: the added pig-product words are read"]),
     "the Worcestershire rule removed": (
         [(r'r"\b(worcestershire|worcester\s?sauce)\b"',
           r'r"\b(a-sauce-no-menu-names)\b"')],
