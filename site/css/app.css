@@ -4669,7 +4669,7 @@ body.faves-view .to-top {
 }
 /* The recipe page's hero and body (ADR 0125), after the owner's reference: the
    Whittaker's recipe page. The DOM is the phone's reading order — photo, title,
-   stats, description, tags, controls, ingredients, method — and the wide layout
+   description, stats, tags, controls, ingredients, method — and the wide layout
    is a grid laid over it, so a keyboard or screen-reader reader meets things in
    the same order at every width. */
 .recipe-photo {

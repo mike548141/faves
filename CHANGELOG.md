@@ -349,6 +349,9 @@ content freshness separately from this file.
   place the old wording could not paper over the gap.
 
 ### Changed
+- **A recipe's description now sits straight under its name**, above the
+  Prep · Cook · Serves · Difficulty panel, so you read what the dish is before
+  the numbers.
 - **The place count and the "open places near you come first" line share one
   row.** The count now sits at the right-hand end of that row instead of on a
   line of its own, which gives the list one more line of screen height.

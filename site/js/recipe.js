@@ -65,8 +65,8 @@ function render(collection, item) {
   back.href = `restaurant.html?id=${id}`;
   back.textContent = `← ${collection.name}`;
 
-  // Two regions, laid out by CSS (ADR 0125): the HERO — photo, title, stats,
-  // description, tags, the cook and shopping controls — and the BODY, where the
+  // Two regions, laid out by CSS (ADR 0125): the HERO — photo, title,
+  // description, stats, tags, the cook and shopping controls — and the BODY, where the
   // ingredients sit beside the method on a wide screen and above it on a phone.
   // Built as two lists so the DOM order is the phone's reading order and the
   // wide layout is a grid over it, never a reordering the keyboard would miss.
@@ -112,6 +112,11 @@ function render(collection, item) {
     titleGroup.append(btn, note);
   }
   parts.push(el("div", { className: "menu-title-row" }, [titleGroup, heart]));
+  // The description sits straight under the title and ABOVE the stats panel
+  // (owner, 2026-09-29: "should be below 'Chocolate Lava Cakes' and above the
+  // box that specifies Prep, Cook, Serves, Difficulty"). ADR 0125 listed it
+  // after the stats; this is the owner's later call on a reversible layout.
+  if (item.desc) parts.push(el("p", { className: "recipe-lede", textContent: item.desc }));
 
   // `serves` restated at the chosen scale (17a). Only 3 of the 24 recipes carry
   // it, so most read exactly as they always did; where it IS carried, a reader
@@ -147,8 +152,6 @@ function render(collection, item) {
   } else if (item.time) {
     parts.push(el("p", { className: "menu-sub", textContent: item.time }));
   }
-  if (item.desc) parts.push(el("p", { className: "recipe-lede", textContent: item.desc }));
-
 
   const trace = traceEntries(item);
   if (item.tags?.length || trace.length) {
