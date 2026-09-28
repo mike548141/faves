@@ -33,6 +33,10 @@ content freshness separately from this file.
 - **A recipe's source sits behind an ⓘ beside its name**, the way a venue's
   "last checked" note does, and links to the original online where there is
   one (Whittaker's lava cakes first).
+- **A search down to one result goes there.** Picking a dish from the search
+  suggestions, or pressing Enter when only one dish, recipe or place is left,
+  opens it — a recipe on its own page, a restaurant dish at its row in the
+  full menu — instead of just filtering the list to it.
 ### Fixed
 - **Ticking a method step ticks the steps before it** — the method is a
   sequence, so ticking step 3 marks 1 and 2 done too, and unticking a step

@@ -2047,14 +2047,41 @@ function render(r) {
   // Escape handler below stops propagation so a first Escape closes the popup
   // without also emptying the field, and `stopImmediatePropagation` can only
   // stop a listener registered after it.
+  // A single dish is a destination, not a filter (owner, 2026-09-28): picking
+  // a dish suggestion, or pressing Enter when the search has left exactly one
+  // dish, OPENS it — a recipe on its own page; a venue dish, which has no page,
+  // at its row in the whole menu with the search cleared, which is where a
+  // home-search dish result already lands.
+  const openDish = (id) => {
+    if (isRecipeKind(r)) {
+      location.href = `recipe.html?id=${encodeURIComponent(r.id)}&dish=${encodeURIComponent(id)}`;
+      return;
+    }
+    search.value = "";
+    applyView();
+    history.pushState(null, "", `#dish-${id}`);
+    scrollToHash();
+  };
   attachSuggestions(search, {
     getCandidates: menuCandidates,
     onChoose(c) {
-      // One behaviour for every row: put the word in the box. What happens next
-      // is exactly what would have happened had the reader finished typing it.
+      if (c.kind === "dish") return openDish(c.id.slice("dish:".length));
+      // Every other row (a section, a dietary word) puts the word in the box:
+      // what happens next is exactly what would have happened had the reader
+      // finished typing it.
       search.value = c.label;
       applyView();
     },
+  });
+  // Registered AFTER attachSuggestions, so an Enter that took a highlighted
+  // suggestion arrives here already defaultPrevented and is left alone.
+  search.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" || e.defaultPrevented || e.isComposing || !search.value.trim()) return;
+    const shown = [...root.querySelectorAll("li.dish")].filter((li) => li.offsetParent !== null);
+    if (shown.length === 1) {
+      e.preventDefault();
+      openDish(shown[0].dataset.dishId);
+    }
   });
 
   // Custom ✕ + Escape both clear the field (shared with the home search).

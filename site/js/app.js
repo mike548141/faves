@@ -888,8 +888,18 @@ function wireSearch(restaurants) {
     return r ? closureBadge(r, todayIn(venueTimezone(r), clock.date)) : null;
   }
 
+  // The one result's link when a search has exactly one, else null — read by
+  // the submit handler below.
+  let onlyHref = null;
+
   function renderResults(q) {
     const { places, dishes } = search(index, q);
+    onlyHref =
+      places.total + dishes.total !== 1
+        ? null
+        : places.total
+          ? `restaurant.html?id=${places.items[0].id}`
+          : dishes.items[0].href;
     // One clock for the whole list, read per venue in that venue's own zone —
     // the same pattern the card list uses.
     const clock = makeClock();
@@ -944,14 +954,22 @@ function wireSearch(restaurants) {
     // not just an active ≥2-char search.
     if (clear) clear.hidden = input.value.length === 0;
     if (active) renderResults(q);
-    else groups.replaceChildren();
+    else {
+      groups.replaceChildren();
+      onlyHref = null;
+    }
   }
 
   input.addEventListener("input", update);
   // Custom ✕ + Escape both clear the field (shared with the in-menu search).
   wireSearchClear(input, clear, update);
-  // Submit is a no-op (results are live); just don't reload the page.
-  form.addEventListener("submit", (e) => e.preventDefault());
+  // Results are live, so submit never reloads the page. But when the search
+  // has narrowed to ONE place or dish, committing it goes there (owner,
+  // 2026-09-28): a list of one is a destination, not a filter.
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (onlyHref) location.href = onlyHref;
+  });
 }
 
 // Search and the Favourites view both take over the browse area, so turning

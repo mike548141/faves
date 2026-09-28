@@ -390,19 +390,79 @@ async function run(opts) {
       sug.heights.join(",")
     );
 
-    // Choosing a row types the word — it can do nothing the box cannot.
-    await driver.evalPage(`(() => {
+    // Choosing a DISH row opens that dish (owner, 2026-09-28: a single dish is
+    // a destination, not a filter). A venue dish has no page of its own, so it
+    // lands on its row in the WHOLE menu, search cleared — where a home-search
+    // dish result already lands.
+    const pickRow = (cls) => driver.evalPage(`(() => {
       const s = document.querySelector(".menu-search");
-      s.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+      const at = [...document.querySelectorAll(".suggest-list .suggest-row")]
+        .findIndex((r) => ${cls === "dish" ? "" : "!"}r.classList.contains("suggest-dish"));
+      if (at < 0) return null;
+      for (let i = 0; i <= at; i++) {
+        s.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+      }
+      const label = document.querySelectorAll(".suggest-row")[at].querySelector(".suggest-label").textContent;
       s.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      return label;
     })()`);
+    const pickedDish = await pickRow("dish");
+    // The row is reached by a SMOOTH scroll down a long menu, so wait for it to
+    // arrive rather than guess how long it takes (bounded; the check then fails).
+    const inViewNow = `(() => { const t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      const b = t?.getBoundingClientRect(); return !!b && b.top >= 0 && b.top < innerHeight; })()`;
+    for (let waited = 0; waited < 4000 && !(await driver.evalPage(inViewNow)); waited += 100) await sleep(100);
+    const landed = await driver.evalPage(`(() => {
+      const t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      const b = t?.getBoundingClientRect();
+      return { hash: location.hash, query: document.querySelector(".menu-search").value,
+        shown: [...document.querySelectorAll("li.dish")].filter((d) => !d.hidden).length,
+        total: document.querySelectorAll("li.dish").length,
+        name: (t?.querySelector(".dish-name")?.textContent || "").trim(),
+        top: b ? Math.round(b.top) : null, inView: !!b && b.top >= 0 && b.top < innerHeight };
+    })()`);
+    report.check(
+      "choosing a DISH suggestion opens it — its row in the whole menu, search cleared",
+      pickedDish !== null && landed.name.startsWith(pickedDish.trim()) && landed.query === "" &&
+        landed.shown === landed.total && landed.inView,
+      `picked ${JSON.stringify(pickedDish)} → ${JSON.stringify(landed)}`
+    );
+    // The control: any OTHER row still just types its word.
+    await typeQuery(driver, "veg");
+    const pickedWord = await pickRow("other");
     await sleep(150);
     await driver.settle();
-    const chosen = await driver.evalPage(PROBE);
+    const typed = await driver.evalPage(PROBE);
     report.check(
-      "choosing a suggestion just types it — no mode, no hidden state",
-      chosen.query.length > 0 && chosen.shown > 0 && chosen.shown < chosen.total,
-      `query=${JSON.stringify(chosen.query)}, ${chosen.shown} of ${chosen.total}`
+      "…while a non-dish suggestion still just types its word — no mode, no hidden state",
+      pickedWord !== null && typed.query === pickedWord.trim() && typed.shown > 0 && typed.shown < typed.total,
+      `picked ${JSON.stringify(pickedWord)} → query=${JSON.stringify(typed.query)}, ${typed.shown} of ${typed.total}`
+    );
+
+    // A recipe DOES have a page: Enter on a search that has left exactly one
+    // recipe goes there, on the menu screen and on the home screen alike.
+    const waitForRecipe = (label) =>
+      untilPresent(() => driver.evalPage(`location.pathname.endsWith("/recipe.html") ? location.search : null`), { label });
+    await openVenue(driver, cdp, sessionId, port, "cook-at-home");
+    await typeQuery(driver, "self-saucing");
+    await driver.evalPage(`document.querySelector(".menu-search")
+      .dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true }))`);
+    const fromMenu = await waitForRecipe("Enter on one recipe opened its page");
+    report.check(
+      "Enter on a menu search left with ONE recipe opens that recipe's page",
+      /dish=chocolate-self-saucing-pudding/.test(fromMenu),
+      fromMenu
+    );
+    await cdp.send("Page.navigate", { url: `http://127.0.0.1:${port}/index.html` }, sessionId);
+    await untilPresent(() => driver.evalPage(`!document.getElementById("search-form")?.hidden`), { label: "home search" });
+    await driver.evalPage(`(() => { const s = document.getElementById("search-input");
+      s.value = "self-saucing"; s.dispatchEvent(new Event("input", { bubbles: true }));
+      document.getElementById("search-form").requestSubmit(); })()`);
+    const fromHome = await waitForRecipe("home submit on one result opened it");
+    report.check(
+      "submitting a home search with ONE result opens it",
+      /dish=chocolate-self-saucing-pudding/.test(fromHome),
+      fromHome
     );
 
     // ─── The GLOBAL search list ranks a property above a spelling ──────────
