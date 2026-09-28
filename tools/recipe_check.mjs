@@ -1238,7 +1238,7 @@ async function run(opts) {
         cells: cells.map((c) => ({
           label: c.querySelector("dt")?.textContent,
           value: c.querySelector("dd")?.firstChild?.textContent,
-          est: !!c.querySelector(".recipe-stat-est"),
+          est: !!c.querySelector(".recipe-stat-est[title]"),
           left: Math.round(c.getBoundingClientRect().left),
         })),
         key: !!document.querySelector(".recipe-stats-key"),
@@ -1251,7 +1251,9 @@ async function run(opts) {
       return (
         h.cells.length === want.length &&
         want.every((c, k) => h.cells[k].label === c.label && h.cells[k].value === c.value && h.cells[k].est === c.estimated) &&
-        h.key === want.some((c) => c.estimated)
+        // The key line under the panel was removed (owner, 2026-09-28): it
+        // must be gone whether or not anything is estimated.
+        h.key === false
       );
     };
     const cellText = (h) => h.cells.map((c) => `${c.label} ${c.value}${c.est ? " est." : ""}`).join(" · ") + (h.key ? " + key line" : "");
@@ -1319,8 +1321,8 @@ async function run(opts) {
       await size(WIDE);
       const he = await hero();
       report.check(
-        "every value the recipe did not give carries \"est.\" in words, and the key line says what that means",
-        statsAgree(he, estimatedFixture) && he.cells.some((c) => c.est) && he.key,
+        "every value the recipe did not give carries \"est.\" in words — and no key line under the panel (owner, 2026-09-28)",
+        statsAgree(he, estimatedFixture) && he.cells.some((c) => c.est) && !he.key,
         `“${estimatedFixture.name}”: ${cellText(he)}`
       );
       await size(NARROW);

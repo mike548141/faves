@@ -127,7 +127,7 @@ function render(collection, item) {
     : null;
   // The stats panel (ADR 0125), Whittaker's shape: Prep · Cook · Serves ·
   // Difficulty. A value that is OUR estimate carries "est." in words beside it
-  // and a key line under the panel — never colour alone (WCAG 1.4.1), and never
+  // — never colour alone (WCAG 1.4.1), and never
   // bare, because an unlabelled estimate is the one thing the owner's ruling on
   // estimates forbade. `time` is not repeated here: prep + cook say it better,
   // and the list screen still shows it.
@@ -136,19 +136,23 @@ function render(collection, item) {
     const dl = el("dl", { className: "recipe-stats" });
     for (const c of stats) {
       const dd = el("dd", { className: "recipe-stat-value" }, [c.value]);
-      if (c.estimated) dd.append(" ", el("span", { className: "recipe-stat-est", textContent: "est." }));
+      // "est." stays on the value — ADR 0125: our estimate never reaches the
+      // page bare. What went (owner, 2026-09-28: "unnecessary") is the key line
+      // that used to spell it out under the panel; the expansion now rides on
+      // the marker itself, as an <abbr> title and in its accessible name.
+      if (c.estimated) {
+        dd.append(" ", el("abbr", {
+          className: "recipe-stat-est",
+          title: "our estimate — the recipe doesn’t say",
+          textContent: "est.",
+        }));
+      }
       dl.append(el("div", { className: "recipe-stat", "data-stat": c.key }, [
         el("dt", { className: "recipe-stat-label", textContent: c.label }),
         dd,
       ]));
     }
     parts.push(dl);
-    if (stats.some((c) => c.estimated)) {
-      parts.push(el("p", {
-        className: "recipe-stats-key",
-        textContent: "est. — our estimate; the recipe doesn’t say.",
-      }));
-    }
   } else if (item.time) {
     parts.push(el("p", { className: "menu-sub", textContent: item.time }));
   }
