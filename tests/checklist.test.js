@@ -16,6 +16,7 @@ import {
   lineId,
   recipeId,
   sanitiseTicks,
+  stepCascade,
 } from "../site/js/checklist.js";
 
 const fakeStorage = (seed = {}) => {
@@ -185,4 +186,35 @@ test("storage that refuses to write still leaves the boxes working this session"
   const c = createChecklist(blocked);
   assert.doesNotThrow(() => c.set("r", "i:1", true));
   assert.equal(c.has("r", "i:1"), true);
+});
+
+// Owner, 2026-09-28: ticking step 3 must tick 1 and 2. A tick on the method
+// means "done up to here", so it cascades backwards; an untick cascades forwards.
+test("ticking a method step ticks every step before it, and no step after", () => {
+  const steps = ["one", "two", "three", "four"];
+  const list = createChecklist(fakeStorage());
+  list.setMany("r", stepCascade(steps, 2, true), true);
+  assert.deepEqual(steps.map((s) => list.has("r", lineId("s", s))), [true, true, true, false]);
+});
+
+test("unticking a method step unticks every step after it, and none before", () => {
+  const steps = ["one", "two", "three", "four"];
+  const list = createChecklist(fakeStorage());
+  list.setMany("r", stepCascade(steps, 3, true), true);
+  list.setMany("r", stepCascade(steps, 1, false), false);
+  assert.deepEqual(steps.map((s) => list.has("r", lineId("s", s))), [true, false, false, false]);
+});
+
+test("a cascade leaves the ingredient ticks alone, and notifies once", () => {
+  const steps = ["one", "two", "three"];
+  const list = createChecklist(fakeStorage());
+  list.set("r", lineId("i", "one"), true); // an ingredient reading like a step
+  let calls = 0;
+  list.subscribe(() => calls++);
+  list.setMany("r", stepCascade(steps, 2, false), false);
+  list.setMany("r", stepCascade(steps, 2, true), true);
+  assert.equal(calls, 2);
+  assert.ok(list.has("r", lineId("i", "one")));
+  list.setMany("r", stepCascade(steps, 0, false), false);
+  assert.ok(list.has("r", lineId("i", "one")));
 });

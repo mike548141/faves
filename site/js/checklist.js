@@ -80,6 +80,18 @@ export function lineId(kind, text) {
   return `${kind}:${fnv1a(String(text ?? "").replace(/\s+/g, " ").trim())}`;
 }
 
+/**
+ * The method is a SEQUENCE, so a tick means "done up to here" (owner,
+ * 2026-09-28: ticking step 3 must tick 1 and 2 as well). Ticking step `index`
+ * ticks every step before it; unticking it unticks every step after it — the
+ * mirror, so the list can never read "3 done, 2 not". Ingredients do not
+ * cascade: they are gathered in any order.
+ */
+export function stepCascade(steps, index, on) {
+  const range = on ? steps.slice(0, index + 1) : steps.slice(index);
+  return range.map((step) => lineId("s", step));
+}
+
 /** The key for a whole recipe: venue + dish id (ADR 0051), never the name. */
 export function recipeId(venueId, item) {
   return `${venueId ?? ""} ${dishId(item ?? {})}`;
@@ -163,8 +175,17 @@ export function createChecklist(storage, now = () => Date.now()) {
      * (cook mode sits over the recipe page showing the same ingredients).
      */
     set(rid, id, on) {
+      return this.setMany(rid, [id], on);
+    },
+
+    /**
+     * Tick or untick several lines as ONE write and ONE notification, so a
+     * method cascade (stepCascade below) repaints once rather than per step.
+     */
+    setMany(rid, ids, on) {
       const current = ticks[rid]?.t || [];
-      const next = on ? [...new Set([...current, id])] : current.filter((x) => x !== id);
+      const drop = new Set(ids);
+      const next = on ? [...new Set([...current, ...ids])] : current.filter((x) => !drop.has(x));
       // A record with nothing ticked is deleted rather than kept empty, so the
       // store holds only recipes with something in them.
       ticks = next.length

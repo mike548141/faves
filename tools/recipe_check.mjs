@@ -133,7 +133,7 @@ const HEIGHT = 844;
 // summary line cannot be reached by a run that fell out of the middle: this
 // repo has shipped a wall of PASS lines followed by a harness error and no
 // verdict more than once (sync_check.mjs, still). Add an assertion, bump this.
-const EXPECTED_ASSERTIONS = 53;
+const EXPECTED_ASSERTIONS = 55;
 
 const HELP = `Faves recipe-page check — verify the ingredient list's layout in a real browser.
 
@@ -787,6 +787,28 @@ async function run(opts) {
       "a tick made at 1× is STILL TICKED after the recipe is scaled",
       after.ticked === true,
       `checkbox checked=${after.ticked} after 1× → 2×`
+    );
+
+    // The method is a sequence (owner, 2026-09-28): ticking step 3 ticks 1 and
+    // 2, and unticking step 2 unticks everything after it. The wiring is what
+    // this proves — stepCascade's own rule is unit-tested in checklist.test.js.
+    const methodTicks = () => evalPage(`[...document.querySelectorAll(
+      ".recipe-body .method .tick-box")].map((b) => b.checked)`);
+    const before = await methodTicks();
+    await click(".recipe-body .method li:nth-child(3) .tick-box");
+    const down = await methodTicks();
+    report.check(
+      "ticking method step 3 ticks steps 1 and 2 as well, and nothing after it",
+      before.length >= 4 && before.every((c) => !c) &&
+        down.slice(0, 3).every(Boolean) && down.slice(3).every((c) => !c),
+      `${before.length} steps · before ${JSON.stringify(before)} · after ${JSON.stringify(down)}`
+    );
+    await click(".recipe-body .method li:nth-child(2) .tick-box");
+    const up = await methodTicks();
+    report.check(
+      "…and unticking step 2 unticks every step after it, leaving step 1",
+      up[0] === true && up.slice(1).every((c) => !c),
+      JSON.stringify(up)
     );
 
     // A line the scaler refused, inside a recipe where other lines DID scale —

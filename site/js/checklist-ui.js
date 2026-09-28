@@ -17,7 +17,7 @@
 // the step out again on every tick.
 
 import { el } from "./dom.js";
-import { checklist, lineId } from "./checklist.js";
+import { checklist, lineId, stepCascade } from "./checklist.js";
 
 /**
  * One tickable line.
@@ -25,9 +25,10 @@ import { checklist, lineId } from "./checklist.js";
  * `raw` is the line as the DATA holds it — it is what the tick is keyed on, so
  * it must never be the converted render (units.js rewrites °C to °F, and a
  * reader flipping to imperial must not lose their ticks). `display` is what the
- * reader sees, and defaults to the same string.
+ * reader sees, and defaults to the same string. A method step also passes
+ * `{ steps, index }` so its tick cascades through the steps before it.
  */
-export function tickRow(rid, kind, raw, display = raw) {
+export function tickRow(rid, kind, raw, display = raw, { steps, index } = {}) {
   const id = lineId(kind, raw);
   const box = el("input", {
     type: "checkbox",
@@ -38,7 +39,12 @@ export function tickRow(rid, kind, raw, display = raw) {
   // The reader's click is the truth — write what the box now says rather than
   // flipping what is stored, so two copies of a line on screen at once (cook
   // mode over the recipe page) can never argue.
-  box.addEventListener("change", () => checklist.set(rid, id, box.checked));
+  // A method step passes its whole list, so one tick cascades (stepCascade).
+  box.addEventListener("change", () =>
+    steps
+      ? checklist.setMany(rid, stepCascade(steps, index, box.checked), box.checked)
+      : checklist.set(rid, id, box.checked)
+  );
   return el("label", { className: "tick" }, [
     box,
     el("span", { className: "tick-text", textContent: display }),

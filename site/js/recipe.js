@@ -331,9 +331,10 @@ function render(collection, item) {
     // stored recipe is untouched; settings.subscribe below repaints on a flip.
     const units = settings.get().units;
     const ol = el("ol", { className: "method" });
-    for (const step of item.steps) {
-      ol.append(el("li", {}, [tickRow(rid, "s", step, convertTemperatures(step, units))]));
-    }
+    item.steps.forEach((step, index) => {
+      const row = tickRow(rid, "s", step, convertTemperatures(step, units), { steps: item.steps, index });
+      ol.append(el("li", {}, [row]));
+    });
     method.push(ol);
     body.push(el("section", { className: "recipe-method" }, method));
   }

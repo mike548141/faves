@@ -33,7 +33,7 @@ import { DEFAULT_SCALE, SCALES, scaleFor, scaleLineStatus } from "./quantity.js"
 import { translate } from "./reo.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
-import { checklist, lineId, recipeId } from "./checklist.js";
+import { checklist, lineId, recipeId, stepCascade } from "./checklist.js";
 import { syncTicks, tickRow } from "./checklist-ui.js";
 import {
   canCook,
@@ -409,8 +409,9 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
     stepBox,
     el("span", { className: "tick-text", "data-i18n": "cook.stepDone", textContent: "Step done" }),
   ]);
+  // Same cascade as the recipe page: "step done" means every step before it is.
   stepBox.addEventListener("change", () =>
-    checklist.set(rid, lineId("s", steps[index]), stepBox.checked)
+    checklist.setMany(rid, stepCascade(steps, index, stepBox.checked), stepBox.checked)
   );
   // Read the step aloud (ROADMAP 17e). Built ONLY where the browser has the
   // API: no control at all beats a control that does nothing, and this is the

@@ -31,6 +31,9 @@ content freshness separately from this file.
   uses the same chocolate and now carries the same nut warnings.
 
 ### Fixed
+- **Ticking a method step ticks the steps before it** — the method is a
+  sequence, so ticking step 3 marks 1 and 2 done too, and unticking a step
+  unticks the ones after it. Same on the recipe page and in cook mode.
 - **The privacy note now tells the truth about visit statistics.** It said
   "no tracking, no third-party scripts", but the host (Cloudflare) has been
   adding its cookie-free visitor-statistics script to every page. The footer,
