@@ -118,7 +118,7 @@
         {
           "name": "B's Dope-As Brownie",
           "dishId": "b-s-dope-as-brownie",
-          "desc": "The label on Whittaker's dark chocolate says it may contain peanuts and tree nuts.",
+          "desc": null,
           "serves": 9,
           "time": "~22 min",
           "prepMinutes": 5,
