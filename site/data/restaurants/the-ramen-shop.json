@@ -97,9 +97,10 @@
           "tags": [
             "v-option",
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “buns” — a wheat bakery item.", "contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-gluten": "The menu says “buns” — a wheat bakery item.", "contains-soy": "The menu says “tofu”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Dumplings",
@@ -107,9 +108,10 @@
           "desc": "6 pieces. Housemade pork and chive dumplings.",
           "price": 12,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Karaage",
@@ -235,9 +237,10 @@
           "desc": "Braised pork and kimchi topped with mesclun and sesame.",
           "price": 21,
           "tags": [
-            "contains-sesame"
+            "contains-sesame",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
+          "tagNotes": {"contains-sesame": "The menu says “sesame”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chicken rice bowl",
@@ -317,7 +320,10 @@
           "dishId": "tonkotsu",
           "desc": "Pork broth, double pork belly, sprouts, nori, corn, pickled cucumber and fried onion.",
           "price": 22,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Tonkotsu”."}
         },
         {
           "name": "Spicy tonkotsu",
@@ -326,16 +332,20 @@
           "price": 22,
           "tags": [
             "contains-egg",
-            "spicy-2"
+            "spicy-2",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “egg”."}
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “tonkotsu”."}
         },
         {
           "name": "Black garlic tonkotsu",
           "dishId": "black-garlic-tonkotsu",
           "desc": "Pork broth, double pork belly, bamboo shoots, black fungus, spring onion, fried garlic and mayu.",
           "price": 22,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “tonkotsu”."}
         },
         {
           "name": "Tokyo chicken",
@@ -450,9 +460,10 @@
           "tags": [
             "v-option",
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “ramen” — a wheat noodle.", "contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-gluten": "The menu says “ramen” — a wheat noodle.", "contains-soy": "The menu says “tofu”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Yakisoba",
@@ -461,9 +472,10 @@
           "price": 22,
           "tags": [
             "contains-egg",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-fish": "The menu says “katsuobushi”."}
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-fish": "The menu says “katsuobushi”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Pork abura ramen",
@@ -472,9 +484,10 @@
           "price": 22,
           "tags": [
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “ramen” — a wheat noodle."}
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “ramen” — a wheat noodle.", "contains-pork": "The menu says “Pork”."}
         }
       ]
     },
@@ -487,7 +500,10 @@
           "dishId": "pork-belly",
           "desc": null,
           "price": 4.5,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Ebi katsu (extra)",

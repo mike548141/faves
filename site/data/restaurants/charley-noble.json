@@ -121,8 +121,10 @@
           "price": 39,
           "tags": [
             "contains-gluten",
-            "gf-option"
-          ]
+            "gf-option",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Porchetta”."}
         },
         {
           "name": "Classic Beef Tartare",
@@ -223,8 +225,10 @@
           "price": 14,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
-          ]
+            "contains-dairy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Ham”."}
         },
         {
           "name": "Warmed Olives",
@@ -297,9 +301,10 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Mussel”.", "contains-fish": "The menu says “fish”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Mussel”.", "contains-fish": "The menu says “fish”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Focaccia (with Seafood Chowder)",
@@ -324,8 +329,10 @@
           "desc": "Dinner only, subject to availability. Beetroot purée, pork jus, pickled daikon, orange gelée, mint.",
           "price": 46,
           "tags": [
-            "gf-option"
-          ]
+            "gf-option",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Wild Awatoru Venison Loin",
@@ -367,9 +374,10 @@
             "contains-dairy",
             "contains-egg",
             "contains-gluten",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-gluten": "The menu says “Burger” — a wheat bakery item."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Charley Noble Veg Burger",
@@ -560,9 +568,10 @@
           "price": 15,
           "tags": [
             "contains-dairy",
-            "gf"
+            "gf",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cream”."}
+          "tagNotes": {"contains-dairy": "The menu says “cream”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Sweetcorn",
@@ -885,9 +894,10 @@
           "tags": [
             "contains-dairy",
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-gluten": "The menu says “Burger” — a wheat bakery item."},
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-pork": "The menu says “bacon”."},
           "needs": [
             {
               "what": "price",

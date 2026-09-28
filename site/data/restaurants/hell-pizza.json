@@ -762,7 +762,10 @@
           "dishId": "lust",
           "price": 23.5,
           "desc": "5-pepper pepperoni, salami, ham, bacon and chorizo. Free-range.",
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Greed",
@@ -770,9 +773,10 @@
           "price": 23.5,
           "desc": "Double ham, double pineapple and double cheese. Free-range.",
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Creator",
@@ -799,22 +803,30 @@
           "price": 23.5,
           "desc": "5-pepper pepperoni, onion, capsicum, tomatoes, chilli and black pepper. Free-range.",
           "tags": [
-            "spicy-1"
-          ]
+            "spicy-1",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Envy",
           "dishId": "envy",
           "price": 23.5,
           "desc": "Salami, ham, onions, mushrooms, pineapple and bacon. Free-range.",
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Gluttony",
           "dishId": "gluttony",
           "price": 23.5,
           "desc": "Onion, garlic, salami, ham, mushroom, pineapple, capsicum, tomato, bacon and black pepper. Free-range.",
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “ham”."}
         }
       ]
     },
@@ -842,9 +854,10 @@
             "spicy-1",
             "contains-gluten",
             "contains-egg",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item.", "contains-egg": "The menu says “hollandaise” — an egg emulsion."}
+          "tagNotes": {"contains-gluten": "The menu says “Pizza” — a wheat bakery item.", "contains-egg": "The menu says “hollandaise” — an egg emulsion.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Mordor",
@@ -852,8 +865,10 @@
           "price": 26,
           "desc": "Smokey BBQ sauce, free-range chicken, 5-pepper pepperoni, onions, capsicum and bacon.",
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Grimm",
@@ -885,9 +900,10 @@
           "desc": "Honey mustard, free-range chicken, ham, onions, gherkins, bacon and smoked cheddar.",
           "tags": [
             "contains-dairy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "The Beast",
@@ -896,9 +912,10 @@
           "desc": "Italian buffalo mozzarella and 5-pepper free-range pepperoni on a tangy tomato base. Thin stretched base only.",
           "tags": [
             "contains-dairy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "The Buffalo",
@@ -918,7 +935,8 @@
           "price": 26,
           "desc": "Half The Buffalo and half The Beast. Thin stretched base only.",
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ]
         },
         {
@@ -940,8 +958,10 @@
           "desc": "Chorizo, free-range chicken, cajun herbs, onions, garlic, chilli, tomatoes, capsicum and black pepper.",
           "tags": [
             "spicy-1",
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Chorizo”."}
         },
         {
           "name": "Brimstone",
@@ -962,9 +982,10 @@
           "desc": "Salami, onions, chicken, bacon, pineapple and camembert.",
           "tags": [
             "contains-dairy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “camembert”."}
+          "tagNotes": {"contains-dairy": "The menu says “camembert”.", "contains-pork": "The menu says “bacon”."}
         }
       ]
     },
@@ -992,9 +1013,10 @@
           "tags": [
             "contains-dairy",
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “buttermilk”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
+          "tagNotes": {"contains-dairy": "The menu says “buttermilk”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Lust Deluxe",
@@ -1002,8 +1024,10 @@
           "price": 28.5,
           "desc": "Marinated steak, 5-pepper pepperoni, salami, ham, bacon, smoked chorizo, black pepper and béarnaise. Free-range.",
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Serpent",
@@ -1453,9 +1477,10 @@
           "price": 25,
           "desc": "Half a kilo of marinated NZ pork ribs with your choice of APA spicy, cola BBQ or smokey BBQ sauce.",
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Lamb Shank and Mash",
@@ -1471,9 +1496,10 @@
           "desc": "Oven-baked penne in a garlic cream sauce with free-range chicken, bacon and mushrooms, topped with parmesan.",
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “penne”.", "contains-dairy": "The menu says “cream”."}
+          "tagNotes": {"contains-gluten": "The menu says “penne”.", "contains-dairy": "The menu says “cream”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Chicken Demon",
@@ -1509,7 +1535,10 @@
           "dishId": "chicken-salad",
           "price": 9.5,
           "desc": "Lettuce, spring onions, cucumber, tomatoes, free-range chicken, bacon and avocado, dressing on the side.",
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Camembert Salad",

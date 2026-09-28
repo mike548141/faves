@@ -98,9 +98,10 @@
           "price": 32.0,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “Pancetta”."}
         },
         {
           "name": "Porchetta",
@@ -109,9 +110,10 @@
           "price": 30.0,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-pork": "The menu says “Porchetta”."}
         }
       ]
     },
@@ -127,9 +129,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Siciliana - Large",
@@ -139,9 +142,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Capricciosa - Small",
@@ -151,9 +155,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Capricciosa - Large",
@@ -163,9 +168,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Bambina - Small",
@@ -175,9 +181,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Bambina - Large",
@@ -187,9 +194,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Carne - Small",
@@ -199,9 +207,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Carne - Large",
@@ -211,9 +220,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Romana - Small",
@@ -249,9 +259,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Cardinale - Large",
@@ -261,9 +272,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Parma - Small",
@@ -273,9 +285,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."}
         },
         {
           "name": "Parma - Large",
@@ -285,9 +298,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."}
         },
         {
           "name": "Inferno - Small",
@@ -298,9 +312,10 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Inferno - Large",
@@ -311,9 +326,10 @@
             "contains-gluten",
             "contains-dairy",
             "gf-option",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Pomodorina - Small",
@@ -557,9 +573,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Pepperoni - Large",
@@ -569,9 +586,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Rustico Bosco - Small",
@@ -581,9 +599,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “provolone”."}
+          "tagNotes": {"contains-dairy": "The menu says “provolone”.", "contains-pork": "The menu says “prosciutto”."}
         },
         {
           "name": "Rustico Bosco - Large",
@@ -593,9 +612,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “provolone”."}
+          "tagNotes": {"contains-dairy": "The menu says “provolone”.", "contains-pork": "The menu says “prosciutto”."}
         }
       ]
     },
@@ -611,9 +631,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Salsiccia - Large",
@@ -623,9 +644,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Tartufo - Small",
@@ -635,9 +657,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."}
         },
         {
           "name": "Tartufo - Large",
@@ -647,9 +670,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."}
         },
         {
           "name": "Funghi Bianca - Small",
@@ -685,9 +709,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “pancetta”."}
         },
         {
           "name": "Paesana - Large",
@@ -697,9 +722,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “pancetta”."}
         },
         {
           "name": "Pizza Bread - Small",
@@ -733,9 +759,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “parmesan”."}
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-pork": "The menu says “nduja”."}
         },
         {
           "name": "Bomba - Large",
@@ -745,9 +772,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “parmesan”."}
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-pork": "The menu says “nduja”."}
         },
         {
           "name": "Giardinella - Small",

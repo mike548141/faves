@@ -33,7 +33,7 @@
 // vegan, the first is merely annoying. Untagged options are the content sweep's
 // problem (Theme 14b), not a reason to soften the predicate.
 
-import { DIET_FILTERS } from "./dietary.js";
+import { DIET_FILTERS, STATED_CLAIMS } from "./dietary.js";
 import { slug } from "./slug.js";
 
 const ALLERGEN_PREFIX = "contains-";
@@ -61,19 +61,36 @@ const ALLERGEN_PREFIX = "contains-";
 // positive fact that closes 14h: "Bacon is meat" is readable off the option's
 // own name, and it turns the picker's absence-shaped line into a fact-shaped
 // one. Applied by tools/tag_addon_options.py; never inferred the other way.
+//
+// `contains-pork` (ADR 0140) contradicts `v` and `vg` for the reason
+// `has-meat` does, and `halal` and `kosher` — the two claims only a VENUE may
+// state. Kosher is also contradicted by shellfish (owner-ruled 2026-09-29).
 export const CONTRADICTS = {
   gf: ["contains-gluten"],
   df: ["contains-dairy"],
-  v: ["contains-shellfish", "contains-fish", "has-meat", "has-fish"],
+  v: ["contains-shellfish", "contains-fish", "contains-pork", "has-meat", "has-fish"],
   vg: ["contains-dairy", "contains-egg", "contains-shellfish", "contains-fish",
-       "has-meat", "has-fish"],
+       "contains-pork", "has-meat", "has-fish"],
+  halal: ["contains-pork"],
+  kosher: ["contains-pork", "contains-shellfish"],
 };
 
-const DIET_KEYS = DIET_FILTERS.map((f) => f.key);
+// Every claim composition INTERSECTS: the four diet filters, plus the two
+// venue-stated claims (ADR 0140). Halal and Kosher are NOT filters — nothing
+// dims on them — but they are claims about the whole plate, so an option must
+// never union one onto a dish that did not state it, and a dish's own "Halal"
+// must die when a pork topping is added. Treating them as a plain tag would
+// have done both wrong: `claimTagsOf` would not recognise them, and the union
+// loop below would carry an option's "halal" onto an unstated dish.
+const DIET_KEYS = [...DIET_FILTERS.map((f) => f.key), ...STATED_CLAIMS.map((c) => c.key)];
 
 // Every tag that counts as making a given dietary claim — `gf` and `gf-option`
-// both do. Read off DIET_FILTERS so the claim vocabulary has one definition.
-const CLAIM_TAGS = new Map(DIET_FILTERS.map((f) => [f.key, f.satisfies]));
+// both do. Read off DIET_FILTERS so the claim vocabulary has one definition; a
+// stated claim is satisfied only by itself (no `halal-option` exists).
+const CLAIM_TAGS = new Map([
+  ...DIET_FILTERS.map((f) => [f.key, f.satisfies]),
+  ...STATED_CLAIMS.map((c) => [c.key, [c.key]]),
+]);
 
 const isAllergen = (t) => t.startsWith(ALLERGEN_PREFIX);
 

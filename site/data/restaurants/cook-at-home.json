@@ -452,9 +452,10 @@
             "contains-peanuts",
             "contains-shellfish",
             "contains-egg",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-peanuts": "From the ingredients: peanut oil; roasted peanuts.", "contains-shellfish": "From the ingredients: finely chopped cooked chicken, cooked pork and/or prawns.", "contains-egg": "From the ingredients: eggs, whisked.", "contains-fish": "From the ingredients: fish sauce."}
+          "tagNotes": {"contains-peanuts": "From the ingredients: peanut oil; roasted peanuts.", "contains-shellfish": "From the ingredients: finely chopped cooked chicken, cooked pork and/or prawns.", "contains-egg": "From the ingredients: eggs, whisked.", "contains-fish": "From the ingredients: fish sauce.", "contains-pork": "From the ingredients: finely chopped cooked chicken, cooked pork and/or prawns."}
         },
         {
           "name": "Famous Brade Green Chicken Curry",
@@ -570,8 +571,10 @@
             "Remove the ribs, reduce the sauce in a pot until thick, then pour over the ribs."
           ],
           "tags": [
-            "spicy-1"
+            "spicy-1",
+            "contains-pork"
           ],
+          "tagNotes": {"contains-pork": "From the ingredients: Pork ribs."},
           "goesWith": [
             "Creamy Mushrooms",
             "Turkish Flatbread",

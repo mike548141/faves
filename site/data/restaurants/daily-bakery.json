@@ -83,9 +83,10 @@
           "price": 9.8,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “pastry”.", "contains-dairy": "The menu says “Cheese”."}
+          "tagNotes": {"contains-gluten": "The menu says “pastry”.", "contains-dairy": "The menu says “Cheese”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Gourmet Chicken Pie",
@@ -171,9 +172,10 @@
           "desc": "Flaky pastry filled with savoury sausage.",
           "price": 6.5,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “pastry”."}
+          "tagNotes": {"contains-gluten": "The menu says “pastry”.", "contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Minced Savoury",
@@ -198,9 +200,10 @@
           "price": 12.8,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Muffin” — a wheat bakery item.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Muffin” — a wheat bakery item.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Toasted Sandwich - Bacon, Egg, Cheese, Tomato",
@@ -210,9 +213,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-dairy": "The menu says “Cheese”.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “bread”.", "contains-dairy": "The menu says “Cheese”.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Bacon”."}
         }
       ]
     },
@@ -226,9 +230,10 @@
           "desc": "Ham and cheese filling in a soft roll.",
           "price": 12.8,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-pork": "The menu says “Ham”."}
         }
       ]
     },
@@ -300,9 +305,10 @@
           "price": 12.8,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Chicken, Basil, Garlic Pesto and Brie Ficelle",

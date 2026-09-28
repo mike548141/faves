@@ -58,7 +58,8 @@ STRIP_TAWA = [
           "price": 8.0,
           "tags": [
             "has-meat",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ]''',
      '''          "name": "Sausages",
           "id": "sausages",
@@ -66,11 +67,15 @@ STRIP_TAWA = [
           "tags": [
             "contains-gluten"
           ]'''),
+    # `contains-pork` (ADR 0140) is ALSO this tool's to write — it reaches an
+    # option only through the borrowed dish rules — so it comes off with
+    # `has-meat`, and `check_meat_and_fish_return` asserts both come back.
     ('''          "name": "Bacon",
           "id": "bacon",
           "price": 8.0,
           "tags": [
-            "has-meat"
+            "has-meat",
+            "contains-pork"
           ]''',
      '''          "name": "Bacon",
           "id": "bacon",
@@ -184,8 +189,8 @@ def check_meat_and_fish_return(after, out):
     """
     got = options(after)
     want = {
-        ("brunch-sides", "Sausages"): ["has-meat"],
-        ("brunch-sides", "Bacon"): ["has-meat"],
+        ("brunch-sides", "Sausages"): ["has-meat", "contains-pork"],
+        ("brunch-sides", "Bacon"): ["has-meat", "contains-pork"],
         ("brunch-sides", "Salmon"): ["has-fish", "contains-fish"],
     }
     missing = {
@@ -340,7 +345,9 @@ def check_same_shaped_options_are_patched_separately(after, out):
     bacons = {k: v for k, v in got.items() if k[1] == "Bacon"}
     if len(bacons) != 2:
         return f"the mutation did not land — found {len(bacons)} Bacon options, wanted 2"
-    bad = {k: v for k, v in bacons.items() if v != ["has-meat"]}
+    # Two tags each since ADR 0140 — meat from this tool's own rule, pork from
+    # the borrowed dish rule — and still exactly once each.
+    bad = {k: v for k, v in bacons.items() if v != ["contains-pork", "has-meat"]}
     return f"not tagged exactly once each: {bad}" if bad else None
 
 
@@ -378,11 +385,11 @@ CASES = {
         0, check_curation_outranks_the_pattern),
     "chicken salt is not chicken": (
         BAMBINA,
-        [('''        { "name": "Cotto ham", "id": "cotto-ham", "tags": ["has-meat"] },''',
+        [('''        { "name": "Cotto ham", "id": "cotto-ham", "tags": ["has-meat", "contains-pork"] },''',
           '''        { "name": "Chicken salt", "id": "cotto-ham", "tags": [] },'''),
-         ('''        { "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat"] },''',
+         ('''        { "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat", "contains-pork"] },''',
           '''        { "name": "Pepperoni", "id": "pepperoni", "tags": [] },'''),
-         ('''        { "name": "Italian sausage", "id": "italian-sausage", "tags": ["has-meat"] },''',
+         ('''        { "name": "Italian sausage", "id": "italian-sausage", "tags": ["has-meat", "contains-pork"] },''',
           '''        { "name": "Italian sausage", "id": "italian-sausage", "tags": [] },'''),
          ('''        { "name": "Beef meatball", "id": "beef-meatball", "tags": ["has-meat"] }''',
           '''        { "name": "Beef meatball", "id": "beef-meatball", "tags": [] }''')],
@@ -392,15 +399,15 @@ CASES = {
         check_same_shaped_options_are_patched_separately),
     "a one-line option array stays on one line": (
         BAMBINA,
-        [('''        { "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat"] },''',
+        [('''        { "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat", "contains-pork"] },''',
           '''        { "name": "Pepperoni", "id": "pepperoni", "tags": [] },''')],
         0, check_one_line_layout_survives),
     "a record it cannot write makes the run fail": (
         BAMBINA,
         # Take the tags key away from an option that is about to gain one.
-        [('''        { "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat"] },''',
+        [('''        { "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat", "contains-pork"] },''',
           '''        { "name": "Pepperoni", "id": "pepperoni" },'''),
-         ('''        { "name": "Cotto ham", "id": "cotto-ham", "tags": ["has-meat"] },''',
+         ('''        { "name": "Cotto ham", "id": "cotto-ham", "tags": ["has-meat", "contains-pork"] },''',
           '''        { "name": "Cotto ham", "id": "cotto-ham", "tags": [] },''')],
         1, check_unwritable_record_is_loud),
 }
@@ -409,7 +416,7 @@ CASES = {
 # the property, so parsing it away would test nothing.
 RAW_CHECKS = {
     "a one-line option array stays on one line":
-        lambda raw: None if '{ "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat"] },' in raw
+        lambda raw: None if '{ "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat", "contains-pork"] },' in raw
         else "the array was reflowed or not patched",
 }
 

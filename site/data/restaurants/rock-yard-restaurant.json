@@ -122,9 +122,10 @@
           "tags": [
             "df",
             "gf-option",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “spring rolls” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “spring rolls” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Combo Sapa",
@@ -137,9 +138,10 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-sesame",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-gluten": "The menu says “dumpling” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-gluten": "The menu says “dumpling” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Combo Hoian",
@@ -171,9 +173,10 @@
           "tags": [
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Baguette”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “soy”."}
+          "tagNotes": {"contains-gluten": "The menu says “Baguette”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “soy”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Hue Spicy Beef Noodle Soup",
@@ -182,8 +185,10 @@
           "price": 17.0,
           "tags": [
             "gf",
-            "df"
-          ]
+            "df",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Vermicelli Noodles",
@@ -224,9 +229,10 @@
             "contains-egg",
             "contains-soy",
             "v-option",
-            "vg-option"
+            "vg-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Roti”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “soy”."}
+          "tagNotes": {"contains-gluten": "The menu says “Roti”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “soy”.", "contains-pork": "The menu says “pork”."}
         }
       ]
     },
@@ -269,9 +275,10 @@
           "price": 15.0,
           "tags": [
             "df",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Pork & Prawn Shumai Dumplings",
@@ -283,9 +290,10 @@
             "contains-sesame",
             "contains-soy",
             "contains-gluten",
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Mushroom & Bamboo Dumplings",
@@ -342,9 +350,10 @@
           "price": 15.0,
           "tags": [
             "df",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Pork & Prawn Shumai Dumplings",
@@ -356,9 +365,10 @@
             "contains-sesame",
             "contains-soy",
             "contains-gluten",
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-soy": "The menu says “soy”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Mushroom & Bamboo Dumplings",
@@ -442,9 +452,10 @@
             "contains-gluten",
             "contains-egg",
             "contains-sesame",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Traditional Tasting Platter (3 people)",
@@ -458,9 +469,10 @@
             "contains-gluten",
             "contains-egg",
             "contains-sesame",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Traditional Tasting Platter (4 people)",
@@ -474,9 +486,10 @@
             "contains-gluten",
             "contains-egg",
             "contains-sesame",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Traditional Tasting Platter (5 people)",
@@ -490,9 +503,10 @@
             "contains-gluten",
             "contains-egg",
             "contains-sesame",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Vegan Tasting Platter (2 people)",
@@ -581,9 +595,10 @@
           "tags": [
             "gf",
             "df",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “egg”."}
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Salt & Pepper Prawn",
@@ -717,8 +732,10 @@
           "price": 29.0,
           "tags": [
             "gf",
-            "df"
-          ]
+            "df",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Vermicelli Noodles",
@@ -728,9 +745,10 @@
           "tags": [
             "gf",
             "df",
-            "contains-peanuts"
+            "contains-peanuts",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Soy-Glazed Tofu Noodles",

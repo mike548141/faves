@@ -322,9 +322,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The photo’s description says “bun” — a wheat bakery item."}
+          "tagNotes": {"contains-gluten": "The photo’s description says “bun” — a wheat bakery item.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Chicken McNuggets (6 pack)",
@@ -525,9 +526,10 @@
           "tags": [
             "contains-egg",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-gluten": "The menu says “McMuffin” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”."}
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-gluten": "The menu says “McMuffin” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Sausage & Egg McMuffin",
@@ -549,9 +551,10 @@
           "tags": [
             "contains-egg",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-gluten": "The menu says “McMuffin” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”."}
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-gluten": "The menu says “McMuffin” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”.", "contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Sausage McMuffin",
@@ -572,9 +575,10 @@
           ],
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “McMuffin” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”."}
+          "tagNotes": {"contains-gluten": "The menu says “McMuffin” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”.", "contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Chicken McMuffin",
@@ -619,9 +623,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “McMuffin” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”.", "contains-egg": "The photo’s description says “egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “McMuffin” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”.", "contains-egg": "The photo’s description says “egg”.", "contains-pork": "The photo’s description says “bacon”."}
         },
         {
           "name": "Hotcakes",
@@ -666,9 +671,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”.", "contains-egg": "The photo’s description says “egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”.", "contains-egg": "The photo’s description says “egg”.", "contains-pork": "The photo’s description says “bacon”."}
         }
       ]
     },

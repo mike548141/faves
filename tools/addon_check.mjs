@@ -37,8 +37,9 @@
 // absence sentence per claim per option, each repeating the option's name, and
 // the volume did the discounting that the careful wording was written to
 // prevent. So Sprig & Fern Tawa's brunch sides are driven at 390 px to assert:
-//   f) a tagged option produces the FACT — "Bacon is meat, so this is no longer
-//      vegetarian" — and the words "can't say" appear nowhere on the page;
+//   f) a tagged option produces the FACT — "Bacon contains pork, so this is no
+//      longer vegetarian" since ADR 0140 (was "Bacon is meat, …"), said once,
+//      and the words "can't say" appear nowhere on the page;
 //   g) the residue collapses to exactly ONE sentence for the whole
 //      configuration, naming each untagged option once and each label once;
 //   h) with both on the plate, the fact leads and the one quiet sentence closes.
@@ -833,13 +834,23 @@ async function run(opts) {
     });
 
     // (f) a tagged option is a FACT, and it reads like one.
+    // Since ADR 0140 Bacon carries `has-meat` AND `contains-pork`, one
+    // substance through two tags, so the fact is said ONCE through the pork
+    // clause ("Bacon contains pork, so this is no longer vegetarian") — never
+    // as "Bacon contains pork. Bacon is meat, so …", which is 200/070's defect.
+    const MEAT_FACT = `${MEAT_OPTION} contains pork, so this is no longer vegetarian.`;
     const vegDish = dishSel(VEG_DISH);
     await driver.click(`${vegDish} .dish-addons-summary`);
     await driver.click(`${vegDish} .addon-option`, MEAT_OPTION);
     let w = await driver.evalPage(dishExpr(VEG_DISH));
     report.check(
       `${MEAT_OPTION} on a vegetarian dish is stated as a FACT, not as an absence`,
-      !w.warnHidden && w.warnText.includes(`${MEAT_OPTION} is meat, so this is no longer vegetarian.`),
+      !w.warnHidden && w.warnText.includes(MEAT_FACT),
+      JSON.stringify(w.warnText),
+    );
+    report.check(
+      "…said ONCE: the meat and the pork are one substance, not two sentences",
+      occurrences(w.warnText, MEAT_OPTION) === 1 && !w.warnText.includes("is meat"),
       JSON.stringify(w.warnText),
     );
     report.check(
@@ -881,7 +892,7 @@ async function run(opts) {
     // (h) both together: the fact leads, the quiet sentence closes.
     await driver.click(`${twoClaim} .addon-option`, MEAT_OPTION);
     w = await driver.evalPage(dishExpr(TWO_CLAIM_DISH));
-    const factAt = w.warnText.indexOf(`${MEAT_OPTION} is meat`);
+    const factAt = w.warnText.indexOf(`${MEAT_OPTION} contains pork`);
     const residueAt = w.warnText.indexOf("aren't tagged");
     report.check(
       "with a fact and an absence on the same plate, the FACT is said first",
@@ -900,7 +911,7 @@ async function run(opts) {
     // must never happen is the same option named twice for the same reason, so
     // each sentence is checked separately.
     const sentences = w.warnText.split(/(?<=\.)\s+/).filter(Boolean);
-    const factPart = sentences.find((x) => x.includes("is meat")) || "";
+    const factPart = sentences.find((x) => x.includes("contains pork")) || "";
     const residuePart = sentences.find((x) => x.includes("aren't tagged")) || "";
     report.check(
       `…and ${MEAT_OPTION} is named once per sentence — never twice for one reason`,

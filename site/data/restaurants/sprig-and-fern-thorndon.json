@@ -349,9 +349,10 @@
           "tags": [
             "gf-option",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Chicken / Brie / Mango / Mozzarella",

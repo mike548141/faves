@@ -99,9 +99,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “panko”.", "contains-dairy": "The menu says “milk”.", "contains-egg": "The menu says “mayo” — an egg emulsion."}
+          "tagNotes": {"contains-gluten": "The menu says “panko”.", "contains-dairy": "The menu says “milk”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Taiwanese Popcorn Chicken",
@@ -135,9 +136,10 @@
           "desc": "Pan seared and served with fermented chilli Chinese red vinegar, tomato and crisp garlic.",
           "price": 20.9,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Thai Chicken Dumplings",
@@ -223,9 +225,10 @@
           "price": 39.9,
           "tags": [
             "gf",
-            "contains-sesame"
+            "contains-sesame",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
+          "tagNotes": {"contains-sesame": "The menu says “sesame”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Red Duck Curry",

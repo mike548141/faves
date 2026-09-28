@@ -122,9 +122,10 @@
             "gf",
             "contains-egg",
             "contains-dairy",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-dairy": "The menu says “halloumi”.", "contains-fish": "The menu says “salmon”."}
+          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-dairy": "The menu says “halloumi”.", "contains-fish": "The menu says “salmon”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Salmon and Avo Bagel",
@@ -316,8 +317,10 @@
           "price": 8.0,
           "tags": [
             "gf",
-            "df"
-          ]
+            "df",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Grilled Chicken",
@@ -393,9 +396,10 @@
           "price": 13.5,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Brie”."}
+          "tagNotes": {"contains-dairy": "The menu says “Brie”.", "contains-pork": "The menu says “Ham”."}
         },
         {
           "name": "Beef Pastrami Pita Pocket",
@@ -425,8 +429,10 @@
           "desc": "With tomato sauce.",
           "price": 12.0,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Salmon & Zucchini Quiche",
@@ -454,8 +460,10 @@
           "dishId": "bacon-turkish",
           "price": 14.0,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Halloumi & Mushroom Turkish",
@@ -516,9 +524,10 @@
           "price": 13.0,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Croissant”.", "contains-dairy": "The menu says “Cheese”."}
+          "tagNotes": {"contains-gluten": "The menu says “Croissant”.", "contains-dairy": "The menu says “Cheese”.", "contains-pork": "The menu says “Ham”."}
         }
       ]
     },

@@ -166,3 +166,32 @@ test("THE DATA RULE IS UNTOUCHED: neither fish tag implies the other", () => {
   assert.ok(!allergenOnly.tags.includes("has-fish"));
   assert.equal(allergenOnly.dropped[0].allergen, "contains-fish");
 });
+
+// --- ADR 0140: the second substance two tags carry ------------------------
+
+const PORK_BACON = { group: "sides", name: "Bacon", price: 8, tags: ["has-meat", "contains-pork"] };
+
+test("bacon's pork and its meat are ONE substance: said once, both consequences after it", () => {
+  // Since the pork sweep (2026-09-29) every bacon option carries `has-meat` AND
+  // `contains-pork`. Without the SUBSTANCE entry this read "Bacon contains pork.
+  // Bacon is meat, so this is no longer vegetarian." — 200/070's defect again.
+  const { text, lines } = warning(["v"], [PORK_BACON]);
+  assert.equal(text, "Bacon contains pork, so this is no longer vegetarian.");
+  assert.equal(lines.length, 1);
+  assert.equal(text.split("Bacon").length - 1, 1, "the option is named once");
+});
+
+test("…and for a Halal reader it leads as THEIR warning, still one sentence", () => {
+  // `contains-pork` in the avoid set is what dietary.js `effectiveAvoid` puts
+  // there for Halal; the picker reads that set, never the raw avoid list.
+  const { text, flagged } = warning(["v"], [PORK_BACON], ["contains-pork"]);
+  assert.equal(text, "Bacon contains pork — you asked to avoid it, and this is no longer vegetarian.");
+  assert.ok(flagged);
+});
+
+test("the pork/meat merge does not touch the two tags' independence in the data", () => {
+  // Same guarantee the fish pair's test above holds: the map is about SENTENCES.
+  const out = composeTags(["v"], [PORK_BACON]);
+  assert.deepEqual(out.added.map((a) => a.tag), ["contains-pork"]);
+  assert.equal(out.dropped.find((d) => d.tag === "v").allergen, "has-meat");
+});

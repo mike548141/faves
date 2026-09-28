@@ -132,9 +132,10 @@
           "desc": null,
           "price": 13.4,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "6 Fried Squid Rings",
@@ -463,9 +464,10 @@
           "desc": "Marinated pork or chicken stir fried with season vegetables and homemade sweet and sour sauce. Served with steamed rice or roti.",
           "price": 20.7,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “roti”."}
+          "tagNotes": {"contains-gluten": "The menu says “roti”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Noyonya Chicken",
@@ -486,9 +488,10 @@
           "price": 20.7,
           "tags": [
             "contains-gluten",
-            "contains-peanuts"
+            "contains-peanuts",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “roti”."}
+          "tagNotes": {"contains-gluten": "The menu says “roti”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "General Tso's Chicken",
@@ -498,9 +501,10 @@
           "price": 20.7,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “roti”."}
+          "tagNotes": {"contains-gluten": "The menu says “roti”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Sambal Squid",
@@ -609,9 +613,10 @@
           "tags": [
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Beef Noodle Soup",

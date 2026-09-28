@@ -641,7 +641,56 @@ def check_a_caption_tags_only_behind_the_caveat(after, out):
     return None
 
 
+# --- pork against the venue's own vegetarian label (ADR 0140) --------------
+BRISTOL = "site/data/restaurants/hotel-bristol.json"
+PORK_V_VS_V_OPTION = [
+    # A dish the VENUE calls vegetarian outright: curation outranks the pattern,
+    # exactly as it does for fish. (Synthetic — the row is really pork belly —
+    # which is the point: only CONTRADICTED_BY can keep the tag off it.)
+    ("""          "tags": [
+            "contains-sesame",
+            "spicy-1",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”.", "contains-pork": "The menu says “Pork”."}""",
+     """          "tags": [
+            "v",
+            "contains-sesame",
+            "spicy-1"
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”."}"""),
+    # …and a `v-option` dish, whose DEFAULT plate is bacon. The pork tag must
+    # come back: "can be made vegetarian" is not "is vegetarian".
+    ("""          "tags": [
+            "v-option",
+            "contains-dairy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-pork": "The menu says “Bacon”."}""",
+     """          "tags": [
+            "v-option",
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}"""),
+]
+
+
+def check_pork_yields_to_v_but_not_to_v_option(after, out):
+    """`v` contradicts `contains-pork`; `v-option` does not (owner-ruled)."""
+    fries = _dish(after, "cheese-bacon-loaded-fries") or set()
+    if "contains-pork" not in fries:
+        return ("the v-option Cheese & Bacon Loaded Fries did not regain contains-pork — "
+                f"a vegetarian OPTION was read as a vegetarian dish (has {sorted(fries)})")
+    bites = _dish(after, "sticky-pork-belly-bites") or set()
+    if "contains-pork" in bites:
+        return ("a dish the venue calls `v` was given contains-pork — the pattern "
+                f"overrode curation (has {sorted(bites)})")
+    return None
+
+
 CASES = {
+    "pork yields to the venue's own `v`, and not to a `v-option`": (
+        BRISTOL, PORK_V_VS_V_OPTION, 0, check_pork_yields_to_v_but_not_to_v_option),
     "a caption tags only behind the unconfirmed-allergens caveat": (
         MCDONALDS,
         [# Big Mac: tags emptied, caveat kept.
@@ -822,7 +871,8 @@ CASES = {
           "tags": [
             "gf-option",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ]""",
           """          "desc": "Pulled pork, cabanossi, bourbon bacon jam.",
           "price": 24.0,
@@ -838,7 +888,8 @@ CASES = {
             "gf-option",
             "contains-gluten",
             "contains-dairy",
-            "df-option"
+            "df-option",
+            "contains-pork"
           ]""",
           """          "desc": "Prosciutto, rocket, basil.",
           "price": 24.0,
@@ -927,6 +978,101 @@ json.dump(out, sys.stdout)
 
 # group name -> [(text, tags it MUST gain, tags it must NOT gain), …]
 PROBES = {
+    # --- pork (owner-ruled 2026-09-29, ADR 0140) ---------------------------
+    # 🛑 THE DANGEROUS DIRECTION FIRST: a pork dish the menu describes only as
+    # "sausage" or "pepperoni" IS tagged. A reader who chose Halal is relying on
+    # exactly these rows; a rule tuned to under-reach would pass every absence
+    # line below and fail them all.
+    "pork: a usually-pork food is tagged unless another meat is named": [
+        ("Sausage roll", {"contains-pork"}, set()),
+        ("Pepperoni pizza", {"contains-pork"}, set()),
+        ("Salami, olives, ricotta", {"contains-pork"}, set()),
+        ("Italian sausage meat and spinach", {"contains-pork"}, set()),
+        ("Garlic Spare Ribs", {"contains-pork"}, set()),
+        ("Hot Dog on Stick", {"contains-pork"}, set()),
+        ("Cheerio Sausages", {"contains-pork"}, set()),
+        ("Chinese Sausage with Dried Tofu", {"contains-pork"}, set()),
+        # …and the owner's escape: another meat NAMED against the word.
+        ("Beef sausage, mash, peas", set(), {"contains-pork"}),
+        ("Chicken sausage", set(), {"contains-pork"}),
+        ("Spiced lamb sausage with harissa", set(), {"contains-pork"}),
+        ("Wild venison salami", set(), {"contains-pork"}),
+        ("Steamed Beef Spare Ribs", set(), {"contains-pork"}),
+    ],
+    "pork: a named pig product is always tagged, and a near-miss never is": [
+        ("Pork dumplings", {"contains-pork"}, set()),
+        ("Bacon & egg roll", {"contains-pork"}, set()),
+        ("Ham & cheese toastie", {"contains-pork"}, set()),
+        ("Pig Ears with Chilli Sauce", {"contains-pork"}, set()),
+        ("Tonkotsu ramen", {"contains-pork"}, set()),
+        ("Prosciutto, rocket, basil", {"contains-pork"}, set()),
+        ("Salame, 'Nduja, garlic", {"contains-pork"}, set()),
+        # The meat escape must NOT reach a named pig product: this is chicken
+        # AND bacon, and reading "chicken bacon" as one meat is a MISS.
+        ("Chicken bacon ranch pizza", {"contains-pork"}, set()),
+        # The owner's ruling: dumplings, wontons and mince only when pork is said.
+        ("Steamed dumplings", set(), {"contains-pork"}),
+        ("Prawn wontons", {"contains-shellfish"}, {"contains-pork"}),
+        ("Mince on toast", {"contains-gluten"}, {"contains-pork"}),
+        # `ham` is not a compound tail, and gelatine is the declined maybe.
+        ("Hamburger", {"contains-gluten"}, {"contains-pork"}),
+        ("Cheeseburger", {"contains-gluten"}, {"contains-pork"}),
+        ("Panna cotta with gelatine", {"contains-dairy"}, {"contains-pork"}),
+        # Corpus near-misses: a sauce, a vegetable "rib", a fish belly.
+        ("Takoyaki with tonkatsu sauce", set(), {"contains-pork"}),
+        ("Corn Ribs, almond romesco", {"contains-nuts"}, {"contains-pork"}),
+        ("Spicy Salt Fish Belly", {"contains-fish"}, {"contains-pork"}),
+        ("Slow-cooked pulled lamb", set(), {"contains-pork"}),
+    ],
+    # hell-pizza's Plant-Based Mischief and Wrath: the reason the plant escape
+    # exists. The LAST line is the control that makes it a lookbehind and not a
+    # veto — the pepperoni beside the plant chorizo must still be read.
+    "pork: a plant-based or vegan version is never tagged": [
+        ("Plant-based chorizo, cajun herbs", set(), {"contains-pork"}),
+        ("Plant-based bacon", set(), {"contains-pork"}),
+        ("Vegan sausages on sourdough toast", {"contains-gluten"}, {"contains-pork"}),
+        ("Mock pork buns", {"contains-gluten"}, {"contains-pork"}),
+        ("Plant-based chorizo, or pepperoni", {"contains-pork"}, set()),
+    ],
+    # 🛑 THE 2026-09-29 REVIEW'S FOUR MISSES. A substitute INGREDIENT (soy,
+    # coconut, mushroom, tofu) used to escape every pork word, so these four
+    # pork dishes went untagged. Each must be tagged; the substitute PRODUCTS
+    # below them must still not be — both halves, or a fix that simply dropped
+    # the escapes (tagging "coconut bacon") would pass the first four alone.
+    "pork: a substitute ingredient spares only the product it replaces": [
+        ("Sweet soy pork belly", {"contains-pork"}, set()),
+        ("Coconut pork curry", {"contains-pork"}, set()),
+        ("Mushroom pork dumplings", {"contains-pork"}, set()),
+        ("Tofu pork mince", {"contains-pork"}, set()),
+        ("Mushroom and bacon risotto", {"contains-pork"}, set()),
+        ("Coconut bacon", set(), {"contains-pork"}),
+        ("Tempeh bacon", set(), {"contains-pork"}),
+        ("Soy chorizo", {"contains-soy"}, {"contains-pork"}),
+        ("Tofu sausages", {"contains-soy"}, {"contains-pork"}),
+    ],
+    # The owner-review's additions to the table: none is in today's corpus,
+    # so these probes are the only thing that proves each word is read.
+    "pork: the added pig-product words are read": [
+        ("Gammon steak, pineapple", {"contains-pork"}, set()),
+        ("Lardo on toast", {"contains-pork", "contains-gluten"}, set()),
+        ("Lardons, frisée", {"contains-pork"}, set()),
+        ("Streaky, eggs, hash brown", {"contains-pork", "contains-egg"}, set()),
+        ("Lap chong fried rice", {"contains-pork"}, set()),
+        ("Salumi board", {"contains-pork"}, set()),
+        ("Mortadella, pistachio", {"contains-pork", "contains-nuts"}, set()),
+        ("Coppa and capicola", {"contains-pork"}, set()),
+        ("Guanciale carbonara", {"contains-pork"}, set()),
+    ],
+    # The one-way rule, as ADR 0140 restates it for the two new claims: the
+    # word "halal" on a menu line is NEVER turned into a `halal` tag by a tool —
+    # a person writes that tag from the venue's own words — and no absence of
+    # pork is ever read as one either.
+    "no tool ever writes halal or kosher": [
+        ("Halal lamb kebab with tzatziki", {"contains-dairy"}, {"halal", "kosher"}),
+        ("Kosher-style pastrami on rye", {"contains-gluten"}, {"halal", "kosher"}),
+        ("Grilled chicken, rice, salad", set(), {"halal", "kosher"}),
+        ("Kosher salt, pork belly", {"contains-pork"}, {"kosher"}),
+    ],
     # (a) The eight words the tool had never heard of. Each line is the phrasing
     # the word was actually found in (roadmap 110/050's table), so a probe that
     # passes says the real menu row would have been tagged.
@@ -1552,6 +1698,56 @@ BREAKERS = {
     "the fish rule's leading word boundary removed": (
         [(r'r"\b(fish\w*|salmon|', r'r"(fish\w*|salmon|')],
         ["shellfish is not fish, and fish is not shellfish"]),
+    # --- contains-pork (2026-09-29, ADR 0140) -----------------------------
+    # Each narrowing is put back to what a hurried edit would make it, and the
+    # group that names it must notice.
+    "the pork contradiction by `v` removed": (
+        [('    "contains-pork": {"v", "vg", "halal", "kosher"},',
+          '    "contains-pork": {"halal", "kosher"},')],
+        ["pork yields to the venue's own `v`, and not to a `v-option`"]),
+    "the pork contradiction widened to `v-option`": (
+        [('    "contains-pork": {"v", "vg", "halal", "kosher"},',
+          '    "contains-pork": {"v", "vg", "v-option", "halal", "kosher"},')],
+        ["pork yields to the venue's own `v`, and not to a `v-option`"]),
+    "the usually-pork rule loses its other-meat escape": (
+        [("     PORK_PLANT_ESCAPE + PORK_MEAT_ESCAPE +\n", "     PORK_PLANT_ESCAPE +\n")],
+        ["pork: a usually-pork food is tagged unless another meat is named"]),
+    "the other-meat escape leaks onto named pig products": (
+        [('"names pork or a pig product",\n     PORK_PLANT_ESCAPE +\n',
+          '"names pork or a pig product",\n     PORK_PLANT_ESCAPE + PORK_MEAT_ESCAPE +\n')],
+        ["pork: a named pig product is always tagged, and a near-miss never is"]),
+    "the plant escape removed from named pig products": (
+        [('"names pork or a pig product",\n     PORK_PLANT_ESCAPE +\n',
+          '"names pork or a pig product",\n')],
+        ["pork: a plant-based or vegan version is never tagged"]),
+    # 🛑 The water-chestnut shape: the plant narrowing rebuilt as an item-level
+    # `exclude`. Every absence line still passes — and the pepperoni beside the
+    # plant chorizo is LOST. Only the control line can see it.
+    "the plant narrowing rebuilt as an item-level exclude": (
+        [("     PORK_PLANT_ESCAPE + PORK_MEAT_ESCAPE +\n", "     PORK_MEAT_ESCAPE +\n"),
+         ('r"cabanossi|kielbasa|bratwursts?)\\b", None),',
+          'r"cabanossi|kielbasa|bratwursts?)\\b", r"\\b(plant[\\s-]?based|vegan|mock)\\b"),')],
+        ["pork: a plant-based or vegan version is never tagged"]),
+    "the tonkatsu-sauce lookahead removed": (
+        [(r"tonkatsu(?!\s+sauce)|", r"tonkatsu|")],
+        ["pork: a named pig product is always tagged, and a near-miss never is"]),
+    "sausage dropped from the usually-pork rule": (
+        [(r'r"sausages?|pepperoni|', r'r"pepperoni|')],
+        ["pork: a usually-pork food is tagged unless another meat is named"]),
+    # The review's defect, put back: substitute ingredients escaping EVERY pork
+    # word again. The four named misses must all come back as failures.
+    "substitute ingredients escape every pork word again": (
+        [('PORK_PLANT_ESCAPE = _escapes([\n    "vegan",',
+          'PORK_PLANT_ESCAPE = _escapes([\n    "soy", "coconut", "mushroom", "tofu", "vegan",')],
+        ["pork: a substitute ingredient spares only the product it replaces"]),
+    # …and the opposite over-correction: the substitute scoping deleted, so
+    # "coconut bacon" is tagged pork.
+    "the substitute-product lookbehind dropped from bacon": (
+        [('r"\\b(pork|pigs?|" + _sub("bacon") + r"bacon|', 'r"\\b(pork|pigs?|bacon|')],
+        ["pork: a substitute ingredient spares only the product it replaces"]),
+    "gammon dropped from the named pig products": (
+        [("bacon|streaky|hams?|gammon|prosciutto|", "bacon|streaky|hams?|prosciutto|")],
+        ["pork: the added pig-product words are read"]),
     "the Worcestershire rule removed": (
         [(r'r"\b(worcestershire|worcester\s?sauce)\b"',
           r'r"\b(a-sauce-no-menu-names)\b"')],

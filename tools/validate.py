@@ -41,6 +41,14 @@ TAGS = {
     # 0092): they say what an ADD-ON OPTION is, so the picker can say "Bacon is
     # meat, so this is no longer vegetarian" instead of "we can't say".
     "has-meat", "has-fish",
+    # Pork, and the two claims only a VENUE may state (ADR 0140, owner-ruled
+    # 2026-09-29). `contains-pork` is not an allergen: it sits in the
+    # `contains-` namespace so every allergen path carries it, and a reader
+    # reaches it through Halal/Kosher. `halal`/`kosher` are written by hand from
+    # the venue's own words and by NO tool — tools/test_tag_allergens.py holds
+    # that no rule in either tagger can emit them.
+    "contains-pork",
+    "halal", "kosher",
 }
 # Legal on an add-on option, an ERROR on a dish. ADR 0047 asks which screen
 # renders a field: for these two it is the picker's warning line, reached only
@@ -128,7 +136,12 @@ ADD_ON_OPTION_KEYS = {"name", "id", "price", "dishPrice", "default", "tags"}
 # addons.js composeTags intersects. A `selects` option must restate exactly the
 # claims of every dish it is a variant of (ADR 0130), so this is the set that
 # comparison is made over.
-CLAIM_TAGS = {"v", "vg", "gf", "df", "v-option", "vg-option", "gf-option", "df-option"}
+CLAIM_TAGS = {"v", "vg", "gf", "df", "v-option", "vg-option", "gf-option", "df-option", "halal", "kosher"}
+# The two claims composition intersects WITHOUT their being filters (ADR 0140):
+# site/js/dietary.js `STATED_CLAIMS`. Each is satisfied by itself alone — there
+# is no `halal-option` — which is what `claim_satisfiers` below falls back to
+# when DIET_FILTERS (read out of dietary.js) has no entry for the key.
+STATED_CLAIM_TAGS = {"halal", "kosher"}
 TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
@@ -591,7 +604,7 @@ def check_ingredient_claims(rid, name, dish_tags, parts):
     for tag in (t for t in (dish_tags or []) if t in CLAIM_TAGS):
         key = tag.replace("-option", "")
         clashes = CONTRADICTS.get(key, set())
-        satisfying = set(DIET_FILTERS.get(key, []))
+        satisfying = set(DIET_FILTERS.get(key) or ([key] if key in STATED_CLAIM_TAGS else []))
         for part in parts:
             ptags = part["tags"]
             hit = next((t for t in ptags if t in clashes), None)

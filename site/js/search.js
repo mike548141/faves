@@ -11,7 +11,7 @@ import { dishId } from "./dish-id.js";
 import { ingredientKeys } from "./ingredients.js";
 import { isRecipeKind, kindOf } from "./kinds.js";
 import { searchableText, venueLanguage } from "./lang.js";
-import { DIET_FILTERS } from "./dietary.js";
+import { DIET_FILTERS, STATED_CLAIMS } from "./dietary.js";
 import { isTrading } from "./temporal.js";
 import { vibesFor } from "./vibes.js";
 
@@ -112,9 +112,13 @@ export function expand(q) {
 function dietLabels(tags) {
   if (!tags || !tags.length) return "";
   const has = new Set(tags);
-  return DIET_FILTERS.filter((f) => f.satisfies.some((t) => has.has(t)))
-    .map((f) => f.label)
-    .join(" ");
+  // …plus a venue's own "Halal"/"Kosher" (ADR 0140). Only the literal tag
+  // answers: a dish that merely lacks `contains-pork` is NOT halal, and a
+  // search that returned it for "halal" would be an absence claim.
+  return [
+    ...DIET_FILTERS.filter((f) => f.satisfies.some((t) => has.has(t))).map((f) => f.label),
+    ...STATED_CLAIMS.filter((c) => has.has(c.key)).map((c) => c.label),
+  ].join(" ");
 }
 
 /**

@@ -1764,3 +1764,10 @@ deliberation those compact docs omit.
   Supersedes 0034 §6's second entry point: the Cook at Home list's expanded
   "Ingredients & method" has no Start cooking and no ingredient ⓘ; the recipe
   page is the one way into cook mode and the one place a note reads.
+- [0140](0140-halal-kosher-meatarian-and-pork.md) —
+  **Halal, Kosher and Meatarian are food preferences; pork is a presence
+  tag** (owner-ruled 2026-09-29). `contains-pork` is inferred (named pig
+  products; usually-pork foods unless another meat is named) and reached
+  through Halal/Kosher, never an avoid chip. `halal`/`kosher` are dish-level
+  claims only a venue states. Stored in top-level `foodPrefs`; Meatarian is
+  inert. Supersedes 0092's rejection of a `contains-` meat tag, for pork only.

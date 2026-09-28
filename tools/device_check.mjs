@@ -116,6 +116,13 @@ const snapshotExpr = (dishName) => `(() => {
   return {
     dishes: dishes.length,
     allergen: dishes.filter((d) => tags(d).includes(${JSON.stringify(ALLERGEN.key)})).map(nameOf),
+    // ADR 0140: what Halal must light, and a signature of every row's state so
+    // "Meatarian changed nothing" is a comparison, not an absence of evidence.
+    pork: dishes.filter((d) => tags(d).includes("contains-pork")).map(nameOf),
+    rows: dishes.map((d) => [d.className, d.hidden, getComputedStyle(d).opacity].join("|")).join("\\n"),
+    foodChips: Object.fromEntries([...document.querySelectorAll(".pref-chip[data-key]")]
+      .filter((c) => ["halal", "kosher", "meatarian"].includes(c.dataset.key))
+      .map((c) => [c.dataset.key, c.getAttribute("aria-pressed")])),
     flagged: dishes.filter((d) => d.classList.contains("dish-flagged")).map(nameOf),
     flaggedChips: document.querySelectorAll(".tag-allergen.is-flagged").length,
     // Owner's ruling 2026-08-17: a chip for a need this reader has NOT declared
@@ -499,6 +506,55 @@ async function run(opts) {
       "hearts and ratings survive the safety re-render",
       flipped.heart === "true" && flipped.rating === String(SEED_RATING),
       `${seedDish.name}: heart=${flipped.heart}, rating=${flipped.rating}`
+    );
+
+    // --- 2b. Halal, Kosher and Meatarian (ADR 0140, owner-ruled 2026-09-29) --
+    // Meatarian FIRST, against a known state: it must change nothing on the
+    // page — not a flag, not a dim, not a hidden row. `dishSatisfiesDiet`
+    // answers false for a key it does not know, so a Meatarian key leaking
+    // into a filter would dim every row, and this comparison is what sees it.
+    const beforeFood = await snap();
+    report.check(
+      "Settings offers Halal, Kosher and Meatarian, none selected",
+      JSON.stringify(beforeFood.foodChips) === JSON.stringify({ halal: "false", kosher: "false", meatarian: "false" }),
+      JSON.stringify(beforeFood.foodChips)
+    );
+    await click('.pref-chip[data-key="meatarian"]');
+    const meat = await snap();
+    report.check(
+      "Meatarian is selectable and changes nothing on the menu",
+      meat.foodChips.meatarian === "true" && meat.rows === beforeFood.rows &&
+        same(meat.flagged, beforeFood.flagged) && meat.flaggedChips === beforeFood.flaggedChips,
+      `pressed=${meat.foodChips.meatarian}; rows identical=${meat.rows === beforeFood.rows}; ` +
+        `${meat.flagged.length} flagged (was ${beforeFood.flagged.length})`
+    );
+    await click('.pref-chip[data-key="halal"]');
+    const halal = await snap();
+    const wantHalal = [...new Set([...halal.allergen, ...halal.pork])];
+    report.check(
+      "Halal flags every pork dish live, on top of the reader's own allergen",
+      halal.pork.length > 0 && same(halal.flagged, wantHalal) &&
+        halal.sentinel === "alive" && navigations === navsAfterLoad,
+      `${halal.flagged.length} flagged = ${halal.allergen.length} ${ALLERGEN.key} ∪ ` +
+        `${halal.pork.length} contains-pork (${wantHalal.length} distinct); no reload`
+    );
+    report.check(
+      "Halal dims and hides nothing — it only warns",
+      halal.dishes === beforeFood.dishes &&
+        halal.rows.split("\n").every((r, i) => r.split("|").slice(1).join("|") ===
+          beforeFood.rows.split("\n")[i].split("|").slice(1).join("|")),
+      `${halal.dishes} rows before and after, visibility and opacity unchanged`
+    );
+    // Put both back, so the profile switch below starts from the state it
+    // always has, and prove the warnings LEAVE again (the reverse direction).
+    await click('.pref-chip[data-key="halal"]');
+    await click('.pref-chip[data-key="meatarian"]');
+    const cleared = await snap();
+    report.check(
+      "turning Halal off takes the pork warnings away again, live",
+      same(cleared.flagged, cleared.allergen) &&
+        JSON.stringify(cleared.foodChips) === JSON.stringify({ halal: "false", kosher: "false", meatarian: "false" }),
+      `${cleared.flagged.length} flagged, chips ${JSON.stringify(cleared.foodChips)}`
     );
 
     // --- 3. Switch profile ------------------------------------------------

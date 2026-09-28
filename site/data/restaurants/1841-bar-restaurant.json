@@ -158,9 +158,10 @@
             }
           ],
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Prawn Twisters",
@@ -208,12 +209,13 @@
             }
           ],
           "tags": [
-            "v",
+            "v-option",
             "gf",
             "contains-dairy",
-            "vg-option"
+            "vg-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Local Platter",
@@ -228,9 +230,10 @@
           "tags": [
             "contains-gluten",
             "contains-shellfish",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “spring rolls” — a wheat-flour wrapper.", "contains-shellfish": "The menu says “prawn”.", "contains-fish": "The menu says “fish”."}
+          "tagNotes": {"contains-gluten": "The menu says “spring rolls” — a wheat-flour wrapper.", "contains-shellfish": "The menu says “prawn”.", "contains-fish": "The menu says “fish”.", "contains-pork": "The menu says “cheerios” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "West Park Wings",
@@ -279,8 +282,10 @@
           ],
           "tags": [
             "df",
-            "gf"
-          ]
+            "gf",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Cheerios” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Vegetarian Pasta",
@@ -371,9 +376,10 @@
           ],
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”."}
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Fraser Ave Fettuccine",
@@ -387,9 +393,10 @@
           ],
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Fettuccine”.", "contains-dairy": "The menu says “parmesan”."}
+          "tagNotes": {"contains-gluten": "The menu says “Fettuccine”.", "contains-dairy": "The menu says “parmesan”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Hawtrey Farm Filo",
@@ -436,9 +443,10 @@
           "tags": [
             "gf",
             "contains-egg",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “egg”."}
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Petherick Pork",
@@ -452,8 +460,10 @@
           ],
           "tags": [
             "gf",
-            "contains-dairy"
-          ]
+            "contains-dairy",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Railway Ribs",
@@ -466,9 +476,10 @@
             }
           ],
           "tags": [
-            "contains-sesame"
+            "contains-sesame",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
+          "tagNotes": {"contains-sesame": "The menu says “sesame”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Frank Shank Pie",
@@ -656,9 +667,10 @@
           ],
           "tags": [
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “eggs”."}
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "The Works",
@@ -672,9 +684,10 @@
           ],
           "tags": [
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “eggs”."}
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Veg Brekkie",
@@ -705,9 +718,10 @@
           ],
           "tags": [
             "contains-egg",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Eggs”."}
+          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Caesar",
@@ -722,9 +736,10 @@
           "tags": [
             "contains-egg",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “croutons”.", "contains-dairy": "The menu says “parmesan”."}
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-gluten": "The menu says “croutons”.", "contains-dairy": "The menu says “parmesan”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Steak Sammie",
@@ -772,9 +787,10 @@
           "tags": [
             "gf",
             "contains-egg",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “egg”."}
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Fish",
@@ -990,8 +1006,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Mushroom Gravy",

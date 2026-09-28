@@ -100,9 +100,10 @@
           "tags": [
             "contains-dairy",
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item."}
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Classic Cheese with Pepperoni Stuffed Crust",
@@ -112,9 +113,10 @@
           "tags": [
             "contains-dairy",
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item."}
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Pepperoni with Pepperoni Stuffed Crust",
@@ -124,9 +126,10 @@
           "tags": [
             "contains-dairy",
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item."}
+          "tagNotes": {"contains-dairy": "The menu says “Mozzarella”.", "contains-gluten": "The menu says “pizza” — a wheat bakery item.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Classic Cheese with Mozzarella Stuffed Crust",
@@ -227,9 +230,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “sourdough”."}
+          "tagNotes": {"contains-gluten": "The menu says “sourdough”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Meat Lovers",
@@ -240,7 +244,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
           "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
@@ -266,9 +271,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Loaded Hawaiian With Double Toppings",
@@ -279,7 +285,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
           "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },
@@ -306,8 +313,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
-          ]
+            "gf-option",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Italian Lovers",
@@ -318,8 +327,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
-          ]
+            "gf-option",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Hot & Spicy Veggie",
@@ -427,8 +438,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
-          ]
+            "gf-option",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Chicken Deluxe",
@@ -453,8 +466,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
-          ]
+            "gf-option",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Big New Yorker",
@@ -478,8 +493,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
-          ]
+            "gf-option",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Big Triple Cheese",
@@ -516,9 +533,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Ham & Cheese",
@@ -529,9 +547,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cheese”."}
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-pork": "The menu says “Ham”."}
         },
         {
           "name": "Classic Veggie",
@@ -556,9 +575,10 @@
             "contains-egg",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-egg": "The menu says “Aioli” — an egg emulsion."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-egg": "The menu says “Aioli” — an egg emulsion.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Pepperoni",
@@ -569,9 +589,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Hawaiian",
@@ -582,8 +603,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
-          ]
+            "gf-option",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Cheesy Garlic",
@@ -620,9 +643,10 @@
           "tags": [
             "contains-dairy",
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “Chorizo”."}
         },
         {
           "name": "Hot Honey, Chicken, Green Capsicum & Jalapeño",
@@ -645,9 +669,10 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "spicy-1"
+            "spicy-1",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “Sourdough”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-gluten": "The menu says “Sourdough”.", "contains-pork": "The menu says “Chorizo”."}
         },
         {
           "name": "Classic Veggie with Hot Honey",

@@ -227,9 +227,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “brioche”.", "contains-dairy": "The menu says “cheddar”."}
+          "tagNotes": {"contains-gluten": "The menu says “brioche”.", "contains-dairy": "The menu says “cheddar”.", "contains-pork": "The menu says “bacon”."}
         }
       ]
     },
@@ -268,9 +269,10 @@
           "tags": [
             "gf-option",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-pork": "The menu says “bacon”."}
         }
       ]
     },

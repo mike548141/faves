@@ -147,7 +147,10 @@
               "recorded": "2026-08-08"
             }
           ],
-          "tags": [],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."},
           "code": "5"
         },
         {
@@ -201,7 +204,10 @@
               "recorded": "2026-08-08"
             }
           ],
-          "tags": [],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."},
           "code": "9"
         },
         {
@@ -265,7 +271,10 @@
               "recorded": "2026-08-08"
             }
           ],
-          "tags": [],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."},
           "code": "13"
         },
         {
@@ -419,9 +428,10 @@
             }
           ],
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”."},
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Pork”."},
           "code": "23"
         },
         {
@@ -484,9 +494,10 @@
             }
           ],
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”."},
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Bacon”."},
           "code": "27"
         },
         {
@@ -556,9 +567,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle.", "contains-pork": "The menu says “Pork”."},
           "code": "31"
         },
         {
@@ -621,9 +633,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."},
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle.", "contains-pork": "The menu says “Bacon”."},
           "code": "35"
         },
         {
@@ -689,7 +702,10 @@
               "recorded": "2026-08-08"
             }
           ],
-          "tags": [],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."},
           "code": "39"
         },
         {
@@ -743,7 +759,10 @@
               "recorded": "2026-08-08"
             }
           ],
-          "tags": [],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."},
           "code": "43"
         },
         {
@@ -794,7 +813,10 @@
               "recorded": "2026-08-08"
             }
           ],
-          "tags": [],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."},
           "code": "46"
         },
         {
@@ -909,9 +931,10 @@
             }
           ],
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “black bean sauce” — the sauce is soy-based."},
+          "tagNotes": {"contains-soy": "The menu says “black bean sauce” — the sauce is soy-based.", "contains-pork": "The menu says “Pork”."},
           "code": "53"
         },
         {
@@ -1015,9 +1038,10 @@
           ],
           "tags": [
             "contains-peanuts",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."},
+          "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based.", "contains-pork": "The menu says “Pork”."},
           "code": "59"
         },
         {
@@ -1123,9 +1147,10 @@
             }
           ],
           "tags": [
-            "contains-nuts"
+            "contains-nuts",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-nuts": "The menu says “Cashew”."},
+          "tagNotes": {"contains-nuts": "The menu says “Cashew”.", "contains-pork": "The menu says “Pork”."},
           "code": "65"
         },
         {
@@ -1629,8 +1654,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Hot Dog” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Sausages",
@@ -1643,8 +1670,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Sausages” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Battered Sausage",
@@ -1657,9 +1686,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour."}
+          "tagNotes": {"contains-gluten": "The menu says “Battered” — battered/crumbed coatings are wheat flour.", "contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Prawn Cutlet",
@@ -2074,9 +2104,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pork Bun” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Pork Bun” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Plain Roti",
@@ -2162,9 +2193,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-pork": "The menu says “Ham”."}
         },
         {
           "name": "Kids Beef Burger (no salad)",
@@ -2223,9 +2255,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-pork": "The menu says “Ham”."}
         },
         {
           "name": "Cheese Burger",
@@ -2285,7 +2318,8 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
           "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
@@ -2348,9 +2382,10 @@
           ],
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Vegetarian Burger",
@@ -2381,9 +2416,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “bacon”."}
         }
       ]
     },
@@ -2466,9 +2502,10 @@
           ],
           "tags": [
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Crumb Chicken Fillet",
@@ -2558,8 +2595,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Beef Bacon & Avo",
@@ -2572,8 +2611,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Beef & Camembert",
@@ -2664,9 +2705,10 @@
           ],
           "tags": [
             "contains-egg",
-            "contains-sesame"
+            "contains-sesame",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Chicken Schnitzel & Bacon Wrap",
@@ -2681,9 +2723,10 @@
           "tags": [
             "contains-gluten",
             "contains-egg",
-            "contains-sesame"
+            "contains-sesame",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Schnitzel” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
+          "tagNotes": {"contains-gluten": "The menu says “Schnitzel” — battered/crumbed coatings are wheat flour.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-pork": "The menu says “Bacon”."}
         }
       ]
     },
@@ -2731,9 +2774,10 @@
           ],
           "tags": [
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Bacon”."}
         }
       ]
     },
@@ -2754,9 +2798,10 @@
           "tags": [
             "contains-shellfish",
             "contains-fish",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “crab”.", "contains-fish": "The menu says “fish”."}
+          "tagNotes": {"contains-shellfish": "The menu says “crab”.", "contains-fish": "The menu says “fish”.", "contains-pork": "The menu says “hotdogs” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Family Pack 2",
@@ -2786,9 +2831,10 @@
           "tags": [
             "contains-shellfish",
             "contains-fish",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “crab”.", "contains-fish": "The menu says “fish”."}
+          "tagNotes": {"contains-shellfish": "The menu says “crab”.", "contains-fish": "The menu says “fish”.", "contains-pork": "The menu says “hotdogs” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Fish Dinner",
@@ -2858,9 +2904,10 @@
           "price": 21.0,
           "tags": [
             "contains-gluten",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “fish”."}
+          "tagNotes": {"contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour.", "contains-fish": "The menu says “fish”.", "contains-pork": "The menu says “hotdog” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Kids Packs",
@@ -2874,9 +2921,10 @@
           ],
           "tags": [
             "contains-fish",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-fish": "The menu says “fish”.", "contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour."}
+          "tagNotes": {"contains-fish": "The menu says “fish”.", "contains-gluten": "The menu says “nuggets” — battered/crumbed coatings are wheat flour.", "contains-pork": "The menu says “hotdogs” — is usually pork in NZ unless the menu names another meat."}
         }
       ]
     }

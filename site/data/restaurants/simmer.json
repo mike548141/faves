@@ -136,9 +136,10 @@
           "desc": "With bacon, banana and maple syrup.",
           "price": 28.0,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “pancakes” — a wheat bakery item."}
+          "tagNotes": {"contains-gluten": "The menu says “pancakes” — a wheat bakery item.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Salmon bagel",
@@ -161,9 +162,10 @@
             "gf-option",
             "df-option",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “toast” — a wheat bakery item.", "contains-egg": "The menu says “eggs”."}
+          "tagNotes": {"contains-gluten": "The menu says “toast” — a wheat bakery item.", "contains-egg": "The menu says “eggs”.", "contains-pork": "The menu says “bacon”."}
         }
       ]
     },
@@ -238,9 +240,10 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “bagel”.", "contains-dairy": "The menu says “mascarpone”.", "contains-egg": "The menu says “eggs”."}
+          "tagNotes": {"contains-gluten": "The menu says “bagel”.", "contains-dairy": "The menu says “mascarpone”.", "contains-egg": "The menu says “eggs”.", "contains-pork": "The menu says “ham”."}
         },
         {
           "name": "Benedict",
@@ -249,9 +252,10 @@
           "price": 25.0,
           "tags": [
             "gf-option",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “eggs”."}
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Montreal",
@@ -334,8 +338,10 @@
           "desc": "Aromatic caramel sauce, sticky rice, spicy nahm jim slaw.",
           "price": 29.0,
           "tags": [
-            "df"
-          ]
+            "df",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Pan fried fish",
@@ -600,7 +606,10 @@
           "name": "Bacon, mushrooms, avocado, or crispy potatoes",
           "dishId": "bacon-mushrooms-avocado-or-crispy-potatoes",
           "price": 7.0,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Grilled tomato or sauteed spinach",
@@ -724,9 +733,10 @@
           "tags": [
             "gf-option",
             "contains-dairy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The note over this section says “All with a tomato sauce base and mozzarella”."}
+          "tagNotes": {"contains-dairy": "The note over this section says “All with a tomato sauce base and mozzarella”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Pepperoni & the sundried syndicate",
@@ -736,9 +746,10 @@
           "tags": [
             "gf-option",
             "contains-dairy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The note over this section says “All with a tomato sauce base and mozzarella”."}
+          "tagNotes": {"contains-dairy": "The note over this section says “All with a tomato sauce base and mozzarella”.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Hei Hei Hawaiian",
@@ -790,7 +801,10 @@
           "name": "Smoked chicken, bacon or chorizo",
           "dishId": "smoked-chicken-bacon-or-chorizo",
           "price": 5.0,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “bacon”."}
         },
         {
           "name": "Olives, pickled jalapenos or hot honey",
@@ -1280,9 +1294,10 @@
           "dishId": "bacon-bagel",
           "price": 10.8,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “bagel”."}
+          "tagNotes": {"contains-gluten": "The menu says “bagel”.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Chicken bagel",
@@ -1354,8 +1369,10 @@
           "dishId": "bacon-panini",
           "price": 12.5,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Chicken panini",
@@ -1370,8 +1387,10 @@
           "dishId": "sausage-roll",
           "price": 11.0,
           "tags": [
-            "contains-gluten"
-          ]
+            "contains-gluten",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Vege pizza",
@@ -1389,9 +1408,10 @@
           "price": 14.5,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
+          "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item.", "contains-pork": "The menu says “Bacon”."}
         },
         {
           "name": "Pumpkin, beetroot, chickpea & feta salad",

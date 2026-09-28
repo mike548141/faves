@@ -114,8 +114,15 @@ CONTRADICTED_BY = {
     "contains-gluten": {"gf"},
     "contains-dairy": {"vg", "df"},
     "contains-egg": {"vg"},
-    "contains-shellfish": {"v", "vg"},
+    # Kosher is contradicted by shellfish too (owner-ruled 2026-09-29, ADR 0140).
+    # `halal`/`kosher` are only ever the venue's word, so a dish carrying one is
+    # curation, and curation outranks a pattern exactly as `v` does.
+    "contains-shellfish": {"v", "vg", "kosher"},
     "contains-fish": {"v", "vg"},
+    # NOT `v-option`/`vg-option`: "Cheese & Bacon Loaded Fries" is `v-option`
+    # and its default plate is bacon. Only a dish the venue calls vegetarian
+    # outright is spared — and ADR 0140's report lists every one of those.
+    "contains-pork": {"v", "vg", "halal", "kosher"},
     # Not allergens, and never applied by THIS tool — it tags dishes and these
     # two say what an add-on option is (ADR 0092, tools/tag_addon_options.py).
     # They are here because validate.py checks that this table and
@@ -170,6 +177,46 @@ CONTRADICTED_BY = {
 # is the half that makes the remaining gap falsifiable; the tail is the half
 # that closes the three the corpus can already prove are safe.
 COMPOUND_TAILS = ("burger", "muffin", "nugget")
+
+# The pork rules' escapes (ADR 0140). Each word becomes TWO fixed-width
+# lookbehinds — "vegan bacon" and "vegan-bacon" are not the same width — placed
+# in front of the rule's `\b(…)`, so a qualifier cancels only the word it sits
+# against and `finditer` walks on to the next. Built rather than hand-typed
+# because ~70 hand-written lookbehinds is 70 chances to mistype one.
+def _escapes(words):
+    return "".join(f"(?<!{w} )(?<!{w}-)" for w in words)
+
+
+# Words that can only mean "this is not pork", wherever they sit: they escape
+# every pork word, "pork" itself included ("mock pork", "plant-based pork").
+PORK_PLANT_ESCAPE = _escapes([
+    "vegan", "veggie", "vegetarian", "plant-based", "plant based",
+    "mock", "faux", "fake", "meatless", "meat-free", "meat free", "halal", "kosher",
+])
+# 🛑 INGREDIENTS THAT NAME A SUBSTITUTE ONLY WHEN THEY SIT ON THE PRODUCT WORD.
+# "Coconut bacon", "tempeh bacon" and "soy chorizo" are vegan products; "Coconut
+# pork curry", "Sweet soy pork belly", "Mushroom pork dumplings" and "Tofu pork
+# mince" are PORK. These words escaped every pork word until the 2026-09-29
+# review ran the real regexes and found all four of those phrases untagged — a
+# miss, the one direction this tool may not move. So each is scoped to the
+# product it can actually replace, as a lookbehind on THAT alternative only, and
+# never reaches `pork`, `ham` or anything else.
+PORK_SUBSTITUTE_OF = {
+    "bacon": ["coconut", "tempeh", "tofu", "seitan", "soy", "mushroom", "shiitake",
+              "eggplant", "carrot", "rice paper", "plant"],
+    "chorizo": ["soy", "tofu", "tempeh", "seitan", "plant"],
+    "sausage": ["tofu", "tempeh", "seitan", "soy", "mushroom", "plant"],
+}
+
+
+def _sub(word):
+    return _escapes(PORK_SUBSTITUTE_OF[word])
+
+
+PORK_MEAT_ESCAPE = _escapes([
+    "beef", "chicken", "lamb", "mutton", "hogget", "venison", "turkey", "veal",
+    "goat", "duck", "wagyu", "angus", "fish", "seafood", "prawn",
+])
 
 # (tag, tier, basis, pattern, exclude)
 # `exclude` is checked against the same text; a hit vetoes the rule for that
@@ -271,6 +318,68 @@ RULES = [
     ("contains-fish", "DERIVED", "nam pla and nuoc mam are fish sauce",
      r"\b(nam\s?pla|nuoc\s?mam)\b", None),
     ("contains-fish", "DERIVED", "ceviche is raw fish cured in citrus", r"\bceviche\b", None),
+
+    # --- pork (owner-ruled 2026-09-29, ADR 0140) ------------------------
+    # NOT AN ALLERGEN. A presence tag in the `contains-` namespace so it rides
+    # every allergen path — this tagger, the tips, the add-on union, the ⚠
+    # treatment — and is flagged for a reader through Halal or Kosher, never
+    # through an avoid chip of its own (the owner ruled there is no "No pork").
+    # The one-way rule binds unchanged: it only ever ADDS, and the absence of
+    # this tag is never a halal claim anywhere.
+    #
+    # TWO RULES, SPLIT BY THE OWNER'S OWN WORDS — "Flag the usually-pork ones":
+    #
+    #   STATED — a pig product the name settles: pork, bacon, ham, prosciutto,
+    #   pancetta, chorizo, speck, porchetta, nduja, char siu, crackling, lard…
+    #   `\bham\b` never reaches "hamburger" (the closing boundary refuses it,
+    #   and `ham` is not a compound tail), and `pig` is here because the corpus
+    #   writes "Pig Ears" and "Pig Intestine" with no "pork" beside them.
+    #
+    #   DERIVED — a food that is USUALLY pork in NZ unless the menu names
+    #   another meat: sausage, pepperoni, salami, spare ribs, hot dogs, cheerios,
+    #   saveloys, frankfurters, kransky, cabanossi, kielbasa, bratwurst. "Beef
+    #   sausage", "chicken sausage", "lamb sausage" and "venison salami" escape;
+    #   "Italian sausage" and "Chinese sausage" do not.
+    #
+    # Deliberately NOT matched, each on the owner's ruling or on the corpus:
+    #   • dumplings, wontons, gyoza, shumai, bao, mince — only when the menu says
+    #     pork, which the STATED rule already reads ("pork dumplings").
+    #   • gelatine — the "flag every maybe" option he declined.
+    #   • bare `ribs`/`rib` — the corpus holds "Corn Ribs" (a VEGETARIAN dish),
+    #     "Beef Short Rib", "Chicken Ribs", "Lamb Rib" and "rib sauce"; only
+    #     SPARE ribs is the usually-pork cut.
+    #   • `belly` — "Fish Belly" is on Regal's menu; "pork belly" says pork.
+    #   • `pulled` — "Pulled lamb" is on two menus; "pulled pork" says pork.
+    #   • `tonkatsu` SAUCE — the corpus's five tonkatsu are all the brown
+    #     condiment (see the `katsu` note in the gluten block), so the cutlet
+    #     reading is kept behind a lookahead rather than dropped.
+    #
+    # 🛑 EVERY NARROWING IS A FIXED-WIDTH LOOKBEHIND, NEVER AN `exclude`, for the
+    # water-chestnut reason: an item-level veto on "Plant-based chorizo, or
+    # pepperoni" would lose the PEPPERONI — an over-warning traded for a miss.
+    #
+    # The escape lists differ ON PURPOSE. A plant or mock qualifier escapes
+    # BOTH rules ("plant-based chorizo", "vegan bacon"); a substitute INGREDIENT
+    # ("coconut", "tofu", "soy") escapes only the product it replaces ("coconut
+    # bacon"), never `pork` ("coconut pork curry"). Another MEAT escapes
+    # only the usually-pork rule — the owner's "unless the menu names another
+    # meat" — and NOT the named pig products, because "Chicken bacon ranch" is
+    # chicken AND bacon: a lookbehind on `chicken ` in front of `bacon` would
+    # read a menu's list of two meats as one.
+    ("contains-pork", "STATED", "names pork or a pig product",
+     PORK_PLANT_ESCAPE +
+     r"\b(pork|pigs?|" + _sub("bacon") + r"bacon|streaky|hams?|gammon|prosciutto|pancetta|"
+     + _sub("chorizo") + r"chorizo|speck|porchetta|"
+     r"n['’]?duja|char\s?siu|cha\s?siu|crackling|lard|lardo|lardons?|guanciale|"
+     r"mortadella|coppa|capicola|jam[oó]n|tonkotsu|tonkatsu(?!\s+sauce)|"
+     r"lap\s?ch(?:e?o)ng)\b", None),
+    # `salumi` is here and not above: Italian cured meats are mostly pork but
+    # not all of them, so it is the "usually" rule's word, not the "names" one.
+    ("contains-pork", "DERIVED", "is usually pork in NZ unless the menu names another meat",
+     PORK_PLANT_ESCAPE + PORK_MEAT_ESCAPE +
+     r"\b(" + _sub("sausage") + r"sausages?|pepperoni|salami|salame|salumi|sopp?ressat?a|"
+     r"spare\s?ribs?|hot\s?dogs?|cheerios?|saveloys?|frankfurters?|kransk(?:y|ies)|"
+     r"cabanossi|kielbasa|bratwursts?)\b", None),
 
     # --- gluten -------------------------------------------------------
     # `baguette`, `hoagie`, `sourdough` and `crouton` are here for the same

@@ -111,7 +111,8 @@
           "id": "bacon",
           "price": 2.0,
           "tags": [
-            "has-meat"
+            "has-meat",
+            "contains-pork"
           ]
         }
       ]
@@ -202,9 +203,10 @@
           "tags": [
             "gf-option",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The note over this section says “All pizzas $24”."}
+          "tagNotes": {"contains-gluten": "The note over this section says “All pizzas $24”.", "contains-pork": "The menu says “Pigs”."}
         },
         {
           "name": "Fungus Amongus",
@@ -239,9 +241,10 @@
           "tags": [
             "gf-option",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The note over this section says “All pizzas $24”.", "contains-dairy": "The menu says “parmesan”."}
+          "tagNotes": {"contains-gluten": "The note over this section says “All pizzas $24”.", "contains-dairy": "The menu says “parmesan”.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Trip to Arrakis",

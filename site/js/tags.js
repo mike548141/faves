@@ -42,7 +42,7 @@
 import { el } from "./dom.js";
 import { disclosure } from "./disclosure.js";
 import { isSpicy, heatLabel } from "./heat.js";
-import { DIET_FILTERS } from "./dietary.js";
+import { DIET_FILTERS, STATED_CLAIMS } from "./dietary.js";
 
 /** How many chips a row shows before collapsing (owner: "a variable, so I can
  *  change my mind as we test it"). Declared tags are shown beyond it. */
@@ -57,6 +57,10 @@ export const DIETARY = {
   "v-option": "Veg option",
   "df-option": "DF option",
   "vg-option": "Vegan option",
+  // Only ever the VENUE's word (ADR 0140): no tool infers either, and an absence
+  // of `contains-pork` is never read as one. The tip says "As the venue marks it."
+  halal: "Halal",
+  kosher: "Kosher",
 };
 export const ALLERGEN = {
   "contains-nuts": "Contains nuts",
@@ -68,6 +72,9 @@ export const ALLERGEN = {
   "contains-gluten": "Contains gluten",
   "contains-soy": "Contains soy",
   "contains-sesame": "Contains sesame",
+  // Not an allergen — a presence tag in the allergen namespace so it takes
+  // every allergen path (ADR 0140). Flagged for a reader through Halal/Kosher.
+  "contains-pork": "Contains pork",
 };
 
 export const isAllergen = (t) => t in ALLERGEN;
@@ -89,6 +96,9 @@ export const isChipTag = (t) => isAllergen(t) || isSpicy(t) || t in DIETARY;
  */
 export function servesDeclaredDiet(t, dietary) {
   if (!dietary || dietary.size === 0) return false;
+  // A venue-stated Halal/Kosher chip is the reader's own when they chose that
+  // observance (dietary.js `declaredClaims` puts the key in this set).
+  if (STATED_CLAIMS.some((c) => c.key === t)) return dietary.has(t);
   return DIET_FILTERS.some((f) => dietary.has(f.key) && f.satisfies.includes(t));
 }
 

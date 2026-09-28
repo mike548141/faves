@@ -48,7 +48,7 @@ import { createFavourites, favKey } from "./favourites.js";
 import { migrateDishKeys } from "./dish-id.js";
 import { clampRating } from "./ratings.js";
 import { normaliseNoteText } from "./notes.js";
-import { createSettings, sanitiseDiet, DEFAULTS as SETTINGS_DEFAULTS } from "./settings.js";
+import { createSettings, sanitiseDiet, sanitiseFoodPrefs, DEFAULTS as SETTINGS_DEFAULTS } from "./settings.js";
 import { mergeItems, normaliseNote } from "./cart.js";
 import { optionId } from "./addons.js";
 
@@ -862,6 +862,14 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
       const patch = {};
       for (const f of MERGE_SETTINGS_FIELDS) {
         if (f in p.settings) patch[f] = p.settings[f];
+      }
+      // Halal / Kosher (ADR 0140) switch warnings ON, so merging a file into a
+      // profile UNIONS them rather than letting the file's list replace this
+      // device's — the same direction sync-merge.js takes, and the reason
+      // `diet` is never overwritten quietly. Replace mode never reaches here.
+      if ("foodPrefs" in p.settings) {
+        const have = createSettings(view).raw().foodPrefs;
+        patch.foodPrefs = sanitiseFoodPrefs([...have, ...(Array.isArray(p.settings.foodPrefs) ? p.settings.foodPrefs : [])]);
       }
       if (entry.diet) {
         const { existing, incoming, choice } = entry.diet;

@@ -355,3 +355,31 @@ test("a corrupt or empty snapshot merges to something usable rather than throwin
   assert.doesNotThrow(() => mergeSet(null, undefined, [null, 5, "x"]));
   assert.deepEqual(mergeMap(null, null, null).map, {});
 });
+
+// --- Halal / Kosher / Meatarian (ADR 0140) ---------------------------------
+
+test("mergeSettings: foodPrefs changed on both sides UNION — a warning is never tie-broken off", () => {
+  // Halal and Kosher each switch warnings ON. A tie-break would pick one side
+  // and switch the other device's Halal off to agree with it.
+  const out = mergeSettings({ foodPrefs: [] }, { foodPrefs: ["halal"] }, { foodPrefs: ["kosher"] });
+  assert.deepEqual(out.settings.foodPrefs, ["halal", "kosher"]);
+  const c = out.conflicts.find((x) => x.field === "foodPrefs");
+  assert.equal(c.kind, CONFLICT_SETTING);
+  assert.deepEqual(c.resolved, ["halal", "kosher"]);
+});
+
+test("mergeSettings: a one-sided foodPrefs change is simply taken, removal included", () => {
+  // Union is ONLY the two-sided answer: turning Halal off on one device while
+  // the other did nothing must still turn it off everywhere.
+  const on = mergeSettings({ foodPrefs: [] }, { foodPrefs: [] }, { foodPrefs: ["halal"] });
+  assert.deepEqual(on.settings.foodPrefs, ["halal"]);
+  const off = mergeSettings({ foodPrefs: ["halal"] }, { foodPrefs: ["halal"] }, { foodPrefs: [] });
+  assert.deepEqual(off.settings.foodPrefs, []);
+});
+
+test("mergeSettings: an older device that carried foodPrefs untouched does not delete it", () => {
+  // An ADR 0127 build carries the field opaquely, so its blob comes back with
+  // the value unchanged — which reads as "only we moved" and keeps ours.
+  const out = mergeSettings({ foodPrefs: ["halal"] }, { foodPrefs: ["halal", "kosher"] }, { foodPrefs: ["halal"] });
+  assert.deepEqual(out.settings.foodPrefs, ["halal", "kosher"]);
+});

@@ -170,10 +170,13 @@ test("CONTRADICTS: peanuts, nuts, soy and sesame contradict no dietary claim", (
   // step; this is the same claim said in the language of the app.
   // `contains-fish` joined them 2026-09-07 — a separate allergen from
   // `contains-shellfish`, contradicting the same two claims.
+  // `contains-pork` joined them 2026-09-29 (ADR 0140) — not an allergen, a
+  // presence tag that kills `v`/`vg` like `has-meat` and the two venue-stated
+  // claims `halal`/`kosher`.
   assert.deepEqual(
     new Set(all.filter((t) => t.startsWith("contains-"))),
     new Set(["contains-gluten", "contains-dairy", "contains-egg", "contains-shellfish",
-             "contains-fish"]),
+             "contains-fish", "contains-pork"]),
   );
   // The two non-allergen facts (ADR 0092) kill `v` and `vg` and nothing else —
   // meat is not gluten, and a `gf` or `df` dish stays gf or df with bacon on it.
@@ -476,4 +479,50 @@ test("selectionKey: a selection stored before ids existed keys as the same optio
 test("selectionSummary: reads as what you would say at the counter", () => {
   assert.equal(selectionSummary([SATAY, HALLOUMI]), "Satay, Halloumi");
   assert.equal(selectionSummary([]), "");
+});
+
+// --- ADR 0140: pork, and the two claims only a venue may state -------------
+
+test("CONTRADICTS: pork kills v, vg, halal and kosher; shellfish also kills kosher; nothing else", () => {
+  const killedBy = (tag) => Object.keys(CONTRADICTS).filter((k) => CONTRADICTS[k].includes(tag)).sort();
+  assert.deepEqual(killedBy("contains-pork"), ["halal", "kosher", "v", "vg"]);
+  assert.deepEqual(killedBy("contains-shellfish"), ["kosher", "v", "vg"]);
+  // Halal is NOT killed by shellfish — that is Kosher's rule, not Halal's.
+  assert.deepEqual(CONTRADICTS.halal, ["contains-pork"]);
+});
+
+test("composeTags: a pork topping costs a venue-stated Halal dish its claim, as a FACT", () => {
+  const bacon = { group: "extras", name: "Bacon", price: 4, tags: ["has-meat", "contains-pork"] };
+  const out = composeTags(["halal"], [bacon]);
+  assert.ok(!out.tags.includes("halal"), "Halal survived a bacon topping");
+  const d = out.dropped.find((x) => x.tag === "halal");
+  assert.equal(d.reason, "contradicted");
+  assert.equal(d.allergen, "contains-pork");
+});
+
+test("composeTags: an option's own 'halal' never lands on a dish that did not state it", () => {
+  // The union half would have carried it: a non-claim tag unions in. Halal is a
+  // CLAIM (it intersects), so a halal chicken option on an unstated dish adds
+  // nothing — the dish did not say halal, and a topping cannot say it for it.
+  const chicken = { group: "extras", name: "Halal chicken", price: 6, tags: ["has-meat", "halal"] };
+  const out = composeTags(["contains-gluten"], [chicken]);
+  assert.ok(!out.tags.includes("halal"), "an add-on made an unstated dish read Halal");
+});
+
+test("composeTags: a Halal dish keeps its claim only if every option also states it", () => {
+  const plainRice = { group: "sides", name: "Rice", price: 0, tags: [] };
+  const out = composeTags(["halal"], [plainRice]);
+  assert.ok(!out.tags.includes("halal"), "an unstated option left the Halal claim standing");
+  assert.equal(out.dropped.find((x) => x.tag === "halal").reason, "not-stated");
+  const halalRice = { group: "sides", name: "Rice", price: 0, tags: ["halal"] };
+  assert.ok(composeTags(["halal"], [halalRice]).tags.includes("halal"));
+});
+
+test("composeTags: shellfish kills Kosher and leaves Halal standing", () => {
+  const prawns = { group: "extras", name: "Prawns", price: 7, tags: ["contains-shellfish", "halal", "kosher"] };
+  // (A prawn option tagged kosher is contradictory data — validate warns on it —
+  // but the machinery must still let the fact win over the claim.)
+  const out = composeTags(["halal", "kosher"], [prawns]);
+  assert.ok(out.tags.includes("halal"));
+  assert.ok(!out.tags.includes("kosher"));
 });

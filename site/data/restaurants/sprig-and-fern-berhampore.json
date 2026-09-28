@@ -152,7 +152,8 @@
           "name": "Salami",
           "id": "salami",
           "tags": [
-            "has-meat"
+            "has-meat",
+            "contains-pork"
           ]
         },
         {
@@ -372,9 +373,10 @@
           "tags": [
             "contains-gluten",
             "contains-dairy",
-            "contains-sesame"
+            "contains-sesame",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “breads”.", "contains-dairy": "The menu says “brie”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
+          "tagNotes": {"contains-gluten": "The menu says “breads”.", "contains-dairy": "The menu says “brie”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Vegetarian Antipasto Platter",
@@ -423,9 +425,10 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy",
-            "df-option"
+            "df-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The note over this section says “Our pizza bases contain dairy”.", "contains-dairy": "The menu says “Mozzarella”."}
+          "tagNotes": {"contains-gluten": "The note over this section says “Our pizza bases contain dairy”.", "contains-dairy": "The menu says “Mozzarella”.", "contains-pork": "The menu says “Prosciutto”."}
         },
         {
           "name": "Super Salami",
@@ -436,9 +439,10 @@
             "gf-option",
             "contains-gluten",
             "contains-dairy",
-            "df-option"
+            "df-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The note over this section says “Our pizza bases contain dairy”.", "contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-gluten": "The note over this section says “Our pizza bases contain dairy”.", "contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “Salami” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Mediterranean",
@@ -476,9 +480,10 @@
           "desc": "Served with fries and tomato sauce.",
           "price": 12.5,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Nuggets” — battered/crumbed coatings are wheat flour."}
+          "tagNotes": {"contains-gluten": "The menu says “Nuggets” — battered/crumbed coatings are wheat flour.", "contains-pork": "The menu says “Hot Dogs” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Mini Pizza + Fries",

@@ -139,7 +139,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Grill Pork Dumpling (6 Pcs)",
@@ -153,9 +156,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumpling” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumpling” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Seafood Udon",
@@ -233,7 +237,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Roast Duck or BBQ Pork with Rice Noodle or Egg Noodle Soup",
@@ -248,9 +255,10 @@
           ],
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Egg Noodle” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Egg Noodle” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "BBQ Pork Wonton Noodle Soup",
@@ -264,9 +272,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         }
       ]
     },
@@ -301,7 +310,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Two Combination BBQ Meat on Rice",
@@ -314,7 +326,9 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Three Combination BBQ Meat on Rice",
@@ -327,7 +341,9 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Roast Duck on Rice",
@@ -353,7 +369,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Prawn Wonton Soup",
@@ -401,9 +420,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Wontons” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Wontons” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Roast Duck or Crispy Roast Pork or BBQ Pork Noodle Dry",
@@ -416,7 +436,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Soya Chicken or BBQ Pork Ribs Noodle Dry",
@@ -430,9 +453,10 @@
             }
           ],
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Soya”."}
+          "tagNotes": {"contains-soy": "The menu says “Soya”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Beef Brisket Noodle Soup or Noodle Dry",
@@ -471,7 +495,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Vietnamese Style Beef Noodle Soup",
@@ -604,9 +631,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Dumpling” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Dumpling” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chicken Feet and Mushroom Soup",
@@ -634,9 +662,10 @@
           "desc": null,
           "price": 14.5,
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chicken Salad",
@@ -662,7 +691,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pig”."}
         },
         {
           "name": "Duck Feet with Chilli Sauce",
@@ -699,7 +731,10 @@
           "code": "45",
           "desc": null,
           "price": 14.5,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "BBQ Pork Bun",
@@ -708,9 +743,10 @@
           "desc": null,
           "price": 5.6,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pork Bun” — a wheat-flour wrapper."}
+          "tagNotes": {"contains-gluten": "The menu says “Pork Bun” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Deep Fried Chicken Wing",
@@ -765,9 +801,10 @@
             }
           ],
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Fish Congee",
@@ -819,9 +856,10 @@
             }
           ],
           "tags": [
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-fish": "The menu says “Fish”."}
+          "tagNotes": {"contains-fish": "The menu says “Fish”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Roast Pork with Tofu & Vegetable",
@@ -835,9 +873,10 @@
             }
           ],
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Groper Wing with Tofu & Roast Pork",
@@ -852,9 +891,10 @@
           ],
           "tags": [
             "contains-soy",
-            "contains-fish"
+            "contains-fish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-fish": "The menu says “Groper”."}
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-fish": "The menu says “Groper”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork Maw with Pepper & Vegetable Pickle",
@@ -862,7 +902,10 @@
           "code": "57",
           "desc": null,
           "price": 26.2,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Braised Pork with Dried Vegetable or Taro",
@@ -875,7 +918,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chicken Wing with Chinese Mushroom",
@@ -901,7 +947,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Bitter Melon with Pork Spare Ribs",
@@ -914,7 +963,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Hot & Spicy Chicken",
@@ -1122,9 +1174,10 @@
             }
           ],
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Tofu, Vegetable & Pork with Oyster Sauce",
@@ -1139,9 +1192,10 @@
           ],
           "tags": [
             "contains-shellfish",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “Tofu”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Oyster”.", "contains-soy": "The menu says “Tofu”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Homestyle Tofu with Pork",
@@ -1155,9 +1209,10 @@
             }
           ],
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Belly Pork with Chilli Sauce",
@@ -1170,7 +1225,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Belly Pork with Bean Sauce",
@@ -1183,7 +1241,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Belly Pork with Chef's Special Sauce",
@@ -1191,7 +1252,10 @@
           "code": "80",
           "desc": null,
           "price": 25.6,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Mao's Braised Pork with Chilli",
@@ -1204,7 +1268,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork with Chilli Sauce",
@@ -1217,7 +1284,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork with Peking Sauce",
@@ -1230,7 +1300,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork with Chinese Black Mushroom",
@@ -1243,7 +1316,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Fried Beans with Pork Mince and Chilli",
@@ -1256,7 +1332,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Fried Beans with Pork Mince in XO Sauce",
@@ -1265,9 +1344,10 @@
           "desc": null,
           "price": 26.1,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “XO Sauce” — XO sauce is made with dried scallop and shrimp."}
+          "tagNotes": {"contains-shellfish": "The menu says “XO Sauce” — XO sauce is made with dried scallop and shrimp.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "KC Homemade Tofu with Pork Mince",
@@ -1281,9 +1361,10 @@
             }
           ],
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Salt & Pepper Pork Spare Ribs",
@@ -1296,7 +1377,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork Maw with Vegetable and Pickle",
@@ -1309,7 +1393,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Seasonal Vegetable with Chinese Sausage and Pork",
@@ -1322,7 +1409,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chinese Sausage with Dried Tofu and Vegetable",
@@ -1331,9 +1421,10 @@
           "desc": null,
           "price": 26.8,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Tofu”."}
+          "tagNotes": {"contains-soy": "The menu says “Tofu”.", "contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."}
         },
         {
           "name": "Sweet & Sour Pork with Pineapple",
@@ -1346,7 +1437,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chicken Hot Pepper Sauce",
@@ -1829,7 +1923,10 @@
           "code": "130",
           "desc": null,
           "price": 34.0,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Beef Tripe and Mix Mushroom in Hot & Spicy Sauce",
@@ -1864,9 +1961,10 @@
             }
           ],
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid."}
+          "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-pork": "The menu says “Pork”."}
         }
       ]
     },
@@ -1885,7 +1983,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Beef Brisket Stirred Noodle or Fried Noodle",
@@ -1928,9 +2029,10 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle."}
+          "tagNotes": {"contains-gluten": "The menu says “Chow Mein” — a wheat noodle.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Chow Kueh Teow with Beef or Black Bean Sauce",
@@ -1977,9 +2079,10 @@
             }
           ],
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Shredded Duck Meat with Vermicelli",
@@ -2016,7 +2119,10 @@
           "code": "143",
           "desc": null,
           "price": 23.4,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Hainanese Chicken with Rice",
@@ -2058,7 +2164,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Young Chow Fried Rice with Shrimp and BBQ Pork",
@@ -2072,9 +2181,10 @@
             }
           ],
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Hokkien Fried Rice or Noodle",
@@ -2104,9 +2214,10 @@
             }
           ],
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”."}
+          "tagNotes": {"contains-shellfish": "The menu says “Shrimp”.", "contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Pork Chop with Lemon Grass or Black Pepper",
@@ -2119,7 +2230,10 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
         },
         {
           "name": "Salted Chicken on Rice",

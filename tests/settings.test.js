@@ -14,6 +14,8 @@ import {
   sanitiseDiet,
   futureAllergens,
   isKnownAllergen,
+  FOOD_PREFS,
+  sanitiseFoodPrefs,
 } from "../site/js/settings.js";
 
 // `get()` returns settings with every LOCAL already resolved to a concrete
@@ -414,6 +416,71 @@ test("picksClosed: a corrupt payload can't grow the store without bound", () => 
   const s = createSettings(fakeStorage());
   s.set({ picksClosed: Array.from({ length: 900 }, (_, i) => `venue-${i}`) });
   assert.equal(s.get().picksClosed.length, 500);
+});
+
+// ——————————— Halal / Kosher / Meatarian — `foodPrefs` (ADR 0140) ———————————
+
+test("foodPrefs: defaults to empty, keeps the three known keys, dedupes, persists", () => {
+  const storage = fakeStorage();
+  const s = createSettings(storage);
+  assert.deepEqual(s.raw().foodPrefs, []);
+  s.set({ foodPrefs: ["halal", "meatarian", "halal", "kosher"] });
+  assert.deepEqual(s.raw().foodPrefs, ["halal", "meatarian", "kosher"]);
+  assert.deepEqual(createSettings(storage).raw().foodPrefs, ["halal", "meatarian", "kosher"]);
+  assert.deepEqual(FOOD_PREFS.map((p) => p.key), ["halal", "kosher", "meatarian"]);
+});
+
+test("foodPrefs: NEVER stored inside diet — an older sanitiseDiet would strip it", () => {
+  // The reason for the top-level field. `diet.dietary` drops any key it does not
+  // know (and must: a dietary key has no namespace), so "halal" stored there
+  // would be deleted by every build older than this one on its next write.
+  const s = createSettings(fakeStorage());
+  s.set({ foodPrefs: ["halal"] });
+  assert.deepEqual(s.raw().diet, { dietary: [], avoid: [] });
+  assert.deepEqual(sanitiseDiet({ dietary: ["halal", "meatarian"], avoid: [] }).dietary, [],
+    "the diet sanitiser still drops these keys — which is why they are not kept there");
+});
+
+test("foodPrefs: the field fits the bounds ADR 0127 carries, so an older build round-trips it", () => {
+  // An ADR 0127 build (one that does not know `foodPrefs`) keeps an unknown
+  // top-level field only if its key is ≤ 40 characters and its value serialises
+  // to ≤ 2000. The worst this build can ever store — every known key plus the
+  // full carry of future ones at their longest — must fit, or the oldest
+  // devices would drop exactly the busiest profiles.
+  const worst = createSettings(fakeStorage());
+  worst.set({
+    foodPrefs: [
+      ...FOOD_PREFS.map((p) => p.key),
+      ...Array.from({ length: 40 }, (_, i) => `p${String(i).padStart(2, "0")}-${"x".repeat(26)}`),
+    ],
+  });
+  assert.ok("foodPrefs".length <= 40);
+  assert.ok(JSON.stringify(worst.raw().foodPrefs).length <= 2000,
+    `serialises to ${JSON.stringify(worst.raw().foodPrefs).length}`);
+  // …and it is a TOP-LEVEL field, which is the level ADR 0127 carries at.
+  assert.ok(Object.hasOwn(worst.raw(), "foodPrefs"));
+  assert.ok(!Object.hasOwn(DEFAULTS.diet, "foodPrefs"));
+});
+
+test("foodPrefs: a preference from a NEWER build is carried, not dropped (the ADR 0118 seam)", () => {
+  const storage = fakeStorage(JSON.stringify({ foodPrefs: ["pescatarian", "halal"] }));
+  const s = createSettings(storage);
+  s.set({ favBoostKm: 4 }); // unrelated write — the round trip an older device does
+  assert.deepEqual(createSettings(storage).raw().foodPrefs, ["halal", "pescatarian"]);
+});
+
+test("foodPrefs: junk is dropped, the carry is bounded, and order follows the SET", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ foodPrefs: ["Halal", "no pork", "", 42, null, "x".repeat(31), "-lead", "kosher"] });
+  assert.deepEqual(s.raw().foodPrefs, ["kosher"]);
+  s.set({ foodPrefs: "halal" });
+  assert.deepEqual(s.raw().foodPrefs, [], "a bare string is not a list");
+  const many = Array.from({ length: 30 }, (_, i) => `future${i}`);
+  s.set({ foodPrefs: ["halal", ...many] });
+  assert.equal(s.raw().foodPrefs.length, 11, "three known at most, plus ten carried");
+  const a = sanitiseFoodPrefs(["zeta", "halal", "alpha"]);
+  const b = sanitiseFoodPrefs(["alpha", "zeta", "halal"]);
+  assert.deepEqual(a, b, "two devices agreeing on the set serialise alike");
 });
 
 test("picksClosed: a distance-only patch leaves the closed list intact", () => {

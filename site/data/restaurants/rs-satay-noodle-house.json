@@ -437,9 +437,10 @@
           "desc": null,
           "price": 18.5,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."},
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."},
           "prices": {
             "online": 30.5
           },
@@ -451,9 +452,10 @@
           "desc": null,
           "price": 21.0,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper."},
+          "tagNotes": {"contains-gluten": "The menu says “Wonton” — a wheat-flour wrapper.", "contains-pork": "The menu says “Pork”."},
           "prices": {
             "online": 34.7
           },
@@ -502,7 +504,10 @@
           "dishId": "bbq-pork-on-rice",
           "desc": null,
           "price": 22.0,
-          "tags": [],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."},
           "prices": {
             "online": 36.3
           },
@@ -546,7 +551,10 @@
           "dishId": "pork-balls-noodles-soup",
           "desc": null,
           "price": 17.5,
-          "tags": [],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."},
           "prices": {
             "online": 28.9
           },
@@ -699,7 +707,10 @@
           "dishId": "fried-chicken-bbq-pork-on-rice",
           "desc": null,
           "price": 24.0,
-          "tags": [],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."},
           "prices": {
             "online": 39.6
           },
