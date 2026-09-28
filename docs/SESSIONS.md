@@ -12273,4 +12273,7 @@ below was shipped to `main` and checked in a real browser.
 - ⏳ **Still open on 22e:** step 4 (ingredient-level tags and notes) and
   step 5 (trace tier, including the lava cakes/brownie tags and the ADR
   0047 note owed since 2026-08-16).
-
+- **Late ask:** the "est. — our estimate" line under the recipe stats panel
+  has been removed (`63f43d2`). The "est." marker stays, as an `<abbr>` that
+  carries the explanation, per ADR 0125's rule that an estimate is never
+  shown unlabelled.
