@@ -24,7 +24,7 @@ import { ingredientBlocks } from "./ingredients.js";
 import { SCALES, DEFAULT_SCALE, scaleFor, scaleLineStatus, scaleServes } from "./quantity.js";
 import { el } from "./dom.js";
 import { disclosure } from "./disclosure.js";
-import { isSpicy, heatLabel } from "./heat.js";
+import { tagRow } from "./tags.js";
 import { recipeStats } from "./recipe-stats.js";
 // The app chrome behind the ⋯ menu. Until 2026-08-16 this page had none of it:
 // a recipe could show CONTAINS GLUTEN chips with no route to the Settings that
@@ -40,44 +40,9 @@ import { initOverflowMenu } from "./overflow-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
 
 const root = document.getElementById("recipe-root");
-const EMPTY_SET = new Set();
 
-// --- Tag vocabulary → display (mirrors menu.js) ----------------------
-const DIETARY = {
-  v: "Veg", vg: "Vegan", gf: "GF", df: "DF",
-  "gf-option": "GF option", "v-option": "Veg option",
-  "df-option": "DF option", "vg-option": "Vegan option",
-};
-const ALLERGEN = {
-  "contains-nuts": "Contains nuts",
-  "contains-peanuts": "Contains peanuts",
-  "contains-shellfish": "Contains shellfish",
-  "contains-fish": "Contains fish",
-  "contains-egg": "Contains egg",
-  "contains-dairy": "Contains dairy",
-  "contains-gluten": "Contains gluten",
-  "contains-soy": "Contains soy",
-  "contains-sesame": "Contains sesame",
-};
-const isAllergen = (t) => t in ALLERGEN;
-// Heat is NOT mirrored from menu.js any more: `isSpicy`/`heatLabel` are imported
-// from heat.js, so the recipe page and the menu row cannot word the same scale
-// differently (roadmap 200/080). The two tables above are still mirrors and are
-// held in step by tests/tag-labels.test.js.
-
-function tagChip(t, avoid = EMPTY_SET) {
-  if (isAllergen(t)) {
-    const cls = avoid.has(t) ? "tag tag-allergen is-flagged" : "tag tag-allergen";
-    return el("span", { className: cls, textContent: `⚠ ${ALLERGEN[t]}` });
-  }
-  if (isSpicy(t)) {
-    return el("span", { className: "tag tag-spicy", textContent: heatLabel(t) });
-  }
-  if (t in DIETARY) return el("span", { className: "tag tag-diet", textContent: DIETARY[t] });
-  return el("span", { className: "tag", textContent: t });
-}
-// Allergen warnings first (safety), then the rest.
-const tagOrder = (tags) => [...tags].sort((a, b) => Number(isAllergen(b)) - Number(isAllergen(a)));
+// The tag row is tags.js's — the same module the menu row uses, so the two
+// screens cannot word, order or collapse the same dish differently (350/020).
 
 // The `?dish=` in the URL, resolved to a recipe. Delegated to the shared
 // resolver (dish-id.js) rather than re-slugging every name here: that hand-
@@ -191,10 +156,11 @@ function render(collection, item) {
 
 
   if (item.tags?.length) {
-    // Foreground any allergen the viewer flagged in their preferences.
-    const avoid = new Set(settings.get().diet.avoid);
+    // The reader's own allergens and diets drive loudness, order and what may
+    // collapse — both halves, where this page used to read only `avoid`.
+    const { avoid, dietary } = settings.get().diet;
     const tags = el("div", { className: "dish-tags" });
-    for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid));
+    tagRow(tags, { avoid: new Set(avoid), dietary: new Set(dietary) }).paint(item.tags);
     parts.push(tags);
   }
 

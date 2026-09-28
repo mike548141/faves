@@ -4448,6 +4448,26 @@ body.faves-view .to-top {
   font-weight: 700;
   line-height: 1.5;
 }
+/* The row's "+N" control (tags.js, roadmap 350/020): a chip-sized BUTTON that
+   says what it hides. Drawn at chip size so the row stays one line of chips,
+   with its tap target stretched to 44px by an invisible ::after — the target
+   rule is about the finger, not the paint. */
+.tag-more {
+  position: relative;
+  border: 1.5px dashed var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  cursor: pointer;
+}
+.tag-more::after {
+  content: "";
+  position: absolute;
+  inset: -12px -4px;
+}
+.tag-more:hover {
+  background: var(--surface-2);
+}
 .tag-diet {
   background: var(--diet-bg);
   color: var(--diet);
@@ -4477,7 +4497,10 @@ body.faves-view .to-top {
    🛑 Do NOT reach for `display:none` or `visibility:hidden` here. Absence of a
    declaration is not absence of an allergy (ROADMAP 22d): a phone handed across
    a table, or a reader who never opened Settings, must still be able to read
-   this. Contrast is held above the AA floor deliberately — "duller" is a
+   this. Since 2026-09-28 (roadmap 350/020) an undeclared chip MAY wait behind
+   the row's labelled "+N" control (tags.js) — which names what it hides and is
+   one tap from showing it — but a chip on screen is never made invisible by CSS.
+   Contrast is held above the AA floor deliberately — "duller" is a
    weighting, not a licence to fall under 4.5:1. */
 .tag-allergen.is-muted {
   background: color-mix(in srgb, var(--warn-bg) 55%, var(--surface));

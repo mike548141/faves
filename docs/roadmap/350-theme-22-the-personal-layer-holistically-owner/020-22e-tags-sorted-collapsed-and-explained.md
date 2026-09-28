@@ -1,4 +1,4 @@
-- [ ] 🤔 **22e — a dish's tags: sorted, collapsed, explained, and composed from
+- [~] 🤔 **22e — a dish's tags: sorted, collapsed, explained, and composed from
       its parts** `[L][design][schema]` ⚑ — owner-raised 2026-09-28 from the
       Chocolate Lava Cakes recipe. Four asks in one message; two ruled the same
       day, one open. **Build none of it piecemeal** — the chip row is rendered
@@ -80,6 +80,21 @@ ruling those two tags come off and the trace is recorded instead. Removing a
 peanut warning is not a step to take silently, and the new tag tip gives trace
 its first natural screen (the tip under a present tag, or a quiet line), so
 this goes back to him with that option rather than being applied.
+
+## Ruled 2026-09-28 (second round)
+
+- ✅ **"May contain" — apply the P/T ruling AND show the trace.** The lava
+  cakes' and brownie's `contains-peanuts`/`contains-nuts` come off; the trace
+  is recorded and shown in the tag tips ("may contain traces — Whittaker's
+  label"), which gives trace its first screen so the warning is not lost.
+- ✅ **Build now, in stages** — steps 1–3 this session, each shipped and
+  checked on its own.
+
+## Progress
+
+- ✅ Steps 1–2 — `site/js/tags.js`, one module for the menu row and the recipe
+  page; order + labelled collapse (`TAG_LIMIT = 3`). tests/tags.test.js;
+  recipe_check §13; addon_check opens the row before reading it.
 
 ## Build order (when claimed)
 

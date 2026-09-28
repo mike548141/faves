@@ -59,7 +59,7 @@ import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { favourites, favouriteDishIds } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
-import { isSpicy, heatLabel } from "./heat.js";
+import { tagRow } from "./tags.js";
 import { summarise } from "./dish-filters.js";
 import { textCandidate } from "./suggest.js";
 import { attachSuggestions } from "./suggest-ui.js";
@@ -137,121 +137,9 @@ const money = (n) => {
 };
 
 // --- Tag vocabulary → display ---------------------------------------
-const DIETARY = {
-  v: "Veg",
-  vg: "Vegan",
-  gf: "GF",
-  df: "DF",
-  "gf-option": "GF option",
-  "v-option": "Veg option",
-  "df-option": "DF option",
-  "vg-option": "Vegan option",
-};
-const ALLERGEN = {
-  "contains-nuts": "Contains nuts",
-  "contains-peanuts": "Contains peanuts",
-  "contains-shellfish": "Contains shellfish",
-  "contains-fish": "Contains fish",
-  "contains-egg": "Contains egg",
-  "contains-dairy": "Contains dairy",
-  "contains-gluten": "Contains gluten",
-  "contains-soy": "Contains soy",
-  "contains-sesame": "Contains sesame",
-};
-const isAllergen = (t) => t in ALLERGEN;
-// `isSpicy`/`heatLabel` come from heat.js — the heat scale's one vocabulary,
-// shared with the recipe page's chips and the add-on picker's option rows
-// (roadmap 200/080). It used to be a regex and a template typed out here and
-// again in recipe.js, which is one rule with two implementations.
-
-// Does this dietary/option tag answer a need the reader has actually declared?
-// `dietary` is the viewer's STORED preference (settings `diet.dietary`), not the
-// menu's transient filter chips — the point is what this reader needs, not what
-// they are looking at right now.
-function servesDeclaredDiet(t, dietary) {
-  if (!dietary || dietary.size === 0) return false;
-  return DIET_FILTERS.some((f) => dietary.has(f.key) && f.satisfies.includes(t));
-}
-
-/**
- * One tag → one chip, at the loudness this reader has earned.
- *
- * OWNER'S RULING 2026-08-17, from a screenshot of a dish wearing two identical
- * red warnings when only one of them was his: a chip a reader has declared a
- * need for behaves EXACTLY as before; every other chip is **dulled, never
- * hidden**, and an allergen chip additionally **drops the word "Contains"**.
- *
- * 🔑 Dulling rather than hiding is what makes this safe, and it is his answer to
- * the hardest question on ROADMAP 22d: *absence of a declaration is not absence
- * of an allergy*. A reader who never opened Settings, a phone handed across the
- * table, someone ordering for a friend — none of them lose information here,
- * because nothing is removed from the page or from the accessibility tree. Only
- * the visual weight moves. Do not "finish" this by hiding the muted chips.
- *
- * 🚩 The ⚠ glyph is KEPT on a muted allergen chip, and that is the literal
- * reading of the ruling ("look the same as it does today except (a) colour and
- * (b) the word Contains") rather than a judgement. It sits in tension with his
- * stated intent — that a chip for an allergen you have not declared should not
- * *read* as a warning — and it is raised at ROADMAP 22d for him, not resolved
- * here.
- */
-function tagChip(t, avoid = EMPTY_SET, dietary = EMPTY_SET) {
-  if (isAllergen(t)) {
-    const flagged = avoid.has(t);
-    // "Contains peanuts" → "peanuts" when it is not this reader's allergen. The
-    // chip is uppercased in CSS, so the source string stays sentence-shaped.
-    const label = flagged ? ALLERGEN[t] : ALLERGEN[t].replace(/^Contains /, "");
-    return el("span", {
-      className: flagged ? "tag tag-allergen is-flagged" : "tag tag-allergen is-muted",
-      textContent: `⚠ ${label}`,
-    });
-  }
-  if (isSpicy(t)) {
-    return el("span", { className: "tag tag-spicy", textContent: heatLabel(t) });
-  }
-  if (t in DIETARY) {
-    // Same rule for the positive tags: Vegan/GF/DF-option stay bright for the
-    // reader who declared that need and dull for everyone else.
-    const wanted = servesDeclaredDiet(t, dietary);
-    return el("span", {
-      className: wanted ? "tag tag-diet" : "tag tag-diet is-muted",
-      textContent: DIETARY[t],
-    });
-  }
-  return el("span", { className: "tag", textContent: t });
-}
-
-/**
- * WHICH TAGS ARE A CHIP AT ALL — the gate in front of `tagChip`'s bare fallback.
- *
- * 🛑 Until 2026-09-07 the chip row was built once, from `item.tags`, and NOTHING
- * composed reached it. The moment it does (roadmap 200/060, owner-ruled: update
- * the chips live) `tagChip`'s last line — `el("span", { textContent: t })` —
- * becomes reachable with an option's vocabulary in it, and `has-meat`/`has-fish`
- * would paint on a menu row as their raw internal identifiers. So this predicate
- * is a PRECONDITION of the live re-render, not a tidy-up after it.
- *
- * The vocabulary is closed (`TAGS` in tools/validate.py): 9 `contains-*`, 3
- * `spicy-*`, 8 dietary claim/option tags, and `has-meat`/`has-fish`. Every one
- * of the first three groups has a reader-facing branch above. The last two do
- * not, and they do not get one — see ADR 0096. In short: they are
- * `OPTION_ONLY_TAGS`, which validate.py already REJECTS on a dish, so putting
- * them on a row that describes a dish would render a word the schema forbids
- * there; `has-fish` always ships beside `contains-fish` (ADR 0095), so a chip
- * for it is literally the second chip saying one thing that the owner ruled
- * against; and the fact each one carries is already on the row twice over — the
- * claim chip it killed has just disappeared, and the warning line names it.
- *
- * A future vocabulary word lands here and is silently dropped rather than
- * painted raw, which is the safe direction but is still a silence:
- * `addon_check.mjs` asserts against BOTH failures on a real configured row —
- * no raw identifier, and the chips it should carry are all present.
- */
-const isChipTag = (t) => isAllergen(t) || isSpicy(t) || t in DIETARY;
-
-// Order tags so allergen warnings come first (safety first).
-const tagOrder = (tags) =>
-  [...tags].filter(isChipTag).sort((a, b) => Number(isAllergen(b)) - Number(isAllergen(a)));
+// The vocabulary, the chip, its loudness (22d), its order and the labelled
+// collapse all live in tags.js — ONE implementation shared with the recipe
+// page (roadmap 350/020). This file only decides WHEN the row repaints.
 
 // The dietary filter model + the flag/dim predicates live in dietary.js (DOM-free
 // and unit-tested), so the initial render and the live re-apply share one path.
@@ -1466,14 +1354,11 @@ function renderDish(
   // change no tag at all (a free sauce that carries none, a pick-one swapped for
   // another with the same tags). Compare the painted list and do nothing when it
   // has not moved; when it HAS, `replaceChildren` swaps it in one paint.
-  let painted = null;
-  const paintChips = (list) => {
-    const next = tagOrder(list || []);
-    const key = next.join(" ");
-    if (key === painted) return;
-    painted = key;
-    tags.replaceChildren(...next.map((t) => tagChip(t, avoid, dietary)));
-  };
+  // (The guard lives in tagRow, which also keeps the row's "show all" open
+  // across repaints — configuring a dish must not fold up what the reader
+  // unfolded.)
+  const chipRow = tagRow(tags, { avoid, dietary });
+  const paintChips = (list) => chipRow.paint(list);
   paintChips(item.tags);
   children.push(tags);
   if (kind.itemsHaveRecipeFields && (item.ingredients?.length || item.steps?.length)) {

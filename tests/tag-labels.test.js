@@ -39,6 +39,7 @@ import { ALLERGEN_PREFS, DIETARY_PREFS } from "../site/js/settings.js";
 // so it is imported rather than parsed — the same preference the header states
 // for settings.js.
 import { isSpicy, heatLabel } from "../site/js/heat.js";
+import { DIETARY as TAG_DIETARY, ALLERGEN as TAG_ALLERGEN } from "../site/js/tags.js";
 
 const ROOT = new URL("../", import.meta.url);
 const read = (rel) => readFileSync(new URL(rel, ROOT), "utf8");
@@ -220,17 +221,18 @@ const OPTION_ONLY = pythonInlineSet(validatePy, "OPTION_ONLY_TAGS", "tools/valid
 const menuJs = read("site/js/menu.js");
 const recipeJs = read("site/js/recipe.js");
 const addonsUiJs = read("site/js/addons-ui.js");
+const tagsJs = read("site/js/tags.js");
 
-function chipSurface(source, file) {
-  const dietary = jsTable(source, "DIETARY", file);
-  const allergen = jsTable(source, "ALLERGEN", file);
-  const heat = reachesHeat(source, file);
-  const labelled = new Set([...dietary.keys(), ...allergen.keys(), ...heat]);
-  return { labelled, keys: [...dietary.keys(), ...allergen.keys()] };
-}
-
-const menu = chipSurface(menuJs, "site/js/menu.js");
-const recipe = chipSurface(recipeJs, "site/js/recipe.js");
+// The menu row and the recipe page draw their chips from ONE module since
+// 2026-09-28 (roadmap 350/020) — the "one shared source of truth" 340/230 named
+// as the right end state and declined for that day. tags.js is DOM-free at
+// import, so its tables are IMPORTED rather than parsed (the header's rule: a
+// real value beats a parsed one). What is parsed is the guarantee that neither
+// screen grew its own table back.
+const chip = {
+  labelled: new Set([...Object.keys(TAG_DIETARY), ...Object.keys(TAG_ALLERGEN), ...reachesHeat(tagsJs, "site/js/tags.js")]),
+  keys: [...Object.keys(TAG_DIETARY), ...Object.keys(TAG_ALLERGEN)],
+};
 
 const addonAllergen = jsTable(addonsUiJs, "ALLERGEN_LABEL", "site/js/addons-ui.js");
 const addonClaim = jsTable(addonsUiJs, "CLAIM_LABEL", "site/js/addons-ui.js");
@@ -262,17 +264,10 @@ const SPICY_NOT_HERE = (surface) =>
 
 const SURFACES = [
   {
-    file: "site/js/menu.js",
-    what: "the menu's tag chips (DIETARY + ALLERGEN + heat.js)",
-    labelled: menu.labelled,
-    tableKeys: menu.keys,
-    exempt: Object.fromEntries(OPTION_ONLY.map((t) => [t, OPTION_ONLY_REASON])),
-  },
-  {
-    file: "site/js/recipe.js",
-    what: "the recipe page's tag chips (DIETARY + ALLERGEN + heat.js)",
-    labelled: recipe.labelled,
-    tableKeys: recipe.keys,
+    file: "site/js/tags.js",
+    what: "the tag chips on the menu row AND the recipe page (DIETARY + ALLERGEN + heat.js)",
+    labelled: chip.labelled,
+    tableKeys: chip.keys,
     exempt: Object.fromEntries(OPTION_ONLY.map((t) => [t, OPTION_ONLY_REASON])),
   },
   {
@@ -343,12 +338,17 @@ test("a malformed vocabulary is REFUSED, never parsed as fewer tags", () => {
 });
 
 test("a JS table that is not a plain key/words map is REFUSED", () => {
-  const mangled = menuJs.replace('  "contains-soy": "Contains soy",', '  "contains-soy": SOY,');
-  assert.notEqual(mangled, menuJs, "the fixture line moved — update this test");
+  // A fixed fixture: the chip tables moved into tags.js and are imported now, so
+  // the parser's refusals are proven against a table it is still used on the
+  // shape of, rather than against a file that no longer carries one.
+  const fixtureJs = 'const ALLERGEN = {\n  "contains-nuts": "Contains nuts",\n  "contains-soy": "Contains soy",\n};';
+  assert.equal(jsTable(fixtureJs, "ALLERGEN", "fixture").size, 2, "the unmangled fixture must parse");
+  const mangled = fixtureJs.replace('  "contains-soy": "Contains soy",', '  "contains-soy": SOY,');
+  assert.notEqual(mangled, fixtureJs, "the fixture line moved — update this test");
   assert.throws(() => jsTable(mangled, "ALLERGEN", "fixture"), /does not understand it/);
 
-  const respaced = menuJs.replace('  "contains-soy": "Contains soy",', '  "contains-soy":  "Contains soy",');
-  assert.notEqual(respaced, menuJs, "the fixture line moved — update this test");
+  const respaced = fixtureJs.replace('  "contains-soy": "Contains soy",', '  "contains-soy":  "Contains soy",');
+  assert.notEqual(respaced, fixtureJs, "the fixture line moved — update this test");
   assert.throws(() => jsTable(respaced, "ALLERGEN", "fixture"), /write its input back unchanged/);
 });
 
@@ -411,8 +411,7 @@ test("the three surfaces cannot word the same heat level differently", () => {
   // as a test so the property is asserted where a reader looks for it, rather
   // than only being true as a side effect of how the modules happen to import.
   for (const [file, source] of [
-    ["site/js/menu.js", menuJs],
-    ["site/js/recipe.js", recipeJs],
+    ["site/js/tags.js", tagsJs],
     ["site/js/addons-ui.js", addonsUiJs],
   ]) {
     assert.deepEqual(
@@ -443,5 +442,15 @@ test("Settings offers nothing it cannot mean", () => {
   for (const p of [...ALLERGEN_PREFS, ...DIETARY_PREFS]) {
     assert.ok(TAGS.includes(p.key), `Settings offers ${p.key}, which is not a schema tag`);
     assert.ok(p.label && p.label.trim().length > 0, `${p.key} has no label`);
+  }
+});
+
+test("neither screen keeps its own chip vocabulary — tags.js is the one", () => {
+  // The drift this module ended: menu.js dulled an undeclared allergen and the
+  // recipe page did not, because each carried its own tables and chip builder.
+  for (const [file, source] of [["site/js/menu.js", menuJs], ["site/js/recipe.js", recipeJs]]) {
+    assert.ok(!/^const (DIETARY|ALLERGEN) = \{/m.test(source), `${file} defines its own tag table again`);
+    assert.ok(!/^function tagChip\(/m.test(source), `${file} builds its own chip again`);
+    assert.match(source, /import \{ tagRow \} from "\.\/tags\.js";/, `${file} does not draw its row through tags.js`);
   }
 });

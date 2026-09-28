@@ -110,6 +110,7 @@ import { SCALES, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
 // the day it was written.
 import { recipeLines } from "../site/js/shopping.js";
 import { recipeStats } from "../site/js/recipe-stats.js";
+import { ALLERGEN, TAG_LIMIT, isChipTag, isAllergen, tagLabel } from "../site/js/tags.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -1421,6 +1422,54 @@ async function run(opts) {
       actions.every((y) => y !== null) && new Set(actions).size === 1,
       `button midlines ${JSON.stringify(actions)}`
     );
+
+    // --- 13. The tag row: order and labelled collapse (roadmap 350/020) -----
+    // Owner-ruled 2026-09-28. Fixture chosen by the DATA: the recipe with the
+    // most chip tags, with its alphabetically LAST allergen flagged — so
+    // "flagged first" is visible (alphabetical alone would put it last) and
+    // the collapse has something to hide.
+    const tagged = [...items].sort((a, b) =>
+      (b.tags || []).filter(isChipTag).length - (a.tags || []).filter(isChipTag).length)[0];
+    const chipTags = (tagged.tags || []).filter(isChipTag);
+    const flag = chipTags.filter(isAllergen).sort((a, b) => tagLabel(a).localeCompare(tagLabel(b))).at(-1);
+    await evalPage(`localStorage.setItem("faves.p.default.settings.v1",
+      JSON.stringify({ diet: { dietary: [], avoid: [${JSON.stringify(flag)}] } }))`);
+    await goto(url(tagged), ".dish-tags");
+    const tagRowState = () => evalPage(`(() => {
+      const r = document.querySelector(".recipe-detail-page .dish-tags");
+      const more = r?.querySelector(".tag-more");
+      return { chips: [...(r?.querySelectorAll(".tag:not(.tag-more)") || [])].map((c) => c.textContent),
+        more: more ? more.textContent : null, expanded: more?.getAttribute("aria-expanded") ?? null };
+    })()`);
+    const tagFolded = await tagRowState();
+    report.check(
+      "the reader's own allergen leads the row, loud, even though it sorts last alphabetically",
+      chipTags.length > TAG_LIMIT + 1 && tagFolded.chips[0] === `⚠ ${ALLERGEN[flag]}`,
+      `“${tagged.name}”, ${chipTags.length} tags, flagged ${flag}: ${JSON.stringify(tagFolded)}`
+    );
+    report.check(
+      `past ${TAG_LIMIT} chips the row collapses behind a control that SAYS what it hides`,
+      tagFolded.chips.length === TAG_LIMIT && tagFolded.expanded === "false" &&
+        /^(⚠ \+\d+ allergens?|\+\d+ more)/.test(tagFolded.more ?? "") &&
+        // …and says ⚠ exactly when an allergen is among the hidden.
+        (tagFolded.more ?? "").startsWith("⚠") === (chipTags.filter(isAllergen).length > TAG_LIMIT),
+      JSON.stringify(tagFolded)
+    );
+    await click(".recipe-detail-page .tag-more");
+    const tagOpened = await tagRowState();
+    report.check(
+      "…and one tap shows every tag, with the control now offering to fold them",
+      tagOpened.chips.length === chipTags.length && tagOpened.expanded === "true" && tagOpened.more === "Show fewer",
+      JSON.stringify(tagOpened)
+    );
+    // 22d reached the recipe page with the shared module: an allergen this
+    // reader did NOT flag is dulled and drops "Contains", as on the menu.
+    report.check(
+      "an allergen the reader did not flag drops “Contains” on the recipe page too (22d)",
+      tagOpened.chips.filter((c) => c.startsWith("⚠")).slice(1).every((c) => !/Contains/.test(c)),
+      JSON.stringify(tagOpened.chips)
+    );
+    await evalPage(`localStorage.removeItem("faves.p.default.settings.v1")`);
 
     return report.summary(SITE) ? 0 : 1;
   } finally {

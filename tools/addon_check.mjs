@@ -988,6 +988,13 @@ async function run(opts) {
     // that was never drawn — so the before read is what makes the after read
     // mean anything, and it refuses to run if the row starts with no chips.
     const chipDish = dishSel(CHIP_DISH);
+    // 🛑 Since 2026-09-28 (roadmap 350/020) a row past three chips COLLAPSES
+    // behind a labelled "+N", and this dish's `Veg` and `GF option` are exactly
+    // what collapses. Unopened, the three "claim left the row" assertions below
+    // pass on a claim that was never on screen — the first run after the
+    // collapse landed did precisely that. So open the row first; it stays open
+    // across the configuration's repaint (tags.js keeps `expanded`).
+    await driver.evalPage(`document.querySelector(${JSON.stringify(`${chipDish} .tag-more`)})?.click()`);
     const before = await driver.evalPage(dishExpr(CHIP_DISH));
     report.check(
       "the chip row starts with the dish's own claims on it — the baseline this rests on",

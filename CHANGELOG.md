@@ -40,6 +40,12 @@ content freshness separately from this file.
 - **A recipe's three actions sit in one row** — Start cooking, Add to shopping
   list and Add a note, side by side (wrapping on a phone), with your note and
   the note editor underneath.
+- **Tags on a dish are sorted and folded.** Allergens first, your own
+  allergies and diets leading each group, then alphabetical. Past three tags
+  the rest fold behind a button that says what it hides ("⚠ +3 allergens,
+  1 more"); anything you have declared is never folded away. The recipe page
+  now uses the same tags as the menu, so an allergen you have not flagged is
+  quieter there too.
 ### Fixed
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved
   before dishes had ids were all counted as one and matched nothing — KK
