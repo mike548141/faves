@@ -4699,15 +4699,6 @@ body.faves-view .to-top {
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
-/* The estimate marker is WORDS, not a tint (WCAG 1.4.1). The key line that
-   used to explain it went on 2026-09-28 (owner: "unnecessary"); the <abbr>
-   carries the expansion. No dotted underline: it is a quiet aside. */
-.recipe-stat-est {
-  color: var(--ink-soft);
-  font-size: var(--step-sub);
-  font-style: italic;
-  text-decoration: none;
-}
 /* The goes-with chips sit after both columns, across the full width. */
 .recipe-columns > .dish-pairs {
   grid-column: 1 / -1;

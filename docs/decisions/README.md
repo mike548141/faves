@@ -1731,3 +1731,10 @@ deliberation those compact docs omit.
   live page; the owner ruled keep it and disclose it. Recording *use* is
   allowed; accounts, cookies, personal information and location stay out.
   Supersedes the no-analytics goal 0001 cites; the zero-build decision stands.
+- [0135](0135-an-estimated-recipe-stat-is-shown-unmarked.md) —
+  **an estimated recipe stat is shown unmarked** (owner-ruled 2026-09-28).
+  Amends 0125: the stats panel drops both the key line and the `est.` beside
+  a value we estimated. The data still records which values are ours, the
+  list row keeps "Serves about N", and 0066's timer marking is untouched.
+  Records the advice (a reader can no longer tell our guess from the recipe's
+  on the panel) without reopening the ruling.

@@ -51,8 +51,8 @@ content freshness separately from this file.
   restaurant dish, the words on the menu that did ("The menu says “aioli” — an
   egg emulsion"). Where nothing on the menu gives it away, it says only that it
   was recorded.
-- **No more "est. — our estimate" line under a recipe's stats panel.** The
-  "est." beside an estimated value stays; its meaning is in the marker itself.
+- **No more "est." on a recipe's stats panel** — neither the line under it
+  nor the marker beside an estimated value (ADR 0135).
 ### Fixed
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved
   before dishes had ids were all counted as one and matched nothing — KK

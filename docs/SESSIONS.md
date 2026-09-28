@@ -12277,3 +12277,8 @@ below was shipped to `main` and checked in a real browser.
   has been removed (`63f43d2`). The "est." marker stays, as an `<abbr>` that
   carries the explanation, per ADR 0125's rule that an estimate is never
   shown unlabelled.
+- **Then the marker too:** the owner ruled the `est.` beside each value off
+  as well ("my ruling remains"). ADR 0135 amends 0125 and records the advice:
+  a reader can no longer tell our estimate from the recipe's own figure on
+  that panel.
+

@@ -150,7 +150,7 @@ and measures the recipe page at three explicit widths and two text sizes:
     pseudo-element's own box over the DevTools protocol (37m)
   · two columns only where a second fits, and only on a list of six or more (37d)
   · the hero and side column: photo beside the title, ingredients beside the
-    method, and every estimated stat marked "est." in words (ADR 0125)
+    method, and no stat marked "est." — estimated or not (ADR 0135)
   · the shopping list: reachable with the ingredients folded away, says when it
     disagrees with the scale on screen, updates without lying about what is
     already in the trolley, and can be emptied (17e)
@@ -1238,7 +1238,7 @@ async function run(opts) {
         cells: cells.map((c) => ({
           label: c.querySelector("dt")?.textContent,
           value: c.querySelector("dd")?.firstChild?.textContent,
-          est: !!c.querySelector(".recipe-stat-est[title]"),
+          est: !!c.querySelector(".recipe-stat-est"),
           left: Math.round(c.getBoundingClientRect().left),
         })),
         key: !!document.querySelector(".recipe-stats-key"),
@@ -1250,7 +1250,8 @@ async function run(opts) {
       const want = recipeStats(item);
       return (
         h.cells.length === want.length &&
-        want.every((c, k) => h.cells[k].label === c.label && h.cells[k].value === c.value && h.cells[k].est === c.estimated) &&
+        // No value carries an "est." marker, estimated or not (ADR 0135).
+        want.every((c, k) => h.cells[k].label === c.label && h.cells[k].value === c.value && h.cells[k].est === false) &&
         // The key line under the panel was removed (owner, 2026-09-28): it
         // must be gone whether or not anything is estimated.
         h.key === false
@@ -1321,8 +1322,9 @@ async function run(opts) {
       await size(WIDE);
       const he = await hero();
       report.check(
-        "every value the recipe did not give carries \"est.\" in words — and no key line under the panel (owner, 2026-09-28)",
-        statsAgree(he, estimatedFixture) && he.cells.some((c) => c.est) && !he.key,
+        "a value the recipe did not give is shown plainly — no \"est.\" and no key line (owner, ADR 0135)",
+        statsAgree(he, estimatedFixture) && recipeStats(estimatedFixture).some((c) => c.estimated) &&
+          he.cells.every((c) => !c.est) && !he.key,
         `“${estimatedFixture.name}”: ${cellText(he)}`
       );
       await size(NARROW);

@@ -126,27 +126,18 @@ function render(collection, item) {
       : `Serves ${item.serves}`
     : null;
   // The stats panel (ADR 0125), Whittaker's shape: Prep · Cook · Serves ·
-  // Difficulty. A value that is OUR estimate carries "est." in words beside it
-  // — never colour alone (WCAG 1.4.1), and never
-  // bare, because an unlabelled estimate is the one thing the owner's ruling on
-  // estimates forbade. `time` is not repeated here: prep + cook say it better,
-  // and the list screen still shows it.
+  // Difficulty. A value that is OUR estimate is shown like any other — the
+  // owner ruled the "est." marker off on 2026-09-28 (ADR 0135). `time` is not
+  // repeated here: prep + cook say it better, and the list screen still shows it.
   const stats = recipeStats(item, servesText ? (scaled != null && scaleKey !== DEFAULT_SCALE ? scaled : item.serves) : null);
   if (stats.length) {
     const dl = el("dl", { className: "recipe-stats" });
     for (const c of stats) {
       const dd = el("dd", { className: "recipe-stat-value" }, [c.value]);
-      // "est." stays on the value — ADR 0125: our estimate never reaches the
-      // page bare. What went (owner, 2026-09-28: "unnecessary") is the key line
-      // that used to spell it out under the panel; the expansion now rides on
-      // the marker itself, as an <abbr> title and in its accessible name.
-      if (c.estimated) {
-        dd.append(" ", el("abbr", {
-          className: "recipe-stat-est",
-          title: "our estimate — the recipe doesn’t say",
-          textContent: "est.",
-        }));
-      }
+      // No "est." beside a value we estimated — owner-ruled 2026-09-28 (ADR
+      // 0135, amending 0125). The data still records which values are ours
+      // (`estimated`, data/estimates/), so the list row's "about" and the
+      // working stay; only this marker went.
       dl.append(el("div", { className: "recipe-stat", "data-stat": c.key }, [
         el("dt", { className: "recipe-stat-label", textContent: c.label }),
         dd,
