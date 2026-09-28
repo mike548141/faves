@@ -14,7 +14,7 @@ content freshness separately from this file.
   Neither hides or dims anything, and a dish only ever reads "Halal" or
   "Kosher" when the place says so — Faves can't check slaughter, preparation
   or alcohol. Meatarian can be selected and doesn't change any menu yet.
-  Behind it, 458 dishes and 11 extras now carry a pork tag, worked out from
+  Behind it, 463 dishes and 11 extras now carry a pork tag, worked out from
   the menu (sausage, pepperoni and salami count unless another meat is named;
   plant-based versions never do) (ADR 0140).
 - **"May contain" allergens are shown, without turning into "Contains".** A

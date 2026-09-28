@@ -141,11 +141,12 @@ or deliberately inert.
 
 ## Consequences
 
-- **458 dishes and 11 add-on options** carry `contains-pork`: **428** from the
-  tagger (369 STATED, 57 DERIVED, 2 PHOTO — unchanged by the review's rule
-  fix, since none of the four missed shapes is in today's corpus) and **30
-  hand-tagged** where the venue's own menu shows pork but no rule can read
-  it. 419 dishes name a core pork word.
+- **463 dishes and 11 add-on options** carry `contains-pork`: **429** from the
+  tagger (370 STATED, 57 DERIVED, 2 PHOTO — the review's rule fix added none,
+  since none of the four missed shapes is in today's corpus; the one extra
+  is 1841's Nachos, below), **30 hand-tagged** on same-venue evidence, and
+  **4 hand-tagged** as owner-ruled known-dish inference. 419 dishes name a
+  core pork word.
 - **The 30 hand-tagged rows and their evidence** (no `tagNotes` — those are
   tool-written only; `--explain --check` stays clean with a tag no rule
   explains, and the tagger never removes one):
@@ -169,18 +170,35 @@ or deliberately inert.
     yum noodle soup, Laksa curry noodle soup, Tom kha soup, Tom yum soup,
     Thai chilli, Thai basil, The cashew nut, Sweet and sour, Satay sauce,
     Ginger and vegetable.
-- **Held for the owner, deliberately untagged** (general knowledge, not the
-  venue's words): 1841's Nachos (`v` → `v-option`?), pizza-hut *Meat Lovers*
-  and *Super Supreme*, kc-cafe *Two/Three Combination BBQ Meat on Rice*,
-  garage-project *Charcuterie*, takeaway-at-churton *Hawaiian Burger*, and
-  the Hotel Bristol group's kids *Meatballs*.
+- **Owner-ruled 2026-09-29 on the rows held for him.**
+  - 1841's *Nachos* ("Pulled pork or vegetarian…"): **"Yes, vegetarian
+    option"** — its `v` became `v-option`, which does not spare pork, so the
+    tagger then wrote `contains-pork` with its own tip ("The menu says
+    “pork”"). It still answers the Vegetarian filter through `v-option`.
+  - **Known-dish inference — "Only the clearest".** A group apart from the
+    30 above, because the evidence is NOT the venue's words: it is what these
+    dishes are in New Zealand, and the owner ruled which ones are clear
+    enough to warn on. Each carries `contains-pork` with **no tagNotes**
+    (those are tool-written only), so its tip is the generic one —
+    "Recorded when this menu was entered. If it matters, check with the
+    venue." — which is the honest sentence for an inference nobody printed.
+    - pizza-hut *Meat Lovers* ("The original Meat Lovers pizza!") — the
+      chain's Meat Lovers carries ham, bacon and pepperoni.
+    - kc-cafe *Two Combination BBQ Meat on Rice* and *Three Combination BBQ
+      Meat on Rice* (no description) — a Cantonese BBQ-meat combination
+      plate is built on char siu and roast pork.
+    - takeaway-at-churton *Hawaiian Burger* (no description) — a NZ
+      takeaway's Hawaiian burger is ham and pineapple.
+  - **Excluded by him, left untagged:** pizza-hut *Super Supreme*,
+    garage-project *Charcuterie*, and the Hotel Bristol group's kids
+    *Meatballs*.
 - **Every dish naming a pork word while tagged v/vg/-option**, and what
-  happened — `v`/`vg` spared (the venue's claim wins): 1841's *Nachos*
-  ("Pulled pork or vegetarian", `v` — reads like a `v-option`, a data
-  question for the owner), hell-pizza's *Veggie Mischief*, *Veggie Wrath*,
+  happened — `v`/`vg` spared (the venue's claim wins): hell-pizza's
+  *Veggie Mischief*, *Veggie Wrath*,
   *Plant-Based Mischief* and *Plant-Based Wrath* (plant-based chorizo), the
   Borough's *Mini VIP Pizza* (pepperoni as a topping choice). `v-option` /
-  `vg-option` tagged: *Cheese & Bacon Loaded Fries* ×3 (Hotel Bristol,
+  `vg-option` tagged: 1841's *Nachos* (after the owner's `v-option` ruling,
+  above), *Cheese & Bacon Loaded Fries* ×3 (Hotel Bristol,
   Khandallah, Southern Cross), Dirty Little Secret's *Caeser Salad*
   (pancetta), Rock Yard's *Roti Rolls* (a pork-belly choice), the Ramen Shop's
   *Steamed bao buns* and *Kids ramen*.
