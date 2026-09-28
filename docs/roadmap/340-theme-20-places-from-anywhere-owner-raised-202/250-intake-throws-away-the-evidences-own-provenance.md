@@ -17,6 +17,10 @@
   ruled on "68 files"; `intake/` holds **410** (236 carrying GPS), and the
   measured cost of committing them stripped is **≈1.84 GB, permanently** —
   stripping saves under 5%. Six are refused outright (4 PDF, 2 HEIC).
+  ✅ **SUPERSEDED 2026-09-28: part (4) will NOT import anything.** After an
+  impact analysis the owner ruled option C, fingerprints in the public
+  record and originals backed up privately to Google Drive. That work is
+  `310`. The reply noted below is kept for the record only.
   🎯 **OWNER REPLY 2026-09-28, re-briefed on the 1.84 GB:** *"I've already
   answered this question."* Read as: the 2026-09-09 ruling stands, commit
   ALL 404 stripped files, now informed of the size. **Confirm that reading

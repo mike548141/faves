@@ -12220,3 +12220,22 @@ Asked via AskUserQuestion, after the report:
   its premise moved (its ruling stays open).
 - ⚠️ **Nothing guards the new wording.** The beacon lives in the Cloudflare
   dashboard, outside every gate here.
+
+### 2026-09-28 addendum (`faves-8e`): the evidence-photo impact analysis
+
+The owner asked what "import the evidence photos" would actually mean. The
+measured answer:
+- The photos never reach phones, because `data/` is not deployed.
+- The repo would grow from **13 MB to ≈1.85 GB**, forever, and every clone,
+  CI job and worktree would carry that.
+- About **311 photos taken in his home** would become public. GPS stripping
+  cannot hide what is in the frame.
+- `intake/ingredients/` also holds **"Healthy Mike" diet transcripts**,
+  which must never be swept up by an "import intake".
+
+**Ruling: option C.** SHA-256 fingerprints go in the public provenance
+record, and the originals are backed up privately to Google Drive. That
+meets both goals, auditable and durable, publishes nothing, and stays
+reversible. Queued as **340/310** 🔥. My earlier reading of "already
+answered" as "commit all" would have published the lot, which is why a
+one-line yes was never enough for an irreversible step.
