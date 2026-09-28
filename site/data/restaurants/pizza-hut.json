@@ -284,7 +284,8 @@
             "contains-dairy",
             "contains-gluten",
             "contains-soy",
-            "gf-option"
+            "gf-option",
+            "contains-pork"
           ],
           "tagNotes": {"contains-gluten": "The menu says “pizza” — a wheat bakery item."}
         },

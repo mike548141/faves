@@ -338,7 +338,8 @@
             }
           ],
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
           "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
@@ -353,7 +354,9 @@
               "recorded": "2026-08-15"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Nasi goreng",
@@ -367,7 +370,8 @@
             }
           ],
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
           "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
@@ -383,7 +387,8 @@
             }
           ],
           "tags": [
-            "spicy-2"
+            "spicy-2",
+            "contains-pork"
           ]
         },
         {
@@ -398,7 +403,8 @@
             }
           ],
           "tags": [
-            "spicy-2"
+            "spicy-2",
+            "contains-pork"
           ]
         }
       ]
@@ -420,7 +426,8 @@
           ],
           "tags": [
             "contains-peanuts",
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
           "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-egg": "The menu says “egg”."}
         },
@@ -439,7 +446,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
           "tagNotes": {"contains-shellfish": "The menu says “oyster”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-egg": "The menu says “egg”.", "contains-soy": "The menu says “soy”."}
         },
@@ -455,7 +463,8 @@
             }
           ],
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-pork"
           ],
           "tagNotes": {"contains-egg": "The menu says “egg”."}
         },
@@ -493,7 +502,9 @@
               "recorded": "2026-08-15"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Red curry",
@@ -506,7 +517,9 @@
               "recorded": "2026-08-15"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Yellow curry",
@@ -519,7 +532,9 @@
               "recorded": "2026-08-15"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Panang curry",
@@ -532,7 +547,9 @@
               "recorded": "2026-08-15"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Beef massamun curry",
@@ -579,7 +596,8 @@
           "tags": [
             "contains-nuts",
             "contains-shellfish",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
           "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-shellfish": "The menu says “oyster”.", "contains-soy": "The menu says “oyster sauce” — the sauce is soy-based."}
         },
@@ -591,7 +609,8 @@
           "price": 28.5,
           "tags": [
             "contains-shellfish",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
           "tagNotes": {"contains-shellfish": "The menu says “oyster”.", "contains-soy": "The menu says “oyster sauce” — the sauce is soy-based."}
         },
@@ -602,7 +621,8 @@
           "desc": "Stir-fried with our special sauce, a choice of meat, onion, mixed seasonal vegetables, kaffir lime leaves and Thai chilli paste. Served with rice.",
           "price": 28.5,
           "tags": [
-            "spicy-2"
+            "spicy-2",
+            "contains-pork"
           ]
         },
         {
@@ -613,7 +633,8 @@
           "price": 28.5,
           "tags": [
             "contains-dairy",
-            "spicy-2"
+            "spicy-2",
+            "contains-pork"
           ],
           "tagNotes": {"contains-dairy": "The menu says “milk”."}
         }
@@ -761,7 +782,8 @@
           ],
           "tags": [
             "gf",
-            "spicy-2"
+            "spicy-2",
+            "contains-pork"
           ]
         },
         {
@@ -816,7 +838,8 @@
             }
           ],
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-pork"
           ],
           "tagNotes": {"contains-shellfish": "The menu says “Laksa” — laksa paste contains belacan (dried shrimp)."}
         }
@@ -846,7 +869,9 @@
               "change": "Menu renamed it from “Tom kha” to “Tom kha soup”."
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Tom yum soup",
@@ -860,7 +885,8 @@
             }
           ],
           "tags": [
-            "spicy-2"
+            "spicy-2",
+            "contains-pork"
           ]
         }
       ]
@@ -891,7 +917,8 @@
           ],
           "tags": [
             "contains-dairy",
-            "spicy-2"
+            "spicy-2",
+            "contains-pork"
           ],
           "tagNotes": {"contains-dairy": "The menu says “milk”."}
         },
@@ -915,7 +942,9 @@
               "change": "Menu renamed it from “Gar-paow (basil stir fry)” to “Thai basil”."
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "The cashew nut",
@@ -940,7 +969,8 @@
           "tags": [
             "contains-nuts",
             "contains-shellfish",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
           "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-shellfish": "The menu says “oyster”.", "contains-soy": "The menu says “oyster sauce” — the sauce is soy-based."}
         },
@@ -964,7 +994,9 @@
               "change": "Menu renamed it from “Sweet and sour stir fry” to “Sweet and sour”."
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Satay sauce",
@@ -988,7 +1020,8 @@
           ],
           "tags": [
             "contains-peanuts",
-            "contains-soy"
+            "contains-soy",
+            "contains-pork"
           ],
           "tagNotes": {"contains-peanuts": "The menu says “Peanut”.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         },
@@ -1012,7 +1045,9 @@
               "change": "Menu renamed it from “Ginger stir fry” to “Ginger and vegetable”."
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Crispy pork stir-fry vegetable",

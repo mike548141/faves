@@ -747,7 +747,9 @@
           "code": "52",
           "desc": null,
           "price": 21,
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Pork fried rice",

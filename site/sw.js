@@ -12,7 +12,7 @@
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
 const SHELL_VERSION = "2026-09-29.6";
-const DATA_VERSION = "2026-09-29.2";
+const DATA_VERSION = "2026-09-29.3";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
 const DATA_CACHE = `faves-data-${DATA_VERSION}`;

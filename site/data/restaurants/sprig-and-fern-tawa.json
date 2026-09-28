@@ -1138,7 +1138,7 @@
           "dishId": "chicken-parma-gold-card",
           "desc": "Gold Card portion.",
           "price": 21.0,
-          "tags": ["contains-dairy", "contains-gluten"]
+          "tags": ["contains-dairy", "contains-gluten", "contains-pork"]
         },
         {
           "name": "Corn Fritters",
