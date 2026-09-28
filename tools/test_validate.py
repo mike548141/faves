@@ -297,6 +297,49 @@ CASES = {
             tags=["v"], trace=["contains-peanuts"])),
         "error", r"trace on .* needs a traceSource",
     ),
+    # --- pork and the venue-stated claims (ADR 0140) ------------------------
+    # Accepted first: a gate broken into refusing the new words must fail here.
+    "contains-pork, halal and kosher are legal on a dish": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["contains-pork", "halal"])),
+        "clean", None,
+    ),
+    # `v` beside `contains-pork` is two statements that cannot both be true —
+    # the tagger is stopped by CONTRADICTED_BY, so only a hand edit makes this,
+    # and it must be SAID (validate reads CONTRADICTS out of addons.js).
+    "a dish claiming v is tagged contains-pork": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["v", "contains-pork"])),
+        "warn", r"claims v and is tagged contains-pork",
+    ),
+    "a dish the venue calls halal is tagged contains-pork": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["halal", "contains-pork"])),
+        "warn", r"claims halal and is tagged contains-pork",
+    ),
+    "a kosher dish is tagged contains-shellfish": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["kosher", "contains-shellfish"])),
+        "warn", r"claims kosher and is tagged contains-shellfish",
+    ),
+    # Halal is a CLAIM, never an allergen word: it may not be "traced".
+    "halal as a trace": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["v"], trace=["halal"], traceSource="Example label")),
+        "error", r"trace on .* holds 'halal'; only allergen tags",
+    ),
+    # A stated claim intersects like a diet claim (CLAIM_TAGS), so a size
+    # variant that drops it would strip it silently on the picker.
+    "a halal dish's size variant does not restate halal": (
+        _ladder(lambda g, d: (_first_item(d).pop("tagNotes", None),
+                              _first_item(d).update(tags=["v", "gf-option", "halal"]),
+                              g["options"][0]["tags"].append("halal"))),
+        "error", r"variant 'Large' of selects group 'size' does not restate the dish's halal",
+    ),
+    "a no-pork spelling is not a tag": (
+        lambda d: _first_item(d).update(tags=["no-pork"]),
+        "error", r"unknown tag 'no-pork'",
+    ),
     "a source with no trace": (
         lambda d: _first_item(d).update(traceSource="Example label"),
         "error", r"traceSource on .* names a source for a trace it does not carry",
