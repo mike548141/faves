@@ -64,9 +64,21 @@ kransky in** (usually pork in NZ); **tonkotsu in**, **tonkatsu in except
 Not matched: `belly` (Fish Belly), `pulled` (pulled lamb), gelatine.
 
 **Every narrowing is a fixed-width lookbehind**, never an `exclude`, for the
-water-chestnut reason. Two escape lists on purpose: a plant or mock qualifier
-escapes both rules; another *meat* escapes only the usually-pork rule, because
+water-chestnut reason. Three escape scopes on purpose: a word that can only
+mean not-pork (vegan, plant-based, mock, meatless) escapes every pork word; a
+**substitute ingredient** (coconut, tempeh, tofu, soy, mushroom…) escapes only
+the product it replaces — "coconut bacon", "soy chorizo", "tofu sausages" —
+and never `pork`; another *meat* escapes only the usually-pork rule, because
 "Chicken bacon ranch" is chicken **and** bacon.
+
+🛑 **The middle scope is a review finding, not the first design.** The first
+cut put the substitute ingredients in the every-word escape, and an
+independent review running the real regexes found four pork dishes untagged:
+"Sweet soy pork belly", "Coconut pork curry", "Mushroom pork dumplings",
+"Tofu pork mince". Each is now a probe that must tag, beside the substitute
+products that must not, and putting the old escape back is a break-probe.
+The same review added gammon, lardo, streaky and lap chong (named) and
+salumi (usually-pork) to the table.
 
 ### Halal and Kosher are claim tags only a venue writes — dish-level only
 
@@ -129,8 +141,39 @@ or deliberately inert.
 
 ## Consequences
 
-- **428 dish tags** (369 STATED, 57 DERIVED, 2 PHOTO) and **11 add-on options**
-  gained `contains-pork` on 2026-09-29; 419 dishes name a core pork word.
+- **458 dishes and 11 add-on options** carry `contains-pork`: **428** from the
+  tagger (369 STATED, 57 DERIVED, 2 PHOTO — unchanged by the review's rule
+  fix, since none of the four missed shapes is in today's corpus) and **30
+  hand-tagged** where the venue's own menu shows pork but no rule can read
+  it. 419 dishes name a core pork word.
+- **The 30 hand-tagged rows and their evidence** (no `tagNotes` — those are
+  tool-written only; `--explain --check` stays clean with a tag no rule
+  explains, and the tagger never removes one):
+  - sprig-and-fern-tawa, Gold Card *Chicken Parma* — its Mains twin reads
+    "…Napoli sauce, ham, mozzarella cheese".
+  - hell-pizza, *Half Buffalo Half Beast* — "half The Beast", which is
+    "5-pepper free-range pepperoni". (Its missing `contains-dairy` is left
+    for the owner.)
+  - pizza-hut, *Loaded Hawaiian With Double Toppings* — the venue's own
+    Hawaiian is "pineapple and ham".
+  - noodle-canteen, *Combination fried rice* (no description) — its
+    Combination noodles and Combination soup list "prawn(s), beef, pork and
+    chicken".
+  - thai-tara-express, all **26** untagged dishes saying "a choice/selection
+    of meat" (28 carry the phrase; two were already tagged) — the venue's
+    Meat choices section lists "Chicken, pork, beef or vegetable with tofu"
+    as "The standard choice of meat". Fried rice, Green curry fried rice,
+    Nasi goreng, Tom yum fried rice, Spicy fried rice, Pad thai, Pad see ewe,
+    Pad kee mao, Green, Red, Yellow and Panang curry, Sizzling cashew nuts,
+    Sizzling black pepper, Sizzling house special, Hot pot tom yum soup, Tom
+    yum noodle soup, Laksa curry noodle soup, Tom kha soup, Tom yum soup,
+    Thai chilli, Thai basil, The cashew nut, Sweet and sour, Satay sauce,
+    Ginger and vegetable.
+- **Held for the owner, deliberately untagged** (general knowledge, not the
+  venue's words): 1841's Nachos (`v` → `v-option`?), pizza-hut *Meat Lovers*
+  and *Super Supreme*, kc-cafe *Two/Three Combination BBQ Meat on Rice*,
+  garage-project *Charcuterie*, takeaway-at-churton *Hawaiian Burger*, and
+  the Hotel Bristol group's kids *Meatballs*.
 - **Every dish naming a pork word while tagged v/vg/-option**, and what
   happened — `v`/`vg` spared (the venue's claim wins): 1841's *Nachos*
   ("Pulled pork or vegetarian", `v` — reads like a `v-option`, a data
