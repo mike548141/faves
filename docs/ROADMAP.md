@@ -84,7 +84,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/110-theme-5-richer-dish-data/README.md)*
 
 - ✅ [RULED 2026-08-16 — ADD contains-fish, and land it WITH 37n.](roadmap/110-theme-5-richer-dish-data/010-ruled-2026-08-16-add-contains-fish-and-land-it.md)
-- [ ] [✅ RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,](roadmap/110-theme-5-richer-dish-data/020-ruled-2026-08-16-capture-present-and-trace-sep.md)
+- ✅ [✅ RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,](roadmap/110-theme-5-richer-dish-data/020-ruled-2026-08-16-capture-present-and-trace-sep.md)
 - ✅ [⚠️ ANSWERED AND SUPERSEDED by 010 in this same section — its ⚑ is](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
 - ✅ 🛑 [Adding a fish option to a dish produces NO allergen warning — the](roadmap/110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
 - ✅ 🔎 [The allergen sweep has no rule for seven everyday food words, and](roadmap/110-theme-5-richer-dish-data/050-the-allergen-sweep-misses-seven-everyday-food-words.md)
@@ -296,7 +296,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/350-theme-22-the-personal-layer-holistically-owner/README.md)*
 
 - [ ] [✅ RULED AND SHIPPED (first half) 2026-08-17 — the answer is DULL, NOT](roadmap/350-theme-22-the-personal-layer-holistically-owner/010-22d-hide-what-does-not-apply-to-this-reader.md)
-- [~] 🤔 [22e — a dish's tags: sorted, collapsed, explained, and composed from](roadmap/350-theme-22-the-personal-layer-holistically-owner/020-22e-tags-sorted-collapsed-and-explained.md)
+- ✅ [✅ 22e — a dish's tags: sorted, collapsed, explained, and composed from](roadmap/350-theme-22-the-personal-layer-holistically-owner/020-22e-tags-sorted-collapsed-and-explained.md)
 - [ ] 🤔 [22f — a heat preference: "no spice" and "mild only"](roadmap/350-theme-22-the-personal-layer-holistically-owner/030-22f-a-heat-preference-no-spice-or-mild-only.md)
 
 ## Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)

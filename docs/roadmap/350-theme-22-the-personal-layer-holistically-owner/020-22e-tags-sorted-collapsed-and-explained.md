@@ -1,4 +1,4 @@
-- [~] 🤔 **22e — a dish's tags: sorted, collapsed, explained, and composed from
+- [x] ✅ **22e — a dish's tags: sorted, collapsed, explained, and composed from
       its parts** `[L][design][schema]` ⚑ — owner-raised 2026-09-28 from the
       Chocolate Lava Cakes recipe. Four asks in one message; two ruled the same
       day, one open. **Build none of it piecemeal** — the chip row is rendered
@@ -55,8 +55,9 @@
   app never asserts "free of X" (ADR 0025: no tag = not stated). The only
   absence claims are `gf`/`df`(+`-option`), which are diet labels. Resolution:
   they stay in the preference group; the allergen group is `contains-*` only.
-- **Heat (`spicy-*`) is covered by no rule.** Proposed: a preference-group tag
-  with no setting, so it sorts in the unselected group. Not yet ruled.
+- **Heat (`spicy-*`) is covered by no rule.** ✅ Ruled 2026-09-28 (third
+  round): it stays with the unselected preferences. A heat PREFERENCE is now
+  its own item, 22f (`030`), owner-raised the same evening.
 - **Allergens and diet labels compose in OPPOSITE directions.** An allergen on
   any part is on the dish (union). A diet label holds only if EVERY part holds
   it; an untagged part leaves it unknown, never true (ADR 0092's "we can't
@@ -90,10 +91,28 @@ this goes back to him with that option rather than being applied.
 - ✅ **Build now, in stages** — steps 1–3 this session, each shipped and
   checked on its own.
 
+## Ruled 2026-09-28 (third round, `faves-b8`, asked with the account first)
+
+- ✅ **A traced allergen the reader FLAGGED gets a chip: "Flagged-only chip".**
+  🔎 The second-round ruling ("show the trace in the tag tips") left a gap:
+  once `contains-peanuts` came off, the lava cakes had no peanut chip to carry
+  the tip. A peanut-flagged reader would have seen no peanut signal on the
+  row, only a line inside the *dairy* chip's tip. That was put back to him
+  before the change shipped, and his first answer was *"Which option is inline
+  with what I have already ruled?"*. The answer given was "Tips only, literally,
+  but it breaks the option's own 'the warning isn't lost'". He then picked:
+  a dashed "May contain …" chip only for a reader who flagged that allergen,
+  never folded. No chip for anyone else. The row accent stays present-only.
+- ✅ **Tap-target overlap: accept it.** A tap in the gap opens the
+  neighbouring chip's tip. Harmless.
+- ✅ **Payload: keep the reasons offline** (+20 KB gzipped, so tips work in
+  flight mode).
+- ✅ **Heat sorts with the unselected preferences** (today's behaviour).
+
 ## Progress
 
-📌 **Claimed 2026-09-28 (`faves-b8`)** for steps 5 then 4 (claim released by
-`faves-3c` with steps 1–3 shipped).
+✅ **Done 2026-09-28 (`faves-b8`)**: steps 5 and 4 shipped, so all five steps
+are built.
 
 
 - ✅ Steps 1–2 — `site/js/tags.js`, one module for the menu row and the recipe
@@ -109,6 +128,21 @@ this goes back to him with that option rather than being applied.
   🚩 Chips are now 44px tap targets drawn at chip size (an invisible
   `::after`); on a row that wraps, the stretched targets of two lines overlap
   by a few pixels, so a tap in the gap goes to the lower line's chip.
+  ✅ Owner accepted this, 2026-09-28.
+- ✅ Step 5, the trace tier (ADR 0136; ADR 0137 is the note on 0047 owed since
+  2026-08-16): `trace` + `traceSource` beside `tags`, and `validate.py`
+  `check_trace` (8 mutation cases). Every tip carries "May contain traces of
+  … — source", and a flagged trace gets a dashed chip. The lava cakes' and
+  brownie's Whittaker's peanut/nut tags became trace. recipe_check §14.
+- ✅ Step 4, ingredients as parts (ADR 0138): an ingredient line may be
+  `{ text, tags?, trace?, traceSource?, note?, noteSource? }`. A line with
+  tags is composed through `composeTags` at `data.js`'s load seam, so the
+  menu row, the accent, filters and search all see it. An ⓘ opens a note, and
+  an inferred note says "Our suggestion". The tagger never reads a part's
+  words. `validate.py` refuses a dish claim a part does not state.
+  recipe_check §15. 🚩 The brownie gained `contains-soy` (Whittaker's states
+  it). The lava cakes' chocolate carries the owner's substitution note as
+  `owner`, in his words with the spelling corrected.
 
 ## Build order (when claimed)
 

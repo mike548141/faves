@@ -12282,3 +12282,45 @@ below was shipped to `main` and checked in a real browser.
   a reader can no longer tell our estimate from the recipe's own figure on
   that panel.
 
+
+### 2026-09-28 (`faves-b8`): 22e steps 5 and 4, the trace tier and ingredient parts
+
+Picked up `350/020` from `faves-3c`'s handover. Its six points were checked
+and applied, and it answered two follow-up questions with the owner's
+verbatim words. All five steps of 22e are now built.
+- **Step 5, "may contain" (ADR 0136).** A dish's `trace` + `traceSource`
+  sit beside its tags, in `site/data/`. Every tip on the dish says "May
+  contain traces of … — source". The lava cakes' and brownie's Whittaker's
+  peanut/nut tags became trace. `validate.py` `check_trace` keeps the two
+  tiers apart (8 mutation cases).
+- 🛑 **The safety gap, put back to the owner before shipping.** "Show the
+  trace in the tag tips" left a peanut-flagged reader with no peanut chip:
+  the tip only opens from some other chip. He first asked which option
+  matched what he had ruled. The answer given was "Tips only", literally, and
+  that it breaks the option's own promise that the warning isn't lost. He
+  ruled **Flagged-only chip**: a dashed "May contain …" chip, never folded,
+  only for a reader who flagged it. The row accent stays present-only.
+- **ADR 0137 is the note on 0047 owed since 2026-08-16**: the owner's "or
+  may with future features" half, dropped by 0047's Consequences and by
+  CLAUDE.md. CLAUDE.md's line now carries it.
+- **Step 4, ingredients as parts (ADR 0138).** An ingredient line may be an
+  object. A line with tags is a fixed, pre-selected add-on, composed through
+  `composeTags` at `data.js`'s load seam, so the list row, the accent,
+  filters and search all see it. An ⓘ opens a note, and an inferred note says
+  so. The tagger skips parts' words (done by a Sonnet worker, plus
+  `validate.py`'s object rules by a second one).
+- 🚩 **Data moved, reported rather than buried:** the brownie gained
+  `contains-soy` (Whittaker's states it, per ADR 0025). The lava cakes'
+  chocolate carries the owner's substitution note as `owner`, typos fixed.
+- **Also ruled (third round):** accept the chip tap-target overlap, keep the
+  tag reasons offline, heat sorts with the unselected preferences.
+- **Filed 22f** (`350/030`), owner-raised mid-session: a "no spice" or "mild
+  only" preference. 🔎 It is an absence claim ("not tagged spicy" ≠ "not
+  spicy"), so options are filed, not built.
+- 🔎 **A break-probe that could not break:** moving the ingredient ⓘ inside
+  the tick's `<label>` did not make a tap tick the line, because browsers
+  don't forward a click from a button inside a label. The "does not tick"
+  assertion stays as a behaviour pin and is not break-proven.
+- 🔎 **An import shadowed by a local:** recipe_check's `noteText` import
+  collided with a `const [noteTag, noteText]` in §13 and threw a harness
+  error. It is imported under an alias now.

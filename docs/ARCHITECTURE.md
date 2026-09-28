@@ -365,6 +365,18 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
     the component is part of the identity, not decoration. A quantity is parsed
     out of the string at RENDER time for scaling (ADR 0076); nothing about a
     quantity is stored.
+    **A line may also be an object** (ADR 0138, 22e step 4), top level or as
+    a group item: `{ text, tags?, trace?, traceSource?, note?, noteSource? }`.
+    `text` is what shows, scales and keys the tick, exactly as the string did.
+    A line with `tags` is a **part**: `data.js` composes the dish's tags from
+    its own plus its parts' through `addons.js` `composeTags` (allergens union,
+    diet claims intersect; an untagged part is unknown). The dish's served
+    `tags` are the composed set, its own kept as `ownTags`, a part's trace as
+    `partTrace`. `note` opens from an ⓘ on the line; `noteSource` is `owner` ·
+    `publisher` · `inferred`, and an inferred note says "Our suggestion" on
+    screen. `validate.py` refuses a dish diet claim that a part does not state,
+    so composition never drops a claim silently. The tagger never reads a
+    part's words (they would put its allergens on the whole dish).
   - `steps`: list of strings (the method, rendered as an ordered list).
   - `prepMinutes`, `cookMinutes`: whole minutes; `difficulty`: `very-easy` ·
     `easy` · `medium` · `challenging`. The recipe page's stats panel (ADR 0125).

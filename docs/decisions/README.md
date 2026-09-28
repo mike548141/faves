@@ -1752,3 +1752,10 @@ deliberation those compact docs omit.
   features" half its Consequences and CLAUDE.md dropped. Owner-named features
   only, recorded where the field is defined; the trace tier was the one case,
   and it is now rendered.
+- [0138](0138-a-recipe-ingredient-is-a-fixed-add-on.md) —
+  **a recipe ingredient is a fixed, pre-selected add-on** (owner-ruled
+  2026-09-28, 22e step 4). An ingredient line may be `{ text, tags?, trace?,
+  note?, noteSource? }`; a line with tags is a PART composed through
+  `composeTags` at `data.js`'s load seam (allergens union, claims intersect).
+  Notes say who wrote them; an inferred one says "Our suggestion". The brownie
+  gained `contains-soy` (Whittaker's states it).

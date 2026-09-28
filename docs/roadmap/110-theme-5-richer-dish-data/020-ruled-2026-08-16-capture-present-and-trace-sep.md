@@ -1,4 +1,4 @@
-- [ ] ✅ **RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,
+- [x] ✅ **RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,
       but keep tagging only PRESENT.** `[M][schema]` Owner's call, and it split
       the question in two rather than answering it as asked.
       **The case that raised it:** Pizza Hut publishes its own allergen PDF
@@ -91,3 +91,11 @@
   marked superseded rather than deleted, so a reader can still see what was put
   to him and what he did with it.
 
+  ✅ **BUILT 2026-09-28 (`faves-b8`, with 350/020 step 5).** The `trace` +
+  `traceSource` fields are in `site/data/`, and `validate.py` `check_trace`
+  makes sure a trace can never be read as a present tag (ADR 0136). The owed
+  superseding note on 0047 is **ADR 0137**. The trace is no longer unrendered:
+  on 2026-09-28 the owner ruled it into every tag tip, plus a chip for a reader
+  who flagged it. ⏳ **Still owed, and it rides with the first chart:** the
+  per-venue payload cost, measured when Pizza Hut's P/T chart is transcribed.
+  No venue carries a chart yet.
