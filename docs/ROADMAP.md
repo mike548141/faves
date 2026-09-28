@@ -70,6 +70,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🎯 [Which of the remaining 47 venues deliver?](roadmap/080-theme-4-content-growth-ongoing-in-parallel/230-which-of-the-remaining-47-venues-deliver.md)
 - [ ] [A photo for every item, eventually — OWNER GOAL 2026-09-28, not a](roadmap/080-theme-4-content-growth-ongoing-in-parallel/240-a-photo-for-every-item-owner-goal.md)
 - [ ] 🔎 [Nine Simmer photographs dropped into intake/ on 2026-09-09 were](roadmap/080-theme-4-content-growth-ongoing-in-parallel/250-nine-simmer-photos-never-read.md)
+- [ ] 🔎 [Hell Pizza's "Half Buffalo Half Beast" carries no dairy tag](roadmap/080-theme-4-content-growth-ongoing-in-parallel/260-half-buffalo-half-beast-carries-no-dairy.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
@@ -221,6 +222,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - ✅ [⏸️ RULED NOT TO FIX 2026-08-16 — deliberately deferred, not](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/010-the-order-pill-eats-a-dietary-chip-s-tap-at-la.md)
 - ✅ 🎯 [The back-to-top arrow should appear on the way DOWN too — and still](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/020-the-arrow-should-appear-on-the-way-down-too.md)
+- [ ] 🔎 [The ⋯ button may be covered once a menu is scrolled](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/030-the-overflow-button-is-covered-mid-menu.md)
 
 ## Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)
 
