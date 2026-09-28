@@ -1374,6 +1374,39 @@ async function run(opts) {
       `row reads ${JSON.stringify(soupMeta)}`
     );
 
+    // --- 11. Provenance sits behind the ⓘ beside the name (owner, 2026-09-28)
+    // Chosen by the DATA, not by name: the first recipe carrying a source link.
+    // The control is a recipe with no credit, which must grow no ⓘ at all.
+    const credited = items.find((i) => i.attribution && i.attributionUrl);
+    const uncredited = items.find((i) => !i.attribution);
+    const creditState = () => evalPage(`(() => {
+      const group = document.querySelector(".menu-title-group");
+      const btn = group?.querySelector(".caveat-btn");
+      const note = group?.querySelector(".caveat-note");
+      const a = note?.querySelector("a");
+      return {
+        btn: !!btn, open: !!note?.classList.contains("is-open"),
+        href: a?.getAttribute("href") ?? null, text: note?.textContent ?? null,
+        outside: [...document.querySelectorAll(".recipe-credit")].filter((c) => !note?.contains(c)).length,
+      };
+    })()`);
+    await goto(url(credited), ".menu-title-group");
+    await click(".menu-title-group .caveat-btn");
+    const cr = await creditState();
+    report.check(
+      "a recipe's source credit opens from the ⓘ beside its name, linking the original",
+      cr.btn && cr.open && cr.href === credited.attributionUrl &&
+        cr.text === credited.attribution && cr.outside === 0,
+      `“${credited.name}”: ${JSON.stringify(cr)}`
+    );
+    await goto(url(uncredited), ".menu-title-group");
+    const un = await creditState();
+    report.check(
+      "…and a recipe with no credit grows no ⓘ",
+      !un.btn,
+      `“${uncredited.name}”: ${JSON.stringify(un)}`
+    );
+
     return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();

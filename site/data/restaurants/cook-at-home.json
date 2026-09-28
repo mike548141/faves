@@ -948,7 +948,8 @@
           ],
           "image": "img/cook-at-home/chocolate-lava-cakes.webp",
           "alt": "A chocolate lava cake on a cream plate, dusted with icing sugar and topped with vanilla ice cream and chocolate shavings, its runny centre spilling out.",
-          "attribution": "Adapted from Whittaker's (whittakers.co.nz)"
+          "attribution": "Adapted from Whittaker's (whittakers.co.nz)",
+          "attributionUrl": "https://www.whittakers.co.nz/en_NZ/recipes/choc-lava-cakes"
         }
       ]
     },

@@ -314,6 +314,9 @@ excluded from both stores, always.
                                      //   recipe page. The ONE place a family name may
                                      //   appear in the payload — owner-approved
                                      //   exception 1, see CLAUDE.md
+          "attributionUrl": null,    // optional: https link to the recipe as its source
+                                     //   published it online; links the credit, so
+                                     //   it needs an attribution (owner, 2026-09-28)
           "translations": {}         // optional: {field: {bcp47: text}} (ADR 0044). The
                                      //   field must be one the record actually has, so
                                      //   a translation can never invent a dish

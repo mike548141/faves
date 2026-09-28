@@ -133,7 +133,7 @@ ITEM_KEYS = {
     "addOns", "served", "translations",
     # Recipe-only fields (kind: "recipes"), all optional and all validated
     # above whether or not the record is a recipe collection.
-    "steps", "ingredients", "serves", "time", "attribution",
+    "steps", "ingredients", "serves", "time", "attribution", "attributionUrl",
     "prepMinutes", "cookMinutes", "difficulty", "estimated",
 }
 # The stats panel's difficulty scale (ADR 0125), easiest first.
@@ -2363,6 +2363,18 @@ def check_restaurant(path):
                 not isinstance(attribution, str) or not attribution.strip()
             ):
                 err(rid, f"attribution for {name!r} must be a non-empty string or absent")
+
+            # The credit's link to the recipe as its source published it online
+            # (owner, 2026-09-28). It links the credit, so it cannot exist
+            # without one, and it leaves the app, so it is https or nothing.
+            attribution_url = item.get("attributionUrl")
+            if attribution_url is not None:
+                if not attribution:
+                    err(rid, f"attributionUrl for {name!r} needs an attribution to link")
+                if not isinstance(attribution_url, str) or not re.match(
+                    r"https://[^\s/]+\.[^\s]+$", attribution_url
+                ):
+                    err(rid, f"attributionUrl for {name!r} must be an https:// URL")
 
             # Dish photo (optional, self-hosted); alt required when set.
             check_image(rid, item, f"item {name!r}")

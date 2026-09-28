@@ -30,6 +30,9 @@ content freshness separately from this file.
   soy, peanuts and nuts, from the chocolate's own label. B's Dope-As Brownie
   uses the same chocolate and now carries the same nut warnings.
 
+- **A recipe's source sits behind an ⓘ beside its name**, the way a venue's
+  "last checked" note does, and links to the original online where there is
+  one (Whittaker's lava cakes first).
 ### Fixed
 - **Ticking a method step ticks the steps before it** — the method is a
   sequence, so ticking step 3 marks 1 and 2 done too, and unticking a step

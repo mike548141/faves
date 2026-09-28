@@ -258,6 +258,25 @@ CASES = {
         ),
         "clean", None,
     ),
+    # --- the credit's source link (owner, 2026-09-28) ----------------------
+    # The positive case first, so a gate broken into refusing every link fails.
+    "a credit links to its source": (
+        lambda d: _first_item(d).update(
+            attribution="Adapted from Example (example.co.nz)",
+            attributionUrl="https://www.example.co.nz/recipes/one",
+        ),
+        "clean", None,
+    ),
+    "a source link with no credit to hang on": (
+        lambda d: _first_item(d).update(attributionUrl="https://www.example.co.nz/r"),
+        "error", r"attributionUrl for .* needs an attribution to link",
+    ),
+    "a source link that is not https": (
+        lambda d: _first_item(d).update(
+            attribution="Adapted from Example", attributionUrl="http://example.co.nz/r"
+        ),
+        "error", r"attributionUrl for .* must be an https:// URL",
+    ),
     # --- the recipe stats panel (ADR 0125) ---------------------------------
     # The panel's promise is that our estimate never reaches the page bare, and
     # `estimated` is the label that carries it. A label naming a field the dish

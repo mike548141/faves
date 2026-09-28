@@ -23,6 +23,7 @@ import { noteControl } from "./notes-ui.js";
 import { ingredientBlocks } from "./ingredients.js";
 import { SCALES, DEFAULT_SCALE, scaleFor, scaleLineStatus, scaleServes } from "./quantity.js";
 import { el } from "./dom.js";
+import { disclosure } from "./disclosure.js";
 import { isSpicy, heatLabel } from "./heat.js";
 import { recipeStats } from "./recipe-stats.js";
 // The app chrome behind the ⋯ menu. Until 2026-08-16 this page had none of it:
@@ -120,12 +121,32 @@ function render(collection, item) {
     item.name
   );
   heart.classList.add("heart-lg");
-  parts.push(
-    el("div", { className: "menu-title-row" }, [
-      el("h1", { className: "menu-title", textContent: item.name }),
-      heart,
-    ])
-  );
+  // Where it came from sits behind an ⓘ beside the name (owner, 2026-09-28) —
+  // the same control and the same place a venue keeps its "last checked" note,
+  // so provenance reads the same on both screens and stays out of the lede.
+  // The field ships WITH this control and never before it: site/data/ is
+  // precached to every phone, so a field no screen renders is a download nobody
+  // asked for (ADR 0047). A source credit is not personal data; a family
+  // attribution in a home recipe is owner-approved (CLAUDE.md Exception 1).
+  // With `attributionUrl` the credit links to the recipe as its source
+  // published it; it leaves the app, hence a new tab.
+  const titleGroup = el("div", { className: "menu-title-group" }, [
+    el("h1", { className: "menu-title", textContent: item.name }),
+  ]);
+  if (item.attribution) {
+    const credit = item.attributionUrl
+      ? el("a", { href: item.attributionUrl, rel: "noopener", target: "_blank", textContent: item.attribution })
+      : item.attribution;
+    const [btn, note] = disclosure({
+      noteId: `recipe-credit-${id}-${dishId(item)}`,
+      label: "Where this recipe comes from",
+      text: el("span", { className: "recipe-credit" }, [credit]),
+    });
+    btn.classList.add("is-info");
+    note.classList.add("is-info");
+    titleGroup.append(btn, note);
+  }
+  parts.push(el("div", { className: "menu-title-row" }, [titleGroup, heart]));
 
   // `serves` restated at the chosen scale (17a). Only 3 of the 24 recipes carry
   // it, so most read exactly as they always did; where it IS carried, a reader
@@ -167,15 +188,6 @@ function render(collection, item) {
     parts.push(el("p", { className: "menu-sub", textContent: item.time }));
   }
   if (item.desc) parts.push(el("p", { className: "recipe-lede", textContent: item.desc }));
-  // Where it came from, as a field rather than buried in the prose (37e). The
-  // field ships WITH this line and never before it: site/data/ is precached to
-  // every phone, so a field no screen renders is a download nobody asked for
-  // (ADR 0047). A source credit — a cookbook, a publication — is not personal
-  // data; a family attribution in a home recipe is owner-approved (CLAUDE.md
-  // Exception 1).
-  if (item.attribution) {
-    parts.push(el("p", { className: "recipe-credit", textContent: item.attribution }));
-  }
 
 
   if (item.tags?.length) {
