@@ -12239,3 +12239,38 @@ meets both goals, auditable and durable, publishes nothing, and stays
 reversible. Queued as **340/310** 🔥. My earlier reading of "already
 answered" as "commit all" would have published the lot, which is why a
 one-line yes was never enough for an irreversible step.
+
+### 2026-09-28 (`faves-3c`): recipe feedback, search, favourites, and 22e steps 1–3
+
+The owner gave recipe-page feedback live, one message at a time. Everything
+below was shipped to `main` and checked in a real browser.
+- **Content.** The lava cakes' method now says where the flaky salt goes.
+  The chocolate-label sentence is gone from the summaries of the lava cakes
+  and the brownie.
+- **Method ticks cascade.** Ticking step N ticks 1..N; unticking N unticks
+  N onwards. Works on the recipe page and in cook mode.
+- **Provenance.** A recipe's source sits behind an ⓘ by its name, and a
+  new `attributionUrl` links to the original.
+- **Search.** A search down to one result opens it: a recipe goes to its
+  page, a venue dish to its row in the full menu.
+- **Favourites search fixed.** Hearts saved before dish ids existed all
+  counted as the empty string (KK: 4 hearts counted as 1, then none shown).
+  They now use the heart's own key.
+- **Recipe actions.** The three buttons share one row (owner's pick of three
+  layouts offered).
+- **22e (`350/020`), steps 1–3.** One shared tag module (`tags.js`) for the
+  menu and recipe screens. Tags are sorted, folded behind a labelled "+N",
+  and each tag opens a tip saying why it is there (`tagNotes`, written by
+  `tag_allergens.py --explain`, with a CI drift gate).
+- 🔎 **Spec flaws found and ruled on.** Flagged allergens sort first (the
+  owner's own example needed this rule). "Does not contain" is an empty
+  group. Hiding tags replaces only the "never hidden" half of 22d.
+- 🔎 **"May contain" was already ruled** (Pizza Hut P/T, `110/020`). The
+  Whittaker's trace tags contradict it. Ruled: apply it and show the trace
+  in tips. This lands with 22e step 5.
+- ⚠️ **Folding the tag row made `addon_check`'s baseline read a folded row.**
+  Its guard caught this; the check now opens the row first.
+- ⏳ **Still open on 22e:** step 4 (ingredient-level tags and notes) and
+  step 5 (trace tier, including the lava cakes/brownie tags and the ADR
+  0047 note owed since 2026-08-16).
+
