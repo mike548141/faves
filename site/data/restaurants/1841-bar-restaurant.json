@@ -209,12 +209,13 @@
             }
           ],
           "tags": [
-            "v",
+            "v-option",
             "gf",
             "contains-dairy",
-            "vg-option"
+            "vg-option",
+            "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-pork": "The menu says “pork”."}
         },
         {
           "name": "Local Platter",

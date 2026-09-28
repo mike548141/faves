@@ -2318,7 +2318,8 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-pork"
           ],
           "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },

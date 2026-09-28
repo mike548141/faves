@@ -326,7 +326,9 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Three Combination BBQ Meat on Rice",
@@ -339,7 +341,9 @@
               "recorded": "2026-07-06"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-pork"
+          ]
         },
         {
           "name": "Roast Duck on Rice",
