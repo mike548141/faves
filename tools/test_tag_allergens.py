@@ -645,11 +645,13 @@ CASES = {
     "a caption tags only behind the unconfirmed-allergens caveat": (
         MCDONALDS,
         [# Big Mac: tags emptied, caveat kept.
+         # (Its tag tips go with the tags — roadmap 350/020.)
          ("""          "tags": [
             "contains-gluten",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The photo’s description says “bun” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”.", "contains-sesame": "The photo’s description says “sesame”."}
         },
         {
           "name": "Quarter Pounder",""",
@@ -668,7 +670,8 @@ CASES = {
             "contains-gluten",
             "contains-dairy",
             "contains-sesame"
-          ]
+          ],
+          "tagNotes": {"contains-gluten": "The photo’s description says “bun” — a wheat bakery item.", "contains-dairy": "The photo’s description says “cheese”.", "contains-sesame": "The photo’s description says “sesame”."}
         },
         {
           "name": "Double Quarter Pounder",""",
@@ -766,6 +769,7 @@ CASES = {
             "contains-gluten",
             "contains-fish"
           ],
+          "tagNotes": {"contains-egg": "The menu says “egg”.", "contains-fish": "The menu says “Caviar”."},
           "needs": [
             {
               "what": "price",
