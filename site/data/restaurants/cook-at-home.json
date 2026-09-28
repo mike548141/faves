@@ -913,7 +913,7 @@
         {
           "name": "Chocolate Lava Cakes",
           "dishId": "chocolate-lava-cakes",
-          "desc": "Dark chocolate puddings with a runny centre, rested in the freezer before they bake. The chocolate's label says it may contain peanuts and tree nuts.",
+          "desc": "Dark chocolate puddings with a runny centre, rested in the freezer before they bake.",
           "serves": 8,
           "time": "~82 min",
           "prepMinutes": 60,
