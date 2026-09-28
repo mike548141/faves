@@ -1738,3 +1738,17 @@ deliberation those compact docs omit.
   list row keeps "Serves about N", and 0066's timer marking is untouched.
   Records the advice (a reader can no longer tell our guess from the recipe's
   on the panel) without reopening the ruling.
+- [0136](0136-may-contain-is-a-trace-tier-never-a-tag.md) —
+  **"may contain" is a trace tier, never a tag** (owner-ruled 110/020,
+  2026-08-16 and 2026-09-09; 350/020, 2026-09-28). A dish's `trace` +
+  `traceSource` sit beside `tags`; every tip carries "May contain traces of
+  … — source", and a reader who FLAGGED a traced allergen gets a dashed "May
+  contain …" chip, never folded. No chip for anyone else; the row accent stays
+  present-only. The lava cakes' and brownie's Whittaker's peanut/nut tags
+  became trace.
+- [0137](0137-a-field-a-future-screen-will-render-may-ship-before-it.md) —
+  **a field a future screen will render may ship before it** (owner-ruled
+  2026-08-16; owed since then). Amends 0047 with the "or may with future
+  features" half its Consequences and CLAUDE.md dropped. Owner-named features
+  only, recorded where the field is defined; the trace tier was the one case,
+  and it is now rendered.

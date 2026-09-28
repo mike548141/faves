@@ -420,7 +420,9 @@ Guard postures (cheap-failure vs. forbids-the-act) are declared in `docs/GUARDS.
   whether a screen reads it or not. Data no screen shows — superseded
   prices, departed dishes — lives in `data/`, the repo-only research
   store, and is kept forever there. Before adding a field to a venue
-  file, name the screen that renders it.
+  file, name the screen that renders it — or the future feature the
+  OWNER has ruled will render it (ADR 0137, the half of his ruling this
+  line dropped until 2026-09-28; never a session's "might be useful").
 - **Accessibility is non-negotiable.** WCAG 2.2 AA, semantic HTML,
   visible focus, prefers-reduced-motion respected, dark mode supported.
 

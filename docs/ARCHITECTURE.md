@@ -303,6 +303,11 @@ excluded from both stores, always.
               "since": "2026-08-07" }                             // optional, record time
           ],
           "tags": ["spicy-1"],       // see tag vocabulary
+          "trace": ["contains-nuts"], // optional: "may contain" — allergen tags the
+                                     //   source says MAY be present, never a tag
+                                     //   (ADR 0136). Needs `traceSource`; never
+                                     //   overlaps `tags` (present wins)
+          "traceSource": "Example label", // who said "may contain"; shown in the tip
           "image": null,             // optional self-hosted dish photo (lazy-loaded)
           "alt": null,               // required when image is set
           "rating": null,            // optional curated household rating, integer 1..5 (ours)
@@ -758,6 +763,15 @@ reason. English only, like the refresh caveat, per `reo.js`'s safety boundary.
 
 Unknown is distinct from safe: **no tag means "not stated"**, and the
 UI must never present absence of an allergen tag as "allergen-free".
+
+**"May contain" is not a tag (ADR 0136).** Only a PRESENT allergen is a
+`contains-*` tag (owner, 110/020, ruled 2026-08-16 and 2026-09-09). A source's
+trace statement — Pizza Hut's `T`, a chocolate label's "may be present" — goes
+in the dish's `trace` list with a `traceSource`, in `site/data/` (ADR 0137
+records that exception to ADR 0047). It renders two ways (`tags.js`): a line
+in every tip on the dish, and a dashed "May contain …" chip **only for a
+reader who flagged that allergen**, never folded. `dishFlagged` and the row
+accent stay present-only. `validate.py` `check_trace` keeps the tiers apart.
 
 ### Add-ons — what the menu offers on top of a dish (ADR 0048)
 
