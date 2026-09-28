@@ -747,6 +747,19 @@ reason. English only, like the refresh caveat, per `reo.js`'s safety boundary.
   a dish may carry both. It is also **not** `has-fish` below — that is a
   *dietary* marker on an add-on option, a different axis, and neither is
   written in terms of the other.
+- **Pork** (ADR 0140, owner-ruled 2026-09-29): `contains-pork` — **not an
+  allergen**, a presence tag in the `contains-` namespace so every allergen
+  path carries it (tagger, tips, add-on union, the ⚠ flagged treatment).
+  Inferred by `tag_allergens.py` (named pig products always; sausage,
+  pepperoni, salami and kin unless another meat is named). Contradicted by
+  `v`/`vg`/`halal`/`kosher`, never by `v-option`. No avoid chip: a reader
+  reaches it through the Halal or Kosher food preference.
+- **Venue-stated claims** (ADR 0140): `halal`, `kosher` — **only ever written
+  from the venue's own words, never by a tool**, and never inferred from an
+  absence of `contains-pork`. Dish-level. A chip ("As the venue marks it"),
+  a search word, and a claim composition INTERSECTS (`addons.js`) — never a
+  filter, so nothing dims on them. Kosher is also contradicted by
+  `contains-shellfish`.
 - Heat: `spicy-1` … `spicy-3`
 - **What an add-on option IS** (ADR 0092): `has-meat`, `has-fish` — **legal on
   an add-on option, an ERROR on a dish** (`validate.py` `OPTION_ONLY_TAGS`).
@@ -1121,7 +1134,10 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   badge (`--accent`); rendered on the menu header + dish rows. Per-profile (a
   rating is personal); no averaging, no sharing, no public ratings (ADR 0013).
 - **Settings** (`faves.settings.v1`): `settings.js` — dietary/allergen prefs
-  (`diet`), the two ranking distances (`favBoostKm`, `farKm`), the reo
+  (`diet`), the Halal/Kosher/Meatarian food preferences (`foodPrefs`, a
+  top-level list and deliberately NOT inside `diet` — an older build's
+  `sanitiseDiet` would strip it; ADR 0140), the two ranking distances
+  (`favBoostKm`, `farKm`), the reo
   language, the maps app, and `units` (metric | imperial), clamped/sanitised on
   read so a bad value can't break the sort. `units` is a **display** choice
   only: `units.js` converts km→miles and °C→°F at render, the stored dials stay
