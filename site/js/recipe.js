@@ -20,7 +20,7 @@ import { CHECKLIST_KEY, checklist, recipeId } from "./checklist.js";
 import { syncTicks, tickRow } from "./checklist-ui.js";
 import { notes } from "./notes.js";
 import { noteControl } from "./notes-ui.js";
-import { ingredientBlocks } from "./ingredients.js";
+import { ingredientBlocks, noteText } from "./ingredients.js";
 import { SCALES, DEFAULT_SCALE, scaleFor, scaleLineStatus, scaleServes } from "./quantity.js";
 import { el } from "./dom.js";
 import { disclosure } from "./disclosure.js";
@@ -280,6 +280,22 @@ function render(collection, item) {
         // ½×, by the same mechanism that already survives a metric/imperial
         // flip. Only the display text moves.
         const li = el("li", {}, [tickRow(rid, "i", line.key, v.text)]);
+        // An ingredient's note (22e step 4) opens from an ⓘ at the end of its
+        // line — disclosure(), the control the venue's "last checked" and the
+        // tag tips use, so it opens, closes and dismisses the same everywhere.
+        // Outside the tick's <label>: tapping the ⓘ must not tick the line.
+        const said = noteText(line);
+        if (said) {
+          const [btn, note] = disclosure({
+            noteId: `ing-note-${rid}-${vi}`.replace(/[^\w-]/g, "-"),
+            label: `A note on ${line.text}`,
+            text: said,
+          });
+          btn.classList.add("is-info", "ingredient-note-btn");
+          note.classList.add("is-info");
+          li.classList.add("has-note");
+          li.append(btn, note);
+        }
         if (v.status === "blocked" && scaleKey !== DEFAULT_SCALE) {
           li.classList.add("is-unscaled");
           // Marked in TEXT as well as in colour: the whole point is that this

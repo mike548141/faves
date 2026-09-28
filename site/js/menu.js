@@ -94,7 +94,7 @@ import { dishNeeds, priceUnknown } from "./needs.js";
 import { filterHref } from "./filters.js";
 import { initBackToTop } from "./to-top.js";
 import { el } from "./dom.js";
-import { ingredientBlocks, ingredientKeys } from "./ingredients.js";
+import { ingredientBlocks, ingredientKeys, noteText } from "./ingredients.js";
 import { wireSearchClear } from "./search-clear.js";
 import { toast } from "./toast.js";
 import { foldSearchText } from "./search.js";
@@ -1516,7 +1516,25 @@ function renderRecipeDetail(item) {
         body.push(el("h5", { className: "ingredient-component", textContent: block.component }));
       }
       const ul = el("ul", { className: "ingredients" });
-      for (const line of block.lines) ul.append(el("li", { textContent: line.text }));
+      for (const line of block.lines) {
+        const li = el("li", { textContent: line.text });
+        // The ingredient's note (22e step 4) reads here too, behind the same ⓘ
+        // as on the recipe page — one screen rendering it would quietly drop
+        // the fact from the other, the trap 37e's credit comment names above.
+        const said = noteText(line);
+        if (said) {
+          const [btn, note] = disclosure({
+            noteId: `ing-note-${dishId(item)}-${ul.childElementCount}`.replace(/[^\w-]/g, "-"),
+            label: `A note on ${line.text}`,
+            text: said,
+          });
+          btn.classList.add("is-info", "ingredient-note-btn");
+          note.classList.add("is-info");
+          li.classList.add("has-note");
+          li.append(btn, note);
+        }
+        ul.append(li);
+      }
       body.push(ul);
     }
   }

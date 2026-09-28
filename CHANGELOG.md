@@ -16,6 +16,13 @@ content freshness separately from this file.
   allergen gets a dashed **May contain …** chip that is never folded away.
   The Chocolate Lava Cakes and B's Dope-As Brownie no longer claim to contain
   peanuts and nuts; the Whittaker's label only says they may (ADR 0136).
+- **An ingredient can carry its own allergens and a note.** A recipe's
+  chocolate now brings its own soy and "may contain" warnings, so the tag row
+  is built from the dish plus its ingredients (the same rule as add-ons), and
+  a tap on a tag names the ingredient behind it. An ⓘ beside an ingredient
+  opens a note ("You can substitute with other chocolates, dark is
+  recommended"); a note we wrote ourselves says so. B's Dope-As Brownie now
+  shows soy, which Whittaker's chocolate contains (ADR 0138).
 - **Personal notes on a recipe** ("used half the sugar, better") — profile-
   scoped, up to 240 characters, on the recipe page under the cook/shopping
   controls, and echoed read-only in cook mode when there is one. Included in

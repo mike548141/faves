@@ -1373,6 +1373,96 @@ SECTION_PROBES = {
 }
 
 
+# --- ingredients as objects, and PARTS (2026-09-28, roadmap 350/020 step 4) --
+# Owner-ruled 2026-09-28 (22e): a recipe's `ingredients` entry — top-level or
+# inside a group's `items` — may now be an OBJECT `{"text": ..., "tags"?: ...,
+# "note"?: ...}` as well as a plain string. One that carries `tags` is a PART:
+# it states its own allergens and the app composes them onto the dish at load
+# time (`composeTags`), so this tool must never ALSO write that allergen onto
+# the dish's own `tags` — the two would go out of sync the moment the part is
+# swapped for an allergen-free one, because nothing points the dish's own copy
+# back at the part it came from.
+#
+# Each line is (`ingredients` value, tags it MUST gain, tags it must NOT
+# gain), run through a "kind": "recipes" record so `ingredient_lines` is what
+# feeds the rules, exactly as `tag_note`'s ingredient quoting and a real Cook
+# at Home dish do.
+INGREDIENT_PROBE_DRIVER = """
+import json, sys
+sys.path.insert(0, "tools")
+from tag_allergens import audit
+out = []
+for ingredients in json.load(sys.stdin):
+    item = {"name": "Test dish", "tags": [], "ingredients": ingredients}
+    record = {"kind": "recipes", "menu": [{"items": [item]}]}
+    out.append(sorted({tag for _i, tag, _t, _w in audit(record)}))
+json.dump(out, sys.stdout)
+"""
+
+INGREDIENT_PROBES = {
+    # (a) THE CASE THE WHOLE FEATURE EXISTS TO PROTECT. A part's own words must
+    # not reach the dish's tags, whether the part sits at the top level or
+    # inside a group's `items`.
+    "a part's own tags are not read onto the dish": [
+        ([{"text": "2 eggs", "tags": ["contains-egg"]}], set(), {"contains-egg"}),
+        ([{"component": "Icing", "items": [{"text": "1 egg white", "tags": ["contains-egg"]}]}],
+         set(), {"contains-egg"}),
+        # The presence control: a plain string ingredient beside the excluded
+        # part must still tag, so a tool that has stopped reading
+        # `ingredients` at all cannot pass the two absences above by doing
+        # nothing.
+        ([{"text": "2 eggs", "tags": ["contains-egg"]}, "100g flour"],
+         {"contains-gluten"}, set()),
+    ],
+    # (b) A non-part object line is an ordinary ingredient line that happens to
+    # carry other metadata — its `text` is read exactly as a plain string
+    # line would be, at the top level and inside a group.
+    "a non-part object line tags the dish from its text": [
+        ([{"text": "2 eggs"}], {"contains-egg"}, set()),
+        ([{"component": "Icing", "items": [{"text": "1 egg white"}]}],
+         {"contains-egg"}, set()),
+    ],
+    # (c) `note`/`noteSource` are prose ABOUT the ingredient (a substitution
+    # aside, a supplier note) — never a declaration — so an allergen word
+    # inside one must not tag, on a part or on a plain line.
+    "a note is never allergen evidence": [
+        ([{"text": "Vanilla essence", "note": "may contain peanut traces"}],
+         set(), {"contains-peanuts"}),
+        ([{"text": "Vanilla essence", "tags": ["contains-egg"],
+           "note": "may contain peanut traces"}],
+         set(), {"contains-peanuts", "contains-egg"}),
+        # The control: the SAME word, read from `text` instead of `note`,
+        # must still tag — otherwise "nothing tags peanuts" would pass by a
+        # rule that has simply stopped matching at all.
+        ([{"text": "Peanut butter (smooth)"}], {"contains-peanuts"}, set()),
+    ],
+}
+
+
+def run_ingredient_probes(work, name, verbose=False):
+    """Run one INGREDIENT_PROBES group — a recipe's `ingredients`, and a tag."""
+    lines = INGREDIENT_PROBES[name]
+    if not any(want for _i, want, _f in lines):
+        return "the group asserts no PRESENCE — a tool matching nothing passes it"
+    proc = subprocess.run(
+        [sys.executable, "-c", INGREDIENT_PROBE_DRIVER], cwd=work, timeout=120,
+        input=json.dumps([ing for ing, _w, _f in lines]), capture_output=True, text=True,
+    )
+    if proc.returncode != 0:
+        return f"the rule set would not load: {proc.stderr.strip().splitlines()[-1:]}"
+    got = json.loads(proc.stdout)
+    for (ingredients, want, forbid), tags in zip(lines, got):
+        if verbose:
+            print(f"       | {ingredients!r} -> {tags}")
+        missing = want - set(tags)
+        if missing:
+            return f"{ingredients!r} did not gain {sorted(missing)} (got {tags})"
+        wrong = forbid & set(tags)
+        if wrong:
+            return f"{ingredients!r} was given {sorted(wrong)} (got {tags})"
+    return None
+
+
 def run_section_probes(work, name, verbose=False):
     """Run one SECTION_PROBES group — a heading, a dish, a note, a tag@TIER."""
     lines = SECTION_PROBES[name]
@@ -1811,6 +1901,16 @@ BREAKERS = {
         ["a photo caption is read, and recorded as PHOTO",
          "the hedge guard reads a caption too",
          "a caption tags only behind the unconfirmed-allergens caveat"]),
+
+    # --- ingredient PARTS (2026-09-28, roadmap 350/020 step 4) -------------
+    # Stop excluding a `tags`-bearing object and its words go straight onto
+    # the dish's own tags — the exact double-count the whole feature exists to
+    # prevent, because the dish's copy would then survive the part being
+    # swapped for an allergen-free one.
+    "a part's tags are read into the dish's own tags": (
+        [('if isinstance(entry, dict) and "tags" not in entry:',
+          "if isinstance(entry, dict):")],
+        ["a part's own tags are not read onto the dish"]),
 }
 
 
@@ -1887,6 +1987,8 @@ def run_named(work, name, verbose=False):
         return run_alt_probes(work, name, verbose)
     if name in SECTION_PROBES:
         return run_section_probes(work, name, verbose)
+    if name in INGREDIENT_PROBES:
+        return run_ingredient_probes(work, name, verbose)
     return f"no case or probe called {name!r}"
 
 
@@ -1947,7 +2049,8 @@ def main() -> int:
             if complaint:
                 failures.append(label)
 
-        for name in list(CASES) + list(PROBES) + list(ALT_PROBES) + list(SECTION_PROBES):
+        for name in (list(CASES) + list(PROBES) + list(ALT_PROBES) + list(SECTION_PROBES)
+                     + list(INGREDIENT_PROBES)):
             complaint = run_named(work, name, args.verbose)
             print(f"  {'❌' if complaint else '✅'} {name:52} {complaint or 'as specified'}")
             if complaint:
@@ -1982,8 +2085,9 @@ def main() -> int:
     if failures:
         print(f"\n{len(failures)} failure(s): {', '.join(failures)}", file=sys.stderr)
         return 1
-    print(f"\nAll {len(CASES) + len(PROBES) + len(ALT_PROBES) + len(SECTION_PROBES) + len(BREAKERS) + 2} "
-          "cases behaved as specified.")
+    total = (len(CASES) + len(PROBES) + len(ALT_PROBES) + len(SECTION_PROBES)
+             + len(INGREDIENT_PROBES) + len(BREAKERS) + 2)
+    print(f"\nAll {total} cases behaved as specified.")
     return 0
 
 

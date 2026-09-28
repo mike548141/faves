@@ -7,6 +7,7 @@ import { venueHemisphere, venueTimezone } from "./place.js";
 import { canonicalVenueId } from "./renames.js";
 import { loadFx } from "./fx.js";
 import { findDish, dishId } from "./dish-id.js";
+import { composeRecipe } from "./ingredients.js";
 
 const INDEX_URL = "data/index.json";
 const restaurantUrl = (id) => `data/restaurants/${id}.json`;
@@ -53,9 +54,37 @@ function normaliseVenue(r) {
 // equator the venue sits. Hemisphere comes off the venue's latitude; with no
 // coordinate we keep the collection's own (south) rather than guess.
 const load = (raw) =>
-  normaliseVenue(
-    resolveRecord(raw, todayIn(venueTimezone(raw)), venueHemisphere(raw) ?? "south")
+  composeParts(
+    normaliseVenue(
+      resolveRecord(raw, todayIn(venueTimezone(raw)), venueHemisphere(raw) ?? "south")
+    )
   );
+
+// A recipe whose ingredients state their own tags (a PART — ingredients.js,
+// roadmap 350/020 step 4) is read everywhere as its COMPOSED tags: the dish's
+// own plus its parts', by the same composeTags an add-on uses. Done here, at
+// the one seam every screen loads through, so the chips, the row accent, the
+// diet filter, search and the dish report all see the soy the chocolate brings
+// — a part's allergen that only the recipe page knew about would be a warning
+// the menu row, the home search and the flagged treatment silently lacked.
+// A record with no parts passes through as the same object.
+function composeParts(r) {
+  if (!Array.isArray(r?.menu)) return r;
+  let changed = false;
+  const menu = r.menu.map((section) => {
+    if (!Array.isArray(section?.items)) return section;
+    let touched = false;
+    const items = section.items.map((item) => {
+      const next = composeRecipe(item);
+      if (next !== item) touched = true;
+      return next;
+    });
+    if (!touched) return section;
+    changed = true;
+    return { ...section, items };
+  });
+  return changed ? { ...r, menu } : r;
+}
 
 /** Load every restaurant, in display order. Throws if the index fails. */
 export async function loadRestaurants() {

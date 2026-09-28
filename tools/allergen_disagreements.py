@@ -262,11 +262,16 @@ def dish_text(item, section_text):
     heading into a class.
     """
     parts = [item.get("name") or "", item.get("desc") or ""]
-    # `ingredients` entries are strings OR {component, items[]} groups since
-    # ADR 0070 — flattened here rather than read raw, or a grouped recipe hands
-    # a dict to " ".join and the whole report dies on it. A component name is a
-    # label ("Sauce"), never a thing anyone is allergic to, so only its items
-    # reach the match text.
+    # `ingredients` entries are strings, {component, items[]} groups (ADR
+    # 0070), or objects `{text, tags?, ...}` (roadmap 350/020 step 4) —
+    # flattened here rather than read raw, or a grouped/object recipe hands a
+    # dict to " ".join and the whole report dies on it. `ingredient_lines`
+    # does the same exclusion this file needs for the same reason the tagger
+    # does: a component name is a label ("Sauce"), never a thing anyone is
+    # allergic to, and a PART's own text is excluded too — its allergens are
+    # composed onto the dish separately (`composeTags`), and reading its words
+    # into the class text here would be the same double-count the tagger
+    # refuses.
     parts.extend(ingredient_lines(item))
     parts.append(section_text)
     return " ".join(parts)

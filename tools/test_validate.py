@@ -458,7 +458,99 @@ CASES = {
     ),
     "ingredients is not a list at all": (
         lambda d: _first_item(d).update(ingredients="250g butter"),
-        "error", 'ingredients for .* must be a list of strings or \\{component, items\\} groups',
+        "error",
+        r'ingredients for .* must be a list of strings, \{text, \.\.\.\} objects, '
+        r'or \{component, items\} groups',
+    ),
+    # --- ingredient OBJECTS (owner ruling, roadmap 350/020 step 4) ---------
+    # A line can now ALSO be an object carrying its own tags/trace/note. An
+    # object that carries `tags` is a PART — composed onto the dish the same
+    # way an add-on option is (ADR 0048's composeTags) — so the positive case
+    # first checks a fully-loaded part still composes clean, and a plain
+    # note-only line (no tags at all) is legal and never treated as a part.
+    "a fully-loaded ingredient object composes clean": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["v"],
+            ingredients=[{
+                "text": "250g Whittaker's 72% Dark Ghana chocolate, roughly chopped",
+                "tags": ["v"],
+                "trace": ["contains-peanuts", "contains-nuts"],
+                "traceSource": "Whittaker's label",
+                "note": "You can substitute other chocolates — dark is recommended.",
+                "noteSource": "owner",
+            }],
+        )),
+        "clean", None,
+    ),
+    "a note-only ingredient object carries no tags": (
+        lambda d: _first_item(d).update(ingredients=[{
+            "text": "A pinch of salt",
+            "note": "Adjust to taste.",
+            "noteSource": "owner",
+        }]),
+        "clean", None,
+    ),
+    "an ingredient object with no text": (
+        lambda d: _first_item(d).update(ingredients=[{}]),
+        "error", r"ingredients for .*: an ingredient object needs a non-empty 'text'",
+    ),
+    "an ingredient object with blank text": (
+        lambda d: _first_item(d).update(ingredients=[{"text": "   "}]),
+        "error", r"ingredients for .*: an ingredient object needs a non-empty 'text'",
+    ),
+    "an ingredient object carrying an unknown key": (
+        lambda d: _first_item(d).update(ingredients=[{"text": "1 cup flour", "unit": "cup"}]),
+        "error", r"ingredients for .*: an ingredient object has unknown key 'unit'",
+    ),
+    "an ingredient object part with an unknown tag": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=[], ingredients=[{"text": "Weird spice", "tags": ["not-a-real-tag"]}]
+        )),
+        "error", r"'Weird spice' has unknown tag 'not-a-real-tag'",
+    ),
+    "an ingredient object with a trace but no tags": (
+        lambda d: _first_item(d).update(ingredients=[{
+            "text": "Dark chocolate, chopped",
+            "trace": ["contains-peanuts"],
+            "traceSource": "Example label",
+        }]),
+        "error", r"carries a trace but no tags — a trace belongs on a part",
+    ),
+    "an ingredient object note with no noteSource": (
+        lambda d: _first_item(d).update(ingredients=[{
+            "text": "Salt", "note": "Adjust to taste.",
+        }]),
+        "error", r"needs a noteSource .* to go with its note",
+    ),
+    "an ingredient object noteSource is not one of the three": (
+        lambda d: _first_item(d).update(ingredients=[{
+            "text": "Salt", "note": "Adjust to taste.", "noteSource": "chef",
+        }]),
+        "error", r"needs a noteSource .* to go with its note",
+    ),
+    "an ingredient object noteSource with no note": (
+        lambda d: _first_item(d).update(ingredients=[{"text": "Salt", "noteSource": "owner"}]),
+        "error", r"has noteSource but no note",
+    ),
+    # --- a part must keep the dish's claims true once composed -------------
+    "an ingredient part missing a claim the dish makes": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["v"], ingredients=[{"text": "Beef mince", "tags": ["contains-gluten"]}]
+        )),
+        "error", r"states no tag satisfying the dish's 'v' claim",
+    ),
+    "an ingredient part contradicting a claim": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["vg"], ingredients=[{"text": "Greek yoghurt", "tags": ["contains-dairy"]}]
+        )),
+        "error", r"contradicts the dish's 'vg' claim",
+    ),
+    "an ingredient object inside a group with no text": (
+        lambda d: _first_item(d).update(
+            ingredients=[{"component": "Sauce", "items": [{"tags": ["v"]}]}]
+        ),
+        "error",
+        r"ingredients for .*: an ingredient object under 'Sauce' needs a non-empty 'text'",
     ),
     # --- referential integrity -------------------------------------------
     "pick names a non-existent dish": (
@@ -1396,13 +1488,22 @@ def main() -> int:
         work.mkdir(parents=True)
         shutil.copytree(ROOT / "tools", work / "tools")
         shutil.copytree(ROOT / "site" / "data", work / "site" / "data")
-        # validate.py reads three tables out of the shipped JS so they can't
+        # validate.py reads four tables out of the shipped JS so they can't
         # drift from their Python counterparts (see _load_renames,
-        # _load_contradicts and _load_vibes there), so the sandbox needs those
-        # modules too. Omitting one is fatal, not silent: _load_vibes exits
-        # rather than returning an empty vocabulary that would pass everything.
+        # _load_contradicts, _load_vibes and _load_diet_filters there), so the
+        # sandbox needs those modules too. Omitting one is fatal, not silent
+        # for most: _load_vibes exits rather than returning an empty
+        # vocabulary that would pass everything. `_load_diet_filters` (roadmap
+        # 350/020 step 4) is the one exception that fails QUIET rather than
+        # LOUD — an empty DIET_FILTERS makes check_ingredient_claims refuse
+        # every part's claim as unsatisfied, which is conservative (an error,
+        # never a silent pass) but is still the wrong error for the right
+        # reason, and dietary.js going missing here once already produced
+        # exactly that: two real, already-clean cook-at-home dishes failing
+        # with "give that line a satisfying tag ()" — an empty suggestion list
+        # being the tell that the table, not the data, was the hole.
         (work / "site" / "js").mkdir(parents=True, exist_ok=True)
-        for mod in ("renames.js", "addons.js", "vibes.js"):
+        for mod in ("renames.js", "addons.js", "vibes.js", "dietary.js"):
             shutil.copy(ROOT / "site" / "js" / mod, work / "site" / "js" / mod)
 
         rc, out = run_validate(work)

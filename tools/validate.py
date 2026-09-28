@@ -356,6 +356,44 @@ def _load_contradicts():
 CONTRADICTS = _load_contradicts()
 
 
+def _load_diet_filters():
+    """The dietary-claim SATISFYING table from site/js/dietary.js, read as
+    text — same technique as _load_contradicts above, and for the same reason:
+    a hand-kept Python copy of `satisfies` could accept a tag the browser would
+    never treat as satisfying a claim, or refuse one it would.
+
+    Returns {key: [satisfying tags]}, e.g. {"v": ["v", "vg", "v-option"]}.
+    A parse that comes back short is FATAL, as `_load_vibes` is: an empty table
+    made every recipe claim "unstated" and read as a data fault (found by this
+    gate's own break-probe in test_validate's sandbox), and a table missing a
+    key would quietly skip that claim. Better no validator than a wrong one."""
+    path = ROOT / "site" / "js" / "dietary.js"
+    try:
+        src = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise SystemExit(f"error: cannot read {path} — the ingredient-claims gate cannot run ({exc})")
+    body = re.search(r"DIET_FILTERS\s*=\s*\[(.*?)\n\];", src, re.S)
+    table = {
+        key: re.findall(r'"([^"]+)"', items)
+        for key, items in re.findall(r'key:\s*"([^"]+)".*?satisfies:\s*\[([^\]]*)\]', body.group(1), re.S)
+    } if body else {}
+    missing = {"v", "vg", "gf", "df"} - set(table)
+    if missing or not all(table.values()):
+        raise SystemExit(
+            f"error: read {sorted(table)} out of {path}'s DIET_FILTERS, missing "
+            f"{sorted(missing)} — the ingredient-claims gate would misjudge every "
+            "recipe. Has the DIET_FILTERS literal changed shape?"
+        )
+    return table
+
+
+DIET_FILTERS = _load_diet_filters()
+# noteSource on an ingredient line's `note` (roadmap 350/020 step 4): who the
+# aside is attributed to, so a substitution tip reads as ours, the recipe's, or
+# a guess rather than an unstated blend of the three.
+NOTE_SOURCES = {"owner", "publisher", "inferred"}
+
+
 # BCP-47, loosely: a 2-3 letter primary subtag plus optional script/region/variant
 # subtags. Deliberately a shape check, not a registry lookup — the IANA registry
 # is not in the stdlib, and a shape check catches the realistic error (a language
@@ -472,28 +510,132 @@ def warn(rid, msg):
     warnings.append(f"[{rid}] {msg}")
 
 
+INGREDIENT_OBJECT_KEYS = {"text", "tags", "trace", "traceSource", "note", "noteSource"}
+
+
+def check_ingredient_object(rid, name, entry, where):
+    """One ingredient line written as an object (owner ruling, roadmap 350/020
+    step 4): ``{text, tags?, trace?, traceSource?, note?, noteSource?}``. `where`
+    names the line's position (top-level, or under a component) for messages.
+
+    An object line that carries `tags` is a PART — the same shape as an add-on
+    OPTION, and reasoned about the same way (ADR 0048's composeTags): its tags
+    union allergens onto the dish and its dietary claims must be intersected
+    with the dish's own. Returns ``{"text": str, "tags": list}`` when the line
+    is a part with a usable text and tags list, so `check_ingredients` can pass
+    every part on to the dish-level composition check; ``None`` otherwise (a
+    plain note-only line, or one broken enough that composing it would only
+    compound the error already raised here)."""
+    for extra in sorted(set(entry) - INGREDIENT_OBJECT_KEYS):
+        err(rid, f"ingredients for {name!r}: {where} has unknown key {extra!r}")
+
+    text = entry.get("text")
+    if not isinstance(text, str) or not text.strip():
+        err(rid, f"ingredients for {name!r}: {where} needs a non-empty 'text'")
+        text = None
+    label = repr(text) if text is not None else where
+
+    raw_tags = entry.get("tags")
+    tags = None
+    if raw_tags is not None:
+        if not isinstance(raw_tags, list):
+            err(rid, f"ingredients for {name!r}: {label} tags must be a list")
+        else:
+            tags = raw_tags
+            for t in tags:
+                if t not in TAGS:
+                    err(rid, f"ingredients for {name!r}: {label} has unknown tag {t!r}")
+
+    # `trace` says "may contain"; that is a fact about a PART (an ingredient
+    # that was actually used), never about a line with no tags to hang it off —
+    # a line that states neither presence nor absence has nothing for `trace`
+    # to qualify (see check_trace's own docstring on the present/traced split).
+    if entry.get("trace") is not None and not tags:
+        err(rid, f"ingredients for {name!r}: {label} carries a trace but no tags — "
+                 "a trace belongs on a part; give the line its tags")
+    check_trace(rid, entry, f"{label} on {name!r}")
+
+    note = entry.get("note")
+    note_source = entry.get("noteSource")
+    if note is not None:
+        if not isinstance(note, str) or not note.strip():
+            err(rid, f"ingredients for {name!r}: {label} note must be a non-empty string")
+        if note_source not in NOTE_SOURCES:
+            err(rid, f"ingredients for {name!r}: {label} needs a noteSource "
+                     f"({', '.join(sorted(NOTE_SOURCES))}) to go with its note")
+    elif note_source is not None:
+        err(rid, f"ingredients for {name!r}: {label} has noteSource but no note")
+
+    if text is None or tags is None:
+        return None
+    return {"text": text, "tags": tags}
+
+
+def check_ingredient_claims(rid, name, dish_tags, parts):
+    """After `check_ingredients` has gathered every PART (an ingredient object
+    carrying `tags`), check the dish's own dietary claims still hold once they
+    are composed with ALL of them together — a recipe uses every listed
+    ingredient, so this is the ADR 0048 `composeTags` rule with the whole part
+    list standing in for a fully-ticked add-on selection, never a subset.
+
+    For each dietary claim the dish's own `tags` make, EVERY part must state a
+    tag that satisfies it (`DIET_FILTERS`, read out of site/js/dietary.js), and
+    none may carry a tag that contradicts it (`CONTRADICTS`, out of
+    site/js/addons.js) — otherwise the card would compose the claim away the
+    moment the ingredients render, and nothing else here would say so. An
+    ERROR, not a warning: the dish's tags are what the card shows before any
+    composition, so a silent mismatch is a claim the reader is shown and the
+    ingredients quietly contradict."""
+    if not parts:
+        return
+    for tag in (t for t in (dish_tags or []) if t in CLAIM_TAGS):
+        key = tag.replace("-option", "")
+        clashes = CONTRADICTS.get(key, set())
+        satisfying = set(DIET_FILTERS.get(key, []))
+        for part in parts:
+            ptags = part["tags"]
+            hit = next((t for t in ptags if t in clashes), None)
+            if hit is not None:
+                err(rid, f"ingredients for {name!r}: {part['text']!r} carries {hit!r}, "
+                         f"which contradicts the dish's {tag!r} claim — composing the "
+                         "ingredients (ADR 0048) would drop it silently; give the dish's "
+                         f"tags without {tag!r}, or drop {hit!r} from that line")
+            elif not any(t in satisfying for t in ptags):
+                err(rid, f"ingredients for {name!r}: {part['text']!r} states no tag "
+                         f"satisfying the dish's {tag!r} claim — composing the "
+                         "ingredients (ADR 0048) would drop it silently; give that line "
+                         f"a satisfying tag ({', '.join(sorted(satisfying))}), or remove "
+                         f"{tag!r} from the dish")
+
+
 def check_ingredients(rid, name, value):
     """`ingredients` is optional; when present it is a list whose entries are
-    either a plain string (one ungrouped line) or a group object
-    ``{"component": str, "items": [str, ...]}`` — ADR 0070.
+    a plain string (one ungrouped line), an ingredient OBJECT (owner ruling,
+    roadmap 350/020 step 4 — see `check_ingredient_object`), or a group object
+    ``{"component": str, "items": [str | object, ...]}`` — ADR 0070, widened to
+    let a group's items be objects too. Returns the list of every PART found
+    (top-level or inside a group), so the caller can run
+    `check_ingredient_claims` once the dish's own `tags` are in hand.
 
     Two rules beyond the shape, both load-bearing:
 
-    * **Loose lines must lead.** A bare string after a component would render
-      under that component's heading while claiming not to belong to it, so the
-      reader cannot tell which block it is in. Refuse it at the gate rather than
-      leave the render to guess.
+    * **Loose lines must lead.** A bare string or object after a component
+      would render under that component's heading while claiming not to
+      belong to it, so the reader cannot tell which block it is in. Refuse it
+      at the gate rather than leave the render to guess.
     * **A component may not repeat.** Two "Sauce" groups would put two headings
       with the same name on one page and, worse, could key two different lines
       to the same tick hash (``"<component>: <text>"``, ADR 0067/0070). One
       component, one block.
     """
+    parts = []
     if value is None:
-        return
-    shape = f"ingredients for {name!r} must be a list of strings or {{component, items}} groups, or absent"
+        return parts
+    shape = (f"ingredients for {name!r} must be a list of strings, {{text, ...}} "
+             "objects, or {component, items} groups, or absent")
     if not isinstance(value, list):
         err(rid, shape)
-        return
+        return parts
     seen_group = False
     components = set()
     for entry in value:
@@ -507,7 +649,24 @@ def check_ingredients(rid, name, value):
             continue
         if not isinstance(entry, dict):
             err(rid, shape)
-            return
+            return parts
+        # A group is keyed by `component`; a group with the component key
+        # dropped by mistake still names itself by `items`, so that shape is
+        # kept a group too (and errors as one) rather than being reinterpreted
+        # as a badly-formed ingredient object with a stray `items` key.
+        is_group = "component" in entry or ("items" in entry and "text" not in entry)
+        if not is_group:
+            if seen_group:
+                err(
+                    rid,
+                    f"ingredients for {name!r}: an ungrouped ingredient object follows a "
+                    f"component group — loose lines must come first, or give it a "
+                    f"component of its own",
+                )
+            part = check_ingredient_object(rid, name, entry, "an ingredient object")
+            if part is not None:
+                parts.append(part)
+            continue
         seen_group = True
         component = entry.get("component")
         items = entry.get("items")
@@ -517,13 +676,25 @@ def check_ingredients(rid, name, value):
         if component in components:
             err(rid, f"ingredients for {name!r}: component {component!r} appears twice")
         components.add(component)
-        if not isinstance(items, list) or not items or not all(isinstance(x, str) for x in items):
+        if not isinstance(items, list) or not items or not all(
+            isinstance(x, (str, dict)) for x in items
+        ):
             err(
                 rid,
-                f"ingredients for {name!r}: component {component!r} needs a non-empty list of strings",
+                f"ingredients for {name!r}: component {component!r} needs a non-empty list "
+                "of strings or ingredient objects",
             )
+        else:
+            for item in items:
+                if isinstance(item, dict):
+                    part = check_ingredient_object(
+                        rid, name, item, f"an ingredient object under {component!r}"
+                    )
+                    if part is not None:
+                        parts.append(part)
         for extra in set(entry) - {"component", "items"}:
             err(rid, f"ingredients for {name!r}: unknown key {extra!r} on component {component!r}")
+    return parts
 
 
 def check_image(rid, obj, where):
@@ -2364,7 +2535,10 @@ def check_restaurant(path):
                 not isinstance(steps, list) or not all(isinstance(x, str) for x in steps)
             ):
                 err(rid, f"steps for {name!r} must be a list of strings or absent")
-            check_ingredients(rid, name, item.get("ingredients"))
+            ingredient_parts = check_ingredients(rid, name, item.get("ingredients"))
+            check_ingredient_claims(
+                rid, name, tags if isinstance(tags, list) else [], ingredient_parts
+            )
             serves = item.get("serves")
             if serves is not None and (not isinstance(serves, int) or isinstance(serves, bool)):
                 err(rid, f"serves for {name!r} must be an integer or absent")

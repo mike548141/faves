@@ -109,9 +109,13 @@ const traceTag = (k) => k.slice(TRACE.length);
  */
 export function traceEntries(obj) {
   const src = typeof obj?.traceSource === "string" ? obj.traceSource : "";
-  return (Array.isArray(obj?.trace) ? obj.trace : [])
+  const own = (Array.isArray(obj?.trace) ? obj.trace : [])
     .filter(isAllergen)
     .map((tag) => ({ tag, source: src }));
+  // A recipe's parts carry their own trace (ingredients.js `composeRecipe`,
+  // projected at load by data.js) — the Whittaker's chocolate's "may contain".
+  const parts = (Array.isArray(obj?.partTrace) ? obj.partTrace : []).filter((e) => isAllergen(e?.tag));
+  return [...own, ...parts];
 }
 
 /**

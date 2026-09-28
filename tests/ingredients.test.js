@@ -84,3 +84,62 @@ test("count flattens groups", () => {
   assert.equal(ingredientCount(["a", { component: "S", items: ["b", "c"] }]), 3);
   assert.equal(ingredientCount([]), 0);
 });
+
+// ── Ingredient lines as OBJECTS, and parts (22e step 4, ADR 0138) ──
+import { ingredientParts, composeRecipe, noteText } from "../site/js/ingredients.js";
+
+const CHOC = {
+  text: "250g dark chocolate", tags: ["v", "contains-soy"],
+  trace: ["contains-peanuts"], traceSource: "Example label",
+  note: "Any dark chocolate works.", noteSource: "owner",
+};
+
+test("an object line shows, keys and scales by its TEXT — a tick made on the string survives", () => {
+  const [b] = ingredientBlocks(["100g butter", CHOC]);
+  assert.deepEqual(b.lines.map((l) => [l.key, l.text]), [["100g butter", "100g butter"], [CHOC.text, CHOC.text]]);
+  const [g] = ingredientBlocks([{ component: "Sauce", items: [{ text: "60g butter", note: "x", noteSource: "owner" }] }]);
+  assert.equal(g.lines[0].key, "Sauce: 60g butter");
+  assert.deepEqual(ingredientKeys(["a", { text: "b" }]), ["a", "b"]);
+});
+
+test("a line is a PART only when it states its own tags", () => {
+  const parts = ingredientParts(["flour", { text: "a note only", note: "n", noteSource: "owner" }, CHOC]);
+  assert.deepEqual(parts.map((p) => p.name), [CHOC.text]);
+});
+
+test("a recipe with no parts is returned as the SAME object — nothing moves for the other recipes", () => {
+  const item = { name: "x", tags: ["v"], ingredients: ["flour", { text: "sugar" }] };
+  assert.equal(composeRecipe(item), item);
+});
+
+test("allergens union in from a part, and its tip names the part", () => {
+  const c = composeRecipe({ name: "x", tags: ["v", "contains-dairy"], ingredients: ["butter", CHOC] });
+  assert.deepEqual(c.tags, ["v", "contains-dairy", "contains-soy"]);
+  assert.deepEqual(c.ownTags, ["v", "contains-dairy"]);
+  assert.equal(c.tagNotes["contains-soy"], `From the ingredients: ${CHOC.text}.`);
+  assert.deepEqual(c.partTrace, [{ tag: "contains-peanuts", source: "Example label" }]);
+});
+
+test("a diet claim survives only if EVERY part states it — an untagged part is unknown, never safe", () => {
+  const silent = composeRecipe({ name: "x", tags: ["vg"], ingredients: [{ text: "chocolate", tags: [] }] });
+  assert.deepEqual(silent.tags, []);
+  const clash = composeRecipe({ name: "x", tags: ["vg"], ingredients: [{ text: "milk chocolate", tags: ["vg", "contains-dairy"] }] });
+  assert.equal(clash.tags.includes("vg"), false);
+  const kept = composeRecipe({ name: "x", tags: ["v"], ingredients: [{ text: "dark chocolate", tags: ["vg"] }] });
+  assert.deepEqual(kept.tags, ["v"]);
+});
+
+test("the dish's own tag notes are kept, and a tag the dish already carries is not re-attributed", () => {
+  const c = composeRecipe({
+    name: "x", tags: ["contains-soy"], tagNotes: { "contains-soy": "From the ingredients: soy sauce." },
+    ingredients: [CHOC],
+  });
+  assert.equal(c.tagNotes["contains-soy"], "From the ingredients: soy sauce.");
+});
+
+test("an inferred note SAYS it is ours; a publisher's is credited; the owner's reads plain", () => {
+  assert.equal(noteText({ note: "Use dark.", noteSource: "inferred" }), "Our suggestion, not the recipe's: Use dark.");
+  assert.equal(noteText({ note: "Use dark.", noteSource: "publisher" }), "From the recipe: Use dark.");
+  assert.equal(noteText({ note: "Use dark.", noteSource: "owner" }), "Use dark.");
+  assert.equal(noteText({ text: "no note" }), null);
+});

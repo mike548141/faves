@@ -918,20 +918,70 @@ def review_notes(record):
                 yield section, clause, reason, outstanding
 
 
+# --- ingredients as objects, and PARTS (2026-09-28, roadmap 350/020 step 4) --
+# Since ADR 0070 an `ingredients` entry was a plain string or a group
+# `{"component": ..., "items": [...]}`. Owner-ruled 2026-09-28 (22e): an entry
+# — top-level, or inside a group's `items` — may now ALSO be an OBJECT:
+# `{"text": str, "tags"?: [...], "trace"?: [...], "traceSource"?: str,
+# "note"?: str, "noteSource"?: str}`.
+#
+# 🛑 AN OBJECT CARRYING `tags` IS A PART, AND A PART'S WORDS MUST NEVER REACH
+# THE DISH'S OWN TAGS. A part states its own allergens (and diet claims) and
+# the app composes them onto the dish at load time (`composeTags`) — union for
+# allergens, intersection for diet claims — which is what lets the part be
+# swapped later (another chocolate) and take its allergens with it. If this
+# tool read a part's `text` too, the SAME allergen would be written a second
+# time, directly onto the dish's own `tags` array, by the tagger rather than by
+# composition — and that copy is invisible to a swap: replace the peanut
+# chocolate with a peanut-free one and the dish's own tags would still say
+# `contains-peanuts`, because nothing pointed back at the part it came from.
+# So a part's `text` is excluded here, unconditionally.
+#
+# A non-part object contributes its `text`, exactly as a plain string would —
+# it is an ordinary ingredient line that merely carries other metadata.
+#
+# `note`/`noteSource` are never read as allergen evidence, on a part OR a
+# plain line. A note is prose ABOUT the ingredient ("you can substitute
+# other chocolates, dark is recommended") — an aside, not a declaration — and
+# reading it would let "may contain peanut" in a note write `contains-peanuts`
+# on a line that states no such thing.
+def _entry_text(entry):
+    """The evidence text of one ingredients-list entry, or None for a PART.
+
+    `entry` is a string, or an object `{"text": ..., "tags"?: ..., ...}`. See
+    the block above `ingredient_lines` for why a `tags`-bearing object (a
+    PART) yields None, and why `note`/`noteSource` are never consulted.
+    """
+    if isinstance(entry, str):
+        return entry
+    if isinstance(entry, dict) and "tags" not in entry:
+        text = entry.get("text")
+        if isinstance(text, str):
+            return text
+    return None
+
+
 def ingredient_lines(item):
     """A recipe's ingredient lines, flat, whichever way it was written.
 
-    Since ADR 0070 an `ingredients` entry is either a plain string or a group
-    `{"component": ..., "items": [...]}`. Allergen matching wants the words, not
-    the structure — and the component itself is a label ("Sauce", "Topping"),
-    never a thing you can be allergic to, so only its items come through.
+    Every line that is NOT a part: plain strings, and object lines that carry
+    no `tags` of their own (their `text` is the line). A group entry
+    `{"component": ..., "items": [...]}` is unwrapped first — the component
+    name is a label ("Sauce", "Topping"), never a thing you can be allergic
+    to, so only its own items come through, each read by the same rule as a
+    top-level entry. See `_entry_text` for what "not a part" means and why.
     """
     out = []
     for entry in item.get("ingredients") or []:
-        if isinstance(entry, str):
-            out.append(entry)
-        elif isinstance(entry, dict):
-            out.extend(x for x in entry.get("items") or [] if isinstance(x, str))
+        if isinstance(entry, dict) and "items" in entry:
+            for x in entry.get("items") or []:
+                text = _entry_text(x)
+                if text is not None:
+                    out.append(text)
+            continue
+        text = _entry_text(entry)
+        if text is not None:
+            out.append(text)
     return out
 
 

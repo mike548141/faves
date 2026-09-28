@@ -5167,6 +5167,21 @@ body.faves-view .to-top {
 .ingredients li:has(.tick)::before {
   content: none;
 }
+/* An ingredient with a note (22e step 4): its ⓘ takes a third column at the
+   end of the line, so the tick column and the text keep the alignment above.
+   Drawn a little smaller than the header's ⓘ and pulled into the row with a
+   negative margin: the 44px target stays, the list does not grow a gap. */
+.ingredients li.has-note {
+  position: relative;
+}
+.ingredients li.has-note:has(.tick) {
+  grid-template-columns: 1.6em 1fr 44px;
+}
+.ingredients .ingredient-note-btn {
+  font-size: 1.1rem;
+  margin-block: -6px;
+  vertical-align: middle;
+}
 /* The step number stays — it is how you say "I'm on four" out loud.
    `start`, NOT `center` (37m): this rule used to say `center`, which overrode
    the `align-items: start` on `.recipe-body .method li` and put the number

@@ -103,14 +103,14 @@ import {
 // tool builds and the line counts it expects are the ones the app itself would
 // produce. A second copy of either could drift and quietly test nothing.
 import { slug } from "../site/js/slug.js";
-import { ingredientBlocks, ingredientCount } from "../site/js/ingredients.js";
+import { ingredientBlocks, ingredientCount, composeRecipe, noteText as ingredientNoteText } from "../site/js/ingredients.js";
 import { SCALES, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
 // …and the shopping list's own view of a recipe, for the same reason: an
 // expectation hand-typed here would only prove the tool and the page agreed on
 // the day it was written.
 import { recipeLines } from "../site/js/shopping.js";
 import { recipeStats } from "../site/js/recipe-stats.js";
-import { ALLERGEN, TAG_LIMIT, isChipTag, isAllergen, tagLabel } from "../site/js/tags.js";
+import { ALLERGEN, TAG_LIMIT, isChipTag, isAllergen, tagLabel, traceEntries } from "../site/js/tags.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -285,7 +285,10 @@ async function run(opts) {
   const data = JSON.parse(
     await readFile(join(SITE, "data", "restaurants", `${COLLECTION}.json`), "utf8")
   );
-  const items = (data.menu || []).flatMap((s) => s.items || []);
+  // COMPOSED, as data.js serves them: a recipe's parts bring their own tags
+  // and trace (22e step 4), and a fixture read off the raw record would pick
+  // by, and assert on, tags the page no longer shows.
+  const items = (data.menu || []).flatMap((s) => s.items || []).map(composeRecipe);
   const blocksOf = (i) => ingredientBlocks(i.ingredients);
   const grouped = (i) => blocksOf(i).some((b) => b.component);
   const byLines = (a, b) => ingredientCount(b.ingredients) - ingredientCount(a.ingredients);
@@ -1497,8 +1500,9 @@ async function run(opts) {
     // is a line in every tip, and a chip only for a reader who FLAGGED it —
     // dashed, "May contain …", never folded away — and it never lights the
     // dish row's accent. Fixture by the DATA: the first recipe carrying trace.
-    const traced = items.find((i) => Array.isArray(i.trace) && i.trace.length);
-    const tFlag = traced?.trace?.[0];
+    const traced = items.find((i) => traceEntries(i).length);
+    const tFlag = traceEntries(traced ?? {})[0]?.tag;
+    const tSource = traceEntries(traced ?? {})[0]?.source;
     const tWord = tFlag ? ALLERGEN[tFlag].replace(/^Contains /, "").toLowerCase() : "";
     const setAvoid = (list) => evalPage(`localStorage.setItem("faves.p.default.settings.v1",
       JSON.stringify({ diet: { dietary: [], avoid: ${JSON.stringify(list)} } }))`);
@@ -1523,11 +1527,11 @@ async function run(opts) {
     report.check(
       "a traced allergen the reader did NOT flag is no chip at all — not even behind the fold",
       !!tFlag && tUn.traceChip === null && !tUn.all.some((c) => new RegExp(tWord, "i").test(c)),
-      `“${traced?.name}” trace ${JSON.stringify(traced?.trace)}: ${JSON.stringify(tUn.all)}`
+      `“${traced?.name}” trace ${JSON.stringify(traceEntries(traced ?? {}))}: ${JSON.stringify(tUn.all)}`
     );
     report.check(
       "…and every tip on the dish still says it: 'May contain traces of …' with its source",
-      (tUn.firstTip ?? "").includes(`May contain traces of`) && (tUn.firstTip ?? "").includes(traced?.traceSource ?? "∅") &&
+      (tUn.firstTip ?? "").includes(`May contain traces of`) && (tUn.firstTip ?? "").includes(tSource || "∅") &&
         new RegExp(tWord).test(tUn.firstTip ?? ""),
       JSON.stringify(tUn.firstTip)
     );
@@ -1542,7 +1546,7 @@ async function run(opts) {
     );
     report.check(
       "…whose tip names the source and says it is a warning, not an ingredient",
-      (tFl.traceTip ?? "").startsWith("You asked to avoid this.") && (tFl.traceTip ?? "").includes(traced.traceSource) &&
+      (tFl.traceTip ?? "").startsWith("You asked to avoid this.") && (tFl.traceTip ?? "").includes(tSource || "∅") &&
         (tFl.traceTip ?? "").includes("Not listed as an ingredient"),
       JSON.stringify(tFl.traceTip)
     );
@@ -1557,6 +1561,86 @@ async function run(opts) {
       tList.traceChip === `⚠ May contain ${tWord}` && accent === false,
       `${JSON.stringify(tList.all)} dish-flagged=${accent}`
     );
+    await evalPage(`localStorage.removeItem("faves.p.default.settings.v1")`);
+
+    // --- 15. Ingredients as PARTS (22e step 4, ADR 0138) -----------------------
+    // A line carrying its own tags is a fixed, pre-selected option composed by
+    // addons.js composeTags at data.js's load seam. Fixture by the DATA: the
+    // first recipe with a part that brings an allergen the dish does not carry
+    // itself, and the first line with a note.
+    const partOf = (i) => ingredientBlocks(i.ingredients).flatMap((b) => b.lines)
+      .find((l) => (l.tags || []).some((t) => isAllergen(t) && !(i.ownTags || []).includes(t)));
+    const parted = items.find((i) => partOf(i));
+    const pLine = parted && partOf(parted);
+    const pTag = pLine?.tags.find((t) => isAllergen(t) && !(parted.ownTags || []).includes(t));
+    const noted = items.find((i) => ingredientBlocks(i.ingredients).some((b) => b.lines.some((l) => l.note)));
+    const nLine = noted && ingredientBlocks(noted.ingredients).flatMap((b) => b.lines).find((l) => l.note);
+    await setAvoid([]);
+    await goto(url(parted), ".dish-tags");
+    const pRow = await traceRow(".recipe-detail-page");
+    const pWord = pTag ? ALLERGEN[pTag].replace(/^Contains /, "") : "∅";
+    const pChip = await evalPage(`(() => {
+      const b = [...document.querySelectorAll(".recipe-detail-page .dish-tags .tag-tip-btn")]
+        .find((x) => x.textContent === ${JSON.stringify(`⚠ ${pWord}`)});
+      return b ? document.getElementById(b.getAttribute("aria-controls"))?.textContent ?? "" : null;
+    })()`);
+    report.check(
+      "an allergen only an INGREDIENT carries is on the recipe's row, and its tip names that ingredient",
+      !!pTag && pRow.all.includes(`⚠ ${pWord}`) && (pChip ?? "").includes(`From the ingredients: ${pLine.text}`),
+      `“${parted?.name}” part “${pLine?.text}” → ${pTag}: ${JSON.stringify({ all: pRow.all, tip: pChip })}`
+    );
+    // The same composition must reach menu.js — the row accent is the loudest
+    // signal on a list, and a part's allergen the list missed would be silent.
+    await setAvoid([pTag]);
+    await goto(`${base}/restaurant.html?id=${COLLECTION}`, ".dish-meta");
+    const pList = `#dish-${parted.dishId ?? slug(parted.name)}`;
+    const pListRow = await traceRow(pList);
+    const pAccent = await evalPage(`document.querySelector(${JSON.stringify(pList)})?.classList.contains("dish-flagged") ?? null`);
+    report.check(
+      "…and on the collection list, flagged, it is loud AND lights the row's accent (composition at the load seam)",
+      pListRow.all.includes(`⚠ ${ALLERGEN[pTag]}`) && pAccent === true,
+      `${JSON.stringify(pListRow.all)} dish-flagged=${pAccent}`
+    );
+    await setAvoid([]);
+    // The note: an ⓘ at the end of its line, disclosure()'s behaviour, and a
+    // tap that must NOT tick the line it sits on.
+    await goto(url(noted), ".recipe-body .ingredients .tick");
+    const noteSel = ".recipe-body .ingredients li.has-note .ingredient-note-btn";
+    const nBefore = await evalPage(`document.querySelector(${JSON.stringify(noteSel)})?.closest("li")?.querySelector(".tick-box")?.checked ?? null`);
+    await click(noteSel);
+    const nState = await evalPage(`(() => {
+      const b = document.querySelector(${JSON.stringify(noteSel)});
+      const n = b && document.getElementById(b.getAttribute("aria-controls"));
+      const li = b?.closest("li");
+      return { count: document.querySelectorAll(${JSON.stringify(noteSel)}).length,
+        line: li?.querySelector(".tick-text")?.textContent ?? null, open: !!n?.classList.contains("is-open"),
+        text: n?.textContent ?? null, ticked: li?.querySelector(".tick-box")?.checked ?? null };
+    })()`);
+    const nWant = ingredientNoteText(nLine);
+    report.check(
+      "an ingredient's note opens from the ⓘ on its own line — and tapping it does not tick the line",
+      !!nWant && nState.open && nState.text === nWant && nState.line === nLine.text &&
+        nBefore === false && nState.ticked === false,
+      `“${noted?.name}”: ${JSON.stringify(nState)}`
+    );
+    report.check(
+      "…and only lines that carry a note grow an ⓘ",
+      nState.count === ingredientBlocks(noted.ingredients).flatMap((b) => b.lines).filter((l) => l.note).length,
+      `${nState.count} ⓘ`
+    );
+    // A part keys its tick on its TEXT, like any line: tick it, scale, still ticked.
+    const partBox = `.recipe-body .ingredients li.has-note .tick-box`;
+    await click(partBox);
+    if (await evalPage(`!!document.querySelector(".scale-row .scale-btn:nth-child(3)")`)) {
+      await click(".scale-row .scale-btn:nth-child(3)"); // 2×
+    }
+    const stillTicked = await evalPage(`document.querySelector(${JSON.stringify(partBox)})?.checked ?? null`);
+    report.check(
+      "an object ingredient line ticks, and its tick survives a scale change (keyed on its text)",
+      stillTicked === true,
+      `ticked=${stillTicked}`
+    );
+    await click(partBox); // leave it as found
     await evalPage(`localStorage.removeItem("faves.p.default.settings.v1")`);
 
     return report.summary(SITE) ? 0 : 1;

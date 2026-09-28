@@ -42,6 +42,16 @@ RECIPES = {
         {"name": "Cake", "tags": ["contains-gluten", "contains-dairy", "contains-peanuts"],
          "ingredients": ["1 cup plain flour", "100g butter", "2 tbsp sugar",
                          {"component": "Icing", "items": ["50g butter, softened"]}]},
+        # roadmap 350/020 step 4: an ingredient may be an OBJECT as well as a
+        # plain string or a group. "2 eggs" is a non-part object line (no
+        # `tags` of its own) and its `text` is read exactly like a plain
+        # string would be — the tip must quote THAT text, not paraphrase it.
+        # The chocolate is a PART (it carries `tags`): its own allergens are
+        # composed onto the dish elsewhere and must never be quoted here as if
+        # this tool had read them from the dish's own words.
+        {"name": "Cookies", "tags": ["contains-egg"],
+         "ingredients": [{"text": "2 eggs"},
+                         {"text": "peanut chocolate chips", "tags": ["contains-peanuts"]}]},
     ]}],
 }
 VENUE = {
@@ -61,6 +71,12 @@ check("…and only the lines that fired",
       repr(cake.get("contains-gluten")))
 check("a tag no rule accounts for gets NO sentence — never a guess (the chocolate-label peanut)",
       "contains-peanuts" not in cake, repr(cake))
+cookies = notes_for(RECIPES)["Cookies"]
+check("a non-part object line's `text` is what gets quoted, same as a plain string",
+      cookies.get("contains-egg") == "From the ingredients: 2 eggs.",
+      repr(cookies.get("contains-egg")))
+check("a PART's own tags are never quoted here — they compose onto the dish elsewhere",
+      "contains-peanuts" not in cookies, repr(cookies))
 venue = notes_for(VENUE)
 check("a venue dish quotes the menu's own word and the rule's reason",
       venue["Chicken Satay"].get("contains-peanuts", "").startswith("The menu says “Satay”"),
