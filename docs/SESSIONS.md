@@ -12324,3 +12324,57 @@ verbatim words. All five steps of 22e are now built.
 - 🔎 **An import shadowed by a local:** recipe_check's `noteText` import
   collided with a `const [noteTag, noteText]` in §13 and threw a harness
   error. It is imported under an alias now.
+
+### 2026-09-28-2138 (`faves-41`): Halal, Kosher and Meatarian; five owner-asked UI fixes
+
+An owner-driven session. One feature was built by a sub-agent on PR #53 and
+reviewed by a second, while five small asks from the live site landed directly
+on `main`.
+
+- **Halal, Kosher, Meatarian (PR #53, merged `cd91de9`, ADR 0140).** The owner
+  asked for "Meatarian" and a no-pork preference. He was told halal and kosher
+  are wider than no-pork, and ruled: *"Use Halal and Kosher and if a
+  restaurant marks it as such we can show that"*, so there is no separate "No
+  pork" option.
+  - Both preferences warn on a new inferred `contains-pork` tag.
+  - Kosher also warns on shellfish (owner took the recommendation).
+  - `halal`/`kosher` are dish-level, venue-stated-only claim tags; there are
+    none in the corpus today.
+  - Meatarian is selectable but inert, per his words *"I will decide dishes
+    later"*; filed as 22g (`350/040`).
+  - The preferences are stored in a top-level `foodPrefs`, because
+    `sanitiseDiet` strips unknown `diet.dietary` keys on older builds. That
+    was proved against the live `settings.js`.
+- 🛑 **The independent review earned its cost.** It found a real rule defect
+  in the dangerous direction before merge: the plant/mock exceptions (soy,
+  coconut, mushroom, tofu) disabled the named-product rule, so "Sweet soy pork
+  belly" went untagged. The exceptions are now lookbehinds on the one word
+  they replace, each break-probed.
+  - It also found 30 rows whose pork is stated elsewhere on the same menu,
+    26 of them at Thai Tara's "choice of meat".
+  - The owner then ruled on the held rows: 1841 Nachos `v` → `v-option`, and
+    "only the clearest" general-knowledge rows (Meat Lovers, KC's BBQ
+    combinations, Hawaiian Burger).
+  - Final count: 463 dishes and 11 options. The builder's own report had
+    called the sweep clean.
+- **Direct to main:**
+  - `7e47f59`: the home count shares a row with the location line, and is
+    right-aligned.
+  - `e49bc03`: a recipe's description sits above its stats panel.
+  - `8a03ad2`: the "May contain" tip says each thing once.
+  - `f69ab27`: allergen tips drop ingredient amounts. The JS and Python
+    writers share one fixture, `tests/fixtures/ingredient-names.json`.
+  - `8f18043`: the recipe list's preview is read-only (ADR 0139, superseding
+    0034 §6): no Start cooking and no ingredient ⓘ.
+- ⚠️ **My miss:** `f69ab27` was pushed without running `recipe_check`, which
+  still expected the amount. It failed 74/75 on main until `ba9716c`. CI runs
+  only `boot_check`, so nothing else would have said so. That is the
+  "brief is the gate" lesson, applied to myself.
+- **Filed:** 29c (`300/030`, the ⋯ button reported covered mid-menu, not
+  reproduced by hand) and `080/260` (Hell Pizza's half-and-half carries no
+  dairy).
+- **Harness notes from the builder:** compound shell commands (heredocs,
+  `xargs`, loops) were refused as unverifiable in a worktree. It re-ran each
+  as plain commands and routed around no git refusal. It turned a
+  rebase-then-force-push into a merge of `origin/main`, because force-push is
+  forbidden.
