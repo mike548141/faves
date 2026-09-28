@@ -34,7 +34,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { ALLERGEN_PREFS, DIETARY_PREFS } from "../site/js/settings.js";
+import { ALLERGEN_PREFS, DIETARY_PREFS, FOOD_PREFS } from "../site/js/settings.js";
+import { DIET_FILTERS, OBSERVANCE_WARNS, STATED_CLAIMS, INERT_PREFS } from "../site/js/dietary.js";
 // The heat scale is one shared module now (roadmap 200/080), and it is DOM-free,
 // so it is imported rather than parsed — the same preference the header states
 // for settings.js.
@@ -250,6 +251,18 @@ const addonCarries = jsTable(addonsUiJs, "CARRIES", "site/js/addons-ui.js");
 const addonHeat = reachesHeat(addonsUiJs, "site/js/addons-ui.js");
 
 const settingsKeys = [...ALLERGEN_PREFS, ...DIETARY_PREFS].map((p) => p.key);
+// What Settings' food preferences REACH without a chip of their own (ADR 0140):
+// the venue-stated claims a Halal/Kosher chip is named after, and every tag an
+// offered observance warns on. `contains-pork` has no avoid chip by the owner's
+// ruling (there is no "No pork"), and it used to be the shape this file would
+// have had to EXEMPT — so it is counted as covered only because an observance
+// the reader can actually tick reaches it, and the dedicated test below asserts
+// that route rather than trusting this set.
+const foodKeys = FOOD_PREFS.map((p) => p.key);
+const reachedByFoodPrefs = new Set([
+  ...foodKeys.filter((k) => STATED_CLAIMS.some((c) => c.key === k)),
+  ...foodKeys.flatMap((k) => OBSERVANCE_WARNS[k] || []),
+]);
 
 // A tag is EXEMPT from a surface only with a reason written down. Nothing is
 // exempt by default: a word added to `TAGS` lands in none of these maps and so
@@ -279,9 +292,9 @@ const SURFACES = [
   },
   {
     file: "site/js/settings.js",
-    what: "Settings' avoid list (ALLERGEN_PREFS + DIETARY_PREFS)",
-    labelled: new Set(settingsKeys),
-    tableKeys: settingsKeys,
+    what: "Settings' food preferences (ALLERGEN_PREFS + DIETARY_PREFS + what FOOD_PREFS reaches)",
+    labelled: new Set([...settingsKeys, ...reachedByFoodPrefs]),
+    tableKeys: [...settingsKeys, ...reachedByFoodPrefs],
     exempt: {
       "spicy-1": SPICY_NOT_HERE("Settings"),
       "spicy-2": SPICY_NOT_HERE("Settings"),
@@ -308,7 +321,8 @@ const SURFACES = [
 test("validate.py's TAGS parses, and to the count we expect", () => {
   // A count, because every assertion below is satisfied by a vocabulary of
   // nothing: an empty or truncated parse would pass the lot in silence.
-  assert.equal(TAGS.length, 22, `TAGS parsed as ${TAGS.length} tags: ${TAGS.join(", ")}`);
+  // 22 → 25 on 2026-09-29: contains-pork, halal, kosher (ADR 0140).
+  assert.equal(TAGS.length, 25, `TAGS parsed as ${TAGS.length} tags: ${TAGS.join(", ")}`);
   assert.equal(new Set(TAGS).size, TAGS.length, "TAGS lists a tag twice");
   assert.ok(TAGS.includes("contains-fish"), "the tag whose landing found this hole");
 });
@@ -428,20 +442,77 @@ test("the three surfaces cannot word the same heat level differently", () => {
 
 // --- The surface the ruling singles out ------------------------------------
 
-test("EVERY allergen in the vocabulary can be avoided in Settings", () => {
+test("EVERY `contains-*` tag in the vocabulary can be warned on from Settings", () => {
   // The sharp one. A `contains-*` tag missing here is not a cosmetic gap: the
-  // data carries the allergen and the reader has no way to ask about it.
+  // data carries it and the reader has no way to ask about it.
+  //
+  // Two routes since ADR 0140, and each must be a thing the reader can TICK: an
+  // avoid chip, or a food preference (Halal, Kosher) whose OBSERVANCE_WARNS
+  // entry names the tag. Not an exemption — `contains-pork` passes only while an
+  // offered chip actually reaches it, which the next test pins by name.
   const allergens = TAGS.filter((t) => t.startsWith("contains-"));
-  assert.ok(allergens.length >= 9, `only ${allergens.length} allergen tags parsed`);
+  assert.ok(allergens.length >= 10, `only ${allergens.length} contains- tags parsed`);
   const offered = new Set(ALLERGEN_PREFS.map((p) => p.key));
-  const missing = allergens.filter((t) => !offered.has(t));
-  assert.deepEqual(missing, [], `cannot be avoided in Settings: ${missing.join(", ")}`);
+  const viaObservance = new Set(foodKeys.flatMap((k) => OBSERVANCE_WARNS[k] || []));
+  const missing = allergens.filter((t) => !offered.has(t) && !viaObservance.has(t));
+  assert.deepEqual(missing, [], `cannot be warned on from Settings: ${missing.join(", ")}`);
+});
+
+test("pork is reached through Halal AND Kosher, and has no avoid chip of its own", () => {
+  // Owner-ruled 2026-09-29: "Use Halal and Kosher" — there is NO "No pork"
+  // option. Both halves are asserted, because either drifting is a regression:
+  // a stray "Pork" avoid chip contradicts the ruling, and an observance that
+  // stopped naming pork would leave the tag unreachable while the test above
+  // still found it through the other one.
+  assert.ok(!ALLERGEN_PREFS.some((p) => p.key === "contains-pork"), "Settings grew a 'No pork' chip");
+  for (const k of ["halal", "kosher"]) {
+    assert.ok(foodKeys.includes(k), `Settings no longer offers ${k}`);
+    assert.ok(OBSERVANCE_WARNS[k].includes("contains-pork"), `${k} no longer warns on pork`);
+  }
+  assert.ok(OBSERVANCE_WARNS.kosher.includes("contains-shellfish"), "Kosher no longer warns on shellfish");
+  assert.ok(!OBSERVANCE_WARNS.halal.includes("contains-shellfish"), "Halal warns on shellfish — Kosher's rule, not Halal's");
+  // What an observance implies must be a real presence tag, never a claim: it
+  // joins the avoid set, and a claim there would flag every dish that HAS it.
+  for (const [k, tags] of Object.entries(OBSERVANCE_WARNS)) {
+    for (const t of tags) {
+      assert.ok(TAGS.includes(t) && t.startsWith("contains-"), `${k} warns on ${t}, which is not a contains- tag`);
+    }
+  }
 });
 
 test("Settings offers nothing it cannot mean", () => {
   for (const p of [...ALLERGEN_PREFS, ...DIETARY_PREFS]) {
     assert.ok(TAGS.includes(p.key), `Settings offers ${p.key}, which is not a schema tag`);
     assert.ok(p.label && p.label.trim().length > 0, `${p.key} has no label`);
+  }
+  // FOOD_PREFS are not tags by construction (Meatarian is none), so the rule
+  // for them is the one that matters: each key is an observance with warnings,
+  // a venue-stated claim, or DELIBERATELY inert — never a key that means
+  // something by accident. A fourth preference fails here until it is one.
+  for (const p of FOOD_PREFS) {
+    assert.ok(p.label && p.label.trim().length > 0, `${p.key} has no label`);
+    const means = [
+      Object.hasOwn(OBSERVANCE_WARNS, p.key),
+      STATED_CLAIMS.some((c) => c.key === p.key),
+      INERT_PREFS.includes(p.key),
+    ];
+    assert.ok(means.some(Boolean), `Settings offers food preference ${p.key}, which means nothing`);
+    if (STATED_CLAIMS.some((c) => c.key === p.key)) {
+      assert.ok(TAGS.includes(p.key), `${p.key} is a stated claim that validate.py does not know`);
+    }
+  }
+});
+
+test("an INERT food preference reaches no table that could change a menu", () => {
+  // Meatarian (owner, 2026-09-29: "I will decide dishes later"). The trap is
+  // `dishSatisfiesDiet`, which answers FALSE for a key it does not know — so the
+  // day an inert key reached a filter table, every dish on every menu would dim.
+  for (const k of INERT_PREFS) {
+    assert.ok(foodKeys.includes(k), `${k} is inert but not offered — delete it from INERT_PREFS`);
+    assert.ok(!DIET_FILTERS.some((f) => f.key === k), `${k} is a DIET_FILTERS key`);
+    assert.ok(!STATED_CLAIMS.some((c) => c.key === k), `${k} is a stated claim`);
+    assert.ok(!Object.hasOwn(OBSERVANCE_WARNS, k), `${k} implies warnings`);
+    assert.ok(!TAGS.includes(k), `${k} is a schema tag`);
   }
 });
 

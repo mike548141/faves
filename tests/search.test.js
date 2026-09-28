@@ -232,6 +232,34 @@ test("no synonym asserts the ABSENCE of an allergen", () => {
   assert.equal(hit("peanut free").dishes.total, 0);
 });
 
+test("'halal' finds ONLY a dish the venue called halal — never a merely pork-free one", () => {
+  // ADR 0140. The absence claim this search must never make: a dish carrying no
+  // `contains-pork` is "not stated", not halal (slaughter, alcohol and the rest
+  // are not on a menu line). Three dishes, one of each shape.
+  const idx = buildIndex([
+    {
+      id: "kebab-place",
+      name: "Kebab Place",
+      cuisine: [],
+      menu: [
+        {
+          section: "Mains",
+          items: [
+            { name: "Lamb Wrap", tags: ["halal"] },
+            { name: "Falafel Plate", tags: ["v"] },
+            { name: "Pork Souvlaki", tags: ["contains-pork"] },
+          ],
+        },
+      ],
+    },
+  ]);
+  const got = search(idx, "halal").dishes;
+  assert.deepEqual(got.items.map((d) => d.name), ["Lamb Wrap"]);
+  assert.equal(search(idx, "kosher").dishes.total, 0, "nothing stated kosher, so nothing answers");
+  assert.equal(search(idx, "pork free").dishes.total, 0);
+  assert.equal(search(idx, "no pork").dishes.total, 0);
+});
+
 test("a direct name hit still outranks a synonym hit", () => {
   const idx = buildIndex([
     {

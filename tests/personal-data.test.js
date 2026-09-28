@@ -1070,3 +1070,28 @@ test("an add-on option's id survives the backup round trip, and an old backup st
   assert.equal(large.length, 1, JSON.stringify(lines));
   assert.equal(large[0].qty, 3);
 });
+
+// --- Halal / Kosher / Meatarian (ADR 0140) ---------------------------------
+
+test("import MERGES foodPrefs with this device's — a file never switches Halal off", () => {
+  const store = device();
+  const cur = read(store, scopeKey("default", SET_KEY));
+  store.setItem(scopeKey("default", SET_KEY), JSON.stringify({ ...cur, foodPrefs: ["halal"] }));
+  const data = file();
+  data.profiles[0].settings.foodPrefs = ["meatarian"];
+  data.profiles[0].settings.diet = { dietary: [], avoid: ["contains-shellfish"] }; // no diet question
+  applyPersonalData(store, data, { decisions: { [keyFor(data, 1)]: { target: "new" } } });
+  assert.deepEqual(read(store, scopeKey("default", SET_KEY)).foodPrefs, ["halal", "meatarian"]);
+});
+
+test("export carries foodPrefs, so a backup restores Halal/Kosher/Meatarian", () => {
+  const store = device();
+  const cur = read(store, scopeKey("default", SET_KEY));
+  store.setItem(scopeKey("default", SET_KEY), JSON.stringify({ ...cur, foodPrefs: ["kosher", "meatarian"] }));
+  const out = collectPersonalData(store, { now: AT });
+  const me = out.profiles.find((p) => p.id === "default");
+  assert.deepEqual(me.settings.foodPrefs, ["kosher", "meatarian"]);
+  const round = parsePersonalData(JSON.stringify(out));
+  assert.ok(round.ok, round.error);
+  assert.deepEqual(round.data.profiles.find((p) => p.id === "default").settings.foodPrefs, ["kosher", "meatarian"]);
+});

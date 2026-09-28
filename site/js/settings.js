@@ -56,8 +56,28 @@ export const ALLERGEN_PREFS = [
   { key: "contains-soy", label: "Soy" },
   { key: "contains-sesame", label: "Sesame" },
 ];
+// Halal, Kosher and Meatarian (owner-ruled 2026-09-29, ADR 0140). Shown beside
+// DIETARY_PREFS on the Settings screen, and deliberately NOT stored with them:
+//
+//   • not in `diet.dietary`, because `sanitiseDiet` drops a dietary key it does
+//     not know — so every build older than this one would strip "halal" on its
+//     next write and sync would carry that back as a deletion (the ADR 0118
+//     seam, which `dietary` has no namespace to escape). And a dietary key is a
+//     FILTER key (dietary.js), which these must never become.
+//   • a TOP-LEVEL settings field instead, `foodPrefs`, because an unknown
+//     top-level field is the one thing an older build already carries opaquely
+//     (ADR 0127) — so a build from 2026-09-2x onward round-trips it untouched.
+//
+// What each one does lives in dietary.js (`OBSERVANCE_WARNS`, `INERT_PREFS`):
+// Halal and Kosher only add warnings; Meatarian does nothing to any menu yet.
+export const FOOD_PREFS = [
+  { key: "halal", label: "Halal" },
+  { key: "kosher", label: "Kosher" },
+  { key: "meatarian", label: "Meatarian" },
+];
 const DIETARY_KEYS = new Set(DIETARY_PREFS.map((p) => p.key));
 const ALLERGEN_KEYS = new Set(ALLERGEN_PREFS.map((p) => p.key));
+const FOOD_PREF_KEYS = new Set(FOOD_PREFS.map((p) => p.key));
 
 // UI language for the app chrome (not the menu content). English is the
 // source; "mi" is te reo Māori. Kept here (not in reo.js) so the store has no
@@ -97,6 +117,9 @@ export const DEFAULTS = {
   favBoostKm: FAV_BOOST_KM,
   farKm: FAR_KM,
   diet: { dietary: [], avoid: [] },
+  // Halal / Kosher / Meatarian — see FOOD_PREFS above for why this is not
+  // inside `diet`.
+  foodPrefs: [],
   // All three localisation settings default to LOCAL. For a reader at home
   // that resolves to exactly what they had before — English, metric, NZD — so
   // the default costs nobody a change; for a reader abroad it is the answer
@@ -262,6 +285,36 @@ export function sanitiseDiet(d) {
   };
 }
 
+// A FOOD PREFERENCE THIS BUILD DOES NOT KNOW IS CARRIED, NOT DROPPED — the ADR
+// 0118 rule, applied to `foodPrefs` from the day the list exists, because the
+// seam is the same one: the day a later build adds a fourth preference, this
+// build must not strip it on its next write and let sync read that as the
+// reader turning it off. Carrying one is inert: dietary.js gives an unknown key
+// no warnings and no filter. Bounded like the allergen carry — a plain slug, a
+// length, a count — and sorted after the known keys so two devices agreeing on
+// the SET serialise identically (the KV-write ping-pong ADR 0118 describes).
+const FUTURE_FOOD_PREF_RE = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/;
+const FUTURE_FOOD_PREF_MAX_LEN = 30;
+const FUTURE_FOOD_PREF_MAX = 10;
+
+function cleanFoodPrefs(arr) {
+  const known = cleanKeys(arr, FOOD_PREF_KEYS);
+  if (!Array.isArray(arr)) return known;
+  const seen = new Set(known);
+  const future = [];
+  for (const x of arr) {
+    if (typeof x !== "string" || seen.has(x)) continue;
+    if (x.length > FUTURE_FOOD_PREF_MAX_LEN || !FUTURE_FOOD_PREF_RE.test(x)) continue;
+    seen.add(x);
+    future.push(x);
+  }
+  return future.length ? [...known, ...future.sort().slice(0, FUTURE_FOOD_PREF_MAX)] : known;
+}
+
+/** Exported for sync-merge.js and personal-data.js, which union two lists and
+ *  must land on the same cleaned shape the store persists. */
+export const sanitiseFoodPrefs = cleanFoodPrefs;
+
 // A currency preference is LOCAL, AS_CHARGED, or an ISO 4217 code. The code is
 // shape-checked only: which codes are actually offered depends on the rate
 // table the app loaded (fx.js), and a store must not fail closed because a rate
@@ -329,6 +382,7 @@ function sanitise(obj) {
     favBoostKm: clampField(obj?.favBoostKm, "favBoostKm"),
     farKm: clampField(obj?.farKm, "farKm"),
     diet: sanitiseDiet(obj?.diet),
+    foodPrefs: cleanFoodPrefs(obj?.foodPrefs),
     lang: obj?.lang === LOCAL || LANGS.includes(obj?.lang) ? obj.lang : DEFAULTS.lang,
     mapsApp: MAPS_APP_KEYS.has(obj?.mapsApp) ? obj.mapsApp : DEFAULTS.mapsApp,
     units: obj?.units === LOCAL || UNITS.includes(obj?.units) ? obj.units : DEFAULTS.units,

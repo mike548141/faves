@@ -39,11 +39,19 @@
 // would do that on every pull. It is passed through from `mine` untouched.
 
 import { favKey } from "./favourites.js";
-import { sanitiseDiet } from "./settings.js";
+import { sanitiseDiet, sanitiseFoodPrefs } from "./settings.js";
 
 /** The safety-critical field. Its conflicts are reported and never resolved
  *  quietly — the same rule ADR 0030 holds for an imported file's diet. */
 export const DIET_FIELD = "diet";
+
+/** Halal / Kosher / Meatarian (ADR 0140). Not `diet`, so not put to the user —
+ *  but Halal and Kosher each switch warnings ON, so a two-sided change resolves
+ *  to the UNION rather than to one side: a tie-break would switch a warning off
+ *  on one device to agree with the other, and under-warning is the direction
+ *  this file never takes. Union cannot invent a claim — every key here only
+ *  adds warnings or does nothing (dietary.js). */
+export const FOOD_PREFS_FIELD = "foodPrefs";
 
 /** Conflict kinds a caller has to be able to tell apart. `diet` must be put to
  *  the user; the others are already resolved and are reported so the UI can say
@@ -263,6 +271,12 @@ export function mergeSettings(base, mine, theirs) {
         // mistake the union for an answer the user gave.
         provisional: out[field],
       });
+      continue;
+    }
+
+    if (field === FOOD_PREFS_FIELD) {
+      out[field] = sanitiseFoodPrefs([...list(mv), ...list(tv)]);
+      conflicts.push({ kind: CONFLICT_SETTING, field, mine: mv, theirs: tv, resolved: out[field] });
       continue;
     }
 

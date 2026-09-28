@@ -58,7 +58,7 @@ import { settings } from "./settings.js";
 import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { favourites, favouriteDishIds } from "./favourites.js";
 import { ratings } from "./ratings.js";
-import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
+import { DIET_FILTERS, STATED_CLAIMS, dishFlagged, dishSatisfiesDiet, effectiveAvoid, declaredClaims } from "./dietary.js";
 import { tagRow, traceEntries } from "./tags.js";
 import { summarise } from "./dish-filters.js";
 import { textCandidate } from "./suggest.js";
@@ -86,6 +86,10 @@ function dietTerms(tags) {
       out.push(f.label, ...(DIET_ALIASES[f.key] || []));
     }
   }
+  // "halal" finds a dish the VENUE called halal and nothing else (ADR 0140).
+  // A dish merely lacking `contains-pork` must never answer to it — that would
+  // be a halal claim built out of silence.
+  for (const c of STATED_CLAIMS) if (has.has(c.key)) out.push(c.label);
   return out.join(" ");
 }
 import { initReo, translate } from "./reo.js";
@@ -1634,9 +1638,13 @@ function render(r) {
 
   // Personal food preferences (settings.js): the viewer's dietary needs
   // pre-select the matching menu chips, and flagged allergens shout below.
-  const prefs = settings.get().diet;
-  const avoid = new Set(prefs.avoid);
-  const preselect = new Set(prefs.dietary);
+  // Halal/Kosher add their warnings to the flagged set HERE, through the one
+  // dietary.js function the recipe page and the picker also read — and this
+  // render() is what the live re-apply re-runs, so both paths get it (ADR 0140).
+  const all = settings.get();
+  const prefs = all.diet;
+  const avoid = effectiveAvoid(prefs.avoid, all.foodPrefs);
+  const preselect = declaredClaims(prefs.dietary, all.foodPrefs);
 
   // Hearted dishes at THIS venue, by dish id (ADR 0051 — never by name, or the
   // three "Cheeseburger" rows would match together). Recomputed rather than

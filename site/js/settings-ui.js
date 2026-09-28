@@ -47,6 +47,7 @@ import {
   settings,
   DIETARY_PREFS,
   ALLERGEN_PREFS,
+  FOOD_PREFS,
   MAPS_APPS,
   AS_CHARGED,
   LOCAL,
@@ -128,6 +129,29 @@ function prefChips(prefs, kind) {
   return { group, chips, kind };
 }
 
+// Halal / Kosher / Meatarian (ADR 0140). The same chip as a dietary need, but
+// backed by the top-level `foodPrefs` list rather than `diet.dietary` — see
+// settings.js FOOD_PREFS for why they are stored apart. Returned as bare chips
+// so the caller can seat them in the dietary group: to the reader they are one
+// list of "how I eat", and how they are stored is not theirs to care about.
+function foodPrefChips() {
+  return FOOD_PREFS.map((p) => {
+    const chip = el("button", {
+      type: "button",
+      className: "pref-chip",
+      textContent: p.label,
+      "aria-pressed": "false",
+    });
+    chip.dataset.key = p.key;
+    chip.addEventListener("click", () => {
+      const set = new Set(settings.raw().foodPrefs);
+      set.has(p.key) ? set.delete(p.key) : set.add(p.key);
+      settings.set({ foodPrefs: [...set] });
+    });
+    return { key: p.key, chip };
+  });
+}
+
 // --- Index row summaries ------------------------------------------------
 // Each row's subtitle is the setting's current value in plain words. These are
 // the payload of the redesign: the answer to "is my nut allergy flagged?" now
@@ -136,7 +160,10 @@ function prefChips(prefs, kind) {
 // and the rest are interpolated strings the swap engine doesn't cover anyway.
 
 function dietSummary(s) {
-  const needs = DIETARY_PREFS.filter((p) => s.diet.dietary.includes(p.key)).map((p) => p.label);
+  const needs = [
+    ...DIETARY_PREFS.filter((p) => s.diet.dietary.includes(p.key)),
+    ...FOOD_PREFS.filter((p) => s.foodPrefs.includes(p.key)),
+  ].map((p) => p.label);
   const n = s.diet.avoid.length;
   const bits = [];
   if (needs.length) bits.push(needs.join(", "));
@@ -878,7 +905,22 @@ export function initSettingsUI() {
     onChange: (v) => settings.set({ mapsApp: v }),
   });
   const dietary = prefChips(DIETARY_PREFS, "dietary");
+  const food = foodPrefChips();
+  for (const { chip } of food) dietary.group.append(chip);
   const avoid = prefChips(ALLERGEN_PREFS, "avoid");
+  // What the three newest chips do and, as load-bearing, what they cannot
+  // (owner-ruled 2026-09-29). Halal and Kosher are wider than pork — slaughter,
+  // alcohol, shellfish, meat with dairy — and none of that is on a menu line, so
+  // the app never calls a dish halal or kosher on its own say-so. Meatarian says
+  // plainly that it changes nothing yet, rather than looking like a filter.
+  const foodHint = el("p", {
+    className: "settings-hint",
+    textContent:
+      "Halal and Kosher flag dishes the menu shows contain pork (Kosher also " +
+      "flags shellfish). We can’t check how food was slaughtered or prepared, " +
+      "or whether it has alcohol — a dish only says Halal or Kosher when the " +
+      "place says so. Meatarian doesn’t change any menu yet.",
+  });
 
   // The always-confirm allergy caveat lives behind an ⓘ beside the "Allergens to
   // flag" heading (same disclosure as the menu caution) — on demand rather than
@@ -974,6 +1016,7 @@ export function initSettingsUI() {
   const dietPanel = el("div", { className: "settings-panel" }, [
     el("p", { className: "settings-sub", textContent: "Your dietary needs" }),
     dietary.group,
+    foodHint,
     allergenHeadRow,
     avoid.group,
     futureNote,
@@ -1319,6 +1362,8 @@ export function initSettingsUI() {
     currency.select.value = stored.currency;
     const dietarySet = new Set(s.diet.dietary);
     for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
+    const foodSet = new Set(stored.foodPrefs);
+    for (const { key, chip } of food) chip.setAttribute("aria-pressed", String(foodSet.has(key)));
     const avoidSet = new Set(s.diet.avoid);
     for (const { key, chip } of avoid.chips) chip.setAttribute("aria-pressed", String(avoidSet.has(key)));
     const carried = futureAllergens(s.diet.avoid).length;

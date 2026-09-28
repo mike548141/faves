@@ -11,6 +11,7 @@ import { initOrderUI } from "./cart-ui.js";
 import { startSync } from "./sync-start.js";
 import { heartButton } from "./favourites-ui.js";
 import { settings } from "./settings.js";
+import { effectiveAvoid, declaredClaims } from "./dietary.js";
 import { convertTemperatures } from "./units.js";
 import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
@@ -159,11 +160,14 @@ function render(collection, item) {
     // collapse — both halves, where this page used to read only `avoid`.
     // `trace` is the "may contain" tier (ADR 0136): never a tag, shown as a
     // line in every tip and as a chip only for a reader who flagged it.
-    const { avoid, dietary } = settings.get().diet;
+    // Halal/Kosher widen the flagged set through the same dietary.js function
+    // the menu reads (ADR 0140).
+    const all = settings.get();
+    const { avoid, dietary } = all.diet;
     const tags = el("div", { className: "dish-tags" });
     tagRow(tags, {
-      avoid: new Set(avoid),
-      dietary: new Set(dietary),
+      avoid: effectiveAvoid(avoid, all.foodPrefs),
+      dietary: declaredClaims(dietary, all.foodPrefs),
       notes: item.tagNotes,
       recipe: true,
       idPrefix: "tip-recipe",

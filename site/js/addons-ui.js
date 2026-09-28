@@ -52,7 +52,7 @@ import { el } from "./dom.js";
 import { dishId } from "./dish-id.js";
 import { dishStepper } from "./cart-ui.js";
 import { settings } from "./settings.js";
-import { dishFlagged } from "./dietary.js";
+import { dishFlagged, effectiveAvoid } from "./dietary.js";
 import {
   groupsFor,
   optionPrice,
@@ -78,6 +78,7 @@ const ALLERGEN_LABEL = {
   "contains-gluten": "gluten",
   "contains-soy": "soy",
   "contains-sesame": "sesame",
+  "contains-pork": "pork",
 };
 
 const CLAIM_LABEL = {
@@ -89,6 +90,8 @@ const CLAIM_LABEL = {
   "v-option": "vegetarian",
   "df-option": "dairy free",
   "vg-option": "vegan",
+  halal: "halal",
+  kosher: "kosher",
 };
 
 // How a contradicting tag is SAID. An allergen reads "contains dairy"; the two
@@ -203,6 +206,15 @@ function unstatedLine(drops) {
 const SUBSTANCE = {
   "has-fish": "fish",
   "contains-fish": "fish",
+  // The second pair, and the one this comment's "a future pair would be added
+  // here" was waiting for (ADR 0140): Bacon now carries `has-meat` AND
+  // `contains-pork`, one substance through two tags, and without this line the
+  // picker said "Bacon contains pork. Bacon is meat, so this is no longer
+  // vegetarian." — 200/070's defect in a new place. Keyed "meat" because pork is
+  // the meat; `has-meat` beside `contains-dairy` (Little Sprig's gravy) still
+  // names two substances and stays two sentences.
+  "has-meat": "meat",
+  "contains-pork": "meat",
 };
 
 // Substance FIRST: a tag comes from a closed, hyphenated vocabulary and a
@@ -427,8 +439,11 @@ export function dishAddOns(record, section, item, onCompose, onVariant) {
     const { tags, added, dropped } = composeTags(item.tags, selection);
     onCompose?.(tags);
 
-    const avoid = settings.get()?.diet?.avoid;
-    const avoidSet = avoid instanceof Set ? avoid : new Set(avoid || []);
+    // The reader's flags plus what Halal/Kosher imply (ADR 0140) — the same
+    // dietary.js function the menu row reads, so the row accent and this line
+    // cannot disagree about a pork topping.
+    const s = settings.get();
+    const avoidSet = effectiveAvoid(s?.diet?.avoid, s?.foodPrefs);
     const { lines, flagged } = warningLines(added, dropped, avoidSet);
 
     if (notice) lines.push(notice);
