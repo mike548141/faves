@@ -78,6 +78,10 @@ content freshness separately from this file.
 ### Changed
 - **The restaurant page's typical spend reads "~$16 per person"** — the "~"
   marks it as approximate (ADR 0143).
+- **The home card price chip matches: "$$ ~$16pp"** (ADR 0144).
+- **A dish's tags fold only on a row of four or more.** Three or fewer all
+  show; four or more show the first two and fold the rest. Your own flagged
+  allergens and chosen food preferences always show.
 - **Prices no longer say "our estimate".** The menu header reads "$$ $16 per
   person" and the home card "$$ $16pp"; the order sheet's "Estimated total"
   is now "Total" (its "confirm at the till" line stays). The Cook at Home list

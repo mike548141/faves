@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { orderTags, splitTags, moreLabel, isDeclared, tagTip, TAG_LIMIT, TAG_MIN_FOLD, traceEntries, liveTrace, traceLine } from "../site/js/tags.js";
+import { orderTags, splitTags, moreLabel, isDeclared, tagTip, TAG_LIMIT, TAG_SHOW_ALL, traceEntries, liveTrace, traceLine } from "../site/js/tags.js";
 
 const LAVA = ["v", "contains-gluten", "contains-dairy", "contains-egg", "contains-nuts", "contains-peanuts", "contains-soy"];
 const none = { avoid: new Set(), dietary: new Set() };
@@ -63,25 +63,32 @@ test("declared tags are shown even past the limit", () => {
   assert.ok(hidden.every((t) => !isDeclared(t, many.avoid, many.dietary)));
 });
 
-// The owner's worked rule at N = 2 (2026-09-29): two chips both show; three or
-// more fold the rest. Asserted on the SHIPPED constants, so moving either one
-// is a decision this test makes somebody read.
-test(`${TAG_LIMIT} chips all show; ${TAG_LIMIT + TAG_MIN_FOLD} fold ${TAG_MIN_FOLD}`, () => {
+// The owner's worked rule (2026-09-29, third pass): a row of 3 or fewer shows
+// whole; 4 or more shows the first 2 and folds the rest. Asserted on the
+// SHIPPED constants, so moving either one is a decision this test makes
+// somebody read.
+test(`${TAG_SHOW_ALL} chips all show; ${TAG_SHOW_ALL + 1} show ${TAG_LIMIT} and fold the rest`, () => {
   const tags = ["contains-dairy", "contains-egg", "contains-gluten", "v", "gf"];
-  const two = tags.slice(0, TAG_LIMIT);
-  assert.deepEqual(splitTags(orderTags(two, none), none), { shown: orderTags(two, none), hidden: [] });
-  const three = tags.slice(0, TAG_LIMIT + TAG_MIN_FOLD);
-  const s = splitTags(orderTags(three, none), none);
-  assert.equal(s.shown.length, TAG_LIMIT);
-  assert.equal(s.hidden.length, TAG_MIN_FOLD);
+  const whole = orderTags(tags.slice(0, TAG_SHOW_ALL), none);
+  assert.deepEqual(splitTags(whole, none), { shown: whole, hidden: [] });
+  const over = orderTags(tags.slice(0, TAG_SHOW_ALL + 1), none);
+  const s = splitTags(over, none);
+  assert.deepEqual(s.shown, over.slice(0, TAG_LIMIT));
+  assert.equal(s.hidden.length, TAG_SHOW_ALL + 1 - TAG_LIMIT);
 });
 
-test("minFold still stops a too-small collapse when set above 1", () => {
-  const four = ["contains-dairy", "contains-egg", "contains-gluten", "v"];
-  const opts = { ...none, limit: 3, minFold: 2 };
-  assert.deepEqual(splitTags(orderTags(four, none), opts), { shown: orderTags(four, none), hidden: [] });
-  const five = [...four, "gf"];
-  assert.equal(splitTags(orderTags(five, none), opts).hidden.length, 2);
+// The threshold counts the WHOLE row, declared chips included — the owner's
+// "if there are 4 or more tags". So four chips with one declared past the
+// limit still fold, even though only a single chip ends up hidden.
+// A selected PREFERENCE is the declared chip that sorts past the limit —
+// allergens come first, so three unflagged ones push it to fourth place.
+test("four chips fold even when a declared one leaves only one hidden", () => {
+  const reader = { avoid: new Set(), dietary: new Set(["v"]) };
+  const four = orderTags(["contains-dairy", "contains-egg", "contains-gluten", "v"], reader);
+  assert.equal(four.at(-1), "v");
+  const { shown, hidden } = splitTags(four, reader);
+  assert.deepEqual(shown, ["contains-dairy", "contains-egg", "v"]);
+  assert.deepEqual(hidden, ["contains-gluten"]);
 });
 
 test("a declared tag never folds, even when only it would be past the limit", () => {

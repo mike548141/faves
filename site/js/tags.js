@@ -23,10 +23,11 @@
 //   • COLLAPSE, LABELLED (2026-09-28): past TAG_LIMIT chips the rest sit behind
 //     one control that SAYS WHAT IT HIDES ("⚠ +2 allergens"), so a hidden
 //     allergen is never silent. A declared tag is NEVER hidden, even past the
-//     limit — 22d's safety half, kept verbatim. The control appears once it
-//     would hide TAG_MIN_FOLD chips: 2 until 2026-09-29 ("a '+1' costs the
-//     space of the chip it hid"), then 1 when the owner ruled N = 2 with "if
-//     there are 3 or more then fold/hide the additional ones".
+//     limit — 22d's safety half, kept verbatim. WHEN to fold was a count of
+//     chips hidden (TAG_MIN_FOLD, 2 then 1) until the owner's third ruling on
+//     2026-09-29 made it a count of the WHOLE ROW: "if there are 3 or fewer
+//     tags … show them all; if there are 4 or more … show the first two and
+//     hide the remainders". So a four-chip row can fold a single chip.
 //   • TRACE, "MAY CONTAIN" (110/020, 2026-08-16 and 2026-09-09; 350/020,
 //     2026-09-28; ADR 0136): only a PRESENT allergen is a `contains-*` tag. A
 //     trace statement lives beside the tags in `trace`, never in them, and
@@ -51,10 +52,10 @@ import { DIET_FILTERS, STATED_CLAIMS } from "./dietary.js";
  *  3 → 2 on 2026-09-29 (owner). */
 export const TAG_LIMIT = 2;
 
-/** The fewest chips worth folding: below this the whole row shows instead. 1
- *  since 2026-09-29 — the owner's "3 or more, fold the additional ones" at a
- *  limit of 2 folds a single chip. Set 2 to bring back "no '+1' control". */
-export const TAG_MIN_FOLD = 1;
+/** A row of this many chips or fewer shows whole; a longer one folds to
+ *  TAG_LIMIT (owner, 2026-09-29). It counts EVERY chip, declared ones too —
+ *  "if there are 4 or more tags", not "if 2 or more would hide". */
+export const TAG_SHOW_ALL = 3;
 
 export const DIETARY = {
   v: "Veg",
@@ -213,17 +214,17 @@ export function orderTags(tags, { avoid, dietary, trace = [] } = {}) {
 
 /**
  * Split an ordered row into what shows and what waits behind the control.
- * Declared tags always show. Otherwise the first `limit` show; the collapse
- * only happens when it would hide at least `minFold`.
+ * A row of `showAll` or fewer shows whole. Past that the first `limit` show,
+ * and declared tags always show wherever they sort.
  */
-export function splitTags(ordered, { avoid, dietary, limit = TAG_LIMIT, minFold = TAG_MIN_FOLD } = {}) {
+export function splitTags(ordered, { avoid, dietary, limit = TAG_LIMIT, showAll = TAG_SHOW_ALL } = {}) {
+  if (ordered.length <= showAll) return { shown: [...ordered], hidden: [] };
   const shown = [];
   const hidden = [];
   for (const t of ordered) {
     if (isDeclared(t, avoid, dietary) || shown.length < limit) shown.push(t);
     else hidden.push(t);
   }
-  if (hidden.length < minFold) return { shown: [...ordered], hidden: [] };
   return { shown, hidden };
 }
 

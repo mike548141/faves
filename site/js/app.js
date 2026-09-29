@@ -83,14 +83,16 @@ function priceChip(r) {
   const pp = shown ? formatMoney(shown.amount, shown.currency) : "";
   const chip = el("span", { className: "chip chip-price" }, [
     el("span", { className: "price-band", textContent: p.band }),
-    ...(hasFigure ? [` ${pp}pp`] : []),
+    ...(hasFigure ? [` ~${pp}pp`] : []),
   ]);
-  // Curated or derived, the chip says the same thing: no "~", "about" or
-  // "estimated" — owner-ruled 2026-09-29 (ADR 0141). The reader already takes
-  // every figure in Faves as ours.
+  // Curated or derived, the chip says the same thing: a "~" and no words —
+  // "about"/"estimated" were dropped by ADR 0141, and the "~" came back to
+  // match the menu page's spend line (ADR 0143). The aria-label replaces the
+  // content for a screen reader, so it says "about" where "~" would be
+  // "tilde" or nothing.
   if (hasFigure) {
-    chip.title = `${pp} per person`;
-    chip.setAttribute("aria-label", `${pp} per person`);
+    chip.title = `~${pp} per person`;
+    chip.setAttribute("aria-label", `about ${pp} per person`);
   } else {
     chip.title = `Typical price band for this place`;
     chip.setAttribute("aria-label", `Price band ${p.band.length} of 3`);

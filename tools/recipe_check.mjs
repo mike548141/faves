@@ -108,7 +108,7 @@ import { SCALES, ingredientName, scaleFor, scaleLineStatus } from "../site/js/qu
 // the day it was written.
 import { recipeLines } from "../site/js/shopping.js";
 import { recipeStats } from "../site/js/recipe-stats.js";
-import { ALLERGEN, TAG_LIMIT, TAG_MIN_FOLD, isChipTag, isAllergen, tagLabel, traceEntries } from "../site/js/tags.js";
+import { ALLERGEN, TAG_LIMIT, TAG_SHOW_ALL, isChipTag, isAllergen, tagLabel, traceEntries } from "../site/js/tags.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -1437,11 +1437,11 @@ async function run(opts) {
     const tagFolded = await tagRowState();
     report.check(
       "the reader's own allergen leads the row, loud, even though it sorts last alphabetically",
-      chipTags.length >= TAG_LIMIT + TAG_MIN_FOLD && tagFolded.chips[0] === `⚠ ${ALLERGEN[flag]}`,
+      chipTags.length > TAG_SHOW_ALL && tagFolded.chips[0] === `⚠ ${ALLERGEN[flag]}`,
       `“${tagged.name}”, ${chipTags.length} tags, flagged ${flag}: ${JSON.stringify(tagFolded)}`
     );
     report.check(
-      `past ${TAG_LIMIT} chips the row collapses behind a control that SAYS what it hides`,
+      `past ${TAG_SHOW_ALL} chips the row collapses to ${TAG_LIMIT} behind a control that SAYS what it hides`,
       tagFolded.chips.length === TAG_LIMIT && tagFolded.expanded === "false" &&
         /^(⚠ \+\d+ allergens?|\+\d+ more)/.test(tagFolded.more ?? "") &&
         // …and says ⚠ exactly when an allergen is among the hidden.

@@ -1787,3 +1787,6 @@ deliberation those compact docs omit.
   **The venue spend line carries a "~"** (owner-ruled 2026-09-29):
   `$$ ~$16 per person`, spoken "about", still no words. Amends 0141's first
   row only; the home chip stays bare.
+- [0144](0144-the-home-price-chip-carries-a-tilde.md) —
+  **The home price chip carries a "~" too** (owner-ruled 2026-09-29):
+  `$$ ~$16pp`, spoken "about". Amends 0143's "not ruled on".

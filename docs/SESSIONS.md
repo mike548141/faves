@@ -12447,3 +12447,9 @@ on `main`.
   "about". The home card chip was not in the ask and stays `$$ $16pp`.
 - Commit `51bc7c7`. Verified: node --test 1480/0, validate, boot_check 29,
   recipe_check 72, picks_check 20, focus_check 31.
+- **Addendum:** tags now fold on the WHOLE row's size (owner, third pass
+  today): 3 or fewer all show; 4 or more show the first 2 and fold the rest.
+  `TAG_MIN_FOLD` is gone, replaced by `TAG_SHOW_ALL = 3`. The count includes
+  declared chips, so a four-chip row with a selected preference sorted fourth
+  folds a single chip. Break-probed: dropping the threshold fails the
+  shipped-constants test. The home price chip also gains its "~" (ADR 0144).
