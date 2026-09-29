@@ -75,6 +75,14 @@ content freshness separately from this file.
   was recorded.
 - **No more "est." on a recipe's stats panel** — neither the line under it
   nor the marker beside an estimated value (ADR 0135).
+### Changed
+- **Prices no longer say "our estimate".** The menu header reads "$$ $16 per
+  person" and the home card "$$ $16pp"; the order sheet's "Estimated total"
+  is now "Total" (its "confirm at the till" line stays). The Cook at Home list
+  marks our own numbers "Serves ~4 · ~45 min" instead of "about". About Faves
+  now says Faves is independent and not associated with any restaurant listed
+  (ADR 0141).
+
 ### Fixed
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved
   before dishes had ids were all counted as one and matched nothing — KK

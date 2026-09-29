@@ -83,25 +83,17 @@ function priceChip(r) {
   const pp = shown ? formatMoney(shown.amount, shown.currency) : "";
   const chip = el("span", { className: "chip chip-price" }, [
     el("span", { className: "price-band", textContent: p.band }),
-    ...(hasFigure ? [` ~${pp}pp`] : []),
+    ...(hasFigure ? [` ${pp}pp`] : []),
   ]);
-  // Curated band = our call; derived band = estimated from the menu prices.
-  if (p.curated) {
-    chip.title = hasFigure
-      ? `About ${pp} per person — our estimate for this place`
-      : `Typical price band for this place`;
-    chip.setAttribute(
-      "aria-label",
-      hasFigure
-        ? `Around ${pp} per person`
-        : `Price band ${p.band.length} of 3`
-    );
+  // Curated or derived, the chip says the same thing: no "~", "about" or
+  // "estimated" — owner-ruled 2026-09-29 (ADR 0141). The reader already takes
+  // every figure in Faves as ours.
+  if (hasFigure) {
+    chip.title = `${pp} per person`;
+    chip.setAttribute("aria-label", `${pp} per person`);
   } else {
-    chip.title = `About ${pp} per person — estimated from ${p.count} menu prices`;
-    chip.setAttribute(
-      "aria-label",
-      `Around ${pp} per person, estimated from the menu`
-    );
+    chip.title = `Typical price band for this place`;
+    chip.setAttribute("aria-label", `Price band ${p.band.length} of 3`);
   }
   return chip;
 }

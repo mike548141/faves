@@ -381,8 +381,8 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
   - `prepMinutes`, `cookMinutes`: whole minutes; `difficulty`: `very-easy` ·
     `easy` · `medium` · `challenging`. The recipe page's stats panel (ADR 0125).
   - `estimated`: which of `serves`, `prepMinutes`, `cookMinutes` and
-    `difficulty` are OUR estimate rather than the recipe's. The panel prints
-    `est.` beside them, and the list says "Serves about N". The number's working
+    `difficulty` are OUR estimate rather than the recipe's. The panel shows them
+    unmarked (ADR 0135); the list says "Serves ~N" (ADR 0141). The number's working
     lives in `data/estimates/recipes.json`, and `recipe_estimates.py --check`
     fails when the two disagree.
 - `section` groups recipes (e.g. "Weeknight dinners"); `picks`, `tags`,

@@ -64,6 +64,11 @@ function buildDialog() {
           "Every menu here was copied down by hand, so Faves is a record rather " +
           "than a live feed. Prices and dishes change without notice — confirm " +
           "with the place when you order." }),
+        // Owner-ruled 2026-09-29 (ADR 0141). In the intro, not a group of its
+        // own: it is a fact about what Faves IS, and boot_check pins the groups.
+        el("p", { className: "about-lede", textContent:
+          "Faves is independent and in no way associated with any of the " +
+          "restaurants listed." }),
       ]),
 
       group(

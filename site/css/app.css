@@ -1201,7 +1201,7 @@ body.faves-view .filter-bar {
   color: var(--ink);
   letter-spacing: 0.02em;
 }
-/* Menu-header spend line: "$$ about $28 per person · estimated from the menu" */
+/* Menu-header spend line: "$$ $28 per person" (ADR 0141) */
 .menu-price {
   margin-top: var(--space-2);
   color: var(--ink-soft);
@@ -1211,10 +1211,6 @@ body.faves-view .filter-bar {
   font-weight: 800;
   color: var(--ink);
   margin-right: 0.15em;
-}
-.menu-price .price-est {
-  color: var(--ink-soft);
-  opacity: 0.85;
 }
 .chip-service {
   background: transparent;

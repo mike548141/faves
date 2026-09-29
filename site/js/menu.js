@@ -697,10 +697,10 @@ function renderHeader(r) {
       // the VENUE's currency, and this page may be showing the reader another
       // one (ADR 0045). A literal dollar sign here was the one price on the
       // page that didn't convert.
-      parts.push(` about ${money(pb.perPerson)} per person `);
-      // Curated figure is our call; a derived one is read off the menu prices.
-      const est = pb.curated ? "· our estimate" : "· estimated from the menu";
-      parts.push(el("span", { className: "price-est", textContent: est }));
+      // No "about", no "· our estimate": owner-ruled 2026-09-29 (ADR 0141) —
+      // a reader of Faves already takes every figure here as our reading, so
+      // saying so on the one line that is ours reads as doubt about it.
+      parts.push(` ${money(pb.perPerson)} per person`);
     } else {
       // Curated band with no per-person figure — don't leave a lone "$$".
       parts.push(" typical price band");
@@ -1203,24 +1203,28 @@ function renderDish(
 ) {
   const kind = kindOf(r);
   const collectionId = r?.id ?? null;
-  // The price slot doubles as a recipe meta chip (serves · time). A serving
-  // count that is OUR estimate (ADR 0125) says "about" in words: most recipes
-  // gained one from data/estimates/, and a bare number would present our guess
-  // as the recipe's own, which the estimates ruling forbids.
+  // The price slot doubles as a recipe meta chip (serves · time). A value that
+  // is OUR estimate (ADR 0125) carries a "~": most recipes gained one from
+  // data/estimates/, and a bare number would present our guess as the recipe's
+  // own. The mark was the word "about" until the owner ruled "~" (2026-09-29,
+  // ADR 0141). A screen reader still hears "about" — "~" alone is read as
+  // "tilde" or skipped, depending on the reader's punctuation setting.
   // The time is prep + cook (owner ruling 2026-09-28, roadmap 36a): `time` on
   // five bakes is the oven time alone and read as the whole job. `time` stays
   // only as the fallback for a recipe that lacks either half.
+  const approx = (on) => (on
+    ? [el("span", { textContent: "~", "aria-hidden": "true" }),
+       el("span", { className: "sr-only", textContent: "about " })]
+    : []);
   const servesEst = Array.isArray(item.estimated) && item.estimated.includes("serves");
   const total = kind.itemsHaveRecipeFields ? totalTime(item) : null;
-  const timeText = total ? `${total.estimated ? "about " : ""}${total.value}` : item.time || null;
-  const recipeMeta = kind.itemsHaveRecipeFields
-    ? [item.serves ? `Serves ${servesEst ? "about " : ""}${item.serves}` : null, timeText]
-        .filter(Boolean)
-        .join(" · ")
-    : "";
+  const timeBit = total ? [...approx(total.estimated), total.value] : item.time ? [item.time] : null;
+  const metaBits = kind.itemsHaveRecipeFields
+    ? [item.serves ? ["Serves ", ...approx(servesEst), String(item.serves)] : null, timeBit].filter(Boolean)
+    : [];
   const aside = !kind.hasPrices
-    ? recipeMeta
-      ? el("span", { className: "dish-meta", textContent: recipeMeta })
+    ? metaBits.length
+      ? el("span", { className: "dish-meta" }, metaBits.flatMap((b, i) => (i ? [" · ", ...b] : b)))
       : null
     : el("span", {
         // Three states, not two. A dash has always meant "this one varies —

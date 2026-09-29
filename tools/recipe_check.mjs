@@ -1338,21 +1338,33 @@ async function run(opts) {
     const rowMeta = (name) => evalPage(`(() => {
       for (const m of document.querySelectorAll(".dish-meta")) {
         const row = m.closest("li, article, section > div") || m.parentElement;
-        if (row && row.textContent.includes(${JSON.stringify(name)})) return m.textContent;
+        if (row && row.textContent.includes(${JSON.stringify(name)})) {
+          // What is PAINTED (no .sr-only) and what is SPOKEN (no aria-hidden)
+          // differ on purpose since ADR 0141: "~27 min" on screen, "about 27
+          // min" to a screen reader. textContent alone would read "~about".
+          const text = (drop) => {
+            const c = m.cloneNode(true);
+            for (const n of c.querySelectorAll(drop)) n.remove();
+            return c.textContent;
+          };
+          return { seen: text(".sr-only"), heard: text("[aria-hidden='true']") };
+        }
       }
       return null;
     })()`);
     const brownieMeta = await rowMeta("B's Dope-As Brownie");
     report.check(
-      "a bake's list row shows prep + cook, not the oven time alone",
-      typeof brownieMeta === "string" && brownieMeta.includes("about 27 min") && !brownieMeta.includes("22 min"),
+      "a bake's list row shows prep + cook, not the oven time alone — marked \"~\" on screen, \"about\" when spoken",
+      brownieMeta !== null && brownieMeta.seen.includes("~27 min") && !brownieMeta.seen.includes("about") &&
+        brownieMeta.heard.includes("about 27 min") && !brownieMeta.heard.includes("~") &&
+        !brownieMeta.seen.includes("22 min"),
       `row reads ${JSON.stringify(brownieMeta)}`
     );
     // Control: prep with no cook must NOT become a half-total ("15 min").
     const soupMeta = await rowMeta("Slow-Cooked Chicken Noodle");
     report.check(
       "a recipe missing either half shows no invented total",
-      soupMeta === null || !/\b15 min\b/.test(soupMeta),
+      soupMeta === null || !/\b15 min\b/.test(soupMeta.seen),
       `row reads ${JSON.stringify(soupMeta)}`
     );
 

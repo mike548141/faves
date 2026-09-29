@@ -1771,3 +1771,9 @@ deliberation those compact docs omit.
   through Halal/Kosher, never an avoid chip. `halal`/`kosher` are dish-level
   claims only a venue states. Stored in top-level `foodPrefs`; Meatarian is
   inert. Supersedes 0092's rejection of a `contains-` meat tag, for pork only.
+- [0141](0141-no-estimate-wording-on-prices-and-the-order-total.md) —
+  **No estimate wording on the spend line, the price chip or the order total;
+  "~" on the recipe list** (owner-ruled 2026-09-29). "Estimated total" →
+  "Total" (its "confirm at the till" caption stays); "about" → "~" on the Cook
+  at Home row, spoken "about". About states Faves is unaffiliated. Currency,
+  travel and allergen wording not ruled on and unchanged. Amends 0125 §5.

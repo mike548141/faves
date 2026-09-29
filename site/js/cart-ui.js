@@ -291,7 +291,7 @@ export function initOrderUI() {
       body,
       el("div", { className: "order-foot" }, [
         el("div", { className: "order-total-row" }, [
-          el("span", { textContent: "Estimated total" }),
+          el("span", { textContent: "Total" }),
           totalEl,
         ]),
         el("p", {
