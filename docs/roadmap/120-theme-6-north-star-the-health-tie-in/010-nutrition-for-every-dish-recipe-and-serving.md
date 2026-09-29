@@ -24,9 +24,26 @@
      favourites, ratings and orders. It is not the repo, so the repo's
      no-personal-data rule is not what decides this.
 
+  **Widened the same day (his words):** *"I want to capture nutritional
+  information for dishes, recipes, ingredients as well. Not just the common
+  things like calories and sugar or cholesterol but things like vitamin content
+  and other micro-nutrients."* So:
+  - **Ingredients get figures too**, not only whole dishes. That is how a
+    recipe's figure would be built, and how a venue dish's would be too where
+    its ingredients are known
+    ([`110/070`](../110-theme-5-richer-dish-data/070-a-venue-dish-records-its-ingredients.md)).
+  - **Vitamins and minerals are in scope from the start**, not a later
+    extension. The schema must hold an open-ended set of nutrients, each with a
+    unit and a source, rather than a fixed list of label fields. The label
+    panels in `data/products/` are almost all the standard NZ label set
+    (counted 2026-09-29, per-100 g keys: energy 76, carbohydrate 75, sodium 73,
+    and so on). Micronutrients are rare: potassium 7, calcium 5, iron 1. So
+    most micronutrients would need another source, such as a food-composition
+    table.
+
   **What already exists to build on**
-  - `data/products/`: 87 packaged-product records read off labels, 74 with a
-    nutrition panel (per 100 g and per serving). See
+  - `data/products/`: 87 packaged-product records read off labels, most with a
+    nutrition panel (76 carry a per-100 g energy figure, counted 2026-09-29) (per 100 g and per serving). See
     [ADR 0090](../../decisions/0090-the-packaged-product-record-store.md), whose
     brief already said *"we may also use it for a future healthy food, eating
     and food diary, food planning feature(s) or a separate app"*.

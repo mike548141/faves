@@ -12420,3 +12420,17 @@ on `main`.
   Meatarian sentence when Meatarian is. The wording is unchanged. A new
   `device_check` assertion covers none, Meatarian, +Halal, Kosher alone and
   cleared; making the note always show fails it and nothing else.
+- **Addendum:** `TAG_LIMIT` 3 → 2 (`c823c56`). At 2, the owner's "3 or more,
+  fold the additional ones" folds a single chip, which 22e's "no '+1' control"
+  had forbidden. That floor is now its own constant, `TAG_MIN_FOLD = 1`; set it
+  to 2 to restore the old rule. Declared tags still never fold.
+- **Addendum:** `fixture_check --selftest` was failing 9 of 22 on a clean
+  main. validate.py now reads `site/js/dietary.js`, and the sandbox did not
+  copy it. Fixed in `0f95b22`.
+- **Addendum:** the ↑ and "Pick for us" sit outside the content column where
+  the screen allows (`8c8d922`). At 1200 px with 16 px text the ↑ dodged 0 of
+  80 positions on home. ⚠️ Its commit message says it was "dodging on most
+  positions" before: that figure was not measured this session.
+- **Addendum, board:** `110/070` (venue dishes record ingredients, never
+  shown), `240/030` (one venue's update should not re-download all 57), and
+  `120/010` widened to ingredients and micronutrients.

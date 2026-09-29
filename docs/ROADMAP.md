@@ -90,6 +90,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🛑 [Adding a fish option to a dish produces NO allergen warning — the](roadmap/110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
 - ✅ 🔎 [The allergen sweep has no rule for seven everyday food words, and](roadmap/110-theme-5-richer-dish-data/050-the-allergen-sweep-misses-seven-everyday-food-words.md)
 - ✅ 🔎 [An add-on option carries no allergen but fish — a hummus extra is](roadmap/110-theme-5-richer-dish-data/060-an-add-on-option-carries-no-allergen-but-fish.md)
+- [ ] 🎯 [A venue dish records its ingredients where they are available,](roadmap/110-theme-5-richer-dish-data/070-a-venue-dish-records-its-ingredients.md)
 
 ## Theme 6 — North star: the health tie-in
 
@@ -181,6 +182,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - ✅ [🚩 The service worker's install guard is decorative on Pages, and](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/010-the-service-worker-s-install-guard-is-decorative-on-pages.md)
 - ✅ 🔎 [The version constants and the record filenames run on different](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/020-the-version-constants-and-the-record-filenames-use-different-clocks.md)
+- [ ] 🎯 [An update to one venue should not re-download every venue](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/030-an-update-to-one-venue-should-not-redownload-them-all.md)
 
 ## Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)
 
