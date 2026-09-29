@@ -91,6 +91,10 @@ content freshness separately from this file.
 - **The Halal/Kosher/Meatarian note in Settings only shows once you pick
   one.** The Halal and Kosher explanation appears when either is selected, the
   Meatarian line when Meatarian is.
+- **A dish shows two tags before folding the rest, not three.** A dish with
+  two allergens or food preferences shows both; with three or more, the rest
+  sit behind the "+N" control. A tag matching your own settings is never
+  folded away.
 
 ### Fixed
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved

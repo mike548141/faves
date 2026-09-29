@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { orderTags, splitTags, moreLabel, isDeclared, tagTip, TAG_LIMIT, traceEntries, liveTrace, traceLine } from "../site/js/tags.js";
+import { orderTags, splitTags, moreLabel, isDeclared, tagTip, TAG_LIMIT, TAG_MIN_FOLD, traceEntries, liveTrace, traceLine } from "../site/js/tags.js";
 
 const LAVA = ["v", "contains-gluten", "contains-dairy", "contains-egg", "contains-nuts", "contains-peanuts", "contains-soy"];
 const none = { avoid: new Set(), dietary: new Set() };
@@ -63,12 +63,33 @@ test("declared tags are shown even past the limit", () => {
   assert.ok(hidden.every((t) => !isDeclared(t, many.avoid, many.dietary)));
 });
 
-test("no collapse that would hide only one chip — a '+1' costs the space it saves", () => {
+// The owner's worked rule at N = 2 (2026-09-29): two chips both show; three or
+// more fold the rest. Asserted on the SHIPPED constants, so moving either one
+// is a decision this test makes somebody read.
+test(`${TAG_LIMIT} chips all show; ${TAG_LIMIT + TAG_MIN_FOLD} fold ${TAG_MIN_FOLD}`, () => {
+  const tags = ["contains-dairy", "contains-egg", "contains-gluten", "v", "gf"];
+  const two = tags.slice(0, TAG_LIMIT);
+  assert.deepEqual(splitTags(orderTags(two, none), none), { shown: orderTags(two, none), hidden: [] });
+  const three = tags.slice(0, TAG_LIMIT + TAG_MIN_FOLD);
+  const s = splitTags(orderTags(three, none), none);
+  assert.equal(s.shown.length, TAG_LIMIT);
+  assert.equal(s.hidden.length, TAG_MIN_FOLD);
+});
+
+test("minFold still stops a too-small collapse when set above 1", () => {
   const four = ["contains-dairy", "contains-egg", "contains-gluten", "v"];
-  assert.deepEqual(splitTags(orderTags(four, none), none), { shown: orderTags(four, none), hidden: [] });
-  // …while five collapses two.
+  const opts = { ...none, limit: 3, minFold: 2 };
+  assert.deepEqual(splitTags(orderTags(four, none), opts), { shown: orderTags(four, none), hidden: [] });
   const five = [...four, "gf"];
-  assert.equal(splitTags(orderTags(five, none), none).hidden.length, 2);
+  assert.equal(splitTags(orderTags(five, none), opts).hidden.length, 2);
+});
+
+test("a declared tag never folds, even when only it would be past the limit", () => {
+  const reader = { avoid: new Set(["contains-gluten"]), dietary: new Set() };
+  const three = ["contains-dairy", "contains-egg", "contains-gluten"];
+  const { shown, hidden } = splitTags(orderTags(three, reader), reader);
+  assert.ok(shown.includes("contains-gluten"));
+  assert.ok(!hidden.includes("contains-gluten"));
 });
 
 test("the control SAYS what it hides, so a hidden allergen is never silent", () => {

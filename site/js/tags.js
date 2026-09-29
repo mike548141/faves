@@ -23,8 +23,10 @@
 //   • COLLAPSE, LABELLED (2026-09-28): past TAG_LIMIT chips the rest sit behind
 //     one control that SAYS WHAT IT HIDES ("⚠ +2 allergens"), so a hidden
 //     allergen is never silent. A declared tag is NEVER hidden, even past the
-//     limit — 22d's safety half, kept verbatim. The control only appears when it
-//     would hide at least two: a "+1" costs the space of the chip it hid.
+//     limit — 22d's safety half, kept verbatim. The control appears once it
+//     would hide TAG_MIN_FOLD chips: 2 until 2026-09-29 ("a '+1' costs the
+//     space of the chip it hid"), then 1 when the owner ruled N = 2 with "if
+//     there are 3 or more then fold/hide the additional ones".
 //   • TRACE, "MAY CONTAIN" (110/020, 2026-08-16 and 2026-09-09; 350/020,
 //     2026-09-28; ADR 0136): only a PRESENT allergen is a `contains-*` tag. A
 //     trace statement lives beside the tags in `trace`, never in them, and
@@ -45,8 +47,14 @@ import { isSpicy, heatLabel } from "./heat.js";
 import { DIET_FILTERS, STATED_CLAIMS } from "./dietary.js";
 
 /** How many chips a row shows before collapsing (owner: "a variable, so I can
- *  change my mind as we test it"). Declared tags are shown beyond it. */
-export const TAG_LIMIT = 3;
+ *  change my mind as we test it"). Declared tags are shown beyond it.
+ *  3 → 2 on 2026-09-29 (owner). */
+export const TAG_LIMIT = 2;
+
+/** The fewest chips worth folding: below this the whole row shows instead. 1
+ *  since 2026-09-29 — the owner's "3 or more, fold the additional ones" at a
+ *  limit of 2 folds a single chip. Set 2 to bring back "no '+1' control". */
+export const TAG_MIN_FOLD = 1;
 
 export const DIETARY = {
   v: "Veg",
@@ -206,16 +214,16 @@ export function orderTags(tags, { avoid, dietary, trace = [] } = {}) {
 /**
  * Split an ordered row into what shows and what waits behind the control.
  * Declared tags always show. Otherwise the first `limit` show; the collapse
- * only happens when it would hide two or more.
+ * only happens when it would hide at least `minFold`.
  */
-export function splitTags(ordered, { avoid, dietary, limit = TAG_LIMIT } = {}) {
+export function splitTags(ordered, { avoid, dietary, limit = TAG_LIMIT, minFold = TAG_MIN_FOLD } = {}) {
   const shown = [];
   const hidden = [];
   for (const t of ordered) {
     if (isDeclared(t, avoid, dietary) || shown.length < limit) shown.push(t);
     else hidden.push(t);
   }
-  if (hidden.length < 2) return { shown: [...ordered], hidden: [] };
+  if (hidden.length < minFold) return { shown: [...ordered], hidden: [] };
   return { shown, hidden };
 }
 
