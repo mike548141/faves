@@ -1783,3 +1783,7 @@ deliberation those compact docs omit.
   the latter is re-titled "Suggestions" and sits beside "About & privacy".
   Share this app sits above Settings. Cook mode's modal already covers the
   footer. Amends 0028's third entry point.
+- [0143](0143-the-venue-spend-line-carries-a-tilde.md) —
+  **The venue spend line carries a "~"** (owner-ruled 2026-09-29):
+  `$$ ~$16 per person`, spoken "about", still no words. Amends 0141's first
+  row only; the home chip stays bare.

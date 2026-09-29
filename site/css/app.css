@@ -5386,6 +5386,15 @@ body.faves-view .to-top {
   gap: var(--space-1);
   min-width: 0; /* let a long title wrap rather than shove the heart off */
 }
+/* Beside a title the ⓘ's ink must centre on the title's CAPITALS, and the
+   generic -0.1em below left it 3.9px low on both the venue and recipe pages
+   (measured off canvas ink metrics, 2026-09-29 — owner: "sitting too low").
+   -0.27em of the glyph's 1.45rem is that 3.9px more. In em, so it scales with
+   the text-size setting; scoped here because the same button sits inline in
+   ingredient lines and tag rows, where the old offset is right. */
+.menu-title-group > .caveat-btn {
+  margin-top: -0.27em;
+}
 .caveat-btn {
   flex: none;
   display: inline-flex;

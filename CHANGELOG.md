@@ -76,6 +76,8 @@ content freshness separately from this file.
 - **No more "est." on a recipe's stats panel** — neither the line under it
   nor the marker beside an estimated value (ADR 0135).
 ### Changed
+- **The restaurant page's typical spend reads "~$16 per person"** — the "~"
+  marks it as approximate (ADR 0143).
 - **Prices no longer say "our estimate".** The menu header reads "$$ $16 per
   person" and the home card "$$ $16pp"; the order sheet's "Estimated total"
   is now "Total" (its "confirm at the till" line stays). The Cook at Home list
@@ -102,6 +104,8 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **The ⓘ beside a restaurant or recipe name sits level with the name** —
+  it was about 4px low.
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved
   before dishes had ids were all counted as one and matched nothing — KK
   offered "Favourites 1 dish" with four hearted, then showed none. It now

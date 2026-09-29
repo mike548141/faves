@@ -697,10 +697,14 @@ function renderHeader(r) {
       // the VENUE's currency, and this page may be showing the reader another
       // one (ADR 0045). A literal dollar sign here was the one price on the
       // page that didn't convert.
-      // No "about", no "· our estimate": owner-ruled 2026-09-29 (ADR 0141) —
-      // a reader of Faves already takes every figure here as our reading, so
-      // saying so on the one line that is ours reads as doubt about it.
-      parts.push(` ${money(pb.perPerson)} per person`);
+      // A "~" and nothing more (ADR 0143, amending 0141's bare figure): no
+      // "about", no "· our estimate" — the owner wants the approximation
+      // visible without wording that reads as doubt. Spoken "about", as on the
+      // Cook at Home row: "~" alone is read as "tilde" or skipped.
+      parts.push(" ",
+        el("span", { textContent: "~", "aria-hidden": "true" }),
+        el("span", { className: "sr-only", textContent: "about " }),
+        `${money(pb.perPerson)} per person`);
     } else {
       // Curated band with no per-person figure — don't leave a lone "$$".
       parts.push(" typical price band");
