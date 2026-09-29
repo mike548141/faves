@@ -95,6 +95,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/120-theme-6-north-star-the-health-tie-in/README.md)*
 
+- [ ] 🎯 [Nutrition for every dish, recipe and serving — a future major](roadmap/120-theme-6-north-star-the-health-tie-in/010-nutrition-for-every-dish-recipe-and-serving.md)
+
 ## Theme 7 — Provenance & supply-chain: the verifiable zero-dependency claim
 
 *[Narrative](roadmap/130-theme-7-provenance-supply-chain-the-verifiable/README.md)*

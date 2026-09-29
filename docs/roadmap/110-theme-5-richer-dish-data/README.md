@@ -85,7 +85,8 @@ like *char kway teow*; worth confirming against the shop before touching. `[S]`
   rarely publish reliable nutrition, and inventing it is both dishonest
   and a health-claim risk. Realistic path: compute it only where we own
   the recipe (Cook-at-Home) or the venue supplies it. Don't fake
-  restaurant nutrition. Feeds Theme 6.
+  restaurant nutrition. Feeds Theme 6 — now owner-raised as a major feature
+  there (2026-09-29, [`120/010`](../120-theme-6-north-star-the-health-tie-in/010-nutrition-for-every-dish-recipe-and-serving.md)).
 - ✅ **Ratings / feedback** `[M]` **⚑ shipped, direction awaits owner
   ratification** (shipped 2026-07-22, wt: faves-wave4-local-ratings; ADR 0013) —
   built the recorded recommendation **(a)+(b), not public**: (b) **local-only
