@@ -129,7 +129,7 @@ function runValidate(work) {
 }
 
 /**
- * A sandbox holding the tools, the whole real dataset, and the three shipped JS
+ * A sandbox holding the tools, the whole real dataset, and the four shipped JS
  * modules validate.py reads its tables out of.
  *
  * The JS modules are not optional: `_load_vibes` EXITS rather than returning an
@@ -140,7 +140,7 @@ async function sandbox() {
   const work = await mkdtemp(join(tmpdir(), "faves-fixture-check-"));
   await cp(join(ROOT, "tools"), join(work, "tools"), { recursive: true });
   await cp(join(SITE, "data"), join(work, "site", "data"), { recursive: true });
-  for (const mod of ["renames.js", "addons.js", "vibes.js"]) {
+  for (const mod of ["renames.js", "addons.js", "vibes.js", "dietary.js"]) {
     await cp(join(SITE, "js", mod), join(work, "site", "js", mod), { recursive: true });
   }
   return work;
