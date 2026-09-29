@@ -12434,3 +12434,16 @@ on `main`.
 - **Addendum, board:** `110/070` (venue dishes record ingredients, never
   shown), `240/030` (one venue's update should not re-download all 57), and
   `120/010` widened to ingredients and micronutrients.
+
+## 2026-09-29 — the title ⓘ, and "~" on the spend line
+
+- The ⓘ beside a venue or recipe name sat 3.9px below the name's capitals,
+  measured with canvas ink metrics on both pages at 390 and 1200 px. A scoped
+  `.menu-title-group > .caveat-btn { margin-top: -0.27em }` brings it to
+  0.00px. Not changed for the ingredient, tag and Settings ⓘ, which use the
+  same button inline.
+- The restaurant spend line reads `$$ ~$16 per person` (owner, ADR 0143,
+  amending 0141 row 1 from earlier today). The "~" is aria-hidden and spoken
+  "about". The home card chip was not in the ask and stays `$$ $16pp`.
+- Commit `51bc7c7`. Verified: node --test 1480/0, validate, boot_check 29,
+  recipe_check 72, picks_check 20, focus_check 31.
