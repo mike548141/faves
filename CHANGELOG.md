@@ -76,6 +76,8 @@ content freshness separately from this file.
 - **No more "est." on a recipe's stats panel** — neither the line under it
   nor the marker beside an estimated value (ADR 0135).
 ### Changed
+- **The home screen's search bar stays pinned to the top as you scroll the
+  list**, the same way the menu page's search does.
 - **The restaurant page's typical spend reads "~$16 per person"** — the "~"
   marks it as approximate (ADR 0143).
 - **The home card price chip matches: "$$ ~$16pp"** (ADR 0144).

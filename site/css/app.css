@@ -730,12 +730,34 @@ body.faves-view .filter-bar {
   display: none;
 }
 
-/* Search box + Favourites toggle share a row above the results. */
+/* Search box + Favourites toggle share a row above the results. Pinned to the
+   top while the list scrolls, the same way the menu page's .menu-toolbar pins
+   its search (owner, 2026-09-29: "in the same way that it does on the
+   restaurants menu page") — so the same blurred backing, top padding and
+   hairline, and the same z-index 6, under the popovers and the fixed bottom
+   controls. The negative inline margin + matching padding stretch the backing
+   to the gutters, so a card scrolling under the bar never shows at its sides. */
 .home-tools {
+  position: sticky;
+  top: 0;
+  z-index: 6;
   display: flex;
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-3);
+  margin-inline: calc(-1 * var(--space-2));
+  padding: var(--space-2);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+/* A card reached by keyboard or a jump must land below the pinned bar, never
+   under it (WCAG 2.4.11 focus not obscured). On the scroll container, not the
+   cards: focus scrolls the focused LINK into view, and a margin on its <li>
+   is never consulted. 5rem clears the ~4.4rem bar; `rem` grows with it. */
+html:has(.home-tools) {
+  scroll-padding-top: 5rem;
 }
 .home-tools .search-field {
   flex: 1;

@@ -12453,3 +12453,12 @@ on `main`.
   declared chips, so a four-chip row with a selected preference sorted fourth
   folds a single chip. Break-probed: dropping the threshold fails the
   shipped-constants test. The home price chip also gains its "~" (ADR 0144).
+- **Addendum:** the home search bar (`.home-tools`) is sticky, styled like
+  the menu page's `.menu-toolbar` (owner ask). Measured pinned at `top: 0`
+  after a 1,500px scroll at 390 and 1200px, with no sideways overflow, and
+  the search input receives the hit-test there. `html:has(.home-tools)` gets
+  `scroll-padding-top: 5rem` so a focused card is never under the bar. Chrome
+  centres focus anyway (measured 405px down), so that half is untested in a
+  browser that scrolls minimally (Safari). The inline filter row on wide
+  screens is NOT pinned: only the search was asked for. Checks passed: boot,
+  focus, to_top, filter_row, distance, geo and device.
