@@ -123,6 +123,13 @@ const snapshotExpr = (dishName) => `(() => {
     foodChips: Object.fromEntries([...document.querySelectorAll(".pref-chip[data-key]")]
       .filter((c) => ["halal", "kosher", "meatarian"].includes(c.dataset.key))
       .map((c) => [c.dataset.key, c.getAttribute("aria-pressed")])),
+    // The note under the food preferences, as PAINTED: "" when hidden. It
+    // appears only for a selected preference (owner-ruled 2026-09-29).
+    foodHint: (() => {
+      const p = document.querySelector(".food-hint");
+      if (!p || p.hidden || !p.getClientRects().length) return "";
+      return [...p.children].filter((s) => !s.hidden).map((s) => s.textContent).join("").trim();
+    })(),
     flagged: dishes.filter((d) => d.classList.contains("dish-flagged")).map(nameOf),
     flaggedChips: document.querySelectorAll(".tag-allergen.is-flagged").length,
     // Owner's ruling 2026-08-17: a chip for a need this reader has NOT declared
@@ -550,6 +557,20 @@ async function run(opts) {
     await click('.pref-chip[data-key="halal"]');
     await click('.pref-chip[data-key="meatarian"]');
     const cleared = await snap();
+    await click('.pref-chip[data-key="kosher"]');
+    const kosher = await snap();
+    await click('.pref-chip[data-key="kosher"]');
+    const hint = (v) => JSON.stringify(v.foodHint.slice(0, 40));
+    report.check(
+      "the food-preference note shows only for what is selected",
+      beforeFood.foodHint === "" &&
+        meat.foodHint === "Meatarian doesn’t change any menu yet." &&
+        halal.foodHint.startsWith("Halal and Kosher flag") && halal.foodHint.endsWith("Meatarian doesn’t change any menu yet.") &&
+        kosher.foodHint.startsWith("Halal and Kosher flag") && !kosher.foodHint.includes("Meatarian") &&
+        cleared.foodHint === "",
+      `none ${hint(beforeFood)} · Meatarian ${hint(meat)} · +Halal ${hint(halal)} · ` +
+        `Kosher alone ${hint(kosher)} · cleared ${hint(cleared)}`
+    );
     report.check(
       "turning Halal off takes the pork warnings away again, live",
       same(cleared.flagged, cleared.allergen) &&

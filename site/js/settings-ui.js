@@ -913,14 +913,18 @@ export function initSettingsUI() {
   // alcohol, shellfish, meat with dairy — and none of that is on a menu line, so
   // the app never calls a dish halal or kosher on its own say-so. Meatarian says
   // plainly that it changes nothing yet, rather than looking like a filter.
-  const foodHint = el("p", {
-    className: "settings-hint",
+  // Shown only for a preference the reader has SELECTED (owner-ruled
+  // 2026-09-29): the Halal/Kosher half when either is on, the Meatarian
+  // sentence when it is. Words unchanged — only when they appear.
+  const foodHintHK = el("span", {
     textContent:
       "Halal and Kosher flag dishes the menu shows contain pork (Kosher also " +
       "flags shellfish). We can’t check how food was slaughtered or prepared, " +
       "or whether it has alcohol — a dish only says Halal or Kosher when the " +
-      "place says so. Meatarian doesn’t change any menu yet.",
+      "place says so. ",
   });
+  const foodHintMeat = el("span", { textContent: "Meatarian doesn’t change any menu yet." });
+  const foodHint = el("p", { className: "settings-hint food-hint", hidden: true }, [foodHintHK, foodHintMeat]);
 
   // The always-confirm allergy caveat lives behind an ⓘ beside the "Allergens to
   // flag" heading (same disclosure as the menu caution) — on demand rather than
@@ -1364,6 +1368,9 @@ export function initSettingsUI() {
     for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
     const foodSet = new Set(stored.foodPrefs);
     for (const { key, chip } of food) chip.setAttribute("aria-pressed", String(foodSet.has(key)));
+    foodHintHK.hidden = !(foodSet.has("halal") || foodSet.has("kosher"));
+    foodHintMeat.hidden = !foodSet.has("meatarian");
+    foodHint.hidden = foodHintHK.hidden && foodHintMeat.hidden;
     const avoidSet = new Set(s.diet.avoid);
     for (const { key, chip } of avoid.chips) chip.setAttribute("aria-pressed", String(avoidSet.has(key)));
     const carried = futureAllergens(s.diet.avoid).length;

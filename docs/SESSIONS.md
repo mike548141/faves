@@ -12410,3 +12410,13 @@ on `main`.
   recipe 72, cook 84, to_top 80, device 30, picks 20, geo 22, filter_row 25,
   note 19, addon 87, sync 22, distance 19. The new checks in `boot_check` and
   `recipe_check` §10 were each break-probed against the previous file.
+- **Addendum, same session:** board item `120/010` (`50aeef0`) captures the
+  owner's nutrition brief. Faves is to provide full nutrition for dishes,
+  recipes and servings, ideally pushed to Apple Health, else kept in the
+  user's own data. The open questions are recorded there, not answered. The
+  Apple Health route is marked unverified.
+- **Addendum:** the Food preferences note in Settings now shows only for a
+  selected preference: the Halal/Kosher half when either is on, and the
+  Meatarian sentence when Meatarian is. The wording is unchanged. A new
+  `device_check` assertion covers none, Meatarian, +Halal, Kosher alone and
+  cleared; making the note always show fails it and nothing else.

@@ -88,6 +88,9 @@ content freshness separately from this file.
   where "Share this app" now comes before Settings. On the home screen the
   Order button no longer covers the footer's links when your order has
   something in it (ADR 0142).
+- **The Halal/Kosher/Meatarian note in Settings only shows once you pick
+  one.** The Halal and Kosher explanation appears when either is selected, the
+  Meatarian line when Meatarian is.
 
 ### Fixed
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved
