@@ -95,6 +95,11 @@ content freshness separately from this file.
   two allergens or food preferences shows both; with three or more, the rest
   sit behind the "+N" control. A tag matching your own settings is never
   folded away.
+- **The back-to-top button and "Pick for us" sit out beside the list on a
+  wider screen.** They used to sit just inside the list's right edge, so on
+  a laptop the ↑ kept jumping up to avoid the cards. Where the screen has
+  room, both now sit to the right of the content and stay put. Phones are
+  unchanged.
 
 ### Fixed
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved

@@ -354,6 +354,31 @@ async function run(opts) {
               : `${scale}; it had to step aside at ${s.dodged} of ${s.past}, by at most ${Math.round(s.maxDodge)}px`
           );
 
+          // --- 2b. Out past the column where there is room (owner, 2026-09-29).
+          // On a laptop it used to hug the column from the INSIDE and jumped
+          // about dodging cards. At 1200 px the gutter (120 px) holds the 60 px
+          // button, so it must sit wholly outside <main> and never dodge; on
+          // home, "Pick for us" shares its right edge. At 390 px there is no
+          // gutter and the dodge above is what keeps content clear — as at
+          // 1200 px with 24 px text, where the 60rem column is 1440 px wide.
+          if (width === 1200 && rootPx === 16) {
+            const g = await driver.evalPage(`(() => {
+              const b = ${need(".to-top")}.getBoundingClientRect();
+              const m = ${need("main")}.getBoundingClientRect();
+              const p = document.querySelector(".bar-pick");
+              const pr = p && getComputedStyle(p).display !== "none" ? p.getBoundingClientRect() : null;
+              return { btnLeft: Math.round(b.left), btnRight: Math.round(b.right), mainRight: Math.round(m.right),
+                pickRight: pr ? Math.round(pr.right) : null };
+            })()`);
+            report.check(
+              `${at}: the ↑ sits outside the content column, so it never has to dodge`,
+              g.btnLeft >= g.mainRight && s.dodged === 0 &&
+                (screen.name !== "home" || g.pickRight === g.btnRight),
+              `↑ ${g.btnLeft}–${g.btnRight}px, column ends ${g.mainRight}px, dodged ${s.dodged} of ${s.past}` +
+                (screen.name === "home" ? `, Pick for us ends ${g.pickRight}px` : "")
+            );
+          }
+
           // --- 3. The tuck is the safety valve, and it must stay unused. -----
           // If this fires, the page is denser than anything measured and the
           // control is vanishing again — the exact regression this item exists

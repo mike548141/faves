@@ -2132,21 +2132,34 @@ body.filters-inline .filter-foot {
 
 /* Back-to-top for long menus: bottom-right, opposite the bottom-left order FAB.
    Hidden via the [hidden] attribute (global guard) until scrolled down. */
+/* Where the floating ↑ (and, on home, "Pick for us" under it) sits: OUTSIDE
+   the content column wherever the screen has room, so it has nothing to
+   dodge. Owner, 2026-09-29: it was "jumping about as it tries to not position
+   itself over content" on a laptop, where it used to hug the column's edge
+   from the INSIDE. The column is `.wrap` = min(100%, 60rem) centred, so its
+   right edge sits (50vw − 30rem) from the viewport's; the button goes one
+   --space-3 outside that. Where that gutter is too narrow, max() pins it to
+   the viewport's own --space-3 gutter — as far right as the screen allows —
+   and the dodge in to-top.js still guards whatever it overlaps. */
+:root {
+  --to-top-size: 52px;
+  --float-right: max(var(--space-3), calc(50vw - 30rem - var(--to-top-size) - var(--space-3)));
+}
+@media (min-width: 34rem) {
+  :root {
+    --to-top-size: 60px;
+  }
+}
 .to-top {
   position: fixed;
-  /* Hug the content column's right edge, not the viewport's. The column is
-     `.wrap` = min(100%, 60rem) centred, so its right edge sits (50vw − 30rem)
-     from the viewport right; tuck the button one --space-3 inside that. On
-     narrow screens the term goes ≤ 0 and max() pins it at the viewport gutter.
-     Keeps it in the reader's eye line beside the list/menu on a wide laptop. */
-  right: max(var(--space-3), calc(50vw - 30rem + var(--space-3)));
+  right: var(--float-right);
   bottom: calc(env(safe-area-inset-bottom) + var(--space-3));
   z-index: 12;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: var(--to-top-size);
+  height: var(--to-top-size);
   border: 1px solid var(--line);
   border-radius: 50%;
   background: var(--surface);
@@ -2174,8 +2187,6 @@ body.filters-inline .filter-foot {
    past the mobile breakpoint to sit in proportion with the rest of the UI. */
 @media (min-width: 34rem) {
   .to-top {
-    width: 60px;
-    height: 60px;
     font-size: 1.85rem;
   }
 }
@@ -6198,6 +6209,11 @@ body:not(.menu-page):has(> .order-fab:not([hidden])) > main {
    serves the scroll case and the not-on-this-page case. */
 .bar-pick {
   margin-inline-start: auto;
+  /* Right edge under the ↑'s (owner, 2026-09-29): out past the column when the
+     screen has room. Its row ends at max(--space-3, 50vw − 30rem) from the
+     viewport's right; a negative end margin carries it the rest of the way
+     to --float-right. 0 whenever the gutter is narrow, i.e. every phone. */
+  margin-inline-end: calc(var(--float-right) - max(var(--space-3), 50vw - 30rem));
   transition: opacity 0.16s ease, transform 0.16s ease;
 }
 .bar-pick.is-tucked {
