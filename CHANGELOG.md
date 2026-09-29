@@ -82,6 +82,12 @@ content freshness separately from this file.
   marks our own numbers "Serves ~4 · ~45 min" instead of "about". About Faves
   now says Faves is independent and not associated with any restaurant listed
   (ADR 0141).
+- **The footer is on every page.** "About & privacy" and a new
+  **Suggestions** link (formerly "Suggest or report") now sit at the foot of
+  the home screen, every menu and every recipe, and have left the ⋯ menu,
+  where "Share this app" now comes before Settings. On the home screen the
+  Order button no longer covers the footer's links when your order has
+  something in it (ADR 0142).
 
 ### Fixed
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved

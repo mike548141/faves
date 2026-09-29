@@ -1,5 +1,5 @@
 // The About dialog — what Faves is, its privacy stance, and how it works
-// offline. Opened from the ⋯ menu and from the footer link. Modelled on the
+// offline. Opened from the footer's "About & privacy" link, on every page. Modelled on the
 // Settings dialog (settings-ui.js): a <dialog> injected into <body>, closed by
 // the ✕, Escape (native), or a backdrop click.
 //
@@ -101,25 +101,22 @@ function buildDialog() {
 }
 
 export function initAboutUI() {
-  const btn = document.getElementById("about-btn");
-  // Guard against a double-init wiring the openers twice.
-  if (!btn || btn.dataset.wired) return;
-  btn.dataset.wired = "1";
-  btn.hidden = false;
+  // The footer link is the only opener: About left the ⋯ menu when the footer
+  // came to every page (owner, 2026-09-29, ADR 0142).
+  const footerLink = document.getElementById("about-open");
+  // Guard against a double-init wiring the opener twice.
+  if (!footerLink || footerLink.dataset.wired) return;
+  footerLink.dataset.wired = "1";
 
   let dialog = null;
   const open = () => {
     if (!dialog) dialog = buildDialog(); // lazily build the DOM on first open
     dialog.showModal();
   };
-  btn.addEventListener("click", open);
 
   // Swap the no-JS footer privacy note for the compact link that opens here.
   const footerNote = document.querySelector(".footer-privacy");
-  const footerLink = document.getElementById("about-open");
   if (footerNote) footerNote.hidden = true;
-  if (footerLink) {
-    footerLink.hidden = false;
-    footerLink.addEventListener("click", open);
-  }
+  footerLink.hidden = false;
+  footerLink.addEventListener("click", open);
 }

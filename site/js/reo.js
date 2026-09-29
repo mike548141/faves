@@ -187,9 +187,7 @@ const MI = {
   "nav.more": "Ētahi atu",
   "nav.favourites": "Ngā Makau",
   "nav.settings": "Ngā Tautuhinga",
-  "nav.about": "Mō tēnei", // draft
   "nav.shareApp": "Tuaritia tēnei taupānga", // draft
-  "nav.report": "Tukua mai he kōrero", // draft — "send us word"
   // 🚩 `nav.shopping` — the ⋯ menu's "Shopping list" (17e) — is ENGLISH-ONLY and
   // deliberately has no entry here, along with every other string the shopping
   // list shows: "Add to shopping list" / "On your shopping list", "Update the
@@ -243,6 +241,7 @@ const MI = {
   // Footer
   "footer.made": "Nā",
   "footer.about": "Mō tēnei me te tūmataiti", // draft
+  "footer.suggest": "Tukua mai he kōrero", // draft — the Suggestions dialog's own title (report.titleApp)
   // Settings dialog
   "settings.title": "Ngā Tautuhinga",
   // Language and units share one row now, so the two old keys

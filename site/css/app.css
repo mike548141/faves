@@ -5566,6 +5566,24 @@ body.faves-view .to-top {
   font-size: var(--step-sub);
   text-align: center;
 }
+/* On the menu and recipe pages the footer sits AFTER <main> (their JS
+   replaces main's children), so the runway under the floating controls moves
+   from main to the footer — otherwise the footer would sit under the Order
+   button with a bar's height of empty page above it (ADR 0142). */
+body > main:has(+ .site-footer) {
+  padding-bottom: 0;
+}
+body > .site-footer {
+  padding-bottom: calc(var(--bar-h-tall) + env(safe-area-inset-bottom) + var(--space-4));
+}
+/* Home, with something in the order: the Order pill floats a row ABOVE the
+   bar (it is a child of <body>, not of .filter-bar — measured 2026-09-29), and
+   main's runway reserves only the bar. At the foot of the page the pill sat
+   over "About & privacy" — 2 of 3 probe points before the footer grew a second
+   link, all 3 after. Reserve the pill's row too (48 px + its --space-3 gap). */
+body:not(.menu-page):has(> .order-fab:not([hidden])) > main {
+  padding-bottom: calc(var(--bar-h-tall) + env(safe-area-inset-bottom) + var(--space-4) + 48px + var(--space-3));
+}
 .footer-privacy {
   max-width: 46ch;
   margin-inline: auto;

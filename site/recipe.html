@@ -61,6 +61,10 @@
             <span data-i18n="nav.shopping">Shopping list</span>
             <span class="shop-count" aria-hidden="true" hidden></span>
           </button>
+          <button type="button" id="share-app-btn" class="overflow-item" role="menuitem" hidden>
+            <span class="overflow-item-icon" aria-hidden="true">⤴</span>
+            <span data-i18n="nav.shareApp">Share this app</span>
+          </button>
           <button
             type="button"
             id="settings-btn"
@@ -70,18 +74,6 @@
           >
             <span class="overflow-item-icon" aria-hidden="true">⚙</span>
             <span data-i18n="nav.settings">Settings</span>
-          </button>
-          <button type="button" id="share-app-btn" class="overflow-item" role="menuitem" hidden>
-            <span class="overflow-item-icon" aria-hidden="true">⤴</span>
-            <span data-i18n="nav.shareApp">Share this app</span>
-          </button>
-          <button type="button" id="report-btn" class="overflow-item" role="menuitem" hidden>
-            <span class="overflow-item-icon" aria-hidden="true">⚑</span>
-            <span data-i18n="nav.report">Suggest or report</span>
-          </button>
-          <button type="button" id="about-btn" class="overflow-item" role="menuitem" hidden>
-            <span class="overflow-item-icon" aria-hidden="true">ⓘ</span>
-            <span data-i18n="nav.about">About</span>
           </button>
         </div>
       </div>
@@ -98,6 +90,19 @@
         </p>
       </noscript>
     </main>
+
+    <!-- The home screen's footer, on every page (owner, 2026-09-29, ADR 0142).
+         OUTSIDE <main> because the page's JS replaces main's children on every
+         render. Only the link row: the no-JS privacy paragraph is home's, and
+         this page cannot render without JS anyway. Cook mode needs no rule to
+         hide it — it is a full-viewport modal with an opaque backdrop. -->
+    <footer class="site-footer wrap">
+      <p class="footer-line">
+        <button type="button" id="about-open" class="footer-link" hidden data-i18n="footer.about">About &amp; privacy</button>
+        <button type="button" id="suggest-open" class="footer-link" hidden data-i18n="footer.suggest">Suggestions</button>
+        <span class="footer-made"><span data-i18n="footer.made">Made by</span> <span class="footer-brand">cakeIT</span></span>
+      </p>
+    </footer>
 
     <script type="module" src="js/recipe.js"></script>
     <script type="module" src="js/sw-register.js"></script>

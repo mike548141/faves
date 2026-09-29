@@ -1777,3 +1777,9 @@ deliberation those compact docs omit.
   "Total" (its "confirm at the till" caption stays); "about" → "~" on the Cook
   at Home row, spoken "about". About states Faves is unaffiliated. Currency,
   travel and allergen wording not ruled on and unchanged. Amends 0125 §5.
+- [0142](0142-the-footer-is-on-every-page-and-carries-about-and-suggestions.md) —
+  **The footer is on every page and carries About and Suggestions**
+  (owner-ruled 2026-09-29). About and "Suggest or report" leave the ⋯ menu;
+  the latter is re-titled "Suggestions" and sits beside "About & privacy".
+  Share this app sits above Settings. Cook mode's modal already covers the
+  footer. Amends 0028's third entry point.

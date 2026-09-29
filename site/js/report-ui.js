@@ -8,7 +8,8 @@
 // blank "contact us" form cannot.
 //   1. a ⚑ on the dish row's action cluster, beside the ♥ and the stepper
 //   2. a "Something wrong here?" row at the foot of the venue contact card
-//   3. "Suggest or report" in the ⋯ menu, on every screen (home included)
+//   3. "Suggestions" in the footer, on every screen (home included) — the ⋯
+//      menu's "Suggest or report" until 2026-09-29 (ADR 0142)
 //
 // TRANSPORT (owner-ruled 2026-08-09, ADR 0028): compose on the device, hand to
 // the OS share sheet **or** the clipboard. Both are first-class buttons, not a
@@ -181,7 +182,7 @@ export function openReportDialog({ scope, venue = null, dish = null, url = pageU
           id: titleId,
           className: "order-title",
           "data-i18n": scope === "app" ? "report.titleApp" : "report.title",
-          textContent: scope === "app" ? "Suggest or report" : "Something wrong here?",
+          textContent: scope === "app" ? "Suggestions" : "Something wrong here?",
         }),
         closeBtn,
       ]),
@@ -321,12 +322,13 @@ export function venueReportRow(r) {
 }
 
 /**
- * The general "Suggest or report" item in the ⋯ menu — a place we're missing, or
- * a bug/idea about the app. Present on every screen (the markup is in both
- * shells), so feedback never depends on being on the right page.
+ * The footer's "Suggestions" link — a place we're missing, or a bug/idea about
+ * the app. Present on every screen (the footer is in all three shells), so
+ * feedback never depends on being on the right page. It was "Suggest or report"
+ * in the ⋯ menu until the owner moved it (2026-09-29, ADR 0142).
  */
 export function initReportEntry() {
-  const btn = document.getElementById("report-btn");
+  const btn = document.getElementById("suggest-open");
   // Guard against a double-init wiring the opener twice.
   if (!btn || btn.dataset.wired) return;
   btn.dataset.wired = "1";

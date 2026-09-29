@@ -41,6 +41,30 @@ import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome,
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
 
+// The app chrome every page shares (owner, 2026-09-29, ADR 0142): the ⋯ menu
+// carries Share this app ABOVE Settings and no longer carries About or Suggest
+// or report; both moved to a footer that is on EVERY page, so the footer's two
+// links must be live — present, unhidden, with a box — on each screen. The
+// menu and recipe pages build their footer from the HTML shell, outside the
+// <main> their JS replaces, so a render that swallowed it is caught here.
+const CHROME_CHECK = {
+  what: "chrome: ⋯ menu has Share above Settings and no About/Suggest; the footer offers About & privacy and Suggestions",
+  expr: `(() => {
+    const ids = [...document.querySelectorAll("#overflow-menu .overflow-item")].map((e) => e.id);
+    const links = [...document.querySelectorAll(".site-footer .footer-link")]
+      .filter((b) => !b.hidden && b.getBoundingClientRect().height >= 44)
+      .map((b) => b.textContent.trim());
+    return { ids, links };
+  })()`,
+  assert: (v) => {
+    const share = v.ids.indexOf("share-app-btn"), settings = v.ids.indexOf("settings-btn");
+    if (share < 0 || settings < 0 || share > settings) return `⋯ order ${JSON.stringify(v.ids)}`;
+    if (v.ids.includes("about-btn") || v.ids.includes("report-btn")) return `⋯ still carries ${JSON.stringify(v.ids)}`;
+    return JSON.stringify(v.links) === JSON.stringify(["About & privacy", "Suggestions"])
+      ? null : `live footer links ${JSON.stringify(v.links)}`;
+  },
+};
+
 // Each screen names the marker that proves JS, not the fallback, drew it.
 // `ready` is evaluated in the page and must become true; `fallback` is the
 // element the no-JS path leaves visible and JS is expected to hide.
@@ -69,6 +93,7 @@ const SCREENS = [
         expr: `document.querySelector("#result-count")?.textContent?.trim() ?? ""`,
         assert: (v) => (/\d/.test(v) ? null : `no place count rendered (got ${JSON.stringify(v)})`),
       },
+      CHROME_CHECK,
     ],
   },
   {
@@ -76,6 +101,7 @@ const SCREENS = [
     url: (venueId) => `/restaurant.html?id=${encodeURIComponent(venueId)}`,
     ready: `!!document.querySelector(".menu-title")`,
     checks: [
+      CHROME_CHECK,
       {
         // THE TOLERANCE STAYS; THE SILENCE GOES (owner-ruled 2026-09-06,
         // option 2 of three). This selector is an OR-list ending in a
@@ -171,6 +197,13 @@ const SCREENS = [
               : `caution tone says ${JSON.stringify(v.currency)}`,
       },
     ],
+  },
+  {
+    // The recipe page is the third shell carrying the footer (ADR 0142).
+    name: "recipe",
+    url: () => `/recipe.html?id=cook-at-home&dish=perfectly-pretty-hotcakes`,
+    ready: `!!document.querySelector(".recipe-detail-page")`,
+    checks: [CHROME_CHECK],
   },
   {
     // A link shared before a venue was renamed must still land on the venue,
@@ -531,22 +564,19 @@ async function run(opts) {
       report.check("settings: the index opened", false, String(e.message || e));
     }
 
-    // About is the other half of ROADMAP Theme 23: it opens from the same ⋯
-    // menu, and the version stamps must be GONE from it — moving means moving.
+    // About is the other half of ROADMAP Theme 23, and the version stamps must
+    // be GONE from it — moving means moving. It opens from the footer link
+    // since the owner took it out of the ⋯ menu (2026-09-29, ADR 0142).
     try {
       await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
       await untilPresent(
         () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
         { label: "home: back for the About check" }
       );
-      await driver.evalPage(`(() => {
-        const more = [...document.querySelectorAll("button")].find((b) => b.getAttribute("aria-label") === "More");
-        if (more) more.click();
-      })()`);
-      await untilPresent(() => driver.evalPage(`!!document.getElementById("about-btn") && !document.getElementById("about-btn").hidden`), {
-        label: "about: the ⋯ menu offered About",
+      await untilPresent(() => driver.evalPage(`!!document.getElementById("about-open") && !document.getElementById("about-open").hidden`), {
+        label: "about: the footer offered About & privacy",
       });
-      await driver.evalPage(`${need("#about-btn")}.click()`);
+      await driver.evalPage(`${need("#about-open")}.click()`);
       await untilPresent(() => driver.evalPage(`!!document.querySelector(".about-sheet[open]")`), {
         label: "about: the dialog opened",
       });
