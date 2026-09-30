@@ -182,7 +182,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - ✅ [🚩 The service worker's install guard is decorative on Pages, and](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/010-the-service-worker-s-install-guard-is-decorative-on-pages.md)
 - ✅ 🔎 [The version constants and the record filenames run on different](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/020-the-version-constants-and-the-record-filenames-use-different-clocks.md)
-- [ ] 🎯 [An update to one venue should not re-download every venue](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/030-an-update-to-one-venue-should-not-redownload-them-all.md)
+- ✅ [An update to one venue should not re-download every venue](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/030-an-update-to-one-venue-should-not-redownload-them-all.md)
 
 ## Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)
 
@@ -412,3 +412,14 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [ADR 0090 promised a name index of the prior food databases and none](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/040-adr-0090-promised-a-name-index-of-the-food-exports-and-none-exists.md)
 - [ ] 🔎 [A complete menu carries no verified date, and three older menu](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/050-a-menu-with-92-prices-carries-no-verified-date.md)
 - ✅ 🎯 [ADR 0090's "No location, ever" is wider than the reason it gives, and](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/060-the-no-location-rule-is-wider-than-its-reason.md)
+
+## Theme 39 — scaling: partitions, deltas and user data (owner-raised 2026-09-30)
+
+*[Narrative](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/README.md)*
+
+- [ ] 🔥 [Phase 0 — stop older code deleting newer user data](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/010-phase-0-stop-older-code-deleting-newer-user-data.md)
+- [ ] [Phase 1 — the home screen reads summaries, not menus](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/020-phase-1-the-home-screen-reads-summaries-not-menus.md)
+- [ ] [Phase 2 — fetch only what changed](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/030-phase-2-fetch-only-what-changed.md)
+- [ ] [Phase 3 — one versioned user database](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/040-phase-3-one-versioned-user-database.md)
+- [ ] [Phase 4 — personal recipes, and sync by partition](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/050-phase-4-personal-recipes-and-sync-by-partition.md)
+- [ ] [Phase 5 — region partitions, and "your partitions" offline](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/060-phase-5-region-partitions-and-your-partitions-offline.md)

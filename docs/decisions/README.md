@@ -1790,3 +1790,10 @@ deliberation those compact docs omit.
 - [0144](0144-the-home-price-chip-carries-a-tilde.md) —
   **The home price chip carries a "~" too** (owner-ruled 2026-09-29):
   `$$ ~$16pp`, spoken "about". Amends 0143's "not ruled on".
+- [0145](0145-faves-scales-by-partition-and-fingerprint-and-user-data-by-versioned-store.md) — <!-- wrapscan:allow: a link target cannot wrap -->
+  **Faves scales by partition and fingerprint, and user data by a versioned
+  store** (owner-ruled 2026-09-30, design only). Published data in four layers
+  with a fingerprint per file, so a phone fetches only its partitions and only
+  what changed. Offline scope becomes "your partitions". All user data moves to
+  one IndexedDB database with a forward-only upgrade chain. Six phases,
+  roadmap `510`.

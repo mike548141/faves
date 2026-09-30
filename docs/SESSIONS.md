@@ -12462,3 +12462,25 @@ on `main`.
   browser that scrolls minimally (Safari). The inline filter row on wide
   screens is NOT pinned: only the search was asked for. Checks passed: boot,
   focus, to_top, filter_row, distance, geo and device.
+
+## 2026-09-30 — sync timings, and the design for scaling data (session `faves-ad`)
+
+- **Asked and answered (read from the code, no change):** a local change
+  syncs 20 s after the last edit (`DEBOUNCE_MS`), or at once when the app is
+  hidden. Another device picks it up only on load or on returning to the
+  foreground; nothing pushes and nothing polls. A heart added offline on each
+  of two devices merges to both hearts: simulated against `mergePersonal`, and
+  `node --test` on the sync suites gave 61 passed, 0 failed.
+- **Found in the sync engine (not yet fixed):** a refused write (412) returns
+  `retry: true` and nothing retries it; nothing syncs when the device comes
+  back online; and older code can delete newer user data
+  (`sync-merge.js:423`), now filed as 🔥 `510/010`.
+- **Designed and recorded, not built:** ADR 0145 and roadmap section `510`
+  (Theme 39). The owner ruled three forks: offline scope becomes "your
+  partitions", all user data moves to IndexedDB, and the design is recorded
+  before it is built. `240/030` is closed into `510/030`.
+- **Measured:** the venue card fields for all 57 venues come to 12,274 bytes
+  compressed; the full files come to 164,716.
+- Pin bumped `c600f62` → `86da02c`. The only new atelier commit filed board
+  items and changed nothing under `docs/method/`; the floor hand check came
+  back clean against `origin/main`.

@@ -1,7 +1,7 @@
 # Faves — instructions for AI builders
 
 <!-- stamp:begin source=docs/method/PROPAGATION.md region=floor -->
-## Doctrine — inherited from atelier (pinned `atelier@c600f62`)
+## Doctrine — inherited from atelier (pinned `atelier@86da02c`)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -80,7 +80,7 @@ in atelier and is read on demand — never wholesale.
   (`PROPAGATION.md` § *Pointing up*.)
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
   session start run `git -C "../atelier" fetch -q` then `git -C
-  "../atelier" log --oneline c600f62..origin/main` — the parent's published
+  "../atelier" log --oneline 86da02c..origin/main` — the parent's published
   mainline, never whatever branch its checkout is parked on; any output means
   the house doctrine moved — read it, then bump the pin above deliberately.
 - **Estate resources — point up, don't re-derive:** providers & account plans,
@@ -394,6 +394,10 @@ Guard postures (cheap-failure vs. forbids-the-act) are declared in `docs/GUARDS.
   desktop. Every interactive target ≥ 44 px.
 - **Offline capable.** Service worker precaches the app shell and all
   menu data; the whole site must work in flight mode after first visit.
+  ⏳ **Owner-ruled 2026-09-30 (ADR 0145): this becomes "your partitions"** —
+  your home region, every partition holding a favourite, and where you are
+  now — **when roadmap `510/060` lands**. Until then there is one partition
+  and this line stands as written.
 - **New Zealand English** throughout (favourite, organise). Correct
   macrons on te reo Māori words. Prices in NZD.
 - **No personal data — two owner-approved exceptions.** No home

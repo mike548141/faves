@@ -1,4 +1,4 @@
-- [ ] 🎯 **An update to one venue should not re-download every venue** `[L]
+- [x] ✅ **An update to one venue should not re-download every venue** `[L]
       [design][pwa]` — owner-raised 2026-09-29 (session faves-ec). Direction
       only; the design is to be decided later.
 
@@ -36,3 +36,12 @@
     the rest lazily.
   All three still need `tools/check_versions.py` and the
   "a bump is what tells phones" rule in CLAUDE.md to change with them.
+
+  ✅ **Closed 2026-09-30: refined into a decided design** (session `faves-ad`).
+  The owner widened the ask to partitioning and user data, and ruled on the
+  design: [ADR 0145](../../decisions/0145-faves-scales-by-partition-and-fingerprint-and-user-data-by-versioned-store.md).
+  The work owed here now lives in
+  [`510/030`](../510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/030-phase-2-fetch-only-what-changed.md),
+  which takes the first shape above (a fingerprint per venue in the manifest)
+  and keeps file names stable, rejecting the second. The measurements above
+  stay as evidence.
