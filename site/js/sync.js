@@ -70,9 +70,13 @@ export const IDLE = "idle";
 export const SYNCING = "syncing";
 export const ERROR = "error";
 export const NEEDS_DECISION = "needs-decision";
+/** Another device has changed the shape of a store this one reads (ADR 0146
+ *  §3). Its own state, not ERROR (roadmap 510/090): ERROR's row reads "tap to
+ *  retry" and offers Retry, and no retry can help until Faves is updated. */
+export const PAUSED = "paused";
 
 /** What a device says when another one has changed the shape of a store this
- *  one reads (ADR 0146 §3). Shown verbatim by sync-ui's error view. */
+ *  one reads (ADR 0146 §3). Shown verbatim by sync-ui's paused view. */
 export const UPDATE_NEEDED =
   "Update Faves to keep syncing — another device has a newer version. Your data is safe on this device.";
 
@@ -385,7 +389,7 @@ export function createSync({
         // checks again, and an updated build simply passes.
         const ahead = storesAhead(theirs);
         if (ahead.length) {
-          setState(ERROR, UPDATE_NEEDED);
+          setState(PAUSED, UPDATE_NEEDED);
           return { ok: false, error: "update-needed", stores: ahead };
         }
         theirs = upgradeSnapshot(theirs) ?? theirs;

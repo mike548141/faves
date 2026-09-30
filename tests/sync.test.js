@@ -752,7 +752,9 @@ test("a store this build KNOWS, in a newer shape, pauses sync and writes nothing
   assert.equal(res.ok, false);
   assert.equal(res.error, "update-needed");
   assert.deepEqual(res.stores, ["favourites"]);
-  assert.equal(s.status().state, "error");
+  // Its own state since 510/090: ERROR's row says "tap to retry", and no
+  // retry can help until this device runs a newer Faves.
+  assert.equal(s.status().state, "paused");
   assert.equal(s.status().error, UPDATE_NEEDED);
   assert.equal(server.puts, 1, "nothing was written over the newer copy");
   assert.equal(old.getItem(SYNC_BASE_KEY), null, "no base was recorded");
@@ -785,4 +787,21 @@ test("an un-heart still propagates through a base read back through the chain", 
   await syncA.syncNow();
   await mk(b, server).syncNow();
   assert.deepEqual(favsOf(b), ["v:kk"]);
+});
+
+// --- the pause has its own state (roadmap 510/090) --------------------------
+//
+// Until 2026-09-30 the "Update Faves" pause reused ERROR, so the Settings row
+// read "Couldn't sync — tap to retry" while the panel said to update, and the
+// panel offered a Retry that cannot help.
+test("a paused sync has its own row label and view, not the error's retry", async () => {
+  const { summaryText, computeViewKey } = await import("../site/js/sync-ui.js");
+  const local = { joining: false, justOn: false };
+  const paused = { state: "paused", error: UPDATE_NEEDED };
+  assert.equal(computeViewKey(paused, local), "paused");
+  assert.match(summaryText(paused), /update Faves/i);
+  assert.doesNotMatch(summaryText(paused), /retry/i);
+  // The control: the error state still offers retry, so the two did not merge.
+  assert.match(summaryText({ state: "error", error: "x" }), /retry/i);
+  assert.equal(computeViewKey({ state: "error" }, local), "error");
 });
