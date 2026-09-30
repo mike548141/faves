@@ -1,4 +1,4 @@
-- [ ] 🔥 **Phase 0 — stop older code deleting newer user data** `[S]
+- [~] 🔥 **Phase 0 — stop older code deleting newer user data** `[S]
       [sync][data]` — owner-raised 2026-09-30 (session `faves-ad`), revised
       the same day by [ADR 0146](../../decisions/0146-the-scaling-design-revised-after-its-cold-review.md) after its cold review. Must land before **any** user
       schema change.
@@ -28,3 +28,6 @@
   **Test:** a server copy one version ahead carrying an unknown store; after
   an old device syncs, the store is still on the server **and** on the newer
   device.
+
+  📌 **Claimed 2026-09-30 (`faves-0b`)** — built in a worktree, then `070` by the
+  same worker.

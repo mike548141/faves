@@ -1,4 +1,4 @@
-- [ ] **Sync retries a refused write, and syncs when the device comes back
+- [~] **Sync retries a refused write, and syncs when the device comes back
       online** `[S] [sync]` — found 2026-09-30 (session `faves-ad`) while
       answering how long sync takes; filed by [ADR 0146](../../decisions/0146-the-scaling-design-revised-after-its-cold-review.md).
 
@@ -12,3 +12,5 @@
      sync if a change is waiting.
 
   Both are small, and both matter more once `050` adds recipe buckets.
+
+  📌 **Claimed 2026-09-30 (`faves-0b`)** — after `010`, same worktree (both touch `sync.js`).

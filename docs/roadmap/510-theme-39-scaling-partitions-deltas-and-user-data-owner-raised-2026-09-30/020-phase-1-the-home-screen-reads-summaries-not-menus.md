@@ -1,4 +1,4 @@
-- [ ] **Phase 1 — the home screen reads summaries, not menus** `[M]
+- [~] **Phase 1 — the home screen reads summaries, not menus** `[M]
       [data][pwa][home]` — owner-raised 2026-09-30,
       [ADR 0145](../../decisions/0145-faves-scales-by-partition-and-fingerprint-and-user-data-by-versioned-store.md)
       layers 2 and 3.
@@ -25,3 +25,5 @@
   about 3×, not 13×. Build summaries through `load()` so dated fields resolve.
   Keep `index.json` until `recheckReferences` and `check_fallback.py` move off
   it.
+
+  📌 **Claimed 2026-09-30 (`faves-0b`)** — built in a worktree.
