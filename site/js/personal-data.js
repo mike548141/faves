@@ -51,6 +51,7 @@ import { normaliseNoteText } from "./notes.js";
 import { createSettings, sanitiseDiet, sanitiseFoodPrefs, DEFAULTS as SETTINGS_DEFAULTS } from "./settings.js";
 import { mergeItems, normaliseNote } from "./cart.js";
 import { optionId } from "./addons.js";
+import { PERSIST_ASKED_KEY } from "./storage-persist.js";
 
 // Every settings field EXCEPT diet, which is handled just below by its own
 // safety-critical choice logic (keep/incoming/combine) rather than a plain
@@ -245,6 +246,16 @@ const EXCLUDED = {
       "not exported: it is a promise about this device and this browser, and " +
       "carrying it to another one would either silence an ask that phone never " +
       "turned down, or bring back a prompt you had switched off.",
+  },
+  // Whether this browser has already been asked to keep the data (roadmap
+  // 510/090, storage-persist.js). A fact about this browser's answer, like the
+  // location promise above: carried to another device it would stop that
+  // browser ever being asked. Spared by a replace for the same reason.
+  [PERSIST_ASKED_KEY]: {
+    spare: true,
+    why:
+      "Whether this browser has already been asked to keep your Faves data. " +
+      "Deliberately not exported: the answer belongs to this browser.",
   },
 };
 
