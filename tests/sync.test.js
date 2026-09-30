@@ -21,7 +21,7 @@ import {
   UPDATE_NEEDED,
   MAX_ATTEMPTS,
 } from "../site/js/sync.js";
-import { collectPersonalData, FORMAT_VERSION, STORE_SCHEMA } from "../site/js/personal-data.js";
+import { collectPersonalData, USER_SCHEMA, STORE_SCHEMA } from "../site/js/personal-data.js";
 import { mergePersonal, mergeSet } from "../site/js/sync-merge.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "../site/js/sync-crypto.js";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
@@ -701,7 +701,7 @@ test("a server copy one version ahead keeps its unknown store after an old devic
   const newerDevice = device({ favs: [venue("pandan")] });
   const newerSnap = {
     ...collectPersonalData(newerDevice, { exportedAt: "2026-09-30T00:00:00.000Z" }),
-    v: FORMAT_VERSION + 1,
+    v: USER_SCHEMA + 1,
     stores: { ...STORE_SCHEMA, recipes: 1, pantry: 1 },
     pantry: { flour: "plain" },
   };
@@ -718,7 +718,7 @@ test("a server copy one version ahead keeps its unknown store after an old devic
   const onServer = await serverCopy(server, code);
   assert.deepEqual(onServer.profiles[0].recipes, [RECIPE], "the recipe store was dropped from the server copy");
   assert.deepEqual(onServer.pantry, { flour: "plain" });
-  assert.equal(onServer.v, FORMAT_VERSION + 1, "the old device stamped its own lower version over the copy");
+  assert.equal(onServer.v, USER_SCHEMA + 1, "the old device stamped its own lower version over the copy");
   assert.equal(onServer.stores.recipes, 1);
   assert.deepEqual(onServer.profiles[0].favourites.map(favKey).sort(), ["v:kk", "v:pandan"]);
 
@@ -765,10 +765,10 @@ test("the base and the server copy run through the upgrade chain, and an unstamp
   assert.equal(upgradeSnapshot(null), null);
   assert.equal(upgradeSnapshot([1]), null);
   const unstamped = upgradeSnapshot({ profiles: [], shelf: 1 });
-  assert.equal(unstamped.v, FORMAT_VERSION);
+  assert.equal(unstamped.v, USER_SCHEMA);
   assert.equal(unstamped.shelf, 1, "the chain must carry what it does not know");
   const older = upgradeSnapshot({ v: 0, profiles: [{ id: "a", name: "Me", recipes: [1] }] });
-  assert.equal(older.v, FORMAT_VERSION);
+  assert.equal(older.v, USER_SCHEMA);
   assert.deepEqual(older.profiles[0].recipes, [1]);
 });
 

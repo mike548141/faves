@@ -5,6 +5,9 @@
 // them" until 2026-09-08; the dimming went on 2026-09-06 with ADR 0088, and the
 // chip row went with it — the filters live in the Filters sheet.)
 
+// FIRST, on purpose: runs the user-data upgrade chain before any store module
+// below reads storage (roadmap 510/040, upgrade-start.js).
+import { markUpgradeRan } from "./upgrade-start.js";
 import { loadRestaurant } from "./data.js";
 import { mapsUrl, recallOrigin } from "./geo.js";
 import {
@@ -2323,6 +2326,7 @@ if (!id) {
       // applied before scroll-margin-top is honoured. Instant, to land exactly
       // like a hard reload of the same URL.
       scrollToHash();
+      markUpgradeRan(); // the upgraded data has been read and drawn (510/040)
     })
     .catch((err) => {
       console.error("Faves menu:", err);

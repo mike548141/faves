@@ -133,6 +133,8 @@ const SHELL = [
   "js/ui-state.js",
   "js/units.js",
   "js/update-notice.js",
+  "js/upgrade-start.js",
+  "js/user-schema.js",
   "js/versions.js",
   "js/vibes.js",
   "site.webmanifest",

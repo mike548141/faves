@@ -1,0 +1,20 @@
+{
+  "_about": "KEEP FOREVER (roadmap 510/040). This device's local storage exactly as a schema-1 build writes it: every faves. key and its string value. tests/user-schema.test.js upgrades it to the current USER_SCHEMA and checks nothing a person put in was lost, allergen flags above all. Synthetic data only; the sync code is not a real one.",
+  "userSchema": 1,
+  "keys": {
+    "faves.profiles.v1": "{\"v\":1,\"activeId\":\"default\",\"profiles\":[{\"id\":\"default\",\"name\":\"Me\"},{\"id\":\"p2\",\"name\":\"Sam\"}]}",
+    "faves.p.default.favourites.v1": "[{\"type\":\"venue\",\"venueId\":\"kk-malaysian\",\"venueName\":\"KK Malaysian\",\"isRecipe\":false},{\"type\":\"dish\",\"venueId\":\"kk-malaysian\",\"venueName\":\"KK Malaysian\",\"isRecipe\":false,\"name\":\"Roti Canai\",\"dishId\":\"roti-canai\"}]",
+    "faves.p.default.settings.v1": "{\"farKm\":20,\"lang\":\"en\",\"diet\":{\"dietary\":[\"v\"],\"avoid\":[\"contains-nuts\",\"contains-peanuts\"]},\"foodPrefs\":[\"halal\"]}",
+    "faves.p.default.ratings.v1": "{\"v:kk-malaysian\":5,\"d:kk-malaysian roti-canai\":4}",
+    "faves.p.default.notes.v1": "{\"cook-at-home ginger-crunch\":\"double the ginger\"}",
+    "faves.p.default.checklist.v1": "{\"cook-at-home ginger-crunch\":{\"at\":1790000000000,\"t\":[\"i:0\",\"s:1\"]}}",
+    "faves.p.p2.favourites.v1": "[{\"type\":\"venue\",\"venueId\":\"gold-lining-cafe\",\"venueName\":\"Gold Lining Cafe\",\"isRecipe\":false}]",
+    "faves.p.p2.settings.v1": "{\"diet\":{\"dietary\":[],\"avoid\":[\"contains-shellfish\"]}}",
+    "faves.order.v1": "[{\"venueId\":\"kk-malaysian\",\"venueName\":\"KK Malaysian\",\"phone\":null,\"name\":\"Roti Canai\",\"price\":8.5,\"qty\":2,\"collected\":false,\"dishId\":\"roti-canai\"}]",
+    "faves.shopping.v1": "[{\"venueId\":\"cook-at-home\",\"venueName\":\"Cook at Home\",\"phone\":null,\"name\":\"Ginger\",\"price\":null,\"qty\":1,\"collected\":false}]",
+    "faves.timers.v1": "{\"cook-at-home ginger-crunch#2\":{\"endsAt\":1790000600000}}",
+    "faves.geo.consent.v1": "{\"suppressed\":true}",
+    "faves.sync.v1": "{\"code\":\"TESTCODE-NOT-REAL\",\"lastSyncedAt\":\"2026-09-30T00:00:00.000Z\"}",
+    "faves.sync.base.v1": "{\"format\":\"faves.personal-data\",\"v\":1,\"stores\":{\"profiles\":1,\"favourites\":1,\"ratings\":1,\"notes\":1,\"settings\":1,\"order\":1},\"profiles\":[{\"id\":\"default\",\"name\":\"Me\",\"favourites\":[{\"type\":\"venue\",\"venueId\":\"kk-malaysian\",\"venueName\":\"KK Malaysian\",\"isRecipe\":false}],\"settings\":{\"diet\":{\"dietary\":[\"v\"],\"avoid\":[\"contains-nuts\",\"contains-peanuts\"]}},\"ratings\":null,\"notes\":null}],\"order\":[]}"
+  }
+}

@@ -37,6 +37,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
 import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, untilPresent } from "./lib/browser.mjs";
+import { SCHEMA_KEY, UPGRADE_SNAPSHOT_KEY, USER_SCHEMA } from "../site/js/user-schema.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -258,6 +259,10 @@ async function bootScreen(cdp, sessionId, driver, report, base, screen, venueId)
   cdp.on("Runtime.consoleAPICalled", onConsole);
 
   const url = base + screen.url(venueId);
+  // Forget the schema stamp the previous screen left, so THIS page has to
+  // write it again — otherwise the assertion below would only ever prove the
+  // first screen ran the upgrade (510/040). No-op on the very first screen.
+  await driver.evalPage(`try { localStorage.removeItem(${JSON.stringify(SCHEMA_KEY)}) } catch {}`).catch(() => {});
   await cdp.send("Page.navigate", { url }, sessionId);
 
   // A screen that never becomes ready is a FAILURE, not a crash. Reporting it
@@ -285,6 +290,18 @@ async function bootScreen(cdp, sessionId, driver, report, base, screen, venueId)
     `${screen.name}: booted with no console errors`,
     errors.length === 0,
     errors.length ? errors.join(" | ") : url
+  );
+
+  // Every page runs the user-data upgrade chain before any store reads storage
+  // (roadmap 510/040). On this fresh profile that stamps the current schema;
+  // a page whose entry module skipped the upgrade would leave it unset.
+  const stamped = await driver
+    .evalPage(`({ schema: localStorage.getItem(${JSON.stringify(SCHEMA_KEY)}), snapshot: localStorage.getItem(${JSON.stringify(UPGRADE_SNAPSHOT_KEY)}) })`)
+    .catch((e) => ({ error: String(e) }));
+  report.check(
+    `${screen.name}: this device's data is stamped with user schema ${USER_SCHEMA}, no snapshot left over`,
+    !stamped.error && stamped.schema === String(USER_SCHEMA) && stamped.snapshot === null,
+    JSON.stringify(stamped)
   );
 
   for (const check of screen.checks) {
