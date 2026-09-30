@@ -335,13 +335,21 @@ const freezeClock = (iso) => `(() => {
  */
 const nullOneDay = (id, day) => `(() => {
   const real = globalThis.fetch;
-  const target = "data/restaurants/" + ${JSON.stringify(id)} + ".json";
+  const id = ${JSON.stringify(id)};
+  const day = ${JSON.stringify(day)};
+  const target = "data/restaurants/" + id + ".json";
+  // Since 510/020 the home card reads data/summary.json, never the venue file,
+  // so a patch on the venue file alone left home unpatched and this check red
+  // on a correct engine. Patch the venue's record in both.
+  const summary = "data/summary.json";
   globalThis.fetch = async (input, init) => {
     const res = await real(input, init);
     const url = typeof input === "string" ? input : (input && input.url) || "";
-    if (!url.includes(target) || !res.ok) return res;
+    const isVenue = url.includes(target);
+    if ((!isVenue && !url.includes(summary)) || !res.ok) return res;
     const body = await res.clone().json();
-    if (body && body.hours) body.hours[${JSON.stringify(day)}] = null;
+    const records = isVenue ? [body] : Array.isArray(body) ? body.filter((r) => r && r.id === id) : [];
+    for (const r of records) if (r && r.hours) r.hours[day] = null;
     return new Response(JSON.stringify(body), {
       status: 200,
       headers: { "Content-Type": "application/json" },
