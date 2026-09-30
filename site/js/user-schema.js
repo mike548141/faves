@@ -54,6 +54,11 @@ export const STORE_SCHEMA = Object.freeze({
   notes: 1,
   settings: 1,
   order: 1,
+  // Personal recipes (roadmap 510/050): one record per recipe, in the
+  // published recipe shape, filed into sync buckets by a hash of the `u:` id
+  // (sync-buckets.js). Changing RECIPE_BUCKETS, the hash or the record's shape
+  // is a change of this store's shape: bump this with it.
+  recipes: 1,
 });
 
 /** The stores in `snapshot.stores` that this build KNOWS and that are numbered

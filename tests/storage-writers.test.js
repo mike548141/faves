@@ -36,6 +36,7 @@ const WRITERS = {
   "favourites.js": "its own key: hearts",
   "ratings.js": "its own key: ratings",
   "notes.js": "its own key: recipe notes",
+  "recipes.js": "its own key: personal recipes, the device's cookbook (510/050)",
   "settings.js": "its own key: settings, including allergen flags",
   "cart.js": "its own key: the order tally (and, via createOrder, the shopping list)",
   "checklist.js": "its own key: cook-mode ticks",
