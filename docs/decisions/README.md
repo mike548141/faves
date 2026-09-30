@@ -1803,3 +1803,7 @@ deliberation those compact docs omit.
   is deferred (recipes fit in local storage); sync keeps one core copy and
   splits only recipes into buckets; older code carries unknown stores through
   and pauses only when a known store changes shape.
+- [0147](0147-data-reads-come-from-the-phones-own-store-and-every-download-is-checked.md) — <!-- wrapscan:allow: a link target cannot wrap -->
+  **Data reads come from the phone's own store, and every download is
+  checked** (`510/030`). Network-first reads are rejected; an edit reaches an
+  online phone one screen later, a trade still open with the owner.
