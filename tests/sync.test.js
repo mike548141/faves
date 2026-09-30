@@ -21,7 +21,7 @@ import {
   UPDATE_NEEDED,
   MAX_ATTEMPTS,
 } from "../site/js/sync.js";
-import { collectPersonalData, FORMAT_VERSION, STORE_SCHEMA } from "../site/js/personal-data.js";
+import { collectPersonalData, USER_SCHEMA, STORE_SCHEMA } from "../site/js/personal-data.js";
 import { mergePersonal, mergeSet } from "../site/js/sync-merge.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "../site/js/sync-crypto.js";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
@@ -701,7 +701,7 @@ test("a server copy one version ahead keeps its unknown store after an old devic
   const newerDevice = device({ favs: [venue("pandan")] });
   const newerSnap = {
     ...collectPersonalData(newerDevice, { exportedAt: "2026-09-30T00:00:00.000Z" }),
-    v: FORMAT_VERSION + 1,
+    v: USER_SCHEMA + 1,
     stores: { ...STORE_SCHEMA, recipes: 1, pantry: 1 },
     pantry: { flour: "plain" },
   };
@@ -718,7 +718,7 @@ test("a server copy one version ahead keeps its unknown store after an old devic
   const onServer = await serverCopy(server, code);
   assert.deepEqual(onServer.profiles[0].recipes, [RECIPE], "the recipe store was dropped from the server copy");
   assert.deepEqual(onServer.pantry, { flour: "plain" });
-  assert.equal(onServer.v, FORMAT_VERSION + 1, "the old device stamped its own lower version over the copy");
+  assert.equal(onServer.v, USER_SCHEMA + 1, "the old device stamped its own lower version over the copy");
   assert.equal(onServer.stores.recipes, 1);
   assert.deepEqual(onServer.profiles[0].favourites.map(favKey).sort(), ["v:kk", "v:pandan"]);
 
@@ -752,7 +752,9 @@ test("a store this build KNOWS, in a newer shape, pauses sync and writes nothing
   assert.equal(res.ok, false);
   assert.equal(res.error, "update-needed");
   assert.deepEqual(res.stores, ["favourites"]);
-  assert.equal(s.status().state, "error");
+  // Its own state since 510/090: ERROR's row says "tap to retry", and no
+  // retry can help until this device runs a newer Faves.
+  assert.equal(s.status().state, "paused");
   assert.equal(s.status().error, UPDATE_NEEDED);
   assert.equal(server.puts, 1, "nothing was written over the newer copy");
   assert.equal(old.getItem(SYNC_BASE_KEY), null, "no base was recorded");
@@ -763,10 +765,10 @@ test("the base and the server copy run through the upgrade chain, and an unstamp
   assert.equal(upgradeSnapshot(null), null);
   assert.equal(upgradeSnapshot([1]), null);
   const unstamped = upgradeSnapshot({ profiles: [], shelf: 1 });
-  assert.equal(unstamped.v, FORMAT_VERSION);
+  assert.equal(unstamped.v, USER_SCHEMA);
   assert.equal(unstamped.shelf, 1, "the chain must carry what it does not know");
   const older = upgradeSnapshot({ v: 0, profiles: [{ id: "a", name: "Me", recipes: [1] }] });
-  assert.equal(older.v, FORMAT_VERSION);
+  assert.equal(older.v, USER_SCHEMA);
   assert.deepEqual(older.profiles[0].recipes, [1]);
 });
 
@@ -785,4 +787,21 @@ test("an un-heart still propagates through a base read back through the chain", 
   await syncA.syncNow();
   await mk(b, server).syncNow();
   assert.deepEqual(favsOf(b), ["v:kk"]);
+});
+
+// --- the pause has its own state (roadmap 510/090) --------------------------
+//
+// Until 2026-09-30 the "Update Faves" pause reused ERROR, so the Settings row
+// read "Couldn't sync — tap to retry" while the panel said to update, and the
+// panel offered a Retry that cannot help.
+test("a paused sync has its own row label and view, not the error's retry", async () => {
+  const { summaryText, computeViewKey } = await import("../site/js/sync-ui.js");
+  const local = { joining: false, justOn: false };
+  const paused = { state: "paused", error: UPDATE_NEEDED };
+  assert.equal(computeViewKey(paused, local), "paused");
+  assert.match(summaryText(paused), /update Faves/i);
+  assert.doesNotMatch(summaryText(paused), /retry/i);
+  // The control: the error state still offers retry, so the two did not merge.
+  assert.match(summaryText({ state: "error", error: "x" }), /retry/i);
+  assert.equal(computeViewKey({ state: "error" }, local), "error");
 });

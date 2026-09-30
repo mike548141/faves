@@ -18,3 +18,23 @@ export function safeStorage() {
     };
   }
 }
+
+/**
+ * Every `faves.`-prefixed key a storage backend can enumerate. Returns [] when
+ * the backend can't enumerate (the in-memory shim `safeStorage()` falls back to
+ * in a locked-down browser) — callers must treat it as best-effort, not proof.
+ *
+ * Lives here, not in personal-data.js, because the startup upgrade chain
+ * (user-schema.js) needs it and must import nothing that reads a store when it
+ * loads: personal-data.js imports every store module, and each of those reads
+ * storage the moment it is evaluated (roadmap 510/040).
+ */
+export function listStoredKeys(storage) {
+  if (!storage || typeof storage.key !== "function" || typeof storage.length !== "number") return [];
+  const out = [];
+  for (let i = 0; i < storage.length; i += 1) {
+    const k = storage.key(i);
+    if (typeof k === "string" && k.startsWith("faves.")) out.push(k);
+  }
+  return out.sort();
+}

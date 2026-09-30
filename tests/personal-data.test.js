@@ -17,10 +17,9 @@ import { mergePersonal } from "../site/js/sync-merge.js";
 import { readFileSync } from "node:fs";
 import {
   FORMAT,
-  FORMAT_VERSION,
+  USER_SCHEMA,
   ORDER_KEY,
   STORE_SCHEMA,
-  UPGRADE_STEPS,
   upgradePersonalData,
   applyPersonalData,
   collectPersonalData,
@@ -145,7 +144,7 @@ test("ignores keys outside the faves. namespace", () => {
 test("stamps the format marker, version and export time", () => {
   const data = collectPersonalData(seeded(), { exportedAt: AT });
   assert.equal(data.format, FORMAT);
-  assert.equal(data.v, FORMAT_VERSION);
+  assert.equal(data.v, USER_SCHEMA);
   assert.equal(data.exportedAt, AT);
 });
 
@@ -275,7 +274,7 @@ function device() {
 function file(overrides = {}) {
   return {
     format: FORMAT,
-    v: FORMAT_VERSION,
+    v: USER_SCHEMA,
     exportedAt: AT,
     profiles: [
       {
@@ -1113,7 +1112,7 @@ test("export carries foodPrefs, so a backup restores Halal/Kosher/Meatarian", ()
 test("an older backup is upgraded and imported, not refused", () => {
   const r = parsePersonalData({ v: 0, profiles: [{ id: "a", name: "Me", favourites: [{ type: "venue", venueId: "kk" }] }] });
   assert.equal(r.ok, true, r.error);
-  assert.equal(r.data.v, FORMAT_VERSION);
+  assert.equal(r.data.v, USER_SCHEMA);
   assert.equal(r.data.profiles[0].favourites.length, 1);
 });
 
@@ -1124,7 +1123,7 @@ test("the format-1 fixture still imports, allergens and all", () => {
   const raw = readFileSync(new URL("./fixtures/personal-data-v1.json", import.meta.url), "utf8");
   const r = parsePersonalData(raw);
   assert.equal(r.ok, true, r.error);
-  assert.equal(r.data.v, FORMAT_VERSION);
+  assert.equal(r.data.v, USER_SCHEMA);
   assert.deepEqual(r.data.profiles.map((p) => p.name), ["Me", "Sam"]);
   assert.deepEqual(r.data.profiles[0].settings.diet.avoid, ["contains-nuts", "contains-peanuts"]);
   assert.equal(r.data.profiles[0].favourites.length, 2);
@@ -1134,11 +1133,8 @@ test("the format-1 fixture still imports, allergens and all", () => {
   assert.equal(plan.totals.favourites, 3);
 });
 
-test("every format below the current one has an upgrade step", () => {
-  for (let v = 1; v < FORMAT_VERSION; v += 1) {
-    assert.equal(typeof UPGRADE_STEPS[v], "function", `no upgrade step from format ${v}`);
-  }
-});
+// "Every version below the current one has a step" moved to
+// tests/user-schema.test.js with the chain itself (roadmap 510/040).
 
 test("the chain never strips a field it does not understand", () => {
   // The sync copy and the base run through here too (sync.js), so an upgrade
@@ -1148,7 +1144,7 @@ test("the chain never strips a field it does not understand", () => {
   assert.deepEqual(up.data.shelf, { x: 1 });
   assert.deepEqual(up.data.profiles[0].pantry, [1]);
   // A copy already at or above this build's version is returned as it is.
-  const newer = { v: FORMAT_VERSION + 1, profiles: [] };
+  const newer = { v: USER_SCHEMA + 1, profiles: [] };
   assert.equal(upgradePersonalData(newer).data, newer);
   assert.equal(upgradePersonalData({ profiles: [] }).ok, false, "no version is not upgradable");
 });

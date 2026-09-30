@@ -5,7 +5,8 @@
 // verbs sync.js exposes (enable/join/resolve/disable/syncNow).
 //
 // A STATE MACHINE OF VIEWS, NOT A FLAT PANEL. The six views the brief names
-// (off, just-turned-on, on, use-an-existing-code, needs-decision, error) are
+// (off, just-turned-on, on, use-an-existing-code, needs-decision, error) — and
+// a seventh, paused, since roadmap 510/090 — are
 // genuinely different screens, not one screen with things hidden — so this
 // module tracks a `viewKey` computed from the engine's status plus two purely
 // local flags (`joining`, `justOn` — see computeViewKey below) and only tears
@@ -38,7 +39,7 @@
 // reason: a scanner that recognises a URL will offer to "open" it, which is
 // exactly the share-sheet-adjacent path the code must never take.
 
-import { sync, OFF, SYNCING, ERROR, NEEDS_DECISION } from "./sync.js";
+import { sync, OFF, SYNCING, ERROR, NEEDS_DECISION, PAUSED } from "./sync.js";
 import { isValidSyncCode } from "./sync-code.js";
 import { encodeQR } from "./qr.js";
 import { copyText } from "./share-core.js";
@@ -105,10 +106,13 @@ function statusLine(st) {
 
 /** The Settings index row's subtitle (ADR 0025) — the answer to "is sync on,
  *  and is it happy?" without opening the panel. */
-function summaryText(st) {
+export function summaryText(st) {
   if (st.state === OFF) return "Off";
   if (st.state === NEEDS_DECISION) return "Needs your answer";
   if (st.state === ERROR) return "Couldn’t sync — tap to retry";
+  // Not "tap to retry": no retry helps until this device runs a newer Faves
+  // (roadmap 510/090 — the row used to say retry while the panel said update).
+  if (st.state === PAUSED) return "Paused — update Faves";
   if (st.state === SYNCING) return "Syncing…";
   return st.lastSyncedAt ? `On — synced ${relTime(st.lastSyncedAt)}` : "On — not synced yet";
 }
@@ -207,8 +211,9 @@ function buildCodeBlock(code) {
  *  else comes from the engine. Idle and syncing deliberately collapse to the
  *  same "on" key (see the file header) so a background sync never rebuilds
  *  the panel out from under a reader. */
-function computeViewKey(st, local) {
+export function computeViewKey(st, local) {
   if (st.state === ERROR) return "error";
+  if (st.state === PAUSED) return "paused";
   if (st.state === NEEDS_DECISION) return "decision";
   if (st.state === OFF) return local.joining ? "join" : "off";
   return local.justOn ? "justOn" : "on";
@@ -259,6 +264,7 @@ export function syncControls() {
     if (viewKey === "justOn") return buildJustOn(st.code);
     if (viewKey === "decision") return buildDecision(st);
     if (viewKey === "error") return buildError(st);
+    if (viewKey === "paused") return buildPaused(st);
     return buildOn(st);
   }
 
@@ -373,7 +379,7 @@ export function syncControls() {
   /**
    * "Turn off sync on this device", with its inline confirm.
    *
-   * Built once and used by BOTH the "on" view and the ERROR view. Shared
+   * Built once and used by the "on", ERROR and paused views. Shared
    * rather than written twice on purpose: the confirmation's wording is a
    * ruling (ADR 0060's addendum — name the *scope*, never a device count),
    * and a rule with two implementations is one this repo has already watched
@@ -598,6 +604,45 @@ export function syncControls() {
       focusTarget: message,
       refs: {
         patch: (st2) => { message.textContent = st2.error || "Something went wrong with sync."; },
+        hideConfirm: off.hideConfirm,
+      },
+    };
+  }
+
+  // --- paused (roadmap 510/090) ---------------------------------------------
+  //
+  // Another device has changed the shape of a store this one reads (ADR 0146
+  // §3). Until 2026-09-30 this reused the error view, so it offered Retry — a
+  // button that cannot help, because the only fix is a newer Faves on THIS
+  // device. No Retry here: the engine already checks again on every
+  // foreground, and an updated build simply passes. Turning sync off stays,
+  // for the same reason the error view has it (ADR 0118).
+  function buildPaused(st) {
+    const message = el("p", {
+      className: "settings-note",
+      role: "status",
+      "aria-live": "polite",
+      tabIndex: -1,
+      textContent: st.error,
+    });
+    const hint = el("p", {
+      className: "settings-hint",
+      textContent:
+        "Faves looks for a newer version whenever you come back to it. When one is ready, a Refresh " +
+        "button appears at the bottom of the screen — tap it, and sync carries on by itself.",
+    });
+    const off = turnOffControl();
+    const node = el("div", {}, [
+      message,
+      hint,
+      el("div", { className: "profile-form-actions" }, [off.button]),
+      off.confirm,
+    ]);
+    return {
+      node,
+      focusTarget: message,
+      refs: {
+        patch: (st2) => { if (st2.error) message.textContent = st2.error; },
         hideConfirm: off.hideConfirm,
       },
     };

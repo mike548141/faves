@@ -5,6 +5,9 @@
 // Fail-soft: if anything here throws, the static list in index.html
 // stays on screen untouched.
 
+// FIRST, on purpose: runs the user-data upgrade chain before any store module
+// below reads storage (roadmap 510/040, upgrade-start.js).
+import { markUpgradeRan } from "./upgrade-start.js";
 import { loadRestaurants, loadSearchIndex, recheckReferences, REFERENCE_COPY } from "./data.js";
 import {
   deriveFacets,
@@ -1544,7 +1547,12 @@ function wireLocation(state, render) {
 }
 
 Promise.all([loadRestaurants(), loadSearchIndex()])
-  .then(([restaurants, compactIndex]) => init(restaurants, compactIndex))
+  .then(([restaurants, compactIndex]) => {
+    init(restaurants, compactIndex);
+    // This version has read and drawn the (possibly just upgraded) data, so
+    // the pre-upgrade snapshot may go on the next load (510/040).
+    markUpgradeRan();
+  })
   .catch((err) => {
     // Leave the static fallback list in place; just note it.
     console.error("Faves: falling back to static list.", err);

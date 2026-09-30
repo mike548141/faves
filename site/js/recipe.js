@@ -4,6 +4,9 @@
 // "goes well with" links to the other recipes. Self-contained helpers, in
 // keeping with the other screen modules.
 
+// FIRST, on purpose: runs the user-data upgrade chain before any store module
+// below reads storage (roadmap 510/040, upgrade-start.js).
+import { markUpgradeRan } from "./upgrade-start.js";
 import { loadRestaurant } from "./data.js";
 import { slug } from "./slug.js";
 import { dishId, findDish } from "./dish-id.js";
@@ -405,6 +408,7 @@ async function main() {
     if (!item) return fail();
     current = { collection, item };
     render(collection, item);
+    markUpgradeRan(); // the upgraded data has been read and drawn (510/040)
   } catch (err) {
     console.error("Recipe load failed:", err);
     fail();

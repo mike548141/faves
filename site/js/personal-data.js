@@ -51,6 +51,17 @@ import { normaliseNoteText } from "./notes.js";
 import { createSettings, sanitiseDiet, sanitiseFoodPrefs, DEFAULTS as SETTINGS_DEFAULTS } from "./settings.js";
 import { mergeItems, normaliseNote } from "./cart.js";
 import { optionId } from "./addons.js";
+import { listStoredKeys } from "./store.js";
+import {
+  USER_SCHEMA,
+  STORE_SCHEMA,
+  storesAhead,
+  UPGRADE_STEPS,
+  upgradePersonalData,
+  SCHEMA_KEY,
+  UPGRADE_SNAPSHOT_KEY,
+} from "./user-schema.js";
+import { PERSIST_ASKED_KEY } from "./storage-persist.js";
 
 // Every settings field EXCEPT diet, which is handled just below by its own
 // safety-critical choice logic (keep/incoming/combine) rather than a plain
@@ -63,83 +74,19 @@ import { optionId } from "./addons.js";
 // there is nothing left to remember to update.
 const MERGE_SETTINGS_FIELDS = Object.keys(SETTINGS_DEFAULTS).filter((f) => f !== "diet");
 
-/** Marker + version of the on-disk shape. This is a contract we have to keep
- *  being able to read, which is exactly why the file is not a raw dump of
- *  localStorage: the internal key names are ours to change, this isn't. */
+/** Marker of the on-disk shape. This is a contract we have to keep being able
+ *  to read, which is exactly why the file is not a raw dump of localStorage:
+ *  the internal key names are ours to change, this isn't. Its version is
+ *  `USER_SCHEMA` (user-schema.js), carried as `v` — the one number every copy
+ *  of the personal layer carries (roadmap 510/040). */
 export const FORMAT = "faves.personal-data";
-export const FORMAT_VERSION = 1;
 
-/**
- * Each store's own shape number (ADR 0146 §3, roadmap 510/010). Carried in
- * every snapshot as `stores`, so a device reading one can tell "a store I know
- * has changed shape since I was built" — the one case where it must stop and
- * ask to be updated — from "a store I have never heard of", which it carries
- * through untouched and keeps syncing. Bump a store's number only when its
- * SHAPE changes in a way this build's reader would misread; adding a store is
- * not a bump of anyone else's number. Frozen: a caller mutating the table
- * would silently change what every later snapshot claims.
- */
-export const STORE_SCHEMA = Object.freeze({
-  profiles: 1,
-  favourites: 1,
-  ratings: 1,
-  notes: 1,
-  settings: 1,
-  order: 1,
-});
-
-/** The stores in `snapshot.stores` that this build KNOWS and that are numbered
- *  newer than this build reads. A store it does not know is never in this list
- *  — that one is carried, not refused. An absent or malformed `stores` map is a
- *  snapshot from before the numbers existed, which is version 1 of everything. */
-export function storesAhead(snapshot) {
-  const stores = snapshot?.stores;
-  if (!stores || typeof stores !== "object" || Array.isArray(stores)) return [];
-  return Object.keys(STORE_SCHEMA).filter((name) => {
-    const n = stores[name];
-    return typeof n === "number" && Number.isFinite(n) && n > STORE_SCHEMA[name];
-  });
-}
-
-/**
- * The upgrade chain: one step per format version, each taking a snapshot at
- * version `from` to `from + 1`. EMPTY until a format 2 exists, so today the
- * chain is the identity (roadmap 510/010 step 2). A step must carry every field
- * it does not understand through untouched — the sync copy and the sync base run
- * through here too (sync.js), and a step that rebuilt the object field by field
- * would reintroduce exactly the loss ADR 0146 §3 closed.
- *
- * tests/personal-data.test.js requires a step for every version from 1 up to
- * FORMAT_VERSION − 1, so bumping the version without writing its step fails.
- */
-export const UPGRADE_STEPS = Object.freeze({});
-
-/**
- * Bring a snapshot (a backup, the sync copy or the sync base) up to this
- * build's FORMAT_VERSION. Never mutates its input. A snapshot already at or
- * above this version is returned as it is: an older build reading a newer one
- * carries it (ADR 0146 §3), and refusing is `storesAhead`'s call, not this
- * function's. A version below 1 predates every format that ever shipped, so
- * the chain starts at 1 for it — that is what "until a v2 exists the chain is
- * the identity" means.
- *
- * Returns `{ ok: true, data, from }` or `{ ok: false }` when the input carries
- * no usable version at all.
- */
-export function upgradePersonalData(raw) {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { ok: false };
-  if (typeof raw.v !== "number" || !Number.isFinite(raw.v)) return { ok: false };
-  const from = raw.v;
-  if (from >= FORMAT_VERSION) return { ok: true, data: raw, from };
-  let data = { ...raw };
-  for (let v = Math.max(1, Math.floor(from)); v < FORMAT_VERSION; v += 1) {
-    const step = UPGRADE_STEPS[v];
-    if (typeof step !== "function") return { ok: false };
-    data = step(data);
-  }
-  data.v = FORMAT_VERSION;
-  return { ok: true, data, from };
-}
+// The schema number, the per-store numbers and the upgrade chain live in
+// user-schema.js, because the chain must run at startup before any store module
+// is evaluated and this module imports all of them. Re-exported so sync.js and
+// the tests keep one place to import the personal layer from.
+export { USER_SCHEMA, STORE_SCHEMA, storesAhead, UPGRADE_STEPS, upgradePersonalData, SCHEMA_KEY, UPGRADE_SNAPSHOT_KEY };
+export { listStoredKeys };
 
 /** Device-level (not per-profile) stores. The order tally is one order for
  *  the table, shared by whoever is using the phone — see ADR 0012. */
@@ -246,6 +193,40 @@ const EXCLUDED = {
       "carrying it to another one would either silence an ask that phone never " +
       "turned down, or bring back a prompt you had switched off.",
   },
+  // The startup upgrade chain's own two keys (roadmap 510/040, user-schema.js).
+  // Both are facts about THIS device's storage. A backup carries its own schema
+  // number as `v`; restoring this device's number onto another would tell that
+  // device its data is in a shape it may not be. Spared by a replace for the
+  // same reason: a replace writes data in this build's shape, which is exactly
+  // what the number already says — wiping it would make the next load read the
+  // restored data as schema 1.
+  [SCHEMA_KEY]: {
+    spare: true,
+    why:
+      "Which version of Faves’ storage layout this device’s data is in. " +
+      "Deliberately not exported: the file carries its own version.",
+  },
+  // A whole second copy of this device's data, held only across an upgrade.
+  // Exporting it would double the file and restore stale data over new. Spared
+  // by a replace: it is the way back if the upgraded version fails, and a
+  // replace is not grounds to throw that away.
+  [UPGRADE_SNAPSHOT_KEY]: {
+    spare: true,
+    why:
+      "A copy of this device’s data from just before Faves last upgraded it, " +
+      "kept until the new version has run. Deliberately not exported: it is " +
+      "this device’s safety net, not more of your data.",
+  },
+  // Whether this browser has already been asked to keep the data (roadmap
+  // 510/090, storage-persist.js). A fact about this browser's answer, like the
+  // location promise above: carried to another device it would stop that
+  // browser ever being asked. Spared by a replace for the same reason.
+  [PERSIST_ASKED_KEY]: {
+    spare: true,
+    why:
+      "Whether this browser has already been asked to keep your Faves data. " +
+      "Deliberately not exported: the answer belongs to this browser.",
+  },
 };
 
 /** What the exported file shows: one plain sentence per store, no internals. */
@@ -283,21 +264,6 @@ function parse(raw) {
   } catch {
     return null; // corrupt/hand-edited value — record it as absent, never throw
   }
-}
-
-/**
- * Every `faves.`-prefixed key a storage backend can enumerate. Returns [] when
- * the backend can't enumerate (the in-memory shim `safeStorage()` falls back to
- * in a locked-down browser) — callers must treat it as best-effort, not proof.
- */
-export function listStoredKeys(storage) {
-  if (!storage || typeof storage.key !== "function" || typeof storage.length !== "number") return [];
-  const out = [];
-  for (let i = 0; i < storage.length; i += 1) {
-    const k = storage.key(i);
-    if (typeof k === "string" && k.startsWith("faves.")) out.push(k);
-  }
-  return out.sort();
 }
 
 /**
@@ -354,7 +320,7 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
 
   const data = {
     format: FORMAT,
-    v: FORMAT_VERSION,
+    v: USER_SCHEMA,
     stores: { ...STORE_SCHEMA },
     exportedAt: exportedAt ?? null,
     _readme: README,
@@ -606,7 +572,7 @@ export function parsePersonalData(input) {
   if (typeof raw.v !== "number" || !Number.isFinite(raw.v)) {
     return fail("That doesn’t look like a Faves data file — it carries no format version.");
   }
-  if (raw.v > FORMAT_VERSION) {
+  if (raw.v > USER_SCHEMA) {
     return fail(`This file came from a newer version of Faves (format ${raw.v}). Update Faves, then try again.`);
   }
   // A store this build knows, written in a newer shape, would be misread by the
@@ -617,7 +583,7 @@ export function parsePersonalData(input) {
   // An older file is UPGRADED, never refused (roadmap 510/010 step 2). Until
   // 2026-09-30 this refused it with "can no longer read", which turned every
   // format bump into a lost backup.
-  if (raw.v < FORMAT_VERSION) {
+  if (raw.v < USER_SCHEMA) {
     const up = upgradePersonalData(raw);
     if (!up.ok) return fail(`This file uses format ${raw.v}, which this version of Faves can no longer read.`);
     raw = up.data;
@@ -640,7 +606,7 @@ export function parsePersonalData(input) {
     ok: true,
     data: {
       format: FORMAT,
-      v: FORMAT_VERSION,
+      v: USER_SCHEMA,
       exportedAt: typeof raw.exportedAt === "string" ? raw.exportedAt : null,
       profiles,
       order: sanitiseOrderLines(raw.order),

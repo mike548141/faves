@@ -10,6 +10,9 @@
 // and let their tap activate it. The decision rules live in sw-update.js, where
 // `node --test` can execute them.
 
+// FIRST, on purpose: runs the user-data upgrade chain before any store module
+// below reads storage (roadmap 510/040, upgrade-start.js).
+import "./upgrade-start.js";
 import { createUpdateGate, createReloadGuard, isUpdateReady } from "./sw-update.js";
 import { showUpdateNotice } from "./update-notice.js";
 

@@ -4,7 +4,14 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createPersistence, storageSentences, GRANTED, NOT_GRANTED, UNKNOWN } from "../site/js/storage-persist.js";
+import {
+  createPersistence,
+  storageSentences,
+  GRANTED,
+  NOT_GRANTED,
+  UNKNOWN,
+  PERSIST_ASKED_KEY,
+} from "../site/js/storage-persist.js";
 
 function fakeManager({ persisted = false, grant = true, throws = false } = {}) {
   const m = {
@@ -100,4 +107,52 @@ test("About says whether it was granted, and gives the Safari caveat only off th
   assert.equal(tab.length, 2);
   assert.match(tab[1], /Safari/);
   assert.match(tab[1], /Home Screen/);
+});
+
+// --- asked once per browser, not once per page load (roadmap 510/090) -------
+
+function memStorage() {
+  const m = new Map();
+  return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) };
+}
+
+test("a browser that said no is not asked again on the next visit", async () => {
+  const storage = memStorage();
+  const manager = fakeManager({ grant: false });
+  await createPersistence({ manager, win: {}, storage, now: () => "T1" }).requestOnce();
+  assert.equal(manager.calls, 1);
+  assert.deepEqual(JSON.parse(storage.getItem(PERSIST_ASKED_KEY)), { at: "T1", homeScreen: false });
+  // A new page load: a new persistence object over the same storage.
+  await createPersistence({ manager, win: {}, storage }).requestOnce();
+  assert.equal(manager.calls, 1, "asked again after a no");
+});
+
+test("the ask is recorded BEFORE the browser is asked, so a dismissed prompt counts", async () => {
+  const storage = memStorage();
+  let recordedFirst = null;
+  const manager = {
+    async persisted() { return false; },
+    async persist() { recordedFirst = storage.getItem(PERSIST_ASKED_KEY) !== null; return false; },
+  };
+  await createPersistence({ manager, win: {}, storage }).requestOnce();
+  assert.equal(recordedFirst, true);
+});
+
+test("asked from a tab, then opened from the Home Screen: asked once more, then never", async () => {
+  const storage = memStorage();
+  const manager = fakeManager({ grant: false });
+  const home = { navigator: { standalone: true } };
+  await createPersistence({ manager, win: {}, storage }).requestOnce();
+  await createPersistence({ manager, win: home, storage }).requestOnce();
+  assert.equal(manager.calls, 2, "installing is the one change that can turn a no into a yes");
+  await createPersistence({ manager, win: home, storage }).requestOnce();
+  await createPersistence({ manager, win: {}, storage }).requestOnce();
+  assert.equal(manager.calls, 2, "asked a third time");
+});
+
+test("with no storage to remember in, it behaves as before: once per page load", async () => {
+  const manager = fakeManager({ grant: false });
+  await createPersistence({ manager, win: {} }).requestOnce();
+  await createPersistence({ manager, win: {} }).requestOnce();
+  assert.equal(manager.calls, 2);
 });

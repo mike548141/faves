@@ -1304,6 +1304,22 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   holds the steps and `wrangler.toml` keeps placeholders on purpose. A redeploy
   is one `wrangler deploy` from a config filled outside the tree.
 
+**One user schema, upgraded before anything reads it** (roadmap 510/040, ADR
+0145/0146). `USER_SCHEMA` (`user-schema.js`, replacing `FORMAT_VERSION`) is
+the shape of the whole layer. This device's storage records it in
+`faves.schema.v1`; a backup, the sync copy and the sync base carry it as `v`.
+`upgrade-start.js` is the **first import of every page's entry module**, and
+imports nothing that reads a store, so `upgradeStorage` runs before any store
+module is evaluated: it works on an in-memory copy, saves every `faves.` key to
+`faves.upgrade.snapshot.v1` first, writes the difference, and puts everything
+back if a write fails. The snapshot goes on the load after a page of the new
+version has finished its first render (`markUpgradeRan`). Backups and sync run
+the same chain's `snapshot` half. Per-store numbers (`STORE_SCHEMA`) stay: a
+step that reshapes a store bumps that store's number, which is what sync
+pauses on. The only modules allowed to write storage are listed in
+`tests/storage-writers.test.js`; past versions' data sets live in
+`tests/fixtures/` forever.
+
 A `storage` event keeps other tabs in step (favourites/settings keys are now
 namespaced by the active profile; a registry change re-points them). Recipes
 (Cook at Home) can be
