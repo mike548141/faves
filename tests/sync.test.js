@@ -19,6 +19,7 @@ import {
   SYNC_KEY,
   SYNC_BASE_KEY,
   UPDATE_NEEDED,
+  MAX_ATTEMPTS,
 } from "../site/js/sync.js";
 import { collectPersonalData, FORMAT_VERSION, STORE_SCHEMA } from "../site/js/personal-data.js";
 import { mergePersonal, mergeSet } from "../site/js/sync-merge.js";
@@ -235,30 +236,52 @@ test("a failed sync leaves this device's own data untouched", async () => {
   assert.match(s.status().error, /safe on this device/);
 });
 
-test("a lost race is reported as retryable, not as an error", async () => {
-  const server = fakeServer();
-  const a = device({ favs: [venue("kk")] });
-  await mk(a, server).enable();
-
-  // The race is BETWEEN our read and our write, which is the only place it can
-  // happen — mutating the blob beforehand just means we read the newer etag and
-  // succeed, which is what an earlier version of this test actually asserted.
-  let raced = false;
-  const racing = {
+/** A server that lets `raceTimes` writes by "someone else" land between our
+ *  read and our write — the only place a race can happen. Mutating the blob
+ *  before the read just means we read the newer etag and succeed. */
+function racingServer(server, raceTimes) {
+  let raced = 0;
+  const wrapped = {
+    puts412: 0,
     fetch: async (u, i) => {
       const res = await server.fetch(u, i);
-      if ((i?.method || "GET") === "GET" && !raced) {
-        raced = true;
+      if ((i?.method || "GET") === "GET" && raced < raceTimes) {
+        raced += 1;
         const [id, rec] = [...server.blobs.entries()][0];
-        server.blobs.set(id, { ...rec, etag: '"someone-else-wrote"' });
+        server.blobs.set(id, { ...rec, etag: `"someone-else-wrote-${raced}"` });
       }
+      if (res.status === 412) wrapped.puts412 += 1;
       return res;
     },
   };
+  return wrapped;
+}
+
+test("a lost race goes round again and lands the change (roadmap 510/070)", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  await mk(a, server).enable();
+  const racing = racingServer(server, 1);
   const s = mk(a, racing);
 
   a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
   const res = await s.syncNow();
+  assert.equal(racing.puts412, 1, "the first write should have lost the race");
+  assert.equal(res.ok, true, "the second round should have landed it");
+  assert.equal(s.status().state, "idle");
+  assert.ok(a.getItem(SYNC_BASE_KEY).includes("new"), "the agreement now includes the heart");
+});
+
+test("a race lost on every attempt stops at the bound, as retryable, without advancing the base", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  await mk(a, server).enable();
+  const racing = racingServer(server, Infinity);
+  const s = mk(a, racing);
+
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  const res = await s.syncNow();
+  assert.equal(racing.puts412, MAX_ATTEMPTS, "the retry is bounded");
   assert.equal(res.retry, true, "a 412 must come back as retryable");
   assert.equal(s.status().state, "idle", "a race is normal, not a failure state");
   // A base legitimately exists from the successful first sync. What must NOT
@@ -266,6 +289,83 @@ test("a lost race is reported as retryable, not as an error", async () => {
   // includes the heart we failed to push would make the next merge read that
   // heart as something the pair had agreed on and then deleted.
   assert.ok(!a.getItem(SYNC_BASE_KEY).includes("new"), "a lost race must not advance the base");
+});
+
+/** A window stand-in: enough EventTarget to fire `online`. */
+function fakeWin() {
+  const ls = new Map();
+  return {
+    addEventListener: (t, fn) => ls.set(t, fn),
+    removeEventListener: (t) => ls.delete(t),
+    fire: (t) => ls.get(t)?.(),
+    has: (t) => ls.has(t),
+  };
+}
+
+test("coming back online sends a change that failed while offline (roadmap 510/070)", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  let offline = false;
+  const flaky = { fetch: (u, i) => (offline ? Promise.reject(new TypeError("offline")) : server.fetch(u, i)) };
+  const s = mk(a, flaky);
+  await s.enable();
+  const win = fakeWin();
+  const stop = s.start({ stores: [], doc: null, win });
+  await s.syncNow(); // settle the pull start() fired
+  assert.ok(win.has("online"));
+
+  offline = true;
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  const failed = await s.syncNow();
+  assert.equal(failed.ok, false);
+  assert.equal(s.status().state, "error");
+
+  offline = false;
+  const putsBefore = server.puts;
+  win.fire("online");
+  await new Promise((r) => setTimeout(r, 0));
+  await s.syncNow(); // joins the cycle `online` started, if one is in flight
+  assert.equal(server.puts, putsBefore + 1, "the reconnect did not send the waiting change");
+  assert.ok(a.getItem(SYNC_BASE_KEY).includes("new"));
+  assert.equal(s.status().state, "idle");
+  stop();
+  assert.equal(win.has("online"), false, "stop() removes the listener");
+});
+
+test("coming back online with nothing waiting costs nothing", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  const s = mk(a, server);
+  await s.enable();
+  const win = fakeWin();
+  const stop = s.start({ stores: [], doc: null, win });
+  await s.syncNow();
+  const [gets, puts] = [server.gets, server.puts];
+  win.fire("online");
+  await new Promise((r) => setTimeout(r, 0));
+  assert.equal(server.gets, gets, "a reconnect with nothing owed made a request");
+  assert.equal(server.puts, puts);
+  stop();
+});
+
+test("coming back online sends a debounced change now, rather than waiting it out", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  const store = { subs: new Set(), subscribe(fn) { this.subs.add(fn); return () => this.subs.delete(fn); } };
+  const s = mk(a, server, { debounceMs: 60_000 });
+  await s.enable();
+  const win = fakeWin();
+  const stop = s.start({ stores: [store], doc: null, win });
+  await s.syncNow();
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  for (const fn of store.subs) fn();
+  assert.equal(s._pendingWrite(), true);
+  const puts = server.puts;
+  win.fire("online");
+  await s.syncNow();
+  assert.equal(s._pendingWrite(), false, "the debounce was not flushed");
+  assert.equal(server.puts, puts + 1);
+  stop();
 });
 
 // --- the allergen question ------------------------------------------------

@@ -58,6 +58,13 @@ export const SYNC_ENDPOINT = "https://faves-sync.cakeit.workers.dev";
  *  person editing favourites generates a burst, not a stream. */
 export const DEBOUNCE_MS = 20_000;
 
+/** How many times one sync goes round when its write loses a race (a 412) —
+ *  the first try and two more (roadmap 510/070). Each extra round is one read
+ *  and one conditional write; three is enough for two devices that happened
+ *  to write together, and small enough that a pair stuck racing stops quickly
+ *  and waits for the next edit, foreground or reconnect. */
+export const MAX_ATTEMPTS = 3;
+
 export const OFF = "off";
 export const IDLE = "idle";
 export const SYNCING = "syncing";
@@ -258,6 +265,10 @@ export function createSync({
   // the next one: one KV write every ~20 s per open tab, forever, and a full
   // menu repaint each time. A change the ENGINE made is not a change to sync.
   let quiet = false;
+  // True while this device holds a change the server has not accepted — a
+  // failed cycle, a race lost on every attempt, or a debounced write not yet
+  // sent. What the `online` listener asks before it spends a round trip.
+  let waiting = false;
 
   const readConfig = () => parse(storage.getItem(SYNC_KEY)) || {};
   const writeConfig = (patch) => {
@@ -319,118 +330,25 @@ export function createSync({
     if (inFlight) return inFlight;
 
     inFlight = (async () => {
-      setState(SYNCING);
       try {
-        const { blobId, key } = await deriveSyncKeys(normaliseSyncCode(cfg.code));
-
-        // 1. read what the server has.
-        const got = await fetchImpl(url(blobId), { method: "GET" });
-        let theirs = null;
-        let etag = null;
-        if (got.status === 200) {
-          etag = got.headers.get("etag");
-          theirs = await openBlob(key, new Uint8Array(await got.arrayBuffer()));
-          if (theirs === null) {
-            // Authenticated decryption failed. The blob is not ours, or it is
-            // damaged. Refusing is the only safe move: overwriting it would
-            // destroy whatever it really is, and merging garbage is worse.
-            setState(ERROR, "That sync code doesn’t match the data on the server.");
-            return { ok: false, error: "That sync code doesn’t match the data on the server." };
-          }
-          // A store this build reads has been written in a newer shape. Merging
-          // it would misread it and write the misreading back for everyone, so
-          // this is the one case that pauses (ADR 0146 §3). A store this build
-          // has never heard of is NOT this case: it is carried, and sync goes on.
-          // Nothing is written and nothing local changes; the next foreground
-          // checks again, and an updated build simply passes.
-          const ahead = storesAhead(theirs);
-          if (ahead.length) {
-            setState(ERROR, UPDATE_NEEDED);
-            return { ok: false, error: "update-needed", stores: ahead };
-          }
-          theirs = upgradeSnapshot(theirs) ?? theirs;
-        } else if (got.status !== 404) {
-          setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
-          return { ok: false, error: "sync-unreachable" };
+        // A 412 means the other device wrote between our read and our write.
+        // Until 2026-09-30 that returned `retry: true` and nothing read it, so
+        // the change sat on this device until the next edit, foreground or
+        // reload (roadmap 510/070). Going round again reads THEIR write and
+        // merges against it — the same cycle, so nothing new can go wrong —
+        // and the bound stops two devices that keep racing from spinning. A
+        // refused conditional write costs the Worker a read, not a KV write.
+        let res;
+        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
+          res = await cycle(cfg, decisions);
+          if (!res.retry) break;
         }
-
-        // 2. merge against the last agreement.
-        const mine = collectPersonalData(storage, { exportedAt: now() });
-        const base = readBase();
-        const { merged, conflicts, changes } = mergePersonal(base, mine, theirs ?? mine);
-
-        if (needsDecision(conflicts) && !decisions) {
-          pending = { conflicts, merged };
-          setState(NEEDS_DECISION);
-          return { ok: false, conflicts, needsDecision: true };
-        }
-        // An answer does not merely unblock the write — it has to change what
-        // gets written. Without this the user picks "keep mine", the union the
-        // merge produced provisionally is pushed anyway, and their answer is
-        // silently discarded on the one question in this app that can hurt.
-        applyDietDecision(merged, conflicts, decisions);
-        pending = null;
-
-        // 3. write it back BEFORE touching local storage, so a rejected write
-        //    never leaves this device holding a state the pair never agreed on.
-        //    Skipped when the server already holds exactly this — a pull that
-        //    changed nothing is not a write, and writing it anyway is what
-        //    turned every visibility change into a KV write.
-        if (!(theirs && sameSnapshot(merged, theirs))) {
-          const sealed = await sealBlob(key, merged);
-          const put = await fetchImpl(url(blobId), {
-            method: "PUT",
-            body: sealed,
-            headers: etag ? { "If-Match": etag } : {},
-          });
-
-          if (put.status === 412) {
-            // Someone else wrote between our read and our write. Not an error —
-            // the correct response is to go round again against the newer blob.
-            setState(IDLE);
-            return { ok: false, retry: true, error: "raced" };
-          }
-          if (put.status !== 204) {
-            setState(ERROR, "Couldn’t save to sync just now. Your data is safe on this device.");
-            return { ok: false, error: "sync-write-failed" };
-          }
-        }
-
-        // 4. only now is this an agreement. The server holds `merged`, so it is
-        //    the base whatever happens next — but the LOCAL half is applied only
-        //    if nothing here moved while the round trip was in flight. A heart
-        //    or an allergen flag tapped during it lives in storage and not in
-        //    `mine`; writing `merged` over it would erase the tap, and the next
-        //    cycle would then collect the erased store and push the loss to
-        //    every device (found by the 2026-08-17 cold review — an allergen
-        //    flag is the worst thing this can lose). Instead the tap stays, the
-        //    base becomes `merged`, and the cycle it already scheduled carries
-        //    the tap out as a change against that base.
-        const localMoved = !sameSnapshot(mine, collectPersonalData(storage, { exportedAt: now() }));
-        if (!localMoved && !sameSnapshot(merged, mine)) {
-          writeSnapshot(storage, merged);
-          // Before the base, deliberately: if re-pointing the live stores
-          // throws, the base must not claim an agreement whose local half
-          // never landed. Quiet, so the stores' own reload notifications do
-          // not re-arm the debounce.
-          quiet = true;
-          try {
-            applied(merged);
-          } catch {
-            /* a screen that failed to repaint is not a reason to fail the sync */
-          } finally {
-            quiet = false;
-          }
-        }
-        writeBase(merged);
-        writeConfig({ lastSyncedAt: now() });
-        setState(IDLE);
-        if (localMoved) schedule();
-        return { ok: true, changes, deferredLocal: localMoved };
-      } catch {
-        // Offline is the overwhelmingly common cause and is not a fault.
-        setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
-        return { ok: false, error: "sync-unreachable" };
+        // Is there something this device still owes the server? A success
+        // that deferred a mid-flight local change owes it (it scheduled
+        // another cycle); a failure owes whatever it was carrying; a question
+        // for the reader is theirs to answer, not the network's.
+        waiting = res.ok === true ? !!res.deferredLocal : !res.needsDecision;
+        return res;
       } finally {
         inFlight = null;
       }
@@ -438,9 +356,130 @@ export function createSync({
     return inFlight;
   }
 
+  /** One read → merge → write → record pass. `syncNow` runs it, and runs it
+   *  again (a bounded number of times) when the write lost a race. */
+  async function cycle(cfg, decisions) {
+    setState(SYNCING);
+    try {
+      const { blobId, key } = await deriveSyncKeys(normaliseSyncCode(cfg.code));
+
+      // 1. read what the server has.
+      const got = await fetchImpl(url(blobId), { method: "GET" });
+      let theirs = null;
+      let etag = null;
+      if (got.status === 200) {
+        etag = got.headers.get("etag");
+        theirs = await openBlob(key, new Uint8Array(await got.arrayBuffer()));
+        if (theirs === null) {
+          // Authenticated decryption failed. The blob is not ours, or it is
+          // damaged. Refusing is the only safe move: overwriting it would
+          // destroy whatever it really is, and merging garbage is worse.
+          setState(ERROR, "That sync code doesn’t match the data on the server.");
+          return { ok: false, error: "That sync code doesn’t match the data on the server." };
+        }
+        // A store this build reads has been written in a newer shape. Merging
+        // it would misread it and write the misreading back for everyone, so
+        // this is the one case that pauses (ADR 0146 §3). A store this build
+        // has never heard of is NOT this case: it is carried, and sync goes on.
+        // Nothing is written and nothing local changes; the next foreground
+        // checks again, and an updated build simply passes.
+        const ahead = storesAhead(theirs);
+        if (ahead.length) {
+          setState(ERROR, UPDATE_NEEDED);
+          return { ok: false, error: "update-needed", stores: ahead };
+        }
+        theirs = upgradeSnapshot(theirs) ?? theirs;
+      } else if (got.status !== 404) {
+        setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
+        return { ok: false, error: "sync-unreachable" };
+      }
+
+      // 2. merge against the last agreement.
+      const mine = collectPersonalData(storage, { exportedAt: now() });
+      const base = readBase();
+      const { merged, conflicts, changes } = mergePersonal(base, mine, theirs ?? mine);
+
+      if (needsDecision(conflicts) && !decisions) {
+        pending = { conflicts, merged };
+        setState(NEEDS_DECISION);
+        return { ok: false, conflicts, needsDecision: true };
+      }
+      // An answer does not merely unblock the write — it has to change what
+      // gets written. Without this the user picks "keep mine", the union the
+      // merge produced provisionally is pushed anyway, and their answer is
+      // silently discarded on the one question in this app that can hurt.
+      applyDietDecision(merged, conflicts, decisions);
+      pending = null;
+
+      // 3. write it back BEFORE touching local storage, so a rejected write
+      //    never leaves this device holding a state the pair never agreed on.
+      //    Skipped when the server already holds exactly this — a pull that
+      //    changed nothing is not a write, and writing it anyway is what
+      //    turned every visibility change into a KV write.
+      if (!(theirs && sameSnapshot(merged, theirs))) {
+        const sealed = await sealBlob(key, merged);
+        const put = await fetchImpl(url(blobId), {
+          method: "PUT",
+          body: sealed,
+          headers: etag ? { "If-Match": etag } : {},
+        });
+
+        if (put.status === 412) {
+          // Someone else wrote between our read and our write. Not an error —
+          // the correct response is to go round again against the newer blob,
+          // which syncNow does (MAX_ATTEMPTS). Nothing local or in the base
+          // has moved, so going round is safe.
+          setState(IDLE);
+          return { ok: false, retry: true, error: "raced" };
+        }
+        if (put.status !== 204) {
+          setState(ERROR, "Couldn’t save to sync just now. Your data is safe on this device.");
+          return { ok: false, error: "sync-write-failed" };
+        }
+      }
+
+      // 4. only now is this an agreement. The server holds `merged`, so it is
+      //    the base whatever happens next — but the LOCAL half is applied only
+      //    if nothing here moved while the round trip was in flight. A heart
+      //    or an allergen flag tapped during it lives in storage and not in
+      //    `mine`; writing `merged` over it would erase the tap, and the next
+      //    cycle would then collect the erased store and push the loss to
+      //    every device (found by the 2026-08-17 cold review — an allergen
+      //    flag is the worst thing this can lose). Instead the tap stays, the
+      //    base becomes `merged`, and the cycle it already scheduled carries
+      //    the tap out as a change against that base.
+      const localMoved = !sameSnapshot(mine, collectPersonalData(storage, { exportedAt: now() }));
+      if (!localMoved && !sameSnapshot(merged, mine)) {
+        writeSnapshot(storage, merged);
+        // Before the base, deliberately: if re-pointing the live stores
+        // throws, the base must not claim an agreement whose local half
+        // never landed. Quiet, so the stores' own reload notifications do
+        // not re-arm the debounce.
+        quiet = true;
+        try {
+          applied(merged);
+        } catch {
+          /* a screen that failed to repaint is not a reason to fail the sync */
+        } finally {
+          quiet = false;
+        }
+      }
+      writeBase(merged);
+      writeConfig({ lastSyncedAt: now() });
+      setState(IDLE);
+      if (localMoved) schedule();
+      return { ok: true, changes, deferredLocal: localMoved };
+    } catch {
+      // Offline is the overwhelmingly common cause and is not a fault.
+      setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
+      return { ok: false, error: "sync-unreachable" };
+    }
+  }
+
   /** Debounced trigger — what a heart or a rating change calls. */
   function schedule() {
     if (quiet || !readConfig().code || !setTimer) return;
+    waiting = true;
     if (timer) clearTimer(timer);
     timer = setTimer(() => {
       timer = null;
@@ -527,7 +566,7 @@ export function createSync({
      * called them. Idempotent, because three page entry points call it and a
      * tab can be shown and hidden repeatedly.
      */
-    start({ stores = [], doc = globalThis.document, onApplied: hook } = {}) {
+    start({ stores = [], doc = globalThis.document, win = globalThis.window, onApplied: hook } = {}) {
       // Set even on a repeat call: the first screen to start wins the listeners,
       // but every screen needs its OWN stores re-pointed after a pull, and a
       // silently-ignored hook here is how a pull lands on disk and on no screen.
@@ -547,6 +586,20 @@ export function createSync({
         };
         doc.addEventListener("visibilitychange", onVis);
         offs.push(() => doc.removeEventListener("visibilitychange", onVis));
+      }
+      // Back online (roadmap 510/070). An offline change fails, sets the
+      // error state and, until 2026-09-30, then waited for the next
+      // foreground — a phone left open on the bench never sent it. Only when
+      // something is owed: a device with nothing waiting spends nothing on a
+      // reconnect, and a pending debounce is sent now rather than restarted.
+      if (win?.addEventListener) {
+        const onOnline = () => {
+          if (!readConfig().code) return;
+          if (timer) flush();
+          else if (waiting) syncNow();
+        };
+        win.addEventListener("online", onOnline);
+        offs.push(() => win.removeEventListener("online", onOnline));
       }
       // A pull on load, so opening the app on the laptop shows what the phone
       // did. Fire-and-forget: a failure here must never block a page render.

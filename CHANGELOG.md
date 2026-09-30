@@ -114,6 +114,10 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Sync no longer sits on a change after a clash or a lost connection.**
+  When your other device saved at the same moment, Faves now tries again
+  straight away (up to three times) instead of waiting for your next edit,
+  and a change made offline is sent as soon as the device is back online.
 - **An older phone no longer deletes data a newer one added.** Sync now
   carries every store it doesn't recognise through untouched, so a device on
   an older version keeps syncing without erasing what a newer version saved.
