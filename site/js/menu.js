@@ -110,6 +110,7 @@ import { initShoppingEntry } from "./shopping-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
 import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js";
 import { startSync } from "./sync-start.js";
+import { startPersistence } from "./storage-persist.js";
 import { mountNotFound } from "./cache-refresh.js";
 import { totalTime } from "./recipe-stats.js";
 
@@ -2151,6 +2152,7 @@ function initContactBar(bar, cardEl) {
 // reachable — even on a stub page or if this menu fails to load.
 initOrderUI();
 startSync(); // continual sync, if the user turned it on (Theme 9 v2)
+startPersistence(); // ask the browser to keep your data, after the first write (510/010)
 initBackToTop();
 // Remember where the page is scrolled to *before* the Settings dialog opens —
 // opening it scrolls the document to the top, so reapply() would otherwise

@@ -287,6 +287,98 @@ export function mergeSettings(base, mine, theirs) {
   return { settings: out, conflicts };
 }
 
+/**
+ * The fields of a profile, and of a snapshot, that THIS build reads. Anything
+ * else in one was put there by a newer build, and is carried through by
+ * `carryUnknown` rather than dropped (ADR 0146 §3, roadmap 510/010).
+ *
+ * `other` and `excluded` are listed as known on purpose: `other` is this
+ * device's LOCAL bag of storage keys it cannot name (personal-data.js), which
+ * ADR 0127(b) keeps out of sync, and `excluded` is the backup file's
+ * explanation table. Neither is a store a newer device put on the server.
+ */
+export const KNOWN_PROFILE_FIELDS = Object.freeze(["id", "name", "active", "favourites", "ratings", "notes", "settings"]);
+export const KNOWN_SNAPSHOT_FIELDS = Object.freeze([
+  "format",
+  "v",
+  "stores",
+  "exportedAt",
+  "_readme",
+  "profiles",
+  "order",
+  "excluded",
+  "other",
+]);
+
+// A value carried without being read must not be able to act on the object it
+// lands in — the same refusal ADR 0127 gives settings.js's futureSettings().
+const UNSAFE_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
+/**
+ * Carry every field this build does not understand from either side into the
+ * merge, untouched (ADR 0146 §3).
+ *
+ * WHY ABSENCE IS "NO OPINION" HERE, when everywhere else in this file it is a
+ * value. A device that does not know a store never has it, so its side is
+ * absent however the store was edited — reading that absence as a deletion is
+ * the exact loss this exists to stop: an old device writes the server copy
+ * without the store, and the newer device's three-way merge then deletes it,
+ * locally and on the server. So the side that has it wins; when both have it
+ * the usual base rules apply, and a genuine two-sided difference settles by
+ * `tieBreak`, which keeps the merge symmetric. What this cannot do is delete an
+ * unknown store — that is the newer build's merge's job, and it knows the store.
+ *
+ * No size bound, unlike futureSettings(): a store is whatever a newer build
+ * made it (recipes, later), and a cap would drop exactly the data this keeps.
+ * The Worker's MAX_BODY_BYTES already bounds the whole copy.
+ */
+export function carryUnknown(base, mine, theirs, known) {
+  const b = map(base);
+  const m = map(mine);
+  const t = map(theirs);
+  const skip = new Set(known);
+  const out = {};
+  const keys = new Set([...Object.keys(m), ...Object.keys(t)]);
+  for (const key of [...keys].sort()) {
+    if (skip.has(key) || UNSAFE_KEYS.has(key)) continue;
+    const mv = m[key];
+    const tv = t[key];
+    let value;
+    if (mv === undefined) value = tv;
+    else if (tv === undefined) value = mv;
+    else if (same(mv, tv)) value = mv;
+    else if (same(mv, b[key])) value = tv;
+    else if (same(tv, b[key])) value = mv;
+    else value = tieBreak(mv, tv);
+    if (value !== undefined) out[key] = value;
+  }
+  return out;
+}
+
+/** The larger of two version numbers, whichever side holds it. */
+const maxVersion = (a, b) => {
+  const nums = [a, b].filter((n) => typeof n === "number" && Number.isFinite(n));
+  return nums.length ? Math.max(...nums) : null;
+};
+
+/** Merge two `stores` maps (personal-data.js STORE_SCHEMA): each store takes
+ *  the higher number either side records. A newer build's own copy upgrades an
+ *  older one's stores before merging, so the higher number is the shape the
+ *  merged copy is in; a store only one side names is carried. Null when neither
+ *  side carries the map, so a snapshot from before the numbers stays as it was. */
+function mergeStores(mine, theirs) {
+  const m = map(mine);
+  const t = map(theirs);
+  if (!isObj(mine) && !isObj(theirs)) return null;
+  const out = {};
+  for (const name of [...new Set([...Object.keys(m), ...Object.keys(t)])].sort()) {
+    if (UNSAFE_KEYS.has(name)) continue;
+    const v = maxVersion(m[name], t[name]);
+    if (v !== null) out[name] = v;
+  }
+  return out;
+}
+
 /** Profiles are matched by id, and an id alone is not proof of a person: every
  *  device mints its first profile as `default` (profiles.js), so two devices
  *  that were never paired collide by construction. Id AND name together is the
@@ -310,6 +402,13 @@ const sameName = (a, b) =>
  * Returns `{ merged, conflicts, changes }`. `merged` is a snapshot in the same
  * shape, ready to be written back and re-encrypted. `conflicts` carrying any
  * `CONFLICT_DIET` entry means the caller must ask before it writes.
+ *
+ * 🔑 **A field of the SNAPSHOT or of a PROFILE that this build does not know
+ * is carried through, not dropped** (`carryUnknown`, ADR 0146 §3, roadmap
+ * 510/010). A newer build puts its new stores there, and an old device that
+ * dropped them made the newer device's next merge read them as deleted — on
+ * that device and on the server. That is a different thing from the `other`
+ * bag below, which is this device's own LOCAL storage keys it cannot name.
  *
  * 🔑 **`mine.other`/`theirs.other` — the catch-all bag `collectPersonalData`
  * fills with any `faves.` store this build cannot name (personal-data.js) — is
@@ -362,6 +461,8 @@ export function mergePersonal(base, mine, theirs) {
       conflicts.push({ ...c, profileId: profileKey(m ?? t), profileName: (m ?? t)?.name ?? "" });
     }
     return {
+      // First, so a known field below can never be shadowed by a carried one.
+      ...carryUnknown(b, m, t, KNOWN_PROFILE_FIELDS),
       id: profileKey(m ?? t),
       name: (m ?? t)?.name ?? "",
       // `active` is which profile this DEVICE is showing. It is a property of
@@ -417,10 +518,16 @@ export function mergePersonal(base, mine, theirs) {
     changes.profilesAdded += 1;
   }
 
+  const stores = mergeStores(mine?.stores, theirs?.stores);
   return {
     merged: {
+      ...carryUnknown(base, mine, theirs, KNOWN_SNAPSHOT_FIELDS),
       format: mine?.format ?? theirs?.format ?? null,
-      v: mine?.v ?? theirs?.v ?? null,
+      // The higher of the two, not "mine first": until 2026-09-30 an old device
+      // stamped its own lower version over a newer copy it had just carried
+      // (roadmap 510/010), so the stamp lied about what the copy held.
+      v: maxVersion(mine?.v, theirs?.v),
+      ...(stores ? { stores } : {}),
       profiles: merged,
       // Not synced — see the header. Carried through so the merged snapshot is
       // a complete one and the writer needs no second source.

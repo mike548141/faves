@@ -11,10 +11,22 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createSync, writeSnapshot, applyDietDecision, SYNC_KEY, SYNC_BASE_KEY } from "../site/js/sync.js";
+import {
+  createSync,
+  writeSnapshot,
+  applyDietDecision,
+  upgradeSnapshot,
+  SYNC_KEY,
+  SYNC_BASE_KEY,
+  UPDATE_NEEDED,
+  MAX_ATTEMPTS,
+} from "../site/js/sync.js";
+import { collectPersonalData, FORMAT_VERSION, STORE_SCHEMA } from "../site/js/personal-data.js";
+import { mergePersonal, mergeSet } from "../site/js/sync-merge.js";
+import { deriveSyncKeys, openBlob, sealBlob } from "../site/js/sync-crypto.js";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
 import { favKey } from "../site/js/favourites.js";
-import { mintSyncCode } from "../site/js/sync-code.js";
+import { mintSyncCode, normaliseSyncCode } from "../site/js/sync-code.js";
 
 // A REAL code for the tests that seed one by hand. Until 2026-08-17 they used
 // "K7F29DMX4QRA" — 12 characters, which normaliseSyncCode rejects — so
@@ -224,30 +236,52 @@ test("a failed sync leaves this device's own data untouched", async () => {
   assert.match(s.status().error, /safe on this device/);
 });
 
-test("a lost race is reported as retryable, not as an error", async () => {
-  const server = fakeServer();
-  const a = device({ favs: [venue("kk")] });
-  await mk(a, server).enable();
-
-  // The race is BETWEEN our read and our write, which is the only place it can
-  // happen — mutating the blob beforehand just means we read the newer etag and
-  // succeed, which is what an earlier version of this test actually asserted.
-  let raced = false;
-  const racing = {
+/** A server that lets `raceTimes` writes by "someone else" land between our
+ *  read and our write — the only place a race can happen. Mutating the blob
+ *  before the read just means we read the newer etag and succeed. */
+function racingServer(server, raceTimes) {
+  let raced = 0;
+  const wrapped = {
+    puts412: 0,
     fetch: async (u, i) => {
       const res = await server.fetch(u, i);
-      if ((i?.method || "GET") === "GET" && !raced) {
-        raced = true;
+      if ((i?.method || "GET") === "GET" && raced < raceTimes) {
+        raced += 1;
         const [id, rec] = [...server.blobs.entries()][0];
-        server.blobs.set(id, { ...rec, etag: '"someone-else-wrote"' });
+        server.blobs.set(id, { ...rec, etag: `"someone-else-wrote-${raced}"` });
       }
+      if (res.status === 412) wrapped.puts412 += 1;
       return res;
     },
   };
+  return wrapped;
+}
+
+test("a lost race goes round again and lands the change (roadmap 510/070)", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  await mk(a, server).enable();
+  const racing = racingServer(server, 1);
   const s = mk(a, racing);
 
   a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
   const res = await s.syncNow();
+  assert.equal(racing.puts412, 1, "the first write should have lost the race");
+  assert.equal(res.ok, true, "the second round should have landed it");
+  assert.equal(s.status().state, "idle");
+  assert.ok(a.getItem(SYNC_BASE_KEY).includes("new"), "the agreement now includes the heart");
+});
+
+test("a race lost on every attempt stops at the bound, as retryable, without advancing the base", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  await mk(a, server).enable();
+  const racing = racingServer(server, Infinity);
+  const s = mk(a, racing);
+
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  const res = await s.syncNow();
+  assert.equal(racing.puts412, MAX_ATTEMPTS, "the retry is bounded");
   assert.equal(res.retry, true, "a 412 must come back as retryable");
   assert.equal(s.status().state, "idle", "a race is normal, not a failure state");
   // A base legitimately exists from the successful first sync. What must NOT
@@ -255,6 +289,83 @@ test("a lost race is reported as retryable, not as an error", async () => {
   // includes the heart we failed to push would make the next merge read that
   // heart as something the pair had agreed on and then deleted.
   assert.ok(!a.getItem(SYNC_BASE_KEY).includes("new"), "a lost race must not advance the base");
+});
+
+/** A window stand-in: enough EventTarget to fire `online`. */
+function fakeWin() {
+  const ls = new Map();
+  return {
+    addEventListener: (t, fn) => ls.set(t, fn),
+    removeEventListener: (t) => ls.delete(t),
+    fire: (t) => ls.get(t)?.(),
+    has: (t) => ls.has(t),
+  };
+}
+
+test("coming back online sends a change that failed while offline (roadmap 510/070)", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  let offline = false;
+  const flaky = { fetch: (u, i) => (offline ? Promise.reject(new TypeError("offline")) : server.fetch(u, i)) };
+  const s = mk(a, flaky);
+  await s.enable();
+  const win = fakeWin();
+  const stop = s.start({ stores: [], doc: null, win });
+  await s.syncNow(); // settle the pull start() fired
+  assert.ok(win.has("online"));
+
+  offline = true;
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  const failed = await s.syncNow();
+  assert.equal(failed.ok, false);
+  assert.equal(s.status().state, "error");
+
+  offline = false;
+  const putsBefore = server.puts;
+  win.fire("online");
+  await new Promise((r) => setTimeout(r, 0));
+  await s.syncNow(); // joins the cycle `online` started, if one is in flight
+  assert.equal(server.puts, putsBefore + 1, "the reconnect did not send the waiting change");
+  assert.ok(a.getItem(SYNC_BASE_KEY).includes("new"));
+  assert.equal(s.status().state, "idle");
+  stop();
+  assert.equal(win.has("online"), false, "stop() removes the listener");
+});
+
+test("coming back online with nothing waiting costs nothing", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  const s = mk(a, server);
+  await s.enable();
+  const win = fakeWin();
+  const stop = s.start({ stores: [], doc: null, win });
+  await s.syncNow();
+  const [gets, puts] = [server.gets, server.puts];
+  win.fire("online");
+  await new Promise((r) => setTimeout(r, 0));
+  assert.equal(server.gets, gets, "a reconnect with nothing owed made a request");
+  assert.equal(server.puts, puts);
+  stop();
+});
+
+test("coming back online sends a debounced change now, rather than waiting it out", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  const store = { subs: new Set(), subscribe(fn) { this.subs.add(fn); return () => this.subs.delete(fn); } };
+  const s = mk(a, server, { debounceMs: 60_000 });
+  await s.enable();
+  const win = fakeWin();
+  const stop = s.start({ stores: [store], doc: null, win });
+  await s.syncNow();
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  for (const fn of store.subs) fn();
+  assert.equal(s._pendingWrite(), true);
+  const puts = server.puts;
+  win.fire("online");
+  await s.syncNow();
+  assert.equal(s._pendingWrite(), false, "the debounce was not flushed");
+  assert.equal(server.puts, puts + 1);
+  stop();
 });
 
 // --- the allergen question ------------------------------------------------
@@ -529,4 +640,149 @@ test("a screen that throws while repainting does not fail the sync", async () =>
   const s = mk(a, server, { onApplied: () => { throw new Error("render blew up"); } });
   const res = await s.enable();
   assert.notEqual(res.ok, false, "a repaint fault must not lose a completed sync");
+});
+
+// --- a newer build's data must survive an older build (ADR 0146 §3) ---------
+//
+// Roadmap 510/010's named test. The hazard: an old device merged the server
+// copy, kept only the stores it knew, and wrote the result back. The newer
+// device's three-way merge then saw its store in the base and in its own copy
+// but not on the server — which is exactly how a deletion by the other device
+// reads — and deleted it, locally and on the server. An allergen-adjacent
+// store lost that way is the worst outcome this product has.
+//
+// A browser check cannot stage this (it runs one build), so the NEWER device is
+// modelled here: its snapshot is this build's plus a `recipes` store on each
+// profile and a top-level `pantry`, and its merge is this build's plus a
+// three-way merge of `recipes` — the deletion-aware merge a real newer build
+// would run on a store it knows.
+
+async function serverCopy(server, code) {
+  const { blobId, key } = await deriveSyncKeys(normaliseSyncCode(code));
+  const rec = server.blobs.get(blobId);
+  return rec ? openBlob(key, rec.bytes) : null;
+}
+
+async function seedServer(server, code, snapshot) {
+  const { blobId, key } = await deriveSyncKeys(normaliseSyncCode(code));
+  const res = await server.fetch(`https://example.invalid/v1/blob/${blobId}`, {
+    method: "PUT",
+    body: await sealBlob(key, snapshot),
+    headers: {},
+  });
+  assert.equal(res.status, 204);
+}
+
+const RECIPE = { id: "u:ginger-crunch", title: "Ginger crunch" };
+
+/** What a newer build's merge does: this build's, plus `recipes` merged three
+ *  ways by id — so a recipe missing from the server copy, present in its base,
+ *  is read as deleted. That is the reading the fix has to make impossible. */
+function newerMerge(base, mine, theirs) {
+  const out = mergePersonal(base, mine, theirs);
+  const byId = (list, id) => (list || []).find((p) => p.id === id);
+  for (const p of out.merged.profiles) {
+    p.recipes = mergeSet(
+      byId(base?.profiles, p.id)?.recipes,
+      byId(mine?.profiles, p.id)?.recipes,
+      byId(theirs?.profiles, p.id)?.recipes,
+      (r) => r.id
+    ).items;
+  }
+  return out.merged;
+}
+
+test("a server copy one version ahead keeps its unknown store after an old device syncs — on the server AND the newer device", async () => {
+  const server = fakeServer();
+  const code = mintSyncCode();
+
+  // The newer device's last agreed state: its hearts, a recipe, and a pantry
+  // store, stamped one format ahead with two store numbers this build lacks.
+  const newerDevice = device({ favs: [venue("pandan")] });
+  const newerSnap = {
+    ...collectPersonalData(newerDevice, { exportedAt: "2026-09-30T00:00:00.000Z" }),
+    v: FORMAT_VERSION + 1,
+    stores: { ...STORE_SCHEMA, recipes: 1, pantry: 1 },
+    pantry: { flour: "plain" },
+  };
+  newerSnap.profiles[0].recipes = [RECIPE];
+  await seedServer(server, code, newerSnap);
+
+  // The OLD device (this build) joins and adds a heart, so it must WRITE.
+  const old = device({ favs: [venue("kk")] });
+  const res = await mk(old, server).join(code);
+  assert.equal(res.ok, true, JSON.stringify(res));
+  assert.equal(server.puts, 2, "the old device wrote the server copy");
+
+  // 1. On the server: the store, the pantry and the newer stamps survived.
+  const onServer = await serverCopy(server, code);
+  assert.deepEqual(onServer.profiles[0].recipes, [RECIPE], "the recipe store was dropped from the server copy");
+  assert.deepEqual(onServer.pantry, { flour: "plain" });
+  assert.equal(onServer.v, FORMAT_VERSION + 1, "the old device stamped its own lower version over the copy");
+  assert.equal(onServer.stores.recipes, 1);
+  assert.deepEqual(onServer.profiles[0].favourites.map(favKey).sort(), ["v:kk", "v:pandan"]);
+
+  // 2. On the newer device: its next merge, against the base it last agreed
+  //    (newerSnap), keeps the recipe rather than reading it as deleted.
+  const newerNext = newerMerge(newerSnap, newerSnap, onServer);
+  assert.deepEqual(newerNext.profiles[0].recipes, [RECIPE], "the newer device read the recipe as deleted");
+  assert.deepEqual(newerNext.pantry, { flour: "plain" });
+
+  // 3. And again on the old device's SECOND write, when its base already holds
+  //    the carried store and its own copy still does not.
+  old.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("third")]));
+  const again = await mk(old, server).syncNow();
+  assert.equal(again.ok, true);
+  const second = await serverCopy(server, code);
+  assert.deepEqual(second.profiles[0].recipes, [RECIPE], "the second write dropped it");
+  assert.deepEqual(second.pantry, { flour: "plain" });
+});
+
+test("a store this build KNOWS, in a newer shape, pauses sync and writes nothing", async () => {
+  const server = fakeServer();
+  const code = mintSyncCode();
+  const newer = collectPersonalData(device({ favs: [venue("pandan")] }), { exportedAt: null });
+  newer.stores = { ...STORE_SCHEMA, favourites: STORE_SCHEMA.favourites + 1 };
+  await seedServer(server, code, newer);
+
+  const old = device({ favs: [venue("kk")] });
+  const before = [...old._map.entries()].filter(([k]) => !k.startsWith("faves.sync"));
+  const s = mk(old, server);
+  const res = await s.join(code);
+  assert.equal(res.ok, false);
+  assert.equal(res.error, "update-needed");
+  assert.deepEqual(res.stores, ["favourites"]);
+  assert.equal(s.status().state, "error");
+  assert.equal(s.status().error, UPDATE_NEEDED);
+  assert.equal(server.puts, 1, "nothing was written over the newer copy");
+  assert.equal(old.getItem(SYNC_BASE_KEY), null, "no base was recorded");
+  assert.deepEqual([...old._map.entries()].filter(([k]) => !k.startsWith("faves.sync")), before);
+});
+
+test("the base and the server copy run through the upgrade chain, and an unstamped one is format 1", () => {
+  assert.equal(upgradeSnapshot(null), null);
+  assert.equal(upgradeSnapshot([1]), null);
+  const unstamped = upgradeSnapshot({ profiles: [], shelf: 1 });
+  assert.equal(unstamped.v, FORMAT_VERSION);
+  assert.equal(unstamped.shelf, 1, "the chain must carry what it does not know");
+  const older = upgradeSnapshot({ v: 0, profiles: [{ id: "a", name: "Me", recipes: [1] }] });
+  assert.equal(older.v, FORMAT_VERSION);
+  assert.deepEqual(older.profiles[0].recipes, [1]);
+});
+
+test("an un-heart still propagates through a base read back through the chain", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk"), venue("pandan")] });
+  const b = device({ favs: [] });
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  await mk(b, server).join(code);
+  // Stamp A's stored base as an older format: it must still be read as a base,
+  // not discarded (which would turn the un-heart below into a resurrection).
+  const base = JSON.parse(a.getItem(SYNC_BASE_KEY));
+  a.setItem(SYNC_BASE_KEY, JSON.stringify({ ...base, v: 0 }));
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk")]));
+  await syncA.syncNow();
+  await mk(b, server).syncNow();
+  assert.deepEqual(favsOf(b), ["v:kk"]);
 });

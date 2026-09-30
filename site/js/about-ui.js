@@ -32,11 +32,12 @@
 import { el } from "./dom.js";
 import { closeButton, wireDialog } from "./dialog.js";
 import { translate } from "./reo.js";
+import { persistence, storageSentences } from "./storage-persist.js";
 
 function group(title, ...paras) {
   return el("section", { className: "about-group" }, [
     el("h3", { className: "about-group-title", textContent: title }),
-    ...paras.map((text) => el("p", { className: "about-text", textContent: text })),
+    ...paras.map((p) => (typeof p === "string" ? el("p", { className: "about-text", textContent: p }) : p)),
   ]);
 }
 
@@ -45,6 +46,7 @@ function group(title, ...paras) {
 function buildDialog() {
   const close = closeButton();
   const title = el("h2", { id: "about-title", className: "settings-title", textContent: "About Faves" });
+  const storageNote = el("div", { className: "about-storage" });
 
   const dialog = el("dialog", { className: "settings-sheet about-sheet", "aria-labelledby": "about-title" }, [
     el("div", { className: "settings-inner" }, [
@@ -76,8 +78,13 @@ function buildDialog() {
         "No accounts, no cookies, no personal information. Your favourites, " +
           "order and settings stay on your device. Like any website, our host " +
           "(Cloudflare) sees each visit, and we use its cookie-free visitor " +
-          "statistics to see how Faves is used and keep it secure and running."
+          "statistics to see how Faves is used and keep it secure and running.",
           // ↑ ADR 0134. Keep in step with the no-JS footer in index.html.
+        // Whether this browser will keep that data (roadmap 510/010, ADR 0146
+        // §4). Inside "Private by design", not a group of its own: it is the
+        // other half of "stays on your device", and boot_check pins the
+        // groups. Filled on every open — the answer can change after a write.
+        storageNote
       ),
 
       group(
@@ -97,7 +104,26 @@ function buildDialog() {
   // The boot-time translate pass already ran; translate this subtree now that it
   // exists (and later language switches re-translate the whole document).
   translate(dialog);
-  return wireDialog(dialog, { closeBtn: close });
+  const wired = wireDialog(dialog, { closeBtn: close });
+  wired.refreshStorage = () => refreshStorage(storageNote);
+  return wired;
+}
+
+/** Say whether this browser has agreed to keep the data. Async, so the dialog
+ *  opens at once and the sentence lands a moment later; a failure leaves the
+ *  "doesn't say" wording rather than nothing. */
+async function refreshStorage(node) {
+  let state;
+  try {
+    state = await persistence.state();
+  } catch {
+    state = "unknown";
+  }
+  node.replaceChildren(
+    ...storageSentences(state, persistence.onHomeScreen()).map((text) =>
+      el("p", { className: "about-text", textContent: text })
+    )
+  );
 }
 
 export function initAboutUI() {
@@ -112,6 +138,7 @@ export function initAboutUI() {
   const open = () => {
     if (!dialog) dialog = buildDialog(); // lazily build the DOM on first open
     dialog.showModal();
+    dialog.refreshStorage?.();
   };
 
   // Swap the no-JS footer privacy note for the compact link that opens here.

@@ -9,6 +9,7 @@ import { slug } from "./slug.js";
 import { dishId, findDish } from "./dish-id.js";
 import { initOrderUI } from "./cart-ui.js";
 import { startSync } from "./sync-start.js";
+import { startPersistence } from "./storage-persist.js";
 import { heartButton } from "./favourites-ui.js";
 import { settings } from "./settings.js";
 import { effectiveAvoid, declaredClaims } from "./dietary.js";
@@ -412,6 +413,7 @@ async function main() {
 
 initOrderUI(); // the running order stays reachable from the recipe screen too
 startSync(); // continual sync, if the user turned it on (Theme 9 v2)
+startPersistence(); // ask the browser to keep your data, after the first write (510/010)
 initReo(); // sets <html lang>; the back link is set to the collection name by render()
 
 // The ⋯ menu's dialogs. Settings now lives on this page, so an allergen change

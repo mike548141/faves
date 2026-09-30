@@ -45,6 +45,7 @@ import { initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initShoppingEntry } from "./shopping-ui.js";
 import { startSync } from "./sync-start.js";
+import { startPersistence } from "./storage-persist.js";
 import { initBackToTop } from "./to-top.js";
 import { displayPrice, formatMoney, venueTimezone, zoneLabel } from "./place.js";
 import { priceBand } from "./price.js";
@@ -781,6 +782,7 @@ function init(restaurants) {
   }, (r) => favouriteVenueIds().has(r.id));
   initOrderUI();
   startSync(); // continual sync, if the user turned it on (Theme 9 v2)
+  startPersistence(); // ask the browser to keep your data, after the first write (510/010)
   // After all static chrome, the filled selects and the JS-built dialogs are
   // in the DOM, apply the stored UI language across the lot in one pass (and
   // re-apply live whenever it's toggled in Settings).
