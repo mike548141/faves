@@ -1,4 +1,4 @@
-- [ ] **Phase 3 — the upgrade chain, on local storage** `[M] [data][privacy]`
+- [~] **Phase 3 — the upgrade chain, on local storage** `[M] [data][privacy]`
       — owner-raised 2026-09-30. Re-briefed the same day ([ADR 0146](../../decisions/0146-the-scaling-design-revised-after-its-cold-review.md)): personal recipes
       fit in local storage (about 1,650 B each), so the owner ruled **"Defer
       the move"**. The IndexedDB move is `080`.
@@ -17,3 +17,10 @@
 
   🚩 Settings hold allergen flags. Break-probe: drop a store from an upgrade and
   the tests must fail.
+
+  📌 **Claimed 2026-09-30 (`faves-0b`)** — built in a worktree. `010`
+  shipped per-store numbers (`STORE_SCHEMA`) beside the top-level `v`. ADR
+  0146 asks for both: one `userSchema` number drives the chain (§1), and
+  each store's own number decides a pause (§3). So both stay, and this item
+  states the rule that ties them together: a `userSchema` step that changes
+  a store's shape also bumps that store's number.
