@@ -1296,7 +1296,9 @@ bearer sync code (Theme 9 v2, below). The feature stores:
 - **`worker/`** — the Cloudflare Worker + KV blob store (ADR 0017, authorised by
   the owner 2026-08-16). Outside `site/`, so it is not shipped, not precached and
   not covered by the zero-dependency rule, which governs the served artefact. It
-  is a dumb ciphertext store: `GET`/`PUT /v1/blob/<blobId>`, strict id
+  is a dumb ciphertext store: `GET`/`PUT /v1/blob/<blobId>` and, since
+  510/050, the recipe buckets `/v1/blob/<blobId>:r<n>` (⏳ built, **not yet
+  deployed** — `worker/README.md` says what is owed), strict id
   validation, a 256 KiB streamed body cap, a 180-day TTL refreshed on write,
   `If-Match` compare-and-swap, an origin allowlist, and no logging of anything.
   **Deployed 2026-08-16** at the endpoint `sync.js` names; the deploy
@@ -1319,6 +1321,30 @@ step that reshapes a store bumps that store's number, which is what sync
 pauses on. The only modules allowed to write storage are listed in
 `tests/storage-writers.test.js`; past versions' data sets live in
 `tests/fixtures/` forever.
+
+**Personal recipes, and sync in buckets** (roadmap 510/050, ADR 0146 §2).
+`faves.recipes.v1` (`recipes.js`; the record is `recipe-record.js`, pure) is
+the device's cookbook: one record per recipe in the published recipe shape,
+keyed by a `u:` id a published slug can never be. Device-level, like the
+order; hearts, ratings and notes on a recipe stay per person. All personal
+recipes belong to the virtual collection `u:mine`, so a heart is
+`d:u:mine u:<slug>` and the page is `recipe.html?id=u:mine&dish=u:<slug>` —
+every existing link builder already writes that. The recipe page reads it
+from the store (no fetch); `recheckReferences` never asks the network about
+one. Backups carry a named `recipes` field (merge adds, yours win). Sync
+keeps the **core copy** as one all-or-nothing write and puts recipes in
+**8 buckets**, `<blobId>:r0…r7`, by a hash of the id (`sync-buckets.js`),
+each padded to a 4 KiB multiple and all eight written once any recipe
+exists. The core copy's `recipeBuckets` records each bucket's version; a
+GET of the core copy with `?buckets=8` returns the Worker's own report in
+`X-Faves-Buckets`, and a bucket is read only when its reported version is
+not the one last agreed — which also catches one written without its core
+update. The base keeps a hash per recipe (`recipeHashes`), not a second
+copy. A Worker that reports nothing leaves recipes on the device. Any write
+re-arms the expiry of every copy under the user key more than 30 days past
+its last write. `recipe-move.js` is the move map for the owner's one-off
+import (hearts, ratings, notes, ticks and shopping lines follow a recipe to
+its `u:` id); nothing runs it yet.
 
 A `storage` event keeps other tabs in step (favourites/settings keys are now
 namespaced by the active profile; a registry change re-points them). Recipes
