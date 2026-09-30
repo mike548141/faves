@@ -995,7 +995,7 @@ boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It do
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
 `note_check` · `served_check` · `geo_check` · `picks_check` · `focus_check` ·
 `distance_check` · `midnight_check` · `precache_check` · `rename_check` ·
-`fixture_check` — **every other** guard,
+`fixture_check` · `fetch_check` — **every other** guard,
 every one written
 precisely because unit tests had already missed a leak, a wreck or a mistap. Those run **only when a human or
 an agent types them from this list**. That is how `sync_check` sat dead through
