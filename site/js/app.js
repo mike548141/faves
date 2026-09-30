@@ -48,6 +48,7 @@ import { initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initShoppingEntry } from "./shopping-ui.js";
 import { startSync } from "./sync-start.js";
+import { MY_RECIPES, MY_RECIPES_NAME, isPersonalVenue, recipes } from "./recipes.js";
 import { startPersistence } from "./storage-persist.js";
 import { initBackToTop } from "./to-top.js";
 import { displayPrice, formatMoney, venueTimezone, zoneLabel } from "./place.js";
@@ -1049,6 +1050,14 @@ function wireFavourites(restaurants, compactIndex) {
   const byId = new Map(
     (restaurants || []).map((r) => [r.id, { ...r, menu: sectionsById.get(r.id) || [] }])
   );
+  // Personal recipes (roadmap 510/050) resolve against this device's own
+  // cookbook, in the same record shape, so `unresolvedReason` needs no second
+  // path. Read at each row's render, because a sync pull or
+  // an import can change it while the panel is open.
+  const withPersonal = () => {
+    byId.set(MY_RECIPES, recipes.collection());
+    return byId;
+  };
   // What the NETWORK said about a reference, keyed by favKey. It outranks the
   // local reading in both directions: "present" un-marks a row this device's
   // data can't match, and "absent" is the only thing that licenses the word
@@ -1059,7 +1068,7 @@ function wireFavourites(restaurants, compactIndex) {
   function rowState(entry) {
     const net = checked.get(favKey(entry));
     if (net === "present") return null;
-    if (!unresolvedReason(entry, byId)) return null;
+    if (!unresolvedReason(entry, withPersonal())) return null;
     return net || "unresolved";
   }
 
@@ -1150,6 +1159,19 @@ function wireFavourites(restaurants, compactIndex) {
   // favourite state (filled = saved, empty = tap to also save the place);
   // each dish keeps its own un-heart. Reads like "my usual at each spot".
   function favVenueGroup(venueId, g) {
+    // Your own recipes (roadmap 510/050) are grouped under a heading that is
+    // not a place: no menu page to link to, and no place to heart.
+    if (isPersonalVenue(venueId)) {
+      const head = el("li", { className: "search-row fav-venue-head" }, [
+        el("span", { className: "search-row-name", textContent: `🏠 ${MY_RECIPES_NAME}` }),
+      ]);
+      const rows = g.dishes.map((e) =>
+        decorate(resultRow({ name: e.name, sub: "", href: favHref(e), trailing: heartButton(e, e.name) }), e, e.name)
+      );
+      return el("section", { className: "search-group fav-venue-group" }, [
+        el("ul", { className: "search-list" }, [head, ...rows]),
+      ]);
+    }
     const venueName = g.venueName || "This place";
     const venueEntry =
       g.venue || { type: "venue", venueId, venueName, isRecipe: g.isRecipe, sub: g.sub };

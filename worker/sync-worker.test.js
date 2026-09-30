@@ -14,6 +14,11 @@ import worker, {
   parseIfMatch,
   formatEtag,
   readBodyCapped,
+  parseBlobKey,
+  familyKeys,
+  formatBucketReport,
+  MAX_BUCKETS,
+  REFRESH_AFTER_SECONDS,
 } from "./sync-worker.js";
 
 // 32 hex chars = 128 bits, matching deriveSyncKeys() in site/js/sync-crypto.js
@@ -105,8 +110,10 @@ class FakeKV {
     return { value: entry.value.slice(0), metadata: entry.metadata };
   }
   async put(key, value, opts = {}) {
-    const bytes = value instanceof Uint8Array ? new Uint8Array(value) : new Uint8Array(0);
-    this.store.set(key, { value: bytes.buffer, metadata: opts.metadata ?? null });
+    const bytes =
+      value instanceof Uint8Array ? new Uint8Array(value) : value instanceof ArrayBuffer ? new Uint8Array(value.slice(0)) : new Uint8Array(0);
+    this.store.set(key, { value: bytes.buffer, metadata: opts.metadata ?? null, ttl: opts.expirationTtl ?? null });
+    this.puts = (this.puts || 0) + 1;
   }
 }
 
@@ -295,4 +302,137 @@ test("security headers are present on a normal response", async () => {
   assert.equal(res.headers.get("X-Content-Type-Options"), "nosniff");
   assert.equal(res.headers.get("Referrer-Policy"), "no-referrer");
   assert.equal(res.headers.get("Cache-Control"), "no-store");
+});
+
+// --- Recipe buckets (roadmap 510/050, ADR 0146 §2) ---------------------
+
+const BUCKET = (n) => `${VALID_ID}:r${n}`;
+const put = (e, key, bytes, etag) =>
+  worker.fetch(
+    req(`/v1/blob/${key}`, {
+      method: "PUT",
+      headers: { Origin: ORIGIN, ...(etag ? { "If-Match": etag } : {}) },
+      body: new Uint8Array(bytes),
+    }),
+    e,
+  );
+
+test("parseBlobKey takes the core copy and buckets 0–15, and nothing else", () => {
+  assert.deepEqual(parseBlobKey(VALID_ID), { key: VALID_ID, blobId: VALID_ID, bucket: null });
+  assert.deepEqual(parseBlobKey(BUCKET(0)), { key: BUCKET(0), blobId: VALID_ID, bucket: 0 });
+  assert.equal(parseBlobKey(BUCKET(15)).bucket, 15);
+  for (const bad of [BUCKET(16), `${VALID_ID}:r01`, `${VALID_ID}:r`, `${VALID_ID}:x1`, `${VALID_ID}:r-1`, `A${VALID_ID.slice(1)}:r1`, "", null]) {
+    assert.equal(parseBlobKey(bad), null, `accepted ${bad}`);
+  }
+  assert.equal(familyKeys(VALID_ID).length, 1 + MAX_BUCKETS);
+  assert.equal(formatBucketReport([]), "none");
+  assert.equal(formatBucketReport([{ bucket: 2, version: "abc" }]), 'r2="abc"');
+});
+
+test("a bucket is stored under the user's key plus its number, with its own ETag", async () => {
+  const e = env();
+  const res = await put(e, BUCKET(3), [7, 7]);
+  assert.equal(res.status, 204);
+  assert.ok(e.SYNC_BLOBS.store.has(BUCKET(3)));
+  const get = await worker.fetch(req(`/v1/blob/${BUCKET(3)}`, { headers: { Origin: ORIGIN } }), e);
+  assert.equal(get.status, 200);
+  assert.equal(get.headers.get("ETag"), res.headers.get("ETag"));
+  // Conditional like the core copy: a second write without If-Match is refused.
+  assert.equal((await put(e, BUCKET(3), [8])).status, 412);
+});
+
+test("a bucket number past the cap is refused before KV", async () => {
+  const e = env();
+  assert.equal((await put(e, BUCKET(16), [1])).status, 400);
+  assert.equal(e.SYNC_BLOBS.store.size, 0);
+});
+
+test("a GET of the core copy asking ?buckets=n reports each bucket's version — on 200 AND 404", async () => {
+  const e = env();
+  const r0 = await put(e, BUCKET(0), [1]);
+  const r5 = await put(e, BUCKET(5), [2]);
+  // No core copy yet: the report still comes, so a first sync sees the buckets.
+  const missing = await worker.fetch(req(`/v1/blob/${VALID_ID}?buckets=8`, { headers: { Origin: ORIGIN } }), e);
+  assert.equal(missing.status, 404);
+  assert.equal(missing.headers.get("X-Faves-Buckets"), `r0=${r0.headers.get("ETag")},r5=${r5.headers.get("ETag")}`);
+  await put(e, VALID_ID, [3]);
+  const got = await worker.fetch(req(`/v1/blob/${VALID_ID}?buckets=8`, { headers: { Origin: ORIGIN } }), e);
+  assert.equal(got.status, 200);
+  assert.equal(got.headers.get("X-Faves-Buckets"), `r0=${r0.headers.get("ETag")},r5=${r5.headers.get("ETag")}`);
+  // A client may read it cross-origin.
+  assert.match(got.headers.get("Access-Control-Expose-Headers") || "", /\bX-Faves-Buckets\b/i);
+  // Only the buckets asked about: bucket 5 is outside ?buckets=4.
+  const four = await worker.fetch(req(`/v1/blob/${VALID_ID}?buckets=4`, { headers: { Origin: ORIGIN } }), e);
+  assert.equal(four.headers.get("X-Faves-Buckets"), `r0=${r0.headers.get("ETag")}`);
+});
+
+test("no buckets reads 'none'; an older client that asks nothing gets no report and costs one read", async () => {
+  const e = env();
+  await put(e, VALID_ID, [3]);
+  const none = await worker.fetch(req(`/v1/blob/${VALID_ID}?buckets=8`, { headers: { Origin: ORIGIN } }), e);
+  assert.equal(none.headers.get("X-Faves-Buckets"), "none");
+  let reads = 0;
+  const kv = e.SYNC_BLOBS;
+  const orig = kv.getWithMetadata.bind(kv);
+  kv.getWithMetadata = async (k) => {
+    reads += 1;
+    return orig(k);
+  };
+  const old = await worker.fetch(req(`/v1/blob/${VALID_ID}`, { headers: { Origin: ORIGIN } }), e);
+  assert.equal(old.status, 200);
+  assert.equal(old.headers.get("X-Faves-Buckets"), null);
+  assert.equal(reads, 1);
+});
+
+test("any write re-arms the expiry of a sibling copy last written more than 30 days ago, keeping its bytes and version", async () => {
+  const e = env();
+  const kv = e.SYNC_BLOBS;
+  const bucketPut = await put(e, BUCKET(2), [9, 9, 9]);
+  const v = parseIfMatch(bucketPut.headers.get("ETag"));
+  // Age the bucket: last written 31 days ago, with its expiry counting down.
+  const aged = kv.store.get(BUCKET(2));
+  const now = Math.floor(Date.now() / 1000);
+  kv.store.set(BUCKET(2), { ...aged, metadata: { v, t: now - REFRESH_AFTER_SECONDS - 86400 }, ttl: 12345 });
+
+  const before = kv.puts;
+  await put(e, VALID_ID, [1]); // a heart: the core copy only
+  assert.equal(kv.puts - before, 2, "the core write plus one re-armed bucket");
+  const after = kv.store.get(BUCKET(2));
+  assert.deepEqual([...new Uint8Array(after.value)], [9, 9, 9], "same bytes");
+  assert.equal(after.metadata.v, v, "same version, so the core copy's record stays true");
+  assert.ok(after.metadata.t >= now, "its write time moved");
+  assert.equal(after.ttl, 180 * 24 * 60 * 60, "expiry re-armed in full");
+});
+
+test("a sibling written within 30 days is left alone — a heart costs one write, not nine", async () => {
+  const e = env();
+  const kv = e.SYNC_BLOBS;
+  for (let n = 0; n < 8; n += 1) await put(e, BUCKET(n), [n + 1]);
+  const core = await put(e, VALID_ID, [1]);
+  const before = kv.puts;
+  await put(e, VALID_ID, [2], core.headers.get("ETag"));
+  assert.equal(kv.puts - before, 1);
+});
+
+test("a copy from before the write time was recorded is re-armed once, then left alone", async () => {
+  const e = env();
+  const kv = e.SYNC_BLOBS;
+  // The deployed Worker wrote `{ v }` only.
+  kv.store.set(VALID_ID, { value: new Uint8Array([5]).buffer, metadata: { v: "old" }, ttl: 99 });
+  await put(e, BUCKET(0), [1]);
+  assert.equal(kv.store.get(VALID_ID).metadata.v, "old");
+  assert.ok(Number.isFinite(kv.store.get(VALID_ID).metadata.t));
+  const before = kv.puts;
+  await put(e, BUCKET(1), [1]);
+  assert.equal(kv.puts - before, 1, "re-armed already, so not again");
+});
+
+test("a bucket write re-arms the core copy too (B1: recipes and hearts expire together or not at all)", async () => {
+  const e = env();
+  const kv = e.SYNC_BLOBS;
+  await put(e, VALID_ID, [1]);
+  const c = kv.store.get(VALID_ID);
+  kv.store.set(VALID_ID, { ...c, metadata: { ...c.metadata, t: 0 }, ttl: 1 });
+  await put(e, BUCKET(4), [4]);
+  assert.equal(kv.store.get(VALID_ID).ttl, 180 * 24 * 60 * 60);
 });

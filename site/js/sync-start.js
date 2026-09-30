@@ -21,6 +21,7 @@ import { notes } from "./notes.js";
 import { settings } from "./settings.js";
 import { profiles, reloadProfileStores } from "./profiles.js";
 import { sync } from "./sync.js";
+import { recipes } from "./recipes.js";
 
 /**
  * Start continual sync on this screen. Safe to call on every page and more than
@@ -33,7 +34,9 @@ import { sync } from "./sync.js";
 export function startSync() {
   try {
     return sync.start({
-      stores: [favourites, ratings, notes, settings],
+      // `recipes` (roadmap 510/050) is device-level: nothing edits it on a
+      // screen yet, but an import does, and that change must sync too.
+      stores: [favourites, ratings, notes, settings, recipes],
       // The half that only exists in a browser: a pull rewrites localStorage,
       // and these singletons hold their state in memory. Without this the
       // synced data is correct on disk and every open screen keeps rendering
@@ -52,6 +55,7 @@ export function startSync() {
       // still on screen, no allergens flagged. Cold review, 2026-08-17.
       onApplied: () => {
         profiles.reload();
+        recipes.reload(); // device-level, and a pull can bring a recipe in
         reloadProfileStores({ favourites, ratings, notes, settings });
       },
     });

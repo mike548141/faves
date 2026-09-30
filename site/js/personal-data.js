@@ -62,6 +62,7 @@ import {
   UPGRADE_SNAPSHOT_KEY,
 } from "./user-schema.js";
 import { PERSIST_ASKED_KEY } from "./storage-persist.js";
+import { RECIPES_KEY, sanitiseRecipes, sortedRecipes } from "./recipe-record.js";
 
 // Every settings field EXCEPT diet, which is handled just below by its own
 // safety-critical choice logic (keep/incoming/combine) rather than a plain
@@ -93,7 +94,7 @@ export { listStoredKeys };
 export const ORDER_KEY = "faves.order.v1";
 
 const README =
-  "Your own Faves data — favourites, ratings, notes, settings, profiles and the order tally. " +
+  "Your own Faves data — favourites, ratings, notes, settings, profiles, your own recipes and the order tally. " +
   "Faves keeps this in your browser only; this file is a copy you asked for, and " +
   "producing it sent nothing anywhere.";
 
@@ -283,7 +284,7 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
   // catch-all sweep below would happily re-collect the location this module
   // promises never to export, the moment it appeared in localStorage. An
   // exclusion that only holds while nobody moves a key is not an exclusion.
-  const known = new Set([PROFILES_KEY, ORDER_KEY, ...Object.keys(EXCLUDED)]);
+  const known = new Set([PROFILES_KEY, ORDER_KEY, RECIPES_KEY, ...Object.keys(EXCLUDED)]);
 
   const people = registry.profiles.map((p) => {
     const entry = { id: p.id, name: p.name, active: p.id === registry.activeId };
@@ -326,6 +327,11 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
     _readme: README,
     profiles: people,
     order: parse(storage.getItem(ORDER_KEY)) ?? [],
+    // Personal recipes (roadmap 510/050): device-level like the order, one
+    // record per recipe keyed by its `u:` id. A NAMED field, not left to the
+    // `other` sweep below: sync reads it (bucket by bucket, sync.js), and an
+    // import has to clean it, which it cannot do to a store it cannot name.
+    recipes: sortedRecipes(sanitiseRecipes(parse(storage.getItem(RECIPES_KEY)))),
     excluded: EXCLUDED_NOTES,
   };
   if (Object.keys(other).length) data.other = other;
@@ -349,6 +355,7 @@ export function summarisePersonalData(data) {
       0
     ),
     orderItems: count(data?.order),
+    recipes: data?.recipes && typeof data.recipes === "object" ? Object.keys(data.recipes).length : 0,
   };
 }
 
@@ -598,7 +605,9 @@ export function parsePersonalData(input) {
       // Never re-import a key this module promises never to export — including
       // from a file written before it made that promise, which is where the
       // scoped tick keys will still be found.
-      if (!k.startsWith("faves.") || isExcludedKey(k)) continue;
+      // The cookbook is a named field above, cleaned; a raw copy of its key in
+      // the bag would bypass that and overwrite it.
+      if (!k.startsWith("faves.") || isExcludedKey(k) || k === RECIPES_KEY) continue;
       if (typeof v === "string") other[k] = v;
     }
   }
@@ -610,6 +619,10 @@ export function parsePersonalData(input) {
       exportedAt: typeof raw.exportedAt === "string" ? raw.exportedAt : null,
       profiles,
       order: sanitiseOrderLines(raw.order),
+      // A file from before personal recipes has none, which is an empty
+      // cookbook — never a reason to remove the ones on this device (a merge
+      // only adds; a replace makes the device look like the file, as ever).
+      recipes: sanitiseRecipes(raw.recipes),
       other,
     },
   };
@@ -730,6 +743,7 @@ export function planImport(storage, data, { mode = "merge", decisions = {} } = {
       ratings: clean.profiles.reduce((n, p) => n + Object.keys(p.ratings).length, 0),
       notes: clean.profiles.reduce((n, p) => n + Object.keys(p.notes).length, 0),
       orderItems: clean.order.length,
+      recipes: Object.keys(clean.recipes).length,
       otherStores: Object.keys(clean.other).length,
     },
     entries,
@@ -827,6 +841,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     settingsUpdated: 0,
     dietChanged: [],
     orderRestored: false,
+    recipesAdded: 0,
     otherRestored: 0,
   };
 
@@ -847,6 +862,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
         [
           PROFILES_KEY,
           ORDER_KEY,
+          RECIPES_KEY,
           ...readRegistry(storage).profiles.flatMap((p) =>
             [...SCOPED_BASE_KEYS, CHECKLIST_KEY].map((b) => scopeKey(p.id, b))
           ),
@@ -958,6 +974,23 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     const base = mode === "replace" ? [] : sanitiseOrderLines(parse(storage.getItem(ORDER_KEY)) ?? []);
     writeKey(storage, ORDER_KEY, JSON.stringify(mergeItems(base, clean.order)));
     report.orderRestored = true;
+  }
+
+  // Personal recipes: a merge adds the file's recipes this device lacks and
+  // keeps its own where both hold one — yours win, as with ratings and notes,
+  // because a recipe you have since changed is a judgement a restore must not
+  // overwrite. A replace has already wiped the store, so it gets the file's.
+  {
+    const have = mode === "replace" ? {} : sanitiseRecipes(parse(storage.getItem(RECIPES_KEY)));
+    const next = { ...have };
+    for (const [id, r] of Object.entries(clean.recipes)) {
+      if (id in next) continue;
+      next[id] = r;
+      report.recipesAdded += 1;
+    }
+    if (report.recipesAdded || (mode === "replace" && Object.keys(next).length)) {
+      writeKey(storage, RECIPES_KEY, JSON.stringify(sortedRecipes(next)));
+    }
   }
 
   for (const [k, v] of Object.entries(clean.other)) {

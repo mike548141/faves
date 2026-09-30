@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Your own recipes.** Faves can now keep recipes of your own, separate
+  from the published ones, and the recipe page shows them exactly as it
+  shows a Cook at Home recipe — offline, with cook mode, the shopping list,
+  notes and hearts. Your hearted ones sit under "My recipes" in Favourites.
+  They are in your backup, and sync carries them between your devices once
+  the sync server is updated; until then they stay safely on each device.
+  There is no way to write one yet — the first ones will be moved in from
+  Cook at Home.
 - **Faves asks your browser to keep your data.** After the first thing you
   save, Faves asks the browser not to clear its storage when space runs
   short. About now says whether the browser agreed, and that a Safari tab can

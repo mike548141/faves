@@ -7,14 +7,15 @@
 //     node tools/sync_check.mjs             # headless, exit 0 = pass
 //     node tools/sync_check.mjs --help
 //
-// CURRENT STATUS — the run reaches the end. 22 assertions, all passing, in a
-// real two-browser run (2026-09-20; 16 until then, +6 with ADR 0118 — three
-// for the allergen key an older build drops, three for the error view's way
-// out). Read the verdict the same way regardless: a harness abort is exit 2,
+// CURRENT STATUS — the run reaches the end. 26 assertions, all passing, in a
+// real two-browser run (2026-09-30; 22 from 2026-09-20, +4 with roadmap
+// 510/050's personal recipes in buckets; 16 until then, +6 with ADR 0118 —
+// three for the allergen key an older build drops, three for the error
+// view's way out). Read the verdict the same way regardless: a harness abort is exit 2,
 // not exit 1 (see "the verdict" in tools/lib/browser.mjs), so an abort leaves
 // the assertions after it ABSENT, not failed, and the run still looks orderly.
 // Trust nothing until the run has printed its own final "OK/FAILED — N passed,
-// N failed" summary line, and check that N is 22 — a *shrunken* N is the shape
+// N failed" summary line, and check that N is 26 — a *shrunken* N is the shape
 // this file failed in for however long nobody ran it.
 //
 // HOW THIS FILE WENT DECORATIVE, because the next refactor will try it again.
@@ -242,8 +243,13 @@ function parseArgs(argv) {
 // process — no filesystem, no persistence across runs.
 //
 //   GET  /v1/blob/<32-hex-id>  -> 200 + body + ETag header, or 404
-//   PUT  /v1/blob/<32-hex-id>  -> 204; honours If-Match, 412 on mismatch
+//   PUT  /v1/blob/<32-hex-id>  -> 204 + ETag; honours If-Match, 412 on mismatch
 //   OPTIONS                   -> permissive CORS preflight
+//
+// And the recipe buckets (roadmap 510/050, worker/sync-worker.js): the same
+// two verbs on `<32-hex-id>:r<n>`, and a GET of the core copy carrying
+// `?buckets=<n>` reports each existing bucket's version in X-Faves-Buckets
+// (`r0="<etag>",…`, or `none`) — on a 404 as well, exactly as the Worker does.
 //
 // CORS is load-bearing, not decorative: the static site server and this one
 // listen on different loopback ports, so every request the page makes here is
@@ -259,7 +265,7 @@ function startFakeBlobServer(port) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, PUT, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, If-Match");
-    res.setHeader("Access-Control-Expose-Headers", "ETag");
+    res.setHeader("Access-Control-Expose-Headers", "ETag, X-Faves-Buckets");
 
     if (req.method === "OPTIONS") {
       res.writeHead(204);
@@ -267,22 +273,32 @@ function startFakeBlobServer(port) {
       return;
     }
 
-    const m = /^\/v1\/blob\/([0-9a-f]{32})$/.exec(req.url || "");
+    const m = /^\/v1\/blob\/([0-9a-f]{32}(?::r(?:0|[1-9][0-9]?))?)(?:\?(.*))?$/.exec(req.url || "");
     if (!m) {
       res.writeHead(404, { "Content-Type": "text/plain" });
       res.end("not found");
       return;
     }
     const id = m[1];
+    const asked = !id.includes(":") ? Number(new URLSearchParams(m[2] || "").get("buckets")) : 0;
 
     if (req.method === "GET") {
+      const report = {};
+      if (Number.isInteger(asked) && asked > 0) {
+        const found = [];
+        for (let k = 0; k < Math.min(asked, 16); k += 1) {
+          const b = blobs.get(`${id}:r${k}`);
+          if (b) found.push(`r${k}=${b.etag}`);
+        }
+        report["X-Faves-Buckets"] = found.length ? found.join(",") : "none";
+      }
       const entry = blobs.get(id);
       if (!entry) {
-        res.writeHead(404);
+        res.writeHead(404, report);
         res.end();
         return;
       }
-      res.writeHead(200, { "Content-Type": "application/octet-stream", ETag: entry.etag });
+      res.writeHead(200, { ...report, "Content-Type": "application/octet-stream", ETag: entry.etag });
       res.end(entry.body);
       return;
     }
@@ -312,7 +328,7 @@ function startFakeBlobServer(port) {
         }
         const etag = `"${nextEtag++}"`;
         blobs.set(id, { body, etag });
-        res.writeHead(204);
+        res.writeHead(204, { ETag: etag });
         res.end();
       });
       return;
@@ -778,6 +794,12 @@ async function openDevice({ label, profileDir, headed, siteUrl, fakeBlobPort, re
       await cdp.send("Page.navigate", { url: siteUrl }, sessionId);
       await waitForMenu(why || "after a reload");
     },
+    /** Open another page of the site (a recipe, roadmap 510/050) and wait for
+     *  `readyExpr` to be truthy. `reload()` brings the menu back after. */
+    goto: async (url, readyExpr, label) => {
+      await cdp.send("Page.navigate", { url }, sessionId);
+      await untilPresent(async () => driver.evalPage(readyExpr), { label: `[${label}] ${url} to render` });
+    },
     /** Wait until the page has stopped mutating itself — see the comment on
      *  the MutationObserver above. Polls rather than sleeping a fixed period
      *  (a fixed sleep is exactly the kind of time-dependent wait this file's
@@ -852,7 +874,7 @@ async function run(opts) {
   refuseAmbiguousFixture(items, DISH_Y, opts.id);
 
   const { server: siteServer, port: sitePort } = await startServer(opts.port, SITE);
-  const { server: blobServer, port: blobPort } = await startFakeBlobServer(opts.blobPort);
+  const { server: blobServer, port: blobPort, blobs: fakeBlobs } = await startFakeBlobServer(opts.blobPort);
   const siteUrl = `http://127.0.0.1:${sitePort}/restaurant.html?id=${encodeURIComponent(opts.id)}`;
 
   const profileDirA = await mkdtemp(join(tmpdir(), "faves-sync-check-a-"));
@@ -1011,6 +1033,57 @@ async function run(opts) {
       aAvoid.includes(KNOWN_KEY),
       `A's stored avoid list: ${JSON.stringify(aAvoid)} (B flagged ${KNOWN_KEY})`
     );
+
+    // --- 5c. A PERSONAL RECIPE CROSSES IN BUCKETS (roadmap 510/050) -------
+    //
+    // A recipe of one's own lives in this device's cookbook (faves.recipes.v1)
+    // and syncs in eight padded buckets beside the core copy, not inside it.
+    // SEEDED on A, because there is no recipe editor yet (the item says so) —
+    // an import is the only way one arrives today. Everything after the seed
+    // is the real app: A's push, B's pull, and B's recipe page drawing it.
+    const RECIPE = {
+      dishId: "u:sync-check-loaf",
+      name: "Sync Check Loaf",
+      ingredients: ["2 cups flour", "1 cup water"],
+      steps: ["Mix.", "Bake at 200°C."],
+      tags: ["v", "contains-gluten"],
+    };
+    await A.d.evalPage(
+      `localStorage.setItem("faves.recipes.v1", ${JSON.stringify(JSON.stringify({ [RECIPE.dishId]: RECIPE }))})`
+    );
+    await A.d.reload("after seeding A's cookbook");
+    await syncNowAndWait(A.d);
+    await syncNowAndWait(B.d);
+    const bRecipes = await B.d.evalPage(`Object.keys(JSON.parse(localStorage.getItem("faves.recipes.v1") || "{}"))`);
+    report.check(
+      "a personal recipe made on A reaches B's cookbook",
+      Array.isArray(bRecipes) && bRecipes.includes(RECIPE.dishId),
+      `B's recipes: ${JSON.stringify(bRecipes)}`
+    );
+    const bucketBodies = [...fakeBlobs.entries()].filter(([k]) => k.includes(":r"));
+    const sizes = bucketBodies.map(([, v]) => v.body.length);
+    report.check(
+      "the recipes travel in all 8 buckets, each padded to a 4 KiB multiple (+29 bytes of envelope)",
+      bucketBodies.length === 8 && sizes.every((n) => (n - 29) % 4096 === 0),
+      `${bucketBodies.length} bucket(s), sizes ${JSON.stringify(sizes)}`
+    );
+    report.check(
+      "no bucket carries the recipe in the clear — the Worker holds ciphertext only",
+      bucketBodies.every(([, v]) => !v.body.includes(Buffer.from(RECIPE.name))),
+      "searched every bucket's bytes for the recipe's name"
+    );
+    await B.d.goto(
+      siteUrl.replace(/restaurant\.html\?id=.*$/, `recipe.html?id=u:mine&dish=${RECIPE.dishId}`),
+      `document.querySelector("h1.menu-title")?.textContent === ${JSON.stringify(RECIPE.name)}`,
+      "B"
+    );
+    const bSteps = await B.d.evalPage(`document.querySelectorAll(".method li").length`);
+    report.check(
+      "B's recipe page renders the synced personal recipe, method and all",
+      bSteps === RECIPE.steps.length,
+      `${bSteps} method step(s) on the page`
+    );
+    await B.d.reload("back to the menu after the recipe page");
 
     // --- 6. Turning sync off on B leaves B's own data intact -------------
     const bBeforeOff = await dishState(B.d, DISH_X);

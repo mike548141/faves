@@ -97,10 +97,57 @@ const MAX_BODY_BYTES = 256 * 1024;
  *  KV's minimum TTL is 60s, so this is nowhere near a platform limit. */
 const TTL_SECONDS = 180 * 24 * 60 * 60; // 15,552,000
 
+/** Recipe buckets (roadmap 510/050, ADR 0146 §2). A user's personal recipes
+ *  are stored beside their core copy as `<blobId>:r<n>`, the same user key
+ *  plus a bucket number. The client uses 8 (site/js/sync-buckets.js); the
+ *  Worker accepts up to 16 so the client can move to 16 without a redeploy.
+ *  Nothing here can read a bucket either — it is ciphertext like the core. */
+export const MAX_BUCKETS = 16;
+
+/** How stale a sibling copy may get before a write under the same user key
+ *  re-arms its expiry. ADR 0146 §2 says "the Worker resets the expiry of every
+ *  copy under a user key on any write", because a store nobody edits (recipes)
+ *  would otherwise expire while favourites stayed alive (B1 in the cold
+ *  review). KV has no "touch": re-arming a copy is a full re-write, and writes
+ *  are the scarce resource (1,000 a day free). Re-writing all nine copies on
+ *  every heart would spend nine writes where one was needed, so a copy is
+ *  re-armed only once it is more than 30 days past its last write. Every copy
+ *  therefore has at least 150 of its 180 days left after any write under its
+ *  key — the guarantee B1 needed — for at most nine extra writes a month per
+ *  user, instead of up to eight per heart. */
+export const REFRESH_AFTER_SECONDS = 30 * 24 * 60 * 60;
+
 // ---------------------------------------------------------------------------
 // Pure helpers — exported for `node --test`. None of these touch KV, the
 // network, or `console`; they're the parts of the logic that don't need a
 // Workers runtime (or wrangler, or a KV namespace) to verify.
+
+/** A KV key this Worker serves: `<blobId>` (the core copy) or
+ *  `<blobId>:r<n>` (recipe bucket n, n < MAX_BUCKETS). Returns
+ *  `{ key, blobId, bucket }` (bucket null for the core copy), or null. Checked
+ *  before the value ever reaches a KV call, like `isValidBlobId`. */
+export function parseBlobKey(segment) {
+  if (typeof segment !== "string") return null;
+  const m = /^([0-9a-f]{32})(?::r(0|[1-9][0-9]?))?$/.exec(segment);
+  if (!m) return null;
+  const bucket = m[2] === undefined ? null : Number(m[2]);
+  if (bucket !== null && bucket >= MAX_BUCKETS) return null;
+  return { key: segment, blobId: m[1], bucket };
+}
+
+/** Every KV key that belongs to one user: the core copy and each bucket. */
+export function familyKeys(blobId) {
+  return [blobId, ...Array.from({ length: MAX_BUCKETS }, (_, n) => `${blobId}:r${n}`)];
+}
+
+/** The `X-Faves-Buckets` report: `r0="<v>",r3="<v>"` for the buckets that
+ *  exist, `none` when none do (an empty header can be dropped in transit, and
+ *  a client must be able to tell "no buckets" from "a Worker that predates
+ *  them", which sends no header at all). */
+export function formatBucketReport(found) {
+  const parts = found.map(({ bucket, version }) => `r${bucket}=${formatEtag(version)}`);
+  return parts.length ? parts.join(",") : "none";
+}
 
 /** True iff `id` is exactly the blobId shape the client contract promises.
  *  Checked before the value ever reaches a KV call — an oversized or
@@ -208,7 +255,10 @@ function baseHeaders(corsHeaders) {
     // not write twice. Every Node-side check passed, because undici does not
     // filter response headers by CORS. Found by the 2026-08-17 cold review;
     // verified against the deployed Worker with curl before the change.
-    "Access-Control-Expose-Headers": "ETag",
+    // X-Faves-Buckets: the recipe buckets' versions (roadmap 510/050), read
+    // by the page for the same reason — a cross-origin page cannot see it
+    // unless the actual response names it.
+    "Access-Control-Expose-Headers": "ETag, X-Faves-Buckets",
     "Cache-Control": "no-store",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "no-referrer",
@@ -249,15 +299,69 @@ function preflight(corsHeaders) {
 // ---------------------------------------------------------------------------
 // Route handlers.
 
-async function handleGet(blobId, env, cors) {
-  const { value, metadata } = await env.SYNC_BLOBS.getWithMetadata(blobId, "arrayBuffer");
-  if (value === null) return empty(404, cors);
-  const headers = { ...baseHeaders(cors), "Content-Type": "application/octet-stream" };
+/** What the client asked to be told about its buckets: `?buckets=<n>` on a
+ *  GET of the core copy, clamped to MAX_BUCKETS. 0 when absent — an older
+ *  client asks nothing, and costs nothing beyond its one read. */
+function bucketsAsked(url, parsed) {
+  if (parsed.bucket !== null) return 0;
+  const n = Number(url.searchParams.get("buckets"));
+  return Number.isInteger(n) && n > 0 ? Math.min(n, MAX_BUCKETS) : 0;
+}
+
+async function handleGet(parsed, asked, env, cors) {
+  const [{ value, metadata }, found] = await Promise.all([
+    env.SYNC_BLOBS.getWithMetadata(parsed.key, "arrayBuffer"),
+    // One KV read per bucket asked about, in the same request: a sync that
+    // changed nothing still costs one HTTP round trip. Reads are the cheap KV
+    // operation (100,000 a day free, against 1,000 writes).
+    Promise.all(
+      Array.from({ length: asked }, async (_, bucket) => {
+        const got = await env.SYNC_BLOBS.getWithMetadata(`${parsed.blobId}:r${bucket}`, "arrayBuffer");
+        return got.value !== null && got.metadata && got.metadata.v ? { bucket, version: got.metadata.v } : null;
+      })
+    ),
+  ]);
+  const report = asked ? { "X-Faves-Buckets": formatBucketReport(found.filter(Boolean)) } : {};
+  if (value === null) return empty(404, cors, report);
+  const headers = { ...baseHeaders(cors), ...report, "Content-Type": "application/octet-stream" };
   if (metadata && metadata.v) headers["ETag"] = formatEtag(metadata.v);
   return new Response(value, { status: 200, headers });
 }
 
-async function handlePut(request, blobId, env, cors) {
+/**
+ * Re-arm the expiry of every OTHER copy under this user key that is more than
+ * REFRESH_AFTER_SECONDS past its last write (see that constant). The copy keeps
+ * its bytes and its version `v`, so a device's recorded ETag stays valid and
+ * the core copy's record of each bucket's version stays true; only `t`, the
+ * time of the last write, moves.
+ *
+ * HONEST LIMIT, the same one handlePut states: KV has no compare-and-swap, so
+ * a device writing that same copy in the instant this re-writes it can lose its
+ * bytes to the older ones. The version travels with the bytes, so what is left
+ * is an old copy under its OLD version — which the core copy's record no longer
+ * matches, so the next sync detects it and merges again from the device that
+ * still holds the change. Rare (a copy untouched for a month, written at the
+ * same moment), and recoverable rather than silent.
+ */
+async function refreshFamily(parsed, env, nowSeconds) {
+  await Promise.all(
+    familyKeys(parsed.blobId)
+      .filter((k) => k !== parsed.key)
+      .map(async (k) => {
+        const got = await env.SYNC_BLOBS.getWithMetadata(k, "arrayBuffer");
+        if (got.value === null || !got.metadata || !got.metadata.v) return;
+        const t = Number(got.metadata.t);
+        if (Number.isFinite(t) && nowSeconds - t < REFRESH_AFTER_SECONDS) return;
+        await env.SYNC_BLOBS.put(k, got.value, {
+          expirationTtl: TTL_SECONDS,
+          metadata: { ...got.metadata, t: nowSeconds },
+        });
+      })
+  );
+}
+
+async function handlePut(request, parsed, env, cors) {
+  const blobId = parsed.key;
   const contentLengthHeader = request.headers.get("Content-Length");
   if (contentLengthHeader && Number(contentLengthHeader) > MAX_BODY_BYTES) {
     return empty(413, cors);
@@ -302,6 +406,7 @@ async function handlePut(request, blobId, env, cors) {
   // unconditionally — there is nothing to conflict with yet.
 
   const newVersion = crypto.randomUUID();
+  const nowSeconds = Math.floor(Date.now() / 1000);
   await env.SYNC_BLOBS.put(blobId, body, {
     // Refreshed on every write, per TTL_SECONDS's comment above — this is
     // the "does not accumulate forever" requirement.
@@ -312,8 +417,15 @@ async function handlePut(request, blobId, env, cors) {
     // changes even if two writes happen to carry identical ciphertext,
     // which is exactly what a version-style ETag should do (it answers
     // "has anyone written since I last read", not "is the content novel").
-    metadata: { v: newVersion },
+    // `t` is when this copy was last written, in seconds — what
+    // refreshFamily reads to decide whether a sibling needs re-arming.
+    metadata: { v: newVersion, t: nowSeconds },
   });
+
+  // Every write keeps the whole user's copies alive (ADR 0146 §2, B1): a
+  // heart re-arms a recipe bucket nobody has touched in months, and a recipe
+  // edit re-arms the core copy.
+  await refreshFamily(parsed, env, nowSeconds);
 
   return empty(204, cors, { ETag: formatEtag(newVersion) });
 }
@@ -350,11 +462,12 @@ export default {
         return empty(404, cors);
       }
 
-      const blobId = match[1];
-      if (!isValidBlobId(blobId)) return empty(400, cors);
+      // `<blobId>` or `<blobId>:r<n>` — the core copy or a recipe bucket.
+      const parsed = parseBlobKey(match[1]);
+      if (!parsed) return empty(400, cors);
 
-      if (request.method === "GET") return await handleGet(blobId, env, cors);
-      if (request.method === "PUT") return await handlePut(request, blobId, env, cors);
+      if (request.method === "GET") return await handleGet(parsed, bucketsAsked(url, parsed), env, cors);
+      if (request.method === "PUT") return await handlePut(request, parsed, env, cors);
 
       return empty(405, cors, { Allow: "GET, PUT, OPTIONS" });
     } catch {
