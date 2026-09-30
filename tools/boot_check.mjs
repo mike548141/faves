@@ -611,6 +611,29 @@ async function run(opts) {
           about.stamps ? "About is carrying a version stamp again (ROADMAP 23c moved it)" : "none"
         );
         report.check("about: focus is inside the dialog", about.focusInside, String(about.focusInside));
+        // Roadmap 510/010 step 4: About says whether this browser will keep the
+        // data. Filled asynchronously after open, so waited for rather than
+        // read once — and asserted INSIDE "Private by design", the group it
+        // belongs to, so it cannot drift into a group of its own unpinned.
+        try {
+          const storage = await untilPresent(
+            () =>
+              driver.evalPage(`(() => {
+                const g = [...document.querySelectorAll(".about-sheet .about-group")]
+                  .find((s) => s.querySelector(".about-group-title")?.textContent.trim() === "Private by design");
+                const t = g?.querySelector(".about-storage")?.textContent.trim() ?? "";
+                return t || null;
+              })()`),
+            { label: "about: says whether this browser will keep your data" }
+          );
+          report.check(
+            "about: says whether this browser will keep your data",
+            /(agreed to keep|hasn’t agreed|doesn’t say)/.test(storage) && /Home Screen/.test(storage),
+            storage
+          );
+        } catch (e) {
+          report.check("about: says whether this browser will keep your data", false, String(e.message || e));
+        }
       }
     } catch (e) {
       report.check("about: the dialog opened", false, String(e.message || e));

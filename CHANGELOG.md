@@ -9,6 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Faves asks your browser to keep your data.** After the first thing you
+  save, Faves asks the browser not to clear its storage when space runs
+  short. About now says whether the browser agreed, and that a Safari tab can
+  still be cleared after a while unused unless Faves is on your Home Screen.
 - **Halal, Kosher and Meatarian food preferences.** Choosing Halal flags
   every dish the menu shows contains pork; Kosher flags pork and shellfish.
   Neither hides or dims anything, and a dish only ever reads "Halal" or
@@ -110,6 +114,12 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **An older phone no longer deletes data a newer one added.** Sync now
+  carries every store it doesn't recognise through untouched, so a device on
+  an older version keeps syncing without erasing what a newer version saved.
+  It pauses with "Update Faves to keep syncing" only when a store it reads
+  has changed shape. A backup from an older version of Faves is now upgraded
+  and imported instead of being refused.
 - **The ⓘ beside a restaurant or recipe name sits level with the name** —
   it was about 4px low.
 - **Searching "favourites" on a menu found almost none of them.** Hearts saved
