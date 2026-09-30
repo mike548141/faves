@@ -39,6 +39,7 @@ import { deviceStorage, PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseRegistry, scopeK
 import { mergePersonal, needsDecision } from "./sync-merge.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "./sync-crypto.js";
 import { mintSyncCode, normaliseSyncCode } from "./sync-code.js";
+import { storageAhead } from "./store.js";
 import { RECIPES_KEY, sortedRecipes } from "./recipe-record.js";
 import {
   RECIPE_BUCKETS,
@@ -88,6 +89,11 @@ export const NEEDS_DECISION = "needs-decision";
  *  §3). Its own state, not ERROR (roadmap 510/090): ERROR's row reads "tap to
  *  retry" and offers Retry, and no retry can help until Faves is updated. */
 export const PAUSED = "paused";
+
+/** What a tab says when another tab on this device has upgraded storage past
+ *  this tab's build (roadmap 510/110). Nothing is read or sent until it reloads. */
+export const RELOAD_NEEDED =
+  "Reload Faves to keep syncing — it was updated in another tab. Your data is safe on this device.";
 
 /** What a device says when another one has changed the shape of a store this
  *  one reads (ADR 0146 §3). Shown verbatim by sync-ui's paused view. */
@@ -288,6 +294,11 @@ export function createSync({
   // every screen keeps showing what it read at load. Injected rather than
   // imported so the engine stays free of the live stores (see sync-start.js).
   onApplied = () => {},
+  // Is this device's storage in a newer schema than this build? Then this tab
+  // is out of date (roadmap 510/110) and must neither write storage nor send
+  // the server a copy built from data it may be misreading. Injectable for the
+  // tests; the default reads the stamp in `storage`.
+  behind = () => storageAhead(storage),
 } = {}) {
   const subs = new Set();
   let state = OFF;
@@ -461,6 +472,14 @@ export function createSync({
     const cfg = readConfig();
     if (!cfg.code) return { ok: false, error: "Sync is off." };
     if (inFlight) return inFlight;
+    // An out-of-date tab applies no merge (roadmap 510/110). Checked before
+    // the read, not only at the local write: its merge would be built from
+    // data this build may misread, and the server must not receive it either.
+    // Nothing is owed — the reloaded tab collects what is in storage and syncs.
+    if (behind()) {
+      setState(PAUSED, RELOAD_NEEDED);
+      return { ok: false, error: "reload-needed" };
+    }
 
     inFlight = (async () => {
       try {

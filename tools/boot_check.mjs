@@ -656,6 +656,72 @@ async function run(opts) {
       report.check("about: the dialog opened", false, String(e.message || e));
     }
 
+    // A TAB LEFT BEHIND BY AN UPGRADE (roadmap 510/110, owner-ruled "Old tab
+    // stops writing"). Two real tabs of one browser share one localStorage, so
+    // this is the real mechanism, not a dispatched event: tab B stamps storage
+    // one schema ahead — what a newer build's upgrade does — and the browser
+    // fires `storage` in tab A. A must then say so and keep nothing. The heart
+    // tap is the control's other half: without it, a notice drawn over a page
+    // that still saved would pass.
+    const favKey = "faves.p.default.favourites.v1";
+    let tabB = null;
+    try {
+      await cdp.send("Page.navigate", { url: `${base}/restaurant.html?id=${encodeURIComponent(venueId)}` }, sessionId);
+      await untilPresent(() => driver.evalPage(`!!document.querySelector("button.heart")`), {
+        label: "stale tab: the menu drew its hearts",
+      });
+      const saved = await driver.evalPage(`localStorage.getItem(${JSON.stringify(favKey)})`);
+      const noticeBefore = await driver.evalPage(`!!document.querySelector(".stale-notice")`);
+      report.check("stale tab: a current tab shows no reload notice", noticeBefore === false, String(noticeBefore));
+
+      ({ targetId: tabB } = await cdp.send("Target.createTarget", { url: `${base}/favicon.ico` }));
+      const { sessionId: sB } = await cdp.send("Target.attachToTarget", { targetId: tabB, flatten: true });
+      await cdp.send("Runtime.enable", {}, sB);
+      await untilPresent(
+        async () =>
+          (await cdp.send("Runtime.evaluate", { expression: "location.origin", returnByValue: true }, sB)).result
+            ?.value === base,
+        { label: "stale tab: the second tab reached the site's origin" }
+      );
+      await cdp.send(
+        "Runtime.evaluate",
+        { expression: `localStorage.setItem(${JSON.stringify(SCHEMA_KEY)}, "${USER_SCHEMA + 1}")` },
+        sB
+      );
+
+      await untilPresent(
+        () => driver.evalPage(`(document.querySelector(".stale-notice [role=alert]")?.textContent ?? "").length > 0`),
+        { label: "stale tab: the reload notice appeared" }
+      );
+      const notice = await driver.evalPage(`(() => {
+        const n = document.querySelector(".stale-notice");
+        const buttons = [...n.querySelectorAll("button")].map((b) => b.textContent.trim());
+        return { text: n.querySelector("[role=alert]").textContent, buttons, label: n.getAttribute("aria-label") };
+      })()`);
+      report.check(
+        "stale tab: another tab's upgrade puts up the reload notice — one Reload button, in an alert",
+        /updated in another tab/.test(notice.text) && /Reload/.test(notice.text) && notice.buttons.length === 1 &&
+          notice.buttons[0] === "Reload" && !!notice.label,
+        JSON.stringify(notice)
+      );
+
+      await driver.evalPage(`${need("button.heart")}.click()`);
+      const after = await driver.evalPage(`localStorage.getItem(${JSON.stringify(favKey)})`);
+      const pressed = await driver.evalPage(`document.querySelector("button.heart").getAttribute("aria-pressed")`);
+      report.check(
+        "stale tab: a heart tapped after the upgrade is not saved",
+        after === saved,
+        `stored before ${JSON.stringify(saved)}, after ${JSON.stringify(after)} (aria-pressed ${pressed})`
+      );
+    } catch (e) {
+      report.check("stale tab: the reload notice", false, String(e.message || e));
+    } finally {
+      if (tabB) await cdp.send("Target.closeTarget", { targetId: tabB }).catch(() => {});
+      await driver
+        .evalPage(`try { localStorage.setItem(${JSON.stringify(SCHEMA_KEY)}, "${USER_SCHEMA}") } catch {}`)
+        .catch(() => {});
+    }
+
     return report.summary(SITE);
   } finally {
     if (chrome) await stopChrome(chrome.proc ?? chrome);

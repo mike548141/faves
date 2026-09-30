@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A tab left behind by an update stops saving, and says so.** If Faves is
+  updated in one tab while another is still open on the older version, the
+  older tab now shows "Faves was updated in another tab" with a Reload
+  button, and saves nothing until you reload — so it can never write
+  old-style data over data the newer version has upgraded. It does not reload
+  by itself, so nothing you are typing is lost from the screen.
 - **Your own recipes.** Faves can now keep recipes of your own, separate
   from the published ones, and the recipe page shows them exactly as it
   shows a Cook at Home recipe — offline, with cook mode, the shopping list,

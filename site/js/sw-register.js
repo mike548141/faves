@@ -15,6 +15,10 @@
 import "./upgrade-start.js";
 import { createUpdateGate, createReloadGuard, isUpdateReady } from "./sw-update.js";
 import { showUpdateNotice } from "./update-notice.js";
+import { isTabStale } from "./store.js";
+// The "reload this tab" notice (roadmap 510/110): listens for store.js marking
+// this tab stale, from the first write or storage event that shows it.
+import "./stale-tab-ui.js";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -37,6 +41,8 @@ function wireUpdates(registration) {
   const guard = createReloadGuard();
 
   const offer = () => {
+    // A stale tab already shows the reload notice, whose one button does this.
+    if (isTabStale()) return;
     try {
       showUpdateNotice(() => {
         guard.request();

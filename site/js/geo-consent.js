@@ -21,6 +21,8 @@
 // restoring the absence of it would resurrect a nag someone had turned off.
 // So it rides its own key, deliberately outside the exported set.
 
+import { safeStorage as sharedStorage } from "./store.js";
+
 /** localStorage key. Versioned, so a future shape change cannot misread this one. */
 export const CONSENT_KEY = "faves.geo.consent.v1";
 
@@ -108,11 +110,11 @@ export function askSurface(permission, consent, haveOrigin) {
   return "dialog";
 }
 
+// Through store.js, like every other writer (roadmap 510/110): its storage
+// refuses a write from a tab whose build is behind storage, and a module
+// reaching `localStorage` itself would slip past that. Built on first use, not
+// at load, so a test that passes its own storage never touches a real one.
+let shared = null;
 function safeStorage() {
-  try {
-    return globalThis.localStorage ?? null;
-  } catch {
-    // Accessing localStorage itself throws when cookies are blocked entirely.
-    return null;
-  }
+  return (shared ??= sharedStorage());
 }

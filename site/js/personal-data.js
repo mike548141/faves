@@ -51,7 +51,7 @@ import { normaliseNoteText } from "./notes.js";
 import { createSettings, sanitiseDiet, sanitiseFoodPrefs, DEFAULTS as SETTINGS_DEFAULTS } from "./settings.js";
 import { mergeItems, normaliseNote } from "./cart.js";
 import { optionId } from "./addons.js";
-import { listStoredKeys } from "./store.js";
+import { listStoredKeys, storageAhead } from "./store.js";
 import {
   USER_SCHEMA,
   STORE_SCHEMA,
@@ -184,7 +184,7 @@ const EXCLUDED = {
   // cannot mean re-arming a prompt the person holding the phone switched off,
   // and unlike the cook-mode ticks it spares nothing that expires.
   // Imported rather than written as a literal (unlike the sync keys above,
-  // where the import would be circular): geo-consent.js imports nothing, so a
+  // where the import would be circular): geo-consent.js imports only store.js, so a
   // rename cannot silently reopen this hole.
   [CONSENT_KEY]: {
     spare: true,
@@ -820,6 +820,13 @@ function uniqueId(wanted, taken) {
  */
 export function applyPersonalData(storage, data, { mode = "merge", decisions = {} } = {}) {
   if (!IMPORT_MODES.includes(mode)) return fail(`Unknown import mode “${mode}”.`);
+  // A tab whose build is behind storage writes nothing (roadmap 510/110):
+  // store.js would refuse each write anyway, but an import is many writes, and
+  // a report of "added 12 favourites" that were never kept is the dishonest
+  // kind of quiet. Refused whole, before the first one.
+  if (storageAhead(storage)) {
+    return fail("Faves was updated in another tab. Reload this page, then import again.");
+  }
   const plan = planImport(storage, data, { mode, decisions });
   if (!plan.ok) return fail(plan.error);
   if (plan.blocking.length) {

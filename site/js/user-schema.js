@@ -26,16 +26,21 @@
 // is evaluated. An ES module's imports are evaluated before its body, in import
 // order, so the chain can only run "before any store is read" if it sits in a
 // module whose own imports read nothing. That is this file: it imports
-// store.js, which imports nothing. tests/user-schema.test.js holds that line.
+// store.js and schema-stamp.js, which read nothing when they load.
+// tests/user-schema.test.js holds that line.
 //
 // Pure where it can be: storage and the clock are injected.
 
 import { listStoredKeys } from "./store.js";
+import { USER_SCHEMA, SCHEMA_KEY } from "./schema-stamp.js";
 
-/** The shape of the whole personal layer. Replaces `FORMAT_VERSION` (roadmap
- *  510/040). Bump it only together with a step in `UPGRADE_STEPS` from the old
- *  number, and a fixture pair for the new one under tests/fixtures/. */
-export const USER_SCHEMA = 1;
+/** The shape of the whole personal layer, and where this device records it.
+ *  Replaces `FORMAT_VERSION` (roadmap 510/040). DEFINED in schema-stamp.js
+ *  since roadmap 510/110, so store.js can refuse writes from a tab whose build
+ *  is behind storage without an import cycle; bump it there, only together
+ *  with a step in `UPGRADE_STEPS` from the old number, and a fixture pair for
+ *  the new one under tests/fixtures/. */
+export { USER_SCHEMA, SCHEMA_KEY };
 
 /**
  * Each store's own shape number (ADR 0146 §3, roadmap 510/010). Carried in
@@ -74,10 +79,10 @@ export function storesAhead(snapshot) {
   });
 }
 
-/** Where this device's local storage records the `USER_SCHEMA` its data is in.
- *  Excluded from backups (personal-data.js EXCLUDED): it is a fact about this
- *  device's storage, and a backup carries its own number as `v`. */
-export const SCHEMA_KEY = "faves.schema.v1";
+// `SCHEMA_KEY` (schema-stamp.js) is where this device's local storage records
+// the `USER_SCHEMA` its data is in. Excluded from backups (personal-data.js
+// EXCLUDED): it is a fact about this device's storage, and a backup carries its
+// own number as `v`.
 
 /** The pre-upgrade copy of every `faves.` key, kept until the upgraded version
  *  has run successfully (see `upgradeRan`). Excluded from backups: it is this
