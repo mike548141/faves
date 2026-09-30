@@ -5,7 +5,7 @@
 // Fail-soft: if anything here throws, the static list in index.html
 // stays on screen untouched.
 
-import { loadRestaurants, recheckReferences, REFERENCE_COPY } from "./data.js";
+import { loadRestaurants, loadSearchIndex, recheckReferences, REFERENCE_COPY } from "./data.js";
 import {
   deriveFacets,
   applyFilters,
@@ -26,7 +26,7 @@ import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 import { closureBadge } from "./closure-ui.js";
 import { todayIn, isGone } from "./temporal.js";
 import { initPicker } from "./picker.js";
-import { buildIndex, search } from "./search.js";
+import { search } from "./search.js";
 import { rotateHints, defaultHints } from "./search-hints.js";
 import { initOrderUI } from "./cart-ui.js";
 import { favourites, favHref, favKey, groupForShare, unresolvedReason } from "./favourites.js";
@@ -365,7 +365,7 @@ function fillSelect(select, values, allLabel, i18nKey) {
   }
 }
 
-function init(restaurants) {
+function init(restaurants, searchIndex) {
   const listEl = document.getElementById("restaurant-list");
   const countEl = document.getElementById("result-count");
   const emptyEl = document.getElementById("empty-state");
@@ -752,7 +752,7 @@ function init(restaurants) {
 
   wireOpenNow(state, render);
   wireCheapEats(state, render);
-  wireSearch(restaurants);
+  wireSearch(restaurants, searchIndex);
   wireFavourites(restaurants);
   wireHomeButton();
   initSettingsUI();
@@ -795,7 +795,7 @@ function init(restaurants) {
 // zero-dep. While a query is live, the browse view (cards, filters, toggles)
 // hides via `body.searching` and a grouped results list takes its place;
 // clearing the box restores browse. Purely additive to the fail-soft list.
-function wireSearch(restaurants) {
+function wireSearch(restaurants, index) {
   const form = document.getElementById("search-form");
   const input = document.getElementById("search-input");
   const clear = document.getElementById("search-clear");
@@ -810,7 +810,10 @@ function wireSearch(restaurants) {
   rotateHints(input, defaultHints(t));
 
   form.hidden = false;
-  const index = buildIndex(restaurants);
+  // `index` is now the PRECOMPUTED file (data/search-index.json, roadmap
+  // 510/020) rather than something built here from the loaded restaurants —
+  // building it in the browser would mean fetching every venue's full menu
+  // for its ingredients and tags, exactly what this item removes.
 
   // A tab-hint icon precedes the venue name so the two groups read at a glance.
   // The index entry carries `kind` for exactly this — each kind names its own
@@ -1524,8 +1527,8 @@ function wireLocation(state, render) {
     .catch(() => applyPermissionState("prompt"));
 }
 
-loadRestaurants()
-  .then(init)
+Promise.all([loadRestaurants(), loadSearchIndex()])
+  .then(([restaurants, searchIndex]) => init(restaurants, searchIndex))
   .catch((err) => {
     // Leave the static fallback list in place; just note it.
     console.error("Faves: falling back to static list.", err);
