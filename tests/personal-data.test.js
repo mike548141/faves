@@ -14,10 +14,14 @@ import { NOTES_KEY, MAX_NOTE } from "../site/js/notes.js";
 import { SYNC_KEY, SYNC_BASE_KEY } from "../site/js/sync.js";
 import { CONSENT_KEY } from "../site/js/geo-consent.js";
 import { mergePersonal } from "../site/js/sync-merge.js";
+import { readFileSync } from "node:fs";
 import {
   FORMAT,
   FORMAT_VERSION,
   ORDER_KEY,
+  STORE_SCHEMA,
+  UPGRADE_STEPS,
+  upgradePersonalData,
   applyPersonalData,
   collectPersonalData,
   decisionKey,
@@ -324,7 +328,12 @@ test("malformed input is refused with a message worth showing", () => {
     [JSON.stringify({ format: "someone.else", v: 1, profiles: [] }), /wasn’t made by Faves/],
     [JSON.stringify({ v: "one", profiles: [] }), /no format version/],
     [JSON.stringify({ v: 99, profiles: [] }), /newer version/],
-    [JSON.stringify({ v: 0, profiles: [] }), /can no longer read/],
+    // Flipped 2026-09-30 (roadmap 510/010, ADR 0146): an OLDER file is upgraded,
+    // not refused with "can no longer read". This one now gets past the version
+    // gate and fails on what it actually lacks.
+    [JSON.stringify({ v: 0, profiles: [] }), /no people/],
+    // …and a store this build knows, written in a newer shape, is refused.
+    [JSON.stringify({ v: 1, stores: { favourites: 99 }, profiles: [{ id: "x", name: "A" }] }), /newer version/],
     [JSON.stringify({ v: 1 }), /no people/],
     [JSON.stringify({ v: 1, profiles: [{ id: "x" }] }), /no people/], // nameless ⇒ unusable
   ];
@@ -1035,7 +1044,10 @@ test("the sealed sync blob carries no `other` stores at all", () => {
   const mine = collectPersonalData(storage, { exportedAt: AT });
   assert.deepEqual(Object.keys(mine.other), ["faves.recipes.v1"]); // it IS collected
   const { merged } = mergePersonal(null, mine, mine);
-  assert.deepEqual(Object.keys(merged).sort(), ["format", "order", "profiles", "v"]);
+  // `stores` joined 2026-09-30 (roadmap 510/010): the schema numbers ride on
+  // the copy. `other` must still be absent — carryUnknown names it as known
+  // precisely so a local bag never rides along with a newer build's stores.
+  assert.deepEqual(Object.keys(merged).sort(), ["format", "order", "profiles", "stores", "v"]);
 });
 
 test("an add-on option's id survives the backup round trip, and an old backup still merges (ADR 0126)", () => {
@@ -1094,4 +1106,55 @@ test("export carries foodPrefs, so a backup restores Halal/Kosher/Meatarian", ()
   const round = parsePersonalData(JSON.stringify(out));
   assert.ok(round.ok, round.error);
   assert.deepEqual(round.data.profiles.find((p) => p.id === "default").settings.foodPrefs, ["kosher", "meatarian"]);
+});
+
+// --- the upgrade chain (roadmap 510/010, ADR 0146) --------------------------
+
+test("an older backup is upgraded and imported, not refused", () => {
+  const r = parsePersonalData({ v: 0, profiles: [{ id: "a", name: "Me", favourites: [{ type: "venue", venueId: "kk" }] }] });
+  assert.equal(r.ok, true, r.error);
+  assert.equal(r.data.v, FORMAT_VERSION);
+  assert.equal(r.data.profiles[0].favourites.length, 1);
+});
+
+// KEEP THIS FIXTURE FOREVER. It is a format-1 backup exactly as a build before
+// 2026-09-30 wrote it (no `stores` map). Every later format must still read it,
+// through the chain, with its allergen list intact.
+test("the format-1 fixture still imports, allergens and all", () => {
+  const raw = readFileSync(new URL("./fixtures/personal-data-v1.json", import.meta.url), "utf8");
+  const r = parsePersonalData(raw);
+  assert.equal(r.ok, true, r.error);
+  assert.equal(r.data.v, FORMAT_VERSION);
+  assert.deepEqual(r.data.profiles.map((p) => p.name), ["Me", "Sam"]);
+  assert.deepEqual(r.data.profiles[0].settings.diet.avoid, ["contains-nuts", "contains-peanuts"]);
+  assert.equal(r.data.profiles[0].favourites.length, 2);
+  assert.deepEqual(r.data.profiles[1].notes, { "cook-at-home gingernut": "less sugar" });
+  const plan = planImport(fakeStorage(), raw);
+  assert.equal(plan.ok, true);
+  assert.equal(plan.totals.favourites, 3);
+});
+
+test("every format below the current one has an upgrade step", () => {
+  for (let v = 1; v < FORMAT_VERSION; v += 1) {
+    assert.equal(typeof UPGRADE_STEPS[v], "function", `no upgrade step from format ${v}`);
+  }
+});
+
+test("the chain never strips a field it does not understand", () => {
+  // The sync copy and the base run through here too (sync.js), so an upgrade
+  // that rebuilt the object field by field would drop a newer build's store.
+  const up = upgradePersonalData({ v: 0, profiles: [{ id: "a", name: "Me", pantry: [1] }], shelf: { x: 1 } });
+  assert.equal(up.ok, true);
+  assert.deepEqual(up.data.shelf, { x: 1 });
+  assert.deepEqual(up.data.profiles[0].pantry, [1]);
+  // A copy already at or above this build's version is returned as it is.
+  const newer = { v: FORMAT_VERSION + 1, profiles: [] };
+  assert.equal(upgradePersonalData(newer).data, newer);
+  assert.equal(upgradePersonalData({ profiles: [] }).ok, false, "no version is not upgradable");
+});
+
+test("a snapshot carries each store's schema number", () => {
+  const data = collectPersonalData(seeded(), { exportedAt: AT });
+  assert.deepEqual(data.stores, { ...STORE_SCHEMA });
+  assert.ok(Object.isFrozen(STORE_SCHEMA));
 });

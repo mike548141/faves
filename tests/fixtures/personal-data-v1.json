@@ -1,0 +1,77 @@
+{
+  "format": "faves.personal-data",
+  "v": 1,
+  "exportedAt": "2026-09-30T00:00:00.000Z",
+  "_readme": "Your own Faves data — favourites, ratings, notes, settings, profiles and the order tally. Faves keeps this in your browser only; this file is a copy you asked for, and producing it sent nothing anywhere.",
+  "profiles": [
+    {
+      "id": "default",
+      "name": "Me",
+      "active": true,
+      "favourites": [
+        {
+          "type": "venue",
+          "venueId": "kk-malaysian",
+          "venueName": "KK Malaysian"
+        },
+        {
+          "type": "dish",
+          "venueId": "kk-malaysian",
+          "venueName": "KK Malaysian",
+          "name": "Roti Canai",
+          "dishId": "roti-canai"
+        }
+      ],
+      "settings": {
+        "farKm": 20,
+        "diet": {
+          "dietary": [
+            "v"
+          ],
+          "avoid": [
+            "contains-nuts",
+            "contains-peanuts"
+          ]
+        }
+      },
+      "ratings": {
+        "v:kk-malaysian": 5
+      },
+      "notes": null
+    },
+    {
+      "id": "p2",
+      "name": "Sam",
+      "active": false,
+      "favourites": [
+        {
+          "type": "venue",
+          "venueId": "gold-lining-cafe",
+          "venueName": "Gold Lining Cafe"
+        }
+      ],
+      "settings": null,
+      "ratings": null,
+      "notes": {
+        "cook-at-home gingernut": "less sugar"
+      }
+    }
+  ],
+  "order": [
+    {
+      "venueId": "kk-malaysian",
+      "venueName": "KK Malaysian",
+      "name": "Roti Canai",
+      "price": 8.5,
+      "qty": 2
+    }
+  ],
+  "excluded": {
+    "faves.origin.v1": "Your last “Near me” location. Deliberately not exported: it is your whereabouts, and it is session-only anyway.",
+    "faves.checklist.v1": "Which ingredients and steps you had ticked off while cooking. Deliberately not exported: those ticks are about the meal in front of you, they expire twelve hours after you make them, and restoring them into a different day’s cooking would be worse than losing them.",
+    "faves.timers.v1": "Any cook-mode timer still counting down on this device. Deliberately not exported: it is a clock about the food in front of you right now, and it expires an hour after it finishes.",
+    "faves.sync.v1": "Your sync code and pairing. Deliberately not exported: it is a key to your synced data, not the data — turn sync on in Settings on the other device instead of copying it about in a file.",
+    "faves.sync.base.v1": "Sync’s own last-agreed snapshot. Internal to syncing on this device.",
+    "faves.geo.consent.v1": "Whether you told Faves to stop asking about your location. Deliberately not exported: it is a promise about this device and this browser, and carrying it to another one would either silence an ask that phone never turned down, or bring back a prompt you had switched off."
+  }
+}

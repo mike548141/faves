@@ -34,7 +34,7 @@
 // which is the case that actually matters — the person taps three hearts and
 // locks the phone.
 
-import { collectPersonalData, ORDER_KEY } from "./personal-data.js";
+import { collectPersonalData, storesAhead, upgradePersonalData } from "./personal-data.js";
 import { deviceStorage, PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseRegistry, scopeKey } from "./profiles.js";
 import { mergePersonal, needsDecision } from "./sync-merge.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "./sync-crypto.js";
@@ -64,6 +64,11 @@ export const SYNCING = "syncing";
 export const ERROR = "error";
 export const NEEDS_DECISION = "needs-decision";
 
+/** What a device says when another one has changed the shape of a store this
+ *  one reads (ADR 0146 §3). Shown verbatim by sync-ui's error view. */
+export const UPDATE_NEEDED =
+  "Update Faves to keep syncing — another device has a newer version. Your data is safe on this device.";
+
 const parse = (raw) => {
   try {
     return raw == null ? null : JSON.parse(raw);
@@ -71,6 +76,22 @@ const parse = (raw) => {
     return null;
   }
 };
+
+/**
+ * Run a sync snapshot — the server copy or the base — through the same upgrade
+ * chain a backup uses (roadmap 510/010 step 3), so an older copy is read in
+ * this build's shape and never refused. A snapshot with no version is from
+ * before sync stamped one, which is format 1. Anything that is not an object
+ * at all is no snapshot: null, which the merge reads as "no base", the safe
+ * reading (everything looks like an addition). A newer copy comes back as it
+ * is — carrying it is the merge's job.
+ */
+export function upgradeSnapshot(snap) {
+  if (!snap || typeof snap !== "object" || Array.isArray(snap)) return null;
+  const withV = typeof snap.v === "number" && Number.isFinite(snap.v) ? snap : { ...snap, v: 1 };
+  const up = upgradePersonalData(withV);
+  return up.ok ? up.data : null;
+}
 
 /**
  * Write a merged snapshot back to storage.
@@ -249,7 +270,7 @@ export function createSync({
     return next;
   };
 
-  const readBase = () => parse(storage.getItem(SYNC_BASE_KEY));
+  const readBase = () => upgradeSnapshot(parse(storage.getItem(SYNC_BASE_KEY)));
   const writeBase = (snap) => {
     try {
       storage.setItem(SYNC_BASE_KEY, JSON.stringify(snap));
@@ -316,6 +337,18 @@ export function createSync({
             setState(ERROR, "That sync code doesn’t match the data on the server.");
             return { ok: false, error: "That sync code doesn’t match the data on the server." };
           }
+          // A store this build reads has been written in a newer shape. Merging
+          // it would misread it and write the misreading back for everyone, so
+          // this is the one case that pauses (ADR 0146 §3). A store this build
+          // has never heard of is NOT this case: it is carried, and sync goes on.
+          // Nothing is written and nothing local changes; the next foreground
+          // checks again, and an updated build simply passes.
+          const ahead = storesAhead(theirs);
+          if (ahead.length) {
+            setState(ERROR, UPDATE_NEEDED);
+            return { ok: false, error: "update-needed", stores: ahead };
+          }
+          theirs = upgradeSnapshot(theirs) ?? theirs;
         } else if (got.status !== 404) {
           setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
           return { ok: false, error: "sync-unreachable" };

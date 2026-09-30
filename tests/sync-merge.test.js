@@ -23,6 +23,8 @@ import {
   CONFLICT_NOTE,
   CONFLICT_SETTING,
   CONFLICT_PROFILE_IDENTITY,
+  carryUnknown,
+  KNOWN_PROFILE_FIELDS,
 } from "../site/js/sync-merge.js";
 import { favKey } from "../site/js/favourites.js";
 
@@ -382,4 +384,58 @@ test("mergeSettings: an older device that carried foodPrefs untouched does not d
   // the value unchanged — which reads as "only we moved" and keeps ours.
   const out = mergeSettings({ foodPrefs: ["halal"] }, { foodPrefs: ["halal", "kosher"] }, { foodPrefs: ["halal"] });
   assert.deepEqual(out.settings.foodPrefs, ["halal", "kosher"]);
+});
+
+// --- carrying what this build does not know (ADR 0146 §3, roadmap 510/010) --
+
+test("a profile field and a snapshot field this build does not know are carried, not dropped", () => {
+  // The newer device's copy on the server carries a store this build has never
+  // heard of; this (older) device has no such field. Absence here is not a
+  // deletion — this device CANNOT have deleted what it cannot see.
+  const theirs = { ...snap({ recipes: [{ id: "u:a" }] }), shelf: { jars: 2 } };
+  const mine = snap({ favourites: [venue("kk")] });
+  const { merged } = mergePersonal(theirs, mine, theirs);
+  assert.deepEqual(merged.profiles[0].recipes, [{ id: "u:a" }]);
+  assert.deepEqual(merged.shelf, { jars: 2 });
+  assert.deepEqual(keys(merged.profiles[0].favourites), ["v:kk"]);
+});
+
+test("carrying is symmetric, whichever side holds the unknown field", () => {
+  const base = { ...snap({ recipes: ["r1"] }), shelf: 1 };
+  const withIt = { ...snap({ recipes: ["r1", "r2"] }), shelf: 2 };
+  const without = snap({});
+  const ab = mergePersonal(base, withIt, without).merged;
+  const ba = mergePersonal(base, without, withIt).merged;
+  assert.deepEqual(ab.profiles[0].recipes, ["r1", "r2"]);
+  assert.deepEqual(ab.profiles[0].recipes, ba.profiles[0].recipes);
+  assert.equal(ab.shelf, 2);
+  assert.equal(ba.shelf, 2);
+});
+
+test("carryUnknown applies the base rules when both sides hold the field, and tie-breaks symmetrically", () => {
+  assert.deepEqual(carryUnknown({ x: 1 }, { x: 1 }, { x: 2 }, []), { x: 2 }); // only they moved
+  assert.deepEqual(carryUnknown({ x: 1 }, { x: 3 }, { x: 1 }, []), { x: 3 }); // only I moved
+  assert.deepEqual(carryUnknown({ x: 1 }, { x: 3 }, { x: 2 }, []), carryUnknown({ x: 1 }, { x: 2 }, { x: 3 }, []));
+  // Known fields are never carried — the merge above them owns those.
+  assert.deepEqual(carryUnknown({}, { favourites: [1] }, {}, KNOWN_PROFILE_FIELDS), {});
+});
+
+test("a carried field can never reach an object's prototype", () => {
+  const theirs = JSON.parse('{"__proto__": {"polluted": true}, "constructor": 1, "ok": 1}');
+  const out = carryUnknown(null, {}, theirs, []);
+  assert.deepEqual(Object.keys(out), ["ok"]);
+  assert.equal(({}).polluted, undefined);
+  assert.equal(out.polluted, undefined);
+});
+
+test("the merged copy is stamped with the HIGHER format version and the higher store numbers", () => {
+  const mine = { ...snap({}), v: 1, stores: { favourites: 1, notes: 1 } };
+  const theirs = { ...snap({}), v: 2, stores: { favourites: 1, notes: 1, recipes: 3 } };
+  const ab = mergePersonal(null, mine, theirs).merged;
+  const ba = mergePersonal(null, theirs, mine).merged;
+  assert.equal(ab.v, 2, "an old device must not stamp its own lower version over a newer copy");
+  assert.deepEqual(ab.stores, { favourites: 1, notes: 1, recipes: 3 });
+  assert.deepEqual(ab.stores, ba.stores);
+  // Neither side carrying the map leaves it off, as before the numbers existed.
+  assert.equal("stores" in mergePersonal(null, snap({}), snap({})).merged, false);
 });
