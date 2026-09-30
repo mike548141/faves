@@ -88,9 +88,11 @@
 #   • A merge to `main` IS a deploy — Cloudflare Pages builds from it. So this
 #     deploys the site up to once a week from the schedule, plus whenever a
 #     restamped PR's checks happen to pass — by design either way.
-#   • `--bump` moves DATA_VERSION in the same commit, because fx.json lives
-#     under site/data/ and an unbumped version means installed phones keep
-#     serving the old rates (the lockstep rule in CLAUDE.md).
+#   • `--bump` restamps site/data/catalogue.json in the same commit (roadmap
+#     510/030 retired DATA_VERSION): phones fetch fx.json only when the
+#     catalogue names its new fingerprint, and then fetch fx.json ALONE — not
+#     every menu, which is what each weekly DATA_VERSION bump used to cost.
+#     The catalogue's one writer is tools/gen_summaries.mjs, hence node below.
 #   • Most runs do nothing at all: the tool writes only when a rate actually
 #     moved (compared against whatever `main` currently holds) and refuses to
 #     write twice in a day. A run that opens no PR and touches no branch is
@@ -225,6 +227,13 @@ jobs:
         with:
           python-version: "3.12"
 
+      # `--bump` runs tools/gen_summaries.mjs to restamp the catalogue. The same
+      # action and version CI's JS job already uses — no new trust surface.
+      - uses: actions/setup-node@v4
+        if: steps.proceed.outputs.do == 'true'
+        with:
+          node-version: "22"
+
       - name: Fetch the latest rates
         if: steps.proceed.outputs.do == 'true'
         run: python3 tools/fetch_fx.py --bump ${{ inputs.force && '--force' || '' }}
@@ -268,10 +277,10 @@ jobs:
           # workflow_dispatch and push-to-main alike — so recreating the branch
           # here is always a rebase onto CURRENT main, never onto whatever main
           # was when an earlier run (maybe weeks ago) first cut it. That is the
-          # whole fix: `fetch_fx.py --bump` above computed its DATA_VERSION bump
-          # from THIS main, so it cannot be behind a bump that landed since.
+          # whole fix: `fetch_fx.py --bump` above restamped the catalogue from
+          # THIS main, so it names every other file exactly as main has it.
           git checkout -B "$BRANCH"
-          git add site/data/fx.json site/sw.js
+          git add site/data/fx.json site/data/catalogue.json
           git commit -m "data: refresh FX rates (as at ${AS_OF})" \
                      -m "Automated refresh — tools/fetch_fx.py --bump." \
                      -m "Reference rates, not transaction rates; the app says so beside the prices."
@@ -288,10 +297,10 @@ jobs:
           actually charges includes the issuer's margin, so a converted price in
           Faves is an estimate and the app says so beside the prices (ADR 0045).
 
-          \`DATA_VERSION\` is bumped in the same commit, computed from THIS run's
-          current \`main\` (ADR 0129) — so it stays correct however long this PR
-          has to wait on the required checks below, and every push to \`main\`
-          while it waits restamps it again.
+          \`site/data/catalogue.json\` is restamped in the same commit, from THIS
+          run's current \`main\` (ADR 0129, roadmap 510/030) — so it stays
+          correct however long this PR has to wait on the required checks
+          below, and every push to \`main\` while it waits restamps it again.
 
           Merges itself once the required checks pass."
 

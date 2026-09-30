@@ -32,7 +32,9 @@
 import { el } from "./dom.js";
 import { REFERENCE_COPY, recheckReferences, referenceWhyFor } from "./data.js";
 
-const REFRESHABLE = /^faves-(shell|data)-/;
+// `faves-data` is the permanent data store (roadmap 510/030); `faves-data-*`
+// the retired per-version caches a phone mid-upgrade may still hold.
+const REFRESHABLE = /^faves-(?:shell-|data(?:-|$))/;
 
 /** Which cache names a refresh clears. Pure, so the "photos survive" rule is
  *  testable without a browser. */
@@ -130,8 +132,10 @@ export function mountNotFound(host, { venueId, backHref = "index.html", recheck 
     const [result] = await recheck([{ type: "venue", venueId }]);
     const state = result?.state || "unreachable";
     if (state === "present") {
-      // It was staleness. The data cache has just been re-primed by that very
-      // fetch, so a reload lands on the real menu rather than back here.
+      // It was staleness. The reload asks the worker for the venue again: if
+      // its held set names it, that answers; if the set predates the venue,
+      // the worker reads it from the network (sw.js's dataRead), and the read
+      // also starts the update that brings the set up to date.
       why.textContent = REFERENCE_COPY.restored;
       reload();
       return;

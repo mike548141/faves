@@ -106,7 +106,7 @@
 // split_data.py do. Node is dev tooling only (CLAUDE.md) — nothing under
 // site/ imports this file or anything only Node can run.
 
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, realpathSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
@@ -415,9 +415,18 @@ function announceTree() {
 // Guarded so `tools/lib/fixtures.mjs` (and anything else after pure exports —
 // `summarise`, `thinBranch`, `renderFrom`) can `import` this module without
 // running the CLI and exiting the whole process out from under the importer.
+//
+// 🛑 Compared by REAL path. Node resolves symlinks for `import.meta.url` but
+// not in `process.argv[1]`, so run through a symlinked directory (macOS's
+// `/var` → `/private/var`, where every temp dir lives) the two differed, the
+// CLI never ran, and `--check` exited 0 having checked nothing — found
+// 2026-09-30 when tools/test_fetch_fx.py's breaker "passed" on a stale tree.
 const isMain = (() => {
   try {
-    return path.resolve(process.argv[1] ?? "") === path.resolve(fileURLToPath(import.meta.url));
+    return (
+      realpathSync(path.resolve(process.argv[1] ?? "")) ===
+      realpathSync(fileURLToPath(import.meta.url))
+    );
   } catch {
     return false;
   }

@@ -491,11 +491,18 @@ node tools/gen_summaries.mjs --check # site/data/summary.json and
                               # produces from site/data/restaurants/ through
                               # data.js's own load() and search.js's own
                               # buildIndex(), never a second implementation.
-                              # After ANY restaurant data edit, run it with no
-                              # flag to regenerate, then commit both files
+                              # …and the FINGERPRINTS (roadmap 510/030):
+                              # site/data/catalogue.json and each summary
+                              # record's `h`. A stale one is a change no
+                              # installed phone ever fetches — this is the gate
+                              # that replaced the DATA_VERSION lockstep.
+                              # After ANY site/data edit, run it with no flag
+                              # to regenerate, then commit all three files
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
-python3 tools/test_fetch_fx.py # …and its DATA_VERSION bump is NZ-dated and never
-                              # goes backwards (the UTC runner did, PR #52, 2026-09-28)
+python3 tools/test_fetch_fx.py # …and its `--bump` restamps the catalogue, so
+                              # phones fetch the new rates (510/030; it bumped
+                              # DATA_VERSION until then). Its breaker proves a
+                              # forgotten restamp fails gen_summaries --check
 python3 tools/check_visibility.py # the visibility bullet above is still true
 python3 tools/check_fallback.py # the no-JS <ul> in site/index.html still mirrors
                               # site/data/index.json — same ids, same order, and a
@@ -553,8 +560,9 @@ python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py # docs/ROA
                               # `tools/board.py` shim existed 2026-08-17 only because the
                               # generated banner named a file no child has; atelier fixed
                               # the generator and the shim went the same day
-python3 tools/check_versions.py --range origin/main..HEAD # sw.js versions bumped
-                              # in lockstep with site/. Use the RANGE form to check
+python3 tools/check_versions.py --range origin/main..HEAD # SHELL_VERSION bumped
+                              # in lockstep with site/, and DATA_VERSION (retired
+                              # 510/030) not back. Use the RANGE form to check
                               # finished work: bare, it reads only *staged* changes,
                               # so on a clean tree it says "not in scope" and proves
                               # nothing. Two sessions have now collided on a version
@@ -1233,16 +1241,20 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
 - **TODO markers:** `#!#` in any language; more `#` = higher priority
   (`#!#` nice-to-have → `#!####` blocking).
 - **Lockstep rules** (change these together, in one commit):
-  - Bump the right version constant in `site/sw.js` — it's what tells
-    installed phones to refetch; stale = offline visitors keep old menus.
-    **Now enforced** by `tools/check_versions.py` (CI + the verify list):
-    an unchanged constant makes the install step *skip* that cache, so the
-    old files serve forever with CI green — it shipped that way on
-    2026-08-16 and was only caught on the owner's own phone.
-    Data-only change under `site/data/` → bump `DATA_VERSION`; any other
-    change under `site/` → bump `SHELL_VERSION`; a change touching both →
-    bump both. Split caches so a menu edit no longer re-downloads the
-    whole shell (ADR 0015).
+  - Any change under `site/` outside `site/data/` → bump `SHELL_VERSION`
+    in `site/sw.js` — it's what tells installed phones to refetch the app;
+    stale = offline visitors keep the old shell. **Enforced** by
+    `tools/check_versions.py` (CI + the verify list): an unchanged constant
+    makes the install step *skip* that cache, so the old files serve
+    forever with CI green — it shipped that way on 2026-08-16 and was only
+    caught on the owner's own phone.
+    A change under `site/data/` bumps **nothing**: `DATA_VERSION` was
+    retired by roadmap 510/030 (ADR 0145/0146). Re-run
+    `node tools/gen_summaries.mjs` instead — its fingerprints are what tell
+    phones, and they fetch only the files that changed. A missed re-run is
+    caught by `gen_summaries.mjs --check` in CI, and a `DATA_VERSION` line
+    coming back (a pre-510/030 branch rebased across it) by
+    `check_versions.py`.
     🚩 **The constants are dated on NEW ZEALAND LOCAL TIME** —
     `YYYY-MM-DD.N`, `N` counting that day's bumps from `.1`. Record
     filenames are **UTC** (the concurrency clause above), and New Zealand
@@ -1254,15 +1266,19 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
     for twelve hours. `check_versions.py` only checks the constant
     CHANGED, never that its date is right, so nothing catches a mis-dated
     stamp but this paragraph (ARCHITECTURE.md carries the fuller note).
+    (It said "the constants" when there were two; `SHELL_VERSION` is the
+    only one left.)
   - Keep the no-JS fallback `<ul>` in `site/index.html` in step with
     `site/data/index.json` (it's a hand-maintained mirror for fail-soft).
   - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id
     in `site/data/index.json` + a fallback `<li>`; then `validate.py`. Any
     restaurant-data edit (new venue, menu change, hours, price…) also needs
-    `node tools/gen_summaries.mjs` re-run and its two outputs committed
-    (`site/data/summary.json`, `site/data/search-index.json`) — the home
-    screen reads only those two, never `site/data/restaurants/` directly
-    (roadmap 510/020).
+    `node tools/gen_summaries.mjs` re-run and its three outputs committed
+    (`site/data/summary.json`, `site/data/search-index.json`, and
+    `site/data/catalogue.json`) — the home screen reads only the first two,
+    never `site/data/restaurants/` directly (roadmap 510/020), and the
+    fingerprints in the summary and the catalogue are how an installed
+    phone learns the file changed (roadmap 510/030).
   - **Menu content is owner-supplied or owner-directed — never harvested on a
     hunch.** Owner's ruling, 2026-08-16: *"whatever food/dishes I give you are
     to be included, if I don't give them to you or tell you to fetch them they

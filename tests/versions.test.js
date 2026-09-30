@@ -261,3 +261,42 @@ test("getRegistration throwing degrades waiting to null, not a throw", async () 
     waiting: null,
   });
 });
+
+// --- The permanent data store (roadmap 510/030) ----------------------------
+// No data version constant any more: the answer is the GENERATION the store's
+// pointer record names. A fake CacheStorage with a real Response per entry.
+
+function fakeStore(entries) {
+  const reqs = Object.keys(entries).map((url) => ({ url }));
+  return {
+    keys: async () => ["faves-shell-2026-10-01.1", "faves-data", "faves-img-v1"],
+    open: async (name) => {
+      assert.equal(name, "faves-data");
+      return {
+        keys: async () => reqs,
+        match: async (req) => new Response(entries[req.url]),
+      };
+    },
+  };
+}
+
+test("the data store reports the generation its pointer names", async () => {
+  const fake = fakeStore({
+    "https://x/data/summary.json?h=aaaaaaaaaaaa": "[]",
+    "https://x/__data_pointer__/v1": JSON.stringify({ generation: "3f9a2c1b0d4e", at: "2026-10-01T00:00:00Z", files: {} }),
+  });
+  assert.deepEqual(await installedVersions(fake), { shell: "2026-10-01.1", data: "3f9a2c1b0d4e" });
+});
+
+test("two pointers mid-update: the newest-written one is reported", async () => {
+  const fake = fakeStore({
+    "https://x/__data_pointer__/v1": JSON.stringify({ generation: "old000000000", at: "2026-10-01T00:00:00Z", files: {} }),
+    "https://x/__data_pointer__/v2": JSON.stringify({ generation: "new000000000", at: "2026-10-01T00:05:00Z", files: {} }),
+  });
+  assert.equal((await installedVersions(fake)).data, "new000000000");
+});
+
+test("a data store with no pointer yet is 'not stored', not a guess", async () => {
+  const fake = fakeStore({ "https://x/data/summary.json?h=aaaaaaaaaaaa": "[]" });
+  assert.equal((await installedVersions(fake)).data, null);
+});
