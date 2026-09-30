@@ -426,3 +426,4 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [Sync retries a refused write, and syncs when the device comes back](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/070-sync-retries-a-refused-write-and-resyncs-on-reconnect.md)
 - [ ] ⏳ [Move all user data to IndexedDB, in one go, when it pays](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/080-move-all-user-data-to-indexeddb-when-it-pays.md)
 - ✅ [Phase 0 follow-ups: a declined storage request, and the pause label](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/090-phase-0-follow-ups-a-declined-persist-and-the-pause-label.md)
+- [~] 🔥 [Sync can delete another device's change if you edit mid-sync](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/100-sync-base-records-a-merge-this-device-never-applied.md)
