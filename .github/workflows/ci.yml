@@ -320,6 +320,14 @@ jobs:
       # the rest.
       - name: Run the unit tests
         run: node --test
+      # The home screen's card summary and search index (roadmap 510/020,
+      # ADR 0145/0146) are generated from site/data/restaurants/ through the
+      # app's own load()/buildIndex(), never a build step (ADR 0001) — this
+      # proves the committed site/data/summary.json and
+      # site/data/search-index.json still match what that generator produces
+      # from the tree, the same way gen_sbom.py --check proves the SBOM.
+      - name: Assert the home summary and search index match the tree
+        run: node tools/gen_summaries.mjs --check
 
   # THE ONE BROWSER CHECK CI RUNS — owner's ruling, 2026-08-16.
   #

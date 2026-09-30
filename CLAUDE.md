@@ -484,6 +484,15 @@ python3 tools/test_validate.py # …and that gate still catches things (147 muta
                               # new code on a path nothing else exercises
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
+node tools/gen_summaries.mjs --check # site/data/summary.json and
+                              # site/data/search-index.json — the home screen's
+                              # only two read files (roadmap 510/020, ADR
+                              # 0145/0146) — still match what the generator
+                              # produces from site/data/restaurants/ through
+                              # data.js's own load() and search.js's own
+                              # buildIndex(), never a second implementation.
+                              # After ANY restaurant data edit, run it with no
+                              # flag to regenerate, then commit both files
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
 python3 tools/test_fetch_fx.py # …and its DATA_VERSION bump is NZ-dated and never
                               # goes backwards (the UTC runner did, PR #52, 2026-09-28)
@@ -1248,7 +1257,12 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   - Keep the no-JS fallback `<ul>` in `site/index.html` in step with
     `site/data/index.json` (it's a hand-maintained mirror for fail-soft).
   - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id
-    in `site/data/index.json` + a fallback `<li>`; then `validate.py`.
+    in `site/data/index.json` + a fallback `<li>`; then `validate.py`. Any
+    restaurant-data edit (new venue, menu change, hours, price…) also needs
+    `node tools/gen_summaries.mjs` re-run and its two outputs committed
+    (`site/data/summary.json`, `site/data/search-index.json`) — the home
+    screen reads only those two, never `site/data/restaurants/` directly
+    (roadmap 510/020).
   - **Menu content is owner-supplied or owner-directed — never harvested on a
     hunch.** Owner's ruling, 2026-08-16: *"whatever food/dishes I give you are
     to be included, if I don't give them to you or tell you to fetch them they
