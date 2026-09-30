@@ -120,6 +120,7 @@ const SHELL = [
   "js/storage-persist.js",
   "js/suggest.js",
   "js/suggest-ui.js",
+  "js/sync-buckets.js",
   "js/sync-code.js",
   "js/sync-start.js",
   "js/sync-ui.js",

@@ -308,6 +308,13 @@ export const KNOWN_SNAPSHOT_FIELDS = Object.freeze([
   "order",
   "excluded",
   "other",
+  // Recipes (roadmap 510/050) never travel in the core copy: sync.js merges
+  // them bucket by bucket and records the buckets' versions itself, and the
+  // base keeps a hash per recipe. Named here so the carry-through below never
+  // mistakes them for a newer build's store and carries a stale copy.
+  "recipes",
+  "recipeBuckets",
+  "recipeHashes",
 ]);
 
 // A value carried without being read must not be able to act on the object it

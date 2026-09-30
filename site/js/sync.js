@@ -39,6 +39,20 @@ import { deviceStorage, PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseRegistry, scopeK
 import { mergePersonal, needsDecision } from "./sync-merge.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "./sync-crypto.js";
 import { mintSyncCode, normaliseSyncCode } from "./sync-code.js";
+import { RECIPES_KEY, sortedRecipes } from "./recipe-record.js";
+import {
+  RECIPE_BUCKETS,
+  BUCKET_QUERY,
+  BUCKET_HEADER,
+  bucketName,
+  bucketPlaintext,
+  canonicalJson,
+  hashRecipes,
+  inBucket,
+  mergeRecipeBucket,
+  parseBucketHeader,
+  readBucket,
+} from "./sync-buckets.js";
 
 /** Device-level, not per-profile: a sync code covers the whole device, the way
  *  the order tally does (ADR 0012). Holds the code, the current ETag and when
@@ -174,6 +188,26 @@ export function writeSnapshot(storage, snapshot) {
   }
   return written;
 }
+
+/**
+ * Write a merged cookbook back to storage (roadmap 510/050). Like
+ * `writeSnapshot`, it REPLACES: the recipe merge has already decided what is
+ * gone. Sorted so two devices holding the same recipes hold the same bytes.
+ */
+export function writeRecipes(storage, map) {
+  try {
+    storage.setItem(RECIPES_KEY, JSON.stringify(sortedRecipes(map || {})));
+    return true;
+  } catch {
+    return false; /* blocked or over quota — the pull is lost, the device is unharmed */
+  }
+}
+
+/** Two recipe maps hold the same recipes, field for field. */
+const sameRecipes = (a, b) => canonicalJson(a || {}) === canonicalJson(b || {});
+
+/** Two `recipeBuckets` records (`{ n, v: { r0: etag… } }`) say the same. */
+const sameBuckets = (a, b) => canonicalJson(a ?? null) === canonicalJson(b ?? null);
 
 /**
  * The same personal data, or not — ignoring what a device may honestly differ
@@ -322,6 +356,101 @@ export function createSync({
   const url = (blobId) => `${endpoint.replace(/\/$/, "")}/v1/blob/${blobId}`;
 
   /**
+   * Read and merge the recipe buckets (roadmap 510/050, ADR 0146 §2). Reads
+   * only the buckets whose version on the server is not the one this device
+   * last agreed — normally none — and returns the merged cookbook plus, per
+   * bucket, whether the server's copy needs writing.
+   *
+   * `actual` is what the Worker reports it holds; `theirs.recipeBuckets` is
+   * what the core copy recorded. They differ when a bucket was written without
+   * its core update (a device whose core write then lost a race, or KV's
+   * eventual consistency): that is DETECTED here — `mismatch` names it — and
+   * the bucket is read and merged like any other change, because its contents
+   * are some device's honest merge. Deciding what to read by `actual` rather
+   * than by the core copy's record is what stops such a bucket being ignored.
+   *
+   * A bucket the core copy recorded but the Worker no longer holds (expired) is
+   * "no opinion", never "everything in it was deleted": this device's recipes
+   * stand and the bucket is written again.
+   */
+  async function readRecipes({ blobId, key, actual, theirs, base, mineRecipes }) {
+    const mine = mineRecipes || {};
+    const theirsN = theirs?.recipeBuckets?.n;
+    // No report from the Worker (it predates buckets), or buckets cut a
+    // different way by another build: recipes stay on this device, untouched.
+    if (!actual || (theirsN != null && theirsN !== RECIPE_BUCKETS)) {
+      return { supported: false, merged: mine, buckets: [], mismatch: [], conflicts: [] };
+    }
+    const recorded = theirs?.recipeBuckets?.v || {};
+    const agreed = base?.recipeBuckets?.v || {};
+    const baseHashes = base?.recipeHashes || {};
+    const merged = {};
+    const buckets = [];
+    const mismatch = [];
+    const conflicts = [];
+    for (let k = 0; k < RECIPE_BUCKETS; k += 1) {
+      const name = bucketName(k);
+      let version = actual[name];
+      if ((version || recorded[name]) && version !== recorded[name]) mismatch.push(name);
+      let theirsK = null; // null: the server holds what we last agreed
+      if (version && version !== agreed[name]) {
+        const got = await fetchImpl(url(`${blobId}:${name}`), { method: "GET" });
+        if (got.status === 200) {
+          const plain = await openBlob(key, new Uint8Array(await got.arrayBuffer()));
+          theirsK = readBucket(plain, k);
+          if (theirsK === null) return { error: "mismatch" };
+          version = got.headers.get("etag") || version;
+        } else if (got.status === 404) {
+          version = undefined; // gone since the report: no opinion
+        } else {
+          return { error: "unreachable" };
+        }
+      }
+      const mineK = inBucket(mine, k);
+      const baseK = inBucket(baseHashes, k);
+      const r = mergeRecipeBucket(baseK, mineK, theirsK);
+      Object.assign(merged, r.map);
+      conflicts.push(...r.conflicts);
+      let needs;
+      if (!version) needs = null; // decided below, once we know if any recipe exists
+      else if (theirsK) needs = !sameRecipes(r.map, theirsK);
+      else needs = canonicalJson(hashRecipes(r.map)) !== canonicalJson(baseK);
+      buckets.push({ k, name, version, map: r.map, needs });
+    }
+    // Once there is any recipe, EVERY bucket exists on the server, empty or
+    // not: which buckets exist would otherwise tell it how many recipes there
+    // are (sync-buckets.js, "PADDING").
+    const exists = Object.keys(merged).length > 0 || buckets.some((b) => b.version);
+    for (const b of buckets) if (b.needs === null) b.needs = exists;
+    return { supported: true, merged, buckets, mismatch, conflicts };
+  }
+
+  /** Write the buckets that need it, each conditional on the version read.
+   *  Returns the versions the core copy should record, or a failure. */
+  async function writeBuckets({ blobId, key, buckets }) {
+    const v = {};
+    for (const b of buckets) {
+      if (!b.needs) {
+        if (b.version) v[b.name] = b.version;
+        continue;
+      }
+      const sealed = await sealBlob(key, bucketPlaintext(b.k, b.map));
+      const put = await fetchImpl(url(`${blobId}:${b.name}`), {
+        method: "PUT",
+        body: sealed,
+        headers: b.version ? { "If-Match": b.version } : {},
+      });
+      if (put.status === 412) return { retry: true };
+      if (put.status !== 204) return { failed: true };
+      // No readable ETag (a proxy that hid it) records nothing, which the next
+      // cycle reads as a mismatch and repairs with one extra read.
+      const etag = put.headers.get("etag");
+      if (etag) v[b.name] = etag;
+    }
+    return { v };
+  }
+
+  /**
    * One whole cycle: read, merge, write, then record the agreement.
    *
    * `decisions` carries answers to a previous run's blocking conflicts — today
@@ -367,8 +496,11 @@ export function createSync({
     try {
       const { blobId, key } = await deriveSyncKeys(normaliseSyncCode(cfg.code));
 
-      // 1. read what the server has.
-      const got = await fetchImpl(url(blobId), { method: "GET" });
+      // 1. read what the server has. The query asks a Worker that knows recipe
+      //    buckets to report which it holds and their versions, in one read;
+      //    an older Worker ignores it and reports nothing (roadmap 510/050).
+      const got = await fetchImpl(`${url(blobId)}?${BUCKET_QUERY}=${RECIPE_BUCKETS}`, { method: "GET" });
+      const actual = parseBucketHeader(got.headers.get(BUCKET_HEADER));
       let theirs = null;
       let etag = null;
       if (got.status === 200) {
@@ -403,6 +535,19 @@ export function createSync({
       const base = readBase();
       const { merged, conflicts, changes } = mergePersonal(base, mine, theirs ?? mine);
 
+      // 2b. the recipe buckets (roadmap 510/050). Read before any write, so a
+      //     bucket that will not open stops the cycle with nothing written.
+      const rec = await readRecipes({ blobId, key, actual, theirs, base, mineRecipes: mine.recipes });
+      if (rec.error === "mismatch") {
+        setState(ERROR, "That sync code doesn’t match the data on the server.");
+        return { ok: false, error: "That sync code doesn’t match the data on the server." };
+      }
+      if (rec.error) {
+        setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
+        return { ok: false, error: "sync-unreachable" };
+      }
+      changes.recipeConflicts = rec.conflicts.length;
+
       if (needsDecision(conflicts) && !decisions) {
         pending = { conflicts, merged };
         setState(NEEDS_DECISION);
@@ -417,10 +562,34 @@ export function createSync({
 
       // 3. write it back BEFORE touching local storage, so a rejected write
       //    never leaves this device holding a state the pair never agreed on.
-      //    Skipped when the server already holds exactly this — a pull that
-      //    changed nothing is not a write, and writing it anyway is what
-      //    turned every visibility change into a KV write.
-      if (!(theirs && sameSnapshot(merged, theirs))) {
+      //    Buckets first, then the core copy recording their versions: a
+      //    bucket written and then orphaned by a lost core race is exactly the
+      //    case `readRecipes` detects and repairs on the next cycle, while the
+      //    other order would publish versions for bytes that never landed.
+      if (rec.supported) {
+        const w = await writeBuckets({ blobId, key, buckets: rec.buckets });
+        if (w.retry) {
+          setState(IDLE);
+          return { ok: false, retry: true, error: "raced" };
+        }
+        if (w.failed) {
+          setState(ERROR, "Couldn’t save to sync just now. Your data is safe on this device.");
+          return { ok: false, error: "sync-write-failed" };
+        }
+        // Recorded only once a bucket exists: a group with no recipes carries
+        // no field, so turning this on costs nothing until the first recipe.
+        if (Object.keys(w.v).length || theirs?.recipeBuckets) {
+          merged.recipeBuckets = { n: RECIPE_BUCKETS, v: w.v };
+        }
+      } else if (theirs?.recipeBuckets) {
+        // Not ours to change without reading the buckets: carried as found.
+        merged.recipeBuckets = theirs.recipeBuckets;
+      }
+
+      // Skipped when the server already holds exactly this — a pull that
+      // changed nothing is not a write, and writing it anyway is what turned
+      // every visibility change into a KV write.
+      if (!(theirs && sameSnapshot(merged, theirs) && sameBuckets(merged.recipeBuckets, theirs.recipeBuckets))) {
         const sealed = await sealBlob(key, merged);
         const put = await fetchImpl(url(blobId), {
           method: "PUT",
@@ -432,7 +601,8 @@ export function createSync({
           // Someone else wrote between our read and our write. Not an error —
           // the correct response is to go round again against the newer blob,
           // which syncNow does (MAX_ATTEMPTS). Nothing local or in the base
-          // has moved, so going round is safe.
+          // has moved, so going round is safe. A bucket this cycle already
+          // wrote is now orphaned, and the next cycle detects and merges it.
           setState(IDLE);
           return { ok: false, retry: true, error: "raced" };
         }
@@ -452,9 +622,13 @@ export function createSync({
       //    flag is the worst thing this can lose). Instead the tap stays, the
       //    base becomes `merged`, and the cycle it already scheduled carries
       //    the tap out as a change against that base.
-      const localMoved = !sameSnapshot(mine, collectPersonalData(storage, { exportedAt: now() }));
-      if (!localMoved && !sameSnapshot(merged, mine)) {
-        writeSnapshot(storage, merged);
+      const now2 = collectPersonalData(storage, { exportedAt: now() });
+      const localMoved = !sameSnapshot(mine, now2) || !sameRecipes(mine.recipes, now2.recipes);
+      const recipesMoved = rec.supported && !sameRecipes(rec.merged, mine.recipes);
+      const coreMoved = !sameSnapshot(merged, mine);
+      if (!localMoved && (coreMoved || recipesMoved)) {
+        if (coreMoved) writeSnapshot(storage, merged);
+        if (recipesMoved) writeRecipes(storage, rec.merged);
         // Before the base, deliberately: if re-pointing the live stores
         // throws, the base must not claim an agreement whose local half
         // never landed. Quiet, so the stores' own reload notifications do
@@ -468,11 +642,21 @@ export function createSync({
           quiet = false;
         }
       }
-      writeBase(merged);
+      // The recipe half of the agreement. Advanced only when the buckets were
+      // read and this device took the merge: if the Worker could not report
+      // buckets, or a local change landed mid-flight, the LAST agreement
+      // stands — then the next cycle reads the buckets again (their versions
+      // differ from it) and merges them, rather than reading another device's
+      // additions as this device's deletions.
+      const recipeAgreement =
+        rec.supported && !localMoved
+          ? { recipeBuckets: merged.recipeBuckets ?? null, recipeHashes: hashRecipes(rec.merged) }
+          : { recipeBuckets: base?.recipeBuckets ?? null, recipeHashes: base?.recipeHashes ?? {} };
+      writeBase({ ...merged, ...recipeAgreement });
       writeConfig({ lastSyncedAt: now() });
       setState(IDLE);
       if (localMoved) schedule();
-      return { ok: true, changes, deferredLocal: localMoved };
+      return { ok: true, changes, deferredLocal: localMoved, bucketMismatch: rec.mismatch };
     } catch {
       // Offline is the overwhelmingly common cause and is not a fault.
       setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");

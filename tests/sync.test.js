@@ -27,6 +27,7 @@ import { deriveSyncKeys, openBlob, sealBlob } from "../site/js/sync-crypto.js";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
 import { favKey } from "../site/js/favourites.js";
 import { mintSyncCode, normaliseSyncCode } from "../site/js/sync-code.js";
+import { RECIPE_BUCKETS, BUCKET_PAD, bucketOf, bucketPlaintext } from "../site/js/sync-buckets.js";
 
 // A REAL code for the tests that seed one by hand. Until 2026-08-17 they used
 // "K7F29DMX4QRA" — 12 characters, which normaliseSyncCode rejects — so
@@ -60,37 +61,64 @@ function device({ favs = [], ratings = {}, notes = {}, settings = null, id = "de
   return st;
 }
 
-/** An in-memory stand-in for the Worker, with real If-Match semantics. */
-function fakeServer() {
-  const blobs = new Map(); // blobId -> { bytes, etag }
+/**
+ * An in-memory stand-in for the Worker, with real If-Match semantics.
+ *
+ * `buckets: true` (the default) is the Worker that knows recipe buckets
+ * (roadmap 510/050): a GET of the core copy carrying `?buckets=<n>` reports
+ * which `<blobId>:r<k>` copies exist and their versions in `X-Faves-Buckets`,
+ * exactly as worker/sync-worker.js does. `buckets: false` is the Worker
+ * deployed before that, which reports nothing and refuses a bucket's key.
+ */
+function fakeServer({ buckets = true } = {}) {
+  const blobs = new Map(); // key -> { bytes, etag }
   let version = 0;
+  const hdrs = (map) => ({ get: (h) => map[h.toLowerCase()] ?? null });
   const server = {
     blobs,
     puts: 0,
     gets: 0,
+    bucketGets: 0,
+    bucketPuts: 0,
     async fetch(url, init = {}) {
-      const id = String(url).split("/").pop();
+      const [path, query = ""] = String(url).split("?");
+      const id = path.split("/").pop();
+      const isBucket = id.includes(":");
+      if (isBucket && !buckets) return { status: 400, headers: hdrs({}) };
       const method = init.method || "GET";
       if (method === "GET") {
         server.gets += 1;
+        if (isBucket) server.bucketGets += 1;
+        const extra = {};
+        const asked = /(?:^|&)buckets=(\d+)/.exec(query);
+        if (buckets && !isBucket && asked) {
+          const found = [];
+          for (let k = 0; k < Number(asked[1]); k += 1) {
+            const b = blobs.get(`${id}:r${k}`);
+            if (b) found.push(`r${k}=${b.etag}`);
+          }
+          extra["x-faves-buckets"] = found.length ? found.join(",") : "none";
+        }
         const rec = blobs.get(id);
-        if (!rec) return { status: 404, headers: { get: () => null } };
+        if (!rec) return { status: 404, headers: hdrs(extra) };
         return {
           status: 200,
-          headers: { get: (h) => (h.toLowerCase() === "etag" ? rec.etag : null) },
+          headers: hdrs({ ...extra, etag: rec.etag }),
           arrayBuffer: async () => rec.bytes.buffer.slice(rec.bytes.byteOffset, rec.bytes.byteOffset + rec.bytes.byteLength),
         };
       }
       if (method === "PUT") {
         const rec = blobs.get(id);
         const ifMatch = init.headers?.["If-Match"] ?? null;
-        if (rec && ifMatch !== rec.etag) return { status: 412, headers: { get: () => null } };
+        if (rec && ifMatch !== rec.etag) return { status: 412, headers: hdrs({}) };
         version += 1;
-        blobs.set(id, { bytes: new Uint8Array(init.body), etag: `"v${version}"` });
+        const etag = `"v${version}"`;
+        blobs.set(id, { bytes: new Uint8Array(init.body), etag });
         server.puts += 1;
-        return { status: 204, headers: { get: () => null } };
+        if (isBucket) server.bucketPuts += 1;
+        return { status: 204, headers: hdrs({ etag }) };
       }
-      return { status: 405, headers: { get: () => null } };
+      return { status: 405, headers: hdrs({}) };
     },
   };
   return server;
@@ -804,4 +832,235 @@ test("a paused sync has its own row label and view, not the error's retry", asyn
   // The control: the error state still offers retry, so the two did not merge.
   assert.match(summaryText({ state: "error", error: "x" }), /retry/i);
   assert.equal(computeViewKey({ state: "error" }, local), "error");
+});
+
+// --- personal recipes in buckets (roadmap 510/050, ADR 0146 §2) -----------
+
+const RECIPES_KEY_ = "faves.recipes.v1";
+const precipe = (id, name = id.slice(2), extra = {}) => ({ dishId: id, name, steps: ["Mix.", "Bake."], ...extra });
+const withRecipes = (storage, list) => {
+  storage.setItem(RECIPES_KEY_, JSON.stringify(Object.fromEntries(list.map((r) => [r.dishId, r]))));
+  return storage;
+};
+const recipesOf = (storage) => Object.keys(JSON.parse(storage.getItem(RECIPES_KEY_) || "{}")).sort();
+const bucketKeys = (server) => [...server.blobs.keys()].filter((k) => k.includes(":")).sort();
+
+async function keysFor(code) {
+  return deriveSyncKeys(normaliseSyncCode(code));
+}
+
+test("recipes cross between two devices in buckets, every bucket padded, and the core copy records each version", async () => {
+  const server = fakeServer();
+  const a = withRecipes(device(), [precipe("u:ginger-crunch"), precipe("u:pavlova")]);
+  const b = withRecipes(device(), [precipe("u:scones")]);
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  await mk(b, server).join(code);
+  await syncA.syncNow();
+
+  assert.deepEqual(recipesOf(a), ["u:ginger-crunch", "u:pavlova", "u:scones"]);
+  assert.deepEqual(recipesOf(b), ["u:ginger-crunch", "u:pavlova", "u:scones"]);
+
+  const { blobId, key } = await keysFor(code);
+  // All eight exist once any recipe does — which exist must not count them.
+  assert.equal(bucketKeys(server).length, RECIPE_BUCKETS);
+  for (const k of bucketKeys(server)) {
+    const len = server.blobs.get(k).bytes.length;
+    assert.equal((len - 29) % BUCKET_PAD, 0, `${k} is ${len} bytes`); // 1 + 12 IV + 16 tag
+  }
+  const core = await openBlob(key, server.blobs.get(blobId).bytes);
+  assert.equal(core.recipes, undefined, "recipes never travel in the core copy");
+  assert.equal(core.recipeBuckets.n, RECIPE_BUCKETS);
+  for (let n = 0; n < RECIPE_BUCKETS; n += 1) {
+    assert.equal(core.recipeBuckets.v[`r${n}`], server.blobs.get(`${blobId}:r${n}`).etag);
+  }
+});
+
+test("once agreed, a heart costs one core write and no bucket is read or written", async () => {
+  const server = fakeServer();
+  const a = withRecipes(device(), [precipe("u:ginger-crunch")]);
+  const syncA = mk(a, server);
+  await syncA.enable();
+  const reads = server.bucketGets;
+  const writes = server.bucketPuts;
+  const puts = server.puts;
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk")]));
+  const res = await syncA.syncNow();
+  assert.equal(res.ok, true);
+  assert.equal(server.puts - puts, 1);
+  assert.equal(server.bucketPuts - writes, 0);
+  assert.equal(server.bucketGets - reads, 0);
+  // And a pull that changed nothing writes nothing at all.
+  const again = server.puts;
+  await syncA.syncNow();
+  assert.equal(server.puts, again);
+});
+
+test("a recipe edit writes one bucket and the core copy; a deletion crosses to the other device", async () => {
+  const server = fakeServer();
+  const a = withRecipes(device(), [precipe("u:ginger-crunch"), precipe("u:pavlova")]);
+  const b = device();
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const syncB = mk(b, server);
+  await syncB.join(code);
+  assert.deepEqual(recipesOf(b), ["u:ginger-crunch", "u:pavlova"]);
+
+  withRecipes(a, [precipe("u:ginger-crunch", "Ginger Crunch, less sugar")]);
+  const writes = server.bucketPuts;
+  await syncA.syncNow();
+  // Two buckets at most: the edited recipe's and the deleted one's.
+  assert.ok(server.bucketPuts - writes <= 2 && server.bucketPuts - writes >= 1);
+  await syncB.syncNow();
+  assert.deepEqual(recipesOf(b), ["u:ginger-crunch"]);
+  assert.equal(JSON.parse(b.getItem(RECIPES_KEY_))["u:ginger-crunch"].name, "Ginger Crunch, less sugar");
+});
+
+// (a) — the break-probed claim: an OLD device (any build before this one)
+// never reads or writes a bucket, and its write of the core copy — even one
+// that drops the `recipeBuckets` record, as builds before 510/010 drop every
+// field they do not know — must not cost anyone a recipe.
+test("an old device's sync leaves every recipe and every bucket intact", async () => {
+  const server = fakeServer();
+  const a = withRecipes(device(), [precipe("u:ginger-crunch"), precipe("u:pavlova")]);
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const { blobId, key } = await keysFor(code);
+  const bucketsBefore = new Map(bucketKeys(server).map((k) => [k, server.blobs.get(k).etag]));
+
+  // The old device: reads the core copy and writes back its own shape — a new
+  // heart, and none of the fields it never knew.
+  const got = server.blobs.get(blobId);
+  const core = await openBlob(key, got.bytes);
+  const oldWrite = {
+    format: core.format,
+    v: core.v,
+    profiles: core.profiles.map((p) => ({ ...p, favourites: [...p.favourites, venue("old-phone")] })),
+    order: [],
+  };
+  const put = await server.fetch(`https://example.invalid/v1/blob/${blobId}`, {
+    method: "PUT",
+    body: await sealBlob(key, oldWrite),
+    headers: { "If-Match": got.etag },
+  });
+  assert.equal(put.status, 204);
+
+  // The new device syncs after it.
+  const res = await syncA.syncNow();
+  assert.equal(res.ok, true, JSON.stringify(res));
+  assert.deepEqual(recipesOf(a), ["u:ginger-crunch", "u:pavlova"], "the new device lost a recipe");
+  assert.deepEqual(favsOf(a), ["v:old-phone"], "and took the old device's heart");
+  // Every bucket untouched on the server: same versions, nothing rewritten.
+  assert.deepEqual(new Map(bucketKeys(server).map((k) => [k, server.blobs.get(k).etag])), bucketsBefore);
+  // The core copy records them again.
+  const after = await openBlob(key, server.blobs.get(blobId).bytes);
+  assert.equal(Object.keys(after.recipeBuckets.v).length, RECIPE_BUCKETS);
+  // And a device joining later still gets them.
+  const c = device();
+  await mk(c, server).join(code);
+  assert.deepEqual(recipesOf(c), ["u:ginger-crunch", "u:pavlova"]);
+});
+
+// (b) — the break-probed claim: a bucket written WITHOUT its core update (a
+// device whose core write then lost a race) is detected, and its contents are
+// merged rather than ignored.
+test("a bucket written without its core update is detected and merged", async () => {
+  const server = fakeServer();
+  const a = withRecipes(device(), [precipe("u:ginger-crunch")]);
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const b = device();
+  const syncB = mk(b, server);
+  await syncB.join(code);
+  const { blobId, key } = await keysFor(code);
+
+  // Another device adds a recipe to its bucket, and its core write never lands.
+  const added = precipe("u:orphan-loaf");
+  const k = bucketOf(added.dishId);
+  const bkey = `${blobId}:r${k}`;
+  const current = await openBlob(key, server.blobs.get(bkey).bytes);
+  const put = await server.fetch(`https://example.invalid/v1/blob/${bkey}`, {
+    method: "PUT",
+    body: await sealBlob(key, bucketPlaintext(k, { ...current.recipes, [added.dishId]: added })),
+    headers: { "If-Match": server.blobs.get(bkey).etag },
+  });
+  assert.equal(put.status, 204);
+
+  const res = await syncB.syncNow();
+  assert.equal(res.ok, true, JSON.stringify(res));
+  assert.deepEqual(res.bucketMismatch, [`r${k}`], "the orphaned bucket was not detected");
+  assert.deepEqual(recipesOf(b), ["u:ginger-crunch", "u:orphan-loaf"], "its recipe was ignored");
+  const core = await openBlob(key, server.blobs.get(blobId).bytes);
+  assert.equal(core.recipeBuckets.v[`r${k}`], server.blobs.get(bkey).etag, "the core copy records it now");
+  await syncA.syncNow();
+  assert.deepEqual(recipesOf(a), ["u:ginger-crunch", "u:orphan-loaf"]);
+});
+
+test("a Worker that predates buckets: recipes stay on the device, nothing is lost, and they sync once it is updated", async () => {
+  const old = fakeServer({ buckets: false });
+  const a = withRecipes(device({ favs: [venue("kk")] }), [precipe("u:ginger-crunch")]);
+  const syncA = mk(a, old);
+  const { code } = await syncA.enable();
+  assert.equal(old.bucketPuts, 0);
+  assert.deepEqual(recipesOf(a), ["u:ginger-crunch"]);
+  const b = device();
+  await mk(b, old).join(code);
+  assert.deepEqual(favsOf(b), ["v:kk"], "the core copy still syncs");
+  assert.deepEqual(recipesOf(b), []);
+
+  // The Worker is updated: same stored copies, now answering for buckets.
+  const updated = fakeServer();
+  for (const [k, v] of old.blobs) updated.blobs.set(k, v);
+  await mk(a, updated).syncNow();
+  await mk(b, updated).syncNow();
+  assert.deepEqual(recipesOf(b), ["u:ginger-crunch"]);
+  assert.deepEqual(recipesOf(a), ["u:ginger-crunch"], "the device that held it did not read the old agreement as a deletion");
+});
+
+test("a bucket that expired from the server is no opinion: its recipes stand and it is written again", async () => {
+  const server = fakeServer();
+  const a = withRecipes(device(), [precipe("u:ginger-crunch")]);
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const { blobId } = await keysFor(code);
+  const k = bucketOf("u:ginger-crunch");
+  server.blobs.delete(`${blobId}:r${k}`);
+  const res = await syncA.syncNow();
+  assert.equal(res.ok, true);
+  assert.deepEqual(recipesOf(a), ["u:ginger-crunch"]);
+  assert.ok(server.blobs.has(`${blobId}:r${k}`), "the bucket was written back");
+});
+
+test("buckets cut a different way by another build are left alone, never misfiled", async () => {
+  const server = fakeServer();
+  const code = mintSyncCode();
+  const snap = collectPersonalData(device(), { exportedAt: null });
+  delete snap.recipes;
+  await seedServer(server, code, { ...snap, recipeBuckets: { n: 16, v: { r12: '"x"' } } });
+  const a = withRecipes(device(), [precipe("u:ginger-crunch")]);
+  const res = await mk(a, server).join(code);
+  assert.equal(res.ok, true);
+  assert.equal(server.bucketPuts, 0);
+  assert.deepEqual(recipesOf(a), ["u:ginger-crunch"]);
+  const { key, blobId } = await keysFor(code);
+  const core = await openBlob(key, server.blobs.get(blobId).bytes);
+  assert.deepEqual(core.recipeBuckets, { n: 16, v: { r12: '"x"' } }, "carried as found");
+});
+
+test("a bucket that will not open stops the sync with nothing written", async () => {
+  const server = fakeServer();
+  const a = withRecipes(device(), [precipe("u:ginger-crunch")]);
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const { blobId } = await keysFor(code);
+  const k = bucketOf("u:ginger-crunch");
+  const b = server.blobs.get(`${blobId}:r${k}`);
+  server.blobs.set(`${blobId}:r${k}`, { bytes: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), etag: '"tampered"' });
+  const puts = server.puts;
+  const fresh = device();
+  const res = await mk(fresh, server).join(code);
+  assert.equal(res.ok, false);
+  assert.equal(server.puts, puts);
+  assert.deepEqual(recipesOf(fresh), []);
+  assert.ok(b);
 });
