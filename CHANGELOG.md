@@ -87,6 +87,14 @@ content freshness separately from this file.
 - **No more "est." on a recipe's stats panel** — neither the line under it
   nor the marker beside an estimated value (ADR 0135).
 ### Changed
+- **A menu change downloads only what changed.** Your phone now keeps one
+  offline copy of the menus and, when something is updated, fetches just the
+  files that changed — one edited menu and one venue's new hours is four small
+  downloads (about 16 KB) instead of every menu again (about 327 KB). A new
+  set of exchange rates is under 1 KB. Every download is checked against the
+  published fingerprint before it is used, and the switch to the new menus
+  happens in one step, so flight mode never sees a half-updated set. An edit
+  shows on the next screen you open after Faves notices it.
 - **The home screen loads faster: it no longer fetches every venue's full
   menu just to draw the list.** It now reads two small, precomputed files —
   a card summary and a search index — and fetches a venue's own menu only

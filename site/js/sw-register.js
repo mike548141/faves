@@ -77,12 +77,23 @@ function wireUpdates(registration) {
   // Check on resume. `visibilitychange` covers the standalone PWA coming back
   // from the app switcher; `focus` covers a desktop tab. Both are throttled
   // through one gate so the pair can't double up.
+  //
+  // Two checks, because since roadmap 510/030 they are two different things:
+  // `registration.update()` asks whether the APP changed (a new sw.js), and
+  // SYNC_DATA asks the worker whether the MENUS changed — a menu edit no
+  // longer touches sw.js, so the first can never notice it. A resumed app
+  // performs no data read, which is the other thing that starts a data check.
   const check = (event) => {
     if (!gate.claim(event.type, document.visibilityState)) return;
     registration.update().catch(() => {
       // Offline, or the origin is unreachable. Nothing to do and nothing worth
       // saying — the next resume tries again.
     });
+    try {
+      navigator.serviceWorker.controller?.postMessage({ type: "SYNC_DATA" });
+    } catch {
+      // No controller yet, or it went away mid-call: the next read checks.
+    }
   };
   document.addEventListener("visibilitychange", check);
   window.addEventListener("focus", check);

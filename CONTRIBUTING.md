@@ -125,9 +125,10 @@ recipe and Cook at Home screens that offer cook mode.
   2026-08-16: the change was comment-only, every human signal said
   "documentation", and the version gate read the paths and was right.
   It cannot know a change is inert, and must not guess.
-- **Lockstep** (same commit): bump the right version constant in
-  `site/sw.js` — data-only change under `site/data/` → `DATA_VERSION`;
-  any other `site/` change → `SHELL_VERSION`; both → both (ADR 0015).
+- **Lockstep** (same commit): any `site/` change outside `site/data/` →
+  bump `SHELL_VERSION` in `site/sw.js` (ADR 0015); any `site/data/` change
+  → re-run `node tools/gen_summaries.mjs` and commit its fingerprints
+  (there is no `DATA_VERSION` since roadmap 510/030).
   Keep the no-JS fallback list in `site/index.html` in step with
   `site/data/index.json`. Full list in `CLAUDE.md`.
 

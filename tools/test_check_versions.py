@@ -31,8 +31,10 @@ CHECKER = ROOT / "tools" / "check_versions.py"
 
 SW_TEMPLATE = """// stand-in for site/sw.js
 const SHELL_VERSION = "{shell}";
-const DATA_VERSION = "{data}";
 """
+
+# What a pre-510/030 branch rebased across the retirement carries back in.
+RETIRED_LINE = 'const DATA_VERSION = "2026-08-16.21";\n'
 
 
 def git(repo, *args, check=True):
@@ -77,7 +79,7 @@ def make_repo(tmp):
     # something parseable to go backwards FROM. The opaque "v2"/"d2" the bump
     # cases write are deliberately left as they are: this checker owns ordering,
     # not format, and those cases are about equality.
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.50", data="2026-08-16.20"))
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.50"))
     write(repo, "site/js/app.js", "// v1\n")
     write(repo, "site/data/index.json", '["a"]\n')
     write(repo, "docs/NOTES.md", "notes\n")
@@ -114,32 +116,40 @@ def _(repo):
 @case("shell file changed, SHELL_VERSION bumped", False)
 def _(repo):
     write(repo, "site/js/app.js", "// v2\n")
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.51", data="2026-08-16.20"))
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.51"))
 
 
-@case("data file changed, DATA_VERSION not bumped", True)
+# Roadmap 510/030: the data carries its own fingerprints, so a data-only change
+# needs NO constant. Before it, this case was "DATA_VERSION not bumped ⇒ fail";
+# keeping that expectation would make the guard fire on correct work.
+@case("data file changed, no constant needed — fingerprints carry it", False)
 def _(repo):
     write(repo, "site/data/index.json", '["a","b"]\n')
 
 
-@case("data file changed, DATA_VERSION bumped", False)
-def _(repo):
-    write(repo, "site/data/index.json", '["a","b"]\n')
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.50", data="2026-08-16.21"))
-
-
-@case("both changed, only SHELL_VERSION bumped", True)
+@case("both changed, SHELL_VERSION not bumped", True)
 def _(repo):
     write(repo, "site/js/app.js", "// v2\n")
     write(repo, "site/data/index.json", '["a","b"]\n')
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.51", data="2026-08-16.20"))
 
 
-@case("both changed, both bumped", False)
+@case("both changed, SHELL_VERSION bumped", False)
 def _(repo):
     write(repo, "site/js/app.js", "// v2\n")
     write(repo, "site/data/index.json", '["a","b"]\n')
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.51", data="2026-08-16.21"))
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.51"))
+
+
+@case("DATA_VERSION back in sw.js is refused — it was retired", True)
+def _(repo):
+    write(repo, "site/data/index.json", '["a","b"]\n')
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.50") + RETIRED_LINE)
+
+
+@case("…refused even when nothing else under site/ changed", True)
+def _(repo):
+    # What a conflict resolved in sw.js alone looks like after a rebase.
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.50") + RETIRED_LINE)
 
 
 @case("docs-only change needs no bump", False)
@@ -153,11 +163,12 @@ def _(repo):
     # fresh, so a change to it reaches phones without any version bump. Counting
     # it as a shell file is what made the first version of this guard demand a
     # SHELL_VERSION bump for every data-only menu edit — bumping DATA_VERSION
-    # *is* an edit to sw.js. This case pins the exclusion so it can't come back.
+    # (retired by 510/030) *was* an edit to sw.js. A worker-logic change still
+    # is one. This case pins the exclusion so it can't come back.
     write(
         repo,
         "site/sw.js",
-        SW_TEMPLATE.format(shell="2026-08-16.50", data="2026-08-16.20") + "// a new comment\n",
+        SW_TEMPLATE.format(shell="2026-08-16.50") + "// a new comment\n",
     )
 
 
@@ -166,7 +177,7 @@ def _(repo):
     # The regex silently reading None on BOTH sides would compare equal and
     # report clean — the exact way a guard turns decorative.
     write(repo, "site/js/app.js", "// v2\n")
-    write(repo, "site/sw.js", 'const DATA_VERSION = "2026-08-16.20";\n')
+    write(repo, "site/sw.js", 'const IMG_CACHE = "faves-img-v1";\n')
 
 
 @case("SHELL_VERSION goes BACKWARDS — as broken as not moving at all", True)
@@ -181,19 +192,13 @@ def _(repo):
     # step only rebuilds a cache missing its READY sentinel. A value already
     # deployed earlier the same day is already installed on a phone — present,
     # ready, and full of the OLD files, which it then serves.
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.40", data="2026-08-16.20"))
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.40"))
     write(repo, "site/js/app.js", "// v2\n")
-
-
-@case("DATA_VERSION goes BACKWARDS", True)
-def _(repo):
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.50", data="2026-08-16.10"))
-    write(repo, "site/data/index.json", '["a","b"]\n')
 
 
 @case("forwards within a day is fine", False)
 def _(repo):
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.60", data="2026-08-16.20"))
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.60"))
     write(repo, "site/js/app.js", "// v2\n")
 
 
@@ -202,7 +207,7 @@ def _(repo):
     # .1 < .50 numerically, but 2026-08-17 is after 2026-08-16, and the counter
     # restarts each day. Comparing the strings — or the counter alone — would
     # call the first push of a new day a regression and block every morning.
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-17.1", data="2026-08-16.20"))
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-17.1"))
     write(repo, "site/js/app.js", "// v2\n")
 
 
@@ -213,7 +218,7 @@ def _(repo):
     # would make the guard fire on every synthetic fixture in this very file —
     # a check that cries wolf gets overridden into decoration, which is how four
     # earlier checks here went quiet.
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="banana", data="2026-08-16.20"))
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="banana"))
     write(repo, "site/js/app.js", "// v2\n")
 
 
@@ -226,7 +231,7 @@ def _(repo):
     # ordering test never runs. That is precisely what "just fix the version"
     # looks like: a rebase conflict resolved in sw.js alone. The damage is
     # identical, and there is nothing else in the diff to draw the eye.
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.40", data="2026-08-16.20"))
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.40"))
 
 
 @case("a version-only commit going FORWARDS is still not in scope", False)
@@ -234,7 +239,7 @@ def _(repo):
     # The guard above must not turn every version-only commit into a failure —
     # bumping ahead of a rebase, with the payload arriving in the next commit,
     # is legitimate and common.
-    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.60", data="2026-08-16.20"))
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.60"))
 
 
 def main(argv=None):

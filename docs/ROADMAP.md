@@ -419,7 +419,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - ✅ 🔥 [Phase 0 — stop older code deleting newer user data](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/010-phase-0-stop-older-code-deleting-newer-user-data.md)
 - ✅ [Phase 1 — the home screen reads summaries, not menus](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/020-phase-1-the-home-screen-reads-summaries-not-menus.md)
-- [~] [Phase 2 — fetch only what changed](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/030-phase-2-fetch-only-what-changed.md)
+- ✅ [Phase 2 — fetch only what changed](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/030-phase-2-fetch-only-what-changed.md)
 - ✅ [Phase 3 — the upgrade chain, on local storage](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/040-phase-3-one-versioned-user-database.md)
 - [~] [Phase 4 — personal recipes, and recipe buckets in sync](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/050-phase-4-personal-recipes-and-sync-by-partition.md)
 - [ ] [Phase 5 — region partitions, and "your partitions" offline](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/060-phase-5-region-partitions-and-your-partitions-offline.md)

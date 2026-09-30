@@ -18,10 +18,17 @@
 // A stale PWA showing an old stamp is a useful, honest answer either way, not
 // a bug in this module (see ROADMAP Theme 16).
 
-// Cache names are `faves-shell-<SHELL_VERSION>` / `faves-data-<DATA_VERSION>`;
-// the runtime image cache (`faves-img-v1`) is unversioned and ignored.
+// The shell cache is named `faves-shell-<SHELL_VERSION>`. The data has had no
+// version constant since roadmap 510/030: it lives in ONE permanent store,
+// `faves-data`, and what "which menus" means is the GENERATION its pointer
+// record names — the fingerprint of the catalogue it last switched to
+// (site/sw.js). `faves-data-<DATA_VERSION>` is the retired per-version cache,
+// still parsed so a phone mid-upgrade reports what it holds. The runtime
+// image cache (`faves-img-v1`) is unversioned and ignored.
 const SHELL_RE = /^faves-shell-(.+)$/;
 const DATA_RE = /^faves-data-(.+)$/;
+const DATA_STORE = "faves-data";
+const POINTER_PATH = /\/__data_pointer__\/v\d+$/;
 
 // Order two "YYYY-MM-DD.N" stamps. String compare would put ".9" above ".83",
 // so the counter is compared as a number. Only reachable during an update, when
@@ -66,10 +73,34 @@ export function parseCacheVersions(names) {
 export async function installedVersions(cacheStorage = globalThis.caches) {
   if (!cacheStorage?.keys) return { shell: null, data: null };
   try {
-    return parseCacheVersions(await cacheStorage.keys());
+    const names = await cacheStorage.keys();
+    const found = parseCacheVersions(names);
+    if (names.includes(DATA_STORE)) {
+      found.data = (await storeGeneration(cacheStorage)) ?? found.data;
+    }
+    return found;
   } catch {
     return { shell: null, data: null };
   }
+}
+
+/** The generation the permanent data store's pointer names, or null. Several
+ *  pointers can coexist for a moment (one per data schema, during an update);
+ *  the newest-written one is what the next page load will read. */
+async function storeGeneration(cacheStorage) {
+  if (!cacheStorage.open) return null;
+  const store = await cacheStorage.open(DATA_STORE);
+  let best = null;
+  for (const req of await store.keys()) {
+    if (!POINTER_PATH.test(new URL(req.url).pathname)) continue;
+    try {
+      const pointer = await (await store.match(req)).json();
+      if (pointer?.generation && (!best || String(pointer.at) > String(best.at))) best = pointer;
+    } catch {
+      /* an unreadable pointer names nothing */
+    }
+  }
+  return best?.generation ?? null;
 }
 
 // --- Asking the controller directly (ROADMAP 16f, ADR 0032) --------------
@@ -80,8 +111,9 @@ export async function installedVersions(cacheStorage = globalThis.caches) {
 // present, and during the waiting window the highest version present is
 // precisely the update that has NOT taken over the page yet. Only the
 // controlling worker itself knows which cache it reads from, so the honest
-// source is to ask it — a MessageChannel round-trip to its own SHELL_VERSION /
-// DATA_VERSION constants (site/sw.js's GET_VERSIONS handler), not an inference.
+// source is to ask it — a MessageChannel round-trip to its own SHELL_VERSION
+// and its data store's generation (site/sw.js's GET_VERSIONS handler), not an
+// inference.
 
 const REPLY_TIMEOUT_MS = 1000;
 

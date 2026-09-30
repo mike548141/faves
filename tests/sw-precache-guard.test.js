@@ -175,7 +175,7 @@ test("htmlSibling leaves alone everything that already resolves", () => {
 
 // --- Wiring. A correct predicate nothing calls is decoration (ADR 0072) ------
 
-test("the install step routes every precached asset through requireAsset", () => {
+test("the install step routes every shell asset through requireAsset", () => {
   const install = src.slice(
     src.indexOf('self.addEventListener("install"'),
     src.indexOf('self.addEventListener("message"')
@@ -184,14 +184,38 @@ test("the install step routes every precached asset through requireAsset", () =>
   const calls = install.match(/requireAsset\(/g) ?? [];
   assert.equal(
     calls.length,
-    4,
-    `requireAsset is called ${calls.length}× in install; expected 4 — the shell ` +
-      "list, the menu index, the home summary + search index loop (roadmap " +
-      "510/020), and each venue menu"
+    1,
+    `requireAsset is called ${calls.length}× in install; expected 1 — the shell ` +
+      "list. The data set is fetched by the sync (roadmap 510/030), whose own " +
+      "wiring is asserted below"
   );
-  // fx is deliberately NOT one of them: a missing rates file must not reject
-  // the install. It still refuses to CACHE a stand-in.
-  assert.match(install, /const usable =\s*\n?\s*fx\.ok && !servedAsHtmlStandIn\(DATA_FX/);
+  // …and install refuses to activate a worker with no complete data set.
+  assert.match(install, /if \(!\(await readPointer\(await caches\.open\(DATA_STORE\)\)\)\) \{\s*throw/);
+});
+
+// Roadmap 510/030: every data download goes through ONE function, and that
+// function applies the ADR 0100 guard before it hashes. The hash would refuse
+// a stand-in too (its bytes are not the fingerprint asked for), but the guard
+// is what says WHY — "served as HTML, missing from the deploy" — in the
+// install's rejection.
+test("the data sync routes every download through requireAsset", () => {
+  const fn = src.slice(
+    src.indexOf("async function fetchVerified(path, fp) {"),
+    src.indexOf("\n}", src.indexOf("async function fetchVerified(path, fp) {"))
+  );
+  assert.ok(fn.length > 0, "site/sw.js: fetchVerified is gone — update this test");
+  assert.match(fn, /requireAsset\(url, await fetchClean\(url, PRECACHE_FETCH\)\)/);
+  assert.match(fn, /if \(got !== fp\) \{\s*throw/);
+  const sync = src.slice(
+    src.indexOf("async function syncData() {"),
+    src.indexOf("\n}", src.indexOf("async function syncData() {"))
+  );
+  // The catalogue itself, and every file through fetchVerified — no bare fetch.
+  assert.match(sync, /requireAsset\(DATA_CATALOGUE, await fetchClean\(DATA_CATALOGUE, PRECACHE_FETCH\)\)/);
+  assert.match(sync, /await fetchVerified\(path, fp\)/);
+  assert.doesNotMatch(sync, /[^.]fetch\(/, "the sync must not fetch around fetchVerified");
+  // fx is the one SOFT file: a missing rates file must not block the set.
+  assert.match(sync, /take\(path, fp, path === DATA_FX\)/);
 });
 
 test("requireAsset keeps the status guard it is adding to, not replacing", () => {
