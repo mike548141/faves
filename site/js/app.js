@@ -26,7 +26,7 @@ import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 import { closureBadge } from "./closure-ui.js";
 import { todayIn, isGone } from "./temporal.js";
 import { initPicker } from "./picker.js";
-import { search } from "./search.js";
+import { rebuildIndex, search } from "./search.js";
 import { rotateHints, defaultHints } from "./search-hints.js";
 import { initOrderUI } from "./cart-ui.js";
 import { favourites, favHref, favKey, groupForShare, unresolvedReason } from "./favourites.js";
@@ -199,7 +199,9 @@ function card(r, clock, origin = null) {
   // A kind that names itself says what it is and how much of it there is; one
   // that doesn't is placed by its suburb and its distance from you.
   if (labels.browseLabel) {
-    const n = (r.menu || []).reduce((sum, s) => sum + (s.items?.length || 0), 0);
+    // A precomputed count (roadmap 510/020) — the summary carries no menu to
+    // count from any more; dish identity now lives once, in the search index.
+    const n = r.dishCount || 0;
     meta = el("p", { className: "card-meta" }, [
       el("span", { className: "card-area", textContent: labels.browseLabel }),
       el("span", {
@@ -365,7 +367,7 @@ function fillSelect(select, values, allLabel, i18nKey) {
   }
 }
 
-function init(restaurants, searchIndex) {
+function init(restaurants, compactIndex) {
   const listEl = document.getElementById("restaurant-list");
   const countEl = document.getElementById("result-count");
   const emptyEl = document.getElementById("empty-state");
@@ -752,8 +754,8 @@ function init(restaurants, searchIndex) {
 
   wireOpenNow(state, render);
   wireCheapEats(state, render);
-  wireSearch(restaurants, searchIndex);
-  wireFavourites(restaurants);
+  wireSearch(restaurants, compactIndex);
+  wireFavourites(restaurants, compactIndex);
   wireHomeButton();
   initSettingsUI();
   wireProfiles();
@@ -795,7 +797,7 @@ function init(restaurants, searchIndex) {
 // zero-dep. While a query is live, the browse view (cards, filters, toggles)
 // hides via `body.searching` and a grouped results list takes its place;
 // clearing the box restores browse. Purely additive to the fail-soft list.
-function wireSearch(restaurants, index) {
+function wireSearch(restaurants, compactIndex) {
   const form = document.getElementById("search-form");
   const input = document.getElementById("search-input");
   const clear = document.getElementById("search-clear");
@@ -810,10 +812,13 @@ function wireSearch(restaurants, index) {
   rotateHints(input, defaultHints(t));
 
   form.hidden = false;
-  // `index` is now the PRECOMPUTED file (data/search-index.json, roadmap
-  // 510/020) rather than something built here from the loaded restaurants —
-  // building it in the browser would mean fetching every venue's full menu
-  // for its ingredients and tags, exactly what this item removes.
+  // `compactIndex` is the file as fetched (data/search-index.json, roadmap
+  // 510/020): dish identity and search text grouped once by venue/section,
+  // never a menu's worth of dishes fetched per venue. `rebuildIndex` turns it
+  // back into search.js's own `{places, dishes}` runtime shape — reading
+  // `restaurants` (already loaded) for whatever a dish's own entry doesn't
+  // carry (its venue's name, kind) — so `search()` below is unchanged.
+  const index = rebuildIndex(compactIndex, restaurants);
 
   // A tab-hint icon precedes the venue name so the two groups read at a glance.
   // The index entry carries `kind` for exactly this — each kind names its own
@@ -1017,7 +1022,7 @@ function wireHomeButton() {
 // about — and its copy holds both possibilities open ("removed, or your list is
 // out of date") until a fetch that provably reached the network settles it.
 // This device cannot tell the two apart, so it does not get to guess.
-function wireFavourites(restaurants) {
+function wireFavourites(restaurants, compactIndex) {
   const btn = document.getElementById("favourites-toggle");
   const panel = document.getElementById("favourites-panel");
   const summary = document.getElementById("favourites-summary");
@@ -1029,7 +1034,18 @@ function wireFavourites(restaurants) {
   // holding it is removed from the DOM (otherwise it falls to <body>).
   if (summary) summary.tabIndex = -1;
 
-  const byId = new Map((restaurants || []).map((r) => [r.id, r]));
+  // A stored heart/rating resolves through dish-id.js's `unresolvedReason` →
+  // `findDish`/`eachDish`, which read `record.menu` — a shape the summary no
+  // longer carries (roadmap 510/020: dish identity lives once, in the search
+  // index). Rebuilt here rather than teaching dish-id.js a second input shape:
+  // each summary record is paired with that SAME venue's dish groups from the
+  // compact index (already `{ section, items: [{ dishId, name, formerIds }] }`
+  // — exactly what `eachDish` expects as `menu`), so `unresolvedReason` and
+  // `findDish` run completely unchanged.
+  const sectionsById = new Map((compactIndex?.venues || []).map((v) => [v.id, v.sections]));
+  const byId = new Map(
+    (restaurants || []).map((r) => [r.id, { ...r, menu: sectionsById.get(r.id) || [] }])
+  );
   // What the NETWORK said about a reference, keyed by favKey. It outranks the
   // local reading in both directions: "present" un-marks a row this device's
   // data can't match, and "absent" is the only thing that licenses the word
@@ -1528,7 +1544,7 @@ function wireLocation(state, render) {
 }
 
 Promise.all([loadRestaurants(), loadSearchIndex()])
-  .then(([restaurants, searchIndex]) => init(restaurants, searchIndex))
+  .then(([restaurants, compactIndex]) => init(restaurants, compactIndex))
   .catch((err) => {
     // Leave the static fallback list in place; just note it.
     console.error("Faves: falling back to static list.", err);

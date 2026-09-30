@@ -350,7 +350,10 @@ export async function buildFixtures(siteDir, specs) {
  * This rebuilds all three the same way `tools/gen_summaries.mjs` does for the
  * real deploy — through `load()` and the exported `renderFrom()` — so a
  * fixture's summary/search-index entries can never drift from what the real
- * generator would produce for the same record.
+ * generator would produce for the same record. `renderFrom()`'s search index
+ * is the COMPACT, venue-grouped shape the real file ships (roadmap 510/020);
+ * the browser's own `search.js` `rebuildIndex()` turns it back into a
+ * runtime `{ places, dishes }` index, exactly as it does for a real deploy.
  *
  *   const { records, overlay } = await buildFixtures(SITE, [...]);
  *   const swap = new Map([["sushi-bi", [...records.keys()][0]]]);

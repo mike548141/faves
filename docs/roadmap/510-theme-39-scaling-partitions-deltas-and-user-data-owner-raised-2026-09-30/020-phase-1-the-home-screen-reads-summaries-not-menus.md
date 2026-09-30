@@ -30,21 +30,34 @@
 
 ✅ **Shipped 2026-09-30.** `tools/gen_summaries.mjs` generates
 `site/data/summary.json` + `search-index.json` through `data.js`'s own
-`load()` and `search.js`'s `buildIndex()`. Home fetches only these two
-(+ fx.json); `precache_check.mjs` asserts and break-probes zero requests
-under `data/restaurants/`.
+`load()`, `price.js`'s `priceBand()` and `search.js`'s `dishHay()`/
+`placeEntry()`. Home fetches only these two (+ fx.json); `precache_check.mjs`
+asserts and break-probes zero requests under `data/restaurants/`.
+
+🚩 **Revised 2026-09-30, same day, after the coordinator measured the first
+cut in this worktree and found it shipped MORE bytes than the 204,600 B
+baseline** — it shipped `buildIndex()`'s full runtime shape verbatim (`href`/
+`venueName`/`venueId`/`section` repeating on every one of 3,506 dishes) and a
+summary carrying a thinned MENU that duplicated dish identity the search
+index already needed. Fixed: dish identity (`dishId`, `name`, `formerIds`,
+`hay`) ships **once**, grouped by venue then section; `href`/`venueName`/
+`isRecipe` are rebuilt client-side from a dish's `venueId` plus the loaded
+summary (`search.js`'s `rebuildIndex()`, proven byte-identical to
+`buildIndex()`'s own output by `tests/rebuild-index.test.js`); the summary
+carries a dish **count**, not the dishes; every summary field now names its
+reader against an allowlist (ADR 0047) rather than passing through by
+exclusion, which is how `addOnGroups` (menu-page-only, 19.7 KB) rode along in
+the first cut; both files are minified (machine-only, never hand-read).
 
 **Measured 2026-09-30 (per-file gzip, matching ADR 0146's method), home's
-first load — network: 204,600 B / 59 requests → 216,751 B / 3 requests.
-Storage (raw, precached): +1.87 MB on top of the unchanged corpus. Processing:
-57× `load()`+`buildIndex()` per visit → 0 (2 files, pre-resolved). Server:
-unchanged (static host).**
+first load — network: 204,600 B / 59 requests → 122,636 B / 3 requests
+(−40%, −95% requests). Storage (raw, precached): +573 KB (36% of the
+restaurant corpus) on top of the unchanged, still-fully-precached corpus —
+down from the first cut's +1.87 MB (116%). Processing: 57×`load()` +
+index-build per visit → 0 (2 files, pre-resolved; `rebuildIndex()` is cheap
+lookups over already-normalised strings). Server: unchanged (static host).**
 
-🚩 **Disagrees with ADR 0146's ~3×/51–60 KB estimate** — network bytes rose
-~6% and precached storage rose ~16%, because `search-index.json` reuses
-`buildIndex()`'s runtime shape (per-dish `venueName`/`href`/`section`, not
-counted in that estimate) and dish `ingredients`/`attribution` text is most of
-the corpus's weight. Requests (59→3) and client processing (57×resolve → 0)
-are the real, large win. A leaner wire shape (dedupe `venueName`/`href` via a
-`venueId` lookup) could recover the rest but changes `search.js`'s output
-contract — left as an open follow-up, not picked here.
+Still above ADR 0146's ~51–60 KB aspiration, because dish `hay` text
+(ingredients/description/code/diet labels across 3,506 dishes, ~245,000
+characters) is what full-text search must keep and is most of the corpus's
+own weight — not a further duplication, and not picked apart here.

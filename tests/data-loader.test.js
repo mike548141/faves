@@ -89,7 +89,10 @@ test("loadRestaurant resolves a branch's dated address BEFORE lifting it up", as
 // fetch of the precomputed summary file, so these tests assert exactly that —
 // not resolution, which would be testing the generator through the wrong door.
 test("loadRestaurants fetches data/summary.json and returns it as-is", async () => {
-  const SUMMARY = [{ id: "t", name: "T", menu: [{ items: [{ dishId: "soup", name: "Soup" }] }] }];
+  // No `menu` (roadmap 510/020's coordinator revision) — a summary record
+  // carries a `dishCount` instead; dish identity lives only in the search
+  // index (tests/rebuild-index.test.js).
+  const SUMMARY = [{ id: "t", name: "T", dishCount: 1 }];
   globalThis.fetch = async (url) => ({
     ok: true,
     json: async () => (url.includes("summary.json") ? structuredClone(SUMMARY) : {}),
@@ -107,13 +110,19 @@ test("loadRestaurants propagates a failed fetch — the caller falls back to the
   await assert.rejects(() => loadRestaurants());
 });
 
-test("loadSearchIndex fetches the precomputed search index", async () => {
-  const INDEX = { places: [{ id: "t", hay: "t" }], dishes: [] };
+test("loadSearchIndex fetches the compact search-index file as-is", async () => {
+  // Compact (roadmap 510/020's coordinator revision): dish identity grouped
+  // once by venue/section, not search.js's runtime {places,dishes} shape —
+  // that assembly is `rebuildIndex()`'s job, in the browser, once restaurants
+  // has resolved too (tests/rebuild-index.test.js covers that equivalence).
+  const COMPACT = {
+    venues: [{ id: "t", sections: [{ section: "Mains", items: [{ dishId: "soup", name: "Soup", hay: "soup" }] }] }],
+  };
   globalThis.fetch = async (url) => ({
     ok: true,
-    json: async () => (url.includes("search-index.json") ? structuredClone(INDEX) : {}),
+    json: async () => (url.includes("search-index.json") ? structuredClone(COMPACT) : {}),
   });
-  assert.deepEqual(await loadSearchIndex(), INDEX);
+  assert.deepEqual(await loadSearchIndex(), COMPACT);
 });
 
 // ---------------------------------------------------------------------------

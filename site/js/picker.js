@@ -44,7 +44,9 @@ function metaText(r) {
   // browse label, not the record's id.
   const { browseLabel, itemNoun } = labelsOf(r);
   if (browseLabel) {
-    const n = (r.menu || []).reduce((sum, s) => sum + (s.items?.length || 0), 0);
+    // A precomputed count (roadmap 510/020) — the summary this runs against
+    // carries no menu to count from any more.
+    const n = r.dishCount || 0;
     return n ? `${browseLabel} · ${n} ${itemNoun}${n === 1 ? "" : "s"}` : browseLabel;
   }
   const services = (r.services || []).map((s) => SERVICE_LABEL[s] || s).join(", ");

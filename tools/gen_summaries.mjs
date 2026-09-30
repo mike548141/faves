@@ -1,49 +1,56 @@
 #!/usr/bin/env node
 // Generate the home screen's two read files (roadmap 510/020, ADR 0145/0146):
 //
-//   site/data/summary.json       card fields for every venue, thinned menus
-//   site/data/search-index.json  the precomputed dish/place search index
+//   site/data/summary.json       card/ranking/filter fields, one dish COUNT
+//   site/data/search-index.json  dish identity + search text, grouped by
+//                                 venue/section so nothing repeats per dish
 //
 // WHY A GENERATOR, NOT A SECOND IMPLEMENTATION. Before this, the home screen
 // fetched every venue's full JSON file and ran it through data.js's `load()`
 // (temporal resolution, branch projection, recipe-part composition) and
-// search.js's `buildIndex()` client-side. Measured 2026-09-30: the 57 files
-// come to about 204-208 KB gzip as fetched, of which the card and search
-// screens together need about 51-60 KB (ADR 0146; the earlier "13x"/164,716 B
-// figure in ADR 0145 was a reserialised-stream artefact, not what a phone
-// actually transfers). This tool moves that resolve-and-extract step to build
-// time, so it runs ONCE per data change rather than on every phone's every
-// visit — and it imports the app's own `load()` and `buildIndex()` rather than
-// re-implementing them, so the summary and the index can never drift from what
-// a full page render would show (the class of bug "A parse that rebuilds its
-// input" and "A duplicated rule reads correct in every diff" both name).
+// search.js's `buildIndex()` client-side. This tool moves the RESOLUTION half
+// of that to build time — it imports the app's own `load()`, `priceBand()`
+// and search.js's `dishHay()`/`placeEntry()` rather than re-implementing them,
+// so the shipped files can never drift from what a full page render would
+// show. The ASSEMBLY half (turning the compact file back into the shape
+// `search()` reads) runs client-side, in `search.js`'s `rebuildIndex()` — see
+// its own comment for why that split is where it is.
 //
-// WHAT "SUMMARY" MEANS HERE (ADR 0047 — ship only what a screen renders):
-//   - Every venue-level field `load()` resolves survives untouched: hours,
-//     area, cuisine, vibe, locations/branches, closure state, currency,
-//     status, image… everything ranking.js, filters.js, locations.js and the
-//     card itself read (app.js's card(), price.js's priceBand(), picker.js).
-//   - `lifecycle` (raw dated closure events), `verified`/`verifiedBy` (menu
-//     page's freshness caveat only) and `picks` (menu page only) are dropped —
-//     nothing on the home screen renders them.
-//   - `menu` is THINNED to `{ items: [{ dishId, name, formerIds? }] }` per
-//     section: enough for the card's dish count (labelsOf().browseLabel kinds
-//     count items, unchanged) and for a stored heart/rating to resolve
-//     (favourites.js's `unresolvedReason` → dish-id.js's `findDish`/`eachDish`,
-//     which only ever needs a dish's id, name and formerIds to answer "is this
-//     still here?" — never its price, description or tags).
-//   - `_priceSummary` carries the PRECOMPUTED result of price.js's
-//     `priceBand()`, run against the real menu prices before they're thinned
-//     away. price.js reads this field first when present (a record loaded
-//     from `data/restaurants/*.json` never carries it), so the card's price
-//     chip and the cheap-eats filter work unchanged on a summary record.
+// 🚩 REVISED 2026-09-30, same day, after the coordinator measured the first
+// version against this worktree and found it shipped MORE bytes than the
+// 204,600 B / 59-request baseline, not fewer — ADR 0146's ~51–60 KB estimate
+// assumed a lean index; the first cut shipped `buildIndex()`'s full RUNTIME
+// shape verbatim, so `href` (218 KB raw), `venueName` (64 KB) and `venueId`
+// (60 KB) repeated on every one of 3,506 dishes, and the summary carried a
+// thinned menu that DUPLICATED dish identity already needed in the search
+// index. Fixed here: dish identity (id, name, formerIds, section) ships
+// EXACTLY ONCE, grouped by venue then section; `href`/`venueName`/`isRecipe`
+// are rebuilt at load from `venueId` + the summary already in memory, never
+// shipped; the summary drops `menu` entirely for a single `dishCount`; and
+// every summary field is checked against an ALLOWLIST naming its home/search
+// reader (ADR 0047) rather than passed through by exclusion, which is how
+// `addOnGroups` (menu-page-only, 19.7 KB) ended up in the first cut unasked.
 //
-// THE SEARCH INDEX is `buildIndex()`'s own `{ places, dishes }` output, run
-// against the FULL (unthinned) resolved records — so it keeps ingredients,
-// attribution and order numbers, exactly as today's in-browser search does
-// (ADR 0146 correction R5). It is plain, already-lowercased data with no
-// functions in it, so `search.js`'s `search()` consumes it completely
-// unchanged whether it was built here or in the browser.
+// WHAT "SUMMARY" MEANS HERE — SUMMARY_FIELDS below is the whole allowlist,
+// each entry commented with the screen that reads it. `lifecycle` (raw dated
+// events — only `closure` is read), `verified`/`verifiedBy`/`picks` (menu
+// page only), `addOnGroups`/`website`/`ordering`/`priceChannels`/
+// `detailsVerified(By)` (menu/contact-card only) and the raw menu are all
+// dropped. `_priceSummary` carries `price.js`'s `priceBand()` result,
+// computed against the real prices BEFORE they're gone — `price.js` reads
+// this field first when present, so the card's price chip and the cheap-eats
+// filter work unchanged on a summary record with no menu at all.
+//
+// THE SEARCH INDEX carries, per venue, its dishes grouped by section:
+// `{ dishId, name, formerIds?, hay }`. `hay` is `dishHay()`'s output — the
+// full ingredients/description/code/diet text a phone must have to search by
+// them (ADR 0146 R5) — computed ONCE here from the real item, never shipped
+// alongside the item itself. Nothing else about a dish is shipped: `href`,
+// `venueName`, `venueId`, `isRecipe` and `kind` are all cheap to rebuild
+// client-side from the venue's own `id` (the group key) and the ALREADY
+// LOADED summary, so shipping them per dish would be pure duplication.
+// Places need no entry of their own in this file at all — `placeEntry()`
+// reads only venue-level fields the summary already carries unchanged.
 //
 // A STATED TRADE-OFF, not silently absorbed: `load()`'s date resolution
 // depends on "today", and this tool runs at commit/CI time, not at the
@@ -71,7 +78,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { load } from "../site/js/data.js";
-import { buildIndex } from "../site/js/search.js";
+import { dishHay } from "../site/js/search.js";
 import { dishId } from "../site/js/dish-id.js";
 import { priceBand } from "../site/js/price.js";
 
@@ -86,58 +93,112 @@ function readJson(p) {
   return JSON.parse(readFileSync(p, "utf8"));
 }
 
-/** A branch stripped of its own raw `lifecycle` — only the resolved `closure`
- *  (set by resolveRecord when the branch carries one) is read downstream. */
+/**
+ * The ONLY top-level venue fields a summary record carries, each commented
+ * with the home/search-screen reader that earns it its place (ADR 0047). A
+ * field added here without a call site to point at is exactly the defect
+ * this allowlist replaces an exclusion-list to catch.
+ */
+const SUMMARY_FIELDS = {
+  id: "every link, lookup key and the search index's grouping key",
+  name: "card title (app.js), search result name, picker.js",
+  kind: "kindOf()/labelsOf()/isRecipeKind() — every home/search capability check",
+  status: "card's stub chip + hasDetails() (app.js)",
+  cuisine: "card chips, search facet/haystack, filters.js's deriveFacets",
+  area: "card meta line, search sub-line/facet",
+  city: "search's city field/facet (place.js's placeEntry)",
+  currency: "price chip currency (place.js's venueCurrency/displayPrice)",
+  services: "picker.js's non-browse meta line, search haystack/facet",
+  vibe: "card vibe chips, search vibe facet (vibes.js's vibesFor)",
+  address: "search's address field, app.js's hasDetails (stub drill-in)",
+  phone: "search's phone field, app.js's hasDetails",
+  hours: "card hours badge (single-location fallback), venueHours",
+  lat: "distance/ranking, app.js's hasDetails, nearestBranch coords",
+  lng: "same as lat",
+  image: "app.js's cardPhoto",
+  alt: "app.js's cardPhoto (the image's alt text)",
+};
+
+/** A branch, thinned to what locations.js's nearestBranch/venueHours/
+ *  branchesOf and app.js's cardArea actually read: `label` (the per-branch
+ *  name on the card's meta line), `lat`/`lng` (distance, coordinates),
+ *  `hours` (the open/closed badge) and the resolved `closure` (per-branch
+ *  shut state, ADR 0132). `address`/`phone` are dropped — read only by the
+ *  menu page's own contact card (menu.js's branchAsPlace), never by home. */
 export function thinBranch(branch) {
   if (!branch || typeof branch !== "object") return branch;
-  const { lifecycle, ...rest } = branch;
-  return rest;
+  const out = {};
+  if ("label" in branch) out.label = branch.label;
+  if ("lat" in branch) out.lat = branch.lat;
+  if ("lng" in branch) out.lng = branch.lng;
+  if ("hours" in branch) out.hours = branch.hours;
+  if ("closure" in branch) out.closure = branch.closure;
+  return out;
 }
 
-/** A resolved menu, thinned to what dish-id.js's findDish/eachDish need to
- *  answer "is this dish still here?" — never enough to render one. Sections
- *  that carry a name keep it (none render it today, but it costs nothing and
- *  keeps the shape recognisable); `addOnsOnly` sections are INCLUDED, exactly
- *  as the unthinned menu was, so the card's item-count reduce() (app.js,
- *  picker.js) counts the same total it always did. */
-export function thinMenu(menu) {
-  if (!Array.isArray(menu)) return undefined;
-  return menu.map((section) => ({
-    ...(section?.section ? { section: section.section } : {}),
-    items: (section?.items || []).map((item) => {
+/** The dish count a browse-kind card shows (labelsOf().browseLabel kinds,
+ *  e.g. Cook at Home) — ALL items across ALL sections, `addOnsOnly` included,
+ *  matching exactly what the pre-510/020 `(r.menu||[]).reduce(...)` in app.js
+ *  and picker.js counted, so this is a byte-identical replacement for it, not
+ *  a behaviour change. */
+function countDishes(menu) {
+  return (menu || []).reduce((sum, s) => sum + (s.items?.length || 0), 0);
+}
+
+/** One resolved (full) record → its home-card summary: the ALLOWLISTed
+ *  fields, a thinned `locations`, the precomputed price band, and a dish
+ *  COUNT — never the dishes themselves (roadmap 510/020; their identity now
+ *  lives once, in the search index). Exported so tools/lib/fixtures.mjs can
+ *  build a fixture's home-screen overlay through this SAME function rather
+ *  than a second copy of the rules. */
+export function summarise(record) {
+  const out = {};
+  for (const field of Object.keys(SUMMARY_FIELDS)) {
+    if (record[field] !== undefined) out[field] = record[field];
+  }
+  if (Array.isArray(record.locations)) out.locations = record.locations.map(thinBranch);
+  if (record.closure !== undefined) out.closure = record.closure;
+  const price = priceBand(record); // BEFORE the menu is dropped — needs real prices
+  if (price) out._priceSummary = price;
+  out.dishCount = countDishes(record.menu);
+  return out;
+}
+
+/**
+ * One resolved (full) record's dishes, grouped by section, for the compact
+ * search index: `{ section, items: [{ dishId, name, formerIds?, hay }] }`.
+ * `hay` is `search.js`'s own `dishHay()` — the one place that text is
+ * assembled, called here and never re-derived. Nothing else about a dish is
+ * shipped: `href`/`venueName`/`isRecipe`/`kind` are all rebuilt client-side
+ * from the venue's `id` (search.js's `rebuildIndex()`).
+ */
+function dishGroups(record) {
+  return (record.menu || []).map((section) => ({
+    section: section.section || "",
+    items: (section.items || []).map((item) => {
       const out = { dishId: dishId(item), name: item.name };
       if (Array.isArray(item.formerIds) && item.formerIds.length) {
         out.formerIds = item.formerIds;
       }
+      out.hay = dishHay(item, record);
       return out;
     }),
   }));
 }
 
-/** One resolved (full) record → its home-card summary. Exported so
- *  tools/lib/fixtures.mjs can build a fixture's home-screen overlay
- *  (site/data/summary.json + search-index.json) through this SAME function
- *  rather than a second copy of the thinning rules. */
-export function summarise(record) {
-  const { menu, lifecycle, verified, verifiedBy, picks, ...rest } = record;
-  const out = { ...rest };
-  if (Array.isArray(record.locations)) out.locations = record.locations.map(thinBranch);
-  const price = priceBand(record); // BEFORE thinning — needs the real prices
-  if (price) out._priceSummary = price;
-  const thin = thinMenu(menu);
-  if (thin) out.menu = thin;
-  return out;
-}
-
 /**
- * The summary array and search index for a list of ALREADY-LOADED (resolved,
- * via `load()`) records, in the order given. Exported so a browser check can
- * build the exact same two structures for a corpus with one venue swapped for
- * a fixture (tools/lib/fixtures.mjs's `buildHomeOverlay`) — the one path,
- * never a second implementation that could silently disagree with this one.
+ * The summary array and compact search index for a list of ALREADY-LOADED
+ * (resolved, via `load()`) records, in the order given. Exported so a browser
+ * check can build the exact same two structures for a corpus with one venue
+ * swapped for a fixture (tools/lib/fixtures.mjs's `buildHomeOverlay`) — the
+ * one path, never a second implementation that could silently disagree with
+ * this one.
  */
 export function renderFrom(loaded) {
-  return { summary: loaded.map(summarise), searchIndex: buildIndex(loaded) };
+  return {
+    summary: loaded.map(summarise),
+    searchIndex: { venues: loaded.map((r) => ({ id: r.id, sections: dishGroups(r) })) },
+  };
 }
 
 function render() {
@@ -145,8 +206,15 @@ function render() {
   const loaded = ids.map((id) => load(readJson(path.join(RESTAURANTS_DIR, `${id}.json`))));
   const { summary, searchIndex } = renderFrom(loaded);
   return {
-    summaryText: JSON.stringify(summary, null, 2) + "\n",
-    indexText: JSON.stringify(searchIndex, null, 2) + "\n",
+    // Minified, deliberately unlike gen_sbom.py's output: these two files are
+    // never hand-read (a --check byte comparison and the source restaurant
+    // diff are what a review actually looks at), 3,506 dish entries make
+    // pretty-printing's indentation and newlines pure overhead, and the
+    // coordinator's own instruction on this item is "as small as possible" —
+    // measured 2026-09-30, indent:2 → none cut search-index.json's shipped
+    // gzip bytes by ~6.5% and summary.json's by ~17%.
+    summaryText: JSON.stringify(summary) + "\n",
+    indexText: JSON.stringify(searchIndex) + "\n",
     count: loaded.length,
   };
 }
@@ -218,7 +286,7 @@ function announceTree() {
 }
 
 // Guarded so `tools/lib/fixtures.mjs` (and anything else after pure exports —
-// `summarise`, `thinMenu`, `renderFrom`) can `import` this module without
+// `summarise`, `thinBranch`, `renderFrom`) can `import` this module without
 // running the CLI and exiting the whole process out from under the importer.
 const isMain = (() => {
   try {

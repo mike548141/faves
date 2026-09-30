@@ -125,12 +125,21 @@ export async function loadRestaurants() {
 }
 
 /**
- * The precomputed search index (search.js's `buildIndex()` shape: `{ places,
- * dishes }`), built once by `tools/gen_summaries.mjs` against every venue's
- * FULL menu — unlike the summary above, this keeps ingredients, attribution
- * and order numbers, because search reads all of them (ADR 0146). Reading it
- * here rather than calling `buildIndex()` client-side is what lets the home
- * screen fetch two small files instead of every venue's menu.
+ * The COMPACT search index file — `{ venues: [{ id, sections: [{ section,
+ * items: [{ dishId, name, formerIds?, hay }] }] }] }` — built once by
+ * `tools/gen_summaries.mjs` against every venue's FULL menu, so `hay` keeps
+ * ingredients, attribution and order numbers (ADR 0146). Dish identity ships
+ * exactly once, grouped by venue then section: nothing about a dish that is
+ * cheaply rebuilt from its venue's own summary record (`href`, `venueName`,
+ * `isRecipe`) is shipped again per dish (roadmap 510/020's revision after its
+ * coordinator review — the first cut shipped `buildIndex()`'s full runtime
+ * shape and was BIGGER than fetching every menu, not smaller).
+ *
+ * This is NOT search.js's runtime `{ places, dishes }` shape — the caller
+ * turns it into that with `rebuildIndex(compact, restaurants)` once both this
+ * and `loadRestaurants()` have resolved, because rebuilding needs the loaded
+ * summaries (for a dish's venue name/kind) and there is no reason to fetch
+ * them twice.
  */
 export async function loadSearchIndex() {
   return fetchJson(SEARCH_INDEX_URL);
