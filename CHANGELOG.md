@@ -87,6 +87,10 @@ content freshness separately from this file.
 - **No more "est." on a recipe's stats panel** — neither the line under it
   nor the marker beside an estimated value (ADR 0135).
 ### Changed
+- **The home screen loads faster: it no longer fetches every venue's full
+  menu just to draw the list.** It now reads two small, precomputed files —
+  a card summary and a search index — and fetches a venue's own menu only
+  once you open its page (roadmap 510/020).
 - **The home screen's search bar stays pinned to the top as you scroll the
   list**, the same way the menu page's search does.
 - **The restaurant page's typical spend reads "~$16 per person"** — the "~"

@@ -14,8 +14,17 @@ site/
   js/                   ES modules, one per concern (data, filters, ranking,
                         hours, search, cart, favourites, settings, …) — model
                         split from *-ui.js where a feature has both
-  data/index.json       ordered list of restaurant ids
-  data/restaurants/     <id>.json — one file per restaurant, menu included
+  data/index.json       ordered list of restaurant ids (display order; still
+                        read by recheckReferences and the no-JS fallback)
+  data/summary.json     GENERATED (tools/gen_summaries.mjs) — the home
+                        screen's card/ranking/filter fields for every venue,
+                        no menu, one dish COUNT (roadmap 510/020)
+  data/search-index.json GENERATED — dish identity + search text, grouped
+                        ONCE by venue then section (never once per dish);
+                        the browser rebuilds search.js's runtime shape from
+                        it plus the loaded summaries (rebuildIndex())
+  data/restaurants/     <id>.json — one file per restaurant, menu included;
+                        fetched only when THAT venue's own page opens
   img/                  icons, photos (lazy-loaded)
   manifest.webmanifest  PWA manifest
   sw.js                 service worker (precache shell + data)
@@ -876,6 +885,71 @@ Add-on prices never feed the venue's price band (`site/js/price.js` reads
 dish prices only), and a group no section or dish names is a **warning**:
 precached payload nothing on any screen can reach (ADR 0047).
 
+### The home screen's read files (roadmap 510/020, ADR 0145/0146)
+
+`site/data/summary.json` and `site/data/search-index.json` are **generated**
+by `tools/gen_summaries.mjs` from `site/data/restaurants/*.json`, through the
+app's own `load()` (data.js), `priceBand()` (price.js) and `dishHay()`/
+`placeEntry()` (search.js) — never a second, hand-written implementation of
+temporal resolution or of what search reads. `--check` proves the committed
+files match the tree (CI, and the verify list), the same shape as
+`gen_sbom.py --check`.
+
+🚩 **Revised 2026-09-30, same day, after a coordinator review measured the
+first cut shipping MORE bytes than fetching every menu.** It shipped
+`buildIndex()`'s full runtime shape verbatim — `href`/`venueName`/`venueId`
+repeated on every one of 3,506 dishes — and a summary carrying a thinned
+MENU that duplicated dish identity the search index already needed. Fixed by
+shipping dish identity exactly once (below); see the item file
+(`docs/roadmap/510-…/020-…md`) for the full before/after and what the first
+cut got wrong.
+
+- **`summary.json`** carries every venue-level field an ALLOWLIST names a
+  home/search reader for — hours, area, cuisine, vibe, branches (thinned to
+  `label`/`lat`/`lng`/`hours`/`closure`), closure state, currency, image, a
+  precomputed `_priceSummary` — and a single dish **count**, never the dishes
+  themselves. `addOnGroups`, `website`, `ordering`, `priceChannels`,
+  `detailsVerified(By)`, `lifecycle`, `verified`/`verifiedBy` and `picks` are
+  all dropped: nothing on the home screen renders any of them (ADR 0047) —
+  the first cut shipped several of these by exclusion-list rather than by
+  naming a reader, which is why `addOnGroups` (menu-page-only) rode along.
+- **`search-index.json`** carries dish identity — `{ dishId, name,
+  formerIds?, hay }` — grouped **once** by venue then section:
+  `{ venues: [{ id, sections: [{ section, items: [...] }] }] }`. `hay` is
+  `dishHay()`'s output (ingredients, attribution, order numbers — everything
+  search reads, ADR 0146 R5), computed once here from the real item and
+  shipped as a string, never alongside the fields it was built from.
+  `href`/`venueName`/`isRecipe`/`kind` are NOT shipped per dish — they are
+  cheap to rebuild from a dish's own `venueId` plus the summary already
+  loaded, so the browser's `search.js` `rebuildIndex(compact, restaurants)`
+  reconstructs `buildIndex()`'s exact `{ places, dishes }` runtime shape
+  (`tests/rebuild-index.test.js` asserts the two are byte-identical for a
+  fixture corpus). Places need no entry of their own in this file at all —
+  `placeEntry()` reads only fields the summary already carries.
+- A stored heart/rating resolves the same way (`dish-id.js`'s `findDish`/
+  `eachDish`): `app.js`'s `wireFavourites` pairs each summary record with
+  that venue's dish groups from the search index (already shaped like a
+  `menu`), so dish-id.js needed no changes at all.
+- The home screen (`app.js`) and its search fetch **only** these two files
+  plus `fx.json`. A venue's full file under `data/restaurants/` is fetched
+  once, by `loadRestaurant()`, when that venue's own page opens.
+- **Minified, not pretty-printed**, unlike `gen_sbom.py`'s output: both files
+  are machine-generated and machine-read only, and at 3,506 dish entries the
+  indentation costs real bytes for zero review value — `--check`'s byte
+  comparison and the source restaurant diff are what a review reads, not
+  this file.
+- **A stated trade-off:** the generator resolves dated fields at the time it
+  runs, not at the reader's read time. Weekly hours are unaffected (resolved
+  live, in the browser, from the plain schedule this ships); a genuinely
+  DATED field with no accompanying data edit (a seasonal item's `until` date)
+  can lag on the home card until the next regeneration. The venue's own page
+  always resolves against the reader's actual today.
+- A browser check that stages a fixture venue on the home screen (e.g.
+  `focus_check.mjs`'s closed-venue case) must rebuild these two files for the
+  fixture too — `tools/lib/fixtures.mjs`'s `buildHomeOverlay()` does this
+  through the same `renderFrom()` the generator uses, so a check's fixture
+  can never silently disagree with what a real deploy would produce.
+
 ### Rules
 
 - `site/data/index.json` is the display order (an array of ids).
@@ -1258,7 +1332,10 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
 - **Precache** on install, split into two independently-versioned caches
   (ADR 0015): a **shell cache** (`SHELL_VERSION` → the three HTML shells, CSS,
   JS, `site.webmanifest`, icons) and a **data cache** (`DATA_VERSION` →
-  `index.json` + every restaurant JSON). Bumping one constant rebuilds
+  `index.json`, `summary.json`, `search-index.json` + every restaurant JSON —
+  the last two are still precached in full, roadmap 510/020's saving is in
+  what the HOME SCREEN reads at runtime, not in what offline holds; that
+  changes only when `510/060`'s partitioning lands). Bumping one constant rebuilds
   only that cache on the next install; the other survives untouched, so a
   data-only menu edit no longer re-downloads the whole shell. `index.json`
   is **data** (it lists which restaurants exist); `site.webmanifest` is

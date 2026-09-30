@@ -67,6 +67,9 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { load } from "../../site/js/data.js";
+import { renderFrom } from "../gen_summaries.mjs";
+
 /** Every fixture id ends in this, so a grep can never confuse one for a venue
  *  and a stray fixture that reached `site/data/` is one search away. */
 export const FIXTURE_SUFFIX = "-fixture";
@@ -333,4 +336,46 @@ export async function buildFixtures(siteDir, specs) {
     overlay.set(`/data/restaurants/${record.id}.json`, JSON.stringify(record));
   }
   return { records, overlay };
+}
+
+/**
+ * The home screen's overlay for a corpus with one or more venues swapped for
+ * a fixture (roadmap 510/020). Before this, staging `/data/restaurants/<id>.json`
+ * plus a swapped `/data/index.json` was enough — the home screen fetched
+ * every venue file itself and resolved them in the browser. It now reads
+ * `data/summary.json` and `data/search-index.json` instead and never touches
+ * `data/restaurants/` at all, so a fixture invisible in those two files is a
+ * fixture invisible on the home screen, however correct the swapped index is.
+ *
+ * This rebuilds all three the same way `tools/gen_summaries.mjs` does for the
+ * real deploy — through `load()` and the exported `renderFrom()` — so a
+ * fixture's summary/search-index entries can never drift from what the real
+ * generator would produce for the same record. `renderFrom()`'s search index
+ * is the COMPACT, venue-grouped shape the real file ships (roadmap 510/020);
+ * the browser's own `search.js` `rebuildIndex()` turns it back into a
+ * runtime `{ places, dishes }` index, exactly as it does for a real deploy.
+ *
+ *   const { records, overlay } = await buildFixtures(SITE, [...]);
+ *   const swap = new Map([["sushi-bi", [...records.keys()][0]]]);
+ *   for (const [k, v] of (await buildHomeOverlay(SITE, records, swap)))
+ *     overlay.set(k, v);
+ *
+ * `swap`: real venue id → fixture id, one entry per venue being replaced.
+ * `records`: fixture id → fixture record, as `buildFixtures` returns.
+ */
+export async function buildHomeOverlay(siteDir, records, swap) {
+  const ids = JSON.parse(await readFile(join(siteDir, "data", "index.json"), "utf8"));
+  const swapped = ids.map((id) => swap.get(id) || id);
+  const loaded = await Promise.all(
+    swapped.map(async (id) => {
+      const raw = records.has(id) ? records.get(id) : await readVenue(siteDir, id);
+      return load(raw);
+    })
+  );
+  const { summary, searchIndex } = renderFrom(loaded);
+  return new Map([
+    ["/data/index.json", JSON.stringify(swapped)],
+    ["/data/summary.json", JSON.stringify(summary)],
+    ["/data/search-index.json", JSON.stringify(searchIndex)],
+  ]);
 }
