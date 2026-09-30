@@ -141,6 +141,11 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Editing during a sync no longer deletes your other device's changes.**
+  A heart, recipe or allergen flag added on one device could vanish from
+  both if you tapped something on the other while it was mid-sync. Both
+  changes are now kept, and if both devices changed your allergens, Faves
+  asks rather than picking one.
 - **Sync says "Paused — update Faves" when another device is newer.** It used
   to say "Couldn't sync — tap to retry" and offer a Retry that could not help.
   The panel now explains that a Refresh button appears when the update is
