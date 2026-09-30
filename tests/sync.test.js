@@ -1064,3 +1064,123 @@ test("a bucket that will not open stops the sync with nothing written", async ()
   assert.deepEqual(recipesOf(fresh), []);
   assert.ok(b);
 });
+
+// --- a local edit during a pull that brought the other device's change -----
+// (roadmap 510/100). Until 2026-10-01 a change made on this device while a
+// cycle was in flight left the pull unapplied locally — correctly, so the tap
+// survived — but still recorded the merge as the base. The base then held the
+// other device's change and this device did not, so the next cycle read the
+// difference as a deletion made HERE and pushed it to every device.
+
+/** Run `tap` on device storage the first time the core copy is PUT: the one
+ *  moment in a cycle where a tap lands after `mine` was collected and before
+ *  the cycle looks again. */
+function tapDuringPut(server, tap) {
+  let done = false;
+  return {
+    fetch: (u, i = {}) => {
+      const id = String(u).split("?")[0].split("/").pop();
+      if (!done && (i.method || "GET") === "PUT" && !id.includes(":")) {
+        done = true;
+        tap();
+      }
+      return server.fetch(u, i);
+    },
+  };
+}
+
+/** Pair A and B, let B make `bChange` and push it, then let A sync its own
+ *  `aChange` with `aTap` landing mid-flight, then carry A's follow-up out and
+ *  let B pull it. Returns both devices and A's first result. */
+async function midFlight({ a, b, bChange, aChange, aTap }) {
+  const server = fakeServer();
+  const syncA0 = mk(a, server);
+  const { code } = await syncA0.enable();
+  const syncB = mk(b, server);
+  await syncB.join(code);
+  await syncA0.syncNow();
+
+  bChange(b);
+  assert.equal((await syncB.syncNow()).ok, true);
+
+  aChange(a);
+  const syncA = mk(a, tapDuringPut(server, () => aTap(a)), { debounceMs: 5000 });
+  const first = await syncA.syncNow();
+  assert.equal(first.ok, true);
+  assert.equal(first.deferredLocal, true, "the tap must have landed mid-flight, or this tests nothing");
+  syncA.flush();
+  const second = await syncA.syncNow(); // joins the follow-up flush started
+  const third = second.needsDecision ? second : await syncB.syncNow();
+  return { a, b, syncA, syncB, first, second, third };
+}
+
+const setFavs = (st, ids) => st.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify(ids.map(venue)));
+const setRatings = (st, r) => st.setItem(scopeKey("default", "faves.ratings.v1"), JSON.stringify(r));
+const setAvoid = (st, avoid) =>
+  st.setItem(scopeKey("default", "faves.settings.v1"), JSON.stringify({ diet: { dietary: [], avoid } }));
+const avoidOf = (st) => JSON.parse(st.getItem(scopeKey("default", "faves.settings.v1")) || "{}").diet?.avoid;
+
+test("a heart added on the other device survives an edit made here mid-sync (roadmap 510/100)", async () => {
+  const { a, b, second } = await midFlight({
+    a: device({ favs: [venue("kk")] }),
+    b: device({ favs: [] }),
+    bChange: (b) => setFavs(b, ["kk", "pandan"]),
+    aChange: (a) => setFavs(a, ["kk", "new"]),
+    aTap: (a) => setRatings(a, { "v:kk": 4 }),
+  });
+  assert.equal(second.ok, true);
+  assert.deepEqual(favsOf(a), ["v:kk", "v:new", "v:pandan"], "B's heart must reach A");
+  assert.deepEqual(favsOf(b), ["v:kk", "v:new", "v:pandan"], "…and must not be deleted from B by A's follow-up");
+  assert.deepEqual(JSON.parse(b.getItem(scopeKey("default", "faves.ratings.v1"))), { "v:kk": 4 }, "the mid-flight tap still travels");
+});
+
+test("an allergen flag set on the other device survives a heart tapped here mid-sync (roadmap 510/100)", async () => {
+  const { a, b } = await midFlight({
+    a: device({ favs: [venue("kk")], settings: { diet: { dietary: [], avoid: [] } } }),
+    b: device({ favs: [] }),
+    bChange: (b) => setAvoid(b, ["contains-gluten"]),
+    aChange: (a) => setFavs(a, ["kk", "new"]),
+    aTap: (a) => setFavs(a, ["kk", "new", "tapped"]),
+  });
+  assert.deepEqual(avoidOf(a), ["contains-gluten"], "B's allergen flag must reach A");
+  assert.deepEqual(avoidOf(b), ["contains-gluten"], "…and must not be switched off on B by A's follow-up");
+  assert.deepEqual(favsOf(b), ["v:kk", "v:new", "v:tapped"]);
+});
+
+test("an allergen flag set on BOTH devices, one mid-sync, is put to the reader — never silently one side's (roadmap 510/100)", async () => {
+  const { a, b, second } = await midFlight({
+    a: device({ favs: [venue("kk")], settings: { diet: { dietary: [], avoid: [] } } }),
+    b: device({ favs: [] }),
+    bChange: (b) => setAvoid(b, ["contains-gluten"]),
+    aChange: (a) => setFavs(a, ["kk", "new"]),
+    aTap: (a) => setAvoid(a, ["contains-nuts"]),
+  });
+  assert.equal(second.needsDecision, true, "two-sided diet change: the follow-up must ask");
+  assert.deepEqual(avoidOf(a), ["contains-nuts"], "the tap stands until the reader answers");
+  assert.deepEqual(avoidOf(b), ["contains-gluten"], "B's flag was not overwritten behind the reader's back");
+});
+
+test("a recipe added on the other device survives a heart tapped here mid-sync (roadmap 510/100, bucket path)", async () => {
+  const { a, b } = await midFlight({
+    a: withRecipes(device({ favs: [venue("kk")] }), [precipe("u:pavlova")]),
+    b: device({ favs: [] }),
+    bChange: (b) => withRecipes(b, [precipe("u:pavlova"), precipe("u:scones")]),
+    aChange: (a) => setFavs(a, ["kk", "new"]),
+    aTap: (a) => setFavs(a, ["kk", "new", "tapped"]),
+  });
+  assert.deepEqual(recipesOf(a), ["u:pavlova", "u:scones"], "B's recipe must reach A");
+  assert.deepEqual(recipesOf(b), ["u:pavlova", "u:scones"], "…and must not be deleted from B");
+});
+
+test("a heart added on the other device survives a recipe edited here mid-sync (roadmap 510/100)", async () => {
+  const { a, b } = await midFlight({
+    a: withRecipes(device({ favs: [venue("kk")] }), [precipe("u:pavlova")]),
+    b: device({ favs: [] }),
+    bChange: (b) => setFavs(b, ["kk", "pandan"]),
+    aChange: (a) => setFavs(a, ["kk", "new"]),
+    aTap: (a) => withRecipes(a, [precipe("u:pavlova"), precipe("u:scones")]),
+  });
+  assert.deepEqual(favsOf(a), ["v:kk", "v:new", "v:pandan"]);
+  assert.deepEqual(favsOf(b), ["v:kk", "v:new", "v:pandan"]);
+  assert.deepEqual(recipesOf(b), ["u:pavlova", "u:scones"]);
+});

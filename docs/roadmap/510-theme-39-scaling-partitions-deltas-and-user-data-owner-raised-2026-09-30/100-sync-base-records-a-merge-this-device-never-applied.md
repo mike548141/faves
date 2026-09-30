@@ -1,4 +1,4 @@
-- [~] 🔥 **Sync can delete another device's change if you edit mid-sync**
+- [x] 🔥 **Sync can delete another device's change if you edit mid-sync**
       `[S] [sync][data]` — found 2026-09-30 by the `050` worker (session
       `faves-0b`), from reading the code; not yet reproduced.
 
@@ -16,3 +16,5 @@
   reading was wrong and close this item.
 
   📌 **Claimed 2026-09-30 (`faves-0b`)** — built in a worktree.
+
+  ✅ 2026-10-01: reproduced (4 tests red on main); fixed in `sync.js`.

@@ -612,22 +612,49 @@ export function createSync({
         }
       }
 
-      // 4. only now is this an agreement. The server holds `merged`, so it is
-      //    the base whatever happens next — but the LOCAL half is applied only
-      //    if nothing here moved while the round trip was in flight. A heart
-      //    or an allergen flag tapped during it lives in storage and not in
-      //    `mine`; writing `merged` over it would erase the tap, and the next
-      //    cycle would then collect the erased store and push the loss to
-      //    every device (found by the 2026-08-17 cold review — an allergen
-      //    flag is the worst thing this can lose). Instead the tap stays, the
-      //    base becomes `merged`, and the cycle it already scheduled carries
-      //    the tap out as a change against that base.
+      // 4. only now is this an agreement. The server holds `merged` — but the
+      //    LOCAL half must not simply become it if anything here moved while
+      //    the round trip was in flight. A heart or an allergen flag tapped
+      //    during it lives in storage and not in `mine`; writing `merged` over
+      //    it would erase the tap, and the next cycle would then collect the
+      //    erased store and push the loss to every device (found by the
+      //    2026-08-17 cold review — an allergen flag is the worst thing this
+      //    can lose).
+      //
+      //    Nor may the tap simply be left standing with `merged` recorded as
+      //    the base, which is what this did until 2026-10-01 (roadmap
+      //    510/100): the base then held the other device's changes and this
+      //    device did not, so the next cycle read every one of them as a
+      //    deletion made HERE and pushed it — a heart added on the other
+      //    phone vanished from both, and an allergen flag set there was
+      //    switched off on both. A base must be an ANCESTOR of both sides.
+      //
+      //    So the pull and the tap are combined: a second three-way merge
+      //    whose base is `mine` — what this device held when the cycle began,
+      //    an ancestor of both the tap (`now2`) and the pull (`merged`). Both
+      //    are kept, the device then holds `merged` plus the tap, `merged` is
+      //    a true ancestor of that, and the cycle the tap scheduled carries it
+      //    out as a change against it. No await between `now2` and the write
+      //    below, so no further tap can land in between.
+      //
+      //    The one thing that combination may not do is settle a diet
+      //    question: a flag tapped here mid-flight against a flag changed
+      //    there is two-sided safety data (ADR 0060). Then nothing local is
+      //    written and the LAST agreement stands, so the next cycle sees both
+      //    sides against a real ancestor and asks.
       const now2 = collectPersonalData(storage, { exportedAt: now() });
       const localMoved = !sameSnapshot(mine, now2) || !sameRecipes(mine.recipes, now2.recipes);
-      const recipesMoved = rec.supported && !sameRecipes(rec.merged, mine.recipes);
-      const coreMoved = !sameSnapshot(merged, mine);
-      if (!localMoved && (coreMoved || recipesMoved)) {
-        if (coreMoved) writeSnapshot(storage, merged);
+      let local = merged;
+      let agreed = true;
+      if (localMoved) {
+        const combined = mergePersonal(mine, now2, merged);
+        if (needsDecision(combined.conflicts)) agreed = false;
+        else local = combined.merged;
+      }
+      const coreMoved = agreed && !sameSnapshot(local, now2);
+      const recipesMoved = rec.supported && !localMoved && !sameRecipes(rec.merged, mine.recipes);
+      if (coreMoved || recipesMoved) {
+        if (coreMoved) writeSnapshot(storage, local);
         if (recipesMoved) writeRecipes(storage, rec.merged);
         // Before the base, deliberately: if re-pointing the live stores
         // throws, the base must not claim an agreement whose local half
@@ -635,7 +662,7 @@ export function createSync({
         // not re-arm the debounce.
         quiet = true;
         try {
-          applied(merged);
+          applied(local);
         } catch {
           /* a screen that failed to repaint is not a reason to fail the sync */
         } finally {
@@ -647,12 +674,15 @@ export function createSync({
       // buckets, or a local change landed mid-flight, the LAST agreement
       // stands — then the next cycle reads the buckets again (their versions
       // differ from it) and merges them, rather than reading another device's
-      // additions as this device's deletions.
-      const recipeAgreement =
-        rec.supported && !localMoved
-          ? { recipeBuckets: merged.recipeBuckets ?? null, recipeHashes: hashRecipes(rec.merged) }
-          : { recipeBuckets: base?.recipeBuckets ?? null, recipeHashes: base?.recipeHashes ?? {} };
-      writeBase({ ...merged, ...recipeAgreement });
+      // additions as this device's deletions. (That was already right when
+      // 510/100 found the core half wrong; the tests there cover both.)
+      if (agreed) {
+        const recipeAgreement =
+          rec.supported && !localMoved
+            ? { recipeBuckets: merged.recipeBuckets ?? null, recipeHashes: hashRecipes(rec.merged) }
+            : { recipeBuckets: base?.recipeBuckets ?? null, recipeHashes: base?.recipeHashes ?? {} };
+        writeBase({ ...merged, ...recipeAgreement });
+      }
       writeConfig({ lastSyncedAt: now() });
       setState(IDLE);
       if (localMoved) schedule();
