@@ -12541,3 +12541,12 @@ and Sonnet workers in worktrees. Atelier had not moved past the pin
   `040`'s three forks on the upgrade chain; and how `080`'s storage
   threshold gets measured on real devices. `060` stays deferred until a
   second region exists.
+- **Addendum, 2026-10-01, after the owner's rulings.** He ruled: the Worker
+  deploys with the import; keep the freshness trade (ADR 0147); an old tab
+  stops writing once storage is upgraded; the cookbook is per person. The
+  last two were built and merged (PR #60, `510/110` and `510/120`). The full
+  browser sweep and 1,621 unit tests passed, and each guard was
+  break-probed. 🚩 `STORE_SCHEMA.recipes` is now 2, so a device on a build
+  from the last day pauses sync with "Update Faves" until it reloads. That
+  is the designed behaviour, and no device holds a recipe yet. A new fork
+  about who receives imported recipes on a shared phone is in `050`.

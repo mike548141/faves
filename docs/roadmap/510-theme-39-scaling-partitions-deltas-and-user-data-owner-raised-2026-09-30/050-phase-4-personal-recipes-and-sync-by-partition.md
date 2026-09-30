@@ -95,3 +95,8 @@
   ⚖️ **Owner-ruled 2026-10-01:** the Worker deploys **with the import**, not
   before. Fork (1) is ruled **per person**, now item `120`. Fork (2), how
   the import reaches devices, and his recipe list are still open.
+
+  🎯 **New fork from `120` (2026-10-01):** when the import runs on his own
+  devices (`add: "all"`) on a phone shared by several people, whose
+  cookbook gets the moved recipes? Built: the active person. Alternatives:
+  every profile on the phone, or the people his list names.
