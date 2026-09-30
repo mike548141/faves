@@ -5,7 +5,9 @@
 // notes, settings, the registry) stays ONE all-or-nothing write, exactly as
 // before — a heart still costs one read and one write. Only recipes split, into
 // `RECIPE_BUCKETS` buckets stored beside the core copy under the same user key,
-// as `<blobId>:r<n>`. A recipe's bucket is a hash of its id, so it never moves.
+// as `<blobId>:r<n>`. A recipe's bucket is a hash of its flat key — its id and
+// its person's (roadmap 510/120: one cookbook per person, recipe-record.js
+// `cookbookKey`) — so it never moves.
 // The core copy records each bucket's version (the Worker's ETag for it), which
 // is what lets a device notice a bucket written without its core update (B2 in
 // the cold review): the Worker reports the versions it actually holds, and a
@@ -37,7 +39,7 @@
 // Pure and DOM-free: no storage, no network. sync.js drives it.
 
 import { USER_SCHEMA } from "./user-schema.js";
-import { isPersonalId, sanitiseRecipes, sortedRecipes } from "./recipe-record.js";
+import { flattenCookbooks, groupCookbooks } from "./recipe-record.js";
 
 export const RECIPE_BUCKETS = 8;
 export const BUCKET_PAD = 4096;
@@ -133,21 +135,31 @@ const enc = new TextEncoder();
  * a bucket served under the wrong name is refused rather than merged.
  */
 export function bucketPlaintext(k, recipes, n = RECIPE_BUCKETS) {
-  const body = { format: BUCKET_FORMAT, v: USER_SCHEMA, n, k, recipes: sortedRecipes(recipes), pad: "" };
+  // `recipes` is flat (`"<u: id> <profile id>"` → record); the bucket files
+  // them by person, `cookbooks: { <profile id>: { <u: id>: record } }`, the
+  // shape a backup's profiles carry (roadmap 510/120). Until 2026-10-01 a
+  // bucket held one device-wide `recipes` map; none was ever written (the
+  // Worker that stores buckets has not been deployed), and STORE_SCHEMA.recipes
+  // moved to 2 with the change so a build that reads the old shape pauses.
+  const books = groupCookbooks(recipes);
+  const cookbooks = Object.fromEntries([...books.keys()].sort().map((pid) => [pid, books.get(pid)]));
+  const body = { format: BUCKET_FORMAT, v: USER_SCHEMA, n, k, cookbooks, pad: "" };
   const len = enc.encode(JSON.stringify(body)).length;
   const target = Math.ceil(len / BUCKET_PAD) * BUCKET_PAD;
   body.pad = " ".repeat(target - len);
   return body;
 }
 
-/** The recipes in an opened bucket, or null when it is not bucket `k` of `n`
- *  in a format this build reads. Recipes are cleaned on the way in, and one
- *  filed in the wrong bucket is left out — it belongs to another bucket's merge. */
+/** The recipes in an opened bucket, flat (`"<u: id> <profile id>"` →
+ *  record), or null when it is not bucket `k` of `n` in a format this build
+ *  reads. Recipes are cleaned on the way in, and one filed in the wrong bucket
+ *  is left out — it belongs to another bucket's merge. */
 export function readBucket(plain, k, n = RECIPE_BUCKETS) {
   if (!plain || typeof plain !== "object" || plain.format !== BUCKET_FORMAT) return null;
   if (plain.k !== k || plain.n !== n) return null;
-  const clean = sanitiseRecipes(plain.recipes);
-  return Object.fromEntries(Object.entries(clean).filter(([id]) => isPersonalId(id) && bucketOf(id, n) === k));
+  const books = plain.cookbooks && typeof plain.cookbooks === "object" && !Array.isArray(plain.cookbooks) ? plain.cookbooks : {};
+  const flat = flattenCookbooks(Object.entries(books).map(([id, recipes]) => ({ id, recipes })));
+  return Object.fromEntries(Object.entries(flat).filter(([key]) => bucketOf(key, n) === k));
 }
 
 /** Kind of a two-sided recipe conflict, for the caller to report. */

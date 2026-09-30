@@ -27,7 +27,8 @@ import { deriveSyncKeys, openBlob, sealBlob } from "../site/js/sync-crypto.js";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
 import { favKey } from "../site/js/favourites.js";
 import { mintSyncCode, normaliseSyncCode } from "../site/js/sync-code.js";
-import { RECIPE_BUCKETS, BUCKET_PAD, bucketOf, bucketPlaintext } from "../site/js/sync-buckets.js";
+import { RECIPE_BUCKETS, BUCKET_PAD, bucketOf, bucketPlaintext, readBucket } from "../site/js/sync-buckets.js";
+import { cookbookKey } from "../site/js/recipe-record.js";
 
 // A REAL code for the tests that seed one by hand. Until 2026-08-17 they used
 // "K7F29DMX4QRA" — 12 characters, which normaliseSyncCode rejects — so
@@ -701,19 +702,22 @@ async function seedServer(server, code, snapshot) {
   assert.equal(res.status, 204);
 }
 
+// A store this build has never heard of, on each profile. It was called
+// `recipes` until 2026-10-01, when recipes became a real per-person store
+// (roadmap 510/120) that never rides in the core copy.
 const RECIPE = { id: "u:ginger-crunch", title: "Ginger crunch" };
 
-/** What a newer build's merge does: this build's, plus `recipes` merged three
+/** What a newer build's merge does: this build's, plus `jars` merged three
  *  ways by id — so a recipe missing from the server copy, present in its base,
  *  is read as deleted. That is the reading the fix has to make impossible. */
 function newerMerge(base, mine, theirs) {
   const out = mergePersonal(base, mine, theirs);
   const byId = (list, id) => (list || []).find((p) => p.id === id);
   for (const p of out.merged.profiles) {
-    p.recipes = mergeSet(
-      byId(base?.profiles, p.id)?.recipes,
-      byId(mine?.profiles, p.id)?.recipes,
-      byId(theirs?.profiles, p.id)?.recipes,
+    p.jars = mergeSet(
+      byId(base?.profiles, p.id)?.jars,
+      byId(mine?.profiles, p.id)?.jars,
+      byId(theirs?.profiles, p.id)?.jars,
       (r) => r.id
     ).items;
   }
@@ -730,10 +734,10 @@ test("a server copy one version ahead keeps its unknown store after an old devic
   const newerSnap = {
     ...collectPersonalData(newerDevice, { exportedAt: "2026-09-30T00:00:00.000Z" }),
     v: USER_SCHEMA + 1,
-    stores: { ...STORE_SCHEMA, recipes: 1, pantry: 1 },
+    stores: { ...STORE_SCHEMA, jars: 1, pantry: 1 },
     pantry: { flour: "plain" },
   };
-  newerSnap.profiles[0].recipes = [RECIPE];
+  newerSnap.profiles[0].jars = [RECIPE];
   await seedServer(server, code, newerSnap);
 
   // The OLD device (this build) joins and adds a heart, so it must WRITE.
@@ -744,16 +748,16 @@ test("a server copy one version ahead keeps its unknown store after an old devic
 
   // 1. On the server: the store, the pantry and the newer stamps survived.
   const onServer = await serverCopy(server, code);
-  assert.deepEqual(onServer.profiles[0].recipes, [RECIPE], "the recipe store was dropped from the server copy");
+  assert.deepEqual(onServer.profiles[0].jars, [RECIPE], "the jars store was dropped from the server copy");
   assert.deepEqual(onServer.pantry, { flour: "plain" });
   assert.equal(onServer.v, USER_SCHEMA + 1, "the old device stamped its own lower version over the copy");
-  assert.equal(onServer.stores.recipes, 1);
+  assert.equal(onServer.stores.jars, 1);
   assert.deepEqual(onServer.profiles[0].favourites.map(favKey).sort(), ["v:kk", "v:pandan"]);
 
   // 2. On the newer device: its next merge, against the base it last agreed
   //    (newerSnap), keeps the recipe rather than reading it as deleted.
   const newerNext = newerMerge(newerSnap, newerSnap, onServer);
-  assert.deepEqual(newerNext.profiles[0].recipes, [RECIPE], "the newer device read the recipe as deleted");
+  assert.deepEqual(newerNext.profiles[0].jars, [RECIPE], "the newer device read the recipe as deleted");
   assert.deepEqual(newerNext.pantry, { flour: "plain" });
 
   // 3. And again on the old device's SECOND write, when its base already holds
@@ -762,7 +766,7 @@ test("a server copy one version ahead keeps its unknown store after an old devic
   const again = await mk(old, server).syncNow();
   assert.equal(again.ok, true);
   const second = await serverCopy(server, code);
-  assert.deepEqual(second.profiles[0].recipes, [RECIPE], "the second write dropped it");
+  assert.deepEqual(second.profiles[0].jars, [RECIPE], "the second write dropped it");
   assert.deepEqual(second.pantry, { flour: "plain" });
 });
 
@@ -795,9 +799,9 @@ test("the base and the server copy run through the upgrade chain, and an unstamp
   const unstamped = upgradeSnapshot({ profiles: [], shelf: 1 });
   assert.equal(unstamped.v, USER_SCHEMA);
   assert.equal(unstamped.shelf, 1, "the chain must carry what it does not know");
-  const older = upgradeSnapshot({ v: 0, profiles: [{ id: "a", name: "Me", recipes: [1] }] });
+  const older = upgradeSnapshot({ v: 0, profiles: [{ id: "a", name: "Me", jars: [1] }] });
   assert.equal(older.v, USER_SCHEMA);
-  assert.deepEqual(older.profiles[0].recipes, [1]);
+  assert.deepEqual(older.profiles[0].jars, [1]);
 });
 
 test("an un-heart still propagates through a base read back through the chain", async () => {
@@ -836,7 +840,8 @@ test("a paused sync has its own row label and view, not the error's retry", asyn
 
 // --- personal recipes in buckets (roadmap 510/050, ADR 0146 §2) -----------
 
-const RECIPES_KEY_ = "faves.recipes.v1";
+// Per person since 510/120: the default profile's own cookbook.
+const RECIPES_KEY_ = "faves.p.default.recipes.v1";
 const precipe = (id, name = id.slice(2), extra = {}) => ({ dishId: id, name, steps: ["Mix.", "Bake."], ...extra });
 const withRecipes = (storage, list) => {
   storage.setItem(RECIPES_KEY_, JSON.stringify(Object.fromEntries(list.map((r) => [r.dishId, r]))));
@@ -975,13 +980,15 @@ test("a bucket written without its core update is detected and merged", async ()
   const { blobId, key } = await keysFor(code);
 
   // Another device adds a recipe to its bucket, and its core write never lands.
+  // Filed by person since 510/120: the bucket is a hash of recipe + person.
   const added = precipe("u:orphan-loaf");
-  const k = bucketOf(added.dishId);
+  const flat = cookbookKey("default", added.dishId);
+  const k = bucketOf(flat);
   const bkey = `${blobId}:r${k}`;
-  const current = await openBlob(key, server.blobs.get(bkey).bytes);
+  const current = readBucket(await openBlob(key, server.blobs.get(bkey).bytes), k);
   const put = await server.fetch(`https://example.invalid/v1/blob/${bkey}`, {
     method: "PUT",
-    body: await sealBlob(key, bucketPlaintext(k, { ...current.recipes, [added.dishId]: added })),
+    body: await sealBlob(key, bucketPlaintext(k, { ...current, [flat]: added })),
     headers: { "If-Match": server.blobs.get(bkey).etag },
   });
   assert.equal(put.status, 204);
@@ -1023,7 +1030,7 @@ test("a bucket that expired from the server is no opinion: its recipes stand and
   const syncA = mk(a, server);
   const { code } = await syncA.enable();
   const { blobId } = await keysFor(code);
-  const k = bucketOf("u:ginger-crunch");
+  const k = bucketOf(cookbookKey("default", "u:ginger-crunch"));
   server.blobs.delete(`${blobId}:r${k}`);
   const res = await syncA.syncNow();
   assert.equal(res.ok, true);
@@ -1053,7 +1060,7 @@ test("a bucket that will not open stops the sync with nothing written", async ()
   const syncA = mk(a, server);
   const { code } = await syncA.enable();
   const { blobId } = await keysFor(code);
-  const k = bucketOf("u:ginger-crunch");
+  const k = bucketOf(cookbookKey("default", "u:ginger-crunch"));
   const b = server.blobs.get(`${blobId}:r${k}`);
   server.blobs.set(`${blobId}:r${k}`, { bytes: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), etag: '"tampered"' });
   const puts = server.puts;
@@ -1063,6 +1070,39 @@ test("a bucket that will not open stops the sync with nothing written", async ()
   assert.equal(server.puts, puts);
   assert.deepEqual(recipesOf(fresh), []);
   assert.ok(b);
+});
+
+// --- one cookbook per person (roadmap 510/120, owner-ruled "Per person") ----
+
+test("two people's cookbooks cross to the other device and stay theirs, and a removed person's go with them", async () => {
+  const server = fakeServer();
+  const a = withRecipes(device(), [precipe("u:ginger-crunch")]);
+  const reg = JSON.parse(a.getItem(PROFILES_KEY));
+  reg.profiles.push({ id: "p-sam", name: "Sam" });
+  a.setItem(PROFILES_KEY, JSON.stringify(reg));
+  a.setItem(scopeKey("p-sam", "faves.recipes.v1"), JSON.stringify({ "u:scones": precipe("u:scones") }));
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const { blobId, key } = await keysFor(code);
+  const core = await openBlob(key, server.blobs.get(blobId).bytes);
+  assert.ok(core.profiles.every((p) => !("recipes" in p)), "a person's recipes rode in the core copy");
+
+  const b = device();
+  const syncB = mk(b, server);
+  assert.equal((await syncB.join(code)).ok, true);
+  assert.deepEqual(recipesOf(b), ["u:ginger-crunch"], "Me's cookbook on B");
+  const sams = Object.keys(JSON.parse(b.getItem(scopeKey("p-sam", "faves.recipes.v1")) || "{}"));
+  assert.deepEqual(sams, ["u:scones"], "Sam's recipe did not reach Sam on B, or landed on someone else");
+
+  // Sam is removed on A; B loses Sam and Sam's recipes, and Me keeps theirs.
+  const regA = JSON.parse(a.getItem(PROFILES_KEY));
+  regA.profiles = regA.profiles.filter((p) => p.id !== "p-sam");
+  a.setItem(PROFILES_KEY, JSON.stringify(regA));
+  a.removeItem(scopeKey("p-sam", "faves.recipes.v1")); // what profiles.remove() purges
+  assert.equal((await syncA.syncNow()).ok, true);
+  assert.equal((await syncB.syncNow()).ok, true);
+  assert.equal(b.getItem(scopeKey("p-sam", "faves.recipes.v1")), null, "a removed person's recipes stayed behind");
+  assert.deepEqual(recipesOf(b), ["u:ginger-crunch"]);
 });
 
 // --- a local edit during a pull that brought the other device's change -----

@@ -1036,8 +1036,9 @@ async function run(opts) {
 
     // --- 5c. A PERSONAL RECIPE CROSSES IN BUCKETS (roadmap 510/050) -------
     //
-    // A recipe of one's own lives in this device's cookbook (faves.recipes.v1)
-    // and syncs in eight padded buckets beside the core copy, not inside it.
+    // A recipe of one's own lives in its person's cookbook (per profile since
+    // roadmap 510/120: faves.p.<id>.recipes.v1) and syncs in eight padded
+    // buckets beside the core copy, not inside it.
     // SEEDED on A, because there is no recipe editor yet (the item says so) —
     // an import is the only way one arrives today. Everything after the seed
     // is the real app: A's push, B's pull, and B's recipe page drawing it.
@@ -1048,13 +1049,14 @@ async function run(opts) {
       steps: ["Mix.", "Bake at 200°C."],
       tags: ["v", "contains-gluten"],
     };
+    const myBook = `"faves.p." + JSON.parse(localStorage.getItem("faves.profiles.v1")).activeId + ".recipes.v1"`;
     await A.d.evalPage(
-      `localStorage.setItem("faves.recipes.v1", ${JSON.stringify(JSON.stringify({ [RECIPE.dishId]: RECIPE }))})`
+      `localStorage.setItem(${myBook}, ${JSON.stringify(JSON.stringify({ [RECIPE.dishId]: RECIPE }))})`
     );
     await A.d.reload("after seeding A's cookbook");
     await syncNowAndWait(A.d);
     await syncNowAndWait(B.d);
-    const bRecipes = await B.d.evalPage(`Object.keys(JSON.parse(localStorage.getItem("faves.recipes.v1") || "{}"))`);
+    const bRecipes = await B.d.evalPage(`Object.keys(JSON.parse(localStorage.getItem(${myBook}) || "{}"))`);
     report.check(
       "a personal recipe made on A reaches B's cookbook",
       Array.isArray(bRecipes) && bRecipes.includes(RECIPE.dishId),

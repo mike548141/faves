@@ -485,8 +485,11 @@ test("the upgrade is the first import of every page's entry module", () => {
 });
 
 test("nothing the upgrade imports reads a store when it loads", () => {
-  // Its whole import graph, which must be exactly these three files: any other
+  // Its whole import graph, which must be exactly these four files: any other
   // module could evaluate a store (and read storage) before the upgrade runs.
+  // schema-stamp.js joined on 2026-10-01 (roadmap 510/110): it holds the schema
+  // number so store.js can refuse a stale tab's writes without a cycle, and it
+  // imports nothing.
   const seen = new Set();
   const walk = (f) => {
     if (seen.has(f)) return;
@@ -494,7 +497,7 @@ test("nothing the upgrade imports reads a store when it loads", () => {
     for (const g of importsOf(f)) walk(g);
   };
   walk("upgrade-start.js");
-  assert.deepEqual([...seen].sort(), ["store.js", "upgrade-start.js", "user-schema.js"]);
+  assert.deepEqual([...seen].sort(), ["schema-stamp.js", "store.js", "upgrade-start.js", "user-schema.js"]);
   for (const f of seen) {
     assert.ok(!/\bimport\s*\(/.test(readFileSync(new URL(f, SITE_JS), "utf8")), `${f} imports dynamically`);
   }

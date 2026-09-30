@@ -5,7 +5,10 @@
 // startup chain imports may read a store when it loads (recipes.js builds one).
 // The header of recipes.js says what a personal recipe is and why.
 
-/** Where the cookbook is kept: `{ "<u: id>": <recipe record> }`. */
+/** The cookbook's BASE key: `{ "<u: id>": <recipe record> }`. Per person
+ *  since roadmap 510/120 (owner-ruled "Per person"), like hearts: each profile
+ *  keeps its own at `faves.p.<profile id>.recipes.v1` (profiles.js scopeKey),
+ *  and nothing stores anything at this bare key. */
 export const RECIPES_KEY = "faves.recipes.v1";
 
 /** The id prefix that marks a recipe as personal. */
@@ -160,3 +163,50 @@ export function personalCollection(map) {
   return { id: MY_RECIPES, name: MY_RECIPES_NAME, kind: "recipes", menu };
 }
 
+
+// --- every person's cookbook as one map (roadmap 510/120) --------------------
+//
+// A backup carries each person's cookbook inside their profile, as it carries
+// their hearts. Sync's recipe buckets and the three-way merge want ONE flat map
+// — every recipe has one place, one bucket and one hash — so the two shapes
+// meet here. A flat key is `"<u: id> <profile id>"`: the recipe id first,
+// because a `u:` id is slug-shaped and never holds a space, so the first space
+// always divides the two however odd an imported profile id is.
+
+/** The flat key of recipe `id` in profile `profileId`'s cookbook. */
+export const cookbookKey = (profileId, id) => `${id} ${profileId}`;
+
+/** `{ id, profileId }` from a flat key, or null when it is not one. */
+export function splitCookbookKey(key) {
+  const i = typeof key === "string" ? key.indexOf(" ") : -1;
+  if (i < 1 || i === key.length - 1) return null;
+  const id = key.slice(0, i);
+  return isPersonalId(id) ? { id, profileId: key.slice(i + 1) } : null;
+}
+
+/** Every person's cookbook in a snapshot's `profiles`, as one flat map, each
+ *  record cleaned. A profile with no id has no key to be filed under. */
+export function flattenCookbooks(profiles) {
+  const out = {};
+  for (const p of Array.isArray(profiles) ? profiles : []) {
+    const pid = typeof p?.id === "string" ? p.id : "";
+    if (!pid) continue;
+    for (const [id, r] of Object.entries(sanitiseRecipes(p.recipes))) out[cookbookKey(pid, id)] = r;
+  }
+  return Object.fromEntries(Object.keys(out).sort().map((k) => [k, out[k]]));
+}
+
+/** A flat map back into `Map<profile id, { id: record }>`. A key that is not a
+ *  flat key, or a record whose id is not the one in its key, is left out. */
+export function groupCookbooks(flat) {
+  const out = new Map();
+  for (const [key, r] of Object.entries(isObj(flat) ? flat : {})) {
+    const k = splitCookbookKey(key);
+    const clean = sanitiseRecipe(r);
+    if (!k || !clean || clean.dishId !== k.id) continue;
+    if (!out.has(k.profileId)) out.set(k.profileId, {});
+    out.get(k.profileId)[k.id] = clean;
+  }
+  for (const [pid, m] of out) out.set(pid, sortedRecipes(m));
+  return out;
+}

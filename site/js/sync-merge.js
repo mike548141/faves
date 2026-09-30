@@ -297,7 +297,10 @@ export function mergeSettings(base, mine, theirs) {
  * ADR 0127(b) keeps out of sync, and `excluded` is the backup file's
  * explanation table. Neither is a store a newer device put on the server.
  */
-export const KNOWN_PROFILE_FIELDS = Object.freeze(["id", "name", "active", "favourites", "ratings", "notes", "settings"]);
+// `recipes` on a profile (roadmap 510/120) is that person's cookbook. Like the
+// top-level field below it never travels in the core copy — sync.js merges it
+// in buckets — so it is named here, and `mergeOne` leaves it out.
+export const KNOWN_PROFILE_FIELDS = Object.freeze(["id", "name", "active", "favourites", "ratings", "notes", "settings", "recipes"]);
 export const KNOWN_SNAPSHOT_FIELDS = Object.freeze([
   "format",
   "v",
@@ -310,7 +313,8 @@ export const KNOWN_SNAPSHOT_FIELDS = Object.freeze([
   "other",
   // Recipes (roadmap 510/050) never travel in the core copy: sync.js merges
   // them bucket by bucket and records the buckets' versions itself, and the
-  // base keeps a hash per recipe. Named here so the carry-through below never
+  // base keeps a hash per recipe. Per person since 510/120 (in each profile);
+  // `recipes` here is the top-level field a 510/050 build still writes. Named here so the carry-through below never
   // mistakes them for a newer build's store and carries a stale copy.
   "recipes",
   "recipeBuckets",

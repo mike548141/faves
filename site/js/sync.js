@@ -39,7 +39,8 @@ import { deviceStorage, PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseRegistry, scopeK
 import { mergePersonal, needsDecision } from "./sync-merge.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "./sync-crypto.js";
 import { mintSyncCode, normaliseSyncCode } from "./sync-code.js";
-import { RECIPES_KEY, sortedRecipes } from "./recipe-record.js";
+import { storageAhead } from "./store.js";
+import { RECIPES_KEY, flattenCookbooks, groupCookbooks } from "./recipe-record.js";
 import {
   RECIPE_BUCKETS,
   BUCKET_QUERY,
@@ -88,6 +89,11 @@ export const NEEDS_DECISION = "needs-decision";
  *  §3). Its own state, not ERROR (roadmap 510/090): ERROR's row reads "tap to
  *  retry" and offers Retry, and no retry can help until Faves is updated. */
 export const PAUSED = "paused";
+
+/** What a tab says when another tab on this device has upgraded storage past
+ *  this tab's build (roadmap 510/110). Nothing is read or sent until it reloads. */
+export const RELOAD_NEEDED =
+  "Reload Faves to keep syncing — it was updated in another tab. Your data is safe on this device.";
 
 /** What a device says when another one has changed the shape of a store this
  *  one reads (ADR 0146 §3). Shown verbatim by sync-ui's paused view. */
@@ -190,17 +196,30 @@ export function writeSnapshot(storage, snapshot) {
 }
 
 /**
- * Write a merged cookbook back to storage (roadmap 510/050). Like
+ * Write the merged cookbooks back to storage (roadmap 510/050). Like
  * `writeSnapshot`, it REPLACES: the recipe merge has already decided what is
- * gone. Sorted so two devices holding the same recipes hold the same bytes.
+ * gone. `flat` is every person's cookbook in one map (recipe-record.js
+ * `flattenCookbooks`) — each person's is written to their own key (510/120,
+ * owner-ruled "Per person"). Only people in this device's registry are
+ * written: `writeSnapshot` has already added the ones a pull brought in, and a
+ * person it removed takes their recipes with them. Sorted, so two devices
+ * holding the same recipes hold the same bytes.
  */
-export function writeRecipes(storage, map) {
-  try {
-    storage.setItem(RECIPES_KEY, JSON.stringify(sortedRecipes(map || {})));
-    return true;
-  } catch {
-    return false; /* blocked or over quota — the pull is lost, the device is unharmed */
+export function writeRecipes(storage, flat) {
+  const books = groupCookbooks(flat);
+  const registry = sanitiseRegistry(parse(storage.getItem(PROFILES_KEY)));
+  let ok = true;
+  for (const p of registry.profiles) {
+    const key = scopeKey(p.id, RECIPES_KEY);
+    const book = books.get(p.id) || {};
+    try {
+      if (Object.keys(book).length) storage.setItem(key, JSON.stringify(book));
+      else if (storage.getItem(key) != null) storage.removeItem(key);
+    } catch {
+      ok = false; /* blocked or over quota — the pull is lost, the device is unharmed */
+    }
   }
+  return ok;
 }
 
 /** Two recipe maps hold the same recipes, field for field. */
@@ -288,6 +307,11 @@ export function createSync({
   // every screen keeps showing what it read at load. Injected rather than
   // imported so the engine stays free of the live stores (see sync-start.js).
   onApplied = () => {},
+  // Is this device's storage in a newer schema than this build? Then this tab
+  // is out of date (roadmap 510/110) and must neither write storage nor send
+  // the server a copy built from data it may be misreading. Injectable for the
+  // tests; the default reads the stamp in `storage`.
+  behind = () => storageAhead(storage),
 } = {}) {
   const subs = new Set();
   let state = OFF;
@@ -461,6 +485,14 @@ export function createSync({
     const cfg = readConfig();
     if (!cfg.code) return { ok: false, error: "Sync is off." };
     if (inFlight) return inFlight;
+    // An out-of-date tab applies no merge (roadmap 510/110). Checked before
+    // the read, not only at the local write: its merge would be built from
+    // data this build may misread, and the server must not receive it either.
+    // Nothing is owed — the reloaded tab collects what is in storage and syncs.
+    if (behind()) {
+      setState(PAUSED, RELOAD_NEEDED);
+      return { ok: false, error: "reload-needed" };
+    }
 
     inFlight = (async () => {
       try {
@@ -537,7 +569,9 @@ export function createSync({
 
       // 2b. the recipe buckets (roadmap 510/050). Read before any write, so a
       //     bucket that will not open stops the cycle with nothing written.
-      const rec = await readRecipes({ blobId, key, actual, theirs, base, mineRecipes: mine.recipes });
+      // Every person's cookbook as one map, keyed recipe + person (510/120).
+      const mineRecipes = flattenCookbooks(mine.profiles);
+      const rec = await readRecipes({ blobId, key, actual, theirs, base, mineRecipes });
       if (rec.error === "mismatch") {
         setState(ERROR, "That sync code doesn’t match the data on the server.");
         return { ok: false, error: "That sync code doesn’t match the data on the server." };
@@ -643,7 +677,7 @@ export function createSync({
       //    written and the LAST agreement stands, so the next cycle sees both
       //    sides against a real ancestor and asks.
       const now2 = collectPersonalData(storage, { exportedAt: now() });
-      const localMoved = !sameSnapshot(mine, now2) || !sameRecipes(mine.recipes, now2.recipes);
+      const localMoved = !sameSnapshot(mine, now2) || !sameRecipes(mineRecipes, flattenCookbooks(now2.profiles));
       let local = merged;
       let agreed = true;
       if (localMoved) {
@@ -652,7 +686,7 @@ export function createSync({
         else local = combined.merged;
       }
       const coreMoved = agreed && !sameSnapshot(local, now2);
-      const recipesMoved = rec.supported && !localMoved && !sameRecipes(rec.merged, mine.recipes);
+      const recipesMoved = rec.supported && !localMoved && !sameRecipes(rec.merged, mineRecipes);
       if (coreMoved || recipesMoved) {
         if (coreMoved) writeSnapshot(storage, local);
         if (recipesMoved) writeRecipes(storage, rec.merged);

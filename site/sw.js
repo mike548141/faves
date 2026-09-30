@@ -11,7 +11,7 @@
 //     0145 as revised by ADR 0146). There is no DATA_VERSION any more: a menu
 //     edit changes no byte of this file, and the phone learns of it from
 //     data/catalogue.json instead — see "The data store" below.
-const SHELL_VERSION = "2026-10-01.2";
+const SHELL_VERSION = "2026-10-01.4";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
 const DATA_STORE = "faves-data";
@@ -122,11 +122,13 @@ const SHELL = [
   "js/suggest-ui.js",
   "js/sync-buckets.js",
   "js/sync-code.js",
+  "js/schema-stamp.js",
   "js/sync-start.js",
   "js/sync-ui.js",
   "js/sync-crypto.js",
   "js/sync-merge.js",
   "js/sync.js",
+  "js/stale-tab-ui.js",
   "js/store.js",
   "js/sw-register.js",
   "js/sw-update.js",

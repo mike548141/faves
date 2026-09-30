@@ -16,21 +16,24 @@ import {
   readBucket,
   recipeHash,
 } from "../site/js/sync-buckets.js";
+import { cookbookKey } from "../site/js/recipe-record.js";
 
 const rec = (id, name = id, extra = {}) => ({ dishId: id, name, steps: ["Mix."], ...extra });
 const enc = new TextEncoder();
 
 // The size sample the bucket count was set from: the published Cook at Home
-// recipes, re-keyed as personal ones.
+// recipes, re-keyed as personal ones — one person's cookbook, in the flat
+// `"<u: id> <profile id>"` form the buckets take since roadmap 510/120.
 const SAMPLE = (() => {
   const d = JSON.parse(readFileSync(new URL("../site/data/restaurants/cook-at-home.json", import.meta.url)));
   const out = {};
-  for (const s of d.menu) for (const i of s.items) out[`u:${i.dishId}`] = { ...i, dishId: `u:${i.dishId}` };
+  for (const s of d.menu) for (const i of s.items) out[cookbookKey("default", `u:${i.dishId}`)] = { ...i, dishId: `u:${i.dishId}` };
   return out;
 })();
+const flat = (id, pid = "default") => cookbookKey(pid, id);
 
-test("a recipe's bucket is a stable function of its id", () => {
-  assert.equal(bucketOf("u:ginger-crunch"), bucketOf("u:ginger-crunch"));
+test("a recipe's bucket is a stable function of its id and its person", () => {
+  assert.equal(bucketOf(flat("u:ginger-crunch")), bucketOf(flat("u:ginger-crunch")));
   for (const id of Object.keys(SAMPLE)) {
     const k = bucketOf(id);
     assert.ok(Number.isInteger(k) && k >= 0 && k < RECIPE_BUCKETS);
@@ -46,6 +49,10 @@ test("a bucket's plaintext is padded to a multiple of 4 KiB, empty or full", () 
     const len = enc.encode(JSON.stringify(body)).length;
     assert.equal(len % BUCKET_PAD, 0, `bucket ${k}: ${len}`);
     assert.ok(len >= BUCKET_PAD);
+    // Not vacuous: the bucket carries every recipe filed to it. (A padding
+    // test over empty buckets passed on 2026-10-01 while the recipes were
+    // being dropped on the way in.)
+    assert.deepEqual(Object.keys(readBucket(JSON.parse(JSON.stringify(body)), k)).sort(), Object.keys(inBucket(SAMPLE, k)).sort());
   }
   // The whole sample: a size class, not a recipe count.
   const total = Array.from({ length: RECIPE_BUCKETS }, (_, k) =>
@@ -55,15 +62,34 @@ test("a bucket's plaintext is padded to a multiple of 4 KiB, empty or full", () 
 });
 
 test("a bucket opened under the wrong name is refused, and a stray recipe is left out", () => {
-  const k = bucketOf("u:a");
-  const body = JSON.parse(JSON.stringify(bucketPlaintext(k, { "u:a": rec("u:a") })));
-  assert.deepEqual(Object.keys(readBucket(body, k)), ["u:a"]);
+  const k = bucketOf(flat("u:a"));
+  const body = JSON.parse(JSON.stringify(bucketPlaintext(k, { [flat("u:a")]: rec("u:a") })));
+  assert.deepEqual(Object.keys(readBucket(body, k)), [flat("u:a")]);
   assert.equal(readBucket(body, (k + 1) % RECIPE_BUCKETS), null);
   assert.equal(readBucket({ ...body, n: 16 }, k), null);
   assert.equal(readBucket({ ...body, format: "x" }, k), null);
-  const other = Object.keys(SAMPLE).find((id) => bucketOf(id) !== k);
-  body.recipes[other] = SAMPLE[other];
-  assert.deepEqual(Object.keys(readBucket(body, k)), ["u:a"]);
+  const other = Object.keys(SAMPLE).find((key) => bucketOf(key) !== k);
+  body.cookbooks.default[SAMPLE[other].dishId] = SAMPLE[other];
+  assert.deepEqual(Object.keys(readBucket(body, k)), [flat("u:a")]);
+});
+
+test("a bucket files each person's recipes under them, and the same recipe for two people is two recipes", () => {
+  // Roadmap 510/120: two people on one phone may each keep a "u:scones".
+  const mine = rec("u:scones", "Scones");
+  const theirs = rec("u:scones", "Sam's scones");
+  const map = { [flat("u:scones")]: mine, [flat("u:scones", "p-sam")]: theirs };
+  const seen = {};
+  for (let k = 0; k < RECIPE_BUCKETS; k += 1) {
+    const body = JSON.parse(JSON.stringify(bucketPlaintext(k, inBucket(map, k))));
+    for (const pid of Object.keys(body.cookbooks)) assert.ok(["default", "p-sam"].includes(pid));
+    Object.assign(seen, readBucket(body, k));
+  }
+  assert.deepEqual(seen, map);
+  // A record filed under another recipe's id in its person's book is refused.
+  const k = bucketOf(flat("u:scones"));
+  const body = JSON.parse(JSON.stringify(bucketPlaintext(k, { [flat("u:scones")]: mine })));
+  body.cookbooks.default["u:scones"] = rec("u:pavlova");
+  assert.equal(readBucket(body, k)[flat("u:scones")], undefined);
 });
 
 test("the Worker's report parses, and silence is not 'none'", () => {

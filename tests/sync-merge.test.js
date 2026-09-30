@@ -392,24 +392,35 @@ test("a profile field and a snapshot field this build does not know are carried,
   // The newer device's copy on the server carries a store this build has never
   // heard of; this (older) device has no such field. Absence here is not a
   // deletion — this device CANNOT have deleted what it cannot see.
-  const theirs = { ...snap({ recipes: [{ id: "u:a" }] }), shelf: { jars: 2 } };
+  const theirs = { ...snap({ pantry: [{ id: "u:a" }] }), shelf: { jars: 2 } };
   const mine = snap({ favourites: [venue("kk")] });
   const { merged } = mergePersonal(theirs, mine, theirs);
-  assert.deepEqual(merged.profiles[0].recipes, [{ id: "u:a" }]);
+  assert.deepEqual(merged.profiles[0].pantry, [{ id: "u:a" }]);
   assert.deepEqual(merged.shelf, { jars: 2 });
   assert.deepEqual(keys(merged.profiles[0].favourites), ["v:kk"]);
 });
 
 test("carrying is symmetric, whichever side holds the unknown field", () => {
-  const base = { ...snap({ recipes: ["r1"] }), shelf: 1 };
-  const withIt = { ...snap({ recipes: ["r1", "r2"] }), shelf: 2 };
+  const base = { ...snap({ pantry: ["r1"] }), shelf: 1 };
+  const withIt = { ...snap({ pantry: ["r1", "r2"] }), shelf: 2 };
   const without = snap({});
   const ab = mergePersonal(base, withIt, without).merged;
   const ba = mergePersonal(base, without, withIt).merged;
-  assert.deepEqual(ab.profiles[0].recipes, ["r1", "r2"]);
-  assert.deepEqual(ab.profiles[0].recipes, ba.profiles[0].recipes);
+  assert.deepEqual(ab.profiles[0].pantry, ["r1", "r2"]);
+  assert.deepEqual(ab.profiles[0].pantry, ba.profiles[0].pantry);
   assert.equal(ab.shelf, 2);
   assert.equal(ba.shelf, 2);
+});
+
+test("a person's own recipes never ride in the core copy — they travel in buckets (510/120)", () => {
+  // `recipes` on a profile was the hypothetical unknown store above until
+  // 2026-10-01; it is now a real one, merged by sync.js in buckets, so the
+  // carry-through must NOT put it in the core copy from either side.
+  const withBook = snap({ recipes: { "u:a": { dishId: "u:a", name: "A" } } });
+  for (const [b, m, t] of [[null, withBook, snap({})], [null, snap({}), withBook], [withBook, withBook, withBook]]) {
+    const { merged } = mergePersonal(b, m, t);
+    assert.equal("recipes" in merged.profiles[0], false);
+  }
 });
 
 test("carryUnknown applies the base rules when both sides hold the field, and tie-breaks symmetrically", () => {

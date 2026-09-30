@@ -249,7 +249,7 @@ export function importReview({ data, sourceLine, onApplied }) {
     // Re-point the live stores so hearts, marks and preferences update without
     // a page reload; profiles.reload() also repaints the Settings roster.
     profiles.reload();
-    recipes.reload(); // the cookbook is device-level: not a profile store
+    recipes.reload(); // this person's cookbook (510/120); not in reloadProfileStores
     reloadProfileStores({ favourites, ratings, notes, settings });
     entriesBox.replaceChildren();
     actions.hidden = true;

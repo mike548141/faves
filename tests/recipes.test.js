@@ -111,3 +111,26 @@ test("the personal collection resolves like a published one, and every link buil
   assert.equal(q.get("id"), MY_RECIPES);
   assert.equal(q.get("dish"), "u:ginger-crunch");
 });
+
+test("the cookbook is per person: a profile switch shows that person's own recipes (510/120)", async () => {
+  // Owner-ruled "Per person": each profile keeps its own, like hearts. The
+  // live singleton reads through the active profile's scope and re-reads on
+  // any registry change, so a switch (here or in another tab) follows at once.
+  const { recipes } = await import("../site/js/recipes.js");
+  const { profiles, deviceStorage } = await import("../site/js/profiles.js");
+  const me = profiles.activeId();
+  recipes.put(R());
+  assert.ok(deviceStorage.getItem(`faves.p.${me}.recipes.v1`), "not stored under the person's own key");
+  assert.equal(deviceStorage.getItem(RECIPES_KEY), null, "stored at the bare, device-wide key");
+  const sam = profiles.create("Sam"); // creating switches to them
+  assert.equal(recipes.count(), 0, "Sam sees Me's cookbook");
+  recipes.put(R({ dishId: "u:scones", name: "Scones" }));
+  profiles.setActive(me);
+  assert.deepEqual(Object.keys(recipes.all()), ["u:ginger-crunch"]);
+  profiles.setActive(sam);
+  assert.deepEqual(Object.keys(recipes.all()), ["u:scones"]);
+  // And a removed person's recipes go with them.
+  profiles.setActive(me);
+  profiles.remove(sam);
+  assert.equal(deviceStorage.getItem(`faves.p.${sam}.recipes.v1`), null);
+});

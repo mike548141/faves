@@ -39,7 +39,7 @@
 // reason: a scanner that recognises a URL will offer to "open" it, which is
 // exactly the share-sheet-adjacent path the code must never take.
 
-import { sync, OFF, SYNCING, ERROR, NEEDS_DECISION, PAUSED } from "./sync.js";
+import { sync, OFF, SYNCING, ERROR, NEEDS_DECISION, PAUSED, RELOAD_NEEDED } from "./sync.js";
 import { isValidSyncCode } from "./sync-code.js";
 import { encodeQR } from "./qr.js";
 import { copyText } from "./share-core.js";
@@ -112,7 +112,8 @@ export function summaryText(st) {
   if (st.state === ERROR) return "Couldn’t sync — tap to retry";
   // Not "tap to retry": no retry helps until this device runs a newer Faves
   // (roadmap 510/090 — the row used to say retry while the panel said update).
-  if (st.state === PAUSED) return "Paused — update Faves";
+  // Or reload it: another tab on this device has already updated (510/110).
+  if (st.state === PAUSED) return st.error === RELOAD_NEEDED ? "Paused — reload Faves" : "Paused — update Faves";
   if (st.state === SYNCING) return "Syncing…";
   return st.lastSyncedAt ? `On — synced ${relTime(st.lastSyncedAt)}` : "On — not synced yet";
 }
@@ -628,8 +629,10 @@ export function syncControls() {
     const hint = el("p", {
       className: "settings-hint",
       textContent:
-        "Faves looks for a newer version whenever you come back to it. When one is ready, a Refresh " +
-        "button appears at the bottom of the screen — tap it, and sync carries on by itself.",
+        st.error === RELOAD_NEEDED
+          ? "Tap Reload at the bottom of the screen, and sync carries on by itself."
+          : "Faves looks for a newer version whenever you come back to it. When one is ready, a Refresh " +
+            "button appears at the bottom of the screen — tap it, and sync carries on by itself.",
     });
     const off = turnOffControl();
     const node = el("div", {}, [
