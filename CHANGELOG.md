@@ -13,6 +13,13 @@ content freshness separately from this file.
   save, Faves asks the browser not to clear its storage when space runs
   short. About now says whether the browser agreed, and that a Safari tab can
   still be cleared after a while unused unless Faves is on your Home Screen.
+  It now asks once per browser rather than on every visit, so a browser that
+  said no (Firefox shows a prompt) is not asked again — except once more when
+  Faves is later opened from the Home Screen.
+- **Faves can change how it stores your data without losing any.** Every page
+  now upgrades your saved data before reading it, keeps a copy of the old data
+  until the new version has run, and puts everything back if an upgrade fails
+  part way. Backups and sync go through the same upgrade.
 - **Halal, Kosher and Meatarian food preferences.** Choosing Halal flags
   every dish the menu shows contains pork; Kosher flags pork and shellfish.
   Neither hides or dims anything, and a dish only ever reads "Halal" or
@@ -114,6 +121,10 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Sync says "Paused — update Faves" when another device is newer.** It used
+  to say "Couldn't sync — tap to retry" and offer a Retry that could not help.
+  The panel now explains that a Refresh button appears when the update is
+  ready, and sync carries on by itself after it.
 - **Sync no longer sits on a change after a clash or a lost connection.**
   When your other device saved at the same moment, Faves now tries again
   straight away (up to three times) instead of waiting for your next edit,
