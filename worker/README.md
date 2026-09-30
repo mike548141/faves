@@ -54,6 +54,8 @@ deployed** — see "Deploying" below for why, and what has to happen first.
 | `/v1/blob/<blobId>` | `GET` | `200` + ciphertext body (`application/octet-stream`) + `ETag`, or `404` if nothing stored yet. |
 | `/v1/blob/<blobId>` | `PUT` | `204` on success, with a fresh `ETag`. `412` if `If-Match` doesn't match the current version (see "Concurrency" below). `413` if the body is too large. `400` if the body is empty or `blobId` is malformed. |
 | `/v1/blob/<blobId>` | `OPTIONS` | `204` CORS preflight. |
+| `/v1/blob/<blobId>?buckets=<n>` | `GET` | As `GET` above, plus `X-Faves-Buckets`: the version of each recipe bucket 0…n−1 that exists (`r0="<v>",r3="<v>"`), or `none`. On a `404` too. Costs one KV read per bucket asked about. |
+| `/v1/blob/<blobId>:r<n>` | `GET` / `PUT` | A recipe bucket, `n` from 0 to 15. Same rules as the core copy: ciphertext, `ETag`, conditional `PUT`, 256 KiB cap. |
 | anything else | any | `404` (unknown route) or `405` (wrong method on a real route). No index, no listing — there is no way to enumerate what blobIds exist. |
 
 `blobId` must be exactly 32 lowercase hex characters (128 bits) — anything
@@ -61,6 +63,30 @@ else is rejected with `400` before it ever reaches KV. This is the exact
 shape `deriveSyncKeys()` in `site/js/sync-crypto.js` produces; the two are
 tested against each other in that module's own test suite
 (`tests/sync-crypto.test.js`).
+
+## Recipe buckets and expiry (roadmap 510/050)
+
+A user's personal recipes are stored beside their core copy, under the same
+user key plus a bucket number: `<blobId>:r0` … `<blobId>:r7` (ADR 0146 §2).
+The Worker cannot read them any more than it can read the core copy. What it
+learns is that "a recipe bucket changed", and each bucket's size class: the
+client pads every bucket to a multiple of 4 KiB and writes all eight once
+any recipe exists (`site/js/sync-buckets.js` says why).
+
+**Every write keeps all of a user's copies alive.** Each copy's metadata
+records `t`, when it was last written. After any successful `PUT`, the Worker
+reads every other copy under that user key and re-writes, with a fresh
+180-day expiry, the ones last written more than 30 days ago — keeping their
+bytes and their version, so an `ETag` a device holds stays valid. So a
+recipe bucket nobody has touched in months does not expire while the
+hearts beside it stay alive (B1 in the ADR 0145 cold review). Re-writing
+every copy on every write would have spent up to nine KV writes on a heart;
+the 30-day threshold spends at most nine a month per user and still leaves
+every copy at least 150 of its 180 days after any write.
+
+**A client that predates buckets** asks nothing (`?buckets` absent), gets no
+report and costs the one read it always did. Its writes still re-arm the
+buckets' expiry.
 
 ## Concurrency: compare-and-swap, honestly
 
@@ -292,3 +318,26 @@ verification. It is ciphertext of a fixture and expires with the 180-day TTL.
 **Still not reachable from the app.** Nothing in `site/` calls this yet — the
 push/pull client, the pairing screen and the base-snapshot store the merge needs
 are all still to build. The endpoint being live is not the feature being live.
+
+## Owed — deploy the recipe-bucket Worker (roadmap 510/050, 2026-09-30)
+
+⏳ **Built and tested locally (`node --test worker/`), NOT deployed.** The live
+Worker is the 2026-08-16 build: it has no bucket routes, sends no
+`X-Faves-Buckets`, and does not re-arm siblings. Deploying is the owner's call.
+
+**Either order is safe**, by design:
+
+- **Site first** (today's state once 510/050 merges): the client asks
+  `?buckets=8`, the old Worker ignores the query and reports nothing, and the
+  client keeps recipes on the device, touching no bucket and changing nothing
+  it has not read. Hearts, ratings, notes and settings sync exactly as before.
+  Nothing is lost; recipes simply do not cross devices yet.
+- **Worker first**: the old client asks nothing and gets nothing new; its
+  writes now re-arm sibling copies (there are none yet). No behaviour change.
+
+**After the deploy, verify live** (as the 2026-08-16 table did):
+`GET /v1/blob/<id>?buckets=8` on an unwritten id → `404` with
+`X-Faves-Buckets: none`; `PUT /v1/blob/<id>:r0` → `204` + `ETag`; the same
+`GET` → `X-Faves-Buckets: r0="<that etag>"`; `PUT /v1/blob/<id>:r16` → `400`;
+and `Access-Control-Expose-Headers` names both `ETag` and `X-Faves-Buckets`
+on a real cross-origin response.
