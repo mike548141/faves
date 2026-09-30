@@ -403,6 +403,7 @@ function dataSection(syncCtl) {
         `${s.ratings} ${s.ratings === 1 ? "rating" : "ratings"}`,
       ];
       if (s.notes) bits.push(`${s.notes} ${s.notes === 1 ? "note" : "notes"}`);
+      if (s.recipes) bits.push(`${s.recipes} ${s.recipes === 1 ? "recipe" : "recipes"}`);
       if (s.orderItems) bits.push(`${s.orderItems} order ${s.orderItems === 1 ? "item" : "items"}`);
       status.textContent = `Saved ${name} — ${bits.join(", ")}.`;
     } catch {

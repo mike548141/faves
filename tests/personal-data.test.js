@@ -123,9 +123,9 @@ test("carries the device-shared order tally", () => {
 
 test("sweeps up an unknown faves.* store so a new feature can't be silently dropped", () => {
   const storage = seeded();
-  storage.setItem("faves.recipes.v1", JSON.stringify([{ name: "Ginger Crunch" }]));
+  storage.setItem("faves.pantry.v1", JSON.stringify([{ name: "Ginger Crunch" }]));
   const data = collectPersonalData(storage, { exportedAt: AT });
-  assert.equal(data.other["faves.recipes.v1"], JSON.stringify([{ name: "Ginger Crunch" }]));
+  assert.equal(data.other["faves.pantry.v1"], JSON.stringify([{ name: "Ginger Crunch" }]));
 });
 
 test("no unknown stores means no empty `other` key", () => {
@@ -196,7 +196,7 @@ test("listStoredKeys returns [] when the backend cannot enumerate", () => {
 
 test("summary counts across all profiles", () => {
   const s = summarisePersonalData(collectPersonalData(seeded(), { exportedAt: AT }));
-  assert.deepEqual(s, { profiles: 2, favourites: 3, ratings: 3, notes: 1, orderItems: 1 });
+  assert.deepEqual(s, { profiles: 2, favourites: 3, ratings: 3, notes: 1, orderItems: 1, recipes: 0 });
 });
 
 test("summary tolerates a corrupt/empty shape", () => {
@@ -206,6 +206,7 @@ test("summary tolerates a corrupt/empty shape", () => {
     ratings: 0,
     notes: 0,
     orderItems: 0,
+    recipes: 0,
   });
   assert.deepEqual(summarisePersonalData({ profiles: [{ favourites: "nope", ratings: 7 }] }), {
     profiles: 1,
@@ -213,6 +214,7 @@ test("summary tolerates a corrupt/empty shape", () => {
     ratings: 0,
     notes: 0,
     orderItems: 0,
+    recipes: 0,
   });
 });
 
@@ -363,7 +365,7 @@ test("a hostile payload is clipped, clamped and deduped before it can be stored"
         settings: { farKm: 9999 },
       },
     ],
-    other: { "faves.origin.v1": '{"lat":-41}', "evil.key": "x", "faves.recipes.v1": "[]" },
+    other: { "faves.origin.v1": '{"lat":-41}', "evil.key": "x", "faves.pantry.v1": "[]" },
   });
   assert.equal(r.ok, true);
   const p = r.data.profiles[0];
@@ -378,7 +380,7 @@ test("a hostile payload is clipped, clamped and deduped before it can be stored"
   assert.equal(p.notes["cook-at-home kk"], "spaced note");
   assert.equal(p.notes.over.length, MAX_NOTE);
   // The Near-me origin is never re-imported, and non-faves keys never land.
-  assert.deepEqual(Object.keys(r.data.other), ["faves.recipes.v1"]);
+  assert.deepEqual(Object.keys(r.data.other), ["faves.pantry.v1"]);
 });
 
 // --- planning ------------------------------------------------------------
@@ -451,6 +453,7 @@ test("totals describe the payload, for the preview shown before anything happens
     ratings: 2,
     notes: 3,
     orderItems: 0,
+    recipes: 0,
     otherStores: 0,
   });
   assert.equal(plan.exportedAt, AT);
@@ -785,11 +788,11 @@ test("re-importing an older file adds no duplicate rating the next read discards
 
 test("merge restores an unknown store only where there is nothing to lose", () => {
   const store = device();
-  store.setItem("faves.recipes.v1", '["mine"]');
-  const data = file({ other: { "faves.recipes.v1": '["theirs"]', "faves.tags.v1": '["theirs"]' } });
+  store.setItem("faves.pantry.v1", '["mine"]');
+  const data = file({ other: { "faves.pantry.v1": '["theirs"]', "faves.tags.v1": '["theirs"]' } });
   const decisions = { [keyFor(data, 0)]: { diet: "keep" }, [keyFor(data, 1)]: { target: "new" } };
   applyPersonalData(store, data, { decisions });
-  assert.equal(store.getItem("faves.recipes.v1"), '["mine"]'); // never clobbered
+  assert.equal(store.getItem("faves.pantry.v1"), '["mine"]'); // never clobbered
   assert.equal(store.getItem("faves.tags.v1"), '["theirs"]');
 });
 
@@ -890,10 +893,10 @@ test("an older backup's ticks are not read back in", () => {
   // "Not exported" has to mean "not imported either", or the round trip
   // resurrects what we just decided not to keep.
   const r = parsePersonalData(
-    file({ other: { [scopeKey("default", CHECKLIST_KEY)]: ticks("i:stale"), "faves.recipes.v1": "[]" } })
+    file({ other: { [scopeKey("default", CHECKLIST_KEY)]: ticks("i:stale"), "faves.pantry.v1": "[]" } })
   );
   assert.equal(r.ok, true);
-  assert.deepEqual(Object.keys(r.data.other), ["faves.recipes.v1"]);
+  assert.deepEqual(Object.keys(r.data.other), ["faves.pantry.v1"]);
 });
 
 test("a replace still wipes the ticks it refuses to restore", () => {
@@ -945,14 +948,14 @@ test("the sync code never reaches the export", () => {
 const answers = (data) => ({ [keyFor(data, 0)]: { diet: "keep" }, [keyFor(data, 1)]: { target: "new" } });
 
 test("an older backup carrying a sync code does not pair the device on import", () => {
-  const r = parsePersonalData(file({ other: { [SYNC_KEY]: PAIRING, "faves.recipes.v1": "[]" } }));
+  const r = parsePersonalData(file({ other: { [SYNC_KEY]: PAIRING, "faves.pantry.v1": "[]" } }));
   assert.equal(r.ok, true);
-  assert.deepEqual(Object.keys(r.data.other), ["faves.recipes.v1"]);
+  assert.deepEqual(Object.keys(r.data.other), ["faves.pantry.v1"]);
   const store = device();
   const report = applyPersonalData(store, r.data, { mode: "merge", decisions: answers(r.data) });
   assert.equal(report.ok, true, report.error);
   assert.equal(store.getItem(SYNC_KEY), null, "import wrote the exporter's sync code");
-  assert.equal(store.getItem("faves.recipes.v1"), "[]", "the import wrote nothing at all");
+  assert.equal(store.getItem("faves.pantry.v1"), "[]", "the import wrote nothing at all");
 });
 
 test("a replace import leaves this device's own sync pairing alone", () => {
@@ -992,11 +995,11 @@ test("personal-data excludes the consent key geo-consent.js exports", () => {
 test("the “don’t ask again” promise never reaches the export", () => {
   const storage = seeded();
   storage.setItem(CONSENT_KEY, SUPPRESSED);
-  storage.setItem("faves.recipes.v1", "[]");
+  storage.setItem("faves.pantry.v1", "[]");
   const data = collectPersonalData(storage, { exportedAt: AT });
   // The sibling store proves the sweep ran: without it, a collector that
   // gathered nothing would pass the assertion below unnoticed.
-  assert.deepEqual(Object.keys(data.other), ["faves.recipes.v1"]);
+  assert.deepEqual(Object.keys(data.other), ["faves.pantry.v1"]);
   assert.equal(personalDataJson(data).includes("suppressed"), false, "the consent flag is in the file");
 });
 
@@ -1010,14 +1013,14 @@ test("the consent flag is excluded for a scoped key too", () => {
 });
 
 test("a backup carrying the consent flag does not silence the ask on import", () => {
-  const r = parsePersonalData(file({ other: { [CONSENT_KEY]: SUPPRESSED, "faves.recipes.v1": "[]" } }));
+  const r = parsePersonalData(file({ other: { [CONSENT_KEY]: SUPPRESSED, "faves.pantry.v1": "[]" } }));
   assert.equal(r.ok, true);
-  assert.deepEqual(Object.keys(r.data.other), ["faves.recipes.v1"]);
+  assert.deepEqual(Object.keys(r.data.other), ["faves.pantry.v1"]);
   const store = device();
   const report = applyPersonalData(store, r.data, { mode: "merge", decisions: answers(r.data) });
   assert.equal(report.ok, true, report.error);
   assert.equal(store.getItem(CONSENT_KEY), null, "import silenced an ask this device never declined");
-  assert.equal(store.getItem("faves.recipes.v1"), "[]", "the import wrote nothing at all");
+  assert.equal(store.getItem("faves.pantry.v1"), "[]", "the import wrote nothing at all");
 });
 
 test("a replace import leaves this device's own consent flag alone", () => {
@@ -1039,9 +1042,9 @@ test("the sealed sync blob carries no `other` stores at all", () => {
   // consent flag off the wire, and a future merge that carried `other` through
   // would be a second, uncovered path.
   const storage = seeded();
-  storage.setItem("faves.recipes.v1", "[]");
+  storage.setItem("faves.pantry.v1", "[]");
   const mine = collectPersonalData(storage, { exportedAt: AT });
-  assert.deepEqual(Object.keys(mine.other), ["faves.recipes.v1"]); // it IS collected
+  assert.deepEqual(Object.keys(mine.other), ["faves.pantry.v1"]); // it IS collected
   const { merged } = mergePersonal(null, mine, mine);
   // `stores` joined 2026-09-30 (roadmap 510/010): the schema numbers ride on
   // the copy. `other` must still be absent — carryUnknown names it as known
@@ -1153,4 +1156,85 @@ test("a snapshot carries each store's schema number", () => {
   const data = collectPersonalData(seeded(), { exportedAt: AT });
   assert.deepEqual(data.stores, { ...STORE_SCHEMA });
   assert.ok(Object.isFrozen(STORE_SCHEMA));
+});
+
+// --- personal recipes in the backup (roadmap 510/050) ----------------------
+
+const RECIPES = "faves.recipes.v1";
+const GINGER = {
+  dishId: "u:ginger-crunch",
+  name: "Ginger Crunch",
+  section: "Baking & sweets",
+  ingredients: ["125g butter", { component: "Icing", items: ["1 cup icing sugar"] }],
+  steps: ["Mix.", "Bake."],
+  tags: ["v", "contains-gluten"],
+  tagNotes: { "contains-gluten": "From the ingredients: flour." },
+  serves: 12,
+  movedFrom: "cook-at-home ginger-crunch",
+};
+
+// (c) — the break-probed claim: a backup round trip keeps a recipe, field
+// for field, onto a device that never had it.
+test("a backup round trip keeps a personal recipe, field for field", () => {
+  const from = device();
+  from.setItem(RECIPES, JSON.stringify({ [GINGER.dishId]: GINGER }));
+  const data = collectPersonalData(from, { exportedAt: AT });
+  assert.deepEqual(data.recipes, { [GINGER.dishId]: GINGER });
+  assert.equal(summarisePersonalData(data).recipes, 1);
+
+  const to = fakeStorage();
+  const plan = planImport(to, personalDataJson(data), { mode: "replace" });
+  assert.equal(plan.totals.recipes, 1);
+  const r = applyPersonalData(to, personalDataJson(data), { mode: "replace" });
+  assert.equal(r.ok, true);
+  assert.equal(r.recipesAdded, 1);
+  assert.deepEqual(JSON.parse(to.getItem(RECIPES)), { [GINGER.dishId]: GINGER });
+  // And through a MERGE onto a device with none.
+  const merged = device();
+  const m = applyPersonalData(merged, personalDataJson(data), { mode: "merge", decisions: {} });
+  assert.equal(m.ok, true, JSON.stringify(m));
+  assert.deepEqual(JSON.parse(merged.getItem(RECIPES)), { [GINGER.dishId]: GINGER });
+});
+
+test("a merge import keeps your own copy of a recipe, and adds the ones you lack", () => {
+  const store = device();
+  const mine = { ...GINGER, name: "Ginger Crunch (mine)" };
+  store.setItem(RECIPES, JSON.stringify({ [GINGER.dishId]: mine }));
+  const other = { dishId: "u:scones", name: "Scones", steps: ["Bake."] };
+  const r = applyPersonalData(store, file({ recipes: { [GINGER.dishId]: GINGER, [other.dishId]: other } }), {
+    mode: "merge",
+    decisions: { [decisionKey({ id: "p-other-device", name: "Sam" }, 1)]: { target: "new" }, [decisionKey({ id: "default", name: "Me" }, 0)]: { diet: "keep" } },
+  });
+  assert.equal(r.ok, true, JSON.stringify(r));
+  assert.equal(r.recipesAdded, 1);
+  const now = JSON.parse(store.getItem(RECIPES));
+  assert.equal(now[GINGER.dishId].name, "Ginger Crunch (mine)");
+  assert.equal(now["u:scones"].name, "Scones");
+});
+
+test("a backup from before recipes existed removes none on a merge, and a replace makes the device match it", () => {
+  const store = device();
+  store.setItem(RECIPES, JSON.stringify({ [GINGER.dishId]: GINGER }));
+  const old = { ...file() };
+  delete old.recipes;
+  const r = applyPersonalData(store, old, {
+    mode: "merge",
+    decisions: { [decisionKey({ id: "p-other-device", name: "Sam" }, 1)]: { target: "new" }, [decisionKey({ id: "default", name: "Me" }, 0)]: { diet: "keep" } },
+  });
+  assert.equal(r.ok, true, JSON.stringify(r));
+  assert.deepEqual(Object.keys(JSON.parse(store.getItem(RECIPES))), [GINGER.dishId]);
+  const rep = applyPersonalData(store, old, { mode: "replace" });
+  assert.equal(rep.ok, true);
+  assert.equal(store.getItem(RECIPES), null);
+});
+
+test("an imported recipe is cleaned: a script link is dropped, and a raw copy in `other` cannot bypass it", () => {
+  const evil = { ...GINGER, attributionUrl: "javascript:alert(1)" };
+  const parsed = parsePersonalData(
+    file({ recipes: { [GINGER.dishId]: evil }, other: { [RECIPES]: JSON.stringify({ [GINGER.dishId]: evil }) } })
+  );
+  assert.equal(parsed.ok, true);
+  assert.equal("attributionUrl" in parsed.data.recipes[GINGER.dishId], false);
+  assert.equal(RECIPES in parsed.data.other, false);
+  assert.equal(parsePersonalData(file({ recipes: { "cook-at-home": GINGER } })).data.recipes[GINGER.dishId].name, "Ginger Crunch");
 });
