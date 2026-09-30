@@ -824,6 +824,18 @@ node tools/precache_check.mjs # the service worker's install guard and the
                               # controlled page's fetches (they are the WORKER's,
                               # a separate target), and its own probe caught it
                               # doing nothing while everything else stayed green
+node tools/fetch_check.mjs    # an INSTALLED phone downloads only what changed
+                              # (roadmap 510/030). Edits one venue's menu and
+                              # another's hours, then counts what the worker
+                              # fetches: the catalogue + exactly the files whose
+                              # fingerprint moved, nothing else under data/.
+                              # Also: the next screen shows the edit, a Pages
+                              # HTML stand-in is refused with no half-switch,
+                              # and it all works with the server stopped.
+                              # BREAK-PROBES ITSELF every run: a worker that
+                              # re-downloads everything must FAIL the count.
+                              # Run it after touching sw.js's data store,
+                              # gen_summaries.mjs or data.js's loaders
 node tools/fixture_check.mjs --selftest # the degenerate-state venue fixtures
                               # (a venue with no hours, no menu, one branch…) are
                               # still valid under the REAL validate.py, and render.

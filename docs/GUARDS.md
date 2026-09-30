@@ -125,15 +125,16 @@ class is `check_images.py`, above, and is handled separately).
 | `check_no_deps.py`, `gen_sbom.py --check` | the zero-dependency invariant (ADR 0001) and its published SBOM |
 | `check_visibility.py` | CLAUDE.md's stated repo visibility matches GitHub's actual setting |
 | `check_fallback.py` | the no-JS `<ul>` mirrors `site/data/index.json` |
-| `check_precache.py` (+ `--self-test`) | every path `sw.js` precaches exists in `site/` |
+| `check_precache.py` (+ `--self-test`) | every path `sw.js` precaches exists in `site/` — the shell list, the catalogue's files and every summary venue's file (510/030) |
 | `check_decisions.py` | every ADR is in the allocator index |
-| `check_versions.py --range` (+ `test_check_versions.py`) | `sw.js`'s version constants bumped in lockstep with `site/` |
+| `check_versions.py --range` (+ `test_check_versions.py`) | `SHELL_VERSION` bumped in lockstep with `site/`; the retired `DATA_VERSION` not back (510/030) |
+| `gen_summaries.mjs --check` (+ `test_fetch_fx.py`'s breaker) | the home summary, search index and data FINGERPRINTS (catalogue + each summary `h`) match the tree — a stale fingerprint is a change no phone fetches (510/030) |
 | `split_data.py --check` (+ `test_split_data.py`) | a menu refresh appended history rather than destroying it, joined by id |
 | `check_records.py` (+ `--selftest`) | `data/images/` and `data/withdrawn/` — file→row provenance completeness |
 | `check_provenance.py` (+ `--selftest`) | a venue's `verified` date is not fresher than the evidence it was read from |
 | `products.py`, `products.py --coverage --probe`, `intake_index.py --check` | the packaged-product record store and intake coverage |
 | `recipe_estimates.py --check` | cook-mode countdowns line up with the recipes and name their source |
-| `fetch_fx.py --check` | the shipped exchange rates load |
+| `fetch_fx.py --check` (+ `test_fetch_fx.py`) | the shipped exchange rates load; `--bump` restamps the catalogue |
 | `tools/lib/tree.py --self-test` | the tree-identity line every gate prints still tells two trees apart |
 | `test_registry.py`, `test_find_addons.py`, `find_variants.py --selftest`, `test_tag_allergens.py`, `test_allergen_disagreements.py`, `test_tag_addon_options.py` | the authoring tools behind the data, not the shipped data itself — a failure here means a broken tool, never a wrong allergen on a phone |
 | `node --test` | JS unit tests (pure logic) |

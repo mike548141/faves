@@ -244,10 +244,12 @@ function servedAsHtmlStandIn(url, contentType) {
 
 /** Refuse a response that cannot be the file we asked for. */
 function requireAsset(url, res) {
-  if (!res.ok) throw new Error(`SW install: ${url} → ${res.status}`);
+  // "SW fetch", not "SW install": since 510/030 a data sync outside any
+  // install uses this guard too, and the message is what a reader sees.
+  if (!res.ok) throw new Error(`SW fetch: ${url} → ${res.status}`);
   if (servedAsHtmlStandIn(url, res.headers.get("content-type"))) {
     throw new Error(
-      `SW install: ${url} → ${res.status} but served as HTML — that path is ` +
+      `SW fetch: ${url} → ${res.status} but served as HTML — that path is ` +
         `missing from the deploy`
     );
   }
