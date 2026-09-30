@@ -259,9 +259,10 @@ export const referenceWhyFor = (state) =>
  * entries point at it.
  *
  * @param {Array<{type: string, venueId: string, name?: string, dishId?: string}>} entries
- * @returns {Promise<Array<{entry: object, state: "present"|"absent"|"offline"|"unreachable"}>>}
+ * @returns {Promise<Array<{entry: object, state: "present"|"absent"|"offline"|"unreachable"|"local"}>>}
  *   in the order given. Only `"absent"` licenses the word "removed"; the other
- *   three all mean "still unknown", and the UI must say so.
+ *   four all mean "still unknown", and the UI must say so. `"local"` is a
+ *   personal recipe, which no fetch can speak for (roadmap 510/050).
  */
 export async function recheckReferences(entries, opts = {}) {
   const {
@@ -273,8 +274,22 @@ export async function recheckReferences(entries, opts = {}) {
     token = freshToken(),
   } = opts;
 
-  const list = [...(entries || [])];
-  if (!list.length) return [];
+  // A personal recipe (`u:mine`, recipes.js) was never published, so the
+  // network can say nothing about it — asking would answer "absent" and print
+  // "No longer listed" about a recipe that is simply not synced here yet, or
+  // was deleted on another device. It stays "local": unresolved, never
+  // "removed". Matched on the prefix rather than imported, because this module
+  // is also loaded by a Node tool (gen_summaries.mjs) and recipes.js builds a
+  // store at load.
+  const isPersonal = (e) => String(e?.venueId ?? "").startsWith("u:");
+  const all = [...(entries || [])];
+  if (!all.length) return [];
+  if (all.some(isPersonal)) {
+    const published = await recheckReferences(all.filter((e) => !isPersonal(e)), opts);
+    const byEntry = new Map(published.map((r) => [r.entry, r]));
+    return all.map((entry) => (isPersonal(entry) ? { entry, state: "local" } : byEntry.get(entry)));
+  }
+  const list = all;
   if (!isOnline()) return list.map((entry) => ({ entry, state: "offline" }));
 
   // `{ok:false}` is "we did not get an answer", which is never evidence of

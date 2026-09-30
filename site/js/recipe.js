@@ -3,11 +3,20 @@
 // its own focused, shareable page — meta, photo, ingredients, method, and
 // "goes well with" links to the other recipes. Self-contained helpers, in
 // keeping with the other screen modules.
+//
+// It renders BOTH kinds of recipe (roadmap 510/050): a published one, fetched
+// from site/data/, and a person's own, read from their user data. A personal
+// recipe's URL is the same shape, `recipe.html?id=u:mine&dish=u:<slug>`
+// (recipes.js MY_RECIPES) — so a heart, a shopping-list group and cook mode
+// link to it with the builders they already had — and the record is the
+// published shape, so the one render() below draws both.
 
 // FIRST, on purpose: runs the user-data upgrade chain before any store module
 // below reads storage (roadmap 510/040, upgrade-start.js).
 import { markUpgradeRan } from "./upgrade-start.js";
 import { loadRestaurant } from "./data.js";
+import { RECIPES_KEY, isPersonalVenue, recipes } from "./recipes.js";
+import { composeRecipe } from "./ingredients.js";
 import { slug } from "./slug.js";
 import { dishId, findDish } from "./dish-id.js";
 import { initOrderUI } from "./cart-ui.js";
@@ -67,8 +76,11 @@ function render(collection, item) {
   const id = collection.id;
   document.title = `${item.name} — Faves`;
   const back = document.getElementById("recipe-back");
-  back.href = `restaurant.html?id=${id}`;
-  back.textContent = `← ${collection.name}`;
+  // A personal recipe has no collection page to go back to (there is no list
+  // of your own recipes yet — the editor item will bring one), so its back
+  // link goes home rather than to a menu that does not exist.
+  back.href = isPersonalVenue(id) ? "index.html" : `restaurant.html?id=${id}`;
+  back.textContent = isPersonalVenue(id) ? "← All places" : `← ${collection.name}`;
 
   // Two regions, laid out by CSS (ADR 0125): the HERO — photo, title,
   // description, stats, tags, the cook and shopping controls — and the BODY, where the
@@ -403,8 +415,15 @@ async function main() {
   const dishRef = params.get("dish");
   if (!id || !dishRef) return fail();
   try {
-    const collection = await loadRestaurant(id);
-    const item = recipeByRef(collection, dishRef);
+    // A personal recipe is read from this device's own store — no fetch, so it
+    // opens offline without ever having been precached. The published loader
+    // composes a recipe's part tags (data.js composeParts); a personal recipe
+    // gets the same composition here, so an allergen its ingredients state is
+    // shown exactly as it would be on the published copy.
+    const personal = isPersonalVenue(id);
+    const collection = personal ? recipes.collection() : await loadRestaurant(id);
+    const found = recipeByRef(collection, dishRef);
+    const item = personal && found ? composeRecipe(found) : found;
     if (!item) return fail();
     current = { collection, item };
     render(collection, item);
@@ -461,6 +480,30 @@ checklist.subscribe(() => {
   if (current) syncTicks(root, recipeId(current.collection.id, current.item));
 });
 
+// A personal recipe changed under this page — a sync pull, an import, or
+// another tab. Re-read it through the same resolver and repaint; a recipe
+// deleted elsewhere shows the not-found state rather than a stale copy.
+recipes.subscribe(() => {
+  if (!current || !isPersonalVenue(current.collection.id)) return;
+  const collection = recipes.collection();
+  const found = recipeByRef(collection, current.item.dishId);
+  if (!found) {
+    // render() has already replaced the loading and error lines, so fail()
+    // has nothing to show: say it here instead.
+    current = null;
+    root.replaceChildren(
+      el("p", { className: "menu-status" }, [
+        "This recipe is no longer in your recipes. ",
+        el("a", { href: "index.html", textContent: "Back to all places" }),
+        ".",
+      ])
+    );
+    return;
+  }
+  current = { collection, item: composeRecipe(found) };
+  reRender();
+});
+
 const activeProfileAtLoad = profiles.activeId();
 window.addEventListener("storage", (e) => {
   // A cross-tab profile switch: reload the registry; if the active person
@@ -477,6 +520,8 @@ window.addEventListener("storage", (e) => {
   // The same recipe open in two tabs: a line ticked in one shows ticked in the
   // other, which is the whole point of ticks that survive a phone call.
   if (e.key === profiles.scopedKey(CHECKLIST_KEY)) checklist.reload();
+  // The cookbook is device-level, so its key is not profile-scoped.
+  if (e.key === RECIPES_KEY) recipes.reload();
 });
 
 main();
