@@ -1,4 +1,4 @@
-- [~] **Phase 4 — personal recipes, and recipe buckets in sync** `[L]
+- [ ] **Phase 4 — personal recipes, and recipe buckets in sync** `[L]
       [data][sync][recipes]` — owner-raised 2026-09-30, revised the same day
       by [ADR 0146](../../decisions/0146-the-scaling-design-revised-after-its-cold-review.md). Needs `010` and `040`.
 
@@ -87,3 +87,7 @@
     cheap kind); every PUT reads 16 siblings, and re-writes at most one
     each per 30 days. A recipe edit costs a bucket write beside the core
     write. A heart still costs one write.
+
+  📌 **Claim released 2026-10-01 (`faves-0b`)** with everything but the
+  import shipped (PR #58). What is left waits on the owner: his list of
+  recipes, the three forks above, and his go-ahead to deploy the Worker.
