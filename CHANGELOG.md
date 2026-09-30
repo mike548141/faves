@@ -19,7 +19,8 @@ content freshness separately from this file.
   from the published ones, and the recipe page shows them exactly as it
   shows a Cook at Home recipe — offline, with cook mode, the shopping list,
   notes and hearts. Your hearted ones sit under "My recipes" in Favourites.
-  They are in your backup, and sync carries them between your devices once
+  Each person on a phone keeps their own, as with hearts. They are in your
+  backup, and sync carries them between your devices once
   the sync server is updated; until then they stay safely on each device.
   There is no way to write one yet — the first ones will be moved in from
   Cook at Home.

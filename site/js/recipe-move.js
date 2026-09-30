@@ -27,6 +27,16 @@ import { dishId } from "./dish-id.js";
 import { MY_RECIPES, MY_RECIPES_NAME, RECIPES_KEY, isPersonalId, sanitiseRecipe, sanitiseRecipes, sortedRecipes } from "./recipe-record.js";
 
 const SHOPPING_KEY = "faves.shopping.v1"; // shopping.js; named here to stay pure
+const PROFILES_KEY = "faves.profiles.v1"; // profiles.js; named here to stay pure
+const DEFAULT_ID = "default"; // profiles.js: the first profile on every device
+
+// PER PERSON (roadmap 510/120, owner-ruled "Per person"). A moved recipe lands
+// in the cookbook of each person on the device who held something about it —
+// their heart, rating, note or ticks — never in a device-wide one. The
+// shopping list is the device's, so a line on it counts for whoever is active.
+// With `add: "all"` (the owner's own devices) every moved recipe goes to the
+// ACTIVE person: which person, when a device has several, is a question the
+// ruling did not settle (roadmap 510/120's note).
 const isObj = (v) => !!v && typeof v === "object" && !Array.isArray(v);
 const parse = (raw) => {
   try {
@@ -151,7 +161,7 @@ function moveShopping(list, map, referenced) {
 
 // Which per-profile store a storage key is, by its suffix: `faves.p.<id>.<x>`
 // and the pre-profile `faves.<x>` alike (profiles.js scopeKey; a key an older
-// build never migrated is still that person's data).
+// build never migrated is still that person's data — the first profile's).
 const STORE_OF = [
   [/\.favourites\.v1$/, "favourites"],
   [/\.ratings\.v1$/, "ratings"],
@@ -159,45 +169,76 @@ const STORE_OF = [
   [/\.checklist\.v1$/, "checklist"],
 ];
 
+/** The profile a per-profile key belongs to: the id in `faves.p.<id>.<store>`,
+ *  or the first profile's for a pre-profile key. */
+function profileOfKey(key, re) {
+  if (!key.startsWith("faves.p.")) return DEFAULT_ID;
+  const m = re.exec(key);
+  return m ? key.slice("faves.p.".length, m.index) : DEFAULT_ID;
+}
+
+/** `faves.p.<id>.recipes.v1` (profiles.js scopeKey), built here to stay pure. */
+const scopedRecipesKey = (pid) => `faves.p.${pid}.${RECIPES_KEY.slice("faves.".length)}`;
+
+/** Add the wanted personal copies to one person's cookbook, never over a
+ *  recipe already there. Returns the new cookbook, or null if nothing changed. */
+function addToCookbook(have, recipes, wanted) {
+  const book = sanitiseRecipes(have);
+  let added = 0;
+  for (const [id, record] of Object.entries(sanitiseRecipes(recipes))) {
+    if (!wanted.has(id) || id in book) continue;
+    book[id] = record;
+    added += 1;
+  }
+  return added ? sortedRecipes(book) : null;
+}
+
 /**
  * Apply the move to a device's storage, given as `{ "faves.x": "<json>" }` —
  * the shape an upgrade step's `storage` half receives (user-schema.js). Returns
  * a NEW map; never mutates its input, never throws.
  *
  * `recipes` is `{ "<u: id>": record }`, the personal copies (toPersonalRecipe).
- * `add` decides which of them this device gets:
- *   • "referenced" — only the ones this device held something about (a heart,
- *     a rating, a note, ticks or a shopping line), so a stranger's phone does
- *     not gain a cookbook it never asked for;
- *   • "all" — every one (the owner's own devices).
- * A recipe already in the store is never overwritten.
+ * `add` decides who gets them:
+ *   • "referenced" — each person gets the ones they held something about (a
+ *     heart, a rating, a note, ticks; a shopping line counts for whoever is
+ *     active), so a stranger's phone does not gain a cookbook it never asked
+ *     for, and one person's heart does not fill another's cookbook;
+ *   • "all" — every one, to the active person (the owner's own devices).
+ * A recipe already in a cookbook is never overwritten.
  */
 export function moveStorageKeys(keys, moves, recipes = {}, { add = "referenced" } = {}) {
   const map = moveMapOf(moves);
   const out = { ...(isObj(keys) ? keys : {}) };
   if (!map.size) return out;
-  const referenced = new Set();
+  const active = String(parse(out[PROFILES_KEY])?.activeId || DEFAULT_ID);
+  const byPerson = new Map(); // profile id → Set of u: ids they referenced
+  const refsOf = (pid) => {
+    if (!byPerson.has(pid)) byPerson.set(pid, new Set());
+    return byPerson.get(pid);
+  };
   for (const [k, raw] of Object.entries(out)) {
     if (!k.startsWith("faves.") || typeof raw !== "string") continue;
     let next = null;
-    if (k === SHOPPING_KEY) next = moveShopping(parse(raw), map, referenced);
+    if (k === SHOPPING_KEY) next = moveShopping(parse(raw), map, refsOf(active));
     else {
-      const store = STORE_OF.find(([re]) => re.test(k))?.[1];
-      if (store === "favourites") next = moveFavourites(parse(raw), map, referenced);
-      else if (store === "ratings") next = moveKeyedMap(parse(raw), map, "d:", referenced);
-      else if (store === "notes" || store === "checklist") next = moveKeyedMap(parse(raw), map, "", referenced);
+      const hit = STORE_OF.find(([re]) => re.test(k));
+      if (!hit) continue;
+      const [re, store] = hit;
+      const refs = refsOf(profileOfKey(k, re));
+      if (store === "favourites") next = moveFavourites(parse(raw), map, refs);
+      else if (store === "ratings") next = moveKeyedMap(parse(raw), map, "d:", refs);
+      else next = moveKeyedMap(parse(raw), map, "", refs); // notes, checklist
     }
     if (next) out[k] = JSON.stringify(next);
   }
-  const wanted = add === "all" ? new Set(map.values()) : referenced;
-  const have = sanitiseRecipes(parse(out[RECIPES_KEY]));
-  let added = 0;
-  for (const [id, record] of Object.entries(sanitiseRecipes(recipes))) {
-    if (!wanted.has(id) || id in have) continue;
-    have[id] = record;
-    added += 1;
+  const wanted = add === "all" ? new Map([[active, new Set(map.values())]]) : byPerson;
+  for (const [pid, ids] of wanted) {
+    if (!ids.size) continue;
+    const key = scopedRecipesKey(pid);
+    const book = addToCookbook(parse(out[key]), recipes, ids);
+    if (book) out[key] = JSON.stringify(book);
   }
-  if (added) out[RECIPES_KEY] = JSON.stringify(sortedRecipes(have));
   return out;
 }
 
@@ -211,31 +252,27 @@ export function moveStorageKeys(keys, moves, recipes = {}, { add = "referenced" 
 export function moveSnapshot(snapshot, moves, recipes = {}, { add = "referenced" } = {}) {
   const map = moveMapOf(moves);
   if (!isObj(snapshot) || !map.size) return snapshot;
-  const referenced = new Set();
-  const profiles = Array.isArray(snapshot.profiles)
-    ? snapshot.profiles.map((p) => {
+  const list = Array.isArray(snapshot.profiles) ? snapshot.profiles : null;
+  const activeIdx = list ? Math.max(0, list.findIndex((p) => isObj(p) && p.active)) : -1;
+  const profiles = list
+    ? list.map((p, i) => {
         if (!isObj(p)) return p;
         const next = { ...p };
+        const referenced = new Set();
         const fav = moveFavourites(p.favourites, map, referenced);
         const rat = moveKeyedMap(p.ratings, map, "d:", referenced);
         const note = moveKeyedMap(p.notes, map, "", referenced);
         if (fav) next.favourites = fav;
         if (rat) next.ratings = rat;
         if (note) next.notes = note;
+        // Per person (510/120): into this profile's own cookbook.
+        const wanted = add === "all" ? (i === activeIdx ? new Set(map.values()) : new Set()) : referenced;
+        const book = addToCookbook(p.recipes, recipes, wanted);
+        if (book) next.recipes = book;
         return next;
       })
     : snapshot.profiles;
-  const out = { ...snapshot, profiles };
-  const wanted = add === "all" ? new Set(map.values()) : referenced;
-  const have = sanitiseRecipes(snapshot.recipes);
-  let added = 0;
-  for (const [id, record] of Object.entries(sanitiseRecipes(recipes))) {
-    if (!wanted.has(id) || id in have) continue;
-    have[id] = record;
-    added += 1;
-  }
-  if (added || snapshot.recipes) out.recipes = sortedRecipes(have);
-  return out;
+  return { ...snapshot, profiles };
 }
 
 /**

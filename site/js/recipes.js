@@ -19,18 +19,18 @@
 // none of them had to learn a second shape. The colon keeps `u:mine` out of the
 // venue-id space for the same reason it keeps `u:` out of the dish-id space.
 //
-// DEVICE-LEVEL, NOT PER-PROFILE. One cookbook per device (and per sync group),
-// like the order tally, while each person's hearts, ratings and notes ON a
-// recipe stay their own (they are keyed by the recipe id in per-profile stores).
-// 🎯 This is a fork the item did not settle; see roadmap 510/050's note. It is
-// reversible through the upgrade chain (user-schema.js) if the owner rules the
-// other way.
-//
+// PER PERSON, LIKE HEARTS (roadmap 510/120, owner-ruled "Per person"). Each
+// profile on a phone keeps its own cookbook, at its own profile-scoped key, and
+// a backup and sync carry it inside that profile. Until 2026-10-01 it was one
+// cookbook per device; no recipe had been stored anywhere when it moved (no
+// editor, no import run, no sync server that holds recipes — roadmap 510/120
+// has the evidence), so no upgrade step carries one across.
+
 // Local storage until roadmap 510/080 moves all user data to IndexedDB. Pure
 // where it can be: storage is injected; the singleton at the bottom is the one
 // place a real backend is bound.
 
-import { deviceStorage } from "./profiles.js";
+import { profileScopedStorage, profiles } from "./profiles.js";
 import { RECIPES_KEY, personalCollection, sanitiseRecipe, sanitiseRecipes, sortedRecipes } from "./recipe-record.js";
 
 // The record — id, shape, cleaning — is recipe-record.js's, re-exported so a
@@ -97,5 +97,9 @@ export function createRecipes(storage) {
   };
 }
 
-// Device-level: one cookbook for the device (see the header).
-export const recipes = createRecipes(deviceStorage);
+// Per person (see the header): read through the active profile's scope, and
+// re-read whenever the registry changes — a switch here or in another tab, a
+// person removed — exactly as checklist.js does, so every screen that shows a
+// personal recipe follows the switch without being told.
+export const recipes = createRecipes(profileScopedStorage());
+profiles.subscribe(() => recipes.reload());

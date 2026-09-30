@@ -34,8 +34,8 @@ import { recipes } from "./recipes.js";
 export function startSync() {
   try {
     return sync.start({
-      // `recipes` (roadmap 510/050) is device-level: nothing edits it on a
-      // screen yet, but an import does, and that change must sync too.
+      // `recipes` (roadmap 510/050; per person since 510/120): nothing edits
+      // it on a screen yet, but an import does, and that change must sync too.
       stores: [favourites, ratings, notes, settings, recipes],
       // The half that only exists in a browser: a pull rewrites localStorage,
       // and these singletons hold their state in memory. Without this the
@@ -55,7 +55,7 @@ export function startSync() {
       // still on screen, no allergens flagged. Cold review, 2026-08-17.
       onApplied: () => {
         profiles.reload();
-        recipes.reload(); // device-level, and a pull can bring a recipe in
+        recipes.reload(); // a pull can bring a recipe in (and the registry just moved)
         reloadProfileStores({ favourites, ratings, notes, settings });
       },
     });

@@ -520,8 +520,8 @@ window.addEventListener("storage", (e) => {
   // The same recipe open in two tabs: a line ticked in one shows ticked in the
   // other, which is the whole point of ticks that survive a phone call.
   if (e.key === profiles.scopedKey(CHECKLIST_KEY)) checklist.reload();
-  // The cookbook is device-level, so its key is not profile-scoped.
-  if (e.key === RECIPES_KEY) recipes.reload();
+  // This person's own recipes (per profile since roadmap 510/120).
+  if (e.key === profiles.scopedKey(RECIPES_KEY)) recipes.reload();
 });
 
 main();

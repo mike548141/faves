@@ -10,8 +10,9 @@
 //   • Per-profile — favourites (`faves.favourites.v1`), personal ratings
 //     (`faves.ratings.v1`: the viewer's own 1–3 marks), personal notes on a
 //     recipe (`faves.notes.v1`: added 17e/ADR 0131 — "used half the sugar,
-//     better" is exactly as much the reader's own judgement as a rating is)
-//     and *all* of settings (`faves.settings.v1`: dietary/allergen prefs
+//     better" is exactly as much the reader's own judgement as a rating is),
+//     their own recipes (`faves.recipes.v1`: 510/120, owner-ruled "Per
+//     person") and *all* of settings (`faves.settings.v1`: dietary/allergen prefs
 //     [safety-critical — allergies differ per person], plus the ranking dials
 //     and the reo language). We scope by whole store, not by field: shattering
 //     one store's fields across two scopes is where migration/namespacing bugs
@@ -33,6 +34,7 @@
 // unit-tested; the UI (settings-ui.js) owns the switcher and window wiring.
 
 import { safeStorage } from "./store.js";
+import { RECIPES_KEY } from "./recipe-record.js";
 
 export const PROFILES_KEY = "faves.profiles.v1";
 
@@ -52,6 +54,10 @@ export const SCOPED_BASE_KEYS = [
   "faves.settings.v1",
   "faves.ratings.v1",
   "faves.notes.v1",
+  // A person's own recipes (roadmap 510/120, owner-ruled "Per person"). Sync
+  // carries them in recipe buckets rather than the core copy (sync.js), but
+  // they travel all three ways, and a deleted person's go with them.
+  RECIPES_KEY,
 ];
 
 // checklist.js's own key, declared HERE so the purge below can name it without

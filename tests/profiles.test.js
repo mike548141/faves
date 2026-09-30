@@ -231,6 +231,7 @@ test("the checklist is still absent from the list that travels (ADR 0067)", () =
     "faves.settings.v1",
     "faves.ratings.v1",
     "faves.notes.v1",
+    "faves.recipes.v1", // a person's own recipes travel with them (510/120)
   ]);
 });
 

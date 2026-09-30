@@ -14,6 +14,7 @@ import { findDish } from "../site/js/dish-id.js";
 import { upgradePersonalData, upgradeStorage } from "../site/js/user-schema.js";
 
 const V = "test-kitchen"; // a synthetic published collection
+const PROFILES = "faves.profiles.v1";
 const MOVES = [
   { from: { venueId: V, dishId: "alpha-bake" }, to: "u:alpha-bake" },
   { from: { venueId: V, dishId: "beta-stew" }, to: "u:beta-stew" },
@@ -28,6 +29,9 @@ const COPIES = {
 
 const heart = (venueId, dishId, name) => ({ type: "dish", venueId, venueName: "x", name, dishId, isRecipe: true });
 const P = "faves.p.default.";
+// Per person since roadmap 510/120: the moved copy lands in the cookbook of
+// the person who held something about it.
+const MY_BOOK = `${P}recipes.v1`;
 
 function deviceKeys() {
   return {
@@ -87,10 +91,11 @@ test("hearts, ratings, notes, ticks and shopping lines follow the recipe; nothin
   assert.deepEqual(JSON.parse(out[`${P}checklist.v1`])[rid], { at: 1, t: ["i:1"] });
   assert.equal(JSON.parse(out["faves.shopping.v1"])[0].venueId, rid);
   assert.equal(out["faves.sync.base.v1"], deviceKeys()["faves.sync.base.v1"], "the sync base is the snapshot half's");
-  // "referenced": only the recipe this device held something about.
-  assert.deepEqual(Object.keys(JSON.parse(out[RECIPES_KEY])), ["u:alpha-bake"]);
-  // "all": every moved recipe (the owner's own devices).
-  assert.deepEqual(Object.keys(JSON.parse(moveStorageKeys(deviceKeys(), MOVES, COPIES, { add: "all" })[RECIPES_KEY])), [
+  // "referenced": only the recipe this person held something about.
+  assert.deepEqual(Object.keys(JSON.parse(out[MY_BOOK])), ["u:alpha-bake"]);
+  assert.equal(out[RECIPES_KEY], undefined, "nothing goes to a device-wide cookbook");
+  // "all": every moved recipe, to the active person (the owner's own devices).
+  assert.deepEqual(Object.keys(JSON.parse(moveStorageKeys(deviceKeys(), MOVES, COPIES, { add: "all" })[MY_BOOK])), [
     "u:alpha-bake",
     "u:beta-stew",
   ]);
@@ -99,10 +104,10 @@ test("hearts, ratings, notes, ticks and shopping lines follow the recipe; nothin
 test("a move never overwrites what is already under the new id, and is idempotent", () => {
   const keys = deviceKeys();
   keys[`${P}ratings.v1`] = JSON.stringify({ [`d:${V} alpha-bake`]: 5, [`d:${MY_RECIPES} u:alpha-bake`]: 3 });
-  keys[RECIPES_KEY] = JSON.stringify({ "u:alpha-bake": { dishId: "u:alpha-bake", name: "Mine already" } });
+  keys[MY_BOOK] = JSON.stringify({ "u:alpha-bake": { dishId: "u:alpha-bake", name: "Mine already" } });
   const out = moveStorageKeys(keys, MOVES, COPIES);
   assert.deepEqual(JSON.parse(out[`${P}ratings.v1`]), { [`d:${MY_RECIPES} u:alpha-bake`]: 3 });
-  assert.equal(JSON.parse(out[RECIPES_KEY])["u:alpha-bake"].name, "Mine already");
+  assert.equal(JSON.parse(out[MY_BOOK])["u:alpha-bake"].name, "Mine already");
   assert.deepEqual(moveStorageKeys(out, MOVES, COPIES), out, "running it twice changes nothing");
   // No moves, no change; the input is never mutated.
   const before = JSON.stringify(keys);
@@ -133,7 +138,36 @@ test("a backup taken before the move lands its hearts on the personal copy", () 
   assert.deepEqual(p.notes, { [`${MY_RECIPES} u:beta-stew`]: "more salt" });
   assert.deepEqual(p.future, { kept: true }, "a field it does not name is carried");
   assert.equal(out.shelf, 1);
-  assert.deepEqual(Object.keys(out.recipes), ["u:beta-stew"]);
+  assert.deepEqual(Object.keys(p.recipes), ["u:beta-stew"]);
+  assert.equal("recipes" in out, false, "nothing goes to a device-wide cookbook");
+});
+
+test("each person gets the moved recipes THEY held something about, and no one else's (510/120)", () => {
+  const keys = {
+    ...deviceKeys(),
+    [PROFILES]: JSON.stringify({ v: 1, activeId: "default", profiles: [{ id: "default", name: "Me" }, { id: "p-sam", name: "Sam" }] }),
+    "faves.p.p-sam.favourites.v1": JSON.stringify([heart(V, "beta-stew", "Beta Stew")]),
+  };
+  const out = moveStorageKeys(keys, MOVES, COPIES);
+  assert.deepEqual(Object.keys(JSON.parse(out[MY_BOOK])), ["u:alpha-bake"]);
+  assert.deepEqual(Object.keys(JSON.parse(out["faves.p.p-sam.recipes.v1"])), ["u:beta-stew"]);
+  // The same on a snapshot.
+  const snap = moveSnapshot(
+    {
+      v: 1,
+      profiles: [
+        { id: "default", name: "Me", active: true, favourites: [heart(V, "alpha-bake", "Alpha Bake")] },
+        { id: "p-sam", name: "Sam", favourites: [heart(V, "beta-stew", "Beta Stew")] },
+      ],
+    },
+    MOVES,
+    COPIES
+  );
+  assert.deepEqual(snap.profiles.map((p) => Object.keys(p.recipes)), [["u:alpha-bake"], ["u:beta-stew"]]);
+  // "all" goes to the active person only.
+  const all = moveSnapshot({ v: 1, profiles: [{ id: "default", name: "Me" }, { id: "p-sam", name: "Sam", active: true }] }, MOVES, COPIES, { add: "all" });
+  assert.equal(all.profiles[0].recipes, undefined);
+  assert.deepEqual(Object.keys(all.profiles[1].recipes), ["u:alpha-bake", "u:beta-stew"]);
 });
 
 test("as an upgrade step, the move runs through the real chain on both halves", () => {
@@ -159,6 +193,6 @@ test("as an upgrade step, the move runs through the real chain on both halves", 
   };
   const res = upgradeStorage(storage, { steps, target: 2, now: () => "2026-09-30T00:00:00Z" });
   assert.equal(res.status, "upgraded");
-  assert.deepEqual(JSON.parse(m.get(RECIPES_KEY))["u:alpha-bake"].name, "Alpha Bake");
+  assert.deepEqual(JSON.parse(m.get(MY_BOOK))["u:alpha-bake"].name, "Alpha Bake");
   assert.equal(JSON.parse(m.get(`${P}notes.v1`))[`${MY_RECIPES} u:alpha-bake`], "less sugar");
 });

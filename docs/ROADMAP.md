@@ -428,4 +428,4 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [Phase 0 follow-ups: a declined storage request, and the pause label](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/090-phase-0-follow-ups-a-declined-persist-and-the-pause-label.md)
 - ✅ 🔥 [Sync can delete another device's change if you edit mid-sync](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/100-sync-base-records-a-merge-this-device-never-applied.md)
 - ✅ [An old tab stops writing once storage is upgraded](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/110-an-old-tab-stops-writing-once-storage-is-upgraded.md)
-- [~] [The cookbook is per person, not per device](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/120-the-cookbook-is-per-person.md)
+- ✅ [The cookbook is per person, not per device](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/120-the-cookbook-is-per-person.md)

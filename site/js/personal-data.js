@@ -256,6 +256,11 @@ function excludedEntry(key) {
   return null;
 }
 
+/** Is this a cookbook's storage key, any person's (or the bare one no build
+ *  writes any more)? A raw copy of one in a file's `other` bag would bypass the
+ *  cleaning the named `recipes` field gets, so parse refuses it (510/050). */
+const isRecipesKey = (k) => k === RECIPES_KEY || (k.startsWith("faves.p.") && k.endsWith(RECIPES_KEY.slice("faves".length)));
+
 /** Is this storage key one the backup refuses to carry, for any profile? */
 const isExcludedKey = (key) => excludedEntry(key) !== null;
 
@@ -284,7 +289,7 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
   // catch-all sweep below would happily re-collect the location this module
   // promises never to export, the moment it appeared in localStorage. An
   // exclusion that only holds while nobody moves a key is not an exclusion.
-  const known = new Set([PROFILES_KEY, ORDER_KEY, RECIPES_KEY, ...Object.keys(EXCLUDED)]);
+  const known = new Set([PROFILES_KEY, ORDER_KEY, ...Object.keys(EXCLUDED)]);
 
   const people = registry.profiles.map((p) => {
     const entry = { id: p.id, name: p.name, active: p.id === registry.activeId };
@@ -294,6 +299,9 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
       // `faves.favourites.v1` → `favourites`; the field reads as what it is.
       const field = base.replace(/^faves\./, "").replace(/\.v\d+$/, "");
       entry[field] = parse(storage.getItem(key));
+      // A person's own recipes (roadmap 510/120) are cleaned on the way out
+      // too, and sorted, so two devices holding the same ones say the same.
+      if (base === RECIPES_KEY) entry[field] = sortedRecipes(sanitiseRecipes(entry[field]));
     }
     return entry;
   });
@@ -327,11 +335,9 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
     _readme: README,
     profiles: people,
     order: parse(storage.getItem(ORDER_KEY)) ?? [],
-    // Personal recipes (roadmap 510/050): device-level like the order, one
-    // record per recipe keyed by its `u:` id. A NAMED field, not left to the
-    // `other` sweep below: sync reads it (bucket by bucket, sync.js), and an
-    // import has to clean it, which it cannot do to a store it cannot name.
-    recipes: sortedRecipes(sanitiseRecipes(parse(storage.getItem(RECIPES_KEY)))),
+    // Personal recipes are in each PROFILE above (roadmap 510/120), not here:
+    // one cookbook per person, like hearts. A file from the one day they were
+    // per device carries a top-level `recipes`; parsePersonalData folds it in.
     excluded: EXCLUDED_NOTES,
   };
   if (Object.keys(other).length) data.other = other;
@@ -355,7 +361,10 @@ export function summarisePersonalData(data) {
       0
     ),
     orderItems: count(data?.order),
-    recipes: data?.recipes && typeof data.recipes === "object" ? Object.keys(data.recipes).length : 0,
+    recipes: people.reduce(
+      (n, p) => n + (p.recipes && typeof p.recipes === "object" ? Object.keys(p.recipes).length : 0),
+      0
+    ),
   };
 }
 
@@ -550,6 +559,7 @@ function normaliseProfile(p) {
     favourites: sanitiseFavourites(p.favourites),
     ratings: sanitiseRatings(p.ratings),
     notes: sanitiseNotes(p.notes),
+    recipes: sanitiseRecipes(p.recipes),
     // Settings stay raw here; settings.js's own sanitiser is the single gate
     // they pass through on the way to storage, and `diet` has to survive
     // untouched until the comparison below can see whether it differs.
@@ -598,6 +608,15 @@ export function parsePersonalData(input) {
   if (!Array.isArray(raw.profiles)) return fail("That file has no people in it.");
   const profiles = raw.profiles.map(normaliseProfile).filter(Boolean);
   if (!profiles.length) return fail("That file has no people in it.");
+  // A file written on 2026-09-30/10-01, when the cookbook was one per device
+  // (roadmap 510/050), carries it at the top. The owner has since ruled it per
+  // person (510/120): it goes to whoever was active on that device, as hearts
+  // made there would have. Their own copy of a recipe wins, as on a merge.
+  const deviceBook = sanitiseRecipes(raw.recipes);
+  if (Object.keys(deviceBook).length) {
+    const owner = profiles.find((p) => p.active) || profiles[0];
+    owner.recipes = sortedRecipes({ ...deviceBook, ...owner.recipes });
+  }
 
   const other = {};
   if (isObj(raw.other)) {
@@ -607,7 +626,7 @@ export function parsePersonalData(input) {
       // scoped tick keys will still be found.
       // The cookbook is a named field above, cleaned; a raw copy of its key in
       // the bag would bypass that and overwrite it.
-      if (!k.startsWith("faves.") || isExcludedKey(k) || k === RECIPES_KEY) continue;
+      if (!k.startsWith("faves.") || isExcludedKey(k) || isRecipesKey(k)) continue;
       if (typeof v === "string") other[k] = v;
     }
   }
@@ -619,10 +638,6 @@ export function parsePersonalData(input) {
       exportedAt: typeof raw.exportedAt === "string" ? raw.exportedAt : null,
       profiles,
       order: sanitiseOrderLines(raw.order),
-      // A file from before personal recipes has none, which is an empty
-      // cookbook — never a reason to remove the ones on this device (a merge
-      // only adds; a replace makes the device look like the file, as ever).
-      recipes: sanitiseRecipes(raw.recipes),
       other,
     },
   };
@@ -702,6 +717,7 @@ export function planImport(storage, data, { mode = "merge", decisions = {} } = {
       favourites: p.favourites.length,
       ratings: Object.keys(p.ratings).length,
       notes: Object.keys(p.notes).length,
+      recipes: Object.keys(p.recipes).length,
       hasSettings: !!p.settings,
       match: mode === "replace" ? null : idMatch ? "id" : nameMatch ? "name" : null,
       collides: ambiguous,
@@ -743,7 +759,7 @@ export function planImport(storage, data, { mode = "merge", decisions = {} } = {
       ratings: clean.profiles.reduce((n, p) => n + Object.keys(p.ratings).length, 0),
       notes: clean.profiles.reduce((n, p) => n + Object.keys(p.notes).length, 0),
       orderItems: clean.order.length,
-      recipes: Object.keys(clean.recipes).length,
+      recipes: clean.profiles.reduce((n, p) => n + Object.keys(p.recipes).length, 0),
       otherStores: Object.keys(clean.other).length,
     },
     entries,
@@ -803,6 +819,7 @@ function writeProfileStores(storage, id, p) {
   if (p.favourites.length) writeKey(storage, scopeKey(id, "faves.favourites.v1"), JSON.stringify(p.favourites));
   if (Object.keys(p.ratings).length) writeKey(storage, scopeKey(id, "faves.ratings.v1"), JSON.stringify(p.ratings));
   if (Object.keys(p.notes).length) writeKey(storage, scopeKey(id, "faves.notes.v1"), JSON.stringify(p.notes));
+  if (Object.keys(p.recipes).length) writeKey(storage, scopeKey(id, RECIPES_KEY), JSON.stringify(sortedRecipes(p.recipes)));
   // Through the store, so the payload's settings pass settings.js's clamps.
   if (p.settings) createSettings(view).set(p.settings);
 }
@@ -891,6 +908,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
       report.favouritesAdded += p.favourites.length;
       report.ratingsAdded += Object.keys(p.ratings).length;
       report.notesAdded += Object.keys(p.notes).length;
+      report.recipesAdded += Object.keys(p.recipes).length;
       if (p.settings) report.settingsUpdated += 1;
       return;
     }
@@ -929,6 +947,21 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     if (notesAdded) writeKey(storage, scopeKey(id, "faves.notes.v1"), JSON.stringify(mineNotes));
     report.notesAdded += notesAdded;
     touched += notesAdded;
+
+    // Their own recipes (roadmap 510/120): add the ones this person lacks and
+    // keep their own where both hold one — yours win, as with ratings and
+    // notes, because a recipe you have since changed is a judgement a restore
+    // must not overwrite.
+    const mineRecipes = sanitiseRecipes(parse(view.getItem(RECIPES_KEY)));
+    let recipesAdded = 0;
+    for (const [rid, r] of Object.entries(p.recipes)) {
+      if (rid in mineRecipes) continue;
+      mineRecipes[rid] = r;
+      recipesAdded += 1;
+    }
+    if (recipesAdded) writeKey(storage, scopeKey(id, RECIPES_KEY), JSON.stringify(sortedRecipes(mineRecipes)));
+    report.recipesAdded += recipesAdded;
+    touched += recipesAdded;
 
     if (isObj(p.settings)) {
       const patch = {};
@@ -981,23 +1014,6 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     const base = mode === "replace" ? [] : sanitiseOrderLines(parse(storage.getItem(ORDER_KEY)) ?? []);
     writeKey(storage, ORDER_KEY, JSON.stringify(mergeItems(base, clean.order)));
     report.orderRestored = true;
-  }
-
-  // Personal recipes: a merge adds the file's recipes this device lacks and
-  // keeps its own where both hold one — yours win, as with ratings and notes,
-  // because a recipe you have since changed is a judgement a restore must not
-  // overwrite. A replace has already wiped the store, so it gets the file's.
-  {
-    const have = mode === "replace" ? {} : sanitiseRecipes(parse(storage.getItem(RECIPES_KEY)));
-    const next = { ...have };
-    for (const [id, r] of Object.entries(clean.recipes)) {
-      if (id in next) continue;
-      next[id] = r;
-      report.recipesAdded += 1;
-    }
-    if (report.recipesAdded || (mode === "replace" && Object.keys(next).length)) {
-      writeKey(storage, RECIPES_KEY, JSON.stringify(sortedRecipes(next)));
-    }
   }
 
   for (const [k, v] of Object.entries(clean.other)) {

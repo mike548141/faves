@@ -63,7 +63,11 @@ export const STORE_SCHEMA = Object.freeze({
   // published recipe shape, filed into sync buckets by a hash of the `u:` id
   // (sync-buckets.js). Changing RECIPE_BUCKETS, the hash or the record's shape
   // is a change of this store's shape: bump this with it.
-  recipes: 1,
+  // 2 (roadmap 510/120, owner-ruled "Per person"): one cookbook per PERSON,
+  // carried inside each profile in a backup and filed by person in a bucket.
+  // A build at 1 would read that as an empty cookbook — a backup's recipes
+  // silently skipped, a bucket's read as deleted — so it pauses instead.
+  recipes: 2,
 });
 
 /** The stores in `snapshot.stores` that this build KNOWS and that are numbered

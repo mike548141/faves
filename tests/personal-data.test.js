@@ -110,9 +110,11 @@ test("per-profile stores land on readable field names", () => {
     "name",
     "notes",
     "ratings",
+    "recipes",
     "settings",
   ]);
   assert.deepEqual(data.profiles[0].settings, { lang: "mi", farKm: 20 });
+  assert.deepEqual(data.profiles[0].recipes, {}, "no recipes is an empty cookbook, never null");
 });
 
 test("carries the device-shared order tally", () => {
@@ -1173,13 +1175,27 @@ const GINGER = {
   movedFrom: "cook-at-home ginger-crunch",
 };
 
+// Per person since roadmap 510/120 (owner-ruled "Per person"): each profile's
+// own cookbook, at its own scoped key, inside its own entry in the file.
+const MY_BOOK = "faves.p.default.recipes.v1";
+const withRecipes = (recipesByProfile, overrides = {}) => {
+  const f = file(overrides);
+  for (const p of f.profiles) if (recipesByProfile[p.id]) p.recipes = recipesByProfile[p.id];
+  return f;
+};
+const MERGE_DECISIONS = {
+  [decisionKey({ id: "p-other-device", name: "Sam" }, 1)]: { target: "new" },
+  [decisionKey({ id: "default", name: "Me" }, 0)]: { diet: "keep" },
+};
+
 // (c) — the break-probed claim: a backup round trip keeps a recipe, field
-// for field, onto a device that never had it.
-test("a backup round trip keeps a personal recipe, field for field", () => {
+// for field, onto a device that never had it — and it stays that person's.
+test("a backup round trip keeps a person's recipe, field for field, as theirs", () => {
   const from = device();
-  from.setItem(RECIPES, JSON.stringify({ [GINGER.dishId]: GINGER }));
+  from.setItem(MY_BOOK, JSON.stringify({ [GINGER.dishId]: GINGER }));
   const data = collectPersonalData(from, { exportedAt: AT });
-  assert.deepEqual(data.recipes, { [GINGER.dishId]: GINGER });
+  assert.equal("recipes" in data, false, "the cookbook is per person, not the device's");
+  assert.deepEqual(data.profiles.find((p) => p.id === "default").recipes, { [GINGER.dishId]: GINGER });
   assert.equal(summarisePersonalData(data).recipes, 1);
 
   const to = fakeStorage();
@@ -1188,53 +1204,78 @@ test("a backup round trip keeps a personal recipe, field for field", () => {
   const r = applyPersonalData(to, personalDataJson(data), { mode: "replace" });
   assert.equal(r.ok, true);
   assert.equal(r.recipesAdded, 1);
-  assert.deepEqual(JSON.parse(to.getItem(RECIPES)), { [GINGER.dishId]: GINGER });
+  assert.deepEqual(JSON.parse(to.getItem(MY_BOOK)), { [GINGER.dishId]: GINGER });
+  assert.equal(to.getItem(RECIPES), null, "nothing is written to the bare, device-wide key");
   // And through a MERGE onto a device with none.
   const merged = device();
   const m = applyPersonalData(merged, personalDataJson(data), { mode: "merge", decisions: {} });
   assert.equal(m.ok, true, JSON.stringify(m));
-  assert.deepEqual(JSON.parse(merged.getItem(RECIPES)), { [GINGER.dishId]: GINGER });
+  assert.deepEqual(JSON.parse(merged.getItem(MY_BOOK)), { [GINGER.dishId]: GINGER });
+});
+
+test("two people on one phone keep two cookbooks, through a backup and back", () => {
+  const store = device(); // "Me" (default) and "Sam" (pZ) share this phone
+  const scones = { dishId: "u:scones", name: "Scones", steps: ["Bake."] };
+  store.setItem(MY_BOOK, JSON.stringify({ [GINGER.dishId]: GINGER }));
+  store.setItem("faves.p.pZ.recipes.v1", JSON.stringify({ [scones.dishId]: scones }));
+  const data = collectPersonalData(store, { exportedAt: AT });
+  const byId = Object.fromEntries(data.profiles.map((p) => [p.id, Object.keys(p.recipes)]));
+  assert.deepEqual(byId, { default: [GINGER.dishId], pZ: [scones.dishId] });
+  const to = fakeStorage();
+  assert.equal(applyPersonalData(to, data, { mode: "replace" }).ok, true);
+  assert.deepEqual(Object.keys(JSON.parse(to.getItem(MY_BOOK))), [GINGER.dishId]);
+  assert.deepEqual(Object.keys(JSON.parse(to.getItem("faves.p.pZ.recipes.v1"))), [scones.dishId]);
 });
 
 test("a merge import keeps your own copy of a recipe, and adds the ones you lack", () => {
   const store = device();
   const mine = { ...GINGER, name: "Ginger Crunch (mine)" };
-  store.setItem(RECIPES, JSON.stringify({ [GINGER.dishId]: mine }));
+  store.setItem(MY_BOOK, JSON.stringify({ [GINGER.dishId]: mine }));
   const other = { dishId: "u:scones", name: "Scones", steps: ["Bake."] };
-  const r = applyPersonalData(store, file({ recipes: { [GINGER.dishId]: GINGER, [other.dishId]: other } }), {
+  const r = applyPersonalData(store, withRecipes({ default: { [GINGER.dishId]: GINGER, [other.dishId]: other } }), {
     mode: "merge",
-    decisions: { [decisionKey({ id: "p-other-device", name: "Sam" }, 1)]: { target: "new" }, [decisionKey({ id: "default", name: "Me" }, 0)]: { diet: "keep" } },
+    decisions: MERGE_DECISIONS,
   });
   assert.equal(r.ok, true, JSON.stringify(r));
   assert.equal(r.recipesAdded, 1);
-  const now = JSON.parse(store.getItem(RECIPES));
+  const now = JSON.parse(store.getItem(MY_BOOK));
   assert.equal(now[GINGER.dishId].name, "Ginger Crunch (mine)");
   assert.equal(now["u:scones"].name, "Scones");
 });
 
 test("a backup from before recipes existed removes none on a merge, and a replace makes the device match it", () => {
   const store = device();
-  store.setItem(RECIPES, JSON.stringify({ [GINGER.dishId]: GINGER }));
+  store.setItem(MY_BOOK, JSON.stringify({ [GINGER.dishId]: GINGER }));
   const old = { ...file() };
-  delete old.recipes;
-  const r = applyPersonalData(store, old, {
-    mode: "merge",
-    decisions: { [decisionKey({ id: "p-other-device", name: "Sam" }, 1)]: { target: "new" }, [decisionKey({ id: "default", name: "Me" }, 0)]: { diet: "keep" } },
-  });
+  const r = applyPersonalData(store, old, { mode: "merge", decisions: MERGE_DECISIONS });
   assert.equal(r.ok, true, JSON.stringify(r));
-  assert.deepEqual(Object.keys(JSON.parse(store.getItem(RECIPES))), [GINGER.dishId]);
+  assert.deepEqual(Object.keys(JSON.parse(store.getItem(MY_BOOK))), [GINGER.dishId]);
   const rep = applyPersonalData(store, old, { mode: "replace" });
   assert.equal(rep.ok, true);
-  assert.equal(store.getItem(RECIPES), null);
+  assert.equal(store.getItem(MY_BOOK), null);
+});
+
+test("a file from the day the cookbook was per device gives it to whoever was active there", () => {
+  // Roadmap 510/050 wrote a top-level `recipes`; 510/120 moved it into the
+  // profiles. Such a file is read, never refused, and its cookbook lands with
+  // the profile that was active on the device that wrote it.
+  const f = file({ recipes: { [GINGER.dishId]: GINGER } });
+  f.profiles[0].active = false;
+  f.profiles[1].active = true;
+  const parsed = parsePersonalData(f);
+  assert.equal(parsed.ok, true);
+  assert.deepEqual(Object.keys(parsed.data.profiles[1].recipes), [GINGER.dishId]);
+  assert.deepEqual(parsed.data.profiles[0].recipes, {});
+  assert.equal("recipes" in parsed.data, false);
 });
 
 test("an imported recipe is cleaned: a script link is dropped, and a raw copy in `other` cannot bypass it", () => {
   const evil = { ...GINGER, attributionUrl: "javascript:alert(1)" };
-  const parsed = parsePersonalData(
-    file({ recipes: { [GINGER.dishId]: evil }, other: { [RECIPES]: JSON.stringify({ [GINGER.dishId]: evil }) } })
-  );
+  const raw = JSON.stringify({ [GINGER.dishId]: evil });
+  const parsed = parsePersonalData(withRecipes({ default: { [GINGER.dishId]: evil } }, { other: { [RECIPES]: raw, [MY_BOOK]: raw } }));
   assert.equal(parsed.ok, true);
-  assert.equal("attributionUrl" in parsed.data.recipes[GINGER.dishId], false);
+  assert.equal("attributionUrl" in parsed.data.profiles[0].recipes[GINGER.dishId], false);
   assert.equal(RECIPES in parsed.data.other, false);
-  assert.equal(parsePersonalData(file({ recipes: { "cook-at-home": GINGER } })).data.recipes[GINGER.dishId].name, "Ginger Crunch");
+  assert.equal(MY_BOOK in parsed.data.other, false, "a person's cookbook key in `other` bypasses the cleaning");
+  assert.equal(parsePersonalData(withRecipes({ default: { "cook-at-home": GINGER } })).data.profiles[0].recipes[GINGER.dishId].name, "Ginger Crunch");
 });
