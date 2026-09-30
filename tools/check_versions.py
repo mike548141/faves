@@ -1,16 +1,26 @@
 #!/usr/bin/env python3
-"""Enforce the service-worker version lockstep (ADR 0015).
+"""Enforce the service-worker version lockstep (ADR 0015, as narrowed by
+roadmap 510/030).
 
-`site/sw.js` carries two version constants, and they are what tells an
-installed phone to refetch:
+`site/sw.js` carries ONE version constant, and it is what tells an installed
+phone to refetch the app:
 
-    SHELL_VERSION → html/css/js/icons/webmanifest
-    DATA_VERSION  → data/index.json, data/fx.json, every restaurant JSON
+    SHELL_VERSION → html/css/js/icons/webmanifest (everything under site/
+                    except site/data/ and sw.js itself)
 
-Change a file under `site/` and forget to bump the matching constant, and the
-install step *skips the cache entirely* — `sw.js` only rebuilds a cache that
-lacks its READY sentinel, so an existing cache under an unchanged version name
-is left exactly as it was. The deploy goes out, CI is green, the site is
+The data has no constant since 510/030. A change under `site/data/` is carried
+by content fingerprints — `site/data/catalogue.json` and each summary record's
+`h`, written by `tools/gen_summaries.mjs` — and the phone fetches exactly the
+files whose fingerprint moved. What proves those are current is
+`node tools/gen_summaries.mjs --check` (CI's JS job), not this tool. This tool
+now only REFUSES a `DATA_VERSION` coming back: a branch cut before 510/030 and
+rebased across it can carry the line through a conflict, and a constant nothing
+reads is a rule people will keep obeying for nothing.
+
+Change a shell file and forget to bump SHELL_VERSION, and the install step
+*skips the cache entirely* — `sw.js` only rebuilds a cache that lacks its
+READY sentinel, so an existing cache under an unchanged version name is left
+exactly as it was. The deploy goes out, CI is green, the site is
 correct for anyone arriving fresh, and every phone that already had it keeps
 serving the old shell **forever**, or until some later change happens to bump
 the constant. There is no error anywhere; the failure is silent and invisible
@@ -52,11 +62,13 @@ SW = "site/sw.js"
 # everything else under `site/` is the shell.
 #
 # `sw.js` itself belongs to NEITHER, and that exclusion is load-bearing. It is
-# the carrier of the version constants, not a cached asset — it appears nowhere
+# the carrier of the version constant, not a cached asset — it appears nowhere
 # in the SHELL precache list, and the browser always fetches it fresh, which is
-# what makes the update cycle run at all. Counting it as a shell file makes the
-# guard demand a SHELL_VERSION bump for every data-only menu edit, since
-# bumping DATA_VERSION *means* editing sw.js. That would fire on correct work,
+# what makes the update cycle run at all. Counting it as a shell file made the
+# guard demand a SHELL_VERSION bump for every data-only menu edit, back when
+# bumping DATA_VERSION (retired by 510/030) *meant* editing sw.js — and it would
+# still demand one for a worker-logic change that touches no cached file. That
+# would fire on correct work,
 # and a guard that cries wolf on the documented-correct action is one people
 # learn to override — the exact way the other checks in this repo went
 # decorative. Found by tools/test_check_versions.py on its first run.
@@ -66,8 +78,10 @@ CARRIER = "site/sw.js"
 
 VERSION_RE = {
     "SHELL_VERSION": re.compile(r'^const SHELL_VERSION = "([^"]+)";', re.M),
-    "DATA_VERSION": re.compile(r'^const DATA_VERSION = "([^"]+)";', re.M),
 }
+
+# Retired by roadmap 510/030 (ADR 0145/0146). Present at all ⇒ refused.
+RETIRED_RE = re.compile(r"^const DATA_VERSION\b", re.M)
 
 
 def git(*args):
@@ -81,7 +95,7 @@ def git(*args):
 
 
 def versions_in(text):
-    """The two constants as {name: value}; a missing one reads as None."""
+    """The version constant(s) as {name: value}; a missing one reads as None."""
     out = {}
     for name, rx in VERSION_RE.items():
         m = rx.search(text)
@@ -225,6 +239,16 @@ def main(argv=None):
         base, head = None, None
         before, after = read_sw("HEAD"), (ROOT / SW).read_text(encoding="utf-8")
 
+    # Unconditional, like the precache gaps below: a retired constant back in
+    # sw.js is wrong whatever the diff touched.
+    if RETIRED_RE.search(after):
+        print("✗ DATA_VERSION is back in site/sw.js — it was retired by roadmap 510/030.\n")
+        print("  The data is versioned by content fingerprints now (site/data/catalogue.json")
+        print("  and each summary record's `h`, from `node tools/gen_summaries.mjs`). A")
+        print("  DATA_VERSION line is almost always a pre-510/030 branch rebased across it:")
+        print("  delete the line, and regenerate with gen_summaries if data/ changed.")
+        return 1
+
     # Unconditional, and BEFORE the not-in-scope early return: a phantom
     # precache entry breaks the deployed site whether or not this particular
     # change touched site/, and "not in scope" must never be the last word on a
@@ -243,8 +267,8 @@ def main(argv=None):
     if not shell and not data:
         # Bare mode reads STAGED changes only, so a clean tree makes it print
         # "not in scope" — which reads like an all-clear and proves nothing.
-        # That is exactly how a DATA_VERSION collision reached main on
-        # 2026-08-16: two sessions picked the same value, the tree was already
+        # That is exactly how a DATA_VERSION collision (a constant retired by
+        # 510/030) reached main on 2026-08-16: two sessions picked the same value, the tree was already
         # committed, the bare run said "not in scope", and only
         # `--range origin/main..HEAD` caught it. Twice now. A check that cannot
         # fail is a check nobody reads, so bare mode says what it did NOT do.
@@ -293,7 +317,7 @@ def main(argv=None):
         if new[name] is None:
             problems.append(f"{name} is missing from {SW} — the cache has no version to name.")
 
-    checks = (("SHELL_VERSION", shell, "shell"), ("DATA_VERSION", data, "data"))
+    checks = (("SHELL_VERSION", shell, "shell"),)
     for name, touched, label in checks:
         if not touched or new[name] is None:
             continue
@@ -332,7 +356,10 @@ def main(argv=None):
     if shell:
         bits.append(f"SHELL_VERSION {old['SHELL_VERSION']} → {new['SHELL_VERSION']} ({len(shell)} file(s))")
     if data:
-        bits.append(f"DATA_VERSION {old['DATA_VERSION']} → {new['DATA_VERSION']} ({len(data)} file(s))")
+        bits.append(
+            f"{len(data)} data file(s) carried by fingerprints — no constant; "
+            "`node tools/gen_summaries.mjs --check` proves the catalogue"
+        )
     print("Version lockstep holds: " + "; ".join(bits) + ".")
     if args.verbose:
         for p in shell + data:

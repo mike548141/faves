@@ -666,7 +666,10 @@ When you transcribe a new menu for a venue that already has one:
    The test: *did the shop change it, or did we?*
 6. Bump `verified` to the day you read the menu **and set `verifiedBy` to how
    you read it** (a refresh from a delivery app is not a refresh from the
-   counter, and the record has to say which). Bump `DATA_VERSION` in `sw.js`.
+   counter, and the record has to say which). Then re-run
+   `node tools/gen_summaries.mjs` — its fingerprints are what tell installed
+   phones to fetch this venue (roadmap 510/030; this step used to be "bump
+   `DATA_VERSION`", a constant that no longer exists).
 
 Done this way every refresh adds a free, honest reading to the corpus. Done the
 old way it destroys one — which is exactly what happened to Takeaway @ Churton's
@@ -1355,26 +1358,62 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
 
 ## Service worker strategy
 
-- **Precache** on install, split into two independently-versioned caches
-  (ADR 0015): a **shell cache** (`SHELL_VERSION` → the three HTML shells, CSS,
-  JS, `site.webmanifest`, icons) and a **data cache** (`DATA_VERSION` →
-  `index.json`, `summary.json`, `search-index.json` + every restaurant JSON —
-  the last two are still precached in full, roadmap 510/020's saving is in
-  what the HOME SCREEN reads at runtime, not in what offline holds; that
-  changes only when `510/060`'s partitioning lands). Bumping one constant rebuilds
-  only that cache on the next install; the other survives untouched, so a
-  data-only menu edit no longer re-downloads the whole shell. `index.json`
-  is **data** (it lists which restaurants exist); `site.webmanifest` is
-  shell; there is no separate "config" cache (see ADR 0015). Install skips
-  an already-complete cache and uses a `__cache_ready__` sentinel so an
-  interrupted install rebuilds rather than serving a half-filled cache.
-- **Network-first with cache fallback** for data (so menu edits appear
-  promptly), **cache-first** for shell assets. Any byte change to `sw.js`
-  triggers the browser's SW update cycle; the version constants then
-  decide which cache(s) rebuild. **Lockstep:** data-only change under
-  `site/data/` → bump `DATA_VERSION`; any other `site/` change → bump
-  `SHELL_VERSION`; both → both.
-- **The version constants are dated on NEW ZEALAND LOCAL TIME**
+- **The shell** is precached on install into one versioned cache (ADR 0015):
+  `faves-shell-<SHELL_VERSION>` → the three HTML shells, CSS, JS,
+  `site.webmanifest`, icons. Install skips an already-complete cache and
+  uses a `__cache_ready__` sentinel so an interrupted install rebuilds
+  rather than serving a half-filled cache. **Cache-first.** Any byte change
+  to `sw.js` triggers the browser's SW update cycle; `SHELL_VERSION` decides
+  whether the shell rebuilds. **Lockstep:** any `site/` change outside
+  `site/data/` → bump `SHELL_VERSION`.
+- **The data** (everything under `site/data/`) lives in ONE PERMANENT STORE,
+  `faves-data`, keyed by **content fingerprint** — roadmap 510/030, ADR 0145
+  as revised by ADR 0146. There is **no `DATA_VERSION`** (retired; a
+  `check_versions.py` refusal stops it coming back).
+  - **Fingerprint** = first 12 hex digits of the SHA-256 of a file's exact
+    bytes, written by `tools/gen_summaries.mjs` (its one writer).
+    `site/data/catalogue.json` carries the four fixed files' (index, fx,
+    summary, search index) with a `schema` number; each record in
+    `summary.json` carries its venue file's as `h`. `--check` in CI proves
+    them current — the gate that replaced the version lockstep.
+  - **A sync** fetches the catalogue (`cache: "reload"`, ADR 0056), stops if
+    its own fingerprint is the one already held, else fetches ONLY the files
+    whose fingerprint moved as `<path>?h=<fp>`, **hashes each on arrival**
+    and refuses any other bytes (Pages' HTML stand-in, ADR 0100; a
+    mid-deploy mix). New files are written beside the old; then **one
+    pointer record** (`__data_pointer__/v<schema>`) naming the whole set is
+    written last — the switch. Reads go through the pointer, so a
+    half-written sync is unreachable; what no pointer names is swept at the
+    next sync's start and after every swap. The rates are the one soft
+    file: a failed `fx.json` keeps the old copy and leaves the pointer
+    marked incomplete so the next check retries it.
+  - **`?h=` is not immutable on the server** — `site/_headers` matches paths,
+    not query strings, so it is `max-age=0` like any data file. What saves
+    the download is the phone already holding those bytes.
+  - **Reads are store-first**: a data request is answered from the held set;
+    a path the set does not name (a venue newer than the last sync) goes to
+    the network and is never stored — only a sync writes the store.
+    `_fresh` rechecks (ADR 0020) go straight to the network, never stored.
+  - **When a sync runs:** at install (a worker may activate only with a
+    complete set for its schema); on any data read, coalesced to at most one
+    per 10 s; on resume (`sw-register.js`'s 5-minute gate posts
+    `SYNC_DATA`). One sync at a time across workers (Web Locks, with a
+    per-worker chain where the API is missing).
+  - **How fast an edit reaches an online phone:** the first data-reading
+    screen opened after the deploy is live starts the sync; that screen
+    renders the set it held, and the **next** screen opened after the switch
+    shows the edit (`tools/fetch_check.mjs` asserts both; the switch came
+    359 ms after the navigation on a local server). A PWA resumed from the
+    app switcher checks at most every 5 minutes. Before 510/030, reads were
+    network-first, so an online phone saw an edit on its very next read —
+    one screen sooner — at the cost of a request per data read.
+  - **What an update costs** (per-file gzip, 2026-09-30): one menu edit and
+    one hours edit → 4 requests, ~15.6 KB (catalogue, summary, two venue
+    files), was 61 requests, ~327 KB; an FX refresh → 2 requests, ~0.8 KB;
+    nothing changed → 1 request, 140 B. An edit that changes dish TEXT also
+    refetches `search-index.json` (~116 KB) — the one file not yet split.
+- **The version constant is dated on NEW ZEALAND LOCAL TIME** (there were
+  two until 510/030 retired `DATA_VERSION`)
   (`YYYY-MM-DD.N`, `N` counting that day's bumps from `.1`). Written down
   2026-09-07 because it was practised and never stated: the convention was
   carried entirely by each session copying the previous value's shape, and

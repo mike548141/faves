@@ -172,26 +172,19 @@ export async function loadRestaurant(id) {
 //
 // WHY THIS NEEDS NO NEW SERVICE-WORKER MESSAGE. ADR 0020 listed a "forced
 // refresh / cache-bust data path (service-worker cooperation)" as a
-// consequence still to be built. It is already here, in two halves that landed
-// for other reasons:
+// consequence still to be built. The cooperation is one rule in sw.js: a data
+// request carrying `_fresh` goes STRAIGHT to the network — never answered
+// from the worker's data store, never written to it (roadmap 510/030, ADR
+// 0146's "cache-busted rechecks are excluded"). Every other data read is
+// answered from the store, which is exactly why this needs the bust: an
+// answer from the store is indistinguishable from a network hit up here, and
+// reading "absent" out of a held copy is precisely the lie.
 //
-//   • sw.js serves everything under `/data/` NETWORK-FIRST, and with
-//     `cache: "no-cache"`, so while online a plain fetch is already the live
-//     file rather than the worker's copy or the browser's four-hour one.
-//   • The gap that leaves is invisibility, not staleness: the worker's OFFLINE
-//     fallback (`cache.match(req)`) is indistinguishable from a network hit up
-//     here, and reading "absent" out of a cached answer is precisely the lie.
-//
-// A unique query per check closes that gap, because `cache.match` honours the
-// query string (only the shell route passes `ignoreSearch`). The busted URL is
-// in no cache, so the worker's fallback MISSES and the fetch rejects. Hence:
-// a resolved response PROVES the network answered, which is the whole thing
-// the ADR wanted the worker's cooperation for.
-//
-// The cost, stated rather than hidden: the worker caches each 200 it sees, so
-// a recheck leaves one entry per URL in the data cache that will never be
-// served again (cleared on the next DATA_VERSION bump). Skipping `cache.put`
-// for a URL carrying `_fresh` is a one-line sw.js change and the permanent fix.
+// Offline, the straight-through fetch rejects. Hence: a resolved response
+// PROVES the network answered, which is the whole thing the ADR wanted the
+// worker's cooperation for. (Until 510/030 the worker stored each busted 200
+// it saw — one dead entry per recheck until the next DATA_VERSION bump. It no
+// longer stores them, so that cost is gone.)
 //
 // Deliberately NOT `forceRefresh()` (cache-refresh.js). That clears the shell
 // and data caches, unregisters the worker and reloads the page: it re-downloads

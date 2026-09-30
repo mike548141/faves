@@ -30,17 +30,22 @@ compares it to the original byte for byte, and refuses a shape it only half
 recognises rather than quietly yielding fewer paths. Fewer paths is exactly the
 answer that makes every assertion below pass.
 
-Three lists, all derived from `sw.js` itself so this tool cannot drift from it:
+Three lists, each derived from what the worker itself reads so this tool
+cannot drift from it:
 
 1. **`SHELL`** — the app shell, one quoted relative path per line. `"./"` and
    any path ending in `/` resolve to that directory's `index.html`.
-2. **`DATA_INDEX` / `DATA_FX` / `DATA_SUMMARY` / `DATA_SEARCH_INDEX`** — the
-   four data files known ahead of time. The last two are the home screen's
-   read files (roadmap 510/020) — `tools/gen_summaries.mjs --check` is what
-   proves their CONTENT is current; this only proves the PATH exists.
-3. **The menus** — `sw.js` builds these at install from `data/index.json`, so
-   the template is read out of the install step and applied to every id in the
-   index. A menu missing here is an install that throws on a real phone.
+2. **The catalogue's files** — since roadmap 510/030 the worker holds the data
+   set `site/data/catalogue.json` names (index, fx, summary, search index), so
+   `DATA_CATALOGUE` is read out of `sw.js` and every path the catalogue lists
+   must exist. `DATA_SUMMARY` and `DATA_FX` — the two files the sync finds by
+   ROLE — must be among them, or the sync cannot find the venues (summary) or
+   silently never holds the rates (fx). `tools/gen_summaries.mjs --check`
+   proves the fingerprints are CURRENT; this only proves the PATHS exist.
+3. **The menus** — the sync builds these from the summary's venue ids, so the
+   template is read out of `sw.js` (`venueFiles`) and applied to every id in
+   `site/data/summary.json`. A menu missing here is a sync that refuses the
+   whole data set on a real phone — and on a first install, no worker at all.
 
 What it does NOT check: that a file on disk is *in* the lists. `SHELL` is
 deliberately not everything under `site/` — `icons/og-image.png` and
@@ -67,7 +72,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
 SW = SITE / "sw.js"
-INDEX_JSON = SITE / "data" / "index.json"
+DATA_DIR = SITE / "data"
 
 
 class ParseRefused(Exception):
@@ -149,7 +154,7 @@ def const_path(src, name):
     return m.group(2)
 
 
-# The menu URL the install step builds per id. Read rather than hard-coded so a
+# The menu URL the sync builds per id. Read rather than hard-coded so a
 # move of the menus (`data/restaurants/` → anywhere else) is followed here
 # instead of silently checking a directory the worker no longer fetches.
 MENU_TMPL = re.compile(r"^(\s*)const u = `([^`${]*)\$\{id\}([^`${]*)`;$")
@@ -179,15 +184,34 @@ def resolve(rel):
     return path / "index.html" if rel == "" or rel.endswith("/") else path
 
 
-def audit(src, ids, verbose=False):
-    """Return (problems, counts). Takes `src` so --self-test can mutate it."""
+def load_catalogue(src):
+    """The catalogue `sw.js` names, parsed from disk; refused if unreadable."""
+    rel = const_path(src, "DATA_CATALOGUE")
+    path = resolve(rel)
+    try:
+        doc = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as e:
+        raise ParseRefused(f"site/{rel}: cannot be read as JSON ({e}) — run "
+                           "`node tools/gen_summaries.mjs`")
+    if not isinstance(doc.get("files"), dict) or not doc["files"]:
+        raise ParseRefused(f"site/{rel}: no `files` map — the data set would be empty")
+    return rel, doc
+
+
+def summary_ids():
+    doc = json.loads((DATA_DIR / "summary.json").read_text())
+    return [v["id"] for v in doc]
+
+
+def audit(src, catalogue, ids, verbose=False):
+    """Return (problems, counts). Takes `src` and the parsed catalogue so
+    --self-test can mutate either."""
     problems = []
     shell = shell_list(src)
-    data_index = const_path(src, "DATA_INDEX")
     data_fx = const_path(src, "DATA_FX")
     data_summary = const_path(src, "DATA_SUMMARY")
-    data_search_index = const_path(src, "DATA_SEARCH_INDEX")
     pre, post = menu_template(src)
+    listed = catalogue.get("files") or {}
 
     if not shell:
         problems.append("SHELL parsed as an empty list — every check below is vacuous")
@@ -213,13 +237,16 @@ def audit(src, ids, verbose=False):
 
     for rel in shell:
         check(rel, "SHELL")
-    data_files = (data_index, data_fx, data_summary, data_search_index)
-    for rel in data_files:
-        check(rel, "precached data file")
+    for rel in listed:
+        check(rel, "catalogue data file")
+    for role, rel in (("DATA_SUMMARY", data_summary), ("DATA_FX", data_fx)):
+        if rel not in listed:
+            problems.append(f"{role} is {rel!r}, which the catalogue does not list — "
+                            "the sync finds that file by this name")
     for rid in ids:
         check(f"{pre}{rid}{post}", f"menu for {rid!r}")
 
-    return problems, {"shell": len(shell), "data": len(data_files), "menus": len(ids)}
+    return problems, {"shell": len(shell), "data": len(listed), "menus": len(ids)}
 
 
 # --- Proving the gate can still fire --------------------------------------
@@ -230,11 +257,12 @@ def audit(src, ids, verbose=False):
 
 def self_test():
     src = SW.read_text()
-    ids = json.loads(INDEX_JSON.read_text())
+    _, catalogue = load_catalogue(src)
+    ids = summary_ids()
     cases = []
 
-    def case(what, mutate, expect, kind="problem"):
-        cases.append((what, mutate, expect, kind))
+    def case(what, mutate, expect, kind="problem", mutate_catalogue=None):
+        cases.append((what, mutate, expect, kind, mutate_catalogue))
 
     case("a phantom path in SHELL is reported",
          lambda s: s.replace('  "js/app.js",', '  "js/app.js",\n  "js/phantom.js",'),
@@ -245,14 +273,18 @@ def self_test():
     case("a menu template pointing at the wrong directory is reported",
          lambda s: s.replace("`data/restaurants/${id}.json`", "`data/venues/${id}.json`"),
          "data/venues/")
-    case("a missing fx file is reported",
+    case("an fx role the catalogue does not list is reported",
          lambda s: s.replace('const DATA_FX = "data/fx.json";',
                              'const DATA_FX = "data/rates.json";'),
          "data/rates.json")
-    case("a missing summary file is reported",
+    case("a summary role the catalogue does not list is reported",
          lambda s: s.replace('const DATA_SUMMARY = "data/summary.json";',
                              'const DATA_SUMMARY = "data/summary-gone.json";'),
          "data/summary-gone.json")
+    case("a catalogue listing a file that is not there is reported",
+         lambda s: s + "\n// unchanged source; the CATALOGUE is mutated\n",
+         "data/phantom.json",
+         mutate_catalogue=lambda c: {**c, "files": {**c["files"], "data/phantom.json": "0" * 12}})
     case("a re-spaced SHELL row is REFUSED, not read as fewer paths",
          lambda s: s.replace('  "js/app.js",', '  "js/app.js" ,'),
          "write its input back unchanged", kind="refused")
@@ -262,20 +294,21 @@ def self_test():
     case("a renamed SHELL header is REFUSED",
          lambda s: s.replace("const SHELL = [", "const SHELL  = ["),
          "no line reading exactly", kind="refused")
-    case("a DATA_INDEX that is not a quoted path is REFUSED",
-         lambda s: s.replace('const DATA_INDEX = "data/index.json";',
-                             "const DATA_INDEX = INDEX;"),
+    case("a DATA_FX that is not a quoted path is REFUSED",
+         lambda s: s.replace('const DATA_FX = "data/fx.json";',
+                             "const DATA_FX = RATES;"),
          "not a plain quoted path", kind="refused")
 
     failures = 0
-    for what, mutate, expect, kind in cases:
+    for what, mutate, expect, kind, mutate_catalogue in cases:
         mutated = mutate(src)
         if mutated == src:
             print(f"  ✗ {what}: the fixture line moved — update this self-test")
             failures += 1
             continue
+        cat = mutate_catalogue(catalogue) if mutate_catalogue else catalogue
         try:
-            problems, _ = audit(mutated, ids)
+            problems, _ = audit(mutated, cat, ids)
             got = "\n".join(problems)
             ok = kind == "problem" and expect in got
         except ParseRefused as e:
@@ -290,7 +323,7 @@ def self_test():
 
     # The control. Without it, a gate broken into refusing everything passes
     # every case above.
-    problems, _ = audit(src, ids)
+    problems, _ = audit(src, catalogue, ids)
     if problems:
         failures += 1
         print("  ✗ the UNMUTATED tree must be clean, and it is not:")
@@ -315,9 +348,10 @@ def main():
     if args.self_test:
         return self_test()
 
-    ids = json.loads(INDEX_JSON.read_text())
     try:
-        problems, counts = audit(SW.read_text(), ids, args.verbose)
+        src = SW.read_text()
+        _, catalogue = load_catalogue(src)
+        problems, counts = audit(src, catalogue, summary_ids(), args.verbose)
     except ParseRefused as e:
         print(f"✗ {e}")
         print("\nsite/sw.js no longer has the shape this tool reads. Fix the file")
@@ -336,7 +370,7 @@ def main():
         return 1
 
     print(f"✓ every precached path exists — {counts['shell']} shell file(s), "
-          f"{counts['data']} data file(s), {counts['menus']} menu(s).")
+          f"{counts['data']} catalogue file(s), {counts['menus']} menu(s).")
     return 0
 
 

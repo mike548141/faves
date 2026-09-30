@@ -19,18 +19,26 @@ the tool guards itself so it cannot become noise:
 
   • already fetched today  → does nothing
   • no rate actually moved → does nothing
-  • otherwise              → writes, and `--bump` moves DATA_VERSION with it
+  • otherwise              → writes, and `--bump` restamps the data catalogue
 
 So running it on every commit is harmless, and the rates change in the repo at
 most once a day — whether it is you running it or the schedule.
 
     python3 tools/fetch_fx.py            # fetch if due
-    python3 tools/fetch_fx.py --bump     # ...and bump DATA_VERSION if it wrote
+    python3 tools/fetch_fx.py --bump     # ...and restamp site/data/catalogue.json
+                                         #   if it wrote (needs node — see below)
     python3 tools/fetch_fx.py --check    # exit 1 if the file is missing, malformed,
                                          #   short a WANTED currency, or holding a
                                          #   rate outside its plausibility band
     python3 tools/fetch_fx.py --dry-run  # print what would be written
     python3 tools/fetch_fx.py --force    # ignore the guards and write anyway
+
+`--bump` used to move `DATA_VERSION` in sw.js; roadmap 510/030 retired that
+constant. Phones now learn of new rates from fx.json's fingerprint in
+`site/data/catalogue.json`, and fetch fx.json alone — not every menu, which is
+what each weekly bump used to cost them. The catalogue has ONE writer,
+`tools/gen_summaries.mjs`, so this runs it (`--catalogue`) rather than
+re-implementing the fingerprint here.
 
 Stdlib only, no build step. Network is used HERE, at authoring time, never by
 the site — and NEVER by `--check`, which reads the committed file and nothing
@@ -40,7 +48,9 @@ else, so it is the same check in flight mode, in CI and on a dead link.
 import argparse
 import json
 import math
-import re
+import os
+import shutil
+import subprocess
 import sys
 import urllib.request
 from datetime import date, datetime, timezone
@@ -190,7 +200,6 @@ def build():
     return doc, missing
 
 
-SW = ROOT / "site" / "sw.js"
 
 
 def current_doc():
@@ -222,52 +231,44 @@ def rates_changed(doc):
     Compares rates only — never `fetched`, and never `asOf` on its own. The
     source restamps its snapshot daily whether or not a number moved, and a
     commit that changes nothing a reader can see still costs every installed
-    phone a re-download of the data cache.
+    phone a download (of fx.json alone since roadmap 510/030; of every menu
+    before it).
     """
     return current_doc().get("rates") != doc.get("rates")
 
 
-def bump_data_version():
-    """Bump DATA_VERSION in sw.js, because fx.json lives under site/data/.
+def restamp_catalogue(root=ROOT):
+    """Rewrite `site/data/catalogue.json` so it names the new fx.json.
 
-    The lockstep rule (CLAUDE.md) is that a change under `site/data/` must bump
-    `DATA_VERSION` or installed phones keep serving the cached copy — here, the
-    old rates. Doing it in the same tool that writes the file is the only way a
-    scheduled job can honour a rule a human would otherwise have to remember.
-    Same-day reruns get `.1`, `.2`, … so two refreshes in a day are distinct.
+    Why this and not a version bump (roadmap 510/030): phones compare
+    fingerprints, and a changed fx.json whose fingerprint the catalogue does not
+    carry is simply never fetched — the rates would stay old on every installed
+    phone, silently, with CI red only on `gen_summaries.mjs --check`. Doing it
+    in the tool that writes the file is still the only way a scheduled job can
+    honour a rule a human would otherwise have to remember.
+
+    `root` is a parameter so tools/test_fetch_fx.py can run it against a copy.
     """
-    text = SW.read_text()
-    m = re.search(r'const DATA_VERSION = "([^"]+)";', text)
-    if not m:
-        raise SystemExit("could not find DATA_VERSION in site/sw.js")
-    old = m.group(1)
-    nxt = next_data_version(old, nz_today())
-    SW.write_text(text.replace(f'const DATA_VERSION = "{old}";', f'const DATA_VERSION = "{nxt}";', 1))
-    return f"DATA_VERSION {old} -> {nxt}"
-
-
-def nz_today():
-    """Today in New Zealand, which is how the version constants are dated
-    (CLAUDE.md, lockstep rules). `date.today()` is the MACHINE's date: on the
-    UTC Actions runner it is a day behind NZ from midday UTC, and stamped a
-    restamped FX PR BELOW main's constant on 2026-09-28 (PR #52)."""
-    from zoneinfo import ZoneInfo
-    return datetime.now(ZoneInfo("Pacific/Auckland")).date().isoformat()
-
-
-def next_data_version(old, today):
-    """The constant after `old`, dated `today` (YYYY-MM-DD), and NEVER below
-    `old`: a version is a cache name, and a lower one is already installed
-    somewhere and served stale (check_versions.py's went_backwards). If `old`
-    carries a later date than `today` — a clock behind the one that stamped
-    it — the counter on `old`'s own date moves on instead."""
-    m = re.fullmatch(r"(\d{4}-\d{2}-\d{2})(?:\.(\d+))?", old)
-    if not m:
-        return f"{today}.1"
-    old_day, old_n = m.group(1), int(m.group(2) or 0)
-    if old_day > today:
-        today = old_day
-    return f"{today}.{old_n + 1}" if old_day == today else f"{today}.1"
+    node = shutil.which("node")
+    if not node:
+        raise SystemExit(
+            "node is needed to restamp site/data/catalogue.json (its one writer is "
+            "tools/gen_summaries.mjs) — install it, or run that tool by hand"
+        )
+    r = subprocess.run(
+        [node, str(Path(root) / "tools" / "gen_summaries.mjs"), "--catalogue"],
+        capture_output=True,
+        text=True,
+        env={**os.environ, "FAVES_NO_TREE_LINE": "1"},
+    )
+    if r.returncode != 0:
+        raise SystemExit(f"restamping the catalogue failed:\n{r.stdout}{r.stderr}")
+    # Exit 0 is not evidence it wrote: until 2026-09-30 the generator could
+    # exit 0 WITHOUT running at all (a symlinked path fooled its is-main test).
+    # It says what it wrote; require that sentence.
+    if "catalogue only" not in r.stdout:
+        raise SystemExit(f"the generator exited 0 but did not say it wrote the catalogue:\n{r.stdout}")
+    return "restamped site/data/catalogue.json (fx.json's fingerprint)"
 
 
 def check():
@@ -308,14 +309,15 @@ def main():
         action="store_true",
         help="ignore the two NOISE guards (already-fetched-today, and no-rate-moved) "
         "and write anyway. Rarely wanted: a write with identical numbers costs every "
-        "installed phone a re-download of the data cache for nothing. It does NOT "
+        "installed phone a download of fx.json for nothing. It does NOT "
         "bypass the plausibility band — that one is about correctness, not noise.",
     )
     ap.add_argument(
         "--bump",
         action="store_true",
-        help="also bump DATA_VERSION in site/sw.js when the rates actually changed "
-        "— pair it with a normal run so the two land in one commit",
+        help="also restamp site/data/catalogue.json when the rates actually changed, "
+        "so installed phones fetch the new rates (roadmap 510/030) — the two land "
+        "in one commit",
     )
     args = ap.parse_args()
 
@@ -357,15 +359,15 @@ def main():
     if not rates_changed(doc) and not args.force:
         # The scheduled job runs whether or not the rates moved. Rewriting the file
         # with only a new `fetched` stamp would produce a commit a day that
-        # changes no rate, and every one of those would invalidate the data
-        # cache on every installed phone for nothing.
+        # changes no rate, and every one of those would cost every installed
+        # phone a download of fx.json for nothing.
         print(f"rates unchanged since {current_as_of()} — nothing to write")
         return 0
 
     OUT.write_text(text)
     print(f"wrote {OUT.relative_to(ROOT)} — {len(doc['rates'])} rates, as at {doc['asOf']}")
     if args.bump:
-        print(bump_data_version())
+        print(restamp_catalogue())
     return 0
 
 

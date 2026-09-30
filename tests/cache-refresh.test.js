@@ -12,9 +12,11 @@ import { refreshableCaches, forceRefresh } from "../site/js/cache-refresh.js";
 
 const NAMES = [
   "faves-shell-2026-08-09.5",
-  "faves-data-2026-08-09.3",
+  "faves-data-2026-08-09.3", // the retired per-version data cache (pre-510/030)
+  "faves-data", // the permanent data store (510/030)
   "faves-img-v1",
   "something-else",
+  "faves-database-of-someone-else",
 ];
 
 function fakes({ names = NAMES, online = true, registrations = [] } = {}) {
@@ -54,6 +56,7 @@ test("only the shell and data caches are refreshable — photos survive", () => 
   assert.deepEqual(refreshableCaches(NAMES), [
     "faves-shell-2026-08-09.5",
     "faves-data-2026-08-09.3",
+    "faves-data",
   ]);
   assert.deepEqual(refreshableCaches([]), []);
   assert.deepEqual(refreshableCaches(null), []);
@@ -71,9 +74,10 @@ test("offline is a refusal: nothing cleared, nothing unregistered, no reload", a
 test("online: unregisters the worker, clears shell + data, reloads", async () => {
   const f = fakes({ registrations: ["sw"] });
   const res = await forceRefresh(f.opts);
-  assert.deepEqual(res, { ok: true, cleared: 2 });
+  assert.deepEqual(res, { ok: true, cleared: 3 });
   assert.deepEqual(f.unregistered, ["sw"]);
   assert.deepEqual(f.deleted.sort(), [
+    "faves-data",
     "faves-data-2026-08-09.3",
     "faves-shell-2026-08-09.5",
   ]);

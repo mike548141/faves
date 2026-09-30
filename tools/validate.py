@@ -2747,11 +2747,13 @@ def check_restaurant(path):
 
 def check_version_bump():
     """Best-effort reminder (never fails the build): if menu data changed in the
-    working tree but site/sw.js didn't, DATA_VERSION was almost certainly not
-    bumped — installed phones would keep serving stale menus offline (ADR 0015).
-    Deliberately shallow: it doesn't parse which constant moved, just flags the
-    common "forgot to bump anything" slip. Silently skips when git isn't
-    available or this isn't a checkout, so the validator still runs standalone."""
+    working tree but site/data/catalogue.json didn't, the generator was almost
+    certainly not re-run — and a venue whose new fingerprint no manifest
+    carries is never fetched by an installed phone (roadmap 510/030; this
+    warned about DATA_VERSION before that constant was retired). Deliberately
+    shallow: `node tools/gen_summaries.mjs --check` is the real gate, and CI
+    runs it. Silently skips when git isn't available or this isn't a checkout,
+    so the validator still runs standalone."""
     try:
         out = subprocess.run(
             ["git", "-C", str(ROOT), "status", "--porcelain"],
@@ -2769,12 +2771,12 @@ def check_version_bump():
         if " -> " in path:  # rename: "old -> new"
             path = path.split(" -> ", 1)[1]
         paths.add(path)
-    data_dirty = any(p.startswith("site/data/") for p in paths)
-    sw_dirty = "site/sw.js" in paths
-    if data_dirty and not sw_dirty:
+    catalogue = "site/data/catalogue.json"
+    data_dirty = any(p.startswith("site/data/") and p != catalogue for p in paths)
+    if data_dirty and catalogue not in paths:
         warnings.append(
-            "[version] site/data changed but site/sw.js did not — bump "
-            "DATA_VERSION in site/sw.js so installed phones refetch the menus"
+            "[fingerprint] site/data changed but site/data/catalogue.json did not — "
+            "run `node tools/gen_summaries.mjs` so installed phones fetch the change"
         )
 
 

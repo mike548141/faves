@@ -73,6 +73,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      # tools/test_fetch_fx.py runs the catalogue's one writer,
+      # tools/gen_summaries.mjs (roadmap 510/030) — the same action and version
+      # the JS job below uses, so no new trust surface.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       # Fails if package.json ever grows a dependency, or a lockfile /
       # node_modules appears — the invariant ADR 0001 rests on.
       - name: Assert no third-party dependencies
@@ -204,9 +210,11 @@ jobs:
         run: python3 tools/seed_option_ids.py --check
       - name: Assert the shipped exchange rates load
         run: python3 tools/fetch_fx.py --check
-      # The FX bump dated DATA_VERSION by the UTC runner's clock and stamped a
-      # restamped PR BELOW main on 2026-09-28 (PR #52). NZ date, never backwards.
-      - name: Prove the FX version bump never goes backwards
+      # The FX refresh's `--bump` restamps the data catalogue (roadmap 510/030;
+      # until then it bumped DATA_VERSION, and stamped one BELOW main from the
+      # UTC runner's clock on 2026-09-28, PR #52). A new fx.json the catalogue
+      # does not name is never fetched by a phone, silently.
+      - name: Prove the FX refresh restamps the catalogue phones read
         run: python3 tools/test_fetch_fx.py
       # The Theme 38 cold review found three stores under data/ that no
       # document described and two that nothing validated. data/images/ is the
@@ -301,7 +309,8 @@ jobs:
           python3 tools/check_versions.py --range "$RANGE"
       # And prove the guard can still fire. It found a flaw in itself on its
       # first run — sw.js was being counted as a shell file, so every data-only
-      # menu edit (which bumps DATA_VERSION, i.e. edits sw.js) was flagged. A
+      # menu edit (which then bumped DATA_VERSION, i.e. edited sw.js) was
+      # flagged. It now also refuses DATA_VERSION's return (510/030). A
       # guard that cries wolf on the correct action gets overridden into
       # decoration, which is how four earlier checks here went quiet.
       - name: Prove the version guard actually catches things
@@ -326,7 +335,10 @@ jobs:
       # proves the committed site/data/summary.json and
       # site/data/search-index.json still match what that generator produces
       # from the tree, the same way gen_sbom.py --check proves the SBOM.
-      - name: Assert the home summary and search index match the tree
+      # Since 510/030 it also proves the FINGERPRINTS (catalogue.json and each
+      # summary record's `h`): a stale one means installed phones never fetch
+      # the change — this is the gate that replaced the DATA_VERSION lockstep.
+      - name: Assert the home summary, search index and fingerprints match the tree
         run: node tools/gen_summaries.mjs --check
 
   # THE ONE BROWSER CHECK CI RUNS — owner's ruling, 2026-08-16.
