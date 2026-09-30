@@ -91,3 +91,7 @@
   📌 **Claim released 2026-10-01 (`faves-0b`)** with everything but the
   import shipped (PR #58). What is left waits on the owner: his list of
   recipes, the three forks above, and his go-ahead to deploy the Worker.
+
+  ⚖️ **Owner-ruled 2026-10-01:** the Worker deploys **with the import**, not
+  before. Fork (1) is ruled **per person**, now item `120`. Fork (2), how
+  the import reaches devices, and his recipe list are still open.

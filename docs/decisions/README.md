@@ -1806,4 +1806,4 @@ deliberation those compact docs omit.
 - [0147](0147-data-reads-come-from-the-phones-own-store-and-every-download-is-checked.md) — <!-- wrapscan:allow: a link target cannot wrap -->
   **Data reads come from the phone's own store, and every download is
   checked** (`510/030`). Network-first reads are rejected; an edit reaches an
-  online phone one screen later, a trade still open with the owner.
+  online phone one screen later, a trade the owner kept (2026-10-01).

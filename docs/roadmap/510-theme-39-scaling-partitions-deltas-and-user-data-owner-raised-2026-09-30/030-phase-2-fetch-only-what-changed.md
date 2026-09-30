@@ -73,3 +73,6 @@
   screen shows the edit (`fetch_check` measured the switch 359 ms after the
   navigation, local server). A resumed app checks at most every 5 minutes.
   That buys the network and server columns above.
+
+  ⚖️ **Owner-ruled 2026-10-01: "Keep as built"**. An edit reaching an online
+  phone one screen later is accepted for 4 requests instead of 61 (ADR 0147).
