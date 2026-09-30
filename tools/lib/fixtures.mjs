@@ -65,10 +65,10 @@
 // two venues differing. Noted rather than converted.)
 
 import { readFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { load } from "../../site/js/data.js";
-import { renderFrom } from "../gen_summaries.mjs";
+import { renderTree } from "../gen_summaries.mjs";
 
 /** Every fixture id ends in this, so a grep can never confuse one for a venue
  *  and a stray fixture that reached `site/data/` is one search away. */
@@ -347,8 +347,9 @@ export async function buildFixtures(siteDir, specs) {
  * `data/restaurants/` at all, so a fixture invisible in those two files is a
  * fixture invisible on the home screen, however correct the swapped index is.
  *
- * This rebuilds all three the same way `tools/gen_summaries.mjs` does for the
- * real deploy — through `load()` and the exported `renderFrom()` — so a
+ * This rebuilds all four (the catalogue too, roadmap 510/030) the same way
+ * `tools/gen_summaries.mjs` does for the real deploy — through its exported
+ * `renderTree()`, so through `load()` — so a
  * fixture's summary/search-index entries can never drift from what the real
  * generator would produce for the same record. `renderFrom()`'s search index
  * is the COMPACT, venue-grouped shape the real file ships (roadmap 510/020);
@@ -365,17 +366,23 @@ export async function buildFixtures(siteDir, specs) {
  */
 export async function buildHomeOverlay(siteDir, records, swap) {
   const ids = JSON.parse(await readFile(join(siteDir, "data", "index.json"), "utf8"));
-  const swapped = ids.map((id) => swap.get(id) || id);
-  const loaded = await Promise.all(
-    swapped.map(async (id) => {
-      const raw = records.has(id) ? records.get(id) : await readVenue(siteDir, id);
-      return load(raw);
-    })
-  );
-  const { summary, searchIndex } = renderFrom(loaded);
+  const swapped = JSON.stringify(ids.map((id) => swap.get(id) || id));
+  // The bytes each path will actually be SERVED as — the fixture strings are
+  // exactly what `buildFixtures` puts in the overlay — so every fingerprint
+  // (a venue's `h`, the catalogue's four) names the bytes the phone gets
+  // (roadmap 510/030). A fingerprint over any other bytes makes the service
+  // worker refuse the whole data set, and the page then runs uncontrolled.
+  const read = (rel) => {
+    if (rel === "data/index.json") return swapped;
+    const m = /^data\/restaurants\/(.+)\.json$/.exec(rel);
+    if (m && records.has(m[1])) return JSON.stringify(records.get(m[1]));
+    return readFileSync(join(siteDir, rel));
+  };
+  const { summaryText, indexText, catalogueText } = renderTree(read);
   return new Map([
-    ["/data/index.json", JSON.stringify(swapped)],
-    ["/data/summary.json", JSON.stringify(summary)],
-    ["/data/search-index.json", JSON.stringify(searchIndex)],
+    ["/data/index.json", swapped],
+    ["/data/summary.json", summaryText],
+    ["/data/search-index.json", indexText],
+    ["/data/catalogue.json", catalogueText],
   ]);
 }

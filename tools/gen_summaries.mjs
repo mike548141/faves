@@ -64,8 +64,42 @@
 // 0146's cold review named this same gap (m6, "freshness changes unnamed")
 // as still open — this comment is that naming, not a fix for it.
 //
-//     node tools/gen_summaries.mjs            # write both files
-//     node tools/gen_summaries.mjs --check    # CI: fail if either is stale
+// THE FINGERPRINTS (roadmap 510/030, ADR 0145 layers 1–2 as revised by ADR
+// 0146). Every data file a phone holds is named by a content fingerprint —
+// the first 12 hex digits of the SHA-256 of its exact committed bytes — and
+// the service worker's permanent data store (site/sw.js) fetches and keeps
+// only the files whose fingerprint moved. Two places carry them:
+//
+//   site/data/catalogue.json  layer 1: the four fixed files (index, fx,
+//                             summary, search index). Fetched on every
+//                             update check, so it must stay tiny.
+//   site/data/summary.json    layer 2: each venue record's `h` is ITS venue
+//                             file's fingerprint. A menu edit therefore
+//                             changes the summary too — the ADR's layering,
+//                             chosen so the catalogue does not grow with the
+//                             number of venues (it is fetched on every check;
+//                             the summary only when something changed).
+//
+// 🔑 WHY HERE AND NOT A SIBLING GENERATOR. This file already reads every venue
+// file and writes the summary that carries their fingerprints, and the
+// catalogue's fingerprints are of files this tool just wrote — so one tool
+// writing all three means one command after a data edit and one --check that
+// cannot pass with a summary regenerated and a catalogue forgotten. A Python
+// sibling was weighed (tools/fetch_fx.py is Python and restamps the catalogue
+// after a rate refresh) and rejected: it would be a second implementation of
+// the fingerprint rule, which is exactly the duplicated rule that reads
+// correct in every diff. fetch_fx.py runs `--catalogue` here instead.
+//
+// Deterministic from bytes, never from time or from the tree's state: the
+// same file always gets the same fingerprint, which is what makes `--check`
+// meaningful and what lets the phone VERIFY a download against the name it
+// asked for (a mismatch is refused, so a mid-deploy mix of old and new files
+// can never be switched to).
+//
+//     node tools/gen_summaries.mjs              # write summary, index, catalogue
+//     node tools/gen_summaries.mjs --check      # CI: fail if any is stale
+//     node tools/gen_summaries.mjs --catalogue  # restamp ONLY the catalogue
+//                                               # (after an fx.json refresh)
 //
 // No build step (ADR 0001): `site/` still ships exactly what's committed;
 // this just writes two more committed files, the same way gen_sbom.py and
@@ -74,6 +108,7 @@
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -84,13 +119,55 @@ import { priceBand } from "../site/js/price.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DATA_DIR = path.join(ROOT, "site", "data");
-const INDEX_PATH = path.join(DATA_DIR, "index.json");
-const RESTAURANTS_DIR = path.join(DATA_DIR, "restaurants");
 const SUMMARY_PATH = path.join(DATA_DIR, "summary.json");
 const SEARCH_INDEX_PATH = path.join(DATA_DIR, "search-index.json");
+const CATALOGUE_PATH = path.join(DATA_DIR, "catalogue.json");
 
-function readJson(p) {
-  return JSON.parse(readFileSync(p, "utf8"));
+/**
+ * The published data schema's major version (ADR 0145: "each manifest
+ * carries a schema version"). site/sw.js carries the same number as
+ * `DATA_SCHEMA` and refuses to switch to a catalogue naming any other, so
+ * a shape change ships as a bump here AND there, in one commit —
+ * tests/sw-data-store.test.js holds the two equal.
+ */
+export const DATA_SCHEMA = 1;
+
+/** Hex digits kept from the SHA-256. 48 bits: the fingerprint only has to
+ *  tell one version of the SAME path from another, and the phone recomputes
+ *  it over every download, so this is a change detector with a checksum's
+ *  teeth, not a global content address. site/sw.js's `FINGERPRINT_LENGTH`
+ *  must match (tests/sw-data-store.test.js). */
+export const FINGERPRINT_LENGTH = 12;
+
+/** A file's fingerprint: the first FINGERPRINT_LENGTH hex digits of the
+ *  SHA-256 of its exact bytes (a string is hashed as its UTF-8 bytes, which
+ *  is what writeFileSync puts on disk). */
+export function fingerprint(bytes) {
+  return createHash("sha256").update(bytes).digest("hex").slice(0, FINGERPRINT_LENGTH);
+}
+
+/** The catalogue's fixed files, site-relative — the paths the service worker
+ *  requests. Venue files are NOT here; the summary names them (see header). */
+export const CATALOGUE_FILES = [
+  "data/fx.json",
+  "data/index.json",
+  "data/search-index.json",
+  "data/summary.json",
+];
+
+/**
+ * The catalogue text for a map of site-relative path → bytes. Pretty-printed
+ * (unlike the two generated payloads): it is a few hundred bytes, and a diff
+ * of it is the one-line record of which fixed file a commit changed.
+ */
+export function renderCatalogue(bytesByPath) {
+  const files = {};
+  for (const rel of CATALOGUE_FILES) {
+    const bytes = bytesByPath[rel];
+    if (bytes === undefined) throw new Error(`catalogue: no bytes for ${rel}`);
+    files[rel] = fingerprint(bytes);
+  }
+  return JSON.stringify({ schema: DATA_SCHEMA, files }, null, 2) + "\n";
 }
 
 /**
@@ -194,17 +271,49 @@ function dishGroups(record) {
  * one path, never a second implementation that could silently disagree with
  * this one.
  */
-export function renderFrom(loaded) {
+export function renderFrom(loaded, fingerprints = null) {
   return {
-    summary: loaded.map(summarise),
+    summary: loaded.map((r, i) => {
+      const out = summarise(r);
+      // Layer 2's per-venue fingerprint (roadmap 510/030). Read by the service
+      // worker's data sync, never by a screen — the owner-ruled design
+      // (ADR 0145's layer table) is the reader ADR 0047 asks this field to name.
+      if (fingerprints) out.h = fingerprints[i];
+      return out;
+    }),
     searchIndex: { venues: loaded.map((r) => ({ id: r.id, sections: dishGroups(r) })) },
   };
 }
 
+/**
+ * Every generated data file for a tree, read through `read(rel)` → the bytes
+ * of a site-relative path. The real run reads the disk; a browser check
+ * (tools/fetch_check.mjs, tools/lib/fixtures.mjs) reads its overlay first, so
+ * an edited or fixture venue gets the summary entry, search index entry,
+ * fingerprint and catalogue the real generator would give it — the one path,
+ * never a second one that could disagree.
+ */
+export function renderTree(read) {
+  const indexBytes = read("data/index.json");
+  const ids = JSON.parse(String(indexBytes));
+  const raws = ids.map((id) => read(`data/restaurants/${id}.json`));
+  const loaded = raws.map((bytes) => load(JSON.parse(String(bytes))));
+  const { summary, searchIndex } = renderFrom(loaded, raws.map(fingerprint));
+  const summaryText = JSON.stringify(summary) + "\n";
+  const indexText = JSON.stringify(searchIndex) + "\n";
+  const catalogueText = renderCatalogue({
+    "data/fx.json": read("data/fx.json"),
+    "data/index.json": indexBytes,
+    "data/search-index.json": indexText,
+    "data/summary.json": summaryText,
+  });
+  return { summaryText, indexText, catalogueText, count: loaded.length };
+}
+
+const readSite = (rel) => readFileSync(path.join(ROOT, "site", rel));
+
 function render() {
-  const ids = readJson(INDEX_PATH);
-  const loaded = ids.map((id) => load(readJson(path.join(RESTAURANTS_DIR, `${id}.json`))));
-  const { summary, searchIndex } = renderFrom(loaded);
+  const { summaryText, indexText, catalogueText, count } = renderTree(readSite);
   return {
     // Minified, deliberately unlike gen_sbom.py's output: these two files are
     // never hand-read (a --check byte comparison and the source restaurant
@@ -213,15 +322,28 @@ function render() {
     // coordinator's own instruction on this item is "as small as possible" —
     // measured 2026-09-30, indent:2 → none cut search-index.json's shipped
     // gzip bytes by ~6.5% and summary.json's by ~17%.
-    summaryText: JSON.stringify(summary) + "\n",
-    indexText: JSON.stringify(searchIndex) + "\n",
-    count: loaded.length,
+    summaryText,
+    indexText,
+    catalogueText,
+    count,
   };
+}
+
+/** The catalogue alone, from the bytes on disk — for a change that touched
+ *  only a fixed file (tools/fetch_fx.py after a rate refresh), so it does
+ *  not re-resolve every venue against today's date. */
+function renderCatalogueOnly() {
+  return renderCatalogue(Object.fromEntries(CATALOGUE_FILES.map((rel) => [rel, readSite(rel)])));
 }
 
 function main(argv) {
   const check = argv.includes("--check");
-  const { summaryText, indexText, count } = render();
+  if (argv.includes("--catalogue")) {
+    writeFileSync(CATALOGUE_PATH, renderCatalogueOnly());
+    console.log(`Wrote ${path.relative(ROOT, CATALOGUE_PATH)} (catalogue only).`);
+    return 0;
+  }
+  const { summaryText, indexText, catalogueText, count } = render();
 
   if (check) {
     const problems = [];
@@ -231,21 +353,26 @@ function main(argv) {
     if (!existsSync(SEARCH_INDEX_PATH) || readFileSync(SEARCH_INDEX_PATH, "utf8") !== indexText) {
       problems.push(path.relative(ROOT, SEARCH_INDEX_PATH));
     }
+    if (!existsSync(CATALOGUE_PATH) || readFileSync(CATALOGUE_PATH, "utf8") !== catalogueText) {
+      problems.push(path.relative(ROOT, CATALOGUE_PATH));
+    }
     if (problems.length) {
       console.error(
         `ERROR: out of date — run \`node tools/gen_summaries.mjs\` and commit: ${problems.join(", ")}`
       );
       return 1;
     }
-    console.log(`Summaries and search index up to date (${count} venues).`);
+    console.log(`Summaries, search index and catalogue up to date (${count} venues).`);
     return 0;
   }
 
   writeFileSync(SUMMARY_PATH, summaryText);
   writeFileSync(SEARCH_INDEX_PATH, indexText);
+  writeFileSync(CATALOGUE_PATH, catalogueText);
   console.log(
-    `Wrote ${path.relative(ROOT, SUMMARY_PATH)} and ` +
-      `${path.relative(ROOT, SEARCH_INDEX_PATH)} (${count} venues).`
+    `Wrote ${path.relative(ROOT, SUMMARY_PATH)}, ` +
+      `${path.relative(ROOT, SEARCH_INDEX_PATH)} and ` +
+      `${path.relative(ROOT, CATALOGUE_PATH)} (${count} venues).`
   );
   return 0;
 }
