@@ -1,4 +1,4 @@
-- [ ] **Phase 4 — personal recipes, and recipe buckets in sync** `[L]
+- [~] **Phase 4 — personal recipes, and recipe buckets in sync** `[L]
       [data][sync][recipes]` — owner-raised 2026-09-30, revised the same day
       by [ADR 0146](../../decisions/0146-the-scaling-design-revised-after-its-cold-review.md). Needs `010` and `040`.
 
@@ -18,3 +18,7 @@
     need padding.
 
   No editor in this item; it comes later.
+
+  📌 **Claimed 2026-09-30 (`faves-0b`)** for everything except the one-off
+  import, which waits for the owner's list. Any Worker change is built and
+  tested but not deployed until he says so.

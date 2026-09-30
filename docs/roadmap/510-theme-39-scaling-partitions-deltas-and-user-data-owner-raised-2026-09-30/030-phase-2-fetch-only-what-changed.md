@@ -1,4 +1,4 @@
-- [ ] **Phase 2 — fetch only what changed** `[L] [pwa][sw][data]` —
+- [~] **Phase 2 — fetch only what changed** `[L] [pwa][sw][data]` —
       owner-raised 2026-09-30 (and first raised 2026-09-29 as `240/030`),
       [ADR 0145](../../decisions/0145-faves-scales-by-partition-and-fingerprint-and-user-data-by-versioned-store.md).
 
@@ -27,3 +27,5 @@
   half-written is unreachable and cleared on the next start. Exclude
   cache-busted rechecks from the store, and delete orphans after each swap.
   Say how quickly a menu edit now reaches a phone that is online.
+
+  📌 **Claimed 2026-09-30 (`faves-0b`)** — built in a worktree.
