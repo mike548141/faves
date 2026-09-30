@@ -13,6 +13,7 @@ import { test, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import {
   loadRestaurants,
+  loadSearchIndex,
   loadRestaurant,
   recheckReferences,
   referenceCopyFor,
@@ -81,26 +82,47 @@ test("loadRestaurant resolves a branch's dated address BEFORE lifting it up", as
   assert.equal(r.locations[0].address, "NEW-ADDR");
 });
 
-test("loadRestaurants applies the same resolution to every record", async () => {
+// loadRestaurants no longer resolves anything itself (roadmap 510/020): that
+// happens ONCE, at build time, in tools/gen_summaries.mjs (which reuses this
+// same `load()` — see data-loader tests below aren't the place that proves
+// resolution; gen_summaries.mjs imports `load` directly). Here it is a plain
+// fetch of the precomputed summary file, so these tests assert exactly that —
+// not resolution, which would be testing the generator through the wrong door.
+test("loadRestaurants fetches data/summary.json and returns it as-is", async () => {
+  // No `menu` (roadmap 510/020's coordinator revision) — a summary record
+  // carries a `dishCount` instead; dish identity lives only in the search
+  // index (tests/rebuild-index.test.js).
+  const SUMMARY = [{ id: "t", name: "T", dishCount: 1 }];
+  globalThis.fetch = async (url) => ({
+    ok: true,
+    json: async () => (url.includes("summary.json") ? structuredClone(SUMMARY) : {}),
+  });
   const all = await loadRestaurants();
-  assert.equal(all.length, 1);
-  assert.equal(all[0].menu[0].items[0].price, 17.5);
-  assert.equal(all[0].closure.state, "closed-temporarily");
+  assert.deepEqual(all, SUMMARY);
 });
 
-test("loadRestaurants skips a record that fails to load rather than dying", async () => {
-  globalThis.fetch = async (url) => {
-    if (url.endsWith("index.json")) return { ok: true, json: async () => ["t", "missing"] };
-    if (url.includes("missing")) return { ok: false, status: 404 };
-    return { ok: true, json: async () => structuredClone(RECORD) };
+test("loadRestaurants propagates a failed fetch — the caller falls back to the static list", async () => {
+  // Before this item, one venue's file 404ing was survivable (skip and carry
+  // on with the other 56); now every venue lives in ONE file, so a failure
+  // there fails the whole load. app.js's own `.catch` is the fail-soft seam —
+  // this test documents where the boundary moved to, not a regression.
+  globalThis.fetch = async () => ({ ok: false, status: 500 });
+  await assert.rejects(() => loadRestaurants());
+});
+
+test("loadSearchIndex fetches the compact search-index file as-is", async () => {
+  // Compact (roadmap 510/020's coordinator revision): dish identity grouped
+  // once by venue/section, not search.js's runtime {places,dishes} shape —
+  // that assembly is `rebuildIndex()`'s job, in the browser, once restaurants
+  // has resolved too (tests/rebuild-index.test.js covers that equivalence).
+  const COMPACT = {
+    venues: [{ id: "t", sections: [{ section: "Mains", items: [{ dishId: "soup", name: "Soup", hay: "soup" }] }] }],
   };
-  const err = console.error;
-  console.error = () => {}; // the loader logs the skip; keep the test output clean
-  try {
-    assert.deepEqual((await loadRestaurants()).map((r) => r.id), ["t"]);
-  } finally {
-    console.error = err;
-  }
+  globalThis.fetch = async (url) => ({
+    ok: true,
+    json: async () => (url.includes("search-index.json") ? structuredClone(COMPACT) : {}),
+  });
+  assert.deepEqual(await loadSearchIndex(), COMPACT);
 });
 
 // ---------------------------------------------------------------------------

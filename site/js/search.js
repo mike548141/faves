@@ -122,6 +122,105 @@ function dietLabels(tags) {
 }
 
 /**
+ * One venue's PLACE search entry: { id, name, area, cuisine[], kind, address,
+ * city, services[], phone, vibes[], closure, hay }.
+ *
+ * Exported (roadmap 510/020) because it reads ONLY venue-level fields —
+ * name, area, cuisine, address, city, services, phone, vibe, closure — every
+ * one of which `site/data/summary.json` already carries unchanged. That makes
+ * this the SAME function whether it runs here against a full resolved record
+ * or in the browser (`rebuildIndex`, below) against a summary record: no
+ * second implementation to drift from this one, and nothing dish-shaped needs
+ * to ship in the search index at all — the browser already has every place's
+ * fields from the summary it loaded to draw the cards.
+ */
+export function placeEntry(r) {
+  // What a place is LIKE — "quick eats", "dog friendly", "craft beer". The
+  // style facet has a filter of its own (filters.js), but nothing could
+  // reach the other two facets at all: 21 of the corpus's taggings are
+  // amenities and character, no screen offers a control for them, and a
+  // person hunting a beer garden had no way to ask. Resolved through
+  // `vibesFor` rather than read raw, so an unknown value in the data cannot
+  // become a searchable term the vocabulary has never heard of.
+  const vibes = vibesFor(r.vibe);
+  return {
+    id: r.id,
+    name: r.name,
+    area: r.area || "",
+    cuisine: r.cuisine || [],
+    kind: r.kind,
+    // Kept as their own fields (not just folded into `hay` below) so a
+    // result can later be asked "which of these did the query actually
+    // land on?" (Theme 27b — matchField()/matchText() do that asking).
+    address: r.address || "",
+    city: r.city || "",
+    services: r.services || [],
+    phone: r.phone || "",
+    vibes,
+    // The venue's lifecycle state for TODAY, already folded by
+    // `resolveRecord` (temporal.js) before the record reaches here. Carried
+    // rather than recomputed so the one fold answers both halves of item
+    // 210/080: `placeClosed` below demotes on it, and the result row renders
+    // the same object through `closureBadge` (closure-ui.js). Null for a
+    // record that was never resolved — a raw fixture, a caller of `buildIndex`
+    // outside the app — which `isTrading` reads as trading, the safe default.
+    closure: r.closure || null,
+    // Address, city, service, phone and vibe join name/area/cuisine: people
+    // look for a place by the street they remember it on, by "takeaway", by
+    // the number in their call history, or by what the place is like — not
+    // only by its name.
+    hay: norm(
+      [
+        r.name,
+        r.area,
+        ...(r.cuisine || []),
+        r.address,
+        r.city,
+        ...(r.services || []),
+        r.phone,
+        digits(r.phone),
+        // Both forms of every vibe: the LABEL is what a person types ("dog
+        // friendly"), the KEY is what a URL, a filter chip and a screenshot
+        // of one carry ("dog-friendly"). Indexing only the label would make
+        // the app's own stored vocabulary unsearchable.
+        ...vibes.flatMap((v) => [v.label, v.key]),
+      ].join(" ")
+    ),
+  };
+}
+
+/**
+ * The normalised search text for one dish `item` within `record` (its venue,
+ * read only for the venue's language). Exported (roadmap 510/020) so
+ * `tools/gen_summaries.mjs` can compute this ONCE per dish at build time and
+ * ship only the string — never the ingredients/description/code/tags it was
+ * built from, which is what keeps the summary thin. This is the one place
+ * that text is assembled; the generator calls it, never re-derives it.
+ */
+export function dishHay(item, record) {
+  const venueLang = venueLanguage(record);
+  // Ingredients join the haystack so "lemon" finds the pasta — mirrors
+  // the menu screen's own dish search.
+  // Attribution joins the haystack so "Edmonds" finds the pudding — the
+  // whole reason 37e made it a field instead of leaving it in prose.
+  const ingredients = [...ingredientKeys(item.ingredients), item.attribution || ""].join(" ");
+  // The venue's order-number (e.g. "14") joins the haystack so a guest
+  // reading "two number 14s" off the board can find it. Every rendering, not
+  // just the canonical one: someone hunting "ต้มยำ" and someone hunting "tom
+  // yam" want the same dish, and only one of them can type the other (ADR
+  // 0044). "vegan" finds the dish the data tags `vg`.
+  return norm(
+    [
+      ...searchableText(item, "name", venueLang),
+      ...searchableText(item, "desc", venueLang),
+      ingredients,
+      item.code,
+      dietLabels(item.tags),
+    ].join(" ")
+  );
+}
+
+/**
  * Build the search index once from the loaded restaurants. Returns
  * { places, dishes }; each entry carries a lowercased `hay` (haystack) and,
  * for dishes, a ready-to-use deep-link `href`.
@@ -130,6 +229,12 @@ function dietLabels(tags) {
  *   dish:  { name, venueId, venueName, isRecipe, section, href, hay }
  * Stubs (no menu) contribute a place but no dishes — which is correct: you
  * can still find the venue by name, there just aren't dishes to match yet.
+ *
+ * This is the REFERENCE shape — what a full, in-browser build has always
+ * produced, and what `rebuildIndex` below reconstructs from the committed
+ * compact file plus the loaded summaries. `search()` cannot tell the two
+ * apart, by construction: both are built from `placeEntry`/dish objects of
+ * this exact shape.
  */
 export function buildIndex(restaurants) {
   const places = [];
@@ -140,66 +245,9 @@ export function buildIndex(restaurants) {
     // capability — whether this kind's items have a page of their own.
     const isRecipe = isRecipeKind(r);
     const itemPage = kindOf(r).itemPage;
-    const venueLang = venueLanguage(r);
-    // What a place is LIKE — "quick eats", "dog friendly", "craft beer". The
-    // style facet has a filter of its own (filters.js), but nothing could
-    // reach the other two facets at all: 21 of the corpus's taggings are
-    // amenities and character, no screen offers a control for them, and a
-    // person hunting a beer garden had no way to ask. Resolved through
-    // `vibesFor` rather than read raw, so an unknown value in the data cannot
-    // become a searchable term the vocabulary has never heard of.
-    const vibes = vibesFor(r.vibe);
-    places.push({
-      id: r.id,
-      name: r.name,
-      area: r.area || "",
-      cuisine: r.cuisine || [],
-      kind: r.kind,
-      // Kept as their own fields (not just folded into `hay` below) so a
-      // result can later be asked "which of these did the query actually
-      // land on?" (Theme 27b — matchField()/matchText() do that asking).
-      address: r.address || "",
-      city: r.city || "",
-      services: r.services || [],
-      phone: r.phone || "",
-      vibes,
-      // The venue's lifecycle state for TODAY, already folded by
-      // `resolveRecord` (temporal.js) before the record reaches here. Carried
-      // rather than recomputed so the one fold answers both halves of item
-      // 210/080: `placeClosed` below demotes on it, and the result row renders
-      // the same object through `closureBadge` (closure-ui.js). Null for a
-      // record that was never resolved — a raw fixture, a caller of `buildIndex`
-      // outside the app — which `isTrading` reads as trading, the safe default.
-      closure: r.closure || null,
-      // Address, city, service, phone and vibe join name/area/cuisine: people
-      // look for a place by the street they remember it on, by "takeaway", by
-      // the number in their call history, or by what the place is like — not
-      // only by its name.
-      hay: norm(
-        [
-          r.name,
-          r.area,
-          ...(r.cuisine || []),
-          r.address,
-          r.city,
-          ...(r.services || []),
-          r.phone,
-          digits(r.phone),
-          // Both forms of every vibe: the LABEL is what a person types ("dog
-          // friendly"), the KEY is what a URL, a filter chip and a screenshot
-          // of one carry ("dog-friendly"). Indexing only the label would make
-          // the app's own stored vocabulary unsearchable.
-          ...vibes.flatMap((v) => [v.label, v.key]),
-        ].join(" ")
-      ),
-    });
+    places.push(placeEntry(r));
     for (const section of r.menu || []) {
       for (const item of section.items || []) {
-        // Ingredients join the haystack so "lemon" finds the pasta — mirrors
-        // the menu screen's own dish search.
-        // Attribution joins the haystack so "Edmonds" finds the pudding — the
-        // whole reason 37e made it a field instead of leaving it in prose.
-        const ingredients = [...ingredientKeys(item.ingredients), item.attribution || ""].join(" ");
         dishes.push({
           name: item.name,
           venueId: r.id,
@@ -209,21 +257,53 @@ export function buildIndex(restaurants) {
           href: itemPage
             ? `${itemPage}?id=${r.id}&dish=${dishId(item)}`
             : `restaurant.html?id=${r.id}#dish-${dishId(item)}`,
-          // The venue's order-number (e.g. "14") joins the haystack so a
-          // guest reading "two number 14s" off the board can find it.
-          // Every rendering, not just the canonical one: someone hunting
-          // "ต้มยำ" and someone hunting "tom yam" want the same dish, and only
-          // one of them can type the other (ADR 0044).
-          hay: norm(
-            [
-              ...searchableText(item, "name", venueLang),
-              ...searchableText(item, "desc", venueLang),
-              ingredients,
-              item.code,
-              // "vegan" finds the dish the data tags `vg`.
-              dietLabels(item.tags),
-            ].join(" ")
-          ),
+          hay: dishHay(item, r),
+        });
+      }
+    }
+  }
+  return { places, dishes };
+}
+
+/**
+ * Reassemble `buildIndex()`'s exact `{ places, dishes }` shape from the
+ * COMPACT committed file (`site/data/search-index.json`: `{ venues: [{ id,
+ * sections: [{ section, items: [{ dishId, name, formerIds?, hay }] }] }] }`)
+ * plus the already-loaded `restaurants` (summary records). This is the home
+ * screen's ONLY path to a search index (roadmap 510/020) — `search()` reads
+ * whatever this returns exactly as it always has, unaware the file it came
+ * from is a fraction of the old size.
+ *
+ * What is RECONSTRUCTED rather than shipped, per dish: `venueName` and `kind`
+ * (looked up on `restaurants` by `venueId` — already loaded for the cards,
+ * so this costs one Map build, not one more fetch), `href` (built from
+ * `itemPage`/`venueId`/`dishId`, exactly as `buildIndex` does), and `isRecipe`
+ * (from the venue's `kind`). `section` is shipped ONCE per group, not once
+ * per dish. Every place field was ALREADY in `restaurants` (the summary never
+ * dropped a venue-level field) — see `placeEntry`'s own comment — so places
+ * need no file of their own at all.
+ */
+export function rebuildIndex(compact, restaurants) {
+  const places = restaurants.map(placeEntry);
+  const byId = new Map(restaurants.map((r) => [r.id, r]));
+  const dishes = [];
+  for (const venue of compact?.venues || []) {
+    const r = byId.get(venue.id);
+    if (!r) continue; // a fixture/venue named in the index but not loaded
+    const isRecipe = isRecipeKind(r);
+    const itemPage = kindOf(r).itemPage;
+    for (const section of venue.sections || []) {
+      for (const item of section.items || []) {
+        dishes.push({
+          name: item.name,
+          venueId: r.id,
+          venueName: r.name,
+          isRecipe,
+          section: section.section || "",
+          href: itemPage
+            ? `${itemPage}?id=${r.id}&dish=${item.dishId}`
+            : `restaurant.html?id=${r.id}#dish-${item.dishId}`,
+          hay: item.hay,
         });
       }
     }

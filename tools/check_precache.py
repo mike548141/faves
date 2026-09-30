@@ -34,7 +34,10 @@ Three lists, all derived from `sw.js` itself so this tool cannot drift from it:
 
 1. **`SHELL`** — the app shell, one quoted relative path per line. `"./"` and
    any path ending in `/` resolve to that directory's `index.html`.
-2. **`DATA_INDEX` / `DATA_FX`** — the two data files known ahead of time.
+2. **`DATA_INDEX` / `DATA_FX` / `DATA_SUMMARY` / `DATA_SEARCH_INDEX`** — the
+   four data files known ahead of time. The last two are the home screen's
+   read files (roadmap 510/020) — `tools/gen_summaries.mjs --check` is what
+   proves their CONTENT is current; this only proves the PATH exists.
 3. **The menus** — `sw.js` builds these at install from `data/index.json`, so
    the template is read out of the install step and applied to every id in the
    index. A menu missing here is an install that throws on a real phone.
@@ -182,6 +185,8 @@ def audit(src, ids, verbose=False):
     shell = shell_list(src)
     data_index = const_path(src, "DATA_INDEX")
     data_fx = const_path(src, "DATA_FX")
+    data_summary = const_path(src, "DATA_SUMMARY")
+    data_search_index = const_path(src, "DATA_SEARCH_INDEX")
     pre, post = menu_template(src)
 
     if not shell:
@@ -208,12 +213,13 @@ def audit(src, ids, verbose=False):
 
     for rel in shell:
         check(rel, "SHELL")
-    for rel in (data_index, data_fx):
+    data_files = (data_index, data_fx, data_summary, data_search_index)
+    for rel in data_files:
         check(rel, "precached data file")
     for rid in ids:
         check(f"{pre}{rid}{post}", f"menu for {rid!r}")
 
-    return problems, {"shell": len(shell), "menus": len(ids)}
+    return problems, {"shell": len(shell), "data": len(data_files), "menus": len(ids)}
 
 
 # --- Proving the gate can still fire --------------------------------------
@@ -243,6 +249,10 @@ def self_test():
          lambda s: s.replace('const DATA_FX = "data/fx.json";',
                              'const DATA_FX = "data/rates.json";'),
          "data/rates.json")
+    case("a missing summary file is reported",
+         lambda s: s.replace('const DATA_SUMMARY = "data/summary.json";',
+                             'const DATA_SUMMARY = "data/summary-gone.json";'),
+         "data/summary-gone.json")
     case("a re-spaced SHELL row is REFUSED, not read as fewer paths",
          lambda s: s.replace('  "js/app.js",', '  "js/app.js" ,'),
          "write its input back unchanged", kind="refused")
@@ -326,7 +336,7 @@ def main():
         return 1
 
     print(f"✓ every precached path exists — {counts['shell']} shell file(s), "
-          f"2 data file(s), {counts['menus']} menu(s).")
+          f"{counts['data']} data file(s), {counts['menus']} menu(s).")
     return 0
 
 

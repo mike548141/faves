@@ -184,9 +184,10 @@ test("the install step routes every precached asset through requireAsset", () =>
   const calls = install.match(/requireAsset\(/g) ?? [];
   assert.equal(
     calls.length,
-    3,
-    `requireAsset is called ${calls.length}× in install; expected 3 — the shell ` +
-      "list, the menu index, and each venue menu"
+    4,
+    `requireAsset is called ${calls.length}× in install; expected 4 — the shell ` +
+      "list, the menu index, the home summary + search index loop (roadmap " +
+      "510/020), and each venue menu"
   );
   // fx is deliberately NOT one of them: a missing rates file must not reject
   // the install. It still refuses to CACHE a stand-in.

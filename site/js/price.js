@@ -80,6 +80,16 @@ function median(nums) {
  */
 export function priceBand(record) {
   if (!kindOf(record).hasPrices) return null; // cooking, not spending
+  // A home-screen summary (tools/gen_summaries.mjs, roadmap 510/020) carries
+  // this band PRECOMPUTED against the venue's real menu prices, because the
+  // summary's own `menu` is thinned to dish ids and names only (ADR 0146: the
+  // home card and the cheap-eats filter still need the band and figure, so it
+  // rides along rather than being lost with the prices it was derived from).
+  // A record loaded from `data/restaurants/*.json` never carries this field —
+  // it falls straight through to the real computation below, unchanged.
+  if (record && Object.prototype.hasOwnProperty.call(record, "_priceSummary")) {
+    return record._priceSummary;
+  }
   const currency = venueCurrency(record);
 
   const curatedBand = BAND_LETTERS.has(record?.priceBand) ? record.priceBand : null;
