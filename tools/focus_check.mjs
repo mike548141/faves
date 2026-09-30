@@ -86,7 +86,7 @@ import {
   untilPresent,
   sleep,
 } from "./lib/browser.mjs";
-import { buildFixtures, defaultId } from "./lib/fixtures.mjs";
+import { buildFixtures, buildHomeOverlay, defaultId } from "./lib/fixtures.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -655,10 +655,14 @@ async function run(opts) {
       ["sushi-bi", defaultId("sushi-bi", ["permanently-closed"])],
       ["the-ramen-shop", defaultId("the-ramen-shop", ["temporarily-closed"])],
     ]);
-    closureOverlay.set(
-      "/data/index.json",
-      JSON.stringify(index.map((id) => swap.get(id) || id))
-    );
+    // Roadmap 510/020: the home screen reads data/summary.json and
+    // data/search-index.json, never data/restaurants/ or a swapped index.json
+    // directly — so the closed venues must exist in THOSE files too, rebuilt
+    // through the same `load()`/`renderFrom()` path the real generator uses
+    // (buildHomeOverlay), or this fixture is invisible to everything below.
+    for (const [k, v] of await buildHomeOverlay(SITE, closureRecords, swap)) {
+      closureOverlay.set(k, v);
+    }
     ({ server: closureServer, port: closurePort } = await startServer(0, SITE, closureOverlay));
     await cdp.send("Page.navigate", { url: `http://127.0.0.1:${closurePort}/index.html` }, sessionId);
     await untilPresent(

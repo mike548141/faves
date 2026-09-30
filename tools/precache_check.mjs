@@ -48,6 +48,7 @@ import {
   createDriver,
   exitFromError,
   launchChrome,
+  sleep,
   startServer,
   stopChrome,
   untilPresent,
@@ -173,6 +174,19 @@ async function run(opts) {
     // good, silently.
     const sessionId = await newPage(cdp);
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
+
+    // Roadmap 510/020 — the home screen reads data/summary.json and
+    // data/search-index.json only; a venue file under data/restaurants/ is
+    // fetched by loadRestaurant() only when THAT venue's own page opens. Real
+    // network requests, not a stubbed fetch, so this is the one place a
+    // regression that quietly re-widens the home screen's own load back out
+    // to every menu would be caught — CDP sees every request this session's
+    // page actually issues, including ones the service worker itself makes.
+    const requestUrls = [];
+    cdp.on("Network.requestWillBeSent", (params, sid) => {
+      if (sid === sessionId) requestUrls.push(params.request.url);
+    });
+
     await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
     await untilPresent(() => driver.evalPage(`document.readyState === "complete"`), {
       label: "the home screen loaded",
@@ -188,6 +202,17 @@ async function run(opts) {
       "…and the shell cache is built and marked ready",
       caches.ready.length === 1,
       `caches: ${JSON.stringify(caches)}`
+    );
+    // Give the install's own background fetches (waitUntil) a moment to land
+    // before reading the request log — they are not gated by "activated".
+    await sleep(300);
+    const restaurantRequests = requestUrls.filter((u) => u.includes("/data/restaurants/"));
+    report.check(
+      "the home screen fetches NO file under data/restaurants/ (roadmap 510/020)",
+      restaurantRequests.length === 0,
+      restaurantRequests.length
+        ? `${restaurantRequests.length} request(s): ${restaurantRequests.join(", ")}`
+        : `0 of ${requestUrls.length} request(s) touched data/restaurants/`
     );
 
     // --- 3. The extensionless deep link, offline ---------------------------
