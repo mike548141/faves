@@ -12484,3 +12484,8 @@ on `main`.
 - Pin bumped `c600f62` → `86da02c`. The only new atelier commit filed board
   items and changed nothing under `docs/method/`; the floor hand check came
   back clean against `origin/main`.
+- **Addendum (same session):** the owner added that the whole design balances
+  processing, storage and network against performance and extensibility.
+  Recorded as ADR 0145's addendum, with the server's KV budget as a fourth
+  cost, the trades already in the design, and a rule that every `510` item
+  measures all four before and after.

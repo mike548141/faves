@@ -19,3 +19,8 @@ change can cause it.
 
 It refines [`240/030`](../240-theme-16-staying-current-pwa-updates-a-manual/030-an-update-to-one-venue-should-not-redownload-them-all.md),
 which is closed into `030` here.
+
+**Every phase balances four costs** (owner, 2026-09-30): processing, storage,
+network and server. Each item records all four before and after its change,
+and names any trade it makes. The costs and the trades already in the design
+are in [ADR 0145's addendum](../../decisions/0145-faves-scales-by-partition-and-fingerprint-and-user-data-by-versioned-store.md#addendum--2026-09-30-every-choice-here-is-a-balance-of-four-costs).

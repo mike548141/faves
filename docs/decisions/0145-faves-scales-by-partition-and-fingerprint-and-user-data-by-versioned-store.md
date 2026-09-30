@@ -184,3 +184,45 @@ cause it.
   there as evidence.
 - Every phase is its own item. Phase 0 needs no further ruling, and each later
   phase states what it measured before it changes a hard rule.
+
+## Addendum — 2026-09-30: every choice here is a balance of four costs
+
+Added by the owner the same day, after the design was recorded:
+
+> *"There is a balance achieved in all of this to offset the cost of
+> processing power used, storage consumed, and network traffic to keep Faves
+> both performant and extensible."*
+
+So no phase optimises one cost alone. The four costs:
+
+| Cost | Measured as |
+|---|---|
+| **Processing** | Main-thread time on a phone, at startup and on update (parsing, fingerprint comparison, upgrades, merges) |
+| **Storage** | Bytes held on the device: the service worker's caches plus `faves-user` |
+| **Network** | Bytes transferred **and** the number of requests, first visit and per update |
+| **Server** | Workers KV reads and writes, measured against the free tier ADR 0017 names as the scarce resource |
+
+**Where the design already trades them, stated so that each dial is set by
+measurement and not by habit:**
+
+- **Partition size.** Bigger partitions mean fewer requests but more bytes you
+  did not need; smaller ones the reverse. Hence a size-based split with a
+  measured limit, not a fixed geography.
+- **One file per venue.** The smallest possible update, but one request per
+  changed venue. If an update ever touches many venues at once, fetching them
+  as one bundled file may win; measure it first.
+- **Summary plus search index.** Costs a little storage twice over (a dish
+  name sits in the index and in its venue file) to save fetching and parsing
+  every menu on the home screen.
+- **Offline scope.** "Your partitions" trades storage against usefulness in
+  flight mode; the owner ruled it.
+- **Sync buckets for recipes.** Fewer buckets mean fewer KV writes but a larger
+  upload per edit; more buckets the reverse. Set the number from measured
+  recipe sizes.
+- **Pre-upgrade snapshot.** Briefly doubles user storage during an upgrade, in
+  exchange for a guarantee that an upgrade cannot lose data. Deleted once the
+  upgraded version has run successfully, so the cost is temporary.
+
+**The rule for every item in section `510`:** measure the four costs before
+and after the change, and record the numbers in the item. A change that
+improves one cost by making another worse states that trade and why it pays.
