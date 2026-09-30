@@ -1797,3 +1797,9 @@ deliberation those compact docs omit.
   what changed. Offline scope becomes "your partitions". All user data moves to
   one IndexedDB database with a forward-only upgrade chain. Six phases,
   roadmap `510`.
+- [0146](0146-the-scaling-design-revised-after-its-cold-review.md) —
+  **The scaling design, revised after its cold review** (owner-ruled
+  2026-09-30). Supersedes parts of 0145 and amends 0127(b). The IndexedDB move
+  is deferred (recipes fit in local storage); sync keeps one core copy and
+  splits only recipes into buckets; older code carries unknown stores through
+  and pauses only when a known store changes shape.

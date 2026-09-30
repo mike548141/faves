@@ -14,3 +14,6 @@
     viewed.
   - The CLAUDE.md hard constraint "precaches … all menu data" is reworded in
     the same commit.
+
+  **Revised 2026-09-30 by ADR 0146:** with location declined (ADR 0083), "home
+  region" falls back to the region holding the person's favourites.

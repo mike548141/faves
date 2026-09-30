@@ -19,3 +19,11 @@
   **Check:** edit one venue's menu and another's hours, then count the requests
   on an installed phone. Expected: one venue file plus the summary, and nothing
   else under `data/`.
+
+  **Revised 2026-09-30 by ADR 0146 (cold review):** a `?h=` URL is **not**
+  immutable on the server (`site/_headers` matches paths only); the phone's
+  own store, keyed by fingerprint, is what saves the download. Switch-over:
+  write new files beside the old, then swap one pointer record last; anything
+  half-written is unreachable and cleared on the next start. Exclude
+  cache-busted rechecks from the store, and delete orphans after each swap.
+  Say how quickly a menu edit now reaches a phone that is online.

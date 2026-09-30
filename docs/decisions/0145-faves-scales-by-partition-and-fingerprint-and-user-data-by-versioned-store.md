@@ -1,7 +1,9 @@
 # 0145 — Faves scales by partition and fingerprint, and user data by a versioned store
 
-**Status:** accepted — design only; nothing here is built yet (roadmap section
-`510`, Theme 39)
+**Status:** accepted, **superseded in part by
+[ADR 0146](0146-the-scaling-design-revised-after-its-cold-review.md)** (its
+cold review, same day) — design only; nothing here is built yet (roadmap
+section `510`, Theme 39)
 **Date:** 2026-09-30
 **Refines:** [`240/030`](../roadmap/240-theme-16-staying-current-pwa-updates-a-manual/030-an-update-to-one-venue-should-not-redownload-them-all.md)
 (one venue's update re-downloads all 57), which asked for a direction and left

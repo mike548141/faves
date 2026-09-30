@@ -12489,3 +12489,12 @@ on `main`.
   Recorded as ADR 0145's addendum, with the server's KV budget as a fourth
   cost, the trades already in the design, and a rule that every `510` item
   measures all four before and after.
+- **Cold review of ADR 0145 (same session):** a Fable sub-agent, given paths
+  only, found 2 blockers and 6 majors
+  (`docs/reviews/2026-09-30-0639-adr-0145-cold-review.md`). Key rows were
+  re-opened at source and hold. The premise of the IndexedDB ruling was wrong
+  (recipes fit, about 1,650 B each), so the owner was re-briefed and ruled
+  "Defer the move". He also ruled "Core copy + recipe buckets" for sync and
+  "Carry unknown data through" for older code. Recorded as ADR 0146; items
+  `010`–`060` revised; `070` (sync retry and reconnect) and `080` (the deferred
+  IndexedDB move) filed.

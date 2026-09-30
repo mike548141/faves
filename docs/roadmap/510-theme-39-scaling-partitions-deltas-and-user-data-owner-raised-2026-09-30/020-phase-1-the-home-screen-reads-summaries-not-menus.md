@@ -17,3 +17,11 @@
   **Check:** `boot_check`, `focus_check` and `distance_check` still pass, and a
   new assertion shows the home screen fetches **no** file under
   `data/restaurants/`.
+
+  **Revised 2026-09-30 by ADR 0146 (cold review):** as fetched, the 57 files come
+  to about 204–208 KB gzip, and home also needs the price band and dish ids
+  (price chip, heart resolution). The search index keeps ingredients,
+  attribution and order number, so home fetches about 51–60 KB: a saving of
+  about 3×, not 13×. Build summaries through `load()` so dated fields resolve.
+  Keep `index.json` until `recheckReferences` and `check_fallback.py` move off
+  it.

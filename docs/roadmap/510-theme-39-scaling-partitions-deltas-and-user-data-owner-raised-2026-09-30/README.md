@@ -24,3 +24,8 @@ which is closed into `030` here.
 network and server. Each item records all four before and after its change,
 and names any trade it makes. The costs and the trades already in the design
 are in [ADR 0145's addendum](../../decisions/0145-faves-scales-by-partition-and-fingerprint-and-user-data-by-versioned-store.md#addendum--2026-09-30-every-choice-here-is-a-balance-of-four-costs).
+
+**Revised the same day after a cold review** ([ADR 0146](../../decisions/0146-the-scaling-design-revised-after-its-cold-review.md),
+[the review](../../reviews/2026-09-30-0639-adr-0145-cold-review.md)). The
+IndexedDB move is deferred to `080`, sync keeps one core copy and splits only
+recipes, and older code carries unknown data through rather than pausing.
