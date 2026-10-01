@@ -9,7 +9,18 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
-- **Your own recipes now sit with Cook at Home in Favourites.** A recipe you
+- **Your own recipes are on the Cook at Home page.** Every recipe in your
+  cookbook is listed beside the published ones, hearted or not, marked "My
+  recipe". One that names an existing section ("Desserts") sits inside it, after
+  the published recipes; any other gets a section of its own. Hearts, ratings
+  and the page's search work on them as on any recipe, and a recipe's own page
+  carries the same label. Another person's recipes never show, and nothing of
+  yours is downloaded or published.
+- **Search finds your own recipes.** The home search, the Cook at Home page's
+  search and its suggestions find your recipes by name, description and
+  ingredient, ranked with the published ones and marked "My recipe". A diet word
+  finds one only if you tagged it, never because it says nothing.
+- **Your own recipes sit with Cook at Home in Favourites.** A recipe you
   imported or wrote shows up in the Cook at Home group alongside the published
   ones, in the order you hearted them, marked "My recipe". There is no separate
   "My recipes" group any more. Only recipes you have hearted appear.

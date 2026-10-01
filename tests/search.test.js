@@ -9,7 +9,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildIndex, search } from "../site/js/search.js";
+import { buildIndex, personalDishes, search, withCookbook } from "../site/js/search.js";
 import { resolveRecord } from "../site/js/temporal.js";
 
 const FIXTURE = [
@@ -735,4 +735,74 @@ test("210/080: DISHES are untouched — a dish is not sunk by its venue's closur
   for (const d of closureIndex.dishes) {
     assert.ok(!("closure" in d), `a dish entry must carry no closure; ${d.name} does`);
   }
+});
+
+// --- your own recipes, read from the device at query time (roadmap 510/310) ---
+
+const MINE = {
+  "u:ginger-crunch": {
+    dishId: "u:ginger-crunch", name: "Ginger Crunch", section: "Baking & sweets", tags: ["v"],
+    desc: "Grandma's slice", ingredients: ["125g butter", "golden syrup"],
+  },
+  "u:famous-curry": {
+    dishId: "u:famous-curry", name: "Famous Brade Green Chicken Curry",
+    ingredients: ["chicken thighs", "green curry paste"],
+  },
+};
+
+test("personalDishes: ordinary dish entries, plus the owner kind and a u:mine link", () => {
+  const [g] = personalDishes(MINE, { venueName: "Cook at Home" });
+  assert.equal(g.name, "Ginger Crunch");
+  assert.equal(g.venueId, "u:mine");
+  assert.equal(g.isRecipe, true);
+  assert.equal(g.owner, "mine");
+  assert.equal(g.href, "recipe.html?id=u:mine&dish=u:ginger-crunch");
+  assert.equal(g.section, "Baking & sweets");
+  assert.equal(g.venueName, "Cook at Home");
+});
+
+test("withCookbook: your recipes are found by the published rules, and ranked with them", () => {
+  const idx = buildIndex(FIXTURE);
+  const merged = withCookbook(idx, MINE);
+  // name, description, ingredient — the same fields a published dish is found by
+  assert.equal(search(merged, "ginger crunch").dishes.items[0].name, "Ginger Crunch");
+  assert.equal(search(merged, "grandma").dishes.items[0].name, "Ginger Crunch");
+  assert.equal(search(merged, "green curry paste").dishes.items[0].name, "Famous Brade Green Chicken Curry");
+  // …ranked beside a published dish by the one ranker: the name-start hit leads
+  const both = search(merged, "ribs").dishes.items.map((d) => d.name);
+  assert.deepEqual(both, ["Shane's Ribs"]);
+  const lemon = withCookbook(idx, { "u:l": { dishId: "u:l", name: "Lemon ribs", ingredients: ["lemon"] } });
+  const r = search(lemon, "lemon").dishes.items.map((d) => [d.name, d.owner ?? null]);
+  assert.deepEqual(r, [["Lemon ribs", "mine"], ["Shane's Ribs", null]]);
+});
+
+test("withCookbook: macrons and case fold as they do for a published dish", () => {
+  const m = withCookbook(buildIndex(FIXTURE), { "u:k": { dishId: "u:k", name: "Kūmara bake" } });
+  assert.equal(search(m, "KUMARA bake").dishes.items.at(-1).name, "Kūmara bake");
+});
+
+test("withCookbook: an untagged recipe is never found by a diet word — not stated is not free-from", () => {
+  const m = withCookbook(buildIndex(FIXTURE), MINE);
+  const names = search(m, "vegetarian").dishes.items.map((d) => d.name);
+  assert.ok(names.includes("Ginger Crunch"), "a recipe that states `v` is found");
+  assert.ok(!names.includes("Famous Brade Green Chicken Curry"), "an untagged one is not");
+  assert.equal(search(m, "gluten free").dishes.total, 0);
+});
+
+test("withCookbook: never touches the shared index; an empty cookbook returns it as is", () => {
+  const idx = buildIndex(FIXTURE);
+  const n = idx.dishes.length;
+  const merged = withCookbook(idx, MINE);
+  assert.equal(idx.dishes.length, n);
+  assert.equal(merged.dishes.length, n + 2);
+  assert.equal(withCookbook(idx, {}), idx);
+  assert.equal(search(idx, "ginger crunch").dishes.total, 0, "nothing is in the published index");
+});
+
+test("withCookbook: follows the store — a replaced map is read afresh (memo keyed by the map)", () => {
+  const idx = buildIndex(FIXTURE);
+  assert.equal(search(withCookbook(idx, MINE), "ginger").dishes.total, 1);
+  const next = { ...MINE };
+  delete next["u:ginger-crunch"];
+  assert.equal(search(withCookbook(idx, next), "ginger").dishes.total, 0);
 });

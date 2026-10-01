@@ -8,7 +8,8 @@
 // Pure, so it's unit-tested directly (tests/search.test.js).
 
 import { dishId } from "./dish-id.js";
-import { ingredientKeys } from "./ingredients.js";
+import { composeRecipe, ingredientKeys } from "./ingredients.js";
+import { MY_RECIPES } from "./recipe-record.js";
 import { isRecipeKind, kindOf } from "./kinds.js";
 import { searchableText, venueLanguage } from "./lang.js";
 import { DIET_FILTERS, STATED_CLAIMS } from "./dietary.js";
@@ -309,6 +310,58 @@ export function rebuildIndex(compact, restaurants) {
     }
   }
   return { places, dishes };
+}
+
+/**
+ * The active person's own recipes as dish search entries, in `buildIndex`'s own
+ * dish shape plus one field: `owner`, whose recipe it is ("mine" today; "ours"
+ * for a recipe someone shared with you, when sharing exists — the result row
+ * turns the kind into its label, so that is a line in favourites-ui.js and the
+ * entries here need no change). Roadmap 510/310.
+ *
+ * Built from the device's own store at query time and NEVER written anywhere:
+ * `site/data/search-index.json` is a public, precached file every phone
+ * downloads, and a person's recipes do not belong in it (ADR 0047). The text is
+ * assembled by `dishHay`, the one function that assembles it for a published
+ * dish, over the recipe composed the way its own page composes it — so the same
+ * words find it, and a diet word finds it only if it carries the tag. An
+ * untagged recipe has no diet label in its haystack: "vegan" does not find it,
+ * which is "not stated", never "free from".
+ */
+export function personalDishes(map, { venueName = "Cook at Home" } = {}) {
+  return Object.values(map || {}).map((r) => {
+    const item = composeRecipe(r);
+    return {
+      name: r.name,
+      venueId: MY_RECIPES,
+      venueName,
+      isRecipe: true,
+      section: r.section || "",
+      href: `recipe.html?id=${MY_RECIPES}&dish=${dishId(r)}`,
+      hay: dishHay(item, null),
+      owner: "mine",
+    };
+  });
+}
+
+// One memo, keyed by the store's map object itself (`recipes.all()` returns the
+// same object until a write replaces it): a keystroke re-searches, and
+// re-composing every recipe per keystroke is work the device store has not
+// changed.
+let cookbookMemo = { map: null, venueName: null, entries: [] };
+
+/**
+ * `index` with the person's own recipes among its dishes — what `search()` is
+ * handed on every query. A new object each call, so the shared index is never
+ * touched, and the SAME object back when there is nothing to add. Ranking is
+ * `search()`'s, unchanged: these are ordinary dish entries to it.
+ */
+export function withCookbook(index, map, { venueName = "Cook at Home" } = {}) {
+  if (!map || !Object.keys(map).length) return index;
+  if (cookbookMemo.map !== map || cookbookMemo.venueName !== venueName) {
+    cookbookMemo = { map, venueName, entries: personalDishes(map, { venueName }) };
+  }
+  return { ...index, dishes: [...index.dishes, ...cookbookMemo.entries] };
 }
 
 // Relevance score for a query `q` (already normalised) against a display

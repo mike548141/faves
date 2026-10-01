@@ -29,7 +29,7 @@ import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 import { closureBadge } from "./closure-ui.js";
 import { todayIn, isGone } from "./temporal.js";
 import { initPicker } from "./picker.js";
-import { rebuildIndex, search } from "./search.js";
+import { rebuildIndex, search, withCookbook } from "./search.js";
 import { rotateHints, defaultHints } from "./search-hints.js";
 import { initOrderUI } from "./cart-ui.js";
 import { COOK_AT_HOME, favourites, favHref, favKey, groupFavourites, groupForShare, unresolvedReason } from "./favourites.js";
@@ -48,7 +48,7 @@ import { initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initShoppingEntry } from "./shopping-ui.js";
 import { startSync } from "./sync-start.js";
-import { MY_RECIPES, isPersonalVenue, recipes } from "./recipes.js";
+import { MY_RECIPES, RECIPES_KEY, isPersonalVenue, recipes } from "./recipes.js";
 import { startPersistence } from "./storage-persist.js";
 import { initBackToTop } from "./to-top.js";
 import { displayPrice, formatMoney, venueTimezone, zoneLabel } from "./place.js";
@@ -934,7 +934,15 @@ function wireSearch(restaurants, compactIndex) {
   let onlyHref = null;
 
   function renderResults(q) {
-    const { places, dishes } = search(index, q);
+    // Your own recipes are searched beside the published ones (roadmap 510/310),
+    // read from this device's store at the moment of the query: a profile switch
+    // or a sync pull changes the answer with nothing to invalidate, and nothing
+    // of them is in the shipped index. Cook at Home's own name rides along so
+    // the row says where they sit.
+    const { places, dishes } = search(
+      withCookbook(index, recipes.all(), { venueName: byId.get(COOK_AT_HOME)?.name }),
+      q
+    );
     onlyHref =
       places.total + dishes.total !== 1
         ? null
@@ -978,6 +986,10 @@ function wireSearch(restaurants, compactIndex) {
             name: d.name,
             sub: [d.venueName, d.section].filter(Boolean).join(" · "),
             href: d.href,
+            // Whose it is, in words (favourites-ui.js — the one label, shared
+            // with Favourites and the Cook at Home page). Published dishes
+            // carry no `owner`, so no row but your own has one.
+            badge: d.owner ? ownerLabel(d.owner) : null,
             ...dishMatch(d),
           })),
         })
@@ -1002,6 +1014,12 @@ function wireSearch(restaurants, compactIndex) {
   }
 
   input.addEventListener("input", update);
+  // A switch of person, a sync pull or an import changes whose recipes the
+  // query reads: re-run a live search, so the list never shows the last
+  // person's recipes under the new person's name.
+  recipes.subscribe(() => {
+    if (input.value.trim().length >= 2) update();
+  });
   // Custom ✕ + Escape both clear the field (shared with the in-menu search).
   wireSearchClear(input, clear, update);
   // Results are live, so submit never reloads the page. But when the search
@@ -1327,6 +1345,9 @@ function wireProfiles() {
   // Another tab changed the roster or switched profile.
   window.addEventListener("storage", (e) => {
     if (e.key === PROFILES_KEY) profiles.reload();
+    // This person's own cookbook changed in another tab (an import): a live
+    // search reads it, so re-read it here (510/310).
+    if (e.key === profiles.scopedKey(RECIPES_KEY)) recipes.reload();
   });
   updateCaption();
 }
