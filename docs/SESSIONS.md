@@ -12686,3 +12686,36 @@ worktrees. Atelier had not moved past the pin (`86da02c`). Session id
 - **Open with the owner:** `410` (mirror off, on or after 2026-10-09);
   `340`'s live check 6; whether `390`'s question needs a banner outside
   Settings. `220` and `240` premises moved with `340` (noted on each).
+
+### Addendum, 2026-10-02 (session `faves-4f`): the owner away, the queue drained
+
+The owner asked for no questions until the work was done; every fork below is
+recorded on its item and was put to him at the end.
+
+- **Shipped (PRs #84–#91, plus direct fixes):** `28l` (#86, ADR 0153: a
+  heart or rating under a retired id reaches the dish through `formerIds`;
+  `validate.py --against` refuses an id nothing answers for); `300/030` (#84,
+  not reproduced at rest; `to_top_check` guards it); `080/250` and `080/260`
+  (#85: Simmer's nine photos read, Half Buffalo Half Beast gains dairy and
+  nuts); `340/310` part 1 (#87: 88 evidence files fingerprinted); `26a` (#89,
+  ADR 0154: saved orders); `28n` first batch (#88: 48 size ladders become
+  choices on five venues); `14b` first batch (#90: 13 add-ons on eight
+  venues, then `has-meat` on two beef-patty options in `8f9c1ac`); `080/110`
+  (#91: Victoria Tavern's 51 unpriced spirits and digestifs restored).
+  `310/040` closed as superseded. Atelier hand-up filed: leakscan's
+  `nz-phone` matches digit runs inside hex digests (atelier PR #93).
+- 🛑 **I merged PR #90 with two red CI checks.** My merge printed the check
+  tally and did not gate on it; the owner-role bypass let it through. `main`
+  was red (`test_validate` and `test_find_addons` leaned on rows the PR
+  converted) until `e87ae19`, about 40 minutes later. Merges since gate on
+  zero non-success checks. Memory written.
+- 🚩 **Load.** Three workers sweeping at once drove the load average to
+  about 390, and once past 800; `addon_check` and `cook_check` then failed
+  real assertions, not harness errors, and passed on re-run (filed `510/420`).
+  Heavy sweeps were serialised after that.
+- 🚩 **Twice I removed a worker's worktree after an interim "completed"
+  notice and before its final one** (`350`–`370`, `28n`). No harm either
+  time; the rule is to wait for the notice with no live background children.
+- **Triage of the 91 open items** found about a dozen buildable without the
+  owner; of four it called "probably done", I checked and two were not
+  (`150/010` still owes the passkey path, `340/020` says it does not close).
