@@ -1841,3 +1841,11 @@ deliberation those compact docs omit.
   every read and merge input, not by a storage migration; a merge with no base
   asks first and an unanswered question means nothing syncs; the device log
   keeps only syncs that did something.
+- [0153](0153-a-retired-dish-id-is-absorbed-on-read-and-gated.md) —
+  **A retired dish id is absorbed on read, and gated against git**
+  (`310/090`, 28l, under the owner's 28j ruling). A page hands each record to
+  the heart and rating stores, which move an entry on a retired id onto the
+  dish claiming it, in memory, so the row lights and the favourites query
+  keeps it. `validate.py --against REF` fails an id nothing answers for any
+  more; `split_data.py`'s round trip folds rows onto a dish that claims their
+  ids.
