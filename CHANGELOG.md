@@ -204,6 +204,12 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **A heart on a recipe you moved into your own recipes stays on the moved
+  copy.** A heart, rating or note left on the recipe's old Cook at Home entry —
+  by an old backup, a shared list, another device or a page left open — now
+  lands on your own copy instead of showing as a second heart beside it, and
+  sync no longer carries the old one between devices. It works from your own
+  recipes' record of where each one came from, so nobody else's hearts move.
 - **Sync no longer mistakes an out-of-date read for another device's change.**
   The sync server could hand a device a copy up to a minute old (for example
   after a phone moved from Wi-Fi to mobile data), and the device then removed

@@ -37,6 +37,7 @@
 import { collectPersonalData, storesAhead, upgradePersonalData } from "./personal-data.js";
 import { deviceStorage, PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseRegistry, scopeKey } from "./profiles.js";
 import { mergePersonal, needsDecision } from "./sync-merge.js";
+import { followMovesInSnapshot } from "./recipe-move.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "./sync-crypto.js";
 import { mintSyncCode, normaliseSyncCode } from "./sync-code.js";
 import { storageAhead } from "./store.js";
@@ -670,13 +671,12 @@ export function createSync({
       }
       if (read.result) return read.result;
       const { actual, etag } = read;
-      const theirs = read.theirs;
-
-      const { merged, conflicts, changes } = mergePersonal(base, mine, theirs ?? mine);
 
       // 2b. the recipe buckets (roadmap 510/050). Read before any write, so a
       //     bucket that will not open stops the cycle with nothing written.
-      const rec = await readRecipes({ blobId, key, actual, theirs, base, mineRecipes });
+      //     Read before the merge since 510/400: the cookbooks they hold say
+      //     which recipes moved, which the merge's three inputs follow.
+      const rec = await readRecipes({ blobId, key, actual, theirs: read.theirs, base, mineRecipes });
       if (rec.error === "mismatch") {
         setState(ERROR, "That sync code doesn’t match the data on the server.");
         return { ok: false, error: "That sync code doesn’t match the data on the server." };
@@ -685,6 +685,24 @@ export function createSync({
         setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
         return { ok: false, error: "sync-unreachable" };
       }
+
+      // 2c. hearts follow a moved recipe (roadmap 510/400). A heart, rating or
+      //     note on a recipe's old id is the moved one, on ALL THREE inputs:
+      //     this device's own copy already follows (a collect does), but the
+      //     server's copy may have been written by a build that did not, and
+      //     the base by this one before the move. Following only one side
+      //     would read the other's old key as a separate heart and keep both.
+      //     The moves come from every cookbook this cycle holds — this
+      //     device's and the buckets' — never from an id in the app.
+      const books = new Map(mine.profiles.map((p) => [String(p.id), p.recipes || {}]));
+      if (rec.supported) {
+        for (const [pid, book] of groupCookbooks(rec.merged)) books.set(pid, { ...(books.get(pid) || {}), ...book });
+      }
+      const theirs = followMovesInSnapshot(read.theirs, books);
+      const baseF = followMovesInSnapshot(base, books);
+      const mineF = followMovesInSnapshot(mine, books);
+
+      const { merged, conflicts, changes } = mergePersonal(baseF, mineF, theirs ?? mineF);
       changes.recipeConflicts = rec.conflicts.length;
 
       if (needsDecision(conflicts) && !decisions) {
@@ -729,8 +747,11 @@ export function createSync({
 
       // Skipped when the server already holds exactly this — a pull that
       // changed nothing is not a write, and writing it anyway is what turned
-      // every visibility change into a KV write.
-      if (!(theirs && sameSnapshot(merged, theirs) && sameBuckets(merged.recipeBuckets, theirs.recipeBuckets))) {
+      // every visibility change into a KV write. Compared with the copy AS
+      // READ, not as followed (510/400): a server copy still holding a moved
+      // recipe's old key is rewritten once, so no older build reads it back.
+      const raw = read.theirs;
+      if (!(raw && sameSnapshot(merged, raw) && sameBuckets(merged.recipeBuckets, raw.recipeBuckets))) {
         const sealed = await sealBlob(key, merged);
         // How many buckets this user has, so the Worker re-arms those and no
         // others (roadmap 510/140): it read all 16 possible keys on every

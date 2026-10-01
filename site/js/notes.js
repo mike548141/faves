@@ -43,6 +43,8 @@
 import { profileScopedStorage } from "./profiles.js";
 import { rawOf } from "./store.js";
 import { recipeId } from "./checklist.js";
+import { RECIPES_KEY } from "./recipe-record.js";
+import { followNotes, movesOfStoredCookbook } from "./recipe-move.js";
 
 export const NOTES_KEY = "faves.notes.v1";
 
@@ -87,10 +89,14 @@ export function createNotes(storage) {
   // over it (roadmap 510/320; the reasoning is favourites.js's, same shape).
   let seen = null;
 
+  // A note on a recipe this person moved follows it to the moved id (roadmap
+  // 510/400; favourites.js says why on every read and every write).
+  const follow = (m) => followNotes(m, movesOfStoredCookbook(rawOf(storage, RECIPES_KEY)));
+
   function read() {
     seen = rawOf(storage, NOTES_KEY);
     try {
-      return sanitise(JSON.parse(seen || "{}"));
+      return follow(sanitise(JSON.parse(seen || "{}")));
     } catch {
       return {};
     }
@@ -110,6 +116,7 @@ export function createNotes(storage) {
   }
 
   function commit() {
+    map = follow(map);
     try {
       const next = JSON.stringify(map);
       storage.setItem(NOTES_KEY, next);

@@ -14,7 +14,8 @@ import { profileScopedStorage } from "./profiles.js";
 import { rawOf } from "./store.js";
 import { migrateEntries, canonicalVenueId } from "./renames.js";
 import { dishId, findDish } from "./dish-id.js";
-import { MY_RECIPES, isPersonalVenue } from "./recipe-record.js";
+import { MY_RECIPES, RECIPES_KEY, isPersonalVenue } from "./recipe-record.js";
+import { followFavourites, movesOfStoredCookbook } from "./recipe-move.js";
 
 const KEY = "faves.favourites.v1";
 
@@ -192,6 +193,14 @@ export function createFavourites(storage) {
   // an in-memory change in a browser that refuses writes is not thrown away.
   let seen = null;
 
+  // A heart on a recipe this person moved into their own recipes follows it
+  // (roadmap 510/400): the moves come from their OWN cookbook, read through
+  // the same per-person storage, so no id is written here. Applied on every
+  // read AND before every write, so a heart arriving on the old id by any
+  // route — a shortlist added, a stale page's tap, another tab — becomes the
+  // moved heart instead of sitting beside it.
+  const follow = (list) => followFavourites(list, movesOfStoredCookbook(rawOf(storage, RECIPES_KEY)));
+
   function read() {
     seen = rawOf(storage, KEY);
     try {
@@ -200,7 +209,7 @@ export function createFavourites(storage) {
       // venue rather than detaching from it (renames.js). Rewritten in memory
       // on read and persisted by the next commit — nothing is destroyed if the
       // viewer never touches their favourites again.
-      return Array.isArray(a) ? migrateEntries(a) : [];
+      return Array.isArray(a) ? follow(migrateEntries(a)) : [];
     } catch {
       return [];
     }
@@ -220,6 +229,7 @@ export function createFavourites(storage) {
   }
 
   function commit() {
+    items = follow(items);
     try {
       const next = JSON.stringify(items);
       storage.setItem(KEY, next);

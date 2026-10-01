@@ -63,6 +63,7 @@ import {
 } from "./user-schema.js";
 import { PERSIST_ASKED_KEY } from "./storage-persist.js";
 import { RECIPES_KEY, sanitiseRecipes, sortedRecipes } from "./recipe-record.js";
+import { followMovesInProfile } from "./recipe-move.js";
 
 // Every settings field EXCEPT diet, which is handled just below by its own
 // safety-critical choice logic (keep/incoming/combine) rather than a plain
@@ -303,7 +304,10 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
       // too, and sorted, so two devices holding the same ones say the same.
       if (base === RECIPES_KEY) entry[field] = sortedRecipes(sanitiseRecipes(entry[field]));
     }
-    return entry;
+    // A heart, rating or note left on a recipe this person moved goes out on
+    // the moved id (roadmap 510/400): what a backup holds and what sync sends
+    // never carry the old key beside the new one, whatever put it in storage.
+    return followMovesInProfile(entry);
   });
 
   // Anything else under the `faves.` namespace — a store added after this

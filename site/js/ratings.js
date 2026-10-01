@@ -34,6 +34,8 @@ import { profileScopedStorage } from "./profiles.js";
 import { rawOf } from "./store.js";
 import { migrateRatingKeys } from "./renames.js";
 import { dishId, migrateDishKeys } from "./dish-id.js";
+import { RECIPES_KEY } from "./recipe-record.js";
+import { followRatings, movesOfStoredCookbook } from "./recipe-move.js";
 
 const KEY = "faves.ratings.v1";
 
@@ -78,6 +80,10 @@ export function createRatings(storage) {
   // over it (roadmap 510/320; the reasoning is favourites.js's, same shape).
   let seen = null;
 
+  // A rating on a recipe this person moved follows it to the moved id
+  // (roadmap 510/400; favourites.js says why on every read and every write).
+  const follow = (m) => followRatings(m, movesOfStoredCookbook(rawOf(storage, RECIPES_KEY)));
+
   function read() {
     // Two key migrations, venue half then dish half (see dish-id.js on the
     // order). A rating is stored as a KEY STRING holding the dish's name, so
@@ -87,7 +93,7 @@ export function createRatings(storage) {
     seen = rawOf(storage, KEY);
     try {
       const raw = JSON.parse(seen || "{}");
-      return sanitise(migrateDishKeys(migrateRatingKeys(raw)));
+      return follow(sanitise(migrateDishKeys(migrateRatingKeys(raw))));
     } catch {
       return {};
     }
@@ -107,6 +113,7 @@ export function createRatings(storage) {
   }
 
   function commit() {
+    map = follow(map);
     try {
       const next = JSON.stringify(map);
       storage.setItem(KEY, next);
