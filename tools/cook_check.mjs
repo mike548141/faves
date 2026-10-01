@@ -505,7 +505,12 @@ async function run(opts) {
   // showed all 14 lines. Assert against what the page computes, never against
   // the shape on disk.
   const ingredientLines = ingredientKeys(recipe.ingredients);
-  // The 1-of-24 with ingredients but no method; it must offer nothing at all.
+  // A recipe with ingredients but no method must offer nothing at all. The
+  // published 1-of-24 that proved it (Booth's Ginger Crunch) left site/data/ on
+  // 2026-10-01 for the owner's own cookbook (roadmap 510/050), so nothing
+  // published has the shape any more. Section 13 therefore falls back to a
+  // PERSONAL recipe seeded into the cookbook — the same shape, and the shape a
+  // cookbook entry without a method really has.
   const noMethod = items.find((i) => !(i.steps || []).length);
 
   const { server, port } = await startServer(opts.port, SITE);
@@ -1276,6 +1281,38 @@ async function run(opts) {
         bare.starts === 0,
         `“${noMethod.name}”: ${bare.starts} cook buttons`
       );
+    } else {
+      // Nothing published lacks a method, so seed the cookbook (as sync_check
+      // does — there is no recipe editor, and an import is the only real way
+      // one arrives) with TWO personal recipes that differ in exactly one
+      // thing: a method. The pair is the point. An absence ("no button") is
+      // satisfied by a personal recipe page that never offers Cook mode at all,
+      // so the control is the same page WITH steps, which must offer it.
+      const bareId = "u:cook-check-no-method";
+      const fullId = "u:cook-check-with-method";
+      const base_ = { ingredients: ["2 cups flour", "1 cup water"], tags: ["v", "contains-gluten"] };
+      const seeded = {
+        [bareId]: { dishId: bareId, name: "Cook Check No Method", steps: [], ...base_ },
+        [fullId]: { dishId: fullId, name: "Cook Check With Method", steps: ["Mix.", "Bake."], ...base_ },
+      };
+      const myBook = `"faves.p." + JSON.parse(localStorage.getItem("faves.profiles.v1")).activeId + ".recipes.v1"`;
+      await evalPage(`localStorage.setItem(${myBook}, ${JSON.stringify(JSON.stringify(seeded))}); true`);
+      const personalUrl = (id) => `${base}/recipe.html?id=u:mine&dish=${id}`;
+      await goto(personalUrl(fullId), ".ingredients");
+      const withMethod = await snap();
+      await goto(personalUrl(bareId), ".ingredients");
+      const bare = await snap();
+      report.check(
+        "a personal recipe with a method DOES offer Cook mode (the control for the next line)",
+        withMethod.starts > 0,
+        `“${seeded[fullId].name}”: ${withMethod.starts} cook button(s)`
+      );
+      report.check(
+        "a recipe with no method offers no Cook mode button at all",
+        bare.starts === 0,
+        `“${seeded[bareId].name}” (personal, seeded): ${bare.starts} cook buttons`
+      );
+      await evalPage(`localStorage.removeItem(${myBook}); true`);
     }
 
     // --- 13b. The timer's alarm (ROADMAP 36d, ADR 0071) -------------------
