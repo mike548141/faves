@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Sync history on this device.** Settings → Your data → Sync → "Show sync
+  history" lists the last 20 syncs that changed something, asked something or
+  didn't finish: when, which screen and which version of Faves ran it, whether
+  it had a record of your last match with your other devices, and which hearts
+  it added or removed here and in sync. "Copy history" copies it for a bug
+  report. It stays on this device: never synced, never in a backup.
 - **Search "my recipes" to see your whole cookbook.** On the home screen and on
   the Cook at Home page, "my recipe" or "my recipes" (any case) lists every
   recipe you own, marked "My recipe". "Our recipes" is kept for shared recipes
@@ -204,6 +210,19 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Sync asks before adding this device's extras when it has lost track.** If
+  a device has no record of when it last matched your other devices — or joins
+  a sync code while already holding favourites — and holds favourites, ratings
+  or notes that sync doesn't, it no longer adds them everywhere on its own:
+  Settings asks whether to keep what sync has or add this device's extras.
+  Nothing syncs from that device until you answer. Previously this could bring
+  back hearts you had removed on another device.
+- **A heart on a recipe you moved into your own recipes stays on the moved
+  copy.** A heart, rating or note left on the recipe's old Cook at Home entry —
+  by an old backup, a shared list, another device or a page left open — now
+  lands on your own copy instead of showing as a second heart beside it, and
+  sync no longer carries the old one between devices. It works from your own
+  recipes' record of where each one came from, so nobody else's hearts move.
 - **Sync no longer mistakes an out-of-date read for another device's change.**
   The sync server could hand a device a copy up to a minute old (for example
   after a phone moved from Wi-Fi to mobile data), and the device then removed

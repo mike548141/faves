@@ -3411,6 +3411,45 @@ body.faves-view .to-top {
   padding-top: var(--space-4);
   border-top: 1px solid var(--line);
 }
+/* "Sync history on this device" (roadmap 510/380). A plain numbered list,
+   newest first; the heart ids are long unbroken tokens, so they wrap anywhere
+   rather than pushing the dialog wider than a 390 px phone. Colours are the
+   theme's own tokens, so dark mode needs nothing of its own. */
+.sync-log-body {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.sync-log {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+}
+.sync-log-entry {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.sync-log-head {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 600;
+}
+.sync-log-line,
+.sync-log-ids {
+  margin: var(--space-1) 0 0;
+  color: var(--ink);
+  font-size: var(--step-sub);
+}
+.sync-log-ids {
+  color: var(--ink-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-wrap: anywhere;
+}
 
 @media (prefers-reduced-motion: reduce) {
   * {

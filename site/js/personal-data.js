@@ -63,6 +63,7 @@ import {
 } from "./user-schema.js";
 import { PERSIST_ASKED_KEY } from "./storage-persist.js";
 import { RECIPES_KEY, sanitiseRecipes, sortedRecipes } from "./recipe-record.js";
+import { followMovesInProfile } from "./recipe-move.js";
 
 // Every settings field EXCEPT diet, which is handled just below by its own
 // safety-critical choice logic (keep/incoming/combine) rather than a plain
@@ -166,6 +167,21 @@ const EXCLUDED = {
   "faves.sync.base.v1": {
     spare: true,
     why: "Sync’s own last-agreed snapshot. Internal to syncing on this device.",
+  },
+  // The device's sync log (roadmap 510/380, sync-log.js). A record of what
+  // sync did HERE — which page, which build, which hearts — so it is this
+  // device's, like the pairing above: carried to another device it would say
+  // things that never happened there. Without this line the catch-all sweep
+  // would put it in every backup and an import would write it onto the
+  // receiving device. Spared by a Replace: the syncs around a Replace are
+  // exactly the ones worth reading afterwards (510/320 was one).
+  // A literal, as the two above are: sync-log.js is imported by sync.js,
+  // which imports this module. tests/sync-log.test.js pins it to SYNC_LOG_KEY.
+  "faves.sync.log.v1": {
+    spare: true,
+    why:
+      "A short log of what sync did on this device, kept so a problem can be " +
+      "looked into. Deliberately not exported: it describes this device only.",
   },
   // The location ask's "don't ask me again" tickbox (ADR 0083, geo-consent.js).
   // Two places already said in writing that this key is outside the export —
@@ -303,7 +319,10 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
       // too, and sorted, so two devices holding the same ones say the same.
       if (base === RECIPES_KEY) entry[field] = sortedRecipes(sanitiseRecipes(entry[field]));
     }
-    return entry;
+    // A heart, rating or note left on a recipe this person moved goes out on
+    // the moved id (roadmap 510/400): what a backup holds and what sync sends
+    // never carry the old key beside the new one, whatever put it in storage.
+    return followMovesInProfile(entry);
   });
 
   // Anything else under the `faves.` namespace — a store added after this

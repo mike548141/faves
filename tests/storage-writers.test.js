@@ -32,6 +32,7 @@ const WRITERS = {
   "user-schema.js": "THE UPGRADE CHAIN — the only code that rewrites data because the app changed",
   "personal-data.js": "the named import modes (merge / replace) and nothing else",
   "sync.js": "sync's write-back of an agreed merge, its pairing and its base",
+  "sync-log.js": "its own key: the device's sync log (510/380), written only by sync.js with the storage sync.js was given",
   "profiles.js": "the profile registry; also copies pre-profile keys forward once (a pre-chain migration, 2026-08)",
   "favourites.js": "its own key: hearts",
   "ratings.js": "its own key: ratings",
@@ -154,6 +155,7 @@ test("in a tab behind storage, every writer leaves storage exactly as it was", a
     const { writeConsent, suppressAsk } = await import("../site/js/geo-consent.js");
     const { createPersistence } = await import("../site/js/storage-persist.js");
     const { createSync } = await import("../site/js/sync.js");
+    const { appendSyncLog } = await import("../site/js/sync-log.js");
     const { applyPersonalData, collectPersonalData } = await import("../site/js/personal-data.js");
     const { upgradeStorage, upgradeRan } = await import("../site/js/user-schema.js");
 
@@ -193,6 +195,9 @@ test("in a tab behind storage, every writer leaves storage exactly as it was", a
         const s = createSync({ fetchImpl: async (u) => (fetched.push(u), { status: 500, headers: new Map() }), setTimer: null });
         const res = await s.syncNow();
         assert.equal(res.error, "reload-needed");
+      },
+      "sync-log.js": () => {
+        assert.equal(appendSyncLog(deviceStorage, { at: "x", outcome: "error" }), false, "the log reported a write a stale tab refused");
       },
       "personal-data.js": () => {
         const r = applyPersonalData(deviceStorage, backup, { mode: "replace" });

@@ -12,11 +12,11 @@
 // heart would point at a dish no longer published, and its note would sit on a
 // key no page reads.
 //
-// NOT RUN BY ANYTHING YET, deliberately. Which recipes move is the owner's list
-// to give, and HOW it reaches devices is a fork he has not ruled (see roadmap
-// 510/050): as an upgrade step every device runs (`moveStep`), or as an import
-// only his devices take. Both halves are here, pure, and tested on synthetic
-// ids; nothing in site/ imports this module today.
+// THE MOVE ITSELF IS RUN BY tools/move_recipes.mjs (an import only the owner's
+// devices take), not by the app: `moveStep` is here for the day a move has to
+// reach every device as an upgrade step, and nothing calls it. What the app DOES
+// run is the follow at the bottom of this file (roadmap 510/400): a heart left
+// on a moved recipe's old id, by any route, lands on the moved one.
 //
 // PURE, AND IMPORTS NOTHING THAT READS A STORE, so an upgrade step in
 // user-schema.js may use it (that module's rule: nothing the startup chain
@@ -273,6 +273,118 @@ export function moveSnapshot(snapshot, moves, recipes = {}, { add = "referenced"
       })
     : snapshot.profiles;
   return { ...snapshot, profiles };
+}
+
+// --- hearts follow a moved recipe (roadmap 510/400, guard B of 510/320) -------
+//
+// A moved recipe records where it came from (`movedFrom: "<venueId> <dishId>"`,
+// toPersonalRecipe above). So a person's OWN cookbook already says which old ids
+// are theirs to follow: a heart, a rating or a note still keyed by one of those
+// is the same heart, rating or note, on a key nothing renders any more. Every
+// copy of the personal layer is run through `followMoves` on its way in — the
+// device's own stores as they read, a collect (so backups and sync send it
+// moved), and both sides and the base of a sync merge — so an old key cannot
+// sit beside its moved one by any route, found or not yet found (510/320).
+//
+// NO ID IS WRITTEN INTO THE APP: the map comes from each person's own cookbook,
+// so a stranger's device, or a person on this device who moved nothing, is
+// untouched. It does nothing about hearts removed and brought back (510/390
+// and 510/380 are for those): it only collapses a pair into one.
+//
+// ONE RULE, ONE IMPLEMENTATION: this reuses `moveFavourites` and
+// `moveKeyedMap`, the same rewrite the move itself ran, so the follow and the
+// move cannot disagree about what a moved key is. Idempotent: a moved key maps
+// to nothing, so a second pass changes nothing.
+
+/**
+ * The moves a cookbook records: a Map from the old recipe id
+ * (`"<venueId> <dishId>"`) to the `u:` id that now holds it. Built only from
+ * records whose `movedFrom` names a published (not personal) recipe; when two
+ * records claim one old id, the first in sorted id order wins, so two devices
+ * holding the same cookbook follow the same way. Throws nothing.
+ */
+export function movesOfCookbook(book) {
+  const out = new Map();
+  if (!isObj(book)) return out;
+  for (const id of Object.keys(book).sort()) {
+    const from = book[id]?.movedFrom;
+    if (!isPersonalId(id) || typeof from !== "string") continue;
+    const space = from.indexOf(" ");
+    if (space <= 0 || space === from.length - 1 || from.startsWith("u:")) continue;
+    if (!out.has(from)) out.set(from, id);
+  }
+  return out;
+}
+
+// One cookbook's raw string is parsed once per page, not on every store read:
+// the stores read on every change, and a cookbook can be large. Keyed by the
+// string itself, so a changed cookbook is re-read.
+let lastRaw = null;
+let lastMoves = new Map();
+
+/** `movesOfCookbook` of a cookbook as stored (a JSON string, or null). The
+ *  common case — no cookbook, or one that moved nothing — never parses. */
+export function movesOfStoredCookbook(raw) {
+  if (typeof raw !== "string" || !raw.includes('"movedFrom"')) return new Map();
+  if (raw !== lastRaw) {
+    lastRaw = raw;
+    lastMoves = movesOfCookbook(parse(raw));
+  }
+  return lastMoves;
+}
+
+/** A favourites list with every heart on a moved recipe's old id on the moved
+ *  one (two hearts for one recipe become one). The same list back, unchanged,
+ *  when nothing moved. */
+export function followFavourites(list, moves) {
+  if (!moves?.size) return list;
+  return moveFavourites(list, moves, new Set()) ?? list;
+}
+
+/** A ratings map (`d:`-prefixed keys) or a notes map (bare recipe ids) with
+ *  every old key on its moved one; an entry already on the moved key wins. */
+export function followRatings(map, moves) {
+  if (!moves?.size) return map;
+  return moveKeyedMap(map, moves, "d:", new Set()) ?? map;
+}
+export function followNotes(map, moves) {
+  if (!moves?.size) return map;
+  return moveKeyedMap(map, moves, "", new Set()) ?? map;
+}
+
+/**
+ * One person's snapshot (`collectPersonalData`'s profile shape) with their
+ * hearts, ratings and notes following the moves in `moves` — by default, the
+ * ones their own cookbook records. Returns the same object when nothing moved.
+ */
+export function followMovesInProfile(profile, moves = movesOfCookbook(profile?.recipes)) {
+  if (!isObj(profile) || !moves.size) return profile;
+  const favourites = followFavourites(profile.favourites, moves);
+  const ratings = followRatings(profile.ratings, moves);
+  const notes = followNotes(profile.notes, moves);
+  if (favourites === profile.favourites && ratings === profile.ratings && notes === profile.notes) return profile;
+  return { ...profile, favourites, ratings, notes };
+}
+
+/**
+ * A whole snapshot — a collect, the server's copy or the sync base — with each
+ * person following their moves. `books` (profile id → cookbook) adds to what a
+ * profile carries itself: the server's copy and the base carry no cookbook
+ * (recipes travel in buckets), so a sync passes the cookbooks it holds.
+ * Returns the same object when nothing moved; never mutates its input.
+ */
+export function followMovesInSnapshot(snapshot, books = new Map()) {
+  if (!isObj(snapshot) || !Array.isArray(snapshot.profiles)) return snapshot;
+  let changed = false;
+  const profiles = snapshot.profiles.map((p) => {
+    if (!isObj(p)) return p;
+    const extra = books.get(String(p.id ?? ""));
+    const moves = movesOfCookbook({ ...(isObj(extra) ? extra : {}), ...(isObj(p.recipes) ? p.recipes : {}) });
+    const next = followMovesInProfile(p, moves);
+    if (next !== p) changed = true;
+    return next;
+  });
+  return changed ? { ...snapshot, profiles } : snapshot;
 }
 
 /**

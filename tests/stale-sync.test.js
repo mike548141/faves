@@ -47,6 +47,9 @@ import {
   atClock,
 } from "./stale-sync-harness.js";
 import currentWorker, { IMPORT_SETTLE_SECONDS } from "../worker/sync-worker.js";
+import { scopeKey } from "../site/js/profiles.js";
+import { RECIPES_KEY } from "../site/js/recipe-record.js";
+import { ADD_EXTRAS, KEEP_SYNCED } from "../site/js/sync.js";
 
 const S = 1_000;
 
@@ -274,23 +277,49 @@ test(`510/320: across ${RUNS} randomised runs of the owner's sequence on two dev
   t.diagnostic(`${stale}/${RUNS} runs read a stale copy; ${undone} ended with the move undone (510/340, not 320's shape)`);
 });
 
-test("510/320: the detector is live — a third copy of the app with no sync base DOES produce the union, on both devices", async () => {
-  // The positive control for the test above (ADR 0072: a guard whose answer
-  // cannot change is decorative). A storage context that joins the sync code
-  // holding the pre-move list and three hearts since removed — Safari and a
-  // Home Screen app on one iPhone keep separate storage — has no base, so its
-  // first merge is a union: old hearts and others added, nothing removed.
-  const start = [venue("kk"), ...MOVED.map(kHeart)];
+/**
+ * A device's moved recipes with their `movedFrom` taken off — what a cookbook
+ * looks like to a build without 510/400's follow. The control below needs the
+ * owner's union to be POSSIBLE, so it gives the follow nothing to follow.
+ */
+function forgetMoves(storage) {
+  const k = scopeKey("default", RECIPES_KEY);
+  const book = JSON.parse(storage.getItem(k) || "{}");
+  for (const r of Object.values(book)) delete r.movedFrom;
+  storage.setItem(k, JSON.stringify(book));
+}
+
+/** Two devices, the move run on A and agreed; `unfollowable` strips the moves
+ *  first (the control). Returns them and a pre-move backup of A. */
+async function movedPair(start, { unfollowable = false } = {}) {
   const kv = new EdgeKV();
   const a = phone(device(start), kv);
   const b = phone(device(start), kv);
   const { code } = await a.sync.enable();
   await b.sync.join(code);
+  const before = JSON.stringify(collectPersonalData(a.storage, { exportedAt: "x" }));
   moveOn(a.storage);
+  if (unfollowable) forgetMoves(a.storage);
   await a.sync.syncNow();
   await b.sync.syncNow();
+  return { kv, a, b, code, before };
+}
+
+test("510/320: the detector is live — with nothing to follow, a third copy answered 'add' and an Apply DO produce the union, on both devices", async () => {
+  // The positive control for the fuzz above (ADR 0072: a guard whose answer
+  // cannot change is decorative). A storage context that joins the sync code
+  // holding the pre-move list and three hearts since removed — Safari and a
+  // Home Screen app on one iPhone keep separate storage — has no base, so its
+  // first merge is a union: old hearts and others added, nothing removed.
+  // Since 510/390 that merge happens only on the answer "add this device's
+  // extras", and since 510/400 the old ids follow the moved recipes — so the
+  // control strips the moves (forgetMoves) to keep the shape reachable, and
+  // the next test runs the same routes with the guards in place.
+  const start = [venue("kk"), ...MOVED.map(kHeart)];
+  const { kv, a, b, code } = await movedPair(start, { unfollowable: true });
   const third = phone(device([...start, venue("x1"), venue("x2"), venue("x3")]), kv);
-  await third.sync.join(code);
+  assert.equal((await third.sync.join(code)).noBase, true, "the third copy merged with no base instead of asking");
+  assert.equal((await third.sync.resolve({ noBase: ADD_EXTRAS })).ok, true);
   await settle(kv, a, b);
   for (const d of [a, b]) {
     const keys = favsOf(d.storage);
@@ -299,16 +328,31 @@ test("510/320: the detector is live — a third copy of the app with no sync bas
   }
   // …and so does the additive restore ("Apply", not "Replace") of the backup
   // taken before the move. Two routes to the shape; neither is a stale read.
-  const c = phone(device(start), kv);
-  const d = phone(device(start), kv);
-  const { code: code2 } = await c.sync.enable();
-  await d.sync.join(code2);
-  const before = JSON.stringify(collectPersonalData(c.storage, { exportedAt: "x" }));
-  moveOn(c.storage);
-  await c.sync.syncNow();
-  await d.sync.syncNow();
-  assert.equal(applyPersonalData(c.storage, before, { mode: "merge" }).ok, true);
-  await c.sync.syncNow();
-  await settle(kv, c, d);
-  for (const x of [c, d]) assert.equal(moveShape(favsOf(x.storage)).both, MOVED.length);
+  const p2 = await movedPair(start, { unfollowable: true });
+  assert.equal(applyPersonalData(p2.a.storage, p2.before, { mode: "merge" }).ok, true);
+  await p2.a.sync.syncNow();
+  await settle(p2.kv, p2.a, p2.b);
+  for (const x of [p2.a, p2.b]) assert.equal(moveShape(favsOf(x.storage)).both, MOVED.length);
+});
+
+test("510/320 guarded (510/390, 510/400): the same third copy and Apply leave each moved recipe with ONE heart, whichever way the question is answered", async () => {
+  const start = [venue("kk"), ...MOVED.map(kHeart)];
+  for (const answer of [KEEP_SYNCED, ADD_EXTRAS]) {
+    const { kv, a, b, code } = await movedPair(start);
+    const third = phone(device([...start, venue("x1"), venue("x2"), venue("x3")]), kv);
+    assert.equal((await third.sync.join(code)).noBase, true);
+    assert.equal((await third.sync.resolve({ noBase: answer })).ok, true);
+    await settle(kv, a, b, third);
+    for (const d of [a, b, third]) {
+      const keys = favsOf(d.storage);
+      assert.equal(moveShape(keys).both, 0, `${answer}: an old heart beside its moved copy`);
+      assert.equal(moveShape(keys).movedOnly, MOVED.length, `${answer}: a moved recipe lost its heart`);
+      assert.equal(keys.includes("v:x1"), answer === ADD_EXTRAS, `${answer}: the third copy's extras`);
+    }
+  }
+  const p2 = await movedPair(start);
+  assert.equal(applyPersonalData(p2.a.storage, p2.before, { mode: "merge" }).ok, true);
+  await p2.a.sync.syncNow();
+  await settle(p2.kv, p2.a, p2.b);
+  for (const x of [p2.a, p2.b]) assert.equal(moveShape(favsOf(x.storage)).both, 0, "Apply put an old heart beside its moved copy");
 });

@@ -21,11 +21,19 @@
 //     Replace keeps every profile id, and a base naming another id heals in one
 //     cycle.
 //
-// 🛑 THE TESTS MARKED `todo` FAIL ON TODAY'S CODE, ON PURPOSE. They assert the
-// correct behaviour on a route that reproduces the owner's shape; `todo` keeps
-// them running and printing without reddening CI. A guard that makes one pass
-// removes its marker (a todo that starts passing before then is a fix nobody
-// recorded). The others pass today and pin why a route is NOT 320.
+// THE THREE ROUTES THAT MADE THE OWNER'S SHAPE were `todo` until the guards
+// the owner ruled on 2026-10-02 landed (510/380, 390, 400). They now assert the
+// GUARDED behaviour, and none is `todo`:
+//   • the received shortlist: "Add to favourites" is an addition the person
+//     asked for, so its hearts and the since-removed ones DO land (390 is not
+//     for it); what 400 stops is two hearts for one recipe — the old ids land
+//     on the moved copies;
+//   • a synced device whose base is lost or names another person: 390 stops
+//     the merge and asks; whichever way the person answers, 400 keeps each
+//     moved recipe to one heart, and "keep what sync has" also keeps the
+//     since-removed hearts away.
+// The others pin why a route is NOT 320, and one of them changed with 400: an
+// old list against a good base no longer undoes the move.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -50,11 +58,9 @@ import { applyPersonalData, collectPersonalData } from "../site/js/personal-data
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
 import { createFavourites, groupForShare } from "../site/js/favourites.js";
 import { encodeShortlist, decodeShare } from "../site/js/share-codec.js";
-import { SYNC_BASE_KEY } from "../site/js/sync.js";
+import { SYNC_BASE_KEY, ADD_EXTRAS, KEEP_SYNCED } from "../site/js/sync.js";
 import { upgradeStorage, UPGRADE_STEPS, USER_SCHEMA } from "../site/js/user-schema.js";
 import { moveBackup } from "../tools/move_recipes.mjs";
-
-const TODO = "510/320 — reproduces the owner's shape today; a guard is proposed, not built";
 
 /** Hearts removed some days before the move: the "3 others" that came back. */
 const X = ["x1", "x2", "x3"];
@@ -120,16 +126,16 @@ const scoped = (st) => ({
   removeItem: (k) => st.removeItem(scopeKey("default", k)),
 });
 
-// --- routes that reproduce the shape (todo: correct behaviour, fails today) ---
+// --- the routes that made the shape, now guarded (510/390, 510/400) ----------
 
-test("510/320: a shortlist shared before the move and received after it does not put old hearts beside the moved ones", { todo: TODO }, async () => {
+test("510/320: a shortlist shared before the move and received after it does not put old hearts beside the moved ones", async () => {
   // Share-receive's "Add to favourites" is favourites.merge(): additive by
   // design, so on a synced device it is this device's own addition and the
   // three-way merge carries it everywhere. A shortlist made before the move
   // names the old ids and the hearts since removed — one tap supplies both
-  // ingredients of the owner's shape. (Its "correct" answer is a judgement
-  // call: the person asked for those hearts. What it must not do is make two
-  // hearts for one recipe; landing on the moved copy is the proposed guard.)
+  // ingredients of the owner's shape. The person asked for those hearts, so
+  // they land (X included): what 510/400 stops is two hearts for one recipe,
+  // because the old ids follow the moved recipes in this person's cookbook.
   const { kv, a, b, old } = await importedAndAgreed();
   const token = encodeShortlist({ label: "", groups: groupForShare(old) });
   const added = createFavourites(scoped(a.storage)).merge(decodeShare(token).items);
@@ -139,6 +145,8 @@ test("510/320: a shortlist shared before the move and received after it does not
     const keys = favsOf(d.storage);
     assert.equal(ownerShape(keys), false, `${n}: the owner's exact shape (old beside moved, X back, nothing lost)`);
     assert.equal(moveShape(keys).both, 0, `${n}: an old heart sits beside its moved copy`);
+    assert.equal(moveShape(keys).movedOnly, MOVED.length, `${n}: a moved recipe lost its heart`);
+    assert.ok(X.every((x) => keys.includes(`v:${x}`)), `${n}: the shortlist's hearts the person asked for did not land`);
   }
 });
 
@@ -153,27 +161,49 @@ for (const [fault, breakBase] of [
     },
   ],
 ]) {
-  test(`510/320: a synced device whose base ${fault} does not merge an old list in beside the move`, { todo: TODO }, async () => {
+  test(`510/320: a synced device whose base ${fault} does not merge an old list in beside the move`, async () => {
     // The second ingredient on its own is a page that loaded before X went and
     // before the move, writing its whole list (every build before PR #76 did).
-    // Against a good base that UNDOES the move (the next test pins it); against
-    // no base — or one that does not cover this person — every difference is
-    // an addition, so the old ids and X join the moved hearts on both devices.
-    const { kv, a, b, old } = await importedAndAgreed();
-    breakBase(a.storage);
-    setFavs(a.storage, [...old, venue("tapped")]);
-    await settle(kv, a, b);
-    for (const [n, d] of [["laptop", a], ["phone", b]]) {
-      const keys = favsOf(d.storage);
-      assert.equal(ownerShape(keys), false, `${n}: the owner's exact shape (old beside moved, X back, nothing lost)`);
-      assert.equal(moveShape(keys).both, 0, `${n}: an old heart sits beside its moved copy`);
+    // Against no base — or one that does not cover this person — every
+    // difference reads as an addition, which made the owner's union. Since
+    // 510/390 the laptop STOPS and asks instead, sending nothing; since
+    // 510/400 neither answer can put an old heart beside its moved copy.
+    for (const answer of [KEEP_SYNCED, ADD_EXTRAS]) {
+      const { kv, a, b, old } = await importedAndAgreed();
+      breakBase(a.storage);
+      setFavs(a.storage, [...old, venue("tapped")]);
+      kv.clock += 3 * CACHE_TTL_MS;
+      const asked = await a.sync.syncNow();
+      assert.equal(asked.noBase, true, `the laptop merged with no base instead of asking (${JSON.stringify(asked)})`);
+      assert.equal(a.requests.filter((r) => r.method === "PUT" && r.at === kv.clock).length, 0, "the laptop wrote while asking");
+      await b.sync.syncNow();
+      assert.equal(moveShape(favsOf(b.storage)).movedOnly, MOVED.length, "the phone changed while the laptop was asking");
+      assert.equal(X.some((x) => favsOf(b.storage).includes(`v:${x}`)), false, "a removed heart reached the phone while the laptop was asking");
+      // The background cycle cannot go ahead either: no answer, no request.
+      const n = a.requests.length;
+      assert.equal((await a.sync.syncNow({ why: "open" })).noBase, true);
+      assert.equal(a.requests.length, n, "a background sync reached the network with the question open");
+
+      assert.equal((await a.sync.resolve({ noBase: answer })).ok, true);
+      await settle(kv, a, b);
+      for (const [n2, d] of [["laptop", a], ["phone", b]]) {
+        const keys = favsOf(d.storage);
+        assert.equal(ownerShape(keys), false, `${n2} (${answer}): the owner's exact shape`);
+        assert.equal(moveShape(keys).both, 0, `${n2} (${answer}): an old heart sits beside its moved copy`);
+        assert.equal(moveShape(keys).movedOnly, MOVED.length, `${n2} (${answer}): a moved recipe lost its heart`);
+        const xBack = X.some((x) => keys.includes(`v:${x}`));
+        // "Keep what sync has": the old list's extras go, removed hearts stay
+        // removed. "Add this device's extras": the person chose to add them.
+        assert.equal(xBack, answer === ADD_EXTRAS, `${n2} (${answer}): removed hearts back = ${xBack}`);
+        assert.ok(KEEP.every((k) => keys.includes(`v:${k}`)), `${n2} (${answer}): a heart nobody touched was lost`);
+      }
     }
   });
 }
 
 // --- why the other routes are not 320 (pass today) ---------------------------
 
-test("510/320: each ingredient alone does not make the shape — a lost base with no old list settles; an old list against a good base undoes the move", async () => {
+test("510/320: each ingredient alone does not make the shape — a lost base with no old list settles, asking nothing; an old list against a good base no longer undoes the move (510/400)", async () => {
   {
     const { kv, a, b } = await importedAndAgreed();
     a.storage.setItem(SYNC_BASE_KEY, "{not json");
@@ -185,14 +215,18 @@ test("510/320: each ingredient alone does not make the shape — a lost base wit
     }
   }
   {
-    // The #76 route, pinned in its pre-fix form: the moved hearts GO.
+    // The #76 route in its pre-fix form. Until 510/400 the moved hearts WENT
+    // (the old list's old ids won). Now the old ids follow the moved recipes
+    // in this person's cookbook, so the move stands. X still comes back —
+    // the old list holds it and the base says it is new here — which 400
+    // does not claim to stop (PR #76 stopped that page writing at all).
     const { kv, a, b, old } = await importedAndAgreed();
     setFavs(a.storage, [...old, venue("tapped")]);
     await settle(kv, a, b);
     for (const d of [a, b]) {
       const s = moveShape(favsOf(d.storage));
       assert.equal(s.both, 0, "an old list against a good base doubled a heart");
-      assert.equal(s.oldOnly, MOVED.length, "expected the move undone (the #76 shape), not 320's");
+      assert.equal(s.movedOnly, MOVED.length, "the old list undid the move (the #76 shape) — 510/400 should keep it");
     }
   }
 });

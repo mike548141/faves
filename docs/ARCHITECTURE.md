@@ -1286,6 +1286,15 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   by all three screens; it exists as its own named file because the failure it
   fixes was an *absence* — every other part was built, tested and green while
   nothing imported any of it.
+  **Three guards from 510/320 (ADR 0152).** A heart, rating or note on a moved
+  recipe's old id follows it to the moved id (`recipe-move.js`
+  `followMoves*`, from the person's own cookbook) on every store read and
+  write, every collect, and all three merge inputs. A person both sides hold,
+  with no base covering them and extras on this device, is never merged
+  silently: the cycle stops and asks (`baselessPeople`), the question is kept
+  in `faves.sync.v1` as `ask`, and no cycle runs until it is answered. The
+  syncs that did something are kept in `faves.sync.log.v1` (`sync-log.js`,
+  last 20, device only, excluded from backups) and shown in Settings.
 - **Sync's encryption and its code** (no key of their own): `sync-crypto.js` +
   `sync-code.js`, specified by **ADR 0061**. The sync code is a 65-bit
   Crockford-base32 bearer secret with a mod-29 check symbol, minted from
