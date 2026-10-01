@@ -3,9 +3,18 @@
 The server half of cross-device sync (ADR
 [0017](../docs/decisions/0017-cross-device-sync-encrypted-blob-bearer-code.md),
 ADR [0060](../docs/decisions/0060-sync-merges-three-ways-because-the-layer-has-no-clock.md)).
-A Cloudflare Worker that stores and serves **one encrypted blob per user** in
-Workers KV. It is a dumb ciphertext store: it cannot read a user's data, and
-it is not supposed to be able to.
+A Cloudflare Worker that stores and serves **one encrypted blob per user**.
+It is a dumb ciphertext store: it cannot read a user's data, and it is not
+supposed to be able to.
+
+⏳ **Since roadmap 510/340 (ADR
+[0151](../docs/decisions/0151-each-sync-code-is-one-durable-object.md); built,
+not yet deployed)** each user's copies live in one **Durable Object** named by
+the `blobId` (`SyncStore` in `sync-worker.js`), not in Workers KV. KV is read
+once per user, to import, and otherwise only mirrored for a lossless rollback.
+The HTTP interface did not change. Sections below that describe KV reads and
+writes describe the Worker until then; "Deploy owed — the Durable Object store" at the end is
+the runbook.
 
 This directory is source and deploy config only. It is deployed (see
 "Deployed" below); `wrangler.toml` keeps placeholders on purpose.
@@ -43,8 +52,11 @@ This directory is source and deploy config only. It is deployed (see
 
 | File | Purpose |
 | --- | --- |
-| `sync-worker.js` | The Worker itself — plain ES module, `export default { fetch }`, no dependencies. |
-| `sync-worker.test.js` | Unit + fetch-handler tests, plain `node --test`, no dependencies. Uses a fake in-memory KV namespace — see the file for why that's a *more* forgiving stand-in than real KV, not an equivalent one — and, since roadmap 510/330, a second one (`LaggyKV`) whose reads lag its writes the way KV's eventual consistency does. |
+| `sync-worker.js` | The Worker itself — plain ES module, `export default { fetch }` plus the `SyncStore` Durable Object class, no dependencies. |
+| `sync-worker.test.js` | Unit + fetch-handler tests, plain `node --test`, no dependencies. Runs against the Durable Object stand-in below, over a fake KV (strongly consistent, so *more* forgiving than real KV) and `LaggyKV` (reads lag writes, as KV's eventual consistency does) for the import's stale-read case. |
+| `durable-object-standin.js` | Test support, never deployed: a Durable Object namespace over real SQLite (Node's built-in `node:sqlite`). Its header says where it is stricter than Cloudflare and the few places it is not. |
+| `sync-worker-kv-only.js` | 🧊 Frozen: the KV-only Worker as it ran until 510/340, byte for byte. The rollback target, and the Worker the 510/320 stale-read fuzz runs against. Never edited (a test pins its hash). |
+| `rollback-kv-only.js` | The rollback entry point: the frozen fetch handler, still exporting `SyncStore`. Deployed only by the runbook's rollback. |
 | `wrangler.toml` | Deploy config for [Wrangler](https://developers.cloudflare.com/workers/wrangler/), Cloudflare's Workers CLI. Has placeholders — see "Deploying". |
 
 ## API
@@ -54,7 +66,8 @@ This directory is source and deploy config only. It is deployed (see
 | `/v1/blob/<blobId>` | `GET` | `200` + ciphertext body (`application/octet-stream`) + `ETag`, or `404` if nothing stored yet. |
 | `/v1/blob/<blobId>` | `PUT` | `204` on success, with a fresh `ETag`. `412` if `If-Match` doesn't match the current version (see "Concurrency" below). `413` if the body is too large. `400` if the body is empty or `blobId` is malformed. |
 | `/v1/blob/<blobId>` | `OPTIONS` | `204` CORS preflight. |
-| `/v1/blob/<blobId>?buckets=<n>` | `GET` | As `GET` above, plus `X-Faves-Buckets`: the version of each recipe bucket 0…n−1 that exists (`r0="<v>",r3="<v>"`), or `none`. On a `404` too. Costs one KV read per bucket asked about. |
+| `/v1/blob/<blobId>?buckets=<n>` | `GET` | As `GET` above, plus `X-Faves-Buckets`: the version of each recipe bucket 0…n−1 that exists (`r0="<v>",r3="<v>"`), or `none`. On a `404` too. Costs one storage read per bucket asked about (one KV read each, before 510/340). |
+| any `GET` / `PUT` | | `503` + `Retry-After` (since 510/340): this user's copies have not been imported from KV yet and it is less than five minutes since the deploy (see ADR 0151). The client treats it like any unreachable moment: it keeps its data and tries again. |
 | `/v1/blob/<blobId>:r<n>` | `GET` / `PUT` | A recipe bucket, `n` from 0 to 15. Same rules as the core copy: ciphertext, `ETag`, conditional `PUT`, 256 KiB cap. |
 | `…?family=<n>` on any `PUT` | `PUT` | How many recipe buckets the user has (roadmap 510/140). After the write, only the core copy and buckets 0…n−1 are read to re-arm their expiry. `0` (no recipes) reads none. Absent or not a whole number: all 16. |
 | `…&known=core:<v>,r0:<v>,…` on any `PUT` | `PUT` | The version the client holds of each other copy (roadmap 510/330). Of the copies `family` allows, only those named are read, and one is re-armed only if KV returns exactly that version. Absent: nothing is read or re-armed. Never changes the response. |
@@ -67,6 +80,15 @@ tested against each other in that module's own test suite
 (`tests/sync-crypto.test.js`).
 
 ## Recipe buckets and expiry (roadmap 510/050)
+
+> Since 510/340 these rules run inside the user's Durable Object, **unchanged**,
+> so retention is the same to the day: each copy expires 180 days after its
+> last write or re-arm, and a write re-arms the other copies in `family` that
+> the client vouches for in `known` and that are 30 days past their last write.
+> A re-arm now moves only the write time — it re-writes no bytes, so the stale
+> re-write 510/330 fixed cannot happen at all — and an alarm frees an object's
+> storage once everything in it has expired. The KV read and write counts
+> below are the KV Worker's.
 
 A user's personal recipes are stored beside their core copy, under the same
 user key plus a bucket number: `<blobId>:r0` … `<blobId>:r7` (ADR 0146 §2).
@@ -154,7 +176,17 @@ other's core write in it — and a Durable Object would close both.
 clobber a newer write — it gets `412` back and is expected to `GET`,
 re-merge (client-side, `site/js/sync-merge.js`), and retry.
 
-**Read this before assuming that's airtight.** Workers KV is
+✅ **Closed by 510/340, once deployed.** Each user's copies now live in one
+Durable Object. Exactly one instance exists per user, every request goes to
+it, and its read of a copy, the `If-Match` comparison and the write are one
+synchronous step over its SQLite storage, so two racing writes cannot both
+win: one gets `204`, the other `412`. A read always sees the latest write, so
+a device is never handed a minute-old copy either (the defect 510/340
+measured: a heart removed, a removed heart back, a recipe move undone on both
+devices). The paragraphs below are the KV Worker's honest limit, kept as the
+record of why.
+
+**Read this before assuming that's airtight (the KV Worker, until 510/340).** Workers KV is
 [eventually consistent](https://developers.cloudflare.com/kv/reference/consistency/)
 and has **no true atomic compare-and-swap primitive**. This Worker's CAS is
 a plain read, then a plain write, as two separate KV operations — if two
@@ -319,11 +351,13 @@ README and `sync-worker.js` describe.
 
 `worker/sync-worker.test.js` runs under plain `node --test` (from the repo
 root, `node --test` already picks it up automatically — no wiring needed)
-with a fake in-memory KV namespace, so the routing, validation, CORS, and
-CAS logic can be verified without `wrangler`, a Cloudflare account, or a
-network call. It is **not** a substitute for a real deploy smoke test
-(step 5 above) — it can't tell you whether `wrangler.toml`'s bindings are
-correct, whether KV's real consistency behaviour differs in a way that
+with a Durable Object stand-in and fake KV namespaces, so the routing,
+validation, CORS, CAS, retention and migration logic can be verified without
+`wrangler`, a Cloudflare account, or a network call. `tests/stale-sync.test.js`
+drives the real client against the real Worker over a KV model with
+Cloudflare's documented 60-second read cache, including the cutover itself.
+It is **not** a substitute for a real deploy smoke test (step 5 above) — it can't tell you whether `wrangler.toml`'s bindings are
+correct, whether KV's or Durable Objects' real behaviour differs in a way that
 matters, or whether the account/namespace ids are right.
 
 ---
@@ -461,3 +495,112 @@ the checks are that nothing broke and that the new query is accepted):
 Re-arming itself cannot be seen from outside (it changes only expiry); the
 unit tests in `sync-worker.test.js` (`510/330`) and the real-client test in
 `tests/sync.test.js` are the evidence for it.
+
+## Deploy owed — the Durable Object store, roadmap 510/340
+
+⏳ **Built, not deployed.** The deploy, and with it the move off KV, needs the
+owner's go at the time (ruled 2026-10-02: option B, one Durable Object per
+sync code; ADR [0151](../docs/decisions/0151-each-sync-code-is-one-durable-object.md)).
+Nothing under `site/` changed, so there is no site half and no order to get
+right: devices on every build keep working on the day, because the HTTP
+interface is the same.
+
+🎯 **One decision rides with the go — `KV_MIRROR`.** The ruling's paper said
+"KV stays as a read-only fallback". `wrangler.toml` ships `KV_MIRROR = "on"`
+instead: every write the object takes is also written to KV (best effort; the
+same KV writes the KV Worker made, and a failed one never fails the sync), so a
+rollback serves the newest copies under the versions devices hold. With it
+`"off"`, KV is truly read-only and retires by its own 180-day TTL, but a
+rollback would serve copies as they stood at the cutover, and devices would
+read them as other devices' deletions: the 510/340 defect, for everyone at
+once. Turning it off later is a vars-only redeploy.
+
+### What changes on the day
+
+- Every `GET`/`PUT` goes to the user's object. **For the first five minutes
+  after the deploy, every user answers `503`** until their object can import
+  (below). The client already treats that as "couldn't reach sync, your data is
+  safe on this device" and tries again on its next sync. Deploy when nobody is
+  mid-change; Faves' traffic makes that easy.
+- On a user's first request after those five minutes, their object reads all
+  17 of their KV keys once, keeps the versions and write times exactly, and
+  never reads KV again. A device's `ETag` from the KV Worker still matches.
+- **Why five minutes, and why not the paper's "refuse a copy younger than a
+  minute":** a stale read returns the *older* copy carrying the older copy's
+  write time, so a check on the copy cannot see it is stale. What bounds it is
+  time since the last KV write, and after the deploy nothing writes a user's KV
+  keys until their object exists. So the object imports only once
+  `IMPORT_SETTLE_SECONDS` (300, five times KV's documented 60 s) have passed
+  since this version was created, read from the `[version_metadata]` binding.
+  Without that binding it never imports and every unimported user gets `503`:
+  loud on purpose, and check 1 below catches it.
+
+### Steps
+
+1. **Credential.** The `faves-sync-deploy` token holds `Workers Scripts Write`
+   and `Workers KV Storage Write`. 🤔 **Not verified:** whether that covers
+   creating a Durable Object class (a migration). If `wrangler deploy` refuses
+   for want of a permission, stop: widening the token is the owner's decision.
+2. **Before the deploy, plant a KV-era copy** to prove the import live: `PUT
+   /v1/blob/<fresh random 32-hex id>` with a junk body to the *live* KV Worker;
+   note the `ETag`. Record the live version id (`wrangler versions list`,
+   read-only) for the record.
+3. **Config.** Regenerate the filled config outside this tree from `main`'s
+   `wrangler.toml`. It now carries `[[durable_objects.bindings]]`
+   (`SYNC_STORE` → `SyncStore`), `[[migrations]]` tag
+   `v1-510-340-sync-store` with `new_sqlite_classes`, `[version_metadata]`, and
+   `KV_MIRROR`. Keep `compatibility_date` as it is (the code deletes its own
+   alarm, so it does not rely on 2026-02-24's `deleteAll` change).
+4. **Deploy with `wrangler deploy -c <filled config>`** — one step. Never
+   `wrangler versions upload` now and `versions deploy` later, and never a
+   gradual deployment: the settling window counts from when the version was
+   *created*, and old and new Workers must not serve side by side.
+
+### Live checks
+
+1. **Inside five minutes:** `GET /v1/blob/<another fresh id>` → `503` with
+   `Retry-After: 300` and `Access-Control-Allow-Origin` for the site.
+2. **After five minutes:** the same `GET` → `404`, and with `?buckets=8` →
+   `404` + `X-Faves-Buckets: none`. (Still `503`? The version-metadata binding
+   is missing: roll back, below.)
+3. **The import:** `GET /v1/blob/<step 2's id>` → `200` with step 2's `ETag`;
+   then `PUT` with that `If-Match` → `204`.
+4. **The interface:** on a fresh id, `PUT` → `204` + `ETag`; `GET` → `200`, same
+   `ETag`; `PUT` with a wrong `If-Match` → `412`; `:r0` `PUT` then the core
+   `GET ?buckets=8` names `r0`; `:r16` → `400`; 300 KiB → `413`;
+   `Access-Control-Expose-Headers` names `ETag` and `X-Faves-Buckets` on the
+   real responses.
+5. **Compare-and-swap, live:** two `PUT`s sent at once with the same correct
+   `If-Match` (two `curl`s in the background) → one `204`, one `412`. Under KV
+   both could pass.
+6. **The owner's devices:** a heart on one shows on the other, including a
+   phone switching between Wi-Fi and mobile data inside a minute.
+
+Residue: the test ids' copies, junk bytes only, in objects and (mirrored) KV.
+They expire in 180 days; the object's alarm then frees its storage.
+
+### Rollback
+
+`wrangler rollback` **cannot** go back to a pre-510/340 version: Cloudflare
+refuses a rollback across a Durable Object class change (Workers → Versions &
+deployments → Rollbacks, read 2026-10-02). The way back is a fresh deploy of
+`rollback-kv-only.js`, which serves the frozen KV-only Worker and still exports
+`SyncStore`:
+
+```sh
+wrangler deploy -c <filled config> rollback-kv-only.js
+```
+
+With `KV_MIRROR` on, nothing is lost: KV holds every copy the objects took, at
+the versions devices hold (`sync-worker.test.js` proves it against the frozen
+Worker). KV's stale reads, the 510/340 defect, come back with it.
+
+🛑 **Rolling forward again after a rollback needs a fresh class.** While rolled
+back, writes land in KV only, and the objects still hold what they had, and
+never re-import. Re-deploying the same class would serve those older copies.
+So roll forward with a new class: add `export class SyncStoreV2 extends
+SyncStore {}` to `sync-worker.js`, point the binding's `class_name` at it, and
+add a **new** `[[migrations]]` entry (`new_sqlite_classes = ["SyncStoreV2"]`,
+a new tag). Fresh objects import from KV again, five minutes after that deploy.
+The old class's objects are left as they are; deleting them
+(`deleted_classes`) destroys data and is the owner's call.

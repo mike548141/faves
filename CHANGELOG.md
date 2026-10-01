@@ -204,6 +204,14 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Sync no longer mistakes an out-of-date read for another device's change.**
+  The sync server could hand a device a copy up to a minute old (for example
+  after a phone moved from Wi-Fi to mobile data), and the device then removed
+  a heart you had just added, brought back one you had removed, or undid a
+  recipe move on every device. Each person's synced data now lives in one place
+  that always answers with the latest copy, and two devices writing at the same
+  moment can no longer both win. Nothing changes in the app, so phones on older
+  versions are fixed too. Takes effect when the sync Worker is next deployed.
 - **Sync can no longer put an older copy of your data back.** When sync kept
   a long-untouched copy alive, the server re-saved whatever it had just read,
   and that read could be a minute out of date, so an import or a recent edit

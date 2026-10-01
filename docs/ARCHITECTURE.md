@@ -1304,6 +1304,13 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   deployed** — `worker/README.md` says what is owed), strict id
   validation, a 256 KiB streamed body cap, a 180-day TTL refreshed on write,
   `If-Match` compare-and-swap, an origin allowlist, and no logging of anything.
+  ⏳ **Since 510/340 (ADR 0151; built, not yet deployed)** each user's copies
+  live in one Durable Object (`SyncStore`, SQLite storage) named by the
+  `blobId`, so a read always sees the latest write and `If-Match` is a true
+  compare-and-swap; KV is read once per user to import (no earlier than five
+  minutes after the deploy) and otherwise only mirrored for rollback
+  (`KV_MIRROR`). Expiry is per copy, 180 days from its last write or re-arm,
+  with the same re-arm rules as the KV Worker, freed by an alarm.
   **Deployed 2026-08-16** at the endpoint `sync.js` names; the deploy
   credential and ids live in the estate root, never here — `worker/README.md`
   holds the steps and `wrangler.toml` keeps placeholders on purpose. A redeploy
