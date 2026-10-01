@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Extras become choices on 13 dishes.** Grilled chicken on the Caesar and
+  tahini bowl, bacon on the omelette, fries on the sliders, a naan upgrade on
+  the combo and eight more are now added on the dish, with the price, instead
+  of read from the description. Each carries what it adds (bacon is pork,
+  cheese is dairy). Baylands, Charley Noble, Gold Lining, Khandallah Trading
+  Company, Simmer, Southern Cross, Spices Indian and The Borough.
 - **Sizes become choices on 48 dishes.** Wine by the glass, large glass or
   bottle, water by the bottle, half and full entrees, fries by the scoop and
   burgers by the size are now picked on the dish (Southern Cross, Hotel
