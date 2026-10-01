@@ -89,7 +89,8 @@
           "id": "extra-patty-cheese",
           "price": 6.0,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "has-meat"
           ]
         },
         {

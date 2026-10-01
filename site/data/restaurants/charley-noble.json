@@ -81,7 +81,9 @@
           "name": "Additional patty",
           "id": "additional-patty",
           "price": 10.0,
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         }
       ]
     }
