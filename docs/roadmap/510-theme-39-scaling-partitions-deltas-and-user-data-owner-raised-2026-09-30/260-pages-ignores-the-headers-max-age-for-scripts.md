@@ -1,4 +1,4 @@
-- [ ] 🔎 **Pages serves scripts with a four-hour cache, not `_headers`'
+- [~] 🔎 **Pages serves scripts with a four-hour cache, not `_headers`'
       `max-age=0`** `[S] [pwa][deploy]` — found 2026-10-01 by the `170`
       worker (session `faves-55`), by `curl` against the live site.
 
@@ -16,3 +16,5 @@
   the same deploy with `_headers`' `max-age=0`; only `lets-eat.myspot.nz`
   answers `max-age=14400`. So the override is in the custom domain's
   Cloudflare zone, likely its Browser Cache TTL (inferred, not read).
+
+  📌 **Claimed 2026-10-02 (`faves-4f`).**
