@@ -23,3 +23,14 @@
   The tagger skips a note marked as a pointer from now on. Existing tags
   stay until a sweep of the 31 lists each one for him to keep or drop.
   📌 **Claimed 2026-10-01 (`faves-55`).**
+  ✅ **Pointer flag landed, review written (2026-10-01).** A note is flagged in
+  `tools/section-note-pointers.json` (venue id + `sectionId` + the note's exact
+  text; not in `site/data/`, ADR 0047) and the section-note reading skips it,
+  for that NOTE only. A stale entry fails `validate.py`, the sweep and
+  `--explain --check`. Groundup's lunch board is flagged. No tag was removed;
+  the five tips now say the tag is kept as a precaution. The 31 tips are
+  listed in `docs/reviews/2026-10-01-0551-section-note-tags-review.md`
+  (`tag_allergens.py --section-notes` regenerates it). 🎯 **Still the owner's:**
+  keep or drop the five Groundup gluten tags (recommendation: Nachos and Fries
+  lean drop, Thai Beef Salad and Corn Fritters keep, Wedges ask the venue);
+  the other 26 are recommended keep. This item stays open for that ruling.
