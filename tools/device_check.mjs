@@ -57,6 +57,9 @@ const SITE = join(ROOT, "site");
 const DEFAULT_VENUE = "rs-satay-noodle-house";
 const ALLERGEN = { key: "contains-peanuts", chip: "Peanuts" };
 const SEED_RATING = 4;
+// The one PUBLISHED Cook at Home recipe section 9 hearts beside the personal ones.
+// Named, and checked against the data before a browser starts.
+const PUBLISHED_RECIPE = { dishId: "easy-pad-thai", name: "Easy Pad Thai" };
 // Neutral display names — this repo is publication-bound, so the fixture never
 // carries a real person's name (CLAUDE.md, no personal data).
 const GUEST_NAME = "Guest";
@@ -747,6 +750,166 @@ async function run(opts) {
       home.moved === 0 && home.same,
       `${home.moved} DOM change(s) in the list, same ${home.cards} card elements: ${home.same}`
     );
+
+    // --- 9. Favourites: your own recipes sit INSIDE Cook at Home -------------
+    // (roadmap 510/290, owner-ruled 2026-10-01: "I should see all the recipes
+    // together under Cook at home".) The home screen's Favourites view used to
+    // list a hearted personal recipe under a separate "My recipes" heading. Now it
+    // is a row of the Cook at Home group, in the order it was hearted among the
+    // published ones, wearing a "My recipe" label in words. Only HEARTED ones show.
+    //
+    // Driven through the page's OWN store modules (the same singletons app.js
+    // holds), exactly as section 8 does, because the seed above rewrites storage
+    // on every document load and a reload would erase the hearts. Fixture names are
+    // synthetic; the one published recipe is named here and checked against the
+    // data first, so a corpus change moves the subject loudly, not silently.
+    const cookRecord = JSON.parse(await readFile(join(SITE, "data", "restaurants", "cook-at-home.json"), "utf8"));
+    const published = (cookRecord.menu || []).flatMap((x) => x.items || []).find((i) => i.dishId === PUBLISHED_RECIPE.dishId);
+    if (!published || published.name !== PUBLISHED_RECIPE.name) {
+      throw new Error(
+        `cook-at-home has no "${PUBLISHED_RECIPE.name}" (${PUBLISHED_RECIPE.dishId}) — pick another published recipe rather than let section 9 test nothing`
+      );
+    }
+    const mineA = { dishId: "u:fixture-home-stew", name: "Fixture Home Stew" };
+    const mineB = { dishId: "u:fixture-home-tart", name: "Fixture Home Tart" };
+    const unhearted = { dishId: "u:fixture-unhearted-bake", name: "Fixture Unhearted Bake" };
+    const venueDish = { type: "dish", venueId: opts.id, venueName: venue.name, name: seedDish.name, dishId: seedDish.dishId || undefined, isRecipe: false };
+    await evalPage(`(async () => {
+      const f = await import("/js/favourites.js"), r = await import("/js/recipes.js");
+      for (const e of [...f.favourites.items()]) f.favourites.removeKey(f.favKey(e));
+      for (const rec of ${JSON.stringify([mineA, mineB, unhearted])}) r.recipes.put({ ...rec, section: "Fixtures" });
+      const mine = (x) => ({ type: "dish", venueId: r.MY_RECIPES, venueName: r.MY_RECIPES_NAME, name: x.name, dishId: x.dishId, isRecipe: true });
+      // Hearted in THIS order: personal, a place's dish, published, personal.
+      f.favourites.toggle(mine(${JSON.stringify(mineA)}));
+      f.favourites.toggle(${JSON.stringify(venueDish)});
+      f.favourites.toggle({ type: "dish", venueId: "cook-at-home", venueName: "Cook at Home", name: ${JSON.stringify(PUBLISHED_RECIPE.name)}, dishId: ${JSON.stringify(PUBLISHED_RECIPE.dishId)}, isRecipe: true });
+      f.favourites.toggle(mine(${JSON.stringify(mineB)}));
+    })()`);
+    // Favourites lives in the ⋯ menu on the home screen, behind its button.
+    await click("#overflow-btn");
+    await click("#favourites-toggle");
+    await untilPresent(() => evalPage(`document.querySelectorAll("#favourites-groups .fav-venue-group").length > 0`), {
+      label: "the Favourites view to render its groups",
+    });
+    await settle();
+    const favView = () => evalPage(`(() => {
+      const root = document.querySelector("#favourites-groups");
+      const groups = [...root.querySelectorAll(".fav-venue-group")].map((g) => {
+        const head = g.querySelector(".fav-venue-head");
+        const rows = [...g.querySelectorAll("li.search-row:not(.fav-venue-head)")].map((li) => {
+          const a = li.querySelector("a.search-link");
+          const owner = a?.querySelector(".recipe-owner");
+          return {
+            name: li.querySelector(".search-row-name")?.textContent.trim(),
+            href: a?.getAttribute("href"),
+            owner: owner ? owner.textContent.trim() : null,
+            ownerInLink: !!owner && a.contains(owner),
+            linkText: (a?.textContent || "").replace(/\\s+/g, " ").trim(),
+            height: Math.round(a?.getBoundingClientRect().height || 0),
+          };
+        });
+        return {
+          head: head?.querySelector(".search-row-name")?.textContent.trim(),
+          headHref: head?.querySelector("a.fav-venue-link")?.getAttribute("href") || null,
+          rows,
+        };
+      });
+      return {
+        groups,
+        summary: document.querySelector("#favourites-summary")?.textContent.trim(),
+        text: root.textContent,
+        marked: root.querySelectorAll(".fav-recheck, .fav-drop").length,
+        scrollX: document.documentElement.scrollWidth > innerWidth,
+      };
+    })()`);
+    const fv = await favView();
+    const cook = fv.groups.find((g) => g.headHref === "restaurant.html?id=cook-at-home");
+    const cookRows = cook ? cook.rows : [];
+    const rowOf = (g, name) => g?.rows.find((r) => r.name === name);
+
+    report.check(
+      "Favourites: a hearted personal recipe is a row inside the Cook at Home group, with the published one",
+      !!cook && !!rowOf(cook, mineA.name) && !!rowOf(cook, mineB.name) && !!rowOf(cook, PUBLISHED_RECIPE.name),
+      JSON.stringify(cookRows.map((r) => r.name))
+    );
+    report.check(
+      'Favourites: …and it carries a "My recipe" label, inside its link so a screen reader says it with the name',
+      [mineA, mineB].every((m) => {
+        const r = rowOf(cook, m.name);
+        return r && r.owner === "My recipe" && r.ownerInLink && /My recipe/.test(r.linkText);
+      }),
+      JSON.stringify(cookRows.map((r) => [r.name, r.owner, r.ownerInLink]))
+    );
+    report.check(
+      "Favourites: …and still opens its own recipe page",
+      rowOf(cook, mineA.name)?.href === `recipe.html?id=u:mine&dish=${mineA.dishId}`,
+      String(rowOf(cook, mineA.name)?.href)
+    );
+    report.check(
+      "Favourites: the personal row's tap target is still at least 44 px tall, with no sideways scroll",
+      cookRows.length > 0 && cookRows.every((r) => r.height >= 44) && !fv.scrollX,
+      `row heights ${JSON.stringify(cookRows.map((r) => r.height))}, horizontal scroll ${fv.scrollX}`
+    );
+    report.check(
+      'Favourites: there is no "My recipes" group, heading or text anywhere in the view',
+      !/My recipes\b/.test(fv.text) && fv.groups.every((g) => g.headHref !== null),
+      `groups ${JSON.stringify(fv.groups.map((g) => g.head))}`
+    );
+    report.check(
+      "Favourites: an unhearted personal recipe does not show (owner: only hearted ones)",
+      !fv.text.includes(unhearted.name),
+      `"${unhearted.name}" ${fv.text.includes(unhearted.name) ? "IS" : "is not"} in the view`
+    );
+    report.check(
+      "Favourites: a published Cook at Home heart still shows, in the same group, WITHOUT the label",
+      rowOf(cook, PUBLISHED_RECIPE.name)?.owner === null,
+      `owner label ${JSON.stringify(rowOf(cook, PUBLISHED_RECIPE.name)?.owner)}`
+    );
+    report.check(
+      "Favourites: the group lists personal and published rows in the order they were hearted",
+      JSON.stringify(cookRows.map((r) => r.name)) === JSON.stringify([mineA.name, PUBLISHED_RECIPE.name, mineB.name]),
+      JSON.stringify(cookRows.map((r) => r.name))
+    );
+    report.check(
+      "Favourites: another place's dish still sits under its own place, unlabelled (control)",
+      fv.groups.length === 2 && fv.groups.some((g) => g.headHref === `restaurant.html?id=${opts.id}` && g.rows.length === 1 && g.rows[0].owner === null),
+      JSON.stringify(fv.groups.map((g) => [g.headHref, g.rows.length]))
+    );
+    report.check(
+      "Favourites: Cook at Home counts as one place and each personal recipe as a dish — 2 places, 4 dishes",
+      /^2 places, 4 dishes saved\./.test(fv.summary || "") && fv.marked === 0,
+      `${JSON.stringify(fv.summary)}, ${fv.marked} marked row(s)`
+    );
+
+    // Only personal recipes hearted: the Cook at Home group must still appear,
+    // under its own name and link, not under a "My recipes" one.
+    await evalPage(`(async () => {
+      const f = await import("/js/favourites.js");
+      for (const e of [...f.favourites.items()]) {
+        if (e.venueId !== "u:mine") f.favourites.removeKey(f.favKey(e));
+      }
+    })()`);
+    await settle();
+    const only = await favView();
+    report.check(
+      "Favourites: with ONLY personal recipes hearted, a Cook at Home group still appears, with its place link",
+      only.groups.length === 1 && only.groups[0].head?.includes("Cook at Home") &&
+        only.groups[0].headHref === "restaurant.html?id=cook-at-home" && only.groups[0].rows.length === 2 &&
+        only.groups[0].rows.every((r) => r.owner === "My recipe") && !/My recipes\b/.test(only.text),
+      JSON.stringify(only.groups.map((g) => [g.head, g.headHref, g.rows.map((r) => r.owner)]))
+    );
+    report.check(
+      "Favourites: …and that is 1 place, 2 dishes",
+      /^1 place, 2 dishes saved\./.test(only.summary || ""),
+      JSON.stringify(only.summary)
+    );
+
+    // Leave the profile as it was found.
+    await evalPage(`(async () => {
+      const f = await import("/js/favourites.js"), r = await import("/js/recipes.js");
+      for (const e of [...f.favourites.items()]) f.favourites.removeKey(f.favKey(e));
+      for (const id of ${JSON.stringify([mineA.dishId, mineB.dishId, unhearted.dishId])}) r.recipes.remove(id);
+    })()`);
 
     return report.summary(SITE) ? 0 : 1;
   } finally {
