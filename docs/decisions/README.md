@@ -1820,3 +1820,10 @@ deliberation those compact docs omit.
   on the browser's own say-so. `precache_check` reproduces the 2026-08-16
   incident to prove it. Update installs and data keep `reload`. Supersedes
   part of 0056; records that 0056's `_headers` half is not live for `js/`.
+- [0150](0150-update-installs-revalidate-the-shell-too.md) —
+  **Update installs revalidate the shell too** (owner-ruled 2026-10-01,
+  `510/270`). Every install fetches the shell with `cache: "no-cache"`; data
+  keeps `reload`. Shipped only after `tools/etag_survey.py` showed, across
+  five real Pages deploys, that the ETag changes exactly when the bytes do.
+  An update with one changed file goes from 621 to 66 KB gzip. Supersedes 0149
+  decision 2.

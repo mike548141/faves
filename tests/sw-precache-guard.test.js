@@ -218,7 +218,7 @@ test("the data sync routes every download through requireAsset", () => {
   assert.match(sync, /take\(path, fp, path === DATA_FX\)/);
 });
 
-// Roadmap 510/170, ADR 0149: the install's fetch mode is the ONE line between
+// Roadmap 510/170 and 510/270, ADRs 0149 and 0150: the install's fetch mode is the ONE line between
 // this worker and the 2026-08-16 stale-precache incident (ADR 0056). Plain
 // fetch() ("default") and "force-cache"/"only-if-cached" read the browser's
 // cache without asking the server, which is the incident. "reload" and
@@ -232,11 +232,12 @@ test("the precache fetches only in the two modes the incident cannot reach", () 
     return m[1];
   };
   assert.equal(mode("PRECACHE_FETCH"), "reload");
-  assert.equal(mode("FIRST_INSTALL_FETCH"), "no-cache");
+  assert.equal(mode("SHELL_FETCH"), "no-cache");
   const install = src.slice(src.indexOf('self.addEventListener("install"'), src.indexOf('self.addEventListener("message"'));
-  // An UPDATE (an active worker exists) keeps "reload"; only a first install revalidates.
-  assert.match(install, /const shellFetch = self\.registration\?\.active \? PRECACHE_FETCH : FIRST_INSTALL_FETCH;/);
-  assert.match(install, /requireAsset\(u, await fetchClean\(u, shellFetch\)\)/);
+  // EVERY install revalidates the shell, first or update (ADR 0149, then ADR
+  // 0150 once tools/etag_survey.py showed Pages' ETag tracks the bytes).
+  assert.match(install, /requireAsset\(u, await fetchClean\(u, SHELL_FETCH\)\)/);
+  assert.doesNotMatch(install, /registration\?\.active/, "the install no longer chooses a mode by first-vs-update");
   // Code only: the comments name "default" to explain why it is not used.
   const code = src.split("\n").filter((l) => !l.trim().startsWith("//")).join("\n");
   assert.doesNotMatch(code, /cache: "(?:default|force-cache|only-if-cached)"/);
