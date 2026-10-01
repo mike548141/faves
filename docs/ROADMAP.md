@@ -434,7 +434,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [Find the "chatty" parts of the app, and what each would save](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/130-find-the-chatty-parts-of-the-app.md)
 - ✅ [Stop probing recipe buckets that do not exist](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/140-stop-probing-recipe-buckets-that-do-not-exist.md)
 - ✅ [Stop every dish re-rendering on every heart and rating](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/150-stop-every-dish-re-rendering-on-every-heart.md)
-- [~] [Throttle page-load and foreground sync pulls](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/160-throttle-page-load-and-foreground-sync-pulls.md)
+- ✅ [Throttle page-load and foreground sync pulls](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/160-throttle-page-load-and-foreground-sync-pulls.md)
 - [~] [The first install revalidates rather than re-downloads](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/170-the-first-install-revalidates-rather-than-re-downloads.md)
 - [~] [Persist the service worker's data-check throttle](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/180-persist-the-data-check-throttle.md)
 - ✅ [A sync pull that changes nothing writes nothing](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/190-a-pull-that-changes-nothing-writes-nothing.md)

@@ -1,0 +1,11 @@
+{
+  "_about": "Section notes that POINT at other food instead of describing the dishes under them (roadmap 080/280). tag_allergens.py does not add allergen tags from a flagged note. Kept here, not in site/data/, because no screen renders the flag (ADR 0047). `note` is the note's exact text: an entry whose note has changed is STALE and fails validate.py and `tag_allergens.py --explain --check`. Flagging never removes a tag already written; `tag_allergens.py --section-notes` lists those for review.",
+  "pointers": [
+    {
+      "venue": "groundup-cafe",
+      "sectionId": "lunch-and-light-bites",
+      "note": "The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes.",
+      "why": "Refers the reader to the cabinet sections; it says nothing about what the lunch dishes are made of."
+    }
+  ]
+}

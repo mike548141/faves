@@ -112,10 +112,12 @@ const B = {
   enableReq: { what: "sync: first sync on a new device: HTTP requests", unit: "req", budget: 0, lowers: "—" },
   enableR: { what: "sync: first sync: KV reads", unit: "R", budget: 0, lowers: "140 (stop probing absent buckets)" },
   enableW: { what: "sync: first sync: KV writes", unit: "W", budget: 0, lowers: "—" },
-  pullReq: { what: "sync: page-load pull, nothing changed: HTTP requests", unit: "req", budget: 0, lowers: "160 (throttle pulls)" },
-  pullR: { what: "sync: page-load pull, nothing changed: KV reads", unit: "R", budget: 0, lowers: "140" },
-  pullW: { what: "sync: page-load pull, nothing changed: KV writes", unit: "W", budget: 0, lowers: "—" },
-  pullLsSet: { what: "sync: page-load pull, nothing changed: localStorage setItem (excl. probe)", unit: "n", budget: 0, lowers: "190 (a no-op pull writes nothing)" },
+  pullReq: { what: "sync: repeat page load 3 s after a sync, nothing changed: HTTP requests", unit: "req", budget: 0, lowers: "—" },
+  pullR: { what: "sync: repeat page load 3 s after a sync: KV reads", unit: "R", budget: 0, lowers: "—" },
+  pullW: { what: "sync: repeat page load 3 s after a sync: KV writes", unit: "W", budget: 0, lowers: "—" },
+  pullLsSet: { what: "sync: repeat page load 3 s after a sync: localStorage setItem (excl. probe)", unit: "n", budget: 0, lowers: "—" },
+  stalePullReq: { what: "sync: page load with the last sync 10 min old, nothing changed: HTTP requests", unit: "req", budget: 0, lowers: "—" },
+  stalePullR: { what: "sync: page load with the last sync 10 min old: KV reads", unit: "R", budget: 0, lowers: "—" },
   heartReq: { what: "sync: one heart then flush: HTTP requests (GET+OPTIONS+PUT)", unit: "req", budget: 0, lowers: "—" },
   heartR: { what: "sync: one heart then flush: KV reads", unit: "R", budget: 0, lowers: "140" },
   heartW: { what: "sync: one heart then flush: KV writes", unit: "W", budget: 0, lowers: "—" },
@@ -153,7 +155,13 @@ Object.assign(BUDGETS, {
   mutHeart: 6, mutUnheart: 5, mutRating: 13, // was 795-797, 795, 2,387
   hintHidden: 0, hintTimersHidden: 0, hintTurns: 4, // was 6, 2, 4 → 0, 0, 3 with 510/230
   enableReq: 4, enableR: 3, enableW: 2, // 3, 2, 1
-  pullReq: 2, pullR: 2, pullW: 0, pullLsSet: 2, // 1, 1, 0, 1
+  // Tightened 2026-10-01 with 510/160 (the 90 s pull window). A repeat load 3 s
+  // after a sync now pulls nothing: 0 requests, 0 KV reads, 0 writes, 0 setItem
+  // (was 1, 1, 0, 1, with budgets 2, 2, 0, 2) and a zero baseline stays 0. The
+  // two stale rows are the same load with the last sync 10 min old — the pull
+  // that still happens, 1 request and 1 KV read, +1 margin.
+  pullReq: 0, pullR: 0, pullW: 0, pullLsSet: 0,
+  stalePullReq: 2, stalePullR: 2,
   heartReq: 4, heartR: 3, heartW: 2, // 3, 2, 1
   tabReq: 0, // 0 since 510/210; was 0-1, the second tab pulling ~20 s after the storage event
 });
@@ -483,16 +491,30 @@ async function scenarioSync(cdp, report, { overlay = null, probe = false, label 
     const first = snap();
     report.step(`${label}: enable → ${JSON.stringify(first)} ${JSON.stringify(en)}`);
 
-    // A page load with sync on and nothing changed: the pull on load.
+    // A page load 3 s after that sync, nothing changed. Since 510/160 this is
+    // inside the 90 s window and pulls nothing — the row that fell.
     w.reset();
     await goto(cdp, d, A.sessionId, `${o.base}/restaurant.html?id=${BIG_MENU}`, MENU_READY);
-    await untilPresent(() => (w.http.gets > 0 ? true : null), { label: `${label}: the page-load pull arrived`, timeout: 15_000 }).catch(() => {});
+    // Nothing is expected to arrive, so give a pull that WOULD fire time to do
+    // it (it starts on load and needs a key derivation before its first GET).
+    await untilPresent(() => (w.http.gets > 0 ? true : null), { label: `${label}: the page-load pull arrived`, timeout: 4_000 }).catch(() => {});
     await idle();
     const pull = snap();
     const pullLs = await chat(d);
     // Every page makes exactly the probe writes (6 sets today); report the rest.
     const probes = (pullLs.keys || []).filter((k) => k === "__faves_probe__").length;
-    report.step(`${label}: pull → ${JSON.stringify(pull)}; setItem ${pullLs.set} (${probes} probes)`);
+    report.step(`${label}: repeat load inside the window → ${JSON.stringify(pull)}; setItem ${pullLs.set} (${probes} probes)`);
+
+    // The same load when the device last synced 10 minutes ago: the pull is
+    // the full one, so the window is a throttle and not a switch. The stamp is
+    // moved back in the page's own storage, the way a quiet afternoon would.
+    await d.evalPage(`(async () => { const { SYNC_KEY } = await import("/js/sync.js"); const c = JSON.parse(localStorage.getItem(SYNC_KEY)); c.lastSyncedAt = new Date(Date.now() - 600_000).toISOString(); localStorage.setItem(SYNC_KEY, JSON.stringify(c)); })()`);
+    w.reset();
+    await goto(cdp, d, A.sessionId, `${o.base}/restaurant.html?id=${BIG_MENU}`, MENU_READY);
+    await untilPresent(() => (w.http.gets > 0 ? true : null), { label: `${label}: the stale page-load pull arrived`, timeout: 15_000 }).catch(() => {});
+    await idle();
+    const stale = snap();
+    report.step(`${label}: stale load (last sync 10 min old) → ${JSON.stringify(stale)}`);
 
     // One heart, then the debounce flushed.
     w.reset();
@@ -504,10 +526,11 @@ async function scenarioSync(cdp, report, { overlay = null, probe = false, label 
     const heart = snap();
     report.step(`${label}: heart → ${JSON.stringify(heart)}`);
 
-    if (probe) return { pull };
+    if (probe) return { pull, stale };
     Object.assign(measured, {
       enableReq: first.req, enableR: first.r, enableW: first.w,
       pullReq: pull.req, pullR: pull.r, pullW: pull.w, pullLsSet: pullLs.set - probes,
+      stalePullReq: stale.req, stalePullR: stale.r,
       heartReq: heart.req, heartR: heart.r, heartW: heart.w,
     });
 
@@ -610,10 +633,28 @@ async function run(opts) {
           label: "break-probe/sync", probe: true,
           overlay: new Map([["/js/sync.js", { body: syncJs.replace(askLine, "readCore(blobId, key, true)"), type: "text/javascript" }]]),
         });
+        // Aimed at the STALE load since 510/160: the repeat load inside the
+        // window pulls nothing, so it has no read to inflate.
         report.check(
-          "break-probe: a client that always asks about buckets FAILS the pull KV-read budget",
-          p.pull.r > B.pullR.budget,
-          `${p.pull.r} KV reads against a budget of ${B.pullR.budget}`
+          "break-probe: a client that always asks about buckets FAILS the stale-pull KV-read budget",
+          p.stale.r > B.stalePullR.budget,
+          `${p.stale.r} KV reads against a budget of ${B.stalePullR.budget}`
+        );
+      }
+      // Break-probe 3 (510/160): the pull window removed, so every page load
+      // pulls. The repeat-load request budget MUST fail.
+      const throttleLine = "if (fresh && !inFlight && !timer && !waiting && !holdsUnsent()) return;";
+      if (!syncJs.includes(throttleLine)) {
+        report.check("break-probe: sync.js's pull-window line is where the probe expects", false, "site/js/sync.js changed shape — update throttleLine in this tool");
+      } else {
+        const p = await scenarioSync(cdp, report, {
+          label: "break-probe/throttle", probe: true,
+          overlay: new Map([["/js/sync.js", { body: syncJs.replace(throttleLine, ""), type: "text/javascript" }]]),
+        });
+        report.check(
+          "break-probe: a client with no pull window FAILS the repeat-load request budget",
+          p.pull.req > B.pullReq.budget,
+          `${p.pull.req} requests against a budget of ${B.pullReq.budget}`
         );
       }
     }
