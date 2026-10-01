@@ -171,3 +171,8 @@
   to his phone (both confirmed by his screenshots), and the five published
   copies removed (PR #71). Step 8, deleting the two backup files in his
   Downloads folder, is his call. Old hearts that later came back are `320`.
+
+  🎯 **Open with the owner (put in chat 2026-10-01, unanswered):** PR #71
+  dropped Booth's Ginger Crunch and Shane's Ribs from Cook at Home's
+  "first time, try…" `picks`, leaving Easy Pad Thai and Sticky Date
+  Pudding. Does he want two others in their place?

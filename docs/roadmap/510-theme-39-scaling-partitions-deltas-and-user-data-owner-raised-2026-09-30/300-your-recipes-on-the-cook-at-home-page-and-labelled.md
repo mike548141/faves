@@ -55,3 +55,8 @@
 
   ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #75), live as
   `2026-10-01.18`, and `main` CI green.
+
+  🎯 **Open with the owner (put in chat 2026-10-01, unanswered):** on a
+  shared phone, "My recipe" means the person currently selected, so Booth
+  sees "My recipe" on his own recipes and none on the owner's. Kept as
+  built unless he wants the label to name the owner.
