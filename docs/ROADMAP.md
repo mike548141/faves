@@ -72,7 +72,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🔎 [Nine Simmer photographs dropped into intake/ on 2026-09-09 were](roadmap/080-theme-4-content-growth-ongoing-in-parallel/250-nine-simmer-photos-never-read.md)
 - [ ] 🔎 [Hell Pizza's "Half Buffalo Half Beast" carries no dairy tag](roadmap/080-theme-4-content-growth-ongoing-in-parallel/260-half-buffalo-half-beast-carries-no-dairy.md)
 - ✅ [Groundup Cafe: menu and cabinet food from the owner's photos](roadmap/080-theme-4-content-growth-ongoing-in-parallel/270-groundup-cafe-from-the-owner-s-photos.md)
-- [~] 🔎 [A section note that points elsewhere tags every dish under it](roadmap/080-theme-4-content-growth-ongoing-in-parallel/280-a-section-note-that-points-elsewhere-tags-every-dish-under-it.md)
+- ✅ 🔎 [A section note that points elsewhere tags every dish under it](roadmap/080-theme-4-content-growth-ongoing-in-parallel/280-a-section-note-that-points-elsewhere-tags-every-dish-under-it.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
@@ -435,8 +435,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [Stop probing recipe buckets that do not exist](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/140-stop-probing-recipe-buckets-that-do-not-exist.md)
 - ✅ [Stop every dish re-rendering on every heart and rating](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/150-stop-every-dish-re-rendering-on-every-heart.md)
 - ✅ [Throttle page-load and foreground sync pulls](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/160-throttle-page-load-and-foreground-sync-pulls.md)
-- [~] [The first install revalidates rather than re-downloads](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/170-the-first-install-revalidates-rather-than-re-downloads.md)
-- [~] [Persist the service worker's data-check throttle](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/180-persist-the-data-check-throttle.md)
+- ✅ [The first install revalidates rather than re-downloads](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/170-the-first-install-revalidates-rather-than-re-downloads.md)
+- ✅ [Persist the service worker's data-check throttle](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/180-persist-the-data-check-throttle.md)
 - ✅ [A sync pull that changes nothing writes nothing](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/190-a-pull-that-changes-nothing-writes-nothing.md)
 - ✅ [Probe localStorage once per page](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/200-probe-localstorage-once-per-page.md)
 - ✅ [A cross-tab reload does not schedule a sync](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/210-a-cross-tab-reload-does-not-schedule-a-sync.md)
@@ -444,3 +444,6 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [Pause the home search hint timer when hidden](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/230-pause-the-search-hint-timer.md)
 - [ ] [Sync write cadence](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/240-sync-write-cadence.md)
 - ✅ [A chatty_check tool with asserted budgets](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/250-a-chatty-check-tool.md)
+- [ ] 🔎 [Pages serves scripts with a four-hour cache, not _headers'](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/260-pages-ignores-the-headers-max-age-for-scripts.md)
+- [ ] 🎯 [Should an update install revalidate too?](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/270-update-installs-revalidate-too.md)
+- [ ] 🔎 [One unit test failed once in five runs, and its name was not](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/280-a-unit-test-failed-once-unnamed.md)

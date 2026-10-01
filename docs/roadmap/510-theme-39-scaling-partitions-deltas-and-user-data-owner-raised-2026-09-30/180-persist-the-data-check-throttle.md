@@ -1,4 +1,4 @@
-- [~] **Persist the service worker's data-check throttle** `[S] [pwa][sw]` —
+- [x] **Persist the service worker's data-check throttle** `[S] [pwa][sw]` —
       from the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **E**.
 
@@ -30,3 +30,6 @@
   proves the unprompted path still delivers. Break-probed: window 0 ⇒ that
   assertion fails. 7 unit tests in `tests/sw-data-store.test.js`, each of
   three mutations caught.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #67), ADR 0148. A warm
+  home load is 2 → 1 requests, and a warm menu open 1 → 0.
