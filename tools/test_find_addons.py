@@ -349,6 +349,47 @@ def check_named_options_beat_the_add_verb(found, out):
 
 SOUTHERN = "site/data/restaurants/southern-cross.json"
 
+# Three cases read rows that 14b's first batch CONVERTED (PR #90): the prose
+# they classify is now an add-on group, so the live corpus no longer carries
+# it. Each case puts the row's exact pre-conversion wording back into the
+# throwaway copy, so the classifier is still tested on the menu's real words
+# rather than on a synthetic sentence written to pass. The live data stays
+# converted; only `work/` is edited, and `run_case` restores it afterwards.
+UNCONVERTED = {
+    "charley-noble": (
+        "site/data/restaurants/charley-noble.json",
+        '"Beef patty, smoked cheese, bacon, pickles, relish, mayo, milk bun, fries. $40 with',
+        '"Beef patty, smoked cheese, bacon, pickles, relish, mayo, milk bun, fries. '
+        '+$10 for an additional patty. $40 with',
+    ),
+    # …and the dish's reference to the group it became, or the tool reads the
+    # row as already converted and classifies nothing on it.
+    "charley-noble-ref": (
+        "site/data/restaurants/charley-noble.json",
+        ',\n          "addOns": [\n            "additional-patty"\n          ]',
+        "",
+    ),
+    "gold-lining-cafe": (
+        "site/data/restaurants/gold-lining-cafe.json",
+        '"Eggs your way on butter toasted ciabatta, house-made tomato relish."',
+        '"Eggs your way on butter toasted ciabatta, house-made tomato relish. '
+        'Creamy scrambled eggs +$1; GF seeded toast +$1."',
+    ),
+    "spices-indian": (
+        "site/data/restaurants/spices-indian.json",
+        '"Half curry, half rice, plain naan and a cold drink can (without drink $12.00). '
+        'Butter Chicken or Lamb Rogan Josh."',
+        '"Half curry, half rice, plain naan and a cold drink can (without drink $12.00). '
+        'Butter Chicken or Lamb Rogan Josh. Naan upgrade to other breads +$1.00, '
+        'stuffed naan +$2.00."',
+    ),
+    "spices-indian-ref": (
+        "site/data/restaurants/spices-indian.json",
+        ',\n          "addOns": [\n            "naan-upgrade"\n          ]',
+        "",
+    ),
+}
+
 CASES = {
     "a +$N inside the pub group's stock idiom is found": (
         ["--only", "southern-cross"], [], 0, check_the_killer),
@@ -361,7 +402,8 @@ CASES = {
     "a priced pairing is vetoed, visibly": (
         ["--only", "baylands-brewery"], [], 0, check_priced_pairing_is_thrown_away),
     "a whole-dish alternate price is not a surcharge": (
-        ["--only", "charley-noble"], [], 0, check_alternate_price_is_not_a_surcharge),
+        ["--only", "charley-noble"], [UNCONVERTED["charley-noble"], UNCONVERTED["charley-noble-ref"]], 0,
+        check_alternate_price_is_not_a_surcharge),
     "a section note carries offers and is read": (
         ["--only", "charley-noble"], [], 0, check_section_note_is_read),
     "an unanchored name match is not a row add-on": (
@@ -385,13 +427,15 @@ CASES = {
     "a combo is flagged once, not once per sentence": (
         ["--only", "regal-chinese-restaurant"], [], 0, check_combo_flagged_once),
     "a price makes a diet alternative 28b, not 14c": (
-        ["--only", "gold-lining-cafe"], [], 0, check_price_is_the_discriminator),
+        ["--only", "gold-lining-cafe"], [UNCONVERTED["gold-lining-cafe"]], 0,
+        check_price_is_the_discriminator),
     "the same words with no price stay 14c": (
         ["--only", "pizza-pomodoro"], [], 0, check_unpriced_diet_alternative_stays_14c),
     "a diet substitution records the dish's *-option tags": (
         ["--only", "southern-cross"], [], 0, check_diet_rows_carry_the_option_tag),
     "a combo does not swallow a second price": (
-        ["--only", "spices-indian"], [], 0, check_combo_keeps_a_second_price),
+        ["--only", "spices-indian"], [UNCONVERTED["spices-indian"], UNCONVERTED["spices-indian-ref"]], 0,
+        check_combo_keeps_a_second_price),
     "a combo restating its own price is still dropped": (
         ["--only", "pizza-hut"], [], 0, check_combo_still_drops_its_own_price),
     "a named option list beats the add verb": (

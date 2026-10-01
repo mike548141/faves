@@ -77,6 +77,22 @@ def _first_item(d):
     return d["menu"][0]["items"][0]
 
 
+def _without_addons(d):
+    """Clear the subject's OWN add-on groups and every reference to them.
+
+    The add-on cases install one synthetic group as `addOnGroups[0]` and assert
+    on that index. Since 14b's first batch (PR #90) the subject carries real
+    groups its dishes name, so replacing the list left those names dangling and
+    every add-on case failed on "addOns names a group not defined" before
+    reaching the rule it exists to test. Clearing both halves first keeps each
+    case about its own group."""
+    d.pop("addOnGroups", None)
+    for sec in d.get("menu", []):
+        sec.pop("addOns", None)
+        for item in sec.get("items", []):
+            item.pop("addOns", None)
+
+
 def _first_section(d):
     """The first menu section — where the section-level cases land. The subject's
     is "All Day Brunch", which carries a real `served` window."""
@@ -98,6 +114,7 @@ def _add_ons(d):
             {"name": "Garlic yogurt", "id": "garlic-yogurt", "tags": ["contains-dairy", "v", "gf"]},
         ],
     }
+    _without_addons(d)
     d["addOnGroups"] = [group]
     _first_item(d)["addOns"] = ["sauces"]
     return group
@@ -165,6 +182,7 @@ def _selects(d):
             {"name": "Large", "id": "large", "dishPrice": 18.5, "tags": ["v", "gf-option"]},
         ],
     }
+    _without_addons(d)
     d["addOnGroups"] = [group]
     _first_item(d)["addOns"] = ["size"]
     return group
