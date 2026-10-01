@@ -1855,3 +1855,12 @@ deliberation those compact docs omit.
   re-prices from the live menu and skips-and-names what no longer resolves. Per
   person; outside `SCOPED_BASE_KEYS`; in the backup file only via
   `collectPersonalData(…, { localOnly: true })`, which sync never passes.
+- [0155](0155-a-branch-that-is-anywhere-says-so-as-a-value.md) —
+  **A branch that is anywhere says so as a value** (`470/050`, owner-ruled
+  2026-09-08). Cook at Home's one public branch has
+  `"address": {"anywhere": true}`, never an absent field or null. Only a recipe
+  collection may use it, and its shipped branches must. It carries no
+  lat/lng/phone, and near-miss spellings are refused. `data.js` normalises it
+  to `address: null` + `anywhere: true` before any renderer sees it. The sort
+  and the distance cut are unchanged (no distance). Sorting it at the reader's
+  position is left to the owner.

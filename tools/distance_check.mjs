@@ -342,6 +342,89 @@ async function run(opts) {
       `"${near.title}" — note present: ${near.noteExists}`
     );
 
+    // ── 5. COOK AT HOME — the branch that is ANYWHERE (ADR 0155) ───────────
+    // Owner-ruled 2026-09-08 (470/050): its one public branch matches every
+    // address and coordinate, declared as `{"anywhere": true}`. The ruling
+    // said what the branch MATCHES, not where it sorts, so this holds the
+    // build to "nothing about its place on the list or its page moved": still
+    // first, never cut, no distance on its card, and its page shows no
+    // address, no map link and no distance. The setup assertion is what stops
+    // the rest being vacuous — every absence below held before the branch
+    // existed, so without proof the branch is THERE they would prove nothing
+    // about it.
+    const COOK = "cook-at-home";
+    const declared = await driver.evalPage(`fetch("data/restaurants/${COOK}.json")
+      .then((r) => r.json())
+      .then((r) => JSON.stringify((r.locations || []).map((b) => b.address)))`);
+    report.check(
+      `(setup) ${COOK} ships ONE branch whose address is the declared wildcard`,
+      declared === JSON.stringify([{ anywhere: true }]),
+      `branch addresses: ${declared}`
+    );
+    const COOK_CARD = `(() => {
+      const a = document.querySelector('#restaurant-list .card-link[href*="id=${COOK}"]');
+      const card = a?.closest(".card");
+      return {
+        present: !!card,
+        distance: card ? card.querySelectorAll(".card-distance").length : -1,
+        text: card ? card.textContent.replace(/\\s+/g, " ").trim() : "",
+      };
+    })()`;
+    for (const km of [100, 5]) {
+      await setFarKm(km);
+      const home = await openHome();
+      const card = await driver.evalPage(COOK_CARD);
+      report.check(
+        `at a ${km} km limit with a known location, ${COOK} is still FIRST and never cut`,
+        home.ids[0] === COOK,
+        `list starts ${home.ids.slice(0, 3).join(", ")} — ${home.cards} cards`
+      );
+      report.check(
+        `…and its card carries no distance — a wildcard has no point to measure to`,
+        card.present && card.distance === 0 && !/\\d\\s?(k?m|mi)\\b/.test(card.text),
+        `card: "${card.text}" · .card-distance × ${card.distance}`
+      );
+    }
+    await setFarKm(5);
+    await cdp.send("Page.navigate", { url: `${origin}/restaurant.html?id=${COOK}` }, sessionId);
+    await untilPresent(() => driver.evalPage(`!!document.querySelector(".menu-title")`), {
+      label: `${COOK} rendered`,
+    });
+    await driver.settle();
+    const page = await driver.evalPage(`(() => {
+      const text = document.body.textContent.replace(/\\s+/g, " ");
+      return {
+        title: (document.querySelector(".menu-title")?.textContent || "").trim(),
+        rows: document.querySelectorAll(".dish").length,
+        maps: [...document.querySelectorAll("a[href]")].map((a) => a.href)
+          .filter((h) => /maps\\.apple\\.com|google\\.[a-z.]+\\/maps|waze\\.com/.test(h)),
+        addressRows: document.querySelectorAll(".contact-value, .contact-card, .branch-distance").length,
+        farNote: !!document.querySelector(".menu-far-note"),
+        objectText: text.includes("[object Object]"),
+        anywhereText: /\\banywhere\\b/i.test(document.querySelector(".menu-header")?.textContent || ""),
+      };
+    })()`);
+    report.check(
+      `(setup) ${COOK}'s page rendered its recipes`,
+      page.title.length > 0 && page.rows > 0,
+      `"${page.title}" — ${page.rows} row(s)`
+    );
+    report.check(
+      `${COOK}'s page has NO map link — a wildcard is nowhere to navigate to`,
+      page.maps.length === 0,
+      `maps links: ${JSON.stringify(page.maps)}`
+    );
+    report.check(
+      `…no address, contact card or distance — and no raw wildcard printed as text`,
+      page.addressRows === 0 && !page.objectText && !page.anywhereText,
+      `address/contact/distance nodes: ${page.addressRows} · "[object Object]": ${page.objectText} · "anywhere" in header: ${page.anywhereText}`
+    );
+    report.check(
+      `…and no "beyond your limit" note: a place with no distance is never past one`,
+      page.farNote === false,
+      `.menu-far-note present: ${page.farNote}`
+    );
+
     return report.summary(SITE);
   } finally {
     cdp?.close();

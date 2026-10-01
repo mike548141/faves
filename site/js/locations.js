@@ -13,6 +13,77 @@
 import { haversineKm } from "./distance.js";
 import { isBranchTrading } from "./temporal.js";
 
+// ——————————————————————— The "anywhere" branch (ADR 0155) ———————————————————————
+// Owner-ruled 2026-09-08 (roadmap 470/050): Cook at Home's one PUBLIC branch
+// "should match any address or GPS coordinate so that it can be used by
+// anyone". In the data that is a declared VALUE in the address slot —
+// exactly `"address": { "anywhere": true }` — never an absent field or a null,
+// which already mean "nobody has captured this yet". An object rather than a
+// word on purpose: a misspelt word ("Anywhere", "*") is still a valid-looking
+// street address that would render and become a maps search, where any
+// misspelling of the object is not a string at all, so validate.py refuses it.
+//
+// The raw object never reaches a renderer. `normaliseBranch` (called from
+// data.js's one normalisation seam) turns it into `address: null` plus
+// `anywhere: true`, so every reader that asks "is there an address to show or
+// map?" gets no, and a reader that needs to tell "everywhere" from "unknown"
+// asks `isAnywhereBranch`. It carries no coordinate, so its distance is
+// Infinity — exactly what the coordless record measured before the branch
+// existed. Whether it should instead sort at the reader's own position is an
+// open question for the owner (470/050's 📎), deliberately NOT answered here.
+
+/** True for exactly the wildcard address value `{ anywhere: true }` — one
+ *  own key, the boolean `true`. Anything near it is not the wildcard. Pure. */
+export function isAnywhere(address) {
+  return (
+    !!address &&
+    typeof address === "object" &&
+    !Array.isArray(address) &&
+    Object.keys(address).length === 1 &&
+    address.anywhere === true
+  );
+}
+
+/** True for a branch that matches any address or coordinate — in its raw
+ *  (declared) form or its normalised (`anywhere: true`) form. Pure. */
+export function isAnywhereBranch(b) {
+  return !!b && typeof b === "object" && (b.anywhere === true || isAnywhere(b.address));
+}
+
+/** One raw branch as the app reads it: the wildcard becomes `address: null`
+ *  and `anywhere: true`; every other branch is returned as the SAME object.
+ *  Pure — the input is never mutated. */
+export function normaliseBranch(b) {
+  if (!b || typeof b !== "object" || !isAnywhere(b.address)) return b;
+  return { ...b, address: null, anywhere: true };
+}
+
+/** The name a branch gives the PLACE it is in — its label — or null for an
+ *  "anywhere" branch, whose label names no place (the home card's suburb slot
+ *  then falls back to the venue's own area). Pure. */
+export function branchPlaceLabel(b) {
+  if (!b || isAnywhereBranch(b)) return null;
+  return b.label || null;
+}
+
+/**
+ * Does this venue hold any place detail worth opening a stub's page for — an
+ * address, a phone, hours, a coordinate, or a branch that is somewhere in
+ * particular? An "anywhere" branch is none of those: it says where you can cook,
+ * not where to go. Read by the home card (app.js) to decide whether a stub links
+ * anywhere. Pure.
+ */
+export function hasPlaceDetails(r) {
+  if (!r) return false;
+  return !!(
+    r.hours ||
+    r.address ||
+    r.phone ||
+    r.lat != null ||
+    (Array.isArray(r.locations) && r.locations.some((b) => !isAnywhereBranch(b)))
+  );
+}
+
 /**
  * Canonical branch list for a venue — always ≥ 1. When the record carries a
  * non-empty `locations` array those branches win; otherwise a single branch is
@@ -207,5 +278,9 @@ export function branchCard(branches, thresholdKm, openStateOf = () => "unknown")
  * primary one.
  */
 export function branchAsPlace(r, b) {
-  return { name: r.name, address: b.address ?? null, lat: b.lat ?? null, lng: b.lng ?? null };
+  // Only a STRING is an address a map can search for. The wildcard (ADR 0155)
+  // is an object, and an object handed on would become "[object Object]" in a
+  // maps URL — so a branch that reached here un-normalised still yields none.
+  const address = typeof b.address === "string" ? b.address : null;
+  return { name: r.name, address, lat: b.lat ?? null, lng: b.lng ?? null };
 }

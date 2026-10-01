@@ -162,6 +162,11 @@ content freshness separately from this file.
 - **No more "est." on a recipe's stats panel** — neither the line under it
   nor the marker beside an estimated value (ADR 0135).
 ### Changed
+- **Cook at Home is now a place with one branch, and that branch is
+  anywhere.** It matches every address and location, so it is true for
+  everyone who opens it. This is the groundwork for adding your own kitchens
+  later. Nothing on screen changes: Cook at Home still sits at the top of the
+  list and shows no address, map link or distance.
 - **Back from one of your own recipes goes to Cook at Home**, where it is
   listed, as a published recipe goes back to its place. It used to go to the home
   screen.

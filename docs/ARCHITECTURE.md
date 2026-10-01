@@ -178,7 +178,11 @@ excluded from both stores, always.
   ],                                 //   `lifecycle` (optional, ADR 0132): the venue's
                                      //   block one level down, `added` optional — one
                                      //   branch shut while the others trade. The venue's
-                                     //   closure is the floor; never on a sole branch
+                                     //   closure is the floor; never on a sole branch.
+                                     //   `address` may instead be EXACTLY
+                                     //   {"anywhere": true} — the public branch of a
+                                     //   recipe collection that matches every place
+                                     //   (ADR 0155): no lat/lng/phone with it
 
   "image": null,                     // optional self-hosted card photo, e.g. "img/kk/hero.jpg"
   "alt": null,                       // required when image is set (a11y)
@@ -1160,6 +1164,21 @@ cut got wrong.
   branch distance limit (`favBoostKm`) filters both lists, the lead always
   survives it, and whatever it hid is counted on the card. A one-branch array
   renders identically to a flat single-location venue.
+  **A branch that is anywhere (ADR 0155).** A recipe collection's shipped
+  branch declares `"address": {"anywhere": true}`: one key, boolean `true`, a
+  VALUE rather than an absent field or `null`, which already mean "not
+  captured". Owner-ruled 2026-09-08 (`470/050`): Cook at Home's public branch
+  *"should match any address or GPS coordinate"*. `validate.py` accepts it only
+  on a recipe collection, requires it on every such shipped branch (a house's
+  real address is the hard rule), refuses `lat`/`lng`/`phone` beside it, and
+  refuses near misses (another object, or a string such as `"anywhere"` or
+  `"*"`). `data.js` normalises it to `address: null` + `anywhere: true`
+  (`locations.normaliseBranch`) before the primary branch is projected, so no
+  renderer can print it or map it. `isAnywhereBranch` is how a reader tells
+  "everywhere" from "unknown", and the home summary keeps the flag. It has no
+  coordinate, so its distance is `Infinity`: the sort and the distance cut
+  read it exactly as they read the coordless record before it. Sorting it at
+  the reader's own position is an open question for the owner.
 
 ### Client-side personal layer (order tally, favourites, ratings, profiles)
 

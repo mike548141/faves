@@ -14,6 +14,15 @@
   "website": null,
   "ordering": [],
   "hours": null,
+  "locations": [
+    {
+      "label": "Anywhere",
+      "id": "anywhere",
+      "address": {
+        "anywhere": true
+      }
+    }
+  ],
   "vibe": [],
   "picks": [
     "Easy Pad Thai",
