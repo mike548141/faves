@@ -1,4 +1,4 @@
-- [~] ✅ **Cook at Home should use the venue/branch structure, so two houses are
+- [ ] ✅ **Cook at Home should use the venue/branch structure, so two houses are
       two branches** `[M][schema][design]` — **owner-raised 2026-09-08**, his
       words: *"cook at home should use our restaurant / branch data structure so
       if I have two houses I can differentiate between houses"*.
@@ -146,3 +146,18 @@
 
   📌 **Claimed 2026-10-02 (`faves-4f`): the wildcard branch and its validator
   value only; the private-branch store is not started.**
+
+  🔨 **First bullet built 2026-10-02 (`faves-4f`, PR #92, ADR 0155).** Cook at
+  Home ships one branch, label "Anywhere", `"address": {"anywhere": true}`:
+  an object, because a misspelt word still looks like a street address and a
+  misspelt object is refused. The validator accepts exactly that, only on a
+  recipe collection, requires it there (so no house address can ship), and
+  refuses lat, lng or phone beside it and every near miss. `data.js`
+  normalises it before any reader sees it. Nothing on screen changed; sort and
+  distance cut measured byte-identical over 60 scenarios.
+  🎯 **Owner fork: where the wildcard sorts once private houses exist.** (1)
+  no distance, as built (recommended now); (2) distance 0, at the reader's
+  position (shows "0 m", always beats a real house); (3) out of the distance
+  comparison, used only when no private house is near (needs the private
+  store). Recommended: 1 now, decide 1 or 3 when the private store is built.
+  📌 **Claim released.** Still owed: the private-branch store and its ADR.
