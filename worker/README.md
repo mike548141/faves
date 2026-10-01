@@ -7,8 +7,8 @@ A Cloudflare Worker that stores and serves **one encrypted blob per user** in
 Workers KV. It is a dumb ciphertext store: it cannot read a user's data, and
 it is not supposed to be able to.
 
-This directory is source and deploy config only. **It has not been
-deployed** — see "Deploying" below for why, and what has to happen first.
+This directory is source and deploy config only. It is deployed (see
+"Deployed" below); `wrangler.toml` keeps placeholders on purpose.
 
 ## The security model, in plain language
 
@@ -337,11 +337,21 @@ verification. It is ciphertext of a fixture and expires with the 180-day TTL.
 push/pull client, the pairing screen and the base-snapshot store the merge needs
 are all still to build. The endpoint being live is not the feature being live.
 
-## Owed — deploy the recipe-bucket Worker (roadmap 510/050, 2026-09-30)
+## Deployed — the recipe-bucket Worker, 2026-10-01 (roadmap 510/050 and 140)
 
-⏳ **Built and tested locally (`node --test worker/`), NOT deployed.** The live
-Worker is the 2026-08-16 build: it has no bucket routes, sends no
-`X-Faves-Buckets`, and does not re-arm siblings. Deploying is the owner's call.
+✅ **Deployed 2026-10-01 (session `faves-55`), with the owner's import, as he
+ruled.** Version `1a368b38-e276-41a9-b760-a7dc32dda30e`, from `main` at
+`ac9ea6f`, with the `faves-sync-deploy` credential and a config filled outside
+this tree (as above). The live checks below were run against it and all passed:
+`?buckets=8` on an unwritten id gives `404` and `X-Faves-Buckets: none`; a
+bucket `PUT` gives `204` and an `ETag`, and the next `GET` reports it; `:r16`
+gives `400`; `?family=0` and `?family=x` both give `204`; and
+`Access-Control-Expose-Headers` names `ETag` and `X-Faves-Buckets`. The
+owner's import then synced five recipes from his laptop to his phone. Residue:
+two test copies under random ids, holding junk bytes, not user data; they
+expire with the 180-day TTL.
+
+The rest of this section is the pre-deploy record, kept as written.
 
 **Either order is safe**, by design:
 
