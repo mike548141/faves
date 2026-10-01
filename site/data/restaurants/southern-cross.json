@@ -77,6 +77,256 @@
   "detailsVerified": "2026-08-15",
   "detailsVerifiedBy": "official-site",
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "size-17-75",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Flute",
+          "id": "flute",
+          "dishPrice": 17.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 75.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-10-50",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Flute",
+          "id": "flute",
+          "dishPrice": 10.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 50.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-10-17p5-50",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Regular",
+          "id": "regular",
+          "dishPrice": 10.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 17.5,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 50.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-13-19-55",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Regular",
+          "id": "regular",
+          "dishPrice": 13.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 19.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 55.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-17-25-73",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Regular",
+          "id": "regular",
+          "dishPrice": 17.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 25.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 73.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-16-23-67",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Regular",
+          "id": "regular",
+          "dishPrice": 16.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 23.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 67.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-15-21-61",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Regular",
+          "id": "regular",
+          "dishPrice": 15.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 21.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 61.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-15-19-55",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Regular",
+          "id": "regular",
+          "dishPrice": 15.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 19.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 55.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-19-28-82",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Regular",
+          "id": "regular",
+          "dishPrice": 19.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 28.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 82.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-7-11p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "500ml",
+          "id": "500ml",
+          "dishPrice": 7.0,
+          "default": true,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "1L",
+          "id": "1l",
+          "dishPrice": 11.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Pub Snacks",
@@ -1241,9 +1491,12 @@
         {
           "name": "Cloudy Bay Pelorus Brut",
           "dishId": "cloudy-bay-pelorus-brut",
-          "desc": "Marlborough. Flute $17.00; bottle $75.00.",
+          "desc": "Marlborough.",
           "price": 17.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-17-75"
+          ]
         },
         {
           "name": "Cloudy Bay Pelorus Rosé",
@@ -1255,9 +1508,12 @@
         {
           "name": "De Bortoli NV Prosecco",
           "dishId": "de-bortoli-nv-prosecco",
-          "desc": "Australia. Flute $10.00; bottle $50.00.",
+          "desc": "Australia.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-50"
+          ]
         }
       ]
     },
@@ -1268,23 +1524,32 @@
         {
           "name": "Northrow Sauvignon Blanc",
           "dishId": "northrow-sauvignon-blanc",
-          "desc": "Marlborough. Regular $10.00; large $17.50; bottle $50.00.",
+          "desc": "Marlborough.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-17p5-50"
+          ]
         },
         {
           "name": "Delegat Sauvignon Blanc",
           "dishId": "delegat-sauvignon-blanc",
-          "desc": "Awatere Valley. Regular $13.00; large $19.00; bottle $55.00.",
+          "desc": "Awatere Valley.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-19-55"
+          ]
         },
         {
           "name": "Dog Point Sauvignon Blanc",
           "dishId": "dog-point-sauvignon-blanc",
-          "desc": "Marlborough. Regular $17.00; large $25.00; bottle $73.00.",
+          "desc": "Marlborough.",
           "price": 17.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-17-25-73"
+          ]
         }
       ]
     },
@@ -1295,30 +1560,42 @@
         {
           "name": "Northrow Pinot Gris",
           "dishId": "northrow-pinot-gris",
-          "desc": "Marlborough. Regular $10.00; large $17.50; bottle $50.00.",
+          "desc": "Marlborough.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-17p5-50"
+          ]
         },
         {
           "name": "Poritus Stone Paddock Pinot Gris",
           "dishId": "poritus-stone-paddock-pinot-gris",
-          "desc": "Hawke's Bay. Regular $13.00; large $19.00; bottle $55.00.",
+          "desc": "Hawke's Bay.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-19-55"
+          ]
         },
         {
           "name": "Jules Taylor Pinot Gris",
           "dishId": "jules-taylor-pinot-gris",
-          "desc": "Marlborough. Regular $16.00; large $23.00; bottle $67.00.",
+          "desc": "Marlborough.",
           "price": 16.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-16-23-67"
+          ]
         },
         {
           "name": "Spy Valley Riesling",
           "dishId": "spy-valley-riesling",
-          "desc": "Marlborough. Regular $15.00; large $21.00; bottle $61.00.",
+          "desc": "Marlborough.",
           "price": 15.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-15-21-61"
+          ]
         }
       ]
     },
@@ -1329,16 +1606,22 @@
         {
           "name": "Northrow Chardonnay",
           "dishId": "northrow-chardonnay",
-          "desc": "Gisborne. Regular $10.00; large $17.50; bottle $50.00.",
+          "desc": "Gisborne.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-17p5-50"
+          ]
         },
         {
           "name": "Spy Valley Chardonnay",
           "dishId": "spy-valley-chardonnay",
-          "desc": "Marlborough. Regular $15.00; large $21.00; bottle $61.00.",
+          "desc": "Marlborough.",
           "price": 15.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-15-21-61"
+          ]
         }
       ]
     },
@@ -1349,23 +1632,32 @@
         {
           "name": "Northrow Rosé",
           "dishId": "northrow-ros",
-          "desc": "Hawke's Bay. Regular $10.00; large $17.50; bottle $50.00.",
+          "desc": "Hawke's Bay.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-17p5-50"
+          ]
         },
         {
           "name": "Trinity Hill Rosé",
           "dishId": "trinity-hill-ros",
-          "desc": "Hawke's Bay. Regular $15.00; large $19.00; bottle $55.00.",
+          "desc": "Hawke's Bay.",
           "price": 15.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-15-19-55"
+          ]
         },
         {
           "name": "Château Routas Rosé",
           "dishId": "ch-teau-routas-ros",
-          "desc": "Provence, France. Regular $16.00; large $23.00; bottle $67.00.",
+          "desc": "Provence, France.",
           "price": 16.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-16-23-67"
+          ]
         }
       ]
     },
@@ -1376,16 +1668,22 @@
         {
           "name": "Northrow Pinot Noir",
           "dishId": "northrow-pinot-noir",
-          "desc": "Marlborough. Regular $10.00; large $17.50; bottle $50.00.",
+          "desc": "Marlborough.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-17p5-50"
+          ]
         },
         {
           "name": "Aces & Arrows Pinot Noir",
           "dishId": "aces-arrows-pinot-noir",
-          "desc": "Central Otago. Regular $16.00; large $23.00; bottle $67.00.",
+          "desc": "Central Otago.",
           "price": 16.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-16-23-67"
+          ]
         }
       ]
     },
@@ -1396,30 +1694,42 @@
         {
           "name": "TW Merlot",
           "dishId": "tw-merlot",
-          "desc": "Gisborne. Regular $13.00; large $19.00; bottle $55.00.",
+          "desc": "Gisborne.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-19-55"
+          ]
         },
         {
           "name": "Barossa Valley Estate Shiraz",
           "dishId": "barossa-valley-estate-shiraz",
-          "desc": "Australia. Regular $13.00; large $19.00; bottle $55.00.",
+          "desc": "Australia.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-19-55"
+          ]
         },
         {
           "name": "Trinity Hill Syrah",
           "dishId": "trinity-hill-syrah",
-          "desc": "Hawke's Bay. Regular $16.00; large $23.00; bottle $67.00.",
+          "desc": "Hawke's Bay.",
           "price": 16.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-16-23-67"
+          ]
         },
         {
           "name": "Craggy Range Te Kahu Blend",
           "dishId": "craggy-range-te-kahu-blend",
-          "desc": "Hawke's Bay. Regular $19.00; large $28.00; bottle $82.00.",
+          "desc": "Hawke's Bay.",
           "price": 19.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-19-28-82"
+          ]
         }
       ]
     },
@@ -1498,11 +1808,14 @@
         {
           "name": "Voyage Water",
           "dishId": "voyage-water",
-          "desc": "Still or sparkling. 500ml $7.00; 1L $11.50.",
+          "desc": "Still or sparkling.",
           "price": 7.0,
           "tags": [
             "v",
             "vg"
+          ],
+          "addOns": [
+            "size-7-11p5"
           ]
         },
         {

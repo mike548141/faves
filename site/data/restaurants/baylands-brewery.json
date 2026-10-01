@@ -26,6 +26,60 @@
     "added": "2026-08-16"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "size-8-15",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "1 scoop",
+          "id": "1-scoop",
+          "dishPrice": 8.0,
+          "default": true,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "2 scoop",
+          "id": "2-scoop",
+          "dishPrice": 15.0,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quantity-7p5-15",
+      "name": "Quantity",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "6 stix",
+          "id": "6-stix",
+          "dishPrice": 7.5,
+          "default": true,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "12 stix",
+          "id": "12-stix",
+          "dishPrice": 15.0,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Snacks",
@@ -34,14 +88,17 @@
         {
           "name": "Fries",
           "dishId": "fries",
-          "desc": "Straight up with aioli. 1 scoop $8.00; 2 scoop $15.00.",
+          "desc": "Straight up with aioli.",
           "price": 8.0,
           "tags": [
             "v",
             "gf",
             "contains-egg"
           ],
-          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."},
+          "addOns": [
+            "size-8-15"
+          ]
         },
         {
           "name": "Criss-cross Fries",
@@ -56,14 +113,17 @@
         {
           "name": "Hash Stix",
           "dishId": "hash-stix",
-          "desc": "Hash brown stix. 6 or 12 hash stix & house made aioli. 6 for $7.50; 12 for $15.00.",
+          "desc": "Hash brown stix. 6 or 12 hash stix & house made aioli.",
           "price": 7.5,
           "tags": [
             "v",
             "gf",
             "contains-egg"
           ],
-          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."},
+          "addOns": [
+            "quantity-7p5-15"
+          ]
         },
         {
           "name": "Beef Loaded Fries",

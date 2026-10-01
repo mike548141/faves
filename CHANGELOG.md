@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Sizes become choices on 48 dishes.** Wine by the glass, large glass or
+  bottle, water by the bottle, half and full entrees, fries by the scoop and
+  burgers by the size are now picked on the dish (Southern Cross, Hotel
+  Bristol, Spices Indian, Baylands, BurgerFuel) instead of read from the
+  description. The dish, its heart and its price are unchanged.
 - **Sync history on this device.** Settings → Your data → Sync → "Show sync
   history" lists the last 20 syncs that changed something, asked something or
   didn't finish: when, which screen and which version of Faves ran it, whether

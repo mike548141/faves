@@ -96,6 +96,212 @@
           ]
         }
       ]
+    },
+    {
+      "id": "size-7-11p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "500ml",
+          "id": "500ml",
+          "dishPrice": 7.0,
+          "default": true,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "1L",
+          "id": "1l",
+          "dishPrice": 11.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-17-75",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 17.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 75.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-10-50",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 10.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 50.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-13p5-57",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 13.5,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 57.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-15-61p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 15.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 61.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-12p5-54",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 12.5,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 54.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-14-58p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 14.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 58.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-16-67p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 16.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 67.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-12-52p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 12.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 52.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-14p5-60",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 14.5,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 60.0,
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -637,11 +843,14 @@
         {
           "name": "Voyage Water",
           "dishId": "voyage-water",
-          "desc": "Sparkling or still. 500ml $7.00; 1L $11.50.",
+          "desc": "Sparkling or still.",
           "price": 7.0,
           "tags": [
             "v",
             "vg"
+          ],
+          "addOns": [
+            "size-7-11p5"
           ]
         }
       ]
@@ -841,23 +1050,32 @@
         {
           "name": "Cloudy Bay Pelorus Brut",
           "dishId": "cloudy-bay-pelorus-brut",
-          "desc": "Marlborough. Glass $17.00; bottle $75.00.",
+          "desc": "Marlborough.",
           "price": 17.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-17-75"
+          ]
         },
         {
           "name": "Cloudy Bay Pelorus Rosé",
           "dishId": "cloudy-bay-pelorus-ros",
-          "desc": "Marlborough. Glass $17.00; bottle $75.00.",
+          "desc": "Marlborough.",
           "price": 17.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-17-75"
+          ]
         },
         {
           "name": "De Bortoli KV Prosecco",
           "dishId": "de-bortoli-kv-prosecco",
-          "desc": "Australia. Glass $10.00; bottle $50.00.",
+          "desc": "Australia.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-50"
+          ]
         }
       ]
     },
@@ -868,23 +1086,32 @@
         {
           "name": "Northrow Sauvignon Blanc",
           "dishId": "northrow-sauvignon-blanc",
-          "desc": "Marlborough. Glass $10.00; bottle $50.00.",
+          "desc": "Marlborough.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-50"
+          ]
         },
         {
           "name": "Petal & Stem Sauvignon Blanc",
           "dishId": "petal-stem-sauvignon-blanc",
-          "desc": "Marlborough. Glass $13.50; bottle $57.00.",
+          "desc": "Marlborough.",
           "price": 13.5,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13p5-57"
+          ]
         },
         {
           "name": "Villa Maria Private Bin Sauvignon Blanc",
           "dishId": "villa-maria-private-bin-sauvignon-blanc",
-          "desc": "Marlborough. Glass $15.00; bottle $61.50.",
+          "desc": "Marlborough.",
           "price": 15.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-15-61p5"
+          ]
         }
       ]
     },
@@ -895,23 +1122,32 @@
         {
           "name": "Northrow Pinot Gris",
           "dishId": "northrow-pinot-gris",
-          "desc": "Gisborne. Glass $10.00; bottle $50.00.",
+          "desc": "Gisborne.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-50"
+          ]
         },
         {
           "name": "Pasqua Pinot Grigio",
           "dishId": "pasqua-pinot-grigio",
-          "desc": "Italy. Glass $12.50; bottle $54.00.",
+          "desc": "Italy.",
           "price": 12.5,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-12p5-54"
+          ]
         },
         {
           "name": "Esk Valley Estate Pinot Gris",
           "dishId": "esk-valley-estate-pinot-gris",
-          "desc": "Hawke’s Bay. Glass $14.00; bottle $58.50.",
+          "desc": "Hawke’s Bay.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14-58p5"
+          ]
         }
       ]
     },
@@ -922,16 +1158,22 @@
         {
           "name": "Northrow Chardonnay",
           "dishId": "northrow-chardonnay",
-          "desc": "Gisborne. Glass $10.00; bottle $50.00.",
+          "desc": "Gisborne.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-50"
+          ]
         },
         {
           "name": "Villa Maria Private Bin Chardonnay",
           "dishId": "villa-maria-private-bin-chardonnay",
-          "desc": "East Coast. Glass $13.50; bottle $57.00.",
+          "desc": "East Coast.",
           "price": 13.5,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13p5-57"
+          ]
         }
       ]
     },
@@ -942,16 +1184,22 @@
         {
           "name": "Northrow Rosé",
           "dishId": "northrow-ros",
-          "desc": "Hawke’s Bay. Glass $10.00; bottle $50.00.",
+          "desc": "Hawke’s Bay.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-50"
+          ]
         },
         {
           "name": "Esk Valley Estate Rosé",
           "dishId": "esk-valley-estate-ros",
-          "desc": "Hawke’s Bay. Glass $14.00; bottle $58.50.",
+          "desc": "Hawke’s Bay.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14-58p5"
+          ]
         }
       ]
     },
@@ -962,16 +1210,22 @@
         {
           "name": "Northrow Pinot Noir",
           "dishId": "northrow-pinot-noir",
-          "desc": "Marlborough. Glass $10.00; bottle $50.00.",
+          "desc": "Marlborough.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-50"
+          ]
         },
         {
           "name": "Rua Pinot Noir",
           "dishId": "rua-pinot-noir",
-          "desc": "Central Otago. Glass $16.00; bottle $67.50.",
+          "desc": "Central Otago.",
           "price": 16.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-16-67p5"
+          ]
         }
       ]
     },
@@ -982,23 +1236,32 @@
         {
           "name": "Sacred Hill Merlot",
           "dishId": "sacred-hill-merlot",
-          "desc": "Hawke’s Bay. Glass $12.00; bottle $52.50.",
+          "desc": "Hawke’s Bay.",
           "price": 12.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-12-52p5"
+          ]
         },
         {
           "name": "Grant Burge Benchmark Cabernet Sauvignon",
           "dishId": "grant-burge-benchmark-cabernet-sauvignon",
-          "desc": "South Australia. Glass $14.50; bottle $60.00.",
+          "desc": "South Australia.",
           "price": 14.5,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14p5-60"
+          ]
         },
         {
           "name": "Trinity Hill Syrah",
           "dishId": "trinity-hill-syrah",
-          "desc": "Hawke’s Bay. Glass $16.00; bottle $67.50.",
+          "desc": "Hawke’s Bay.",
           "price": 16.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-16-67p5"
+          ]
         }
       ]
     }
