@@ -900,7 +900,8 @@ test("the rollback target is still byte-for-byte the KV-only Worker that ran in 
   const { createHash } = await import("node:crypto");
   const text = await readFile(new URL("./sync-worker-kv-only.js", import.meta.url), "utf8");
   const body = text.slice(text.indexOf("\n\n") + 2);
-  assert.equal(createHash("sha256").update(body).digest("hex"), "d41225fb7ea6e8d66e2807cd50f801caae4568b793bba6a970566593c639dd29");
+  const FROZEN_SHA256 = "d41225fb7ea6e8d66e2807cd50f801caae4568b793bba6a970566593c639dd29"; // secretscan:allow:low-variety-entropy: SHA-256 of a public source file, not a credential
+  assert.equal(createHash("sha256").update(body).digest("hex"), FROZEN_SHA256);
   const rollback = await import("./rollback-kv-only.js");
   const frozen = await import("./sync-worker-kv-only.js");
   assert.equal(rollback.default, frozen.default, "the rollback serves the frozen fetch handler");
