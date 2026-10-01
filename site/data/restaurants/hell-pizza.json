@@ -935,6 +935,8 @@
           "price": 26,
           "desc": "Half The Buffalo and half The Beast. Thin stretched base only.",
           "tags": [
+            "contains-nuts",
+            "contains-dairy",
             "contains-gluten",
             "contains-pork"
           ]
