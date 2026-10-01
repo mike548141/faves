@@ -398,6 +398,47 @@ test("coming back online sends a debounced change now, rather than waiting it ou
   stop();
 });
 
+test("a store reloaded by ANOTHER tab's write schedules no sync here; a tap here still does (roadmap 510/210)", async () => {
+  // Survey finding 8: a heart in one tab made every other open tab reload
+  // favourites from the `storage` event and then pull on its own debounce —
+  // a GET and 9 KV reads per extra tab for a change the first tab was
+  // already pushing. The reload arrives through a `storage` event's dispatch,
+  // which is what `window.event` reports while the listeners run.
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  const subs = new Set();
+  const store = { subscribe: (fn) => (subs.add(fn), () => subs.delete(fn)), notify: () => subs.forEach((fn) => fn()) };
+  const s = mk(a, server, { debounceMs: 60_000 });
+  await s.enable();
+  const win = fakeWin();
+  const stop = s.start({ stores: [store], doc: null, win });
+  await s.syncNow(); // settle the pull start() fired
+
+  // Another tab hearted something: this tab's listener reloads the store
+  // while the `storage` event is being dispatched.
+  win.event = { type: "storage", key: scopeKey("default", "faves.favourites.v1") };
+  store.notify();
+  win.event = undefined;
+  assert.equal(s._pendingWrite(), false, "a cross-tab reload scheduled a sync — the writing tab already owns the push");
+
+  // A tap in THIS tab (a click is the current event, or none after an await)
+  // must still schedule, or this tab's own change would never leave it.
+  win.event = { type: "click" };
+  store.notify();
+  win.event = undefined;
+  assert.equal(s._pendingWrite(), true, "a change made in this tab must still schedule a sync");
+  s.flush();
+  await s.syncNow();
+
+  // An import or a profile rename reloads the stores with no event at all;
+  // that is a change made here, and it must sync.
+  store.notify();
+  assert.equal(s._pendingWrite(), true, "a same-tab reload (import, rename) must still schedule");
+  stop();
+  s.flush();
+  await s.syncNow();
+});
+
 // --- the allergen question ------------------------------------------------
 
 const dietOf = (storage, id = "default") =>

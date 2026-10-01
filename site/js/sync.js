@@ -826,8 +826,26 @@ export function createSync({
       if (started) return () => {};
       started = true;
       const offs = [];
+      // A store also notifies when it RELOADS because another tab wrote to it:
+      // that tab's `storage` event reaches app.js/menu.js/recipe.js, they call
+      // `reload()`, and the subscribers fire exactly as on a tap here. Until
+      // 2026-10-01 that scheduled a sync in every other open tab, so one heart
+      // with two tabs open cost two pulls (roadmap 510/210, survey finding 8).
+      // The tab that wrote owns the push — its own commit scheduled it — so a
+      // notification raised INSIDE a `storage` event's dispatch is not a
+      // change to sync here. `window.event` is how a callback deep in that
+      // chain can tell (DOM Standard, "current event"; set in every engine we
+      // ship to). Where it is missing the check is false and this behaves as
+      // it always did — a spare pull, never a lost push. A same-tab reload
+      // (an import, a profile rename) is not inside a `storage` event, so it
+      // still schedules, as it must.
+      const fromOtherTab = () => win?.event?.type === "storage";
       for (const store of stores) {
-        if (typeof store?.subscribe === "function") offs.push(store.subscribe(() => schedule()));
+        if (typeof store?.subscribe === "function") {
+          offs.push(store.subscribe(() => {
+            if (!fromOtherTab()) schedule();
+          }));
+        }
       }
       if (doc?.addEventListener) {
         const onVis = () => {
