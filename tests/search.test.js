@@ -9,7 +9,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildIndex, personalDishes, search, withCookbook } from "../site/js/search.js";
+import { buildIndex, ownerQuery, personalDishes, search, withCookbook } from "../site/js/search.js";
 import { resolveRecord } from "../site/js/temporal.js";
 
 const FIXTURE = [
@@ -805,4 +805,48 @@ test("withCookbook: follows the store — a replaced map is read afresh (memo ke
   const next = { ...MINE };
   delete next["u:ginger-crunch"];
   assert.equal(search(withCookbook(idx, next), "ginger").dishes.total, 0);
+});
+
+// roadmap 510/360 — "my recipes" asks whose, not what.
+test("ownerQuery: the whole query, any case and spacing, my/our x recipe/recipes — nothing wider", () => {
+  assert.equal(ownerQuery("my recipe"), "mine");
+  assert.equal(ownerQuery("My Recipes"), "mine");
+  assert.equal(ownerQuery("  MY   recipes "), "mine");
+  assert.equal(ownerQuery("our recipe"), "ours");
+  assert.equal(ownerQuery("Our recipes"), "ours");
+  for (const q of ["my recipes for lamb", "my rec", "recipes", "my", "mine", "your recipes", "myrecipes", ""]) {
+    assert.equal(ownerQuery(q), null, q);
+  }
+});
+
+test('search: "my recipes" lists every recipe in the cookbook, uncapped, and only those', () => {
+  // A published dish whose own text says "my recipe" must not be listed: this is
+  // the control that proves the owner path answered, not a text match.
+  const fx = JSON.parse(JSON.stringify(FIXTURE));
+  fx[0].menu[0].items[0].desc = "my recipe, honest";
+  const many = {};
+  for (let i = 0; i < 25; i++) many[`u:r${i}`] = { dishId: `u:r${i}`, name: `Recipe ${String(i).padStart(2, "0")}` };
+  const idx = withCookbook(buildIndex(fx), many);
+  for (const q of ["my recipe", "MY RECIPES"]) {
+    const { places, dishes } = search(idx, q);
+    assert.equal(places.total, 0);
+    assert.equal(dishes.total, 25);
+    assert.equal(dishes.items.length, 25, "not clipped to the dish limit");
+    assert.ok(dishes.items.every((d) => d.owner === "mine"));
+    assert.equal(dishes.items[0].name, "Recipe 00");
+  }
+  // …and a published dish saying it in its text IS found by the ordinary search
+  // of a different query, so the fixture is live.
+  assert.ok(search(idx, "honest").dishes.total >= 1);
+});
+
+test('search: "our recipes" finds nothing, without throwing, until a recipe is shared', () => {
+  const idx = withCookbook(buildIndex(FIXTURE), MINE);
+  assert.ok(search(idx, "my recipes").dishes.total > 0, "control: the cookbook is there");
+  for (const q of ["our recipe", "Our Recipes"]) {
+    const r = search(idx, q);
+    assert.equal(r.places.total + r.dishes.total, 0);
+  }
+  const shared = { ...idx, dishes: [...idx.dishes, { name: "Nan's pie", hay: "", owner: "ours" }] };
+  assert.equal(search(shared, "our recipes").dishes.total, 1, "the owner kind is all it takes");
 });

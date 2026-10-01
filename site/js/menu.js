@@ -106,7 +106,7 @@ import { el } from "./dom.js";
 import { ingredientBlocks, ingredientKeys } from "./ingredients.js";
 import { wireSearchClear } from "./search-clear.js";
 import { toast } from "./toast.js";
-import { foldSearchText } from "./search.js";
+import { foldSearchText, ownerQuery } from "./search.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { dishReportButton, venueReportRow, initReportEntry } from "./report-ui.js";
@@ -1878,6 +1878,10 @@ function render(r) {
     // reader, not about the dish — so it is resolved once per pass rather than
     // per row, and only when the word was actually typed.
     const favIds = wantsFavourites(q) ? favouriteIds() : null;
+    // "my recipes" / "our recipes" ask whose a row is, not what it says (510/360);
+    // only the Cook at Home page has rows that are anyone's. "our" finds none
+    // until a shared recipe exists, which is an empty list, not an error.
+    const whose = r.id === COOK_AT_HOME ? ownerQuery(q) : null;
     let visibleTotal = 0;
     let total = 0;
     for (const sec of sectionEls) {
@@ -1889,7 +1893,9 @@ function render(r) {
         // the words people actually type for them — so typing a diet narrows
         // the menu to it without a control existing. `data-name` and
         // `data-desc` are unchanged.
-        const visible = favIds
+        const visible = whose
+          ? whose === "mine" && isPersonalId(dish.dataset.dishId)
+          : favIds
           ? favIds.has(dish.dataset.dishId)
           : !q ||
             dish.dataset.name.includes(q) ||

@@ -344,6 +344,18 @@ export function personalDishes(map, { venueName = "Cook at Home" } = {}) {
   });
 }
 
+/**
+ * Whose recipes a query asks for: "mine" for "my recipe(s)", "ours" for "our
+ * recipe(s)", else null. Whole-query only, any case and spacing — "my recipes
+ * for lamb" is a text search like any other. The one parser, so the home search
+ * and the Cook at Home page's own search cannot disagree about the words
+ * (roadmap 510/360).
+ */
+export function ownerQuery(query) {
+  const m = /^(my|our) recipes?$/.exec(norm(query).trim().replace(/\s+/g, " "));
+  return m ? (m[1] === "my" ? "mine" : "ours") : null;
+}
+
 // One memo, keyed by the store's map object itself (`recipes.all()` returns the
 // same object until a write replaces it): a keystroke re-searches, and
 // re-composing every recipe per keystroke is work the device store has not
@@ -589,6 +601,19 @@ export function search(index, query, { placeLimit = 6, dishLimit = 20 } = {}) {
   const q = norm(query).trim();
   if (q.length < 2) {
     return { places: { total: 0, items: [] }, dishes: { total: 0, items: [] } };
+  }
+  // "my recipes" asks about the reader, not about any dish's text, so it is
+  // answered from the entries' `owner` and never by a text match (roadmap
+  // 510/360). Every one is listed, uncapped: the point of asking is to see the
+  // whole cookbook. "our recipes" runs the same filter and finds nothing until a
+  // shared recipe carries `owner: "ours"`.
+  const owner = ownerQuery(q);
+  if (owner) {
+    const items = index.dishes
+      .filter((d) => d.owner === owner)
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((d) => ({ ...d, matchField: "details", matchText: null }));
+    return { places: { total: 0, items: [] }, dishes: { total: items.length, items } };
   }
   const forms = expand(q);
   return {
