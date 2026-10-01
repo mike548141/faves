@@ -1,4 +1,4 @@
-- [~] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
+- [ ] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
       `[S] [tests]` — filed by session `faves-4f` from its workers' sweeps
       (load averages of 120 to 800 while several sweeps overlapped).
 
@@ -17,3 +17,12 @@
   and N times under a synthetic load, and name what differs.
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  🔎 **2026-10-02 (`faves-4f`):** 40 saved-output runs of `node --test` on
+  `main` at `a608dc6`, quiet machine: 40 of 40 clean (1,823 each). So (1)
+  does not reproduce at rest; it needs the loop run under real load. Also
+  seen the same day: CI's `every screen boots` exited 2 once with "timed out
+  waiting for Chrome's DevToolsActivePort" on the runner (harness, not an
+  assertion; re-run green), and a local `boot_check --id the-victoria-tavern`
+  crashed once with an uncaptured Node stack trace, then passed twice.
+  📌 **Claim released.**
