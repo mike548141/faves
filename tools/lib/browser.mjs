@@ -158,12 +158,16 @@ export function pagesCacheControl(path) {
 
 /**
  * A static server that answers the way CLOUDFLARE PAGES does about CACHING:
- * the measured Cache-Control above, a content-derived ETag on every 200, and a
- * bodiless 304 to an If-None-Match that matches. Measured live 2026-10-01: a
- * matching If-None-Match (strong, and the `W/` form Cloudflare sends with
- * brotli) is answered 304, and Pages' ETag is 32 hex digits. That it is
- * derived from the content is INFERRED — it is not the MD5 of the bytes, and
- * no deploy was watched changing it. {@link startServer} answers
+ * the measured Cache-Control above, a content-derived ETag on every 200 except
+ * HTML, and a bodiless 304 to an If-None-Match that matches. Measured live
+ * 2026-10-01: a matching If-None-Match (strong, and the `W/` form Cloudflare
+ * sends with brotli) is answered 304, and Pages' ETag is 32 hex digits. That
+ * it is derived from the content was MEASURED the same day across five real
+ * deploys (tools/etag_survey.py, ADR 0150): no changed file kept its ETag and
+ * no unchanged one lost it. Pages sends NO ETag on HTML (`/`, `index.html`,
+ * `restaurant.html`, `recipe.html` — same survey), so neither does this: an
+ * HTML file is always sent whole, which a revalidating install must pay
+ * for. {@link startServer} answers
  * `no-store` with no validators, under which the browser's HTTP cache never
  * holds anything — which is exactly the condition under which the 2026-08-16
  * stale-precache incident (ADR 0056) CANNOT happen, so no check served by it
@@ -212,12 +216,14 @@ export function startPagesServer(port, siteDir, overlay = new Map()) {
       }
       type = MIME[extname(file)];
     }
-    const etag = `"${createHash("sha256").update(body).digest("hex").slice(0, 32)}"`;
-    const headers = { ETag: etag, "Cache-Control": pagesCacheControl(path.endsWith("/") ? `${path}index.html` : path) };
+    const html = path.endsWith("/") || /\.html?$/i.test(path) || /^text\/html\b/i.test(type || "");
+    const etag = html ? null : `"${createHash("sha256").update(body).digest("hex").slice(0, 32)}"`;
+    const headers = { "Cache-Control": pagesCacheControl(path.endsWith("/") ? `${path}index.html` : path) };
+    if (etag) headers.ETag = etag;
     const asked = String(req.headers["if-none-match"] || "")
       .split(",")
       .map((t) => t.trim().replace(/^W\//, ""));
-    if (asked.includes(etag)) {
+    if (etag && asked.includes(etag)) {
       entry.status = 304;
       res.writeHead(304, headers);
       res.end();

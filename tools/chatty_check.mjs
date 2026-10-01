@@ -6,7 +6,7 @@
 //
 //     node tools/chatty_check.mjs          # every scenario + the break-probes
 //     node tools/chatty_check.mjs -v       # narrate each step
-//     node tools/chatty_check.mjs --only hint   # one scenario (wire|hint|sync), no probes
+//     node tools/chatty_check.mjs --only hint   # one scenario (wire|update|hint|sync), no probes
 //
 // Exit 0 = every measurement within budget. 1 = a budget was exceeded.
 // 2 = the browser stopped answering (tools/lib/browser.mjs) — says nothing
@@ -91,6 +91,8 @@ const NAV_GAP_MS = 10_500;
 const B = {
   coldReq: { what: "cold install: requests (home page, then the worker's install)", unit: "req", budget: 0, lowers: "170 (revalidate the install)" },
   coldGz: { what: "cold install: gzip-6 estimate", unit: "KB", budget: 0, lowers: "170" },
+  updReq: { what: "update install, one shell file changed: requests (sw.js check + shell + catalogue)", unit: "req", budget: 0, lowers: "—" },
+  updGz: { what: "update install, one shell file changed: gzip-6 estimate", unit: "KB", budget: 0, lowers: "—" },
   warmReq: { what: "warm home load: requests", unit: "req", budget: 0, lowers: "160/180 (throttle the catalogue check)" },
   warmBytes: { what: "warm home load: response bytes", unit: "B", budget: 0, lowers: "160/180" },
   menuReq: { what: "menu open (warm, >10 s after the last page, inside the ~3 min data-check window): requests", unit: "req", budget: 0, lowers: "160/180" },
@@ -139,6 +141,17 @@ Object.assign(BUDGETS, {
   // first install revalidates): 268 req, 1,072 KB (4,461 KB raw). The old
   // no-store instrument read 269 req, 1,547 KB, and could not see a 304 at all.
   coldReq: 295, coldGz: 1179, // 268 req, 1,072 KB
+  // The UPDATE install (510/270, ADR 0150), measured 2026-10-01 on 510-270:
+  // deploy B changes js/app.js and SHELL_VERSION, nothing else. On "no-cache":
+  // 114 req, 107 of them 304, 225 KB raw, 66 KB gzip — sw.js, app.js, the
+  // catalogue and the four HTML files (Pages sends HTML no ETag, so it always
+  // comes whole). On "reload", the update before 510/270 and re-measured every
+  // run by break-probe 4 below: 114 req, 0 of them 304, 1,703 KB raw, 621 KB
+  // gzip. The request count is the same either way: a revalidation is still a
+  // request; a 304 is what makes it cheap.
+  // (The same day's HTML change to startPagesServer moved coldGz 1,072 → 1,085
+  // KB: the install's index.html is now a 200, as on Pages.)
+  updReq: 126, updGz: 73, // 114 req, 66 KB
   // warm/menu tightened 2026-10-01 with 510/180 (the data check's window
   // persisted, ~3 min): measured on 510-sw, 3 runs agreed. Was 2 req (catalogue
   // + the sw.js update check) and 1. On the no-store instrument the one request
@@ -281,7 +294,11 @@ async function newPage(cdp, { shimPort = null } = {}) {
 async function origin(overlay = null, { pages = false } = {}) {
   const srv = pages ? await startPagesServer(0, SITE, overlay || new Map()) : await startServer(0, SITE, overlay);
   const log = []; // { url, bytes, gz }
-  srv.server.on("request", (req, res) => {
+  // PREPENDED, not `on`: the server's own handler answers an OVERLAY entry
+  // synchronously, so a listener added after it wraps `res.end` too late and
+  // counts that body as 0 bytes. Found 2026-10-01 (510/270) when an update
+  // whose only changed files were overlays measured less than its own HTML.
+  srv.server.prependListener("request", (req, res) => {
     const entry = { url: req.url, bytes: 0, gz: 0 };
     log.push(entry);
     const end = res.end.bind(res);
@@ -431,6 +448,76 @@ async function scenarioWire(cdp, report, { overlay = null, probe = false, label 
     o.srv.server.close?.();
     await cdp.send("Target.closeTarget", { targetId: A.targetId }).catch(() => {});
     await cdp.send("Target.closeTarget", { targetId: Bp.targetId }).catch(() => {});
+  }
+}
+
+/**
+ * An UPDATE install (510/270): a phone already on deploy A meets deploy B,
+ * which changed ONE shell file (js/app.js) and SHELL_VERSION. Counts what the
+ * update cycle asks the server for — the sw.js update check, every shell
+ * file, the data catalogue — from `reg.update()` until the new worker is
+ * installed and waiting. `mode` overrides SHELL_FETCH (the probe passes
+ * "reload", the update as it was before 510/270).
+ */
+async function scenarioUpdate(cdp, report, { mode = null, label }) {
+  const overlay = new Map();
+  const o = await origin(overlay, { pages: true });
+  const P = await newPage(cdp);
+  const d = createDriver(cdp, P.sessionId, (m) => report.step(`${label}: ${m}`));
+  const sw = readFileSync(join(SITE, "sw.js"), "utf8");
+  const shellLine = /^const SHELL_FETCH = \{ cache: "[a-z-]+" \};$/m;
+  const versionLine = /^const SHELL_VERSION = "[^"]+";$/m;
+  if (!shellLine.test(sw) || !versionLine.test(sw)) {
+    throw new Error("site/sw.js changed shape — update shellLine/versionLine in scenarioUpdate");
+  }
+  const deploy = (v) => {
+    let s = sw.replace(versionLine, `const SHELL_VERSION = "${v}";`);
+    if (mode) s = s.replace(shellLine, `const SHELL_FETCH = { cache: "${mode}" };`);
+    return { body: s, type: "text/javascript" };
+  };
+  try {
+    overlay.set("/sw.js", deploy("chatty-update-A"));
+    await goto(cdp, d, P.sessionId, `${o.base}/index.html`, HOME_READY);
+    const a = await d.evalPage(SETTLE);
+    if (a !== "activated") throw new Error(`${label}: deploy A's worker ended ${a}`);
+    await untilPresent(async () => ((await d.evalPage(HELD)) > 0 ? true : null), { label: `${label}: deploy A held its data`, timeout: 60_000 });
+    await quiet(() => o.log.length, 2500, 60_000);
+    // Deploy B: one changed shell file and a renamed shell cache.
+    const app = readFileSync(join(SITE, "js", "app.js"));
+    overlay.set("/js/app.js", { body: Buffer.concat([app, Buffer.from("\n// chatty-update: deploy B\n")]), type: "text/javascript" });
+    overlay.set("/sw.js", deploy("chatty-update-B"));
+    o.log.length = 0;
+    const mark = o.srv.log.length; // the server's own log carries the 304 status
+    const state = await d.evalPage(`(async () => {
+      const reg = await navigator.serviceWorker.getRegistration();
+      await reg.update();
+      const w = reg.installing || reg.waiting;
+      if (!w) return "none";
+      const done = ["installed", "activated", "redundant"];
+      if (done.includes(w.state)) return w.state;
+      return await new Promise((ok) => w.addEventListener("statechange", () => { if (done.includes(w.state)) ok(w.state); }));
+    })()`);
+    await quiet(() => o.log.length, 1500, 30_000);
+    // The new cache must hold B's app.js, or a cheap number is a broken install.
+    const held = await d.evalPage(`(async () => {
+      const c = await caches.open("faves-shell-chatty-update-B");
+      if (!(await c.match("./__cache_ready__"))) return "not ready";
+      const r = await c.match("./js/app.js");
+      return r && (await r.text()).includes("chatty-update: deploy B") ? "B" : "A";
+    })()`);
+    const r = {
+      state, held, req: o.log.length,
+      n304: o.srv.log.slice(mark).filter((e) => e.status === 304).length,
+      raw: sum(o.log, "bytes"), gz: sum(o.log, "gz"),
+    };
+    const whole = o.srv.log.slice(mark).filter((e) => e.status !== 304).map((e) => `${e.url} ${e.status}`);
+    report.step(`${label}: sent whole: ${whole.length > 12 ? `${whole.length} files` : whole.join(", ")}`);
+    report.step(`${label}: worker ${state}, holds ${held}; ${r.req} req (${r.n304} 304), ${Math.round(r.raw / 1024)} KB raw, ${Math.round(r.gz / 1024)} KB gzip-6`);
+    return r;
+  } finally {
+    o.srv.server.closeAllConnections?.();
+    o.srv.server.close?.();
+    await cdp.send("Target.closeTarget", { targetId: P.targetId }).catch(() => {});
   }
 }
 
@@ -600,6 +687,16 @@ async function run(opts) {
 
     const want = (n) => !opts.only || opts.only === n;
     if (want("wire")) await scenarioWire(cdp, report, { label: "wire" });
+    if (want("update")) {
+      const u = await scenarioUpdate(cdp, report, { label: "update" });
+      report.check(
+        "update install: the new shell cache holds deploy B's app.js (a cheap update that is also a correct one)",
+        u.state === "installed" && u.held === "B",
+        `worker ${u.state}, cache holds ${u.held}`
+      );
+      measured.updReq = u.req;
+      measured.updGz = Math.round(u.gz / 1024);
+    }
     if (want("hint")) await scenarioHint(cdp, report);
     if (want("sync")) await scenarioSync(cdp, report, { label: "sync" });
     judge(report, !!opts.only);
@@ -641,6 +738,17 @@ async function run(opts) {
           `${p.stale.r} KV reads against a budget of ${B.stalePullR.budget}`
         );
       }
+      // Break-probe 4 (510/270): the update install back on "reload" — the
+      // behaviour before 510/270. The gzip budget MUST fail, and its number is
+      // the "before" this item is measured against, re-derived every run.
+      {
+        const p = await scenarioUpdate(cdp, report, { mode: "reload", label: "break-probe/update" });
+        report.check(
+          'break-probe: an update install on cache "reload" FAILS the update gzip budget',
+          Math.round(p.gz / 1024) > B.updGz.budget,
+          `${Math.round(p.gz / 1024)} KB gzip-6 (${p.req} req, ${p.n304} 304) against a budget of ${B.updGz.budget} KB; it held ${p.held}`
+        );
+      }
       // Break-probe 3 (510/160): the pull window removed, so every page load
       // pulls. The repeat-load request budget MUST fail.
       const throttleLine = "if (fresh && !inFlight && !timer && !waiting && !holdsUnsent()) return;";
@@ -669,7 +777,7 @@ const { values } = parseArgs({
   options: {
     verbose: { type: "boolean", short: "v", default: false },
     "no-probe": { type: "boolean", default: false },
-    only: { type: "string" }, // wire | hint | sync — one scenario, no probes (debugging)
+    only: { type: "string" }, // wire | update | hint | sync — one scenario, no probes (debugging)
   },
 });
 

@@ -138,8 +138,13 @@ content freshness separately from this file.
 - **A first visit downloads about a third less.** Installing Faves for
   offline use no longer downloads the app a second time: it asks the server
   whether each file it just loaded is still current and keeps it if so
-  (about 1.5 MB → 1.1 MB compressed, measured locally). Updates still
-  download fresh copies, as before (ADR 0149).
+  (about 1.5 MB → 1.1 MB compressed, measured locally) (ADR 0149).
+- **An app update downloads only the files that changed.** An installed phone
+  used to download the whole app again each time it updated. Now it asks the
+  server which files are still current and keeps them. For an update that
+  changes one file, that is about 620 KB → 66 KB compressed, measured locally.
+  It is safe because Cloudflare's file tags were checked across five real
+  deploys: a tag changes exactly when the file does (ADR 0150).
 - **The home screen loads faster: it no longer fetches every venue's full
   menu just to draw the list.** It now reads two small, precomputed files —
   a card summary and a search index — and fetches a venue's own menu only

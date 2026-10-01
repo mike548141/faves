@@ -1,7 +1,10 @@
 # 0149 — The first install revalidates the shell rather than re-downloading it
 
 **Status:** accepted (owner-ruled 2026-10-01, `faves-55`: "yes, gated").
-Built by roadmap `510/170`.
+Built by roadmap `510/170`. **Superseded in part by
+[ADR 0150](0150-update-installs-revalidate-the-shell-too.md)** (decision 2:
+update installs now revalidate too, after a survey of real deploys showed
+Pages' ETag follows the bytes).
 **Date:** 2026-10-01
 **Supersedes, in part:** [ADR 0056](0056-a-precache-must-not-read-the-browsers-cache.md) <!-- wrapscan:allow: a link target cannot wrap -->
 decision 1, "`sw.js` precaches with `cache: \"reload\"` on every asset". On a
