@@ -9,3 +9,14 @@
   [the survey](../../reviews/2026-10-01-0418-chatty-app-survey.md) under proposal B.
 
   📌 **Claimed 2026-10-01 (`faves-55`).**
+
+  ✅ **Done 2026-10-01 (`510-150`, PR pending).** Each heart and rating
+  control now repaints only when its own state moved (a force flag keeps the
+  hover-preview restore working), and the home list rebuilds only when a heart
+  changes the hearted-venue set AND the ranked order. Measured the survey's way
+  (regal-chinese-restaurant, 264 dishes, headless Chrome 390 px, MutationObserver
+  count, `Performance.getMetrics` script and layout+style ms, 5 runs, 4x CPU):
+  heart 795 → 3 changes (script 6 → 1 ms, layout+style 33 → 7 ms); rating step
+  2,386 → 10 (script 20 → 1 ms, layout+style 90 → 9 ms); home heart 352 → 13
+  changes, CPU unchanged (the ranking, not the cards, dominates there). Guard:
+  `tools/device_check.mjs` § 7 and § 8, break-probed.

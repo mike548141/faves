@@ -88,8 +88,15 @@ export function ratingControl(entry, thing) {
     }
   }
 
-  function render() {
+  // Every control hears every change; only the one whose value moved repaints
+  // (roadmap 510/150: a rating step rebuilt 264 controls, ~600 ms at 4x CPU).
+  // `force` is for the callers that painted a transient preview over the
+  // committed value, which the skip cannot know about.
+  let painted = -1;
+  function render(force = false) {
     const val = ratings.get(entry);
+    if (val === painted && force !== true) return;
+    painted = val;
     paint(val);
     slider.setAttribute("aria-valuenow", String(val));
     slider.setAttribute("aria-valuetext", valueText(val));
@@ -119,14 +126,15 @@ export function ratingControl(entry, thing) {
     // Live preview while dragging, and on mouse hover (desktop) for aim.
     if (dragging || e.pointerType === "mouse") paint(valueFromX(e.clientX));
   });
-  slider.addEventListener("pointerleave", () => { if (!dragging) render(); });
+  slider.addEventListener("pointerleave", () => { if (!dragging) render(true); });
   slider.addEventListener("pointerup", (e) => {
     if (!dragging) return;
     dragging = false;
     try { slider.releasePointerCapture(e.pointerId); } catch { /* no capture */ }
     ratings.set(entry, valueFromX(e.clientX)); // commit → subscribe fires render
+    render(true); // a same-value tap commits nothing, so un-preview by hand
   });
-  slider.addEventListener("pointercancel", () => { dragging = false; render(); });
+  slider.addEventListener("pointercancel", () => { dragging = false; render(true); });
 
   // Keyboard model: the slider is focusable and steps discretely.
   slider.addEventListener("keydown", (e) => {
@@ -147,7 +155,7 @@ export function ratingControl(entry, thing) {
   });
 
   render();
-  ratings.subscribe(render); // control lives for the page; no teardown needed
+  ratings.subscribe(() => render()); // control lives for the page; no teardown needed
   return group;
 }
 

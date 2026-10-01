@@ -652,13 +652,12 @@ function init(restaurants, compactIndex) {
     return listEmpty;
   }
 
-  function render() {
-    // One clock per render, read per venue in that venue's own zone (ADR 0043):
-    // the whole list is ranked against a single instant, so two venues can never
-    // disagree about what time it is because the render took a moment to run.
-    const clock = makeClock();
+  // The ranked list for `clock` — shared by render() and the favourites
+  // subscriber below, which asks whether a heart moved anything before paying
+  // for 57 new cards (roadmap 510/150).
+  function rankedFor(clock) {
     const matched = applyFilters(restaurants, state, clock);
-    const { favBoostKm, farKm, units } = settings.get();
+    const { favBoostKm, farKm } = settings.get();
     // THE CUT (ADR 0091, owner-ruled 2026-08-22). Settings says the dial hides
     // places, so it hides them — before the ranker sees them, which is why the
     // count below is honest for free. The ranking is untouched and still sinks
@@ -678,6 +677,22 @@ function init(restaurants, compactIndex) {
       favBoostKm,
       farKm,
     });
+    return { shown, beyond, nearestBeyondKm };
+  }
+
+  // The venue ids on screen, in order — what a heart is compared against.
+  let shownIds = null;
+
+  function render(ready = null) {
+    // One clock per render, read per venue in that venue's own zone (ADR 0043):
+    // the whole list is ranked against a single instant, so two venues can never
+    // disagree about what time it is because the render took a moment to run.
+    // `ready` is a ranking the caller already paid for (the favourites
+    // subscriber below), so a heart that DOES re-rank ranks once, not twice.
+    const clock = ready?.clock ?? makeClock();
+    const { shown, beyond, nearestBeyondKm } = ready?.ranked ?? rankedFor(clock);
+    const { farKm, units } = settings.get();
+    shownIds = shown.map((r) => r.id);
     listEl.replaceChildren(...shown.map((r) => card(r, clock, state.origin)));
     const distanceEmptied = renderDistanceCut({
       hidden: beyond.length,
@@ -771,8 +786,26 @@ function init(restaurants, compactIndex) {
   initBackToTop();
   // Hearting something, or changing a distance dial, re-ranks the list (also
   // covers un-favouriting in the view, or a change synced from another tab).
-  favourites.subscribe(render);
-  settings.subscribe(render);
+  // A heart repaints itself (favourites-ui.js); the list is rebuilt only when
+  // the heart changed what the list SHOWS — its order or its members — which a
+  // second dish at an already-hearted venue, or an unheart in the favourites
+  // view, does not. A cross-tab or sync change that does move the order still
+  // lands here, and rebuilds.
+  let rankedFavIds = favouriteVenueIds();
+  favourites.subscribe(() => {
+    // Ranking reads favourites only as a set of venue ids, so a heart that
+    // leaves the set alone (a second dish at a hearted venue) cannot move the
+    // list and does not even re-rank it.
+    const now = favouriteVenueIds();
+    if (now.size === rankedFavIds.size && [...now].every((id) => rankedFavIds.has(id))) return;
+    rankedFavIds = now;
+    const clock = makeClock();
+    const ranked = rankedFor(clock);
+    const ids = ranked.shown.map((r) => r.id);
+    if (shownIds && ids.length === shownIds.length && ids.every((id, i) => id === shownIds[i])) return;
+    render({ clock, ranked });
+  });
+  settings.subscribe(() => render());
 
   render();
   // The shuffle prefers places you can actually order from now (open or
