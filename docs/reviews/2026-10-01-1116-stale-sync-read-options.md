@@ -63,7 +63,9 @@ atomic "write only if it is still version X". The Worker's README and
 `tests/stale-sync.test.js`, over `tests/stale-sync-harness.js`. The harness
 drives the real `site/js/sync.js` against the real `worker/sync-worker.js`. Its
 `EdgeKV` stand-in follows the documented model: a 60 s read cache per location,
-and a write seen at once where it was made.
+and a write seen at once where it was made. The four failing tests are marked
+`todo`, so they run and print their failures without reddening CI; the fix
+removes the marker.
 
 | Test | Today |
 |---|---|

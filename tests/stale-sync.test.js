@@ -58,13 +58,19 @@ async function pairWithL2Cached(favs) {
   return { kv, p, l };
 }
 
+// These four assert the CORRECT behaviour and fail on today's sync, which is
+// the evidence for 510/340. `todo` keeps them running and their failures
+// printed without reddening CI; the fix removes the marker, and a todo that
+// starts passing before then is a fix nobody recorded.
+const TODO = "510/340 — fails until the stale-read fix lands";
+
 /** Every location's cache runs out, then each device syncs twice. */
 async function settle(kv, ...devices) {
   kv.clock += 3 * CACHE_TTL_MS;
   for (let i = 0; i < 2; i += 1) for (const d of devices) assert.equal((await d.sync.syncNow()).ok, true);
 }
 
-test("510/340: a heart is not taken off the phone by a pull, 10 s later, that reads an older copy", async () => {
+test("510/340: a heart is not taken off the phone by a pull, 10 s later, that reads an older copy", { todo: TODO }, async () => {
   // The item's measured case. The heart is written through L1; the next pull
   // goes through L2, which is still handing out the copy from before it. The
   // copy's version is a random id, so the client cannot tell "older than what I
@@ -81,7 +87,7 @@ test("510/340: a heart is not taken off the phone by a pull, 10 s later, that re
   assert.deepEqual(favsOf(p.storage), ["v:kk", "v:laksa"], "the heart just tapped is gone from the phone");
 });
 
-test("510/340: a heart, then a second heart 10 s later through another location — the first is not lost on either device", async () => {
+test("510/340: a heart, then a second heart 10 s later through another location — the first is not lost on either device", { todo: TODO }, async () => {
   // The same stale read, now with something to send. The Worker's own If-Match
   // check reads through the same location, so it is stale too and accepts the
   // write: the copy without the first heart replaces the copy with it.
@@ -99,7 +105,7 @@ test("510/340: a heart, then a second heart 10 s later through another location 
   }
 });
 
-test("510/340: an un-heart, then a heart 10 s later through another location — the removed heart does not come back on either device", async () => {
+test("510/340: an un-heart, then a heart 10 s later through another location — the removed heart does not come back on either device", { todo: TODO }, async () => {
   // The mirror: the older copy still holds a heart the base has dropped, so it
   // reads as another device adding it.
   const { kv, p, l } = await pairWithL2Cached([venue("kk"), venue("bao")]);
@@ -116,7 +122,7 @@ test("510/340: an un-heart, then a heart 10 s later through another location —
   }
 });
 
-test("510/340 and 320: the recipe move is not undone by the other device's stale read — and the stale read does NOT make 320's union", async () => {
+test("510/340 and 320: the recipe move is not undone by the other device's stale read — and the stale read does NOT make 320's union", { todo: TODO }, async () => {
   // The owner's sequence: the laptop imports the moved backup through L1. The
   // phone, on L2 where the pre-move copy is cached, hearts something inside
   // the minute: its read is stale, the Worker's If-Match read is stale, and the
