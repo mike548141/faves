@@ -1,4 +1,4 @@
-- [~] 🔥 **Old hearts on the moved recipes came back after the import**
+- [x] 🔥 **Old hearts on the moved recipes came back after the import**
       `[S] [sync][data]` — seen by the owner 2026-10-01 at 21:50 NZDT
       (session `faves-55`), on his laptop's Favourites screen.
 
@@ -134,3 +134,9 @@
   no. He ruled all three guards: `380` (sync log), `390` (no silent merge
   without a base), `400` (hearts follow a moved recipe). This item closes when
   they land; the cause stays unknown, and the log is how it gets caught.
+
+  ✅ **Closed 2026-10-02 (`faves-4f`): all three guards landed (PR #83).** Its
+  three `todo` tests pass as written, and now assert more: the base-fault
+  routes ask and send nothing; a received shortlist's hearts land on the
+  moved id. The cause on the owner's devices stays unknown; `380`'s log is how
+  the next sighting gets read rather than reconstructed.
