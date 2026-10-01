@@ -398,6 +398,47 @@ test("coming back online sends a debounced change now, rather than waiting it ou
   stop();
 });
 
+test("a store reloaded by ANOTHER tab's write schedules no sync here; a tap here still does (roadmap 510/210)", async () => {
+  // Survey finding 8: a heart in one tab made every other open tab reload
+  // favourites from the `storage` event and then pull on its own debounce —
+  // a GET and 9 KV reads per extra tab for a change the first tab was
+  // already pushing. The reload arrives through a `storage` event's dispatch,
+  // which is what `window.event` reports while the listeners run.
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  const subs = new Set();
+  const store = { subscribe: (fn) => (subs.add(fn), () => subs.delete(fn)), notify: () => subs.forEach((fn) => fn()) };
+  const s = mk(a, server, { debounceMs: 60_000 });
+  await s.enable();
+  const win = fakeWin();
+  const stop = s.start({ stores: [store], doc: null, win });
+  await s.syncNow(); // settle the pull start() fired
+
+  // Another tab hearted something: this tab's listener reloads the store
+  // while the `storage` event is being dispatched.
+  win.event = { type: "storage", key: scopeKey("default", "faves.favourites.v1") };
+  store.notify();
+  win.event = undefined;
+  assert.equal(s._pendingWrite(), false, "a cross-tab reload scheduled a sync — the writing tab already owns the push");
+
+  // A tap in THIS tab (a click is the current event, or none after an await)
+  // must still schedule, or this tab's own change would never leave it.
+  win.event = { type: "click" };
+  store.notify();
+  win.event = undefined;
+  assert.equal(s._pendingWrite(), true, "a change made in this tab must still schedule a sync");
+  s.flush();
+  await s.syncNow();
+
+  // An import or a profile rename reloads the stores with no event at all;
+  // that is a change made here, and it must sync.
+  store.notify();
+  assert.equal(s._pendingWrite(), true, "a same-tab reload (import, rename) must still schedule");
+  stop();
+  s.flush();
+  await s.syncNow();
+});
+
 // --- the allergen question ------------------------------------------------
 
 const dietOf = (storage, id = "default") =>
@@ -550,6 +591,33 @@ test("a pull that changed nothing writes nothing — and a successful sync does 
   await s.syncNow();
   assert.equal(server.puts, puts, "nothing changed, nothing written");
   assert.equal(s._pendingWrite(), false);
+});
+
+test("a pull that changed nothing rewrites no base and collects the device once (roadmap 510/190)", async () => {
+  // Survey finding 6: every no-op pull rewrote the base with identical bytes
+  // (9.1 KB at 200 recipes) and collected the whole device twice. Only the
+  // `lastSyncedAt` stamp may still be written: the status row shows it.
+  const server = fakeServer();
+  const a = withRecipes(device({ favs: [venue("kk")] }), [precipe("u:ginger-crunch")]);
+  // A store nothing syncs, which only a COLLECT reads — so its read count
+  // says how many times the cycle collected the device.
+  a.setItem("faves.somethingelse.v1", "carried");
+  const s = mk(a, server);
+  await s.enable();
+  await s.syncNow(); // settle: the second cycle agrees on what the first wrote
+
+  const writes = [];
+  const reads = new Map();
+  const { setItem, getItem } = a;
+  a.setItem = (k, v) => (writes.push(k), setItem(k, v));
+  a.getItem = (k) => (reads.set(k, (reads.get(k) || 0) + 1), getItem(k));
+  const res = await s.syncNow();
+  a.setItem = setItem;
+  a.getItem = getItem;
+
+  assert.equal(res.ok, true);
+  assert.deepEqual(writes, [SYNC_KEY], "a no-op pull wrote more than its timestamp");
+  assert.equal(reads.get("faves.somethingelse.v1"), 1, "a no-op pull collected the device more than once");
 });
 
 test("a change made while a cycle is in flight is kept, not overwritten by the pull", async () => {
@@ -1023,6 +1091,89 @@ test("a Worker that predates buckets: recipes stay on the device, nothing is los
   await mk(b, updated).syncNow();
   assert.deepEqual(recipesOf(b), ["u:ginger-crunch"]);
   assert.deepEqual(recipesOf(a), ["u:ginger-crunch"], "the device that held it did not read the old agreement as a deletion");
+});
+
+/** Every request a device sends, as "METHOD <query>" — the query is the
+ *  whole of what 510/140 changed on the wire. */
+function recording(server) {
+  const log = [];
+  return {
+    log,
+    fetch: (u, i = {}) => {
+      const q = String(u).split("?")[1] ?? "";
+      const id = String(u).split("?")[0].split("/").pop();
+      log.push(`${i.method || "GET"}${id.includes(":") ? " bucket" : ""} ${q}`.trim());
+      return server.fetch(u, i);
+    },
+  };
+}
+
+test("a user with no recipes asks about no bucket, and says its family is empty (roadmap 510/140)", async () => {
+  // Survey finding 1: every GET asked about eight buckets (8 KV reads) and
+  // every PUT made the Worker read all sixteen possible bucket keys — for a
+  // user with no recipes, none of which exist.
+  const server = fakeServer();
+  const wire = recording(server);
+  const a = device({ favs: [venue("kk")] });
+  const s = mk(a, wire);
+  await s.enable();
+  wire.log.length = 0;
+  await s.syncNow(); // a pull, nothing changed
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  await s.syncNow(); // a heart
+  assert.deepEqual(wire.log, ["GET", "GET", "PUT family=0"]);
+});
+
+test("a recipe holder asks about its buckets and names a family of eight (roadmap 510/140)", async () => {
+  const server = fakeServer();
+  const wire = recording(server);
+  const a = withRecipes(device({ favs: [venue("kk")] }), [precipe("u:ginger-crunch")]);
+  const s = mk(a, wire);
+  await s.enable();
+  assert.ok(wire.log.includes(`PUT bucket family=${RECIPE_BUCKETS}`), wire.log.join(" | "));
+  wire.log.length = 0;
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  await s.syncNow();
+  assert.deepEqual(wire.log, [`GET buckets=${RECIPE_BUCKETS}`, `PUT family=${RECIPE_BUCKETS}`]);
+});
+
+test("another device's FIRST recipe still arrives on a device that was asking about no bucket (roadmap 510/140)", async () => {
+  // A and B agreed while neither had a recipe, so B has stopped asking. A
+  // then gets one. B's plain GET finds a core copy that records buckets and
+  // reads again, asking: one extra round trip, once.
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const b = device();
+  const wireB = recording(server);
+  const syncB = mk(b, wireB);
+  await syncB.join(code);
+  assert.ok(wireB.log.every((l) => !l.includes("buckets=")), "nobody has a recipe yet, so B asks about none");
+
+  withRecipes(a, [precipe("u:ginger-crunch")]);
+  await syncA.syncNow();
+
+  wireB.log.length = 0;
+  await syncB.syncNow();
+  assert.deepEqual(recipesOf(b), ["u:ginger-crunch"], "B never heard about A's first recipe");
+  assert.deepEqual(wireB.log.slice(0, 2), ["GET", `GET buckets=${RECIPE_BUCKETS}`]);
+  wireB.log.length = 0;
+  await syncB.syncNow();
+  assert.deepEqual(wireB.log, [`GET buckets=${RECIPE_BUCKETS}`], "once agreed on buckets, B asks straight away");
+});
+
+test("a new client against a Worker that predates 510/140 still syncs a recipe-less user (roadmap 510/140)", async () => {
+  // The deployed Worker ignores both queries; fakeServer({ buckets: false })
+  // is that Worker, and it parses no `family`.
+  const old = fakeServer({ buckets: false });
+  const a = device({ favs: [venue("kk")] });
+  const { code } = await mk(a, old).enable();
+  const b = device({ favs: [venue("pandan")] });
+  await mk(b, old).join(code);
+  await mk(a, old).syncNow();
+  assert.deepEqual(favsOf(a), ["v:kk", "v:pandan"]);
+  assert.deepEqual(favsOf(b), ["v:kk", "v:pandan"]);
 });
 
 test("a bucket that expired from the server is no opinion: its recipes stand and it is written again", async () => {

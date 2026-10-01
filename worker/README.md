@@ -56,6 +56,7 @@ deployed** — see "Deploying" below for why, and what has to happen first.
 | `/v1/blob/<blobId>` | `OPTIONS` | `204` CORS preflight. |
 | `/v1/blob/<blobId>?buckets=<n>` | `GET` | As `GET` above, plus `X-Faves-Buckets`: the version of each recipe bucket 0…n−1 that exists (`r0="<v>",r3="<v>"`), or `none`. On a `404` too. Costs one KV read per bucket asked about. |
 | `/v1/blob/<blobId>:r<n>` | `GET` / `PUT` | A recipe bucket, `n` from 0 to 15. Same rules as the core copy: ciphertext, `ETag`, conditional `PUT`, 256 KiB cap. |
+| `…?family=<n>` on any `PUT` | `PUT` | How many recipe buckets the user has (roadmap 510/140). After the write, only the core copy and buckets 0…n−1 are read to re-arm their expiry. `0` (no recipes) reads none. Absent or not a whole number: all 16, as before. |
 | anything else | any | `404` (unknown route) or `405` (wrong method on a real route). No index, no listing — there is no way to enumerate what blobIds exist. |
 
 `blobId` must be exactly 32 lowercase hex characters (128 bits) — anything
@@ -87,6 +88,23 @@ every copy at least 150 of its 180 days after any write.
 **A client that predates buckets** asks nothing (`?buckets` absent), gets no
 report and costs the one read it always did. Its writes still re-arm the
 buckets' expiry.
+
+**Only the buckets that exist are read (roadmap 510/140).** Until 2026-10-01
+every `PUT` read all 16 possible sibling keys and every client `GET` asked
+about 8 buckets, so a heart cost 26 KV reads and a pull 9, for a user with
+no recipes, none of whose bucket keys exist. Now the client asks `?buckets=8`
+only when it holds a recipe or last agreed on buckets, and every `PUT`
+carries `?family=<n>`, the bucket count the core copy records (`0` for no
+recipes). Measured with the real client and Worker over a counting KV: no
+recipes, a pull 9 → 1 read and a heart 26 → 2 reads (1 write either way);
+200 recipes, a pull 9 → 9 and a heart 26 → 18. A device that asked nothing
+and finds a core copy recording buckets (another device's first recipe)
+reads again, asking: one extra request, once.
+
+What `family` gives up: a bucket the writing client does not know of (one
+orphaned by a lost race, with no core copy recording it) is not re-armed by
+that write. It is some device's merge that device still holds, and the next
+recipe sync detects it (the report names it) and writes it again.
 
 ## Concurrency: compare-and-swap, honestly
 
@@ -335,9 +353,21 @@ Worker is the 2026-08-16 build: it has no bucket routes, sends no
 - **Worker first**: the old client asks nothing and gets nothing new; its
   writes now re-arm sibling copies (there are none yet). No behaviour change.
 
+The same holds for `?family` (roadmap 510/140): the deployed Worker ignores
+it and reads all 16 siblings, as it does today, and the new Worker treats a
+`PUT` without it (any client before 510/140) the same way. A new client with
+no recipes sends no `?buckets` at all, so against the deployed Worker its
+pull is already one read.
+
 **After the deploy, verify live** (as the 2026-08-16 table did):
 `GET /v1/blob/<id>?buckets=8` on an unwritten id → `404` with
 `X-Faves-Buckets: none`; `PUT /v1/blob/<id>:r0` → `204` + `ETag`; the same
 `GET` → `X-Faves-Buckets: r0="<that etag>"`; `PUT /v1/blob/<id>:r16` → `400`;
 and `Access-Control-Expose-Headers` names both `ETag` and `X-Faves-Buckets`
-on a real cross-origin response.
+on a real cross-origin response. For `?family` (roadmap 510/140), which
+changes no response, only what the Worker reads: `PUT /v1/blob/<id>?family=0`
+on a fresh id → `204`, then the same with `If-Match` → `204`; and
+`PUT /v1/blob/<id>?family=x` → `204` (an unreadable family is "all 16", never
+an error). The read counts themselves cannot be seen from outside; the
+Cloudflare dashboard's KV read graph for the namespace should fall once the
+site and Worker are both live.

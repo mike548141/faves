@@ -16,6 +16,7 @@ import worker, {
   readBodyCapped,
   parseBlobKey,
   familyKeys,
+  familyAsked,
   formatBucketReport,
   MAX_BUCKETS,
   REFRESH_AFTER_SECONDS,
@@ -435,4 +436,86 @@ test("a bucket write re-arms the core copy too (B1: recipes and hearts expire to
   kv.store.set(VALID_ID, { ...c, metadata: { ...c.metadata, t: 0 }, ttl: 1 });
   await put(e, BUCKET(4), [4]);
   assert.equal(kv.store.get(VALID_ID).ttl, 180 * 24 * 60 * 60);
+});
+
+// --- Only the buckets the client says exist (roadmap 510/140) ---------------
+
+/** Count KV reads on `e` from here on. */
+function countReads(e) {
+  const kv = e.SYNC_BLOBS;
+  const orig = kv.getWithMetadata.bind(kv);
+  const seen = [];
+  kv.getWithMetadata = async (k, t) => {
+    seen.push(k);
+    return orig(k, t);
+  };
+  return seen;
+}
+
+const putWith = (e, key, query, bytes, etag) =>
+  worker.fetch(
+    req(`/v1/blob/${key}${query}`, {
+      method: "PUT",
+      headers: { Origin: ORIGIN, ...(etag ? { "If-Match": etag } : {}) },
+      body: new Uint8Array(bytes),
+    }),
+    e,
+  );
+
+test("familyAsked: a whole number up to the cap; anything else — an older client — is every bucket", () => {
+  const q = (s) => new URLSearchParams(s);
+  assert.equal(familyAsked(q("family=0")), 0);
+  assert.equal(familyAsked(q("family=8")), 8);
+  assert.equal(familyAsked(q("family=99")), MAX_BUCKETS);
+  for (const bad of ["", "family=", "family=-1", "family=2.5", "family=x", "family=1e3"]) {
+    assert.equal(familyAsked(q(bad)), MAX_BUCKETS, bad);
+  }
+  assert.deepEqual(familyKeys(VALID_ID, 0), [VALID_ID]);
+  assert.equal(familyKeys(VALID_ID, 8).length, 9);
+});
+
+test("a heart from a user with no recipes (?family=0) costs one KV read and one write, not 17 and one", async () => {
+  const e = env();
+  const first = await putWith(e, VALID_ID, "?family=0", [1]);
+  const seen = countReads(e);
+  const before = e.SYNC_BLOBS.puts;
+  const res = await putWith(e, VALID_ID, "?family=0", [2], first.headers.get("ETag"));
+  assert.equal(res.status, 204);
+  assert.deepEqual(seen, [VALID_ID], "only the copy being written is read");
+  assert.equal(e.SYNC_BLOBS.puts - before, 1);
+});
+
+test("?family=8 reads the eight buckets and no more; a bucket write reads the core and the other seven", async () => {
+  const e = env();
+  const first = await putWith(e, VALID_ID, "?family=8", [1]);
+  let seen = countReads(e);
+  await putWith(e, VALID_ID, "?family=8", [2], first.headers.get("ETag"));
+  assert.equal(seen.length, 1 + 8);
+  assert.ok(!seen.includes(BUCKET(8)), "bucket 8 is outside a family of 8");
+  seen.length = 0;
+  await putWith(e, BUCKET(3), "?family=8", [3]);
+  assert.equal(seen.length, 1 + 8, "its own read, the core, and the seven other buckets");
+  assert.ok(seen.includes(VALID_ID));
+});
+
+test("an older client's write (no ?family) still reads, and re-arms, every copy the user could have", async () => {
+  const e = env();
+  const kv = e.SYNC_BLOBS;
+  await put(e, BUCKET(12), [7]);
+  const aged = kv.store.get(BUCKET(12));
+  kv.store.set(BUCKET(12), { ...aged, metadata: { ...aged.metadata, t: 0 }, ttl: 1 });
+  const seen = countReads(e);
+  await put(e, VALID_ID, [1]);
+  assert.equal(seen.length, 1 + MAX_BUCKETS);
+  assert.equal(kv.store.get(BUCKET(12)).ttl, 180 * 24 * 60 * 60, "an old client's write keeps bucket 12 alive, as before");
+});
+
+test("a stale sibling inside the family is still re-armed when the client names the family", async () => {
+  const e = env();
+  const kv = e.SYNC_BLOBS;
+  await put(e, BUCKET(2), [9]);
+  const aged = kv.store.get(BUCKET(2));
+  kv.store.set(BUCKET(2), { ...aged, metadata: { ...aged.metadata, t: 0 }, ttl: 1 });
+  await putWith(e, VALID_ID, "?family=8", [1]);
+  assert.equal(kv.store.get(BUCKET(2)).ttl, 180 * 24 * 60 * 60);
 });
