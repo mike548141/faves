@@ -194,6 +194,11 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **A page left open no longer brings back hearts you changed elsewhere.** A
+  menu or recipe page kept the hearts, ratings and notes it read when it
+  opened. If they changed in another tab or by a sync, its next tap wrote the
+  old ones back, and sync then copied that to every device. A tap now starts
+  from what is saved.
 - **Editing during a sync no longer deletes your other device's changes.**
   A heart, recipe or allergen flag added on one device could vanish from
   both if you tapped something on the other while it was mid-sync. Both

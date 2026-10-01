@@ -158,6 +158,21 @@ export function safeStorage() {
 }
 
 /**
+ * A store's raw string, or null when storage will not answer. What a
+ * whole-value store keeps to notice that another tab or page wrote since it
+ * last read (roadmap 510/320): favourites, ratings and notes each REPLACE
+ * their whole value on every change, so writing from a copy older than
+ * storage undoes whatever was written in between.
+ */
+export function rawOf(storage, key) {
+  try {
+    return storage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Every `faves.`-prefixed key a storage backend can enumerate. Returns [] when
  * the backend can't enumerate (the in-memory shim `safeStorage()` falls back to
  * in a locked-down browser) — callers must treat it as best-effort, not proof.

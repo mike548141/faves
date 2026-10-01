@@ -11,6 +11,7 @@
 // favourited dish always anchors to the exact row the menu screen builds.
 
 import { profileScopedStorage } from "./profiles.js";
+import { rawOf } from "./store.js";
 import { migrateEntries, canonicalVenueId } from "./renames.js";
 import { dishId, findDish } from "./dish-id.js";
 import { MY_RECIPES, isPersonalVenue } from "./recipe-record.js";
@@ -178,10 +179,23 @@ export function favHref(e) {
 
 export function createFavourites(storage) {
   const subs = new Set();
+  // The raw string this page last read or wrote (roadmap 510/320). Every write
+  // REPLACES the whole list, so a page must never write from a copy older than
+  // storage: a restaurant or recipe page holds its list from when it loaded,
+  // and nothing re-reads it when another tab or page changes the hearts — a
+  // heart tapped elsewhere, a sync pull, an import. Its next tap then wrote its
+  // old list back over the new one, and sync carried that everywhere: after
+  // the 510/050 move it put the old recipe hearts back and dropped the moved
+  // ones (reproduced in real Chrome, two tabs of one profile). So every change
+  // first compares storage with this string and, if someone else wrote, starts
+  // from what they wrote. A write that FAILED leaves this string unchanged, so
+  // an in-memory change in a browser that refuses writes is not thrown away.
+  let seen = null;
 
   function read() {
+    seen = rawOf(storage, KEY);
     try {
-      const a = JSON.parse(storage.getItem(KEY) || "[]");
+      const a = JSON.parse(seen || "[]");
       // Hearts stored against an id that has since been corrected follow the
       // venue rather than detaching from it (renames.js). Rewritten in memory
       // on read and persisted by the next commit — nothing is destroyed if the
@@ -194,13 +208,26 @@ export function createFavourites(storage) {
 
   let items = read();
 
+  /** Catch up with a write made elsewhere. True when the list was re-read. */
+  function fresh() {
+    if (rawOf(storage, KEY) === seen) return false;
+    items = read();
+    return true;
+  }
+
+  function notify() {
+    for (const fn of subs) fn(items);
+  }
+
   function commit() {
     try {
-      storage.setItem(KEY, JSON.stringify(items));
+      const next = JSON.stringify(items);
+      storage.setItem(KEY, next);
+      seen = next;
     } catch {
       /* blocked/over quota — in-memory state still drives the UI */
     }
-    for (const fn of subs) fn(items);
+    notify();
   }
 
   return {
@@ -208,21 +235,30 @@ export function createFavourites(storage) {
     count: () => items.length,
     has: (entry) => items.some((i) => favKey(i) === favKey(entry)),
 
-    /** Add if absent, remove if present. Returns the new on/off state. */
+    /**
+     * Add if absent, remove if present. Returns the new on/off state.
+     *
+     * Absent or present AS THIS PAGE SHOWS IT: the person tapped the heart
+     * they could see. Then the list is brought up to date and that one heart
+     * set, so a tap on a page that missed another tab's change neither undoes
+     * that change nor flips this heart the wrong way.
+     */
     toggle(entry) {
       const k = favKey(entry);
+      const on = !items.some((i) => favKey(i) === k);
+      const moved = fresh();
       const idx = items.findIndex((i) => favKey(i) === k);
-      if (idx >= 0) {
-        items = items.filter((_, n) => n !== idx);
-        commit();
-        return false;
+      if (on ? idx >= 0 : idx < 0) {
+        if (moved) notify();
+        return on;
       }
-      items = [...items, entry];
+      items = on ? [...items, entry] : items.filter((_, n) => n !== idx);
       commit();
-      return true;
+      return on;
     },
 
     removeKey(k) {
+      fresh();
       items = items.filter((i) => favKey(i) !== k);
       commit();
     },
@@ -233,19 +269,20 @@ export function createFavourites(storage) {
      * so the UI can say "Added 3 favourites" (or note there were no new ones).
      */
     merge(entries) {
+      if (fresh()) notify();
       const present = new Set(items.map(favKey));
-      const fresh = [];
+      const added = [];
       for (const e of entries || []) {
         const k = favKey(e);
         if (present.has(k)) continue;
         present.add(k); // guard against duplicates within the incoming list too
-        fresh.push(e);
+        added.push(e);
       }
-      if (fresh.length) {
-        items = [...items, ...fresh];
+      if (added.length) {
+        items = [...items, ...added];
         commit();
       }
-      return fresh.length;
+      return added.length;
     },
 
     venues: () => items.filter((i) => i.type === "venue"),

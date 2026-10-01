@@ -31,6 +31,7 @@
 // within 1..5), so no value ever migrates; the KEYS do (see read()).
 
 import { profileScopedStorage } from "./profiles.js";
+import { rawOf } from "./store.js";
 import { migrateRatingKeys } from "./renames.js";
 import { dishId, migrateDishKeys } from "./dish-id.js";
 
@@ -72,14 +73,20 @@ function sanitise(obj) {
 export function createRatings(storage) {
   const subs = new Set();
 
+  // The raw string this page last read or wrote: a change made in another
+  // tab or page is caught up with before this one writes the whole map back
+  // over it (roadmap 510/320; the reasoning is favourites.js's, same shape).
+  let seen = null;
+
   function read() {
     // Two key migrations, venue half then dish half (see dish-id.js on the
     // order). A rating is stored as a KEY STRING holding the dish's name, so
     // unlike a favourite — stored as an entry object and re-keyed on read — it
     // genuinely has to be rewritten. Both are non-destructive and idempotent,
     // so this runs on every read forever with no "have I migrated" flag.
+    seen = rawOf(storage, KEY);
     try {
-      const raw = JSON.parse(storage.getItem(KEY) || "{}");
+      const raw = JSON.parse(seen || "{}");
       return sanitise(migrateDishKeys(migrateRatingKeys(raw)));
     } catch {
       return {};
@@ -88,13 +95,26 @@ export function createRatings(storage) {
 
   let map = read();
 
+  function notify() {
+    for (const fn of subs) fn(map);
+  }
+
+  /** Catch up with a write made elsewhere; tells the page when it did. */
+  function fresh() {
+    if (rawOf(storage, KEY) === seen) return;
+    map = read();
+    notify();
+  }
+
   function commit() {
     try {
-      storage.setItem(KEY, JSON.stringify(map));
+      const next = JSON.stringify(map);
+      storage.setItem(KEY, next);
+      seen = next;
     } catch {
       /* blocked/over quota — in-memory state still drives the UI this session */
     }
-    for (const fn of subs) fn(map);
+    notify();
   }
 
   return {
@@ -112,6 +132,7 @@ export function createRatings(storage) {
     set(entry, value) {
       const k = ratingKey(entry);
       const r = clampRating(value);
+      fresh();
       if (r === (map[k] || 0)) return r;
       map = { ...map };
       if (r) map[k] = r;
@@ -123,6 +144,7 @@ export function createRatings(storage) {
     /** Remove any rating for `entry`. Returns whether one was present. */
     clear(entry) {
       const k = ratingKey(entry);
+      fresh();
       if (!map[k]) return false;
       map = { ...map };
       delete map[k];
@@ -132,7 +154,7 @@ export function createRatings(storage) {
 
     reload() {
       map = read();
-      for (const fn of subs) fn(map);
+      notify();
     },
 
     subscribe(fn) {

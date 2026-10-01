@@ -211,3 +211,26 @@ test("per-profile: two profiles keep disjoint ratings; a switch re-points", () =
   r.reload();
   assert.equal(r.get(dish), 3); // default's mark is untouched
 });
+
+// --- two pages over one storage (roadmap 510/320) ---------------------------
+
+test("a page loaded before another page's rating does not write its old map back", () => {
+  const st = fakeStorage(JSON.stringify({ [ratingKey(dish)]: 2 }));
+  const stalePage = createRatings(st);
+  const other = createRatings(st);
+  other.clear(dish); // moved away elsewhere…
+  other.set(venue, 3); // …and something new rated
+  stalePage.set({ type: "dish", venueId: "x", venueName: "X", name: "Y", dishId: "y" }, 1);
+  assert.deepEqual(JSON.parse(st.getItem("faves.ratings.v1")), { [ratingKey(venue)]: 3, "d:x y": 1 });
+});
+
+test("a re-tap of a score another page already set is still a no-op, and the page catches up", () => {
+  const st = fakeStorage("{}");
+  const stalePage = createRatings(st);
+  let seen = 0;
+  stalePage.subscribe(() => (seen += 1));
+  createRatings(st).set(dish, 3);
+  assert.equal(stalePage.set(dish, 3), 3);
+  assert.equal(stalePage.get(dish), 3);
+  assert.ok(seen >= 1, "the page was not told it had caught up");
+});
