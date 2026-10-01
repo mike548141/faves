@@ -180,6 +180,15 @@ export function migrateDishKeys(map) {
       continue;
     }
     const [, venueId, rest] = m;
+    // A personal recipe (`u:mine`, recipe-record.js) never had a name-form
+    // key: its id is `u:<slug>`, and slug() would rewrite the colon, so a
+    // rating on one vanished after the next reload (found 2026-10-01 by
+    // roadmap 510/050's import test). Matched on the prefix, as data.js does,
+    // because this module stays free of the store modules.
+    if (venueId.startsWith("u:")) {
+      out[key] = value;
+      continue;
+    }
     const id = slug(rest);
     if (!id || id === rest) {
       out[key] = value;

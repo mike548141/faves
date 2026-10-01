@@ -204,6 +204,19 @@ test("venue keys, unrecognised keys and values are all left alone", () => {
   assert.equal("d:burgerfuel Bastard Burger" in after, false, "the old key is gone");
 });
 
+test("a rating on a personal recipe keeps its u: id, through the store's own reload (510/050)", async () => {
+  // slug("u:alpha") is "u-alpha": until 2026-10-01 every read rewrote the key,
+  // so the rating read back as unrated after one reload.
+  const map = { "d:u:mine u:alpha-bake": 4 };
+  assert.equal(migrateDishKeys(map), map);
+  const { createRatings } = await import("../site/js/ratings.js");
+  const m = new Map();
+  const st = { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: (k) => m.delete(k) };
+  const e = { type: "dish", venueId: "u:mine", name: "Alpha Bake", dishId: "u:alpha-bake" };
+  createRatings(st).set(e, 4);
+  assert.equal(createRatings(st).get(e), 4, "a fresh store (a reload) still reads it");
+});
+
 test("a map with nothing to move is returned as the same object", () => {
   const map = { "v:kk-malaysian": 3, "d:kk-malaysian mee-goreng": 5 };
   assert.equal(migrateDishKeys(map), map);

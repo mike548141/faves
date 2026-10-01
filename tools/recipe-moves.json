@@ -1,0 +1,11 @@
+{
+  "_about": "The owner's list of Cook at Home recipes that move into his own data as personal `u:` recipes (roadmap 510/050, owner-ruled 2026-10-01). Read by tools/move_recipes.mjs, which rewrites an exported backup so these recipes, and every heart, rating, note and shopping line on them, live under the `u:` ids. Ids only: the recipe text comes from site/data/restaurants/<venueId>.json, or data/history/dishes/<venueId>.json once the published copy has left.",
+  "venueId": "cook-at-home",
+  "moves": [
+    { "from": { "venueId": "cook-at-home", "dishId": "booth-s-ginger-crunch" }, "to": "u:booth-s-ginger-crunch" },
+    { "from": { "venueId": "cook-at-home", "dishId": "jesse-s-garlic-chicken-thighs" }, "to": "u:jesse-s-garlic-chicken-thighs" },
+    { "from": { "venueId": "cook-at-home", "dishId": "shane-s-ribs" }, "to": "u:shane-s-ribs" },
+    { "from": { "venueId": "cook-at-home", "dishId": "famous-brade-green-chicken-curry" }, "to": "u:famous-brade-green-chicken-curry" },
+    { "from": { "venueId": "cook-at-home", "dishId": "chocolate-self-saucing-pudding" }, "to": "u:chocolate-self-saucing-pudding" }
+  ]
+}

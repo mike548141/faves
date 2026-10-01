@@ -21,7 +21,8 @@ import {
   UPDATE_NEEDED,
   MAX_ATTEMPTS,
 } from "../site/js/sync.js";
-import { collectPersonalData, USER_SCHEMA, STORE_SCHEMA } from "../site/js/personal-data.js";
+import { applyPersonalData, collectPersonalData, USER_SCHEMA, STORE_SCHEMA } from "../site/js/personal-data.js";
+import { moveBackup } from "../tools/move_recipes.mjs";
 import { mergePersonal, mergeSet } from "../site/js/sync-merge.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "../site/js/sync-crypto.js";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
@@ -1223,4 +1224,71 @@ test("a heart added on the other device survives a recipe edited here mid-sync (
   assert.deepEqual(favsOf(a), ["v:kk", "v:new", "v:pandan"]);
   assert.deepEqual(favsOf(b), ["v:kk", "v:new", "v:pandan"]);
   assert.deepEqual(recipesOf(b), ["u:pavlova", "u:scones"]);
+});
+
+// --- the one-off move, by backup file (roadmap 510/050, owner-ruled 2026-10-01)
+// tools/move_recipes.mjs rewrites an exported backup; the owner imports it on
+// ONE device with Replace, and sync must carry the move to the others: the old
+// keys removed there, the new ones and the recipe itself added. Replace keeps
+// the sync pairing and the base (personal-data.js EXCLUDED `spare`), so the
+// next cycle sees the move as this device's own edit against the last
+// agreement — which is what lets it propagate as deletions + additions.
+
+const MV = "test-kitchen";
+const MOVE_PLAN = { venueId: MV, moves: [{ from: { venueId: MV, dishId: "alpha-bake" }, to: "u:alpha-bake" }] };
+const MOVE_SOURCES = {
+  venue: { id: MV, menu: [{ section: "Baking", items: [{ name: "Alpha Bake", dishId: "alpha-bake", steps: ["Mix.", "Bake."] }] }] },
+  history: null,
+};
+const kHeart = (dishId, name) => ({ type: "dish", venueId: MV, venueName: "Test Kitchen", name, dishId, isRecipe: true });
+const ratingsOf = (st) => JSON.parse(st.getItem(scopeKey("default", "faves.ratings.v1")) || "{}");
+
+/** Two paired, agreed devices holding a heart, a rating and a note on the
+ *  recipe that moves, and a heart and rating on one that stays. */
+async function pairedBeforeTheMove(serverOpts) {
+  const server = fakeServer(serverOpts);
+  const seed = () =>
+    device({
+      favs: [kHeart("alpha-bake", "Alpha Bake"), kHeart("delta-salad", "Delta Salad")],
+      ratings: { [`d:${MV} alpha-bake`]: 5, [`d:${MV} delta-salad`]: 3 },
+      notes: { [`${MV} alpha-bake`]: "less sugar" },
+    });
+  const a = seed();
+  const b = seed();
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const syncB = mk(b, server);
+  await syncB.join(code);
+  await syncA.syncNow();
+  return { server, a, b, syncA, syncB };
+}
+
+/** Steps 3–5 of the runbook on device A: export, run the tool, Replace. */
+function moveOnA(a) {
+  const res = moveBackup(collectPersonalData(a, { exportedAt: "2026-10-01T00:00:00.000Z" }), MOVE_PLAN, MOVE_SOURCES);
+  assert.equal(res.ok, true, res.error);
+  const report = applyPersonalData(a, JSON.stringify(res.data), { mode: "replace" });
+  assert.equal(report.ok, true, report.error);
+}
+
+test("a moved backup Replace-imported on A crosses to B: old keys gone, new keys and the recipe arrive, and it settles", async () => {
+  const { server, a, b, syncA, syncB } = await pairedBeforeTheMove();
+  moveOnA(a);
+  assert.equal((await syncA.syncNow()).ok, true);
+  assert.equal((await syncB.syncNow()).ok, true);
+
+  for (const [name, st] of [["A", a], ["B", b]]) {
+    assert.deepEqual(favsOf(st), [`d:${MV} delta-salad`, "d:u:mine u:alpha-bake"], `${name}'s hearts`);
+    assert.deepEqual(ratingsOf(st), { [`d:${MV} delta-salad`]: 3, "d:u:mine u:alpha-bake": 5 }, `${name}'s ratings`);
+    assert.deepEqual(notesOf(st), { "u:mine u:alpha-bake": "less sugar" }, `${name}'s notes`);
+    assert.deepEqual(recipesOf(st), ["u:alpha-bake"], `${name}'s cookbook`);
+  }
+  // Settled: another round each way writes nothing and brings nothing back.
+  const puts = server.puts;
+  await syncA.syncNow();
+  await syncB.syncNow();
+  await syncA.syncNow();
+  assert.equal(server.puts, puts, "the pair kept writing after the move");
+  assert.deepEqual(favsOf(a), favsOf(b));
+  assert.equal(`d:${MV} alpha-bake` in ratingsOf(a), false, "the old rating came back");
 });

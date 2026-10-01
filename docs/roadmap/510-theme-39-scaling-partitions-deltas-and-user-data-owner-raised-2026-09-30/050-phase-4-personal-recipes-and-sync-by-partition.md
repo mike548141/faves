@@ -118,3 +118,22 @@
   📌 **Claimed 2026-10-01 (`faves-55`)** for the tool, the runbook and the
   removal of the published copies. The run itself needs his backup file,
   and the Worker deploy goes with it.
+
+  🔧 **Import tool built 2026-10-01 (`faves-55` worker, branch
+  `510-050-import`); not run.** `tools/move_recipes.mjs` rewrites an exported
+  backup with the plan in `tools/recipe-moves.json` (the five, to
+  `u:<same slug>`), using `moveSnapshot`/`toPersonalRecipe`; it refuses to
+  write inside any git tree and prints counts only. **The runbook is the
+  tool's header — follow it in that order.** What decided the order:
+  - **Worker first.** Measured on the fake Worker: without bucket support,
+    device B gets the moved hearts, ratings and notes but not the recipes.
+  - **Published copies last.** Nothing deletes a heart whose dish has gone
+    (it is marked "not on your current list"); only a tap on Remove does,
+    and that takes the rating too. Removing first opens that window.
+  - **All devices synced and quiet first; import straight after export.**
+    A rating changed on B to an old recipe between agreeing and the import
+    comes back on both devices beside the moved one; anything changed on A
+    between export and Replace is lost everywhere.
+  - Rollback until the copies go: Replace-import the original backup.
+  🐛 **Fixed with it:** a rating on any personal recipe was lost on the next
+  reload — `migrateDishKeys` slugged `u:x` to `u-x` (`dish-id.js`).
