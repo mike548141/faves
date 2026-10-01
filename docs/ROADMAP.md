@@ -168,7 +168,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/README.md)*
 
-- [~] [26a — Save and recall](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/010-26a-save-and-recall.md)
+- ✅ [26a — Save and recall](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/010-26a-save-and-recall.md)
 - [ ] [26b — Carry it across devices](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/020-26b-carry-it-across-devices.md)
 - [ ] [26c — What happens when the menu moves under it](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/030-26c-what-happens-when-the-menu-moves-under-it.md)
 
@@ -460,3 +460,4 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [No silent merge without a base](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/390-no-silent-merge-without-a-base.md)
 - ✅ [A heart on a moved recipe follows it](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/400-hearts-follow-a-moved-recipe.md)
 - [ ] ⏳ [Turn the KV mirror off after a clean week](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/410-turn-the-kv-mirror-off-after-a-clean-week.md)
+- [ ] 🔎 [Two flakes seen under heavy load on 2026-10-02, neither named](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/420-flakes-under-load-2026-10-02.md)
