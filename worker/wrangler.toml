@@ -28,13 +28,47 @@ compatibility_date = "2024-11-01"
 # dashboard.
 account_id = "REPLACE_WITH_CLOUDFLARE_ACCOUNT_ID"
 
-# One KV namespace: the blob store itself. `id` (production) and
+# The KV namespace: where every copy lived until 510/340. Now read once per
+# user, when that user's object first imports, and — while KV_MIRROR is "on"
+# (below) — written as a mirror so a rollback to the KV-only Worker loses
+# nothing. Nothing deletes from it. `id` (production) and
 # `preview_id` (used by `wrangler dev`) are both PLACEHOLDERS — created by
 # `wrangler kv namespace create SYNC_BLOBS` (and `--preview` for the second),
 # which prints the ids to paste in here. See README step-by-step.
 kv_namespaces = [
   { binding = "SYNC_BLOBS", id = "REPLACE_WITH_KV_NAMESPACE_ID", preview_id = "REPLACE_WITH_PREVIEW_KV_NAMESPACE_ID" }
 ]
+
+# (Tables from here down. Every top-level key must stay ABOVE this line: in
+# TOML a key written after a [table] header belongs to that table.)
+
+# One Durable Object per sync code (roadmap 510/340, ADR 0151): the store
+# itself. `SyncStore` is exported by sync-worker.js; each object is named by a
+# user's blobId and holds that user's core copy and recipe buckets. SQLite
+# storage, because it is the only Durable Object backend on the free plan and
+# because SyncStore's compare-and-swap relies on its SYNCHRONOUS sql API.
+[[durable_objects.bindings]]
+name = "SYNC_STORE"
+class_name = "SyncStore"
+
+# Creating the class is a migration. Its tag is permanent: never edit or reuse
+# it. A later class (a rename, or a fresh class for the roll-forward in the
+# README's runbook) is a NEW [[migrations]] entry with a new tag, after this
+# one.
+[[migrations]]
+tag = "v1-510-340-sync-store"
+new_sqlite_classes = ["SyncStore"]
+
+# The deployed version's own metadata. SyncStore reads its `timestamp` (when
+# this version was uploaded) to know when KV can no longer hand it a stale
+# read, and imports nothing until five minutes after it. Without this binding
+# no import ever runs and every not-yet-imported code answers 503 — loud by
+# design, and the runbook's first live check. Use `wrangler deploy`, never
+# `wrangler versions upload` followed later by `versions deploy`: the
+# timestamp is the UPLOAD time, and a version deployed later would start
+# importing early.
+[version_metadata]
+binding = "CF_VERSION_METADATA"
 
 # CORS allowlist read by sync-worker.js (env.ALLOWED_ORIGINS, comma-
 # separated, parsed by parseAllowedOrigins()). A configured constant, never
@@ -46,3 +80,11 @@ kv_namespaces = [
 # end-to-end.
 [vars]
 ALLOWED_ORIGINS = "https://lets-eat.myspot.nz,https://faves.pages.dev"
+# "on": every write the object takes is mirrored into KV (best effort, the
+# same KV writes the KV-only Worker made), so rolling back to that Worker
+# serves the newest copies, under the versions devices already hold. Anything
+# else: KV is read-only and its copies retire on their own 180-day TTL. The
+# owner's ruling read "KV stays a read-only fallback"; "on" is the
+# rollback-safe side, held for his decision (worker/README.md, "Deploy owed —
+# the Durable Object store"). Turning it off later is a vars-only redeploy.
+KV_MIRROR = "on"

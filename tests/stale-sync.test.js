@@ -5,21 +5,30 @@
 // and a write is seen at once where it was made and up to 60 s later anywhere
 // else (tests/stale-sync-harness.js says where that comes from).
 //
-// 🛑 THE FIRST FOUR TESTS FAIL ON TODAY'S CODE, ON PURPOSE. They assert the
-// correct behaviour of a defect that is not fixed yet; the branch that carries
-// them is not merged until a fix makes them pass. Each story is the same: one
+// The first four are the defect's reproduction. Each story is the same: one
 // device's request lands at a location that read the core copy less than a
-// minute ago, so it is handed the copy from before the latest write.
+// minute ago. Against the KV-only Worker it was handed the copy from before
+// the latest write, and all four FAILED (PR #78). Since 510/340 (ADR 0151) the
+// Worker keeps each user's copies in one Durable Object, which reads its own
+// storage and never KV's cache, and all four pass — with the `todo` marker
+// they carried until the fix removed. A break-probe that makes the object
+// read through a lagging KV again fails them (see the PR for 510/340).
 //
-// The last two PASS today and are about roadmap 510/320: no schedule of stale
-// reads across two devices puts an old recipe heart beside its moved copy —
-// and the detector that says so is shown to fire on a route that does.
+// Then the fix's own fuzz: the owner's sequence on two devices, randomised,
+// against the live Worker — nothing stale is read, nothing is lost or revived.
+//
+// The last two are about roadmap 510/320: no schedule of stale reads across
+// two devices puts an old recipe heart beside its moved copy — and the
+// detector that says so is shown to fire on a route that does. The fuzz there
+// runs against the frozen KV-only Worker on purpose: the claim is about the
+// client's merge under stale reads, which the live Worker can no longer serve.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { collectPersonalData, applyPersonalData } from "../site/js/personal-data.js";
 import {
   EdgeKV,
+  legacyKvWorker,
   device,
   venue,
   favsOf,
@@ -34,7 +43,10 @@ import {
   NEW_KEYS,
   CACHE_TTL_MS,
   fuzzOnce,
+  storeFor,
+  atClock,
 } from "./stale-sync-harness.js";
+import currentWorker, { IMPORT_SETTLE_SECONDS } from "../worker/sync-worker.js";
 
 const S = 1_000;
 
@@ -44,10 +56,10 @@ const S = 1_000;
  * through L2, so L2 now caches the current copy for a minute — the copy any
  * request through L2 will be handed until 160 s, whatever is written since.
  */
-async function pairWithL2Cached(favs) {
+async function pairWithL2Cached(favs, { worker } = {}) {
   const kv = new EdgeKV();
-  const p = phone(device(favs), kv, { loc: "L1" });
-  const l = phone(device(favs), kv, { loc: "L2" });
+  const p = phone(device(favs), kv, { loc: "L1", ...(worker ? { worker } : {}) });
+  const l = phone(device(favs), kv, { loc: "L2", ...(worker ? { worker } : {}) });
   const { code } = await p.sync.enable();
   kv.clock += S;
   await l.sync.join(code);
@@ -58,19 +70,13 @@ async function pairWithL2Cached(favs) {
   return { kv, p, l };
 }
 
-// These four assert the CORRECT behaviour and fail on today's sync, which is
-// the evidence for 510/340. `todo` keeps them running and their failures
-// printed without reddening CI; the fix removes the marker, and a todo that
-// starts passing before then is a fix nobody recorded.
-const TODO = "510/340 — fails until the stale-read fix lands";
-
 /** Every location's cache runs out, then each device syncs twice. */
 async function settle(kv, ...devices) {
   kv.clock += 3 * CACHE_TTL_MS;
   for (let i = 0; i < 2; i += 1) for (const d of devices) assert.equal((await d.sync.syncNow()).ok, true);
 }
 
-test("510/340: a heart is not taken off the phone by a pull, 10 s later, that reads an older copy", { todo: TODO }, async () => {
+test("510/340: a heart is not taken off the phone by a pull, 10 s later, that reads an older copy", async () => {
   // The item's measured case. The heart is written through L1; the next pull
   // goes through L2, which is still handing out the copy from before it. The
   // copy's version is a random id, so the client cannot tell "older than what I
@@ -87,7 +93,7 @@ test("510/340: a heart is not taken off the phone by a pull, 10 s later, that re
   assert.deepEqual(favsOf(p.storage), ["v:kk", "v:laksa"], "the heart just tapped is gone from the phone");
 });
 
-test("510/340: a heart, then a second heart 10 s later through another location — the first is not lost on either device", { todo: TODO }, async () => {
+test("510/340: a heart, then a second heart 10 s later through another location — the first is not lost on either device", async () => {
   // The same stale read, now with something to send. The Worker's own If-Match
   // check reads through the same location, so it is stale too and accepts the
   // write: the copy without the first heart replaces the copy with it.
@@ -105,7 +111,7 @@ test("510/340: a heart, then a second heart 10 s later through another location 
   }
 });
 
-test("510/340: an un-heart, then a heart 10 s later through another location — the removed heart does not come back on either device", { todo: TODO }, async () => {
+test("510/340: an un-heart, then a heart 10 s later through another location — the removed heart does not come back on either device", async () => {
   // The mirror: the older copy still holds a heart the base has dropped, so it
   // reads as another device adding it.
   const { kv, p, l } = await pairWithL2Cached([venue("kk"), venue("bao")]);
@@ -122,7 +128,7 @@ test("510/340: an un-heart, then a heart 10 s later through another location —
   }
 });
 
-test("510/340 and 320: the recipe move is not undone by the other device's stale read — and the stale read does NOT make 320's union", { todo: TODO }, async () => {
+test("510/340 and 320: the recipe move is not undone by the other device's stale read — and the stale read does NOT make 320's union", async () => {
   // The owner's sequence: the laptop imports the moved backup through L1. The
   // phone, on L2 where the pre-move copy is cached, hearts something inside
   // the minute: its read is stale, the Worker's If-Match read is stale, and the
@@ -157,9 +163,94 @@ test("510/340 and 320: the recipe move is not undone by the other device's stale
   }
 });
 
-// --- 510/320: what a stale read can and cannot produce ----------------------
+test("510/340 control: the same first story against the frozen KV-only Worker still removes the heart — the harness can still see the defect", async () => {
+  // Without this, the four above could pass because EdgeKV stopped serving
+  // stale reads rather than because the Worker stopped reading KV (ADR 0072:
+  // a guard whose answer cannot change is decorative).
+  const { kv, p } = await pairWithL2Cached([venue("kk")], { worker: legacyKvWorker });
+  kv.clock = 105 * S;
+  heart(p.storage, venue("laksa"));
+  assert.equal((await p.sync.syncNow()).ok, true);
+  kv.clock = 115 * S;
+  p.loc = "L2";
+  const res = await p.sync.syncNow();
+  assert.equal(res.changes.favouritesRemoved, 1);
+  assert.deepEqual(favsOf(p.storage), ["v:kk"]);
+  assert.ok(kv.staleReads > 0);
+});
 
 const RUNS = Number(process.env.FAVES_STALE_FUZZ_RUNS) || 40;
+
+test(`510/340: across ${RUNS} randomised runs of the owner's sequence against the live Worker, nothing stale is read and nothing is lost, revived or undone`, async (t) => {
+  // The same fuzz the options paper ran against the KV-only Worker (3,000 runs:
+  // a heart lost in 1,127, a removed heart back in 899, the move undone in
+  // 150). Here every request goes to the user's Durable Object. "Lost" and
+  // "revived" are judged against what each tap actually CHANGED on its device
+  // (`lostEffective`, fuzzOnce says why); 1,000 seeds measured 0 and 0 on
+  // 2026-10-02, and the same 1,000 against the frozen KV-only Worker measured
+  // 328 and 312, so the measure is live, not blind.
+  let mixed = 0;
+  for (let seed = 1; seed <= RUNS; seed += 1) {
+    const r = await fuzzOnce(seed);
+    assert.equal(r.staleReads, 0, `seed ${seed}: a read was stale`);
+    assert.deepEqual(r.lostEffective, [], `seed ${seed}: a heart was lost`);
+    assert.deepEqual(r.revivedEffective, [], `seed ${seed}: a removed heart came back`);
+    assert.equal(r.settled.A.oldOnly + r.settled.B.oldOnly, 0, `seed ${seed}: the move was undone`);
+    assert.equal(r.worst.both, 0, `seed ${seed}: an old heart sat beside its moved copy`);
+    assert.ok(r.agree, `seed ${seed}: the devices disagree after settling`);
+    mixed += r.lost.length ? 1 : 0;
+  }
+  t.diagnostic(`${mixed}/${RUNS} runs held a no-op heart that the paper's intent count reads as lost`);
+});
+
+test("510/340 cutover: two devices paired on the KV-only Worker carry on, unchanged, against the Durable Object — and a write in the minute before the deploy is not lost", async () => {
+  // The deploy, end to end, with the REAL client (a build from before this
+  // change: nothing under site/ moved). The object lives at L1, where the
+  // phone's reads have cached the core copy; the laptop writes through L2
+  // ten seconds before the deploy. Inside the settling window the object
+  // refuses (503) and the phone keeps its data; after it, the object imports
+  // the laptop's write — not L1's cached copy from before it — and the
+  // phone's next write goes through on the ETag the KV Worker issued.
+  const kv = new EdgeKV();
+  const DEPLOY = 200 * S;
+  storeFor(kv, { deployedAt: atClock(DEPLOY), location: "L1" });
+  const p = phone(device([venue("kk")]), kv, { loc: "L1", worker: legacyKvWorker });
+  const l = phone(device([venue("kk")]), kv, { loc: "L2", worker: legacyKvWorker });
+  const { code } = await p.sync.enable();
+  kv.clock += S;
+  await l.sync.join(code);
+  kv.clock = 185 * S;
+  assert.equal((await p.sync.syncNow()).ok, true); // L1 caches the core copy until 245 s
+  kv.clock = 190 * S;
+  heart(l.storage, venue("late"));
+  assert.equal((await l.sync.syncNow()).ok, true); // through L2, ten seconds before the deploy
+  kv.clock = DEPLOY;
+  p.worker = l.worker = currentWorker;
+
+  kv.clock = DEPLOY + 15 * S;
+  // The control: at this moment L1 really is holding a copy older than the
+  // laptop's write, so an import now would have taken it.
+  const l1 = kv.caches.get("L1");
+  assert.ok(
+    [...l1.entries()].some(([k, c]) => c.entry !== kv.latest(k) && kv.clock - c.at < kv.ttlMs),
+    "L1 held nothing stale — the test would prove nothing"
+  );
+  heart(p.storage, venue("pho"));
+  const early = await p.sync.syncNow();
+  assert.equal(early.ok, false, "synced inside the settling window");
+  assert.deepEqual(favsOf(p.storage), ["v:kk", "v:pho"], "the phone's own data is untouched");
+
+  kv.clock = DEPLOY + IMPORT_SETTLE_SECONDS * S;
+  const after = await p.sync.syncNow();
+  assert.equal(after.ok, true);
+  assert.equal(after.changes.favouritesRemoved, 0);
+  assert.equal((await l.sync.syncNow()).ok, true);
+  for (const [name, d] of [["phone", p], ["laptop", l]]) {
+    assert.deepEqual(favsOf(d.storage), ["v:kk", "v:late", "v:pho"], `${name}: a heart was lost across the cutover`);
+  }
+});
+
+// --- 510/320: what a stale read can and cannot produce ----------------------
 
 test(`510/320: across ${RUNS} randomised runs of the owner's sequence on two devices, no stale read puts an old heart beside its moved copy`, async (t) => {
   // A three-way merge keeps "exactly one of old and moved" whenever its three
@@ -172,7 +263,8 @@ test(`510/320: across ${RUNS} randomised runs of the owner's sequence on two dev
   let stale = 0;
   let undone = 0;
   for (let seed = 1; seed <= RUNS; seed += 1) {
-    const r = await fuzzOnce(seed);
+    // The frozen KV-only Worker: the one that could serve a stale read.
+    const r = await fuzzOnce(seed, { worker: legacyKvWorker });
     assert.equal(r.worst.both, 0, `seed ${seed}: an old heart sat beside its moved copy`);
     stale += r.staleReads ? 1 : 0;
     undone += r.settled.A.oldOnly || r.settled.B.oldOnly ? 1 : 0;
