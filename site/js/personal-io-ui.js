@@ -102,6 +102,7 @@ export function importReview({ data, sourceLine, onApplied }) {
     // Only when the file holds any: most backups have no recipes, and a
     // "0 recipes" on every one would read as a loss that isn't there.
     if (plan.totals.recipes) bits.push(plural(plan.totals.recipes, "recipe"));
+    if (plan.totals.savedOrders) bits.push(plural(plan.totals.savedOrders, "saved order"));
     const when = exportedOn(plan.exportedAt);
     summary.replaceChildren(
       el("p", { className: "settings-note", textContent: sourceLine + (when ? ` Saved ${when}.` : "") }),
@@ -238,6 +239,7 @@ export function importReview({ data, sourceLine, onApplied }) {
     if (result.ratingsAdded) bits.push(`${plural(result.ratingsAdded, "new rating")}`);
     if (result.notesAdded) bits.push(`${plural(result.notesAdded, "new note")}`);
     if (result.recipesAdded) bits.push(`${plural(result.recipesAdded, "new recipe")}`);
+    if (result.savedOrdersAdded) bits.push(`${plural(result.savedOrdersAdded, "saved order")}`);
     if (result.dietChanged.length) bits.push(`food preferences changed for ${result.dietChanged.join(", ")}`);
     if (result.orderRestored) bits.push("order tally restored");
     status.textContent = bits.length ? `Done — ${bits.join(", ")}.` : "Done — nothing here was new.";

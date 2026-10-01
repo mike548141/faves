@@ -67,13 +67,20 @@ export const SCOPED_BASE_KEYS = [
 // `CHECKLIST_KEY`, so there is still exactly one literal.
 export const CHECKLIST_BASE_KEY = "faves.checklist.v1";
 
+// Saved orders' key (saved-orders.js, Theme 26a), declared here for the same
+// reason and with the same standing as the checklist's: per-profile, NOT in
+// SCOPED_BASE_KEYS — that list is what makes a store sync and migrate, and a
+// saved order is on-device only until Theme 26b rules otherwise. The backup
+// carries it through its own named field (personal-data.js).
+export const SAVED_ORDERS_BASE_KEY = "faves.savedorders.v1";
+
 // What DELETING a profile has to remove: everything stored under that profile's
 // namespace, travelling or not. A store excluded from the export is still that
 // person's data sitting on the device after they are gone — and "make this
 // device look like the file" already treats it that way on a replace-import
 // (personal-data.js). Nothing but `remove` may use this list: it is deliberately
 // wider than what migrate copies and what the export carries.
-const PURGED_BASE_KEYS = [...SCOPED_BASE_KEYS, CHECKLIST_BASE_KEY];
+export const PURGED_BASE_KEYS = [...SCOPED_BASE_KEYS, CHECKLIST_BASE_KEY, SAVED_ORDERS_BASE_KEY];
 
 // The first profile's id is deterministic ("default") so two tabs migrating at
 // once converge on the same key instead of minting two rival profiles.

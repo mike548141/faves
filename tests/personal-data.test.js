@@ -198,7 +198,7 @@ test("listStoredKeys returns [] when the backend cannot enumerate", () => {
 
 test("summary counts across all profiles", () => {
   const s = summarisePersonalData(collectPersonalData(seeded(), { exportedAt: AT }));
-  assert.deepEqual(s, { profiles: 2, favourites: 3, ratings: 3, notes: 1, orderItems: 1, recipes: 0 });
+  assert.deepEqual(s, { profiles: 2, favourites: 3, ratings: 3, notes: 1, orderItems: 1, savedOrders: 0, recipes: 0 });
 });
 
 test("summary tolerates a corrupt/empty shape", () => {
@@ -208,6 +208,7 @@ test("summary tolerates a corrupt/empty shape", () => {
     ratings: 0,
     notes: 0,
     orderItems: 0,
+    savedOrders: 0,
     recipes: 0,
   });
   assert.deepEqual(summarisePersonalData({ profiles: [{ favourites: "nope", ratings: 7 }] }), {
@@ -216,6 +217,7 @@ test("summary tolerates a corrupt/empty shape", () => {
     ratings: 0,
     notes: 0,
     orderItems: 0,
+    savedOrders: 0,
     recipes: 0,
   });
 });
@@ -455,7 +457,9 @@ test("totals describe the payload, for the preview shown before anything happens
     ratings: 2,
     notes: 3,
     orderItems: 0,
+    savedOrders: 0,
     recipes: 0,
+    savedOrders: 0,
     otherStores: 0,
   });
   assert.equal(plan.exportedAt, AT);

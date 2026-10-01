@@ -1849,3 +1849,9 @@ deliberation those compact docs omit.
   keeps it. `validate.py --against REF` fails an id nothing answers for any
   more; `split_data.py`'s round trip folds rows onto a dish that claims their
   ids.
+- [0154](0154-saved-orders-store-ids-not-names-and-stay-off-sync.md) —
+  **Saved orders store ids, are per person, and stay off sync** (Theme 26a). A
+  saved line keeps dish and option ids plus a name/price snapshot; recall
+  re-prices from the live menu and skips-and-names what no longer resolves. Per
+  person; outside `SCOPED_BASE_KEYS`; in the backup file only via
+  `collectPersonalData(…, { localOnly: true })`, which sync never passes.

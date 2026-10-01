@@ -64,6 +64,7 @@ import {
 import { PERSIST_ASKED_KEY } from "./storage-persist.js";
 import { RECIPES_KEY, sanitiseRecipes, sortedRecipes } from "./recipe-record.js";
 import { followMovesInProfile } from "./recipe-move.js";
+import { SAVED_ORDERS_KEY, sanitiseSavedOrders } from "./saved-orders.js";
 
 // Every settings field EXCEPT diet, which is handled just below by its own
 // safety-critical choice logic (keep/incoming/combine) rather than a plain
@@ -95,7 +96,7 @@ export { listStoredKeys };
 export const ORDER_KEY = "faves.order.v1";
 
 const README =
-  "Your own Faves data — favourites, ratings, notes, settings, profiles, your own recipes and the order tally. " +
+  "Your own Faves data — favourites, ratings, notes, settings, profiles, your own recipes, saved orders and the order tally. " +
   "Faves keeps this in your browser only; this file is a copy you asked for, and " +
   "producing it sent nothing anywhere.";
 
@@ -277,6 +278,17 @@ function excludedEntry(key) {
  *  cleaning the named `recipes` field gets, so parse refuses it (510/050). */
 const isRecipesKey = (k) => k === RECIPES_KEY || (k.startsWith("faves.p.") && k.endsWith(RECIPES_KEY.slice("faves".length)));
 
+const isSavedOrdersKey = (k) =>
+  k === SAVED_ORDERS_KEY || (k.startsWith("faves.p.") && k.endsWith(SAVED_ORDERS_KEY.slice("faves".length)));
+
+function cleanSavedOrdersJson(v) {
+  try {
+    return JSON.stringify(sanitiseSavedOrders(JSON.parse(v)));
+  } catch {
+    return "[]";
+  }
+}
+
 /** Is this storage key one the backup refuses to carry, for any profile? */
 const isExcludedKey = (key) => excludedEntry(key) !== null;
 
@@ -298,8 +310,14 @@ function parse(raw) {
  *
  * `exportedAt` is injected (no clock in here) so the output is deterministic
  * and testable.
+ *
+ * `localOnly` adds what lives on this device and is NOT synced (saved orders,
+ * Theme 26a): true only for the file the person asks for in Settings. Sync
+ * collects through this same function and must never pass it — that default, not
+ * a filter further down, is what keeps a saved order off the wire, and what an
+ * older build's collect-and-merge cannot be talked into carrying.
  */
-export function collectPersonalData(storage, { exportedAt } = {}) {
+export function collectPersonalData(storage, { exportedAt, localOnly = false } = {}) {
   const registry = sanitiseRegistry(parse(storage.getItem(PROFILES_KEY)));
   // Seeded with the EXCLUDED keys as well as the known ones: without that, the
   // catch-all sweep below would happily re-collect the location this module
@@ -319,6 +337,12 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
       // too, and sorted, so two devices holding the same ones say the same.
       if (base === RECIPES_KEY) entry[field] = sortedRecipes(sanitiseRecipes(entry[field]));
     }
+    // Saved orders (Theme 26a) are on-device only, so they are read ONLY for the
+    // backup file. The key is `known` either way, so the catch-all sweep below
+    // can never pick it up as an unnamed store and hand it to sync's `other`.
+    const savedKey = scopeKey(p.id, SAVED_ORDERS_KEY);
+    known.add(savedKey);
+    if (localOnly) entry.savedOrders = sanitiseSavedOrders(parse(storage.getItem(savedKey)));
     // A heart, rating or note left on a recipe this person moved goes out on
     // the moved id (roadmap 510/400): what a backup holds and what sync sends
     // never carry the old key beside the new one, whatever put it in storage.
@@ -380,6 +404,7 @@ export function summarisePersonalData(data) {
       0
     ),
     orderItems: count(data?.order),
+    savedOrders: people.reduce((n, p) => n + count(p.savedOrders), 0),
     recipes: people.reduce(
       (n, p) => n + (p.recipes && typeof p.recipes === "object" ? Object.keys(p.recipes).length : 0),
       0
@@ -579,6 +604,7 @@ function normaliseProfile(p) {
     ratings: sanitiseRatings(p.ratings),
     notes: sanitiseNotes(p.notes),
     recipes: sanitiseRecipes(p.recipes),
+    savedOrders: sanitiseSavedOrders(p.savedOrders),
     // Settings stay raw here; settings.js's own sanitiser is the single gate
     // they pass through on the way to storage, and `diet` has to survive
     // untouched until the comparison below can see whether it differs.
@@ -646,7 +672,12 @@ export function parsePersonalData(input) {
       // The cookbook is a named field above, cleaned; a raw copy of its key in
       // the bag would bypass that and overwrite it.
       if (!k.startsWith("faves.") || isExcludedKey(k) || isRecipesKey(k)) continue;
-      if (typeof v === "string") other[k] = v;
+      if (typeof v !== "string") continue;
+      // A saved-orders key in the bag is what a build older than this one writes
+      // into a backup (its catch-all sweep names a store it has never heard of).
+      // It is cleaned, never trusted raw — and kept, because dropping it would
+      // lose the orders (the "other" bag exists so nothing you put in is lost).
+      other[k] = isSavedOrdersKey(k) ? cleanSavedOrdersJson(v) : v;
     }
   }
   return {
@@ -737,6 +768,7 @@ export function planImport(storage, data, { mode = "merge", decisions = {} } = {
       ratings: Object.keys(p.ratings).length,
       notes: Object.keys(p.notes).length,
       recipes: Object.keys(p.recipes).length,
+      savedOrders: p.savedOrders.length,
       hasSettings: !!p.settings,
       match: mode === "replace" ? null : idMatch ? "id" : nameMatch ? "name" : null,
       collides: ambiguous,
@@ -779,6 +811,7 @@ export function planImport(storage, data, { mode = "merge", decisions = {} } = {
       notes: clean.profiles.reduce((n, p) => n + Object.keys(p.notes).length, 0),
       orderItems: clean.order.length,
       recipes: clean.profiles.reduce((n, p) => n + Object.keys(p.recipes).length, 0),
+      savedOrders: clean.profiles.reduce((n, p) => n + p.savedOrders.length, 0),
       otherStores: Object.keys(clean.other).length,
     },
     entries,
@@ -839,6 +872,7 @@ function writeProfileStores(storage, id, p) {
   if (Object.keys(p.ratings).length) writeKey(storage, scopeKey(id, "faves.ratings.v1"), JSON.stringify(p.ratings));
   if (Object.keys(p.notes).length) writeKey(storage, scopeKey(id, "faves.notes.v1"), JSON.stringify(p.notes));
   if (Object.keys(p.recipes).length) writeKey(storage, scopeKey(id, RECIPES_KEY), JSON.stringify(sortedRecipes(p.recipes)));
+  if (p.savedOrders.length) writeKey(storage, scopeKey(id, SAVED_ORDERS_KEY), JSON.stringify(p.savedOrders));
   // Through the store, so the payload's settings pass settings.js's clamps.
   if (p.settings) createSettings(view).set(p.settings);
 }
@@ -885,6 +919,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     dietChanged: [],
     orderRestored: false,
     recipesAdded: 0,
+    savedOrdersAdded: 0,
     otherRestored: 0,
   };
 
@@ -907,7 +942,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
           ORDER_KEY,
           RECIPES_KEY,
           ...readRegistry(storage).profiles.flatMap((p) =>
-            [...SCOPED_BASE_KEYS, CHECKLIST_KEY].map((b) => scopeKey(p.id, b))
+            [...SCOPED_BASE_KEYS, CHECKLIST_KEY, SAVED_ORDERS_KEY].map((b) => scopeKey(p.id, b))
           ),
         ];
     for (const k of doomed) removeKey(storage, k);
@@ -928,6 +963,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
       report.ratingsAdded += Object.keys(p.ratings).length;
       report.notesAdded += Object.keys(p.notes).length;
       report.recipesAdded += Object.keys(p.recipes).length;
+      report.savedOrdersAdded += p.savedOrders.length;
       if (p.settings) report.settingsUpdated += 1;
       return;
     }
@@ -981,6 +1017,23 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     if (recipesAdded) writeKey(storage, scopeKey(id, RECIPES_KEY), JSON.stringify(sortedRecipes(mineRecipes)));
     report.recipesAdded += recipesAdded;
     touched += recipesAdded;
+
+    // Saved orders (Theme 26a): yours win, as with notes — an order of the same
+    // name for the same venue is the one you have been living with, and a
+    // restore is not grounds to overwrite it. Matched by id first (a re-import
+    // of one's own file adds nothing), then by venue + name.
+    const mineSaved = sanitiseSavedOrders(parse(view.getItem(SAVED_ORDERS_KEY)));
+    const haveSaved = new Set(mineSaved.map((s) => s.id));
+    const haveName = new Set(mineSaved.map((s) => `${s.venueId}\n${s.name.toLowerCase()}`));
+    let savedAdded = 0;
+    for (const s of p.savedOrders) {
+      if (haveSaved.has(s.id) || haveName.has(`${s.venueId}\n${s.name.toLowerCase()}`)) continue;
+      mineSaved.push(s);
+      savedAdded += 1;
+    }
+    if (savedAdded) writeKey(storage, scopeKey(id, SAVED_ORDERS_KEY), JSON.stringify(sanitiseSavedOrders(mineSaved)));
+    report.savedOrdersAdded += savedAdded;
+    touched += savedAdded;
 
     if (isObj(p.settings)) {
       const patch = {};

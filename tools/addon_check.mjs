@@ -1458,6 +1458,255 @@ async function run(opts) {
       describe(stored),
     );
 
+    // --- (s)–(z) Theme 26a: save an order, recall it, delete it ---------------
+    // The owner's ask — "saving an order for Subway that I use each time" — is a
+    // claim about a flow that spans the order sheet, storage, a RELOAD and the
+    // venue's menu page, and every join between them is where it can break with
+    // the unit tests green: a save that never reaches storage, a panel that does
+    // not appear after a reload, a recall that adds a line which keys differently
+    // from the original (so "my usual" doubles up beside what is already there).
+    // So it is driven end to end at 390 px, and the assertion that carries the
+    // weight is the last of the round trip: the tally after recall is the tally
+    // before save, line for line and total for total.
+    const SAVED_KEY = "faves.p.default.savedorders.v1";
+    const savedExpr = `JSON.parse(localStorage.getItem(${JSON.stringify(SAVED_KEY)}) || "[]")`;
+    const tallyShape = (ls) =>
+      JSON.stringify(
+        ls.map((l) => [l.dishId, l.qty, l.price, (l.options || []).map((o) => `${o.group}/${o.id}`).join("+"), l.note ?? null]),
+      );
+    const sheetTotal = `(document.querySelector("dialog.order-sheet .order-total") || {}).textContent`;
+    const openSheet = async () => {
+      await driver.click(".order-fab");
+      await untilPresent(async () => await driver.evalPage(`!!document.querySelector("dialog.order-sheet[open]")`), {
+        label: "the order sheet to open",
+      });
+    };
+    const loadMenu = async (label) => {
+      await cdp.send("Page.navigate", { url }, sessionId);
+      await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, { label });
+    };
+    const panelExpr = `(() => {
+      const p = document.querySelector(".saved-orders");
+      const q = (sel) => (p ? p.querySelector(sel) : null);
+      const box = (e) => (e ? { w: Math.round(e.getBoundingClientRect().width), h: Math.round(e.getBoundingClientRect().height) } : null);
+      return {
+        present: !!p,
+        hidden: p ? p.hidden : null,
+        head: (q(".saved-head") || {}).textContent || null,
+        names: p ? [...p.querySelectorAll(".saved-name")].map((e) => e.textContent) : [],
+        lines: p ? [...p.querySelectorAll(".saved-lines")].map((e) => e.textContent) : [],
+        addLabels: p ? [...p.querySelectorAll(".saved-add")].map((e) => e.getAttribute("aria-label")) : [],
+        addBox: box(q(".saved-add")),
+        delBox: box(q(".saved-delete")),
+        delText: (q(".saved-delete") || {}).textContent || null,
+        status: (q(".saved-status") || {}).textContent || "",
+        skipped: p ? [...p.querySelectorAll(".saved-skipped li")].map((e) => e.textContent) : [],
+        focus: document.activeElement ? (document.activeElement.className || document.activeElement.tagName) : null,
+        hOverflow: document.documentElement.scrollWidth > window.innerWidth,
+        fabCount: (document.querySelector(".order-fab-count") || {}).textContent || null,
+        fabHidden: document.querySelector(".order-fab") ? document.querySelector(".order-fab").hidden : null,
+        panelBeforeMenu: p && document.querySelector(".menu-sections")
+          ? !!(p.compareDocumentPosition(document.querySelector(".menu-sections")) & Node.DOCUMENT_POSITION_FOLLOWING)
+          : null,
+      };
+    })()`;
+
+    // Build an order through the real picker: two sauces on the first dish that
+    // offers them, added twice, plus a note — so a saved line carries options by
+    // id, a quantity, and free text.
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); localStorage.removeItem(${JSON.stringify(SAVED_KEY)}); true`);
+    await loadMenu(`${opts.id} to render for the saved-order flow`);
+    let pn = await driver.evalPage(panelExpr);
+    report.check(
+      "(s) with nothing saved the panel is absent from view — no empty heading, nothing to tab through",
+      pn.present && pn.hidden === true,
+      JSON.stringify({ present: pn.present, hidden: pn.hidden }),
+    );
+    await driver.click(".dish-addons-summary");
+    await driver.click(".dish-addons .addon-option", MILD_OPTION);
+    await driver.click(".dish-addons .addon-option", NEUTRAL_OPTION);
+    await driver.click(".addon-stepper .stepper-add");
+    await driver.click(".addon-stepper button", "＋");
+    const original = await driver.evalPage(storedExpr);
+    report.check(
+      "(s) the fixture order is what the flow needs: one line, two sauces, quantity 2",
+      original.length === 1 && original[0].qty === 2 && original[0].options.length === 2,
+      JSON.stringify(original),
+    );
+    await openSheet();
+    await driver.click('dialog.order-sheet .order-note-btn');
+    await driver.evalPage(`${need("dialog.order-sheet .order-note-input")}.value = "extra napkins"; true`);
+    await driver.click("dialog.order-sheet .order-note-save");
+    const beforeSave = await driver.evalPage(storedExpr);
+    const totalBefore = await driver.evalPage(sheetTotal);
+
+    // (t) the save control: where the lines are, a real target, named for the venue.
+    const saveUi = await driver.evalPage(`(() => {
+      const b = document.querySelector("dialog.order-sheet .order-save-btn");
+      const r = b ? b.getBoundingClientRect() : null;
+      return { text: b ? b.textContent : null, label: b ? b.getAttribute("aria-label") : null, h: r ? Math.round(r.height) : null };
+    })()`);
+    report.check(
+      "(t) the order sheet offers \"Save this order\" under the venue's lines, named for the venue, as a 44 px target",
+      saveUi.text === "Save this order" && /^Save this .+ order to use again$/.test(saveUi.label || "") && saveUi.h >= 44,
+      JSON.stringify(saveUi),
+    );
+    await driver.click("dialog.order-sheet .order-save-btn");
+    const editor = await driver.evalPage(`(() => {
+      const i = document.querySelector("dialog.order-sheet .order-save-input");
+      const l = i ? document.querySelector('label[for="' + i.id + '"]') : null;
+      const r = i ? i.getBoundingClientRect() : null;
+      return { value: i ? i.value : null, max: i ? i.maxLength : null, h: r ? Math.round(r.height) : null,
+        font: i ? getComputedStyle(i).fontSize : null, label: l ? l.textContent : null,
+        focused: document.activeElement === i, described: i ? !!document.getElementById(i.getAttribute("aria-describedby")) : null };
+    })()`);
+    report.check(
+      "(t) the name field is pre-filled \"My <venue>\", labelled, focused, 44 px tall and 16 px type (no iOS zoom)",
+      editor.value === `My ${venue.name}`.slice(0, 40) && editor.label && editor.focused && editor.h >= 44 &&
+        parseFloat(editor.font) >= 16 && editor.max === 40 && editor.described,
+      JSON.stringify(editor),
+    );
+    await driver.evalPage(`${need("dialog.order-sheet .order-save-input")}.value = "  Kebab   usual "; true`);
+    await driver.click("dialog.order-sheet .order-save-row .order-note-save");
+    const savedNow = await driver.evalPage(savedExpr);
+    report.check(
+      "(t) saving files ONE order, name normalised, for this venue — and its line holds dish and option IDS",
+      savedNow.length === 1 && savedNow[0].name === "Kebab usual" && savedNow[0].venueId === opts.id &&
+        savedNow[0].lines.length === 1 && savedNow[0].lines[0].dishId === original[0].dishId &&
+        savedNow[0].lines[0].qty === 2 && savedNow[0].lines[0].note === "extra napkins" &&
+        JSON.stringify(savedNow[0].lines[0].options.map((o) => `${o.group}/${o.id}`)) ===
+          JSON.stringify(original[0].options.map((o) => `${o.group}/${o.id}`)),
+      JSON.stringify(savedNow),
+    );
+    report.check(
+      "(t) …and nothing per-visit leaks into it — no `collected`, no phone",
+      !("collected" in savedNow[0].lines[0]) && !("phone" in savedNow[0].lines[0]),
+      JSON.stringify(Object.keys(savedNow[0].lines[0])),
+    );
+    report.check(
+      "(t) saving did not touch the tally",
+      tallyShape(await driver.evalPage(storedExpr)) === tallyShape(beforeSave),
+      "tally unchanged",
+    );
+
+    // (u) the real test of "kept on this device": empty the tally, reload.
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await loadMenu(`${opts.id} to render after a reload, with an empty order`);
+    pn = await driver.evalPage(panelExpr);
+    report.check(
+      "(u) after a reload, with an EMPTY tally, the venue's page shows the saved order — the recall needs no order button",
+      pn.present && pn.hidden === false && pn.names.join() === "Kebab usual" && pn.fabHidden === true,
+      JSON.stringify({ hidden: pn.hidden, names: pn.names, fabHidden: pn.fabHidden }),
+    );
+    report.check(
+      "(u) …it reads the lines the way the tally does, note and all",
+      /2× .+ with Mild chilli, Sweet chilli \(extra napkins\)/.test(pn.lines[0] || ""),
+      JSON.stringify(pn.lines),
+    );
+    report.check(
+      "(u) …sits BELOW the search/picks controls' block and ABOVE the menu, and the page does not scroll sideways",
+      pn.panelBeforeMenu === true && pn.hOverflow === false,
+      `panelBeforeMenu=${pn.panelBeforeMenu} hOverflow=${pn.hOverflow}`,
+    );
+    report.check(
+      "(u) …Add and Delete are 44 px targets, each named for the order it acts on",
+      pn.addBox.h >= 44 && pn.delBox.h >= 44 && pn.addLabels[0] === "Add “Kebab usual” to your order",
+      JSON.stringify({ add: pn.addBox, del: pn.delBox, label: pn.addLabels[0] }),
+    );
+
+    // (v) one tap, and the tally is what it was.
+    await driver.click(".saved-orders .saved-add");
+    const recalled = await driver.evalPage(storedExpr);
+    pn = await driver.evalPage(panelExpr);
+    report.check(
+      "(v) ONE tap on Add puts the order back: the tally is the saved one, line for line (dish, qty, price, option ids, note)",
+      tallyShape(recalled) === tallyShape(beforeSave),
+      `${tallyShape(recalled)} vs ${tallyShape(beforeSave)}`,
+    );
+    report.check(
+      "(v) …and the button count and the sheet's total match what they were before it was saved",
+      pn.fabCount === "2" && (await (async () => { await openSheet(); return (await driver.evalPage(sheetTotal)) === totalBefore; })()),
+      `fab ${pn.fabCount} · total ${totalBefore}`,
+    );
+    report.check(
+      "(v) …and the panel says what it did, politely, in a status region",
+      /^Added 2 items from “Kebab usual” to your order\.$/.test(pn.status.trim()),
+      JSON.stringify(pn.status),
+    );
+    await driver.click("dialog.order-sheet .order-close");
+    // Adding again ADDS (the tally is never overwritten): quantity doubles on the one line.
+    await driver.click(".saved-orders .saved-add");
+    const twice = await driver.evalPage(storedExpr);
+    report.check(
+      "(v) recalling again adds to the tally rather than replacing it — one line, quantity 4, not a second line",
+      twice.length === 1 && twice[0].qty === 4,
+      JSON.stringify(twice.map((l) => [l.name, l.qty])),
+    );
+
+    // (w) a saved order that no longer fits the menu: skip, name, never alter.
+    const good = savedNow[0].lines[0];
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1");
+      localStorage.setItem(${JSON.stringify(SAVED_KEY)}, ${JSON.stringify(JSON.stringify([{
+        ...savedNow[0],
+        lines: [
+          good,
+          { dishId: "a-dish-the-venue-dropped", name: "Dropped Special", qty: 1, price: 9, currency: "NZD" },
+          { ...good, name: good.name, qty: 3, options: [...good.options.slice(0, 1), { group: good.options[1].group, id: "an-option-that-went", name: "Vanished sauce", price: 0 }], note: "should not appear" },
+        ],
+      }]))}); true`);
+    await loadMenu(`${opts.id} to render over a saved order that no longer fits`);
+    await driver.click(".saved-orders .saved-add");
+    const partial = await driver.evalPage(storedExpr);
+    pn = await driver.evalPage(panelExpr);
+    report.check(
+      "(w) the line that still resolves comes back; the two that do not are NOT added — not even \"the line without its missing sauce\"",
+      partial.length === 1 && partial[0].qty === 2 && partial[0].dishId === good.dishId && partial.every((l) => l.note !== "should not appear"),
+      JSON.stringify(partial.map((l) => [l.name, l.qty, (l.options || []).map((o) => o.id)])),
+    );
+    report.check(
+      "(w) …and the panel NAMES what was left out and why, in words",
+      pn.skipped.length === 2 &&
+        pn.skipped.some((t) => /1× Dropped Special — no longer on the menu/.test(t)) &&
+        pn.skipped.some((t) => /3× .+ — “Vanished sauce” is no longer offered/.test(t)),
+      JSON.stringify(pn.skipped),
+    );
+
+    // (x) delete: two taps, then gone, and focus does not fall to <body>.
+    await driver.evalPage(`localStorage.setItem(${JSON.stringify(SAVED_KEY)}, ${JSON.stringify(JSON.stringify([
+      savedNow[0], { ...savedNow[0], id: "second", name: "Second usual" },
+    ]))}); true`);
+    await loadMenu(`${opts.id} to render with two saved orders`);
+    await driver.click(".saved-orders .saved-delete");
+    pn = await driver.evalPage(panelExpr);
+    report.check(
+      "(x) the first Delete tap only ASKS — it reads \"Delete — sure?\" and nothing is deleted",
+      /sure\?/.test(pn.delText || "") && (await driver.evalPage(savedExpr)).length === 2,
+      JSON.stringify(pn.delText),
+    );
+    await driver.click(".saved-orders .saved-delete");
+    const afterDelete = await driver.evalPage(savedExpr);
+    pn = await driver.evalPage(panelExpr);
+    report.check(
+      "(x) the second tap deletes that one and only that one, and the panel follows without a reload",
+      afterDelete.length === 1 && afterDelete[0].id === "second" && pn.names.join() === "Second usual",
+      JSON.stringify({ stored: afterDelete.map((x) => x.name), shown: pn.names }),
+    );
+    report.check(
+      "(x) …and keyboard focus moved to the remaining order's Add button, not to <body>",
+      pn.focus === "saved-add",
+      JSON.stringify(pn.focus),
+    );
+
+    // (y) saved orders are per venue: another venue's page shows none of them.
+    await cdp.send("Page.navigate", { url: `http://127.0.0.1:${port}/restaurant.html?id=${WARN_VENUE}` }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, { label: `${WARN_VENUE} to render for the per-venue check` });
+    pn = await driver.evalPage(panelExpr);
+    report.check(
+      "(y) another venue's page does not list this venue's saved orders",
+      pn.present && pn.hidden === true && pn.names.length === 0,
+      JSON.stringify({ hidden: pn.hidden, names: pn.names }),
+    );
+
     return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();
