@@ -1132,11 +1132,148 @@ test("a recipe holder asks about its buckets and names a family of eight (roadma
   const a = withRecipes(device({ favs: [venue("kk")] }), [precipe("u:ginger-crunch")]);
   const s = mk(a, wire);
   await s.enable();
-  assert.ok(wire.log.includes(`PUT bucket family=${RECIPE_BUCKETS}`), wire.log.join(" | "));
+  // `&known=…` (roadmap 510/330) is pinned by its own test below.
+  const shape = () => wire.log.map((l) => l.replace(/&known=.*$/, ""));
+  assert.ok(shape().includes(`PUT bucket family=${RECIPE_BUCKETS}`), wire.log.join(" | "));
   wire.log.length = 0;
   a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
   await s.syncNow();
-  assert.deepEqual(wire.log, [`GET buckets=${RECIPE_BUCKETS}`, `PUT family=${RECIPE_BUCKETS}`]);
+  assert.deepEqual(shape(), [`GET buckets=${RECIPE_BUCKETS}`, `PUT family=${RECIPE_BUCKETS}`]);
+});
+
+test("every PUT names the version it holds of each other copy, so the Worker re-arms only those (roadmap 510/330)", async () => {
+  // The Worker re-arms a copy's expiry by re-writing what it READ; KV can
+  // serve an older read for a minute or so, and re-writing that put an older
+  // copy back over a newer one. It now re-writes only a read whose version
+  // this device names. So: the core write must name the bucket versions it
+  // records, and a bucket write the core version this cycle read and every
+  // other bucket's version as it stands — never the version a bucket had
+  // before this cycle wrote it.
+  const server = fakeServer();
+  const puts = [];
+  const wire = {
+    fetch: (u, i = {}) => {
+      if (i.method === "PUT") {
+        const [path, q = ""] = String(u).split("?");
+        puts.push({ id: path.split("/").pop(), known: new URLSearchParams(q).get("known") });
+      }
+      return server.fetch(u, i);
+    },
+  };
+  const named = (known) => Object.fromEntries((known || "").split(",").filter(Boolean).map((p) => p.split(":")));
+  const bare = (etag) => etag.replace(/"/g, "");
+  const a = withRecipes(device({ favs: [venue("kk")] }), [precipe("u:ginger-crunch")]);
+  const s = mk(a, wire);
+  const { code } = await s.enable();
+  const { blobId } = await keysFor(code);
+
+  // The first sync: no core copy yet, so a bucket names no `core`; the core
+  // write names all eight buckets at the versions it records.
+  const firstCore = puts.find((p) => p.id === blobId);
+  const held = (k) => bare(server.blobs.get(`${blobId}:r${k}`).etag);
+  assert.deepEqual(named(firstCore.known), Object.fromEntries(Array.from({ length: RECIPE_BUCKETS }, (_, k) => [`r${k}`, held(k)])));
+  assert.ok(puts.filter((p) => p.id !== blobId).every((p) => !("core" in named(p.known))), "no core copy existed to vouch for");
+
+  // A recipe edit: one bucket, then the core copy.
+  puts.length = 0;
+  const coreBefore = bare(server.blobs.get(blobId).etag);
+  const k = bucketOf(cookbookKey("default", "u:ginger-crunch"));
+  const otherBefore = Array.from({ length: RECIPE_BUCKETS }, (_, n) => held(n));
+  withRecipes(a, [precipe("u:ginger-crunch", "Ginger crunch, less sugar")]);
+  await s.syncNow();
+  const bucketPut = puts.find((p) => p.id === `${blobId}:r${k}`);
+  const want = Object.fromEntries(otherBefore.map((v, n) => [`r${n}`, v]).filter(([name]) => name !== `r${k}`));
+  assert.deepEqual(named(bucketPut.known), { core: coreBefore, ...want }, "a bucket write names the core it read and the other buckets");
+  const corePut = puts.find((p) => p.id === blobId);
+  assert.equal(named(corePut.known)[`r${k}`], held(k), "the core write names the bucket's NEW version");
+  assert.notEqual(held(k), otherBefore[k]);
+
+  // A user with no recipes names nothing: the URL is what it was.
+  const b = device({ favs: [venue("kk")] });
+  puts.length = 0;
+  await mk(b, wire).enable();
+  assert.deepEqual(puts.map((p) => p.known), [null]);
+});
+
+test("a bucket the Worker reports at a version the core copy does not record is not vouched for unless this cycle wrote it (roadmap 510/330)", async () => {
+  // The disagreement can be THIS device's stale read of a bucket another
+  // device has just rewritten. Vouching for the version it read would let the
+  // Worker re-arm that stale copy over theirs — and the core copy written here
+  // would then record it, so nobody would ever see the mismatch again.
+  const server = fakeServer();
+  const puts = [];
+  const wire = {
+    fetch: (u, i = {}) => {
+      if (i.method === "PUT") {
+        const [path, q = ""] = String(u).split("?");
+        puts.push({ id: path.split("/").pop(), known: new URLSearchParams(q).get("known") });
+      }
+      return server.fetch(u, i);
+    },
+  };
+  const a = withRecipes(device({ favs: [venue("kk")] }), [precipe("u:ginger-crunch")]);
+  const s = mk(a, wire);
+  const { code } = await s.enable();
+  const { blobId } = await keysFor(code);
+  const k = bucketOf(cookbookKey("default", "u:ginger-crunch"));
+  const j = (k + 1) % RECIPE_BUCKETS; // an empty bucket, same bytes, new version
+  server.blobs.set(`${blobId}:r${j}`, { ...server.blobs.get(`${blobId}:r${j}`), etag: '"rewritten-elsewhere"' });
+  puts.length = 0;
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  assert.equal((await s.syncNow()).ok, true);
+  const corePut = puts.find((p) => p.id === blobId);
+  const names = (corePut.known || "").split(",").map((p) => p.split(":")[0]);
+  assert.ok(!names.includes(`r${j}`), `vouched for the disputed bucket: ${corePut.known}`);
+  assert.equal(names.length, RECIPE_BUCKETS - 1, "every other bucket is still vouched for");
+});
+
+test("the REAL Worker re-arms the buckets a real client's heart names — the two halves agree on `known` (roadmap 510/330)", async () => {
+  // The format crosses two files (sync-buckets.js writes it, the Worker parses
+  // it) and the client holds versions as quoted ETags. If they disagreed, the
+  // Worker would match nothing and silently re-arm nothing — every check that
+  // looks only at one side stays green while recipes start to expire.
+  const { default: worker } = await import("../worker/sync-worker.js");
+  const store = new Map();
+  const kv = {
+    async getWithMetadata(k) {
+      const e = store.get(k);
+      return e ? { value: e.value.slice(0), metadata: e.metadata } : { value: null, metadata: null };
+    },
+    async put(k, value, opts = {}) {
+      const bytes = value instanceof Uint8Array ? new Uint8Array(value) : new Uint8Array(value.slice(0));
+      store.set(k, { value: bytes.buffer, metadata: opts.metadata ?? null, ttl: opts.expirationTtl ?? null });
+    },
+  };
+  const origin = "https://lets-eat.myspot.nz";
+  const env = { SYNC_BLOBS: kv, ALLOWED_ORIGINS: origin };
+  const real = {
+    fetch: async (u, i = {}) => {
+      const res = await worker.fetch(
+        new Request(String(u).replace("https://example.invalid", "https://w.test"), {
+          method: i.method || "GET",
+          headers: { Origin: origin, ...(i.headers || {}) },
+          body: i.body,
+        }),
+        env,
+      );
+      return { status: res.status, headers: res.headers, arrayBuffer: () => res.arrayBuffer() };
+    },
+  };
+  const a = withRecipes(device({ favs: [venue("kk")] }), [precipe("u:ginger-crunch")]);
+  const s = mk(a, real, { endpoint: "https://example.invalid" });
+  const { code } = await s.enable();
+  const { blobId } = await keysFor(code);
+  const buckets = [...store.keys()].filter((k) => k.startsWith(`${blobId}:r`));
+  assert.equal(buckets.length, RECIPE_BUCKETS);
+  // Age every bucket past the 30-day threshold, expiry nearly out.
+  for (const k of buckets) store.set(k, { ...store.get(k), metadata: { ...store.get(k).metadata, t: 0 }, ttl: 1 });
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  const res = await s.syncNow(); // a heart: the core copy only
+  assert.equal(res.ok, true);
+  for (const k of buckets) {
+    assert.equal(store.get(k).ttl, 180 * 24 * 60 * 60, `${k} not re-armed`);
+    assert.ok(store.get(k).metadata.t > 0, `${k} write time did not move`);
+  }
 });
 
 test("another device's FIRST recipe still arrives on a device that was asking about no bucket (roadmap 510/140)", async () => {

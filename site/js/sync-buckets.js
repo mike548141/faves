@@ -56,6 +56,23 @@ export const BUCKET_HEADER = "x-faves-buckets";
  *  510/140). Absent — an older client — the Worker reads all it could hold. */
 export const FAMILY_QUERY = "family";
 
+/**
+ * The query a PUT carries naming the version this device holds of each OTHER
+ * copy under the user key (roadmap 510/330): `known=core:<v>,r0:<v>,…`. The
+ * Worker re-arms a copy's expiry by re-writing what it READ, and KV can serve
+ * an older read for up to a minute or so — so it re-writes only a read whose
+ * version is the one named here, which is what stops an older copy going back
+ * over a newer one. Empty `{}` gives "": a device with no buckets and no core
+ * copy to vouch for adds nothing to its URL. An older Worker ignores it.
+ */
+export const KNOWN_QUERY = "known";
+export function knownQuery(versions) {
+  const parts = Object.entries(versions || {})
+    .filter(([, v]) => typeof v === "string" && v)
+    .map(([name, v]) => `${name}:${encodeURIComponent(v.replace(/^W\//, "").replace(/^"|"$/g, ""))}`);
+  return parts.length ? `&${KNOWN_QUERY}=${parts.join(",")}` : "";
+}
+
 /** `r0`…`r7`: a bucket's name, and the suffix of its key on the server. */
 export const bucketName = (k) => `r${k}`;
 
