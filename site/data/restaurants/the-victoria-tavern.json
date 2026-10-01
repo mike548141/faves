@@ -1330,6 +1330,62 @@
       "section": "Aperitifs",
       "sectionId": "aperitifs",
       "items": [
+          {
+            "name": "Campari",
+            "dishId": "campari",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Aperol",
+            "dishId": "aperol",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Reid + Reid Bitter Aperitivo",
+            "dishId": "reid-reid-bitter-aperitivo",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Ouzo",
+            "dishId": "ouzo",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
         {
           "name": "Negroni",
           "dishId": "negroni",
@@ -1357,6 +1413,709 @@
           "price": 14.0,
           "tags": []
         }
+      ]
+    },
+    {
+      "section": "Digestifs",
+      "sectionId": "digestifs",
+      "items": [
+          {
+            "name": "Grand Marnier",
+            "dishId": "grand-marnier",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Limoncello",
+            "dishId": "limoncello",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Amaro",
+            "dishId": "amaro",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Camus VS",
+            "dishId": "camus-vs",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Camus VSOP Borderies",
+            "dishId": "camus-vsop-borderies",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          }
+      ]
+    },
+    {
+      "section": "Gin",
+      "sectionId": "gin",
+      "items": [
+          {
+            "name": "Hastings Distillers East Block",
+            "dishId": "hastings-distillers-east-block",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Reid + Reid Native",
+            "dishId": "reid-reid-native",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Aviation",
+            "dishId": "aviation",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Four Pillar Bloody Shiraz",
+            "dishId": "four-pillar-bloody-shiraz",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Four Pillar Rare Dry",
+            "dishId": "four-pillar-rare-dry",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Four Pillar Yuzu",
+            "dishId": "four-pillar-yuzu",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Four Pillar Negroni",
+            "dishId": "four-pillar-negroni",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Roots",
+            "dishId": "roots",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Dingle",
+            "dishId": "dingle",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "The Botanist",
+            "dishId": "the-botanist",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Bombay Sapphire",
+            "dishId": "bombay-sapphire",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Hendricks",
+            "dishId": "hendricks",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Tanqueray 10",
+            "dishId": "tanqueray-10",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          }
+      ]
+    },
+    {
+      "section": "Vodka",
+      "sectionId": "vodka",
+      "items": [
+          {
+            "name": "42 Below Pure",
+            "dishId": "42-below-pure",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Tito's",
+            "dishId": "tito-s",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Grey Goose",
+            "dishId": "grey-goose",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Chopin 'Potato'",
+            "dishId": "chopin-potato",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          }
+      ]
+    },
+    {
+      "section": "Tequila & Mezcal",
+      "sectionId": "tequila-mezcal",
+      "items": [
+          {
+            "name": "Jose Cuervo Silver",
+            "dishId": "jose-cuervo-silver",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "El Jimador Anejo",
+            "dishId": "el-jimador-anejo",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "El Jimador Reposado",
+            "dishId": "el-jimador-reposado",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Jose Cuervo Agavero",
+            "dishId": "jose-cuervo-agavero",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Gracias a Dios Espadin Joven Mezcal",
+            "dishId": "gracias-a-dios-espadin-joven-mezcal",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          }
+      ]
+    },
+    {
+      "section": "Rum",
+      "sectionId": "rum",
+      "items": [
+          {
+            "name": "Bacardi",
+            "dishId": "bacardi",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Appleton's Estate Signature",
+            "dishId": "appleton-s-estate-signature",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Sailor Jerry's",
+            "dishId": "sailor-jerry-s",
+            "desc": "Spiced.",
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Honest",
+            "dishId": "honest",
+            "desc": "Spiced.",
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Gosling's Black Seal",
+            "dishId": "gosling-s-black-seal",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Plantation Pineapple",
+            "dishId": "plantation-pineapple",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Plantation XO 20 yr old",
+            "dishId": "plantation-xo-20-yr-old",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          }
+      ]
+    },
+    {
+      "section": "Bourbon",
+      "sectionId": "bourbon",
+      "items": [
+          {
+            "name": "Jack Daniels",
+            "dishId": "jack-daniels",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Jim Beam",
+            "dishId": "jim-beam",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Makers Mark",
+            "dishId": "makers-mark",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Rowans Creek",
+            "dishId": "rowans-creek",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Woodford Reserve Double Oak",
+            "dishId": "woodford-reserve-double-oak",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Woodford Rye",
+            "dishId": "woodford-rye",
+            "desc": null,
+            "price": null,
+            "tags": [
+              "contains-gluten"
+            ],
+            "tagNotes": {"contains-gluten": "The menu says “Rye”."},
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          }
+      ]
+    },
+    {
+      "section": "Whiskey & Whisky",
+      "sectionId": "whiskey-whisky",
+      "items": [
+          {
+            "name": "Canadian Club",
+            "dishId": "canadian-club",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Jameson's",
+            "dishId": "jameson-s",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Bushmill's 10 yr old",
+            "dishId": "bushmill-s-10-yr-old",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Redbreast 12 yr old",
+            "dishId": "redbreast-12-yr-old",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Bowmore 12 yr old",
+            "dishId": "bowmore-12-yr-old",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Glenkinchie 12yr old",
+            "dishId": "glenkinchie-12yr-old",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          },
+          {
+            "name": "Macallan 12 yr old Double Cask",
+            "dishId": "macallan-12-yr-old-double-cask",
+            "desc": null,
+            "price": null,
+            "tags": [],
+            "needs": [
+              {
+                "what": "price",
+                "note": "The drinks list prints no price for this line.",
+                "since": "2026-10-02"
+              }
+            ]
+          }
       ]
     },
     {
