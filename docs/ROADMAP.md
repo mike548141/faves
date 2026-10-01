@@ -244,7 +244,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [28k — A group that SELECTS a variant: schema only, no data migrated](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/080-28k-a-group-that-selects-a-variant-schema-only.md)
 - ✅ [28l — The absorption mechanics, and the gate that must exist BEFORE a](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/090-28l-the-absorption-mechanics-and-the-gate-that.md)
 - ✅ [28m — Render a selects group, and put its choice on the order line](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/100-28m-render-a-selects-group-and-put-its-choice.md)
-- [~] [28n — Convert the prose size ladders: additive, and no id moves](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/110-28n-convert-the-prose-size-ladders-additive-no.md)
+- [ ] [28n — Convert the prose size ladders: additive, and no id moves](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/110-28n-convert-the-prose-size-ladders-additive-no.md)
 - [ ] [28o — Merge the 63 ladders that differ only by name and price](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/120-28o-merge-the-63-ladders-that-differ-only-by-n.md)
 - [ ] [28p — The 70 ladders a human must rule on, one at a time](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/130-28p-the-70-ladders-a-human-must-rule-on-one-at.md)
 - ✅ [28q — An add-on option has no id, and this migration is what makes](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/140-28q-an-add-on-option-has-no-id-and-this-migrat.md)
