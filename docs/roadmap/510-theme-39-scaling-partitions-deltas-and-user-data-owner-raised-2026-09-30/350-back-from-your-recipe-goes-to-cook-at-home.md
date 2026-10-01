@@ -1,4 +1,4 @@
-- [~] **Back from one of your recipes goes to Cook at Home, not the home
+- [ ] **Back from one of your recipes goes to Cook at Home, not the home
       screen** `[XS] [recipes]` — owner-reported 2026-10-01 (session
       `faves-55`), on `2026-10-01.20`.
 
@@ -9,3 +9,6 @@
   because no such list existed then.
 
   📌 **Claimed 2026-10-01 (`faves-55`).**
+
+  📌 **Claim released 2026-10-01 (`faves-55`)** at the owner's word: "put
+  them on a board for a fresh session". Nothing was built; ready to take.
