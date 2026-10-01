@@ -1,5 +1,8 @@
 // Harness for roadmap 510/340 (a stale sync read merged as another device's
-// change) and the 510/320 question it was filed to answer. Not a test file
+// change) and the 510/320 question it was filed to answer. Since the 510/340
+// fix (ADR 0151) a device talks to the live Worker, which routes to a Durable
+// Object stand-in (`storeFor`); the frozen KV-only Worker is exported as
+// `legacyKvWorker` for the runs that need a Worker that CAN read stale. Not a test file
 // itself — `node --test` runs `*.test.js` — so the fuzz can also be driven from
 // a script with other builds of the client and the Worker swapped in.
 //
@@ -24,11 +27,37 @@ import { applyPersonalData, collectPersonalData } from "../site/js/personal-data
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
 import { favKey } from "../site/js/favourites.js";
 import { moveBackup } from "../tools/move_recipes.mjs";
-import currentWorker from "../worker/sync-worker.js";
+import currentWorker, { SyncStore } from "../worker/sync-worker.js";
+import { DurableObjectNamespaceStandIn } from "../worker/durable-object-standin.js";
+// The Worker as it stood before 510/340 (KV-only), frozen: the 510/320 fuzz
+// needs a Worker that CAN serve a stale read, and the live one no longer can.
+import legacyKvWorker from "../worker/sync-worker-kv-only.js";
 
+export { legacyKvWorker };
 export const CACHE_TTL_MS = 60_000;
 export const ORIGIN = "https://lets-eat.myspot.nz";
 const T0 = Date.parse("2026-10-01T08:00:00.000Z");
+/** When the stand-in's Worker version "was deployed": a day before T0, so the
+ *  objects' one-time KV import is long past its settling window. */
+export const DEPLOYED_AT = new Date(T0 - 86_400_000).toISOString();
+/** The stand-in clock's `kv.clock` (ms since T0) as an ISO time. */
+export const atClock = (ms) => new Date(T0 + ms).toISOString();
+
+/**
+ * The sync store over `kv` (roadmap 510/340): one Durable Object namespace per
+ * KV world, shared by every device, on the stand-in's clock. An object lives in
+ * ONE place, so its own KV reads (the import) and mirror writes go through one
+ * location, "DO" — not through whichever location the device's request hit.
+ * The mirror is on, as wrangler.toml ships it.
+ */
+export function storeFor(kv, { mirror = "on", deployedAt = DEPLOYED_AT, location = "DO" } = {}) {
+  kv.store ??= new DurableObjectNamespaceStandIn(
+    SyncStore,
+    () => ({ SYNC_BLOBS: kv.at(location), KV_MIRROR: mirror, CF_VERSION_METADATA: { timestamp: deployedAt } }),
+    { now: () => Math.floor((T0 + kv.clock) / 1000) }
+  );
+  return kv.store;
+}
 
 export function fakeStorage(initial = {}) {
   const m = new Map(Object.entries(initial));
@@ -105,19 +134,22 @@ export class EdgeKV {
 
 /**
  * A device talking to the REAL Worker over `kv`. `loc` is where its next
- * request lands; move it to send the device through another location.
+ * request lands; move it to send the device through another location. Set
+ * `d.worker` to redeploy under it (the 510/340 cutover test).
  */
 export function phone(storage, kv, { worker = currentWorker, createSync = currentCreateSync, loc = "L1" } = {}) {
-  const d = { storage, loc, requests: [] };
+  const d = { storage, loc, requests: [], worker };
   const fetchImpl = async (u, i = {}) => {
     d.requests.push({ method: i.method || "GET", loc: d.loc, at: kv.clock });
-    const res = await worker.fetch(
+    const res = await d.worker.fetch(
       new Request(String(u).replace("https://example.invalid", "https://w.test"), {
         method: i.method || "GET",
         headers: { Origin: ORIGIN, ...(i.headers || {}) },
         body: i.body,
       }),
-      { SYNC_BLOBS: kv.at(d.loc), ALLOWED_ORIGINS: ORIGIN }
+      // Both bindings, always: the live Worker routes to SYNC_STORE, the frozen
+      // KV-only one reads SYNC_BLOBS at the device's location, as it did.
+      { SYNC_BLOBS: kv.at(d.loc), SYNC_STORE: storeFor(kv), ALLOWED_ORIGINS: ORIGIN }
     );
     return { status: res.status, headers: res.headers, arrayBuffer: () => res.arrayBuffer() };
   };
@@ -213,11 +245,23 @@ export async function fuzzOnce(seed, { worker = currentWorker, createSync = curr
     kv.clock += 1_000 + Math.floor(r() * 89_000);
   };
   const intent = new Map(); // fav key -> true (hearted) / false (removed), last action wins
+  // The same, counting only actions that CHANGED the device's list (510/340).
+  // A "heart" on a device that still holds the key — the other device removed
+  // it and this one has not pulled since — is a no-op here, yet `intent` reads
+  // it as "the person wants it": the next sync then removes it, correctly, and
+  // `lost` counts it. In the app the same tap would UN-heart. `intent` is kept
+  // as it was, so the options paper's numbers still reproduce; `effective` is
+  // what a correct sync must honour (measured 2026-10-02: on the Durable Object
+  // path every `lost` in 300 seeds was this no-op, and `lostEffective` was 0).
+  const effective = new Map();
 
   const start = [...POOL.slice(0, 3).map(venue), ...MOVED.map(kHeart)];
   const a = phone(device([...start, ...HISTORIC.map(venue)]), kv, { worker, createSync, loc: pick(locs) });
   const b = phone(device([]), kv, { worker, createSync, loc: pick(locs) });
-  for (const e of start) intent.set(favKey(e), true);
+  for (const e of start) {
+    intent.set(favKey(e), true);
+    effective.set(favKey(e), true);
+  }
   const devs = { A: a, B: b };
   const move = (d) => {
     if (r() < pSwitch) d.loc = pick(locs);
@@ -250,6 +294,7 @@ export async function fuzzOnce(seed, { worker = currentWorker, createSync = curr
   for (const k of HISTORIC) {
     unheart(a.storage, `v:${k}`);
     intent.set(`v:${k}`, false);
+    effective.set(`v:${k}`, false);
   }
   await run(a);
   kv.clock += 5_000 + Math.floor(r() * 115_000);
@@ -265,8 +310,10 @@ export async function fuzzOnce(seed, { worker = currentWorker, createSync = curr
   moveOn(a.storage);
   afterMove = true;
   MOVED.forEach((_, i) => {
-    intent.set(OLD_KEYS[i], false);
-    intent.set(NEW_KEYS[i], true);
+    for (const m of [intent, effective]) {
+      m.set(OLD_KEYS[i], false);
+      m.set(NEW_KEYS[i], true);
+    }
   });
   await run(a);
   observe();
@@ -289,6 +336,7 @@ export async function fuzzOnce(seed, { worker = currentWorker, createSync = curr
     const kind = pick(["pull", "heart", "unheart"]);
     if (kind === "heart") {
       const id = pick(POOL);
+      if (!favsOf(d.storage).includes(`v:${id}`)) effective.set(`v:${id}`, true);
       heart(d.storage, venue(id));
       intent.set(`v:${id}`, true);
     } else if (kind === "unheart") {
@@ -297,6 +345,7 @@ export async function fuzzOnce(seed, { worker = currentWorker, createSync = curr
         const k = pick(held);
         unheart(d.storage, k);
         intent.set(k, false);
+        effective.set(k, false);
       }
     }
     await run(d);
@@ -309,15 +358,20 @@ export async function fuzzOnce(seed, { worker = currentWorker, createSync = curr
   observe();
 
   const final = { A: favsOf(a.storage), B: favsOf(b.storage) };
-  const lost = [];
-  const revived = [];
-  for (const [k, want] of intent) {
-    for (const [n, keys] of Object.entries(final)) {
-      const has = keys.includes(k);
-      if (want && !has) lost.push(`${n}:${k}`);
-      if (!want && has) revived.push(`${n}:${k}`);
+  const against = (wants) => {
+    const lost = [];
+    const revived = [];
+    for (const [k, want] of wants) {
+      for (const [n, keys] of Object.entries(final)) {
+        const has = keys.includes(k);
+        if (want && !has) lost.push(`${n}:${k}`);
+        if (!want && has) revived.push(`${n}:${k}`);
+      }
     }
-  }
+    return { lost, revived };
+  };
+  const { lost, revived } = against(intent);
+  const eff = against(effective);
   return {
     seed,
     worst,
@@ -325,6 +379,8 @@ export async function fuzzOnce(seed, { worker = currentWorker, createSync = curr
     agree: final.A.join() === final.B.join(),
     lost,
     revived,
+    lostEffective: eff.lost,
+    revivedEffective: eff.revived,
     staleReads: kv.staleReads,
     reads: kv.reads,
   };

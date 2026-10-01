@@ -1827,3 +1827,11 @@ deliberation those compact docs omit.
   five real Pages deploys, that the ETag changes exactly when the bytes do.
   An update with one changed file goes from 621 to 66 KB gzip. Supersedes 0149
   decision 2.
+- [0151](0151-each-sync-code-is-one-durable-object.md) —
+  **Each sync code is one Durable Object** (owner-ruled 2026-10-02,
+  `510/340`; built, not yet deployed). Each user's copies live in one
+  SQLite-backed Durable Object, so a read always sees the latest write and
+  `If-Match` is a synchronous compare-and-swap; the HTTP interface is unchanged,
+  so old builds are fixed too. Retention is the KV Worker's to the day. KV is
+  imported once per user, only five minutes after the deploy (a check on the
+  copy cannot see a stale read), and mirrored for a lossless rollback.

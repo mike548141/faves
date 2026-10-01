@@ -23,10 +23,14 @@
 //     origin counts what it receives; that is the cost the other tabs pay.
 //   · DOM mutations — a MutationObserver on the document (childList, attributes,
 //     characterData, subtree), reset just before the action under test.
-//   · Sync — the REAL `worker/sync-worker.js` behind a local Node server, its KV
-//     replaced by a counting stand-in, and the browser's `fetch` for the sync
-//     endpoint redirected to it (the technique sync_check.mjs documents). KV
-//     reads/writes are counted inside the Worker's own calls.
+//   · Sync — the REAL `worker/sync-worker.js` behind a local Node server, and
+//     the browser's `fetch` for the sync endpoint redirected to it (the
+//     technique sync_check.mjs documents). Since 510/340 (ADR 0151) the Worker
+//     keeps each user's copies in a Durable Object: here the stand-in from
+//     worker/durable-object-standin.js (real SQLite), whose rows read and
+//     written are counted, over a counting KV stand-in that the object reads
+//     once per user (the import) and writes as a mirror (KV_MIRROR "on", as
+//     wrangler.toml ships it). Both are counted inside the Worker's own calls.
 //
 // BUDGETS are TODAY's measured value plus a stated margin (counts: the larger of
 // +2 or +10%; bytes: +10%). They exist to CATCH A REGRESSION, not to bless
@@ -45,8 +49,10 @@
 // scenarios keep the plain no-store server.
 //
 // 🚩 WHAT THIS CANNOT SHOW: Cloudflare Pages itself (brotli, HTTP/2, its edge
-// cache), real KV latency or eventual consistency (the stand-in is strictly
-// consistent), Safari,
+// cache), real KV or Durable Object latency, KV's eventual consistency (the
+// stand-in is strictly consistent), Cloudflare's exact row-billing arithmetic
+// (the stand-in counts rows a SELECT returns and rows a write changes, which
+// approximates it), Safari,
 // or a phone's CPU — counts are exact, byte figures are estimates, and the DOM
 // numbers are changes not milliseconds. The KV scenarios are for a user with NO
 // recipes (the survey's population). Browser-driven, so NOT in CI (the standing
@@ -73,7 +79,8 @@ import {
   stopChrome,
   untilPresent,
 } from "./lib/browser.mjs";
-import worker from "../worker/sync-worker.js";
+import worker, { SyncStore } from "../worker/sync-worker.js";
+import { DurableObjectNamespaceStandIn } from "../worker/durable-object-standin.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -112,17 +119,22 @@ const B = {
   hintTimersHidden: { what: "home page hidden 15 s: timers started", unit: "n", budget: 0, lowers: "230" },
   hintTurns: { what: "home page visible 30 s: placeholder changes", unit: "n", budget: 0, lowers: "230 (stop after a few turns)" },
   enableReq: { what: "sync: first sync on a new device: HTTP requests", unit: "req", budget: 0, lowers: "—" },
-  enableR: { what: "sync: first sync: KV reads", unit: "R", budget: 0, lowers: "140 (stop probing absent buckets)" },
-  enableW: { what: "sync: first sync: KV writes", unit: "W", budget: 0, lowers: "—" },
+  enableR: { what: "sync: first sync: KV reads (the object's one-time import)", unit: "R", budget: 0, lowers: "retiring the KV import (ADR 0151)" },
+  enableW: { what: "sync: first sync: KV writes (the mirror)", unit: "W", budget: 0, lowers: "KV_MIRROR off (ADR 0151)" },
+  enableDoR: { what: "sync: first sync: Durable Object storage reads", unit: "q", budget: 0, lowers: "—" },
+  enableDoW: { what: "sync: first sync: Durable Object rows written", unit: "rows", budget: 0, lowers: "—" },
   pullReq: { what: "sync: repeat page load 3 s after a sync, nothing changed: HTTP requests", unit: "req", budget: 0, lowers: "—" },
   pullR: { what: "sync: repeat page load 3 s after a sync: KV reads", unit: "R", budget: 0, lowers: "—" },
   pullW: { what: "sync: repeat page load 3 s after a sync: KV writes", unit: "W", budget: 0, lowers: "—" },
   pullLsSet: { what: "sync: repeat page load 3 s after a sync: localStorage setItem (excl. probe)", unit: "n", budget: 0, lowers: "—" },
   stalePullReq: { what: "sync: page load with the last sync 10 min old, nothing changed: HTTP requests", unit: "req", budget: 0, lowers: "—" },
   stalePullR: { what: "sync: page load with the last sync 10 min old: KV reads", unit: "R", budget: 0, lowers: "—" },
+  stalePullDoR: { what: "sync: page load with the last sync 10 min old: Durable Object storage reads", unit: "q", budget: 0, lowers: "—" },
   heartReq: { what: "sync: one heart then flush: HTTP requests (GET+OPTIONS+PUT)", unit: "req", budget: 0, lowers: "—" },
-  heartR: { what: "sync: one heart then flush: KV reads", unit: "R", budget: 0, lowers: "140" },
-  heartW: { what: "sync: one heart then flush: KV writes", unit: "W", budget: 0, lowers: "—" },
+  heartR: { what: "sync: one heart then flush: KV reads", unit: "R", budget: 0, lowers: "—" },
+  heartW: { what: "sync: one heart then flush: KV writes (the mirror)", unit: "W", budget: 0, lowers: "KV_MIRROR off (ADR 0151)" },
+  heartDoR: { what: "sync: one heart then flush: Durable Object storage reads", unit: "q", budget: 0, lowers: "—" },
+  heartDoW: { what: "sync: one heart then flush: Durable Object rows written", unit: "rows", budget: 0, lowers: "—" },
   tabReq: { what: "sync: a 2nd tab on a menu, one heart elsewhere: extra pull requests", unit: "req", budget: 0, lowers: "210 (cross-tab reload schedules no sync)" },
 };
 // Budgets are filled from MEASURED below (see BUDGETS): a literal per row, set
@@ -167,15 +179,27 @@ Object.assign(BUDGETS, {
   // the pull's setItem 1; the second tab 0. Was 877, 875, 2,626; 29/10/29; 3; 2.
   mutHeart: 6, mutUnheart: 5, mutRating: 13, // was 795-797, 795, 2,387
   hintHidden: 0, hintTimersHidden: 0, hintTurns: 4, // was 6, 2, 4 → 0, 0, 3 with 510/230
-  enableReq: 4, enableR: 3, enableW: 2, // 3, 2, 1
+  // The sync rows re-measured 2026-10-02 on 510-340-do, when the store moved
+  // into a Durable Object (510/340, ADR 0151). enableR went 3 -> 19, LOOSENED,
+  // and on purpose: a new code's first request is the object's one-time
+  // import, which reads all 17 copies a user could have from KV (17, +2
+  // margin). It is once per user, and KV reads are the cheap side (100,000 a
+  // day free); it falls to 0 when the import is retired. heartR and
+  // stalePullR were tightened to 0 (were 3 and 2: after the import no sync
+  // reads KV). The KV writes left are the mirror's. The four Durable Object
+  // rows are new: storage reads are SELECT statements (a bucket question is
+  // one each — the break-probe's target), rows written are rows changed.
+  enableReq: 4, enableR: 19, enableW: 2, // 3, 17, 1
+  enableDoR: 7, enableDoW: 3, // 6 (+1), 2 (+1): the copy and the import marker
   // Tightened 2026-10-01 with 510/160 (the 90 s pull window). A repeat load 3 s
   // after a sync now pulls nothing: 0 requests, 0 KV reads, 0 writes, 0 setItem
   // (was 1, 1, 0, 1, with budgets 2, 2, 0, 2) and a zero baseline stays 0. The
   // two stale rows are the same load with the last sync 10 min old — the pull
   // that still happens, 1 request and 1 KV read, +1 margin.
   pullReq: 0, pullR: 0, pullW: 0, pullLsSet: 0,
-  stalePullReq: 2, stalePullR: 2,
-  heartReq: 4, heartR: 3, heartW: 2, // 3, 2, 1
+  stalePullReq: 2, stalePullR: 0, stalePullDoR: 2, // 1, 0, 1
+  heartReq: 4, heartR: 0, heartW: 2, // 3, 0, 1
+  heartDoR: 4, heartDoW: 2, // 3 (the GET, the CAS, the mirror's read), 1
   tabReq: 0, // 0 since 510/210; was 0-1, the second tab pulling ~20 s after the storage event
 });
 for (const [id, v] of Object.entries(BUDGETS)) B[id].budget = v;
@@ -235,7 +259,15 @@ function countingKv() {
 function startWorkerServer() {
   const kv = countingKv();
   const http = { gets: 0, puts: 0, options: 0 };
-  const env = { SYNC_BLOBS: kv, ALLOWED_ORIGINS: "" };
+  // The store as deployed (510/340): one object per user, deployed a day ago
+  // so its import is past the settling window, mirroring into the counting KV.
+  const store = new DurableObjectNamespaceStandIn(SyncStore, {
+    SYNC_BLOBS: kv,
+    KV_MIRROR: "on",
+    CF_VERSION_METADATA: { timestamp: new Date(Date.now() - 86_400_000).toISOString() },
+  });
+  const rows = { base: store.counts() };
+  const env = { SYNC_STORE: store, ALLOWED_ORIGINS: "" };
   const server = createServer(async (req, res) => {
     if (req.method === "GET") http.gets += 1;
     else if (req.method === "PUT") http.puts += 1;
@@ -260,9 +292,14 @@ function startWorkerServer() {
   return new Promise((ok, bad) => {
     server.once("error", bad);
     server.listen(0, "127.0.0.1", () => ok({
-      server, kv, http, env,
+      server, kv, http, env, store,
       port: server.address().port,
-      reset() { kv.reset(); http.gets = 0; http.puts = 0; http.options = 0; },
+      /** Durable Object storage reads (SELECT statements) and rows written since the last reset. */
+      rows: () => {
+        const c = store.counts();
+        return { r: c.selects - rows.base.selects, w: c.rowsWritten - rows.base.rowsWritten };
+      },
+      reset() { kv.reset(); http.gets = 0; http.puts = 0; http.options = 0; rows.base = store.counts(); },
     }));
   });
 }
@@ -566,7 +603,7 @@ async function scenarioSync(cdp, report, { overlay = null, probe = false, label 
   w.env.ALLOWED_ORIGINS = o.base;
   const A = await newPage(cdp, { shimPort: w.port });
   const d = createDriver(cdp, A.sessionId, (m) => report.step(`${label}: ${m}`));
-  const snap = () => ({ req: w.http.gets + w.http.puts + w.http.options, r: w.kv.c.reads, w: w.kv.c.writes, gets: w.http.gets, puts: w.http.puts, opt: w.http.options, kb: w.kv.c.bytesRead });
+  const snap = () => ({ req: w.http.gets + w.http.puts + w.http.options, r: w.kv.c.reads, w: w.kv.c.writes, doR: w.rows().r, doW: w.rows().w, gets: w.http.gets, puts: w.http.puts, opt: w.http.options, kb: w.kv.c.bytesRead });
   const idle = () => quiet(() => snap().req, 1500, 20_000);
   try {
     await goto(cdp, d, A.sessionId, `${o.base}/restaurant.html?id=${BIG_MENU}`, MENU_READY);
@@ -615,10 +652,10 @@ async function scenarioSync(cdp, report, { overlay = null, probe = false, label 
 
     if (probe) return { pull, stale };
     Object.assign(measured, {
-      enableReq: first.req, enableR: first.r, enableW: first.w,
+      enableReq: first.req, enableR: first.r, enableW: first.w, enableDoR: first.doR, enableDoW: first.doW,
       pullReq: pull.req, pullR: pull.r, pullW: pull.w, pullLsSet: pullLs.set - probes,
-      stalePullReq: stale.req, stalePullR: stale.r,
-      heartReq: heart.req, heartR: heart.r, heartW: heart.w,
+      stalePullReq: stale.req, stalePullR: stale.r, stalePullDoR: stale.doR,
+      heartReq: heart.req, heartR: heart.r, heartW: heart.w, heartDoR: heart.doR, heartDoW: heart.doW,
     });
 
     // A second tab on a different page: a heart in tab A, and does tab B pull too?
@@ -732,10 +769,13 @@ async function run(opts) {
         });
         // Aimed at the STALE load since 510/160: the repeat load inside the
         // window pulls nothing, so it has no read to inflate.
+        // Since 510/340 a bucket question costs the object a storage read per
+        // bucket asked about, and KV nothing — so the probe is aimed at the
+        // object's storage-read budget (it was the KV-read one until then).
         report.check(
-          "break-probe: a client that always asks about buckets FAILS the stale-pull KV-read budget",
-          p.stale.r > B.stalePullR.budget,
-          `${p.stale.r} KV reads against a budget of ${B.stalePullR.budget}`
+          "break-probe: a client that always asks about buckets FAILS the stale-pull Durable Object storage-read budget",
+          p.stale.doR > B.stalePullDoR.budget,
+          `${p.stale.doR} storage reads against a budget of ${B.stalePullDoR.budget}`
         );
       }
       // Break-probe 4 (510/270): the update install back on "reload" — the

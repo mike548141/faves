@@ -1,10 +1,13 @@
 // Faves cross-device sync — the "dumb ciphertext store" from ADR 0017 and
-// ADR 0060. One end-to-end-encrypted blob per user, in Workers KV, keyed by
-// an opaque `blobId`.
+// ADR 0060. One end-to-end-encrypted blob per user, keyed by an opaque
+// `blobId`. Since roadmap 510/340 (ADR 0151) each user's copies live in one
+// Durable Object named by that `blobId` (`SyncStore`, below); Workers KV,
+// where they lived before, is read once per user to import them and is
+// otherwise only an optional mirror for rollback.
 //
 // THE PROPERTY THAT GOVERNS EVERYTHING (ADR 0017): the user's sync code
 // never reaches this Worker. The client runs HKDF on the sync code to derive
-// two *independent* values — a `blobId` (used as the KV key below) and a
+// two *independent* values — a `blobId` (the object's name, and the KV key) and a
 // symmetric encryption key that never leaves the device. This file never
 // sees the sync code, never sees plaintext, and never sees the encryption
 // key. All it stores and returns is an opaque key and an opaque byte blob.
@@ -48,7 +51,7 @@
 // and a security comment that names the wrong parameter is how the right one
 // stops being defended. There is
 // deliberately no rate limiting in this file beyond the body-size cap
-// below: a per-blobId write throttle would need Durable Objects (state) or
+// below: a per-blobId write throttle would need state in the object or
 // a separate Cloudflare rate-limiting rule, and the honest position is that
 // this Worker relies on blobId entropy plus Cloudflare's platform-level
 // abuse mitigation, not an app-layer limiter. Flagged in the README as a
@@ -84,7 +87,7 @@ const BLOB_ID_RE = /^[0-9a-f]{32}$/;
  *  of how many get written, and legitimate payloads are nowhere near it. */
 const MAX_BODY_BYTES = 256 * 1024;
 
-/** KV entry TTL, refreshed on every successful PUT (never on GET — reading
+/** A copy's lifetime, refreshed on every successful PUT (never on GET — reading
  *  a blob you're not actively syncing shouldn't keep it alive forever
  *  either, but a read-only "did anything change" pull is a poor signal of
  *  abandonment either way, so only writes reset the clock). 180 days: an
@@ -95,7 +98,7 @@ const MAX_BODY_BYTES = 256 * 1024;
  *  phone and laptop every couple of months" doesn't silently lose data;
  *  short enough that abandoned codes don't accumulate for years. Cloudflare
  *  KV's minimum TTL is 60s, so this is nowhere near a platform limit. */
-const TTL_SECONDS = 180 * 24 * 60 * 60; // 15,552,000
+export const TTL_SECONDS = 180 * 24 * 60 * 60; // 15,552,000
 
 /** Recipe buckets (roadmap 510/050, ADR 0146 §2). A user's personal recipes
  *  are stored beside their core copy as `<blobId>:r<n>`, the same user key
@@ -105,7 +108,9 @@ const TTL_SECONDS = 180 * 24 * 60 * 60; // 15,552,000
 export const MAX_BUCKETS = 16;
 
 /** How stale a sibling copy may get before a write under the same user key
- *  re-arms its expiry. ADR 0146 §2 says "the Worker resets the expiry of every
+ *  re-arms its expiry. (Written when the copies lived in KV; the Durable Object
+ *  keeps the rule unchanged so retention is the same to the day — see
+ *  SyncStore.rearmFamily.) ADR 0146 §2 says "the Worker resets the expiry of every
  *  copy under a user key on any write", because a store nobody edits (recipes)
  *  would otherwise expire while favourites stayed alive (B1 in the cold
  *  review). KV has no "touch": re-arming a copy is a full re-write, and writes
@@ -127,7 +132,7 @@ export const REFRESH_AFTER_SECONDS = 30 * 24 * 60 * 60;
 /** A KV key this Worker serves: `<blobId>` (the core copy) or
  *  `<blobId>:r<n>` (recipe bucket n, n < MAX_BUCKETS). Returns
  *  `{ key, blobId, bucket }` (bucket null for the core copy), or null. Checked
- *  before the value ever reaches a KV call, like `isValidBlobId`. */
+ *  before the value ever reaches storage, like `isValidBlobId`. */
 export function parseBlobKey(segment) {
   if (typeof segment !== "string") return null;
   const m = /^([0-9a-f]{32})(?::r(0|[1-9][0-9]?))?$/.exec(segment);
@@ -188,8 +193,8 @@ export function formatBucketReport(found) {
 }
 
 /** True iff `id` is exactly the blobId shape the client contract promises.
- *  Checked before the value ever reaches a KV call — an oversized or
- *  oddly-charactered "blobId" never becomes a KV read/write. */
+ *  Checked before the value ever reaches storage — an oversized or
+ *  oddly-charactered "blobId" never names an object or a KV key. */
 export function isValidBlobId(id) {
   return typeof id === "string" && BLOB_ID_RE.test(id);
 }
@@ -335,178 +340,445 @@ function preflight(corsHeaders) {
 }
 
 // ---------------------------------------------------------------------------
+// The store: one Durable Object per sync code (roadmap 510/340, ADR 0151).
+//
+// WHY NOT KV ANY MORE. Workers KV is eventually consistent: a location keeps a
+// read for 60 s, so a request there is handed the copy it read, whatever has
+// been written since. A version is a random id and carries no order, so the
+// client merged an older copy as another device's change — a heart removed, a
+// removed heart back, a recipe move undone on both devices — and the If-Match
+// check below read through the same cache, so a write built on a stale read was
+// accepted (tests/stale-sync.test.js; docs/reviews/2026-10-01-1116-stale-sync-
+// read-options.md). KV has no compare-and-swap, so no Worker logic over it could
+// close that. A Durable Object can: exactly one instance exists per name, it
+// owns its storage, and a read of that storage always sees the latest write.
+//
+// THE CRITICAL SECTION IS SYNCHRONOUS, ON PURPOSE. Every read-compare-write
+// below runs inside `transactionSync`, over the SQLite storage API, which is
+// synchronous: there is no `await` between reading a copy's version and
+// writing its replacement, so nothing else can run in between — whatever the
+// runtime's input gates would or would not have held back. The If-Match check
+// is a true compare-and-swap by construction, not by a property of the
+// platform's scheduling that a later edit could quietly lean on.
+//
+// WHAT THE OBJECT HOLDS. One row per copy: `core`, or `r<n>` for recipe bucket
+// n, with its ciphertext, its version `v` (the ETag) and `t`, when it was last
+// written or re-armed, in seconds. Nothing else about a user, and nothing the
+// object could decrypt: it is the same dumb ciphertext store, and it logs
+// nothing, exactly as the file header promises.
+//
+// THE HTTP INTERFACE DID NOT CHANGE. The Worker below still answers GET, PUT
+// and OPTIONS on /v1/blob/<key> with the same statuses, ETags, bucket report
+// and CORS headers; it now forwards each request to the object instead of
+// reading KV. A device on any earlier build keeps working, unchanged, on the
+// day this deploys — which is why this option was chosen.
+
+/** How long after this Worker version was deployed before an object may
+ *  import its copies from KV (see `SyncStore.importReady`). KV documents a
+ *  write as visible elsewhere "up to 60 seconds or more" later; five times
+ *  that is the margin. The cost is that a code nobody has touched since the
+ *  deploy answers 503 for its first five minutes, and the client keeps its
+ *  data and tries again later (site/js/sync.js treats any status but 200/404
+ *  as "couldn't reach sync"). */
+export const IMPORT_SETTLE_SECONDS = 5 * 60;
+
+/** A copy's name (`core`, `r<n>`) back to its KV key. */
+function kvKey(blobId, name) {
+  return name === "core" ? blobId : `${blobId}:${name}`;
+}
+
+/** Every copy name a user can have, in KV-key order. */
+function familyNames(buckets = MAX_BUCKETS) {
+  return ["core", ...Array.from({ length: buckets }, (_, n) => `r${n}`)];
+}
+
+/** Whether a copy last written (or re-armed) at `t` is past its expiry at
+ *  `now`. KV stops serving a key at its TTL; this is that, for a row. */
+function expired(t, now) {
+  return t + TTL_SECONDS <= now;
+}
+
+const asBytes = (value) => (value instanceof Uint8Array ? value : new Uint8Array(value));
+
+/** SQLite storage binds an ArrayBuffer for a BLOB, not a view onto one. */
+const asBuffer = (bytes) => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+
+/**
+ * One sync code's copies. Bound in wrangler.toml as SYNC_STORE, class
+ * `SyncStore`, SQLite-backed (the only Durable Object backend on the free
+ * plan). A plain class with `fetch`: it needs nothing from `cloudflare:workers`,
+ * so this file still imports nothing and runs under plain `node --test`.
+ */
+export class SyncStore {
+  constructor(ctx, env) {
+    this.ctx = ctx;
+    this.env = env;
+    this.sql = ctx.storage.sql;
+    // In memory only — an object that found nothing in KV writes nothing for
+    // it, so a GET of an id nobody uses leaves no storage behind. A new
+    // instance simply looks again.
+    this.importedEmpty = false;
+    // Both only ever go false -> true, until the alarm deletes everything; so
+    // once seen they are remembered, and a request does not re-read
+    // sqlite_master and the meta row every time (rows read are billed).
+    this.schema = false;
+    this.importedSeen = false;
+    this.importing = null;
+    this.alarmSet = false;
+    // KV mirror writes run one at a time, each writing the copy as it stands
+    // WHEN IT RUNS, so the last mirror write is always the newest version.
+    this.mirrorChain = Promise.resolve();
+  }
+
+  /** Seconds since the epoch. A method so a test can move the clock. */
+  nowSeconds() {
+    return Math.floor(Date.now() / 1000);
+  }
+
+  // --- storage --------------------------------------------------------------
+
+  hasSchema() {
+    if (!this.schema) {
+      this.schema = this.sql.exec("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'copies'").toArray().length > 0;
+    }
+    return this.schema;
+  }
+
+  /** Created on the first WRITE, never on a read: a probe of a random id must
+   *  not leave a database behind. */
+  ensureSchema() {
+    if (this.schema) return;
+    this.sql.exec("CREATE TABLE IF NOT EXISTS copies (name TEXT PRIMARY KEY, body BLOB NOT NULL, v TEXT NOT NULL, t INTEGER NOT NULL)");
+    this.sql.exec("CREATE TABLE IF NOT EXISTS meta (k TEXT PRIMARY KEY, val TEXT NOT NULL)");
+    this.schema = true;
+  }
+
+  /** The live copy `name`, or null (absent, or past its expiry). */
+  copy(name, now) {
+    if (!this.hasSchema()) return null;
+    const rows = this.sql.exec("SELECT body, v, t FROM copies WHERE name = ?", name).toArray();
+    if (!rows.length || expired(rows[0].t, now)) return null;
+    return rows[0];
+  }
+
+  imported() {
+    if (this.importedEmpty || this.importedSeen) return true;
+    if (!this.hasSchema()) return false;
+    this.importedSeen = this.sql.exec("SELECT val FROM meta WHERE k = 'imported'").toArray().length > 0;
+    return this.importedSeen;
+  }
+
+  // --- the one-time import from KV -------------------------------------------
+
+  /**
+   * May this object read its copies from KV yet? Only once KV can no longer
+   * hand it a stale one.
+   *
+   * 🚩 A CHECK ON THE COPY ITSELF CANNOT DO THIS. The options paper suggested
+   * refusing a copy "younger than a minute"; but a stale read returns an OLDER
+   * copy, carrying the older copy's write time, so it would pass. The only
+   * thing that bounds staleness is time since the last write to that key —
+   * which a stale read cannot report. What this Worker can know is that nothing
+   * writes a user's KV keys after this version is live: every request now goes
+   * to the object, and the object writes KV only as a mirror of copies it
+   * already holds (it imports only while it holds none). So once
+   * IMPORT_SETTLE_SECONDS have passed since this version was deployed, every
+   * location's cached read of those keys has expired and a KV read returns the
+   * last write. The deploy time is the version's own timestamp
+   * (`[version_metadata]` in wrangler.toml). Without it the import is refused
+   * outright — loud (a 503 for every unimported code, caught by the runbook's
+   * first live check), never a silent stale import.
+   */
+  importReady(now) {
+    const stamp = Date.parse(this.env.CF_VERSION_METADATA?.timestamp ?? "");
+    if (!Number.isFinite(stamp)) return false;
+    return now >= Math.floor(stamp / 1000) + IMPORT_SETTLE_SECONDS;
+  }
+
+  /** Import once; every request waits on the same import. */
+  async ready(blobId) {
+    if (this.imported()) return true;
+    if (!this.importReady(this.nowSeconds())) return false;
+    this.importing ??= this.importFromKv(blobId).finally(() => {
+      this.importing = null;
+    });
+    await this.importing;
+    return true;
+  }
+
+  /**
+   * Copy this user's copies in from KV. KV is only read, never written or
+   * deleted here — it stays as it was, the fallback a rollback reads. A copy
+   * past its expiry is not imported; a copy with no write time (written before
+   * roadmap 510/050) is imported as written now, which never shortens its life.
+   */
+  async importFromKv(blobId) {
+    const kv = this.env.SYNC_BLOBS;
+    const names = familyNames();
+    const got = kv
+      ? await Promise.all(names.map((name) => kv.getWithMetadata(kvKey(blobId, name), "arrayBuffer")))
+      : names.map(() => ({ value: null, metadata: null }));
+    // From here to the end: synchronous. Nothing else can write in between.
+    if (this.imported()) return;
+    const now = this.nowSeconds();
+    const rows = [];
+    names.forEach((name, i) => {
+      const { value, metadata } = got[i];
+      if (value === null || !metadata || !metadata.v) return;
+      const t0 = Number(metadata.t);
+      const t = Number.isFinite(t0) ? Math.min(t0, now) : now;
+      if (expired(t, now)) return;
+      rows.push({ name, body: asBuffer(asBytes(value)), v: String(metadata.v), t });
+    });
+    if (!rows.length) {
+      this.importedEmpty = true;
+      return;
+    }
+    this.ctx.storage.transactionSync(() => {
+      this.ensureSchema();
+      for (const r of rows) this.sql.exec("INSERT OR REPLACE INTO copies (name, body, v, t) VALUES (?, ?, ?, ?)", r.name, r.body, r.v, r.t);
+      this.sql.exec("INSERT OR REPLACE INTO meta (k, val) VALUES ('imported', ?)", String(now));
+    });
+    await this.armAlarm();
+  }
+
+  // --- requests -------------------------------------------------------------
+
+  async fetch(request) {
+    try {
+      const url = new URL(request.url);
+      const parsed = parseBlobKey(decodeURIComponent(url.pathname.slice(1)));
+      if (!parsed) return new Response(null, { status: 400 });
+      // Defence in depth: the Worker routes by the blobId; a request for some
+      // other user's key must never reach (or write into) this one's rows.
+      const ns = this.env.SYNC_STORE;
+      if (ns && this.ctx.id && !this.ctx.id.equals(ns.idFromName(parsed.blobId))) return new Response(null, { status: 500 });
+      if (request.method === "GET") return await this.get(parsed, bucketsAsked(url, parsed));
+      if (request.method === "PUT") return await this.put(request, parsed, url);
+      return new Response(null, { status: 405 });
+    } catch {
+      return new Response(null, { status: 500 });
+    }
+  }
+
+  async get(parsed, asked) {
+    if (!(await this.ready(parsed.blobId))) return notYet();
+    // Read-only and synchronous: the copy and the bucket report are one
+    // consistent view, and a GET writes nothing (so it re-arms nothing either:
+    // only writes keep a user alive, as before).
+    const now = this.nowSeconds();
+    const name = copyName(parsed.key, parsed.blobId);
+    const cur = this.copy(name, now);
+    const headers = {};
+    if (asked) {
+      const found = [];
+      for (let bucket = 0; bucket < asked; bucket += 1) {
+        const c = this.copy(`r${bucket}`, now);
+        if (c) found.push({ bucket, version: c.v });
+      }
+      headers["X-Faves-Buckets"] = formatBucketReport(found);
+    }
+    if (!cur) return new Response(null, { status: 404, headers });
+    headers.ETag = formatEtag(cur.v);
+    return new Response(asBytes(cur.body), { status: 200, headers });
+  }
+
+  async put(request, parsed, url) {
+    const body = new Uint8Array(await request.arrayBuffer());
+    if (body.byteLength === 0) return new Response(null, { status: 400 });
+    if (body.byteLength > MAX_BODY_BYTES) return new Response(null, { status: 413 });
+    if (!(await this.ready(parsed.blobId))) return notYet();
+
+    const name = copyName(parsed.key, parsed.blobId);
+    const ifMatch = parseIfMatch(request.headers.get("If-Match"));
+    const family = familyAsked(url.searchParams);
+    const known = knownAsked(url.searchParams);
+    const now = this.nowSeconds();
+
+    // THE COMPARE-AND-SWAP. Synchronous from the read to the write: see the
+    // note at the top of this class.
+    const outcome = this.ctx.storage.transactionSync(() => {
+      const cur = this.copy(name, now);
+      // Same rule as ever: once a copy exists the write MUST be conditional,
+      // and a missing If-Match is refused like a wrong one. A copy that does
+      // not exist (or has expired) is a first write and goes through.
+      if (cur && (!ifMatch || ifMatch !== cur.v)) return null;
+      this.ensureSchema();
+      const v = crypto.randomUUID();
+      this.sql.exec("INSERT OR REPLACE INTO copies (name, body, v, t) VALUES (?, ?, ?, ?)", name, asBuffer(body), v, now);
+      this.sql.exec("INSERT OR IGNORE INTO meta (k, val) VALUES ('imported', ?)", String(now));
+      return { v, rearmed: this.rearmFamily(name, now, family, known) };
+    });
+    if (!outcome) return new Response(null, { status: 412 });
+
+    await this.armAlarm();
+    await this.mirror(parsed.blobId, [name, ...outcome.rearmed], now);
+    return new Response(null, { status: 204, headers: { ETag: formatEtag(outcome.v) } });
+  }
+
+  /**
+   * RETENTION — kept exactly as the KV Worker had it (ADR 0146 §2 and roadmap
+   * 510/140, 510/330). Each copy expires TTL_SECONDS after it was last written
+   * or re-armed. A write to one copy re-arms each OTHER copy that:
+   *   · is inside the family the writing client names (`?family`, all 16 when
+   *     absent),
+   *   · the client vouches for — `?known` names exactly the version stored
+   *     (absent `?known`, a client before 510/330, vouches for nothing), and
+   *   · was last written or re-armed REFRESH_AFTER_SECONDS (30 days) ago or
+   *     more.
+   * A re-arm moves only `t`: never the bytes, never the version. So every
+   * copy a client vouches for keeps at least 150 of its 180 days after any
+   * write under its user key, as before.
+   *
+   * In KV the vouching existed because a re-arm re-wrote bytes it had READ,
+   * and a stale read put older bytes back (510/330). Here a re-arm touches no
+   * bytes and reads nothing stale, so that hazard is gone; the rule is kept
+   * anyway so retention is the same, to the day, as the Worker this replaces.
+   * Runs inside the caller's transaction. Returns the names it re-armed.
+   */
+  rearmFamily(self, now, family, known) {
+    if (!known || known.size === 0) return [];
+    const out = [];
+    for (const name of familyNames(family)) {
+      if (name === self || !known.has(name)) continue;
+      const c = this.copy(name, now);
+      if (!c || c.v !== known.get(name)) continue;
+      if (now - c.t < REFRESH_AFTER_SECONDS) continue;
+      this.sql.exec("UPDATE copies SET t = ? WHERE name = ?", now, name);
+      out.push(name);
+    }
+    return out;
+  }
+
+  /** Make sure an alarm is set. It may fire EARLY (a copy re-armed since): the
+   *  handler then re-sets it for the earliest real expiry. It never needs to be
+   *  late, because `t` only ever moves forward. Expiry itself is exact without
+   *  it — every read treats an expired copy as absent; the alarm only frees
+   *  the storage. */
+  async armAlarm() {
+    if (this.alarmSet) return;
+    if ((await this.ctx.storage.getAlarm()) === null) {
+      const first = this.sql.exec("SELECT MIN(t) AS t FROM copies").toArray()[0];
+      if (first && first.t !== null) await this.ctx.storage.setAlarm((first.t + TTL_SECONDS) * 1000);
+    }
+    this.alarmSet = true;
+  }
+
+  /** Expiry: delete what has expired; when nothing is left, delete everything
+   *  (KV is not touched — what it holds expires on its own TTL). */
+  async alarm() {
+    this.alarmSet = false;
+    if (!this.hasSchema()) return;
+    const now = this.nowSeconds();
+    this.sql.exec("DELETE FROM copies WHERE t + ? <= ?", TTL_SECONDS, now);
+    const next = this.sql.exec("SELECT MIN(t) AS t FROM copies").toArray()[0];
+    if (!next || next.t === null) {
+      await this.ctx.storage.deleteAlarm();
+      await this.ctx.storage.deleteAll();
+      this.importedEmpty = false;
+      this.importedSeen = false;
+      this.schema = false;
+      return;
+    }
+    await this.ctx.storage.setAlarm((next.t + TTL_SECONDS) * 1000);
+    this.alarmSet = true;
+  }
+
+  /**
+   * Keep KV in step, so rolling back to the KV-only Worker loses nothing
+   * (worker/README.md, "Deploy owed — the Durable Object store"). On only
+   * when `KV_MIRROR` is "on" (wrangler.toml); off, KV is read-only and retires
+   * by its own TTL.
+   *
+   * The mirror is never consulted by this Worker after an import, so it cannot
+   * bring a stale read back. Its failure is swallowed: KV's write quota or its
+   * one-write-a-second-per-key limit must not fail a sync that has already
+   * landed in the object. It writes each copy as it stands when the job runs,
+   * one job after another, so a slow write cannot leave an older version last.
+   */
+  mirror(blobId, names, now) {
+    if (this.env.KV_MIRROR !== "on" || !this.env.SYNC_BLOBS) return Promise.resolve();
+    const job = this.mirrorChain.then(async () => {
+      for (const name of names) {
+        const c = this.copy(name, this.nowSeconds());
+        if (!c) continue;
+        try {
+          await this.env.SYNC_BLOBS.put(kvKey(blobId, name), asBytes(c.body), {
+            expirationTtl: Math.max(60, c.t + TTL_SECONDS - now),
+            metadata: { v: c.v, t: c.t },
+          });
+        } catch {
+          /* best effort — see above */
+        }
+      }
+    });
+    this.mirrorChain = job.catch(() => {});
+    return this.mirrorChain;
+  }
+}
+
+/** The import may not run yet (see `importReady`). 503 is what the client
+ *  already reads as "couldn't reach sync, your data is safe on this device";
+ *  it keeps its changes and tries again on its next sync. */
+function notYet() {
+  return new Response(null, { status: 503, headers: { "Retry-After": String(IMPORT_SETTLE_SECONDS) } });
+}
+
+// ---------------------------------------------------------------------------
 // Route handlers.
 
 /** What the client asked to be told about its buckets: `?buckets=<n>` on a
  *  GET of the core copy, clamped to MAX_BUCKETS. 0 when absent — an older
- *  client asks nothing, and costs nothing beyond its one read. */
+ *  client asks nothing. */
 function bucketsAsked(url, parsed) {
   if (parsed.bucket !== null) return 0;
   const n = Number(url.searchParams.get("buckets"));
   return Number.isInteger(n) && n > 0 ? Math.min(n, MAX_BUCKETS) : 0;
 }
 
-async function handleGet(parsed, asked, env, cors) {
-  const [{ value, metadata }, found] = await Promise.all([
-    env.SYNC_BLOBS.getWithMetadata(parsed.key, "arrayBuffer"),
-    // One KV read per bucket asked about, in the same request: a sync that
-    // changed nothing still costs one HTTP round trip. Reads are the cheap KV
-    // operation (100,000 a day free, against 1,000 writes).
-    Promise.all(
-      Array.from({ length: asked }, async (_, bucket) => {
-        const got = await env.SYNC_BLOBS.getWithMetadata(`${parsed.blobId}:r${bucket}`, "arrayBuffer");
-        return got.value !== null && got.metadata && got.metadata.v ? { bucket, version: got.metadata.v } : null;
-      })
-    ),
-  ]);
-  const report = asked ? { "X-Faves-Buckets": formatBucketReport(found.filter(Boolean)) } : {};
-  if (value === null) return empty(404, cors, report);
-  const headers = { ...baseHeaders(cors), ...report, "Content-Type": "application/octet-stream" };
-  if (metadata && metadata.v) headers["ETag"] = formatEtag(metadata.v);
-  return new Response(value, { status: 200, headers });
-}
+/** The headers the object may set that the Worker passes on. Everything else
+ *  on the way out — CORS, security headers — is the Worker's own. */
+const FROM_STORE = ["ETag", "X-Faves-Buckets", "Retry-After"];
 
 /**
- * Re-arm the expiry of every OTHER copy under this user key that is more than
- * REFRESH_AFTER_SECONDS past its last write (see that constant). The copy keeps
- * its bytes and its version `v`, so a device's recorded ETag stays valid and
- * the core copy's record of each bucket's version stays true; only `t`, the
- * time of the last write, moves.
- *
- * ONLY A COPY THE CLIENT VOUCHES FOR, AND ONLY IF THE READ IS THAT COPY
- * (roadmap 510/330). A re-arm writes back the bytes it READ, and KV is
- * eventually consistent: a read can return an older value than the latest
- * write for up to a minute or so. Until 2026-10-01 such a read was re-written
- * as it came, with a fresh write time — so the older bytes won, under their old
- * version, and the newer write was gone. In a KV model where a location does
- * not see its own writes for 60 s, an import was undone on both devices that
- * way (the 510/320 simulation; worker/sync-worker.test.js reproduces it, both
- * ways round). The trigger that made it likely: every core copy written before
- * 510/050 has no `t`, so it is due at once.
- *
- * KV offers no read that proves itself current, so the proof comes from the
- * one party that knows: the writing client names, in `?known`, the version it
- * holds of each other copy (the core copy's ETag on a bucket write; the bucket
- * versions the core copy records on a core write). A read whose version is not
- * that one is never re-written. Since a version names one write's bytes, a
- * matching read re-writes exactly the bytes the client holds. And nothing is
- * lost by skipping: a read that disagrees with the client is either stale or
- * newer than the client, and either way that copy was written within KV's
- * window — moments ago — so it already has its full 180 days. ADR 0146's
- * "every copy keeps at least 150 of its 180 days after any write" still holds,
- * at no extra KV write. A copy the client names nothing for is not even read.
- *
- * No `?known` at all — a client from before 510/330 — re-arms NOTHING. Its
- * writes cannot vouch for a read, and every copy has at least 150 days left
- * from the last re-arm, far longer than a page takes to load the new client.
- *
- * WHAT THIS DOES NOT CLOSE, the limit handlePut states: two devices writing
- * through different locations inside KV's window. If another device rewrote a
- * copy seconds ago and EVERYTHING this client read was stale too, it vouches
- * for the older version, the read matches, and the older copy goes back. That
- * needs the same conditions as two conditional PUTs both passing If-Match, and
- * in it this client's core write loses the other device's core write anyway —
- * so the re-arm adds a recipe bucket to what that race already loses, it does
- * not open a new way to lose data. (The client narrows it: a bucket whose
- * reported version disagrees with the core copy's record is not vouched for.)
- * A Durable Object per user key would close both.
+ * Forward a GET or PUT to the user's object. The body cap is enforced here,
+ * before the object is ever woken, as it was when the store was KV: a hostile
+ * upload costs this Worker, not a Durable Object request.
  */
-async function refreshFamily(parsed, env, nowSeconds, buckets, known) {
-  if (!known || known.size === 0) return;
-  await Promise.all(
-    familyKeys(parsed.blobId, buckets)
-      .filter((k) => k !== parsed.key && known.has(copyName(k, parsed.blobId)))
-      .map(async (k) => {
-        const got = await env.SYNC_BLOBS.getWithMetadata(k, "arrayBuffer");
-        if (got.value === null || !got.metadata || !got.metadata.v) return;
-        // Not the copy the client holds: a stale read, or written since. Never
-        // re-written — see above.
-        if (got.metadata.v !== known.get(copyName(k, parsed.blobId))) return;
-        const t = Number(got.metadata.t);
-        if (Number.isFinite(t) && nowSeconds - t < REFRESH_AFTER_SECONDS) return;
-        await env.SYNC_BLOBS.put(k, got.value, {
-          expirationTtl: TTL_SECONDS,
-          metadata: { ...got.metadata, t: nowSeconds },
-        });
-      })
+async function toStore(request, parsed, url, env, cors) {
+  let body;
+  if (request.method === "PUT") {
+    const contentLengthHeader = request.headers.get("Content-Length");
+    if (contentLengthHeader && Number(contentLengthHeader) > MAX_BODY_BYTES) return empty(413, cors);
+    body = await readBodyCapped(request.body, MAX_BODY_BYTES);
+    if (body === null) return empty(413, cors);
+    if (body.byteLength === 0) return empty(400, cors);
+  }
+  const headers = {};
+  const ifMatch = request.headers.get("If-Match");
+  if (ifMatch) headers["If-Match"] = ifMatch;
+  const ns = env.SYNC_STORE;
+  const stub = ns.get(ns.idFromName(parsed.blobId));
+  const res = await stub.fetch(
+    new Request(`https://sync-store.internal/${encodeURIComponent(parsed.key)}${url.search}`, {
+      method: request.method,
+      headers,
+      body,
+    })
   );
-}
-
-async function handlePut(request, parsed, family, known, env, cors) {
-  const blobId = parsed.key;
-  const contentLengthHeader = request.headers.get("Content-Length");
-  if (contentLengthHeader && Number(contentLengthHeader) > MAX_BODY_BYTES) {
-    return empty(413, cors);
+  const extra = {};
+  for (const h of FROM_STORE) {
+    const v = res.headers.get(h);
+    if (v !== null) extra[h] = v;
   }
-
-  const body = await readBodyCapped(request.body, MAX_BODY_BYTES);
-  if (body === null) return empty(413, cors);
-  if (body.byteLength === 0) return empty(400, cors);
-
-  // Read-then-write compare-and-swap. HONEST LIMIT, READ THIS BEFORE
-  // TRUSTING IT: Workers KV is eventually consistent and has no true atomic
-  // compare-and-swap primitive. The read below and the put() further down
-  // are two separate operations; if two edge locations race a write for
-  // the same blobId within KV's propagation window, both can read the same
-  // "current" version, both pass the If-Match check, and both write —
-  // the second write wins and the first is lost, with no 412 raised to
-  // either caller. This narrows the stale-clobber window (ADR 0017/0060's
-  // goal) but does NOT close it. What WOULD close it: a Durable Object
-  // per blobId, which gives single-threaded, strongly-consistent
-  // read-modify-write for that key — the correct fix if this race is ever
-  // shown to matter in practice (measured, not assumed — house rule). Not
-  // built here: it's a second primitive (DO namespace + a small object
-  // class) for a race that debounced, human-paced writes make rare, and
-  // ADR 0017 asks for read-merge-write specifically because the client
-  // side is expected to absorb a lost race by re-pulling, not because the
-  // server was assumed airtight.
-  const current = await env.SYNC_BLOBS.getWithMetadata(blobId, "arrayBuffer");
-  const currentVersion = current.metadata && current.metadata.v ? current.metadata.v : null;
-
-  if (current.value !== null) {
-    // A blob already exists: the write MUST be conditional. Treat a missing
-    // If-Match the same as a mismatched one (both become 412) rather than
-    // inventing a separate "precondition required" status — either way the
-    // correct client action is identical: GET the current blob, re-merge,
-    // retry with its ETag. A client that always reads before it writes
-    // (which every caller here should, per ADR 0017's read-merge-write)
-    // never hits this branch by surprise.
-    const ifMatch = parseIfMatch(request.headers.get("If-Match"));
-    if (!ifMatch || ifMatch !== currentVersion) return empty(412, cors);
+  if (res.status !== 200) {
+    await res.body?.cancel();
+    return empty(res.status, cors, extra);
   }
-  // No existing blob: this is a first write (new sync code) and proceeds
-  // unconditionally — there is nothing to conflict with yet.
-
-  const newVersion = crypto.randomUUID();
-  const nowSeconds = Math.floor(Date.now() / 1000);
-  await env.SYNC_BLOBS.put(blobId, body, {
-    // Refreshed on every write, per TTL_SECONDS's comment above — this is
-    // the "does not accumulate forever" requirement.
-    expirationTtl: TTL_SECONDS,
-    // KV metadata (not the value) — cheap to read alongside a GET without
-    // touching the blob bytes, and invisible to anything that only reads
-    // the value. `v` is an opaque per-write token, not a content hash: it
-    // changes even if two writes happen to carry identical ciphertext,
-    // which is exactly what a version-style ETag should do (it answers
-    // "has anyone written since I last read", not "is the content novel").
-    // `t` is when this copy was last written, in seconds — what
-    // refreshFamily reads to decide whether a sibling needs re-arming.
-    metadata: { v: newVersion, t: nowSeconds },
+  return new Response(await res.arrayBuffer(), {
+    status: 200,
+    headers: { ...baseHeaders(cors), ...extra, "Content-Type": "application/octet-stream" },
   });
-
-  // Every write keeps the whole user's copies alive (ADR 0146 §2, B1): a
-  // heart re-arms a recipe bucket nobody has touched in months, and a recipe
-  // edit re-arms the core copy. Only the buckets the client says exist are
-  // read (`family`, roadmap 510/140): reading all 16 possible keys cost a
-  // heart 16 KV reads, for most users with not one recipe. A bucket the
-  // client does not know of — one orphaned by a lost race — is not re-armed
-  // by this write; the next recipe sync detects and rewrites it. And only
-  // those the client vouches for (`known`, roadmap 510/330): a re-arm
-  // re-writes what KV read, and a stale read must never go back over a newer
-  // write.
-  await refreshFamily(parsed, env, nowSeconds, family, known);
-
-  return empty(204, cors, { ETag: formatEtag(newVersion) });
 }
 
 // ---------------------------------------------------------------------------
@@ -529,8 +801,8 @@ export default {
 
       if (request.method === "OPTIONS") {
         // Preflight is answered identically for every path/method/blobId —
-        // it never touches KV, so it has nothing to leak either way, and a
-        // response that varied with blobId validity would itself be a
+        // it never touches storage, so it has nothing to leak either way, and
+        // a response that varied with blobId validity would itself be a
         // (tiny) way to probe blobIds without ever doing a real GET.
         return preflight(cors);
       }
@@ -545,9 +817,11 @@ export default {
       const parsed = parseBlobKey(match[1]);
       if (!parsed) return empty(400, cors);
 
-      if (request.method === "GET") return await handleGet(parsed, bucketsAsked(url, parsed), env, cors);
-      if (request.method === "PUT") {
-        return await handlePut(request, parsed, familyAsked(url.searchParams), knownAsked(url.searchParams), env, cors);
+      if (request.method === "GET" || request.method === "PUT") {
+        // No store bound is a broken deploy. It fails loudly (500) rather
+        // than falling back to reading KV, which is the defect this replaced.
+        if (!env.SYNC_STORE) return empty(500, cors);
+        return await toStore(request, parsed, url, env, cors);
       }
 
       return empty(405, cors, { Allow: "GET, PUT, OPTIONS" });

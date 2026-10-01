@@ -1232,20 +1232,18 @@ test("the REAL Worker re-arms the buckets a real client's heart names — the tw
   // it) and the client holds versions as quoted ETags. If they disagreed, the
   // Worker would match nothing and silently re-arm nothing — every check that
   // looks only at one side stays green while recipes start to expire.
-  const { default: worker } = await import("../worker/sync-worker.js");
-  const store = new Map();
-  const kv = {
-    async getWithMetadata(k) {
-      const e = store.get(k);
-      return e ? { value: e.value.slice(0), metadata: e.metadata } : { value: null, metadata: null };
-    },
-    async put(k, value, opts = {}) {
-      const bytes = value instanceof Uint8Array ? new Uint8Array(value) : new Uint8Array(value.slice(0));
-      store.set(k, { value: bytes.buffer, metadata: opts.metadata ?? null, ttl: opts.expirationTtl ?? null });
-    },
-  };
+  // Since 510/340 the copies live in the user's Durable Object (ADR 0151); the
+  // re-arm rule is unchanged, so this now reads the object's rows.
+  const { default: worker, SyncStore, REFRESH_AFTER_SECONDS } = await import("../worker/sync-worker.js");
+  const { DurableObjectNamespaceStandIn } = await import("../worker/durable-object-standin.js");
+  let clock = Math.floor(Date.now() / 1000);
+  const ns = new DurableObjectNamespaceStandIn(
+    SyncStore,
+    { CF_VERSION_METADATA: { timestamp: new Date((clock - 86400) * 1000).toISOString() } },
+    { now: () => clock }
+  );
   const origin = "https://lets-eat.myspot.nz";
-  const env = { SYNC_BLOBS: kv, ALLOWED_ORIGINS: origin };
+  const env = { SYNC_STORE: ns, ALLOWED_ORIGINS: origin };
   const real = {
     fetch: async (u, i = {}) => {
       const res = await worker.fetch(
@@ -1263,17 +1261,15 @@ test("the REAL Worker re-arms the buckets a real client's heart names — the tw
   const s = mk(a, real, { endpoint: "https://example.invalid" });
   const { code } = await s.enable();
   const { blobId } = await keysFor(code);
-  const buckets = [...store.keys()].filter((k) => k.startsWith(`${blobId}:r`));
-  assert.equal(buckets.length, RECIPE_BUCKETS);
-  // Age every bucket past the 30-day threshold, expiry nearly out.
-  for (const k of buckets) store.set(k, { ...store.get(k), metadata: { ...store.get(k).metadata, t: 0 }, ttl: 1 });
+  const rows = () => ns.storage(blobId).dump("copies").filter((r) => r.name.startsWith("r"));
+  assert.equal(rows().length, RECIPE_BUCKETS);
+  // A month and a day later, every bucket is past the 30-day threshold.
+  const written = rows()[0].t;
+  clock += REFRESH_AFTER_SECONDS + 86400;
   a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
   const res = await s.syncNow(); // a heart: the core copy only
   assert.equal(res.ok, true);
-  for (const k of buckets) {
-    assert.equal(store.get(k).ttl, 180 * 24 * 60 * 60, `${k} not re-armed`);
-    assert.ok(store.get(k).metadata.t > 0, `${k} write time did not move`);
-  }
+  for (const r of rows()) assert.equal(r.t, clock, `${r.name} not re-armed (t ${r.t}, written ${written})`);
 });
 
 test("another device's FIRST recipe still arrives on a device that was asking about no bucket (roadmap 510/140)", async () => {
