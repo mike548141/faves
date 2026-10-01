@@ -447,24 +447,30 @@ async function run(opts) {
     const waitForRecipe = (label) =>
       untilPresent(() => driver.evalPage(`location.pathname.endsWith("/recipe.html") ? location.search : null`), { label });
     await openVenue(driver, cdp, sessionId, port, "cook-at-home");
-    await typeQuery(driver, "self-saucing");
+    // A query that leaves exactly ONE recipe on this screen AND ONE dish across
+    // the whole corpus (the home search below reads every venue). It was
+    // "self-saucing" until 2026-10-01, when that recipe moved into the owner's
+    // own cookbook (roadmap 510/050). Kept hyphenated, because the hyphen is
+    // part of what is being exercised. Measured 2026-10-01 with search.js on the
+    // shipped index: "upside-down" → 1 dish in 57 venues.
+    await typeQuery(driver, "upside-down");
     await driver.evalPage(`document.querySelector(".menu-search")
       .dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true }))`);
     const fromMenu = await waitForRecipe("Enter on one recipe opened its page");
     report.check(
       "Enter on a menu search left with ONE recipe opens that recipe's page",
-      /dish=chocolate-self-saucing-pudding/.test(fromMenu),
+      /dish=upside-down-plum-cake/.test(fromMenu),
       fromMenu
     );
     await cdp.send("Page.navigate", { url: `http://127.0.0.1:${port}/index.html` }, sessionId);
     await untilPresent(() => driver.evalPage(`!document.getElementById("search-form")?.hidden`), { label: "home search" });
     await driver.evalPage(`(() => { const s = document.getElementById("search-input");
-      s.value = "self-saucing"; s.dispatchEvent(new Event("input", { bubbles: true }));
+      s.value = "upside-down"; s.dispatchEvent(new Event("input", { bubbles: true }));
       document.getElementById("search-form").requestSubmit(); })()`);
     const fromHome = await waitForRecipe("home submit on one result opened it");
     report.check(
       "submitting a home search with ONE result opens it",
-      /dish=chocolate-self-saucing-pudding/.test(fromHome),
+      /dish=upside-down-plum-cake/.test(fromHome),
       fromHome
     );
 
