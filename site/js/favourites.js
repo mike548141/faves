@@ -13,7 +13,7 @@
 import { profileScopedStorage } from "./profiles.js";
 import { rawOf } from "./store.js";
 import { migrateEntries, canonicalVenueId } from "./renames.js";
-import { dishId, findDish } from "./dish-id.js";
+import { absorbFavourites, dishId, findDish, formerIdMoves } from "./dish-id.js";
 import { MY_RECIPES, RECIPES_KEY, isPersonalVenue } from "./recipe-record.js";
 import { followFavourites, movesOfStoredCookbook } from "./recipe-move.js";
 
@@ -199,7 +199,16 @@ export function createFavourites(storage) {
   // read AND before every write, so a heart arriving on the old id by any
   // route — a shortlist added, a stale page's tap, another tab — becomes the
   // moved heart instead of sitting beside it.
-  const follow = (list) => followFavourites(list, movesOfStoredCookbook(rawOf(storage, RECIPES_KEY)));
+  //
+  // And a heart on a dish id the data has RETIRED lands on the dish whose
+  // `formerIds` claims it (roadmap 28l, ADR 0153) — but only once a page has
+  // that record in hand and passed it to `absorb`, because the claim lives in
+  // the menu data, not in anything this store reads. In memory, like the
+  // follow above: the stored string changes at the person's next write, never
+  // as a rewrite of its own (ADR 0152; tests/storage-writers.test.js).
+  const absorbed = new Map();
+  const follow = (list) =>
+    absorbFavourites(followFavourites(list, movesOfStoredCookbook(rawOf(storage, RECIPES_KEY))), absorbed);
 
   function read() {
     seen = rawOf(storage, KEY);
@@ -297,6 +306,31 @@ export function createFavourites(storage) {
 
     venues: () => items.filter((i) => i.type === "venue"),
     dishes: () => items.filter((i) => i.type === "dish"),
+
+    /**
+     * Learn which retired dish ids `record` says its dishes now answer to
+     * (`formerIds`), and move any heart stored under one onto the live dish —
+     * so the menu row lights, and the "favourites" query keeps the row, for a
+     * heart saved before the id was retired. Call it with each record a page
+     * renders hearts against, BEFORE rendering. Kept for every later read of
+     * this page (a profile switch, another tab, a sync pull). Writes nothing;
+     * tells subscribers when something moved. Returns whether anything did.
+     */
+    absorb(record) {
+      const moves = formerIdMoves(record);
+      let learned = false;
+      for (const [k, v] of moves) {
+        if (absorbed.has(k)) continue;
+        absorbed.set(k, v);
+        learned = true;
+      }
+      if (!learned) return false;
+      const next = follow(items);
+      if (next === items) return false;
+      items = next;
+      notify();
+      return true;
+    },
 
     reload() {
       items = read();
