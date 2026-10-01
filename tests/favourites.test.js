@@ -310,6 +310,20 @@ test("favouriteDishIds keys a pre-id heart by its name, exactly as the heart doe
   }
 });
 
+// Roadmap 510/300: Cook at Home's page lists your own recipes, hearted under
+// `u:mine`, so the page's "favourites" query reads both venues — and only there.
+test("favouriteDishIds on Cook at Home also reads your own recipes' hearts", () => {
+  const entries = [
+    { type: "dish", venueId: "cook-at-home", name: "Pavlova", dishId: "pavlova", isRecipe: true },
+    { type: "dish", venueId: "u:mine", name: "Ginger Crunch", dishId: "u:ginger-crunch", isRecipe: true },
+    { type: "dish", venueId: "kk", name: "Roti", dishId: "u:not-here" },
+  ];
+  assert.deepEqual([...favouriteDishIds(entries, "cook-at-home")].sort(), ["pavlova", "u:ginger-crunch"]);
+  // Any other venue is exactly as before: a personal heart is not its dish.
+  assert.deepEqual([...favouriteDishIds(entries, "kk")], ["u:not-here"]);
+  assert.deepEqual([...favouriteDishIds(entries, "u:mine")], ["u:ginger-crunch"]);
+});
+
 // --- groupFavourites: personal recipes live inside Cook at Home (510/290) ----
 
 const mine = (name, dishId) => ({

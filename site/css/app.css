@@ -953,6 +953,19 @@ html:has(.home-tools) {
   line-height: 1.4;
 }
 
+/* The same label beside a recipe's name on the Cook at Home list, in the heading
+   after the name as the order-number badge is, and under the title on the
+   recipe's own page (roadmap 510/300). Inline there, so the pill sits on the
+   name's line and wraps with it rather than stretching a column. */
+.dish-name .recipe-owner {
+  display: inline-block;
+  margin-left: var(--space-2);
+  vertical-align: baseline;
+}
+.recipe-owner-line {
+  margin: var(--space-1) 0 0;
+}
+
 /* Reference integrity (ADR 0020): a saved heart whose venue or dish isn't in
    the data this device holds. The row is MARKED, never dropped.
 
