@@ -1835,3 +1835,9 @@ deliberation those compact docs omit.
   so old builds are fixed too. Retention is the KV Worker's to the day. KV is
   imported once per user, only five minutes after the deploy (a check on the
   copy cannot see a stale read), and mirrored for a lossless rollback.
+- [0152](0152-three-guards-for-old-hearts-coming-back.md) —
+  **Three guards for old hearts coming back** (owner-ruled 2026-10-02,
+  `510/380`, `390`, `400`). A heart on a moved recipe follows it, in memory on
+  every read and merge input, not by a storage migration; a merge with no base
+  asks first and an unanswered question means nothing syncs; the device log
+  keeps only syncs that did something.
