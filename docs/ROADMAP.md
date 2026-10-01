@@ -237,7 +237,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [28a — Nothing to do about "one dish or three": they are three dishes](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/010-28a-nothing-to-do-about-one-dish-or-three-they.md)
 - [ ] [28b — A second price has nowhere to live](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/020-28b-a-second-price-has-nowhere-to-live.md)
 - [ ] 🎯 [28e — OWNER RULED 2026-08-16: yes, Faves may ask who the reader is.](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/030-28e-owner-ruled-2026-08-16-yes-faves-may-ask-w.md)
-- [ ] [28e (original filing) — eligibility is unstated](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/040-28e-original-filing-eligibility-is-unstated.md)
+- ✅ [28e (original filing) — eligibility is unstated](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/040-28e-original-filing-eligibility-is-unstated.md)
 - ✅ [28h — The variant enumerator: nothing else here can be sized without](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/050-28h-the-variant-enumerator-nothing-can-be-plan.md)
 - [ ] 🎯 [28i — The ruling cannot be built for a protein ladder without one](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/060-28i-the-ruling-cannot-be-built-for-a-protein-l.md)
 - [ ] 🎯 [28j — What happens to an existing heart on "Large Butter Chicken"](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/070-28j-what-happens-to-an-existing-heart-on-large.md)
