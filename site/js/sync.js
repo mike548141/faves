@@ -38,6 +38,8 @@ import { collectPersonalData, storesAhead, upgradePersonalData } from "./persona
 import { deviceStorage, PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseRegistry, scopeKey } from "./profiles.js";
 import { mergePersonal, needsDecision, baselessPeople, keepTheirsFor, CONFLICT_NO_BASE } from "./sync-merge.js";
 import { followMovesInSnapshot } from "./recipe-move.js";
+import { appendSyncLog, heartChange, readSyncLog } from "./sync-log.js";
+import { currentVersions } from "./versions.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "./sync-crypto.js";
 import { mintSyncCode, normaliseSyncCode } from "./sync-code.js";
 import { storageAhead } from "./store.js";
@@ -373,6 +375,12 @@ export function createSync({
   // the server a copy built from data it may be misreading. Injectable for the
   // tests; the default reads the stamp in `storage`.
   behind = () => storageAhead(storage),
+  // Which page and which build ran a cycle, for the sync log (roadmap
+  // 510/380). The build is the controlling service worker's own
+  // SHELL_VERSION, asked once per page (versions.js); null where there is no
+  // worker to ask (a first visit, a test).
+  page = () => globalThis.location?.pathname ?? null,
+  build = async () => (await currentVersions()).shell ?? null,
 } = {}) {
   const subs = new Set();
   let state = OFF;
@@ -392,6 +400,17 @@ export function createSync({
   // failed cycle, a race lost on every attempt, or a debounced write not yet
   // sent. What the `online` listener asks before it spends a round trip.
   let waiting = false;
+
+  // Asked once per page, and kept only once there is an answer: on a first
+  // visit no worker controls the page yet, and a remembered "unknown" would
+  // then label every entry this page writes.
+  let buildP = null;
+  const buildOnce = async () => {
+    buildP ??= Promise.resolve().then(build).catch(() => null);
+    const b = await buildP;
+    if (b == null) buildP = null;
+    return b;
+  };
 
   const readConfig = () => parse(storage.getItem(SYNC_KEY)) || {};
   const writeConfig = (patch) => {
@@ -577,7 +596,7 @@ export function createSync({
    * only the diet one (ADR 0060), which is safety data and is never resolved
    * without the user.
    */
-  async function syncNow({ decisions = null } = {}) {
+  async function syncNow({ decisions = null, why = "sync now" } = {}) {
     const cfg = readConfig();
     if (!cfg.code) return { ok: false, error: "Sync is off." };
     if (inFlight) return inFlight;
@@ -602,6 +621,8 @@ export function createSync({
     }
 
     inFlight = (async () => {
+      // What this run did, filled in as it goes, for the sync log (510/380).
+      const trace = { why };
       try {
         // A 412 means the other device wrote between our read and our write.
         // Until 2026-09-30 that returned `retry: true` and nothing read it, so
@@ -612,7 +633,7 @@ export function createSync({
         // refused conditional write costs the Worker a read, not a KV write.
         let res;
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
-          res = await cycle(cfg, decisions);
+          res = await cycle(cfg, decisions, trace);
           if (!res.retry) break;
         }
         // Is there something this device still owes the server? A success
@@ -620,12 +641,51 @@ export function createSync({
         // another cycle); a failure owes whatever it was carrying; a question
         // for the reader is theirs to answer, not the network's.
         waiting = res.ok === true ? !!res.deferredLocal : !res.needsDecision;
+        await record(res, trace);
         return res;
       } finally {
         inFlight = null;
       }
     })();
     return inFlight;
+  }
+
+  /**
+   * Keep this run in the device's sync log (roadmap 510/380) — unless it found
+   * nothing to do: a run that had its last agreement, changed nothing here and
+   * sent nothing is every page load's pull, and keeping those would push the
+   * one that mattered out of the list (sync-log.js says why). Never throws.
+   */
+  async function record(res, trace) {
+    try {
+      const outcome = res.ok
+        ? "synced"
+        : res.noBase
+          ? "asked"
+          : res.needsDecision
+            ? "needs-answer"
+            : res.retry
+              ? "raced"
+              : res.error === "update-needed"
+                ? "paused"
+                : "error";
+      const moved = !!(trace.here?.nAdded || trace.here?.nRemoved || trace.sent);
+      if (outcome === "synced" && !moved && trace.base === "yes") return;
+      const entry = {
+        at: now(),
+        page: page(),
+        build: await buildOnce(),
+        why: trace.why,
+        base: trace.base ?? null,
+        outcome,
+      };
+      if (outcome === "error" || outcome === "paused") entry.error = error || null;
+      if (trace.here) entry.here = trace.here;
+      if (outcome === "synced") entry.sent = trace.sent ?? null;
+      appendSyncLog(storage, entry);
+    } catch {
+      /* the log is a diagnostic; it must never fail the sync it describes */
+    }
   }
 
   /**
@@ -670,7 +730,7 @@ export function createSync({
 
   /** One read → merge → write → record pass. `syncNow` runs it, and runs it
    *  again (a bounded number of times) when the write lost a race. */
-  async function cycle(cfg, decisions) {
+  async function cycle(cfg, decisions, trace = {}) {
     setState(SYNCING);
     try {
       const { blobId, key } = await deriveSyncKeys(normaliseSyncCode(cfg.code));
@@ -741,6 +801,9 @@ export function createSync({
       //     device since (510/320's union). So it asks, once, and waits —
       //     unless the person has already answered.
       const gap = baselessPeople(baseF, mineF, theirs);
+      const both = (theirs?.profiles || []).map((p) => String(p?.id ?? ""));
+      const covered = new Set((baseF?.profiles || []).map((p) => String(p?.id ?? "")));
+      trace.base = !baseF ? "none" : mineF.profiles.some((p) => both.includes(String(p.id)) && !covered.has(String(p.id))) ? "partial" : "yes";
       const answer = NO_BASE_ANSWERS.has(decisions?.noBase) ? decisions.noBase : cfg.ask?.answer;
       if (gap.length) {
         if (!NO_BASE_ANSWERS.has(answer)) {
@@ -805,6 +868,7 @@ export function createSync({
       // recipe's old key is rewritten once, so no older build reads it back.
       const raw = read.theirs;
       if (!(raw && sameSnapshot(merged, raw) && sameBuckets(merged.recipeBuckets, raw.recipeBuckets))) {
+        trace.sent = heartChange(raw, merged);
         const sealed = await sealBlob(key, merged);
         // How many buckets this user has, so the Worker re-arms those and no
         // others (roadmap 510/140): it read all 16 possible keys on every
@@ -891,6 +955,7 @@ export function createSync({
         else local = combined.merged;
       }
       const coreMoved = agreed && !sameSnapshot(local, now2);
+      if (coreMoved) trace.here = heartChange(now2, local);
       const recipesMoved = rec.supported && !localMoved && !sameRecipes(rec.merged, mineRecipes);
       if (coreMoved || recipesMoved) {
         if (coreMoved) writeSnapshot(storage, local);
@@ -943,7 +1008,7 @@ export function createSync({
     if (timer) clearTimer(timer);
     timer = setTimer(() => {
       timer = null;
-      syncNow();
+      syncNow({ why: "change" });
     }, debounceMs);
   }
 
@@ -952,7 +1017,7 @@ export function createSync({
     if (!timer) return;
     clearTimer(timer);
     timer = null;
-    syncNow();
+    syncNow({ why: "leaving" });
   }
 
   /**
@@ -996,7 +1061,7 @@ export function createSync({
     const age = Date.parse(now()) - Date.parse(cfg.lastSyncedAt || "");
     const fresh = Number.isFinite(age) && age >= 0 && age < pullWindowMs;
     if (fresh && !inFlight && !timer && !waiting && !holdsUnsent()) return;
-    syncNow();
+    syncNow({ why: "open" });
   }
 
   return {
@@ -1020,7 +1085,7 @@ export function createSync({
         /* nothing to clear */
       }
       setState(IDLE);
-      const res = await syncNow();
+      const res = await syncNow({ why: "turned on" });
       return { ok: res.ok !== false || !!res.needsDecision, code, ...res };
     },
 
@@ -1041,7 +1106,7 @@ export function createSync({
         /* nothing to clear */
       }
       setState(IDLE);
-      return syncNow();
+      return syncNow({ why: "joined" });
     },
 
     /**
@@ -1058,7 +1123,7 @@ export function createSync({
         const cfg = readConfig();
         if (cfg.ask) writeConfig({ ask: { ...cfg.ask, answer: decisions.noBase } });
       }
-      return syncNow({ decisions });
+      return syncNow({ decisions, why: "answer" });
     },
 
     /**
@@ -1134,7 +1199,7 @@ export function createSync({
         const onOnline = () => {
           if (!readConfig().code) return;
           if (timer) flush();
-          else if (waiting) syncNow();
+          else if (waiting) syncNow({ why: "online" });
         };
         win.addEventListener("online", onOnline);
         offs.push(() => win.removeEventListener("online", onOnline));
@@ -1160,6 +1225,8 @@ export function createSync({
     syncNow,
     schedule,
     flush,
+    /** The device's sync log, oldest first (510/380): what Settings shows. */
+    history: () => readSyncLog(storage),
     /** Exposed for the headless check, which has to assert that a burst of
      *  changes produces one write rather than five. */
     _pendingWrite: () => !!timer,

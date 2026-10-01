@@ -42,6 +42,7 @@
 
 import { sync, OFF, SYNCING, ERROR, NEEDS_DECISION, PAUSED, RELOAD_NEEDED, KEEP_SYNCED, ADD_EXTRAS } from "./sync.js";
 import { CONFLICT_NO_BASE } from "./sync-merge.js";
+import { describeEntry, syncLogText } from "./sync-log.js";
 import { isValidSyncCode } from "./sync-code.js";
 import { encodeQR } from "./qr.js";
 import { copyText } from "./share-core.js";
@@ -209,6 +210,66 @@ function buildCodeBlock(code) {
   ]);
 }
 
+/**
+ * "Sync history on this device" (roadmap 510/380): the last syncs that did
+ * something, in plain words, behind a button so it costs nothing until asked
+ * for, with a Copy for a bug report. Shown in every view that has a history —
+ * a person whose sync is off, stuck or asking is exactly the one who wants to
+ * see what it last did. The words come from sync-log.js, so the panel and the
+ * copied text cannot say different things.
+ */
+function logControl() {
+  const toggle = el("button", {
+    type: "button",
+    className: "profile-btn",
+    textContent: "Show sync history",
+    "aria-expanded": "false",
+    "aria-controls": "sync-log-list",
+  });
+  const intro = el("p", {
+    className: "settings-hint",
+    textContent:
+      "The last syncs on this device that changed something, asked something or didn’t finish. " +
+      "It stays on this device: it is never synced and never in a backup.",
+  });
+  const list = el("ol", { className: "sync-log", id: "sync-log-list" });
+  const copyBtn = el("button", { type: "button", className: "profile-btn", textContent: "Copy history" });
+  const copyStatus = el("p", { className: "settings-data-status", role: "status", "aria-live": "polite" });
+  const body = el("div", { className: "sync-log-body", hidden: true }, [intro, list, copyBtn, copyStatus]);
+  const wrap = el("div", { className: "sync-divider sync-log-wrap", hidden: true }, [toggle, body]);
+
+  function paint() {
+    const entries = sync.history();
+    wrap.hidden = entries.length === 0;
+    if (body.hidden) return;
+    list.replaceChildren(
+      ...[...entries].reverse().map((e) => {
+        const d = describeEntry(e);
+        return el("li", { className: "sync-log-entry" }, [
+          el("p", { className: "sync-log-head", textContent: d.head }),
+          ...d.lines.map((l) => el("p", { className: "sync-log-line", textContent: l })),
+          ...d.ids.map((l) => el("p", { className: "sync-log-ids", textContent: l })),
+        ]);
+      })
+    );
+  }
+  toggle.addEventListener("click", () => {
+    const opening = body.hidden;
+    body.hidden = !opening;
+    toggle.setAttribute("aria-expanded", String(opening));
+    toggle.textContent = opening ? "Hide sync history" : "Show sync history";
+    copyStatus.textContent = "";
+    paint();
+  });
+  copyBtn.addEventListener("click", async () => {
+    copyStatus.textContent = (await copyText(syncLogText(sync.history())))
+      ? "Sync history copied."
+      : "Couldn’t copy — select the list above instead.";
+  });
+  paint();
+  return { node: wrap, refresh: paint };
+}
+
 /** Which of the six views is showing. Pure given `(st, local)` — the two
  *  local-only flags are the entirety of this module's own state, everything
  *  else comes from the engine. Idle and syncing deliberately collapse to the
@@ -239,7 +300,10 @@ export function syncControls() {
   let refs = null;
 
   const body = el("div", { className: "sync-body" });
-  const panel = el("div", { className: "settings-panel" }, [body]);
+  // Outside `body`, which is rebuilt on every change of view: the history
+  // stays open, and keeps its place, while sync moves between states.
+  const history = logControl();
+  const panel = el("div", { className: "settings-panel" }, [body, history.node]);
 
   function render() {
     const st = sync.status();
@@ -262,6 +326,7 @@ export function syncControls() {
       refs?.patch?.(st);
     }
     if (rowEl) rowEl.textContent = summaryText(st);
+    history?.refresh();
   }
 
   function buildView(viewKey, st) {

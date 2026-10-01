@@ -7,15 +7,17 @@
 //     node tools/sync_check.mjs             # headless, exit 0 = pass
 //     node tools/sync_check.mjs --help
 //
-// CURRENT STATUS — the run reaches the end. 26 assertions, all passing, in a
-// real two-browser run (2026-09-30; 22 from 2026-09-20, +4 with roadmap
-// 510/050's personal recipes in buckets; 16 until then, +6 with ADR 0118 —
+// CURRENT STATUS — the run reaches the end. 33 assertions, all passing, in a
+// real two-browser run (2026-10-02: +3 for the sync log, 510/380, and +4 for
+// the no-base question, 510/390; 26 from 2026-09-30, 22 from 2026-09-20, +4
+// with roadmap 510/050's personal recipes in buckets; 16 until then, +6 with
+// ADR 0118 —
 // three for the allergen key an older build drops, three for the error
 // view's way out). Read the verdict the same way regardless: a harness abort is exit 2,
 // not exit 1 (see "the verdict" in tools/lib/browser.mjs), so an abort leaves
 // the assertions after it ABSENT, not failed, and the run still looks orderly.
 // Trust nothing until the run has printed its own final "OK/FAILED — N passed,
-// N failed" summary line, and check that N is 26 — a *shrunken* N is the shape
+// N failed" summary line, and check that N is 33 — a *shrunken* N is the shape
 // this file failed in for however long nobody ran it.
 //
 // HOW THIS FILE WENT DECORATIVE, because the next refactor will try it again.
@@ -154,6 +156,7 @@
 import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { createServer } from "node:http";
 import {
@@ -179,6 +182,11 @@ const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
 
 const DEFAULT_VENUE = "rs-satay-noodle-house";
+
+/** The build the pages under test run, as the sync log should name it
+ *  (roadmap 510/380). Read from sw.js, never typed here, so a bump cannot
+ *  leave this check asserting last week's number. */
+const SHELL_VERSION = /^const SHELL_VERSION = "([^"]+)";/m.exec(readFileSync(join(SITE, "sw.js"), "utf8"))?.[1];
 
 const HELP = `Faves sync check — verify cross-device sync in two real browsers.
 
@@ -402,6 +410,23 @@ const rawStoreExpr = `(() => {
   return { favCount: fav.length, ratingKeys: Object.keys(rat).sort(), ratings: rat };
 })()`;
 
+// The sync history as the Settings panel draws it (roadmap 510/380): each
+// entry's heading and words, whether the toggle says it is open, and the
+// smallest visible control's height (a target under 44 px fails WCAG 2.2's
+// spacing rule on a phone).
+const syncLogExpr = () => `(() => {
+  const items = [...document.querySelectorAll(".sync-log-entry")];
+  const t = document.querySelector(${JSON.stringify(NAV.logToggle)});
+  const btns = [...document.querySelectorAll(".sync-log-wrap button")].filter((b) => b.getClientRects().length);
+  return {
+    n: items.length,
+    expanded: t ? t.getAttribute("aria-expanded") : null,
+    heads: items.map((li) => li.querySelector(".sync-log-head")?.textContent || ""),
+    text: items.map((li) => li.textContent).join(" | "),
+    minH: btns.length ? Math.min(...btns.map((b) => Math.round(b.getBoundingClientRect().height))) : 0,
+  };
+})()`;
+
 const syncStatusExpr = `(() => {
   const s = document.querySelector(".sync-body [role=status]");
   return s ? s.textContent : null;
@@ -460,6 +485,11 @@ const NAV = {
   // this block exists to stop recurring.
   dietTopic: "Food preferences",
   avoidChip: ".pref-chips-avoid .pref-chip",
+  // The sync log (roadmap 510/380) and the no-base question (510/390), both
+  // inside the Sync section.
+  logToggle: ".sync-log-wrap .profile-btn",
+  noBaseHeading: "This device has favourites sync doesn’t",
+  noBaseChoice: ".sync-body .import-choice",
 };
 
 /** Wrap one move of the Settings walk so a break names the STEP, not just a
@@ -870,8 +900,11 @@ async function run(opts) {
   }
   const DISH_X = items[0].name; // hearted + rated: the headline crossing
   const DISH_Y = items[1].name; // only ever touched after the server goes dark
+  const DISH_Z = items[2]?.name; // hearted on B with no base: the no-base question (510/390)
+  if (!DISH_Z) throw new Error(`${opts.id} needs at least three menu items — pick another --id`);
   refuseAmbiguousFixture(items, DISH_X, opts.id);
   refuseAmbiguousFixture(items, DISH_Y, opts.id);
+  refuseAmbiguousFixture(items, DISH_Z, opts.id);
 
   const { server: siteServer, port: sitePort } = await startServer(opts.port, SITE);
   const { server: blobServer, port: blobPort, blobs: fakeBlobs } = await startFakeBlobServer(opts.blobPort);
@@ -1086,6 +1119,75 @@ async function run(opts) {
       `${bSteps} method step(s) on the page`
     );
     await B.d.reload("back to the menu after the recipe page");
+
+    // --- 5d. THE SYNC LOG ON THE DEVICE (roadmap 510/380) ------------------
+    // Every sync above went through the real panel, so A's log holds real
+    // entries. Read the way the owner would: Settings → Your data → Sync →
+    // "Show sync history". The build comes from A's own service worker.
+    await openSyncPanel(A.d);
+    await nav("open the sync history", NAV.logToggle, () => A.d.click(NAV.logToggle, "Show sync history"));
+    const logView = await A.d.evalPage(syncLogExpr());
+    report.check(
+      "[A] Settings shows the sync history newest first, naming the screen and the build that ran each sync",
+      logView.n >= 3 && logView.expanded === "true" && logView.heads[0].includes("A place’s menu") &&
+        logView.heads[0].includes(`build ${SHELL_VERSION}`),
+      `${logView.n} entr(ies); newest: "${logView.heads[0]}"; expected build ${SHELL_VERSION}`
+    );
+    report.check(
+      "[A] the history says what each sync did: the heart sent, by id, and whether it had a base",
+      /Added to sync: d:/.test(logView.text) && /Had the last agreement/.test(logView.text) && /Had NO last agreement/.test(logView.text),
+      logView.text.slice(0, 400)
+    );
+    report.check("[A] the history's controls are at least 44 px tall", logView.minH >= 44, `smallest ${logView.minH}px`);
+    await closeSettings(A.d);
+
+    // --- 5e. NO SILENT MERGE WITHOUT A BASE (roadmap 510/390) --------------
+    // B loses its last agreement (the base) and holds a heart sync does not.
+    // Until 510/390 the next sync added it everywhere as if new — the merge
+    // behind 510/320's union. Now it must stop and ask, send nothing, and
+    // carry the heart only on the answer "add".
+    const blobState = () => JSON.stringify([...fakeBlobs.entries()].map(([k, v]) => [k, v.etag]).sort());
+    await B.d.evalPage(`localStorage.removeItem("faves.sync.base.v1")`);
+    await toggleHeart(B.d, DISH_Z);
+    const blobsBefore = blobState();
+    await openSyncPanel(B.d);
+    await B.d.click(".sync-body .settings-reset", "Sync now");
+    await untilPresent(
+      async () => B.d.evalPage(`[...document.querySelectorAll(".sync-body .settings-sub")].some((e) => e.textContent === ${JSON.stringify(NAV.noBaseHeading)})`),
+      { label: "B's no-base question", timeout: 15_000 }
+    );
+    const q = await B.d.evalPage(`(() => {
+      const radios = [...document.querySelectorAll('.sync-body input[name="sync-no-base-choice"]')];
+      const use = [...document.querySelectorAll(".sync-body .profile-btn-primary")].find((b) => b.textContent === "Use this answer");
+      return { text: document.querySelector(".sync-body").textContent, radios: radios.length, checked: radios.filter((r) => r.checked).length, disabled: use ? use.disabled : null };
+    })()`);
+    report.check(
+      "[B] a device with no base, holding a heart sync lacks, ASKS rather than merging — two answers, neither pre-picked, naming the dish",
+      q.radios === 2 && q.checked === 0 && q.disabled === true && q.text.toLowerCase().includes(DISH_Z.toLowerCase()),
+      `radios=${q.radios} checked=${q.checked} useDisabled=${q.disabled}; names ${DISH_Z}: ${q.text.toLowerCase().includes(DISH_Z.toLowerCase())}`
+    );
+    report.check("[B] nothing was written to sync while the question is open", blobState() === blobsBefore, "the fake server's copies changed");
+    await closeSettings(B.d);
+    await syncNowAndWait(A.d);
+    report.check(
+      "[A] the unanswered heart did not reach A",
+      (await dishState(A.d, DISH_Z)).heart === "false",
+      `A sees ${DISH_Z}: heart=${(await dishState(A.d, DISH_Z)).heart}`
+    );
+    await openSyncPanel(B.d);
+    await B.d.click(NAV.noBaseChoice, "Add them to all your devices");
+    await B.d.click(".sync-body .profile-btn-primary", "Use this answer");
+    await untilPresent(async () => B.d.evalPage(`!!document.querySelector(".sync-body .settings-reset")`), {
+      label: "B's sync panel to return to the \"on\" view after the answer",
+      timeout: 15_000,
+    });
+    await closeSettings(B.d);
+    await syncNowAndWait(A.d);
+    report.check(
+      "[A] once B answers \"add\", B's heart reaches A",
+      (await dishState(A.d, DISH_Z)).heart === "true",
+      `A sees ${DISH_Z}: heart=${(await dishState(A.d, DISH_Z)).heart}`
+    );
 
     // --- 6. Turning sync off on B leaves B's own data intact -------------
     const bBeforeOff = await dishState(B.d, DISH_X);

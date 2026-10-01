@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Sync history on this device.** Settings → Your data → Sync → "Show sync
+  history" lists the last 20 syncs that changed something, asked something or
+  didn't finish: when, which screen and which version of Faves ran it, whether
+  it had a record of your last match with your other devices, and which hearts
+  it added or removed here and in sync. "Copy history" copies it for a bug
+  report. It stays on this device: never synced, never in a backup.
 - **Search "my recipes" to see your whole cookbook.** On the home screen and on
   the Cook at Home page, "my recipe" or "my recipes" (any case) lists every
   recipe you own, marked "My recipe". "Our recipes" is kept for shared recipes

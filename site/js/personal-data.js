@@ -168,6 +168,21 @@ const EXCLUDED = {
     spare: true,
     why: "Sync’s own last-agreed snapshot. Internal to syncing on this device.",
   },
+  // The device's sync log (roadmap 510/380, sync-log.js). A record of what
+  // sync did HERE — which page, which build, which hearts — so it is this
+  // device's, like the pairing above: carried to another device it would say
+  // things that never happened there. Without this line the catch-all sweep
+  // would put it in every backup and an import would write it onto the
+  // receiving device. Spared by a Replace: the syncs around a Replace are
+  // exactly the ones worth reading afterwards (510/320 was one).
+  // A literal, as the two above are: sync-log.js is imported by sync.js,
+  // which imports this module. tests/sync-log.test.js pins it to SYNC_LOG_KEY.
+  "faves.sync.log.v1": {
+    spare: true,
+    why:
+      "A short log of what sync did on this device, kept so a problem can be " +
+      "looked into. Deliberately not exported: it describes this device only.",
+  },
   // The location ask's "don't ask me again" tickbox (ADR 0083, geo-consent.js).
   // Two places already said in writing that this key is outside the export —
   // ARCHITECTURE's location-ask paragraph and geo-consent.js's own header — and

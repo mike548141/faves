@@ -128,6 +128,7 @@ const SHELL = [
   "js/sync-ui.js",
   "js/sync-crypto.js",
   "js/sync-merge.js",
+  "js/sync-log.js",
   "js/sync.js",
   "js/stale-tab-ui.js",
   "js/store.js",
