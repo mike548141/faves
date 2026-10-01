@@ -11,3 +11,8 @@
   origin's headers is the inferred suspect, not confirmed). Read-only
   access is in the estate root's tooling; a change to the zone is the
   owner's to approve.
+
+  🔎 **Narrowed 2026-10-01 by the `270` worker:** `faves.pages.dev` serves
+  the same deploy with `_headers`' `max-age=0`; only `lets-eat.myspot.nz`
+  answers `max-age=14400`. So the override is in the custom domain's
+  Cloudflare zone, likely its Browser Cache TTL (inferred, not read).
