@@ -18,3 +18,7 @@
   feature, as in `290`.
 
   📌 **Claimed 2026-10-01 (`faves-55`)**; build starts once `290` merges.
+
+  ⚖️ **Wording, owner-ruled 2026-10-01 (`faves-55`):** the label reads **"My
+  recipe"**, not "Private". A recipe someone else shares with you will read
+  **"Our recipe"** (not built until sharing exists).

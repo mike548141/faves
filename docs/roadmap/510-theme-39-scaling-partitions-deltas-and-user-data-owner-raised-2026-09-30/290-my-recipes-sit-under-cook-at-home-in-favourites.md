@@ -24,3 +24,7 @@
   imported Famous Brade Green Chicken Curry, today) is reachable only by a
   direct link until a list of your own recipes exists. That list is still
   `050`'s open fork (3).
+
+  ⚖️ **Wording, owner-ruled 2026-10-01 (`faves-55`):** the label reads **"My
+  recipe"**, not "Private". A recipe someone else shares with you will read
+  **"Our recipe"** (not built until sharing exists).
