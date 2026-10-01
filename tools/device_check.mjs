@@ -629,10 +629,123 @@ async function run(opts) {
       back.heart === "true" && back.rating === String(SEED_RATING),
       `${seedDish.name}: heart=${back.heart}, rating=${back.rating}`
     );
+    // --- 7. A heart or a rating step repaints ONE dish (roadmap 510/150) ----
+    // Every dish holds its own subscription to the shared store, which is right
+    // (a cross-tab or sync change must repaint every control) and used to mean
+    // one tap rebuilt every control on the menu: 795 DOM changes for a heart and
+    // 2,430 for a rating step on a 264-dish menu. The assertion is about WHERE
+    // the changes land: after a tap, nothing inside any OTHER dish may be
+    // touched — and the tapped dish must have changed, or "nothing moved" would
+    // be satisfied by a tap that did nothing. The control: the tapped dish's own
+    // heart flips and then the same tap is repeated to put it back.
+    const scoped = (expr) =>
+      evalPage(`(async () => {
+        const rows = [...document.querySelectorAll("li.dish")].filter(
+          (d) => d.querySelector(".dish-actions .heart") && d.querySelector(".dish-rating [role=slider]")
+        );
+        const target = rows.find((d) => d.dataset.name !== ${JSON.stringify(seedDish.name.toLowerCase())});
+        let mine = 0, others = 0;
+        const seen = [];
+        // Collected in the callback: awaiting a frame lets the observer deliver
+        // first, and takeRecords() afterwards would then read an empty queue.
+        const mo = new MutationObserver((recs) => seen.push(...recs));
+        mo.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
+        await (${expr})(target);
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        for (const m of [...seen, ...mo.takeRecords()]) {
+          const row = (m.target.nodeType === 1 ? m.target : m.target.parentElement)?.closest("li.dish");
+          if (!row) continue;
+          if (row === target) mine++; else others++;
+        }
+        mo.disconnect();
+        return { rows: rows.length, mine, others, name: target.dataset.name };
+      })()`);
+    const heartTap = await scoped(`(d) => d.querySelector(".dish-actions .heart").click()`);
+    report.check(
+      "a heart repaints that dish and no other",
+      heartTap.mine > 0 && heartTap.others === 0 && heartTap.rows > 2,
+      `${heartTap.name}: ${heartTap.mine} change(s) in it, ${heartTap.others} in the other ${heartTap.rows - 1} dishes`
+    );
+    const stepKey = `(d) => d.querySelector(".dish-rating [role=slider]")
+      .dispatchEvent(new KeyboardEvent("keydown", { key: "3", bubbles: true, cancelable: true }))`;
+    const ratingTap = await scoped(stepKey);
+    report.check(
+      "a rating step repaints that dish and no other",
+      ratingTap.mine > 0 && ratingTap.others === 0,
+      `${ratingTap.name}: ${ratingTap.mine} change(s) in it, ${ratingTap.others} in the other ${ratingTap.rows - 1} dishes`
+    );
+    // The reason the subscription exists: a change that did NOT come from a tap
+    // here (another tab, a sync pull) must still reach every control.
+    const external = await evalPage(`(async () => {
+      const rows = [...document.querySelectorAll("li.dish")].filter(
+        (d) => d.querySelector(".dish-actions .heart") && d.querySelector(".dish-rating [role=slider]")
+      );
+      const t = rows.find((d) => d.dataset.name === ${JSON.stringify(seedDish.name.toLowerCase())});
+      const before = [t.querySelector(".heart").getAttribute("aria-pressed"), t.querySelector("[role=slider]").getAttribute("aria-valuenow")];
+      const m = await import("/js/favourites.js"), r = await import("/js/ratings.js");
+      // Drop the seeded heart + rating straight in the stores, then reload them
+      // from storage exactly as a storage event does.
+      const key = m.favKey({ type: "dish", venueId: ${JSON.stringify(opts.id)}, name: ${JSON.stringify(seedDish.name)}, dishId: t.dataset.dishId });
+      m.favourites.removeKey(key);
+      r.ratings.clear({ type: "dish", venueId: ${JSON.stringify(opts.id)}, name: ${JSON.stringify(seedDish.name)}, dishId: t.dataset.dishId });
+      await new Promise((r) => requestAnimationFrame(r));
+      return { before, after: [t.querySelector(".heart").getAttribute("aria-pressed"), t.querySelector("[role=slider]").getAttribute("aria-valuenow")] };
+    })()`);
+    report.check(
+      "a change made outside the tapped control still repaints every control that shows it",
+      external.before[0] === "true" && external.before[1] === String(SEED_RATING) &&
+        external.after[0] === "false" && external.after[1] === "0",
+      `heart ${external.before[0]} → ${external.after[0]}, rating ${external.before[1]} → ${external.after[1]}`
+    );
+
     report.check(
       "still one page load for the whole run",
       back.sentinel === "alive" && navigations === navsAfterLoad,
       `navigations since load=${navigations - navsAfterLoad}`
+    );
+
+    // --- 8. The home list is not rebuilt for a heart that cannot move it ------
+    // (roadmap 510/150.) The list is ranked on the SET of hearted venues, so a
+    // dish hearted at a venue that is already hearted changes nothing the list
+    // shows — yet the subscriber used to rebuild all 57 cards for it. A venue
+    // heart, by contrast, may legitimately re-rank, so it is only the CONTROL:
+    // it must light its own card's heart, proving the store really did change.
+    await cdp.send("Page.navigate", { url: url.replace(/restaurant\.html.*$/, "index.html") }, sessionId);
+    await untilPresent(async () => (await evalPage("document.querySelectorAll('#restaurant-list .card .card-heart').length")) > 0, {
+      label: "the home list to render",
+    });
+    const home = await evalPage(`(async () => {
+      const list = document.querySelector("#restaurant-list");
+      const { favourites } = await import("/js/favourites.js");
+      const card = list.querySelector(".card:has(.card-heart)");
+      const heart = card.querySelector(".card-heart");
+      const href = new URL(card.querySelector("a.card-link").href).searchParams.get("id");
+      const venue = { type: "venue", venueId: href, venueName: card.querySelector(".card-name").textContent };
+      favourites.toggle(venue); // control: the card's own heart must light
+      await new Promise((r) => setTimeout(r, 300));
+      const live = [...list.querySelectorAll(".card")].find((c) => c.querySelector("a.card-link")?.href.includes("id=" + href));
+      const lit = live?.querySelector(".card-heart")?.getAttribute("aria-pressed");
+      const before = [...list.children];
+      let moved = 0;
+      const mo = new MutationObserver((recs) => { moved += recs.length; });
+      mo.observe(list, { subtree: true, childList: true, attributes: true, characterData: true });
+      favourites.toggle({ type: "dish", venueId: href, venueName: venue.venueName, name: "Probe dish", dishId: "probe-dish" });
+      await new Promise((r) => setTimeout(r, 300));
+      mo.disconnect();
+      const same = before.length === list.children.length && before.every((c, i) => c === list.children[i]);
+      favourites.removeKey("d:" + href + " probe-dish");
+      favourites.toggle(venue);
+      return { lit, moved, same, cards: before.length };
+    })()`);
+    report.check(
+      "a venue heart lights its card on the home list (control)",
+      home.lit === "true",
+      `aria-pressed=${home.lit}`
+    );
+    report.check(
+      "hearting a dish at an already-hearted venue leaves the home list alone",
+      home.moved === 0 && home.same,
+      `${home.moved} DOM change(s) in the list, same ${home.cards} card elements: ${home.same}`
     );
 
     return report.summary(SITE) ? 0 : 1;

@@ -22,8 +22,15 @@ export function heartButton(entry, thing) {
   const name = thing || entry.name || entry.venueName || "this";
   const btn = el("button", { type: "button", className: "heart" });
 
+  // The store tells EVERY heart about EVERY change (and about a cross-tab or
+  // sync reload, which is why the subscription exists), so a menu of 264 dishes
+  // used to repaint 264 hearts for one tap (roadmap 510/150). Each heart reads
+  // its own state and touches the DOM only when that state moved.
+  let painted = null;
   function render() {
     const on = favourites.has(entry);
+    if (on === painted) return;
+    painted = on;
     btn.setAttribute("aria-pressed", String(on));
     btn.textContent = on ? "♥" : "♡";
     btn.setAttribute(
