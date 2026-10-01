@@ -94,3 +94,15 @@
   them on a board for a fresh session". Nothing was built; ready to take.
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  🔎 **340 does not explain this (2026-10-02, `faves-4f`, PR #78).** 8,000
+  randomised runs of the owner's sequence on two devices across today's build,
+  the build live at the sighting and a mix of the two: stale reads undid the
+  move 378 times and put an old heart beside its moved copy **0** times. The
+  zero is structural: a three-way merge whose inputs each hold exactly one of
+  the pair keeps exactly one. Three routes do make the union on both devices
+  (each run in the harness): a third copy of the app with no sync base (the
+  only one that also adds the "3 others"), **Apply** rather than Replace on a
+  restore, or a sync base that will not load (no route seen). Next step: the
+  owner's answer on Apply, a re-entered sync code, and Safari vs Home Screen
+  app on the iPhone; then a guard on that route.

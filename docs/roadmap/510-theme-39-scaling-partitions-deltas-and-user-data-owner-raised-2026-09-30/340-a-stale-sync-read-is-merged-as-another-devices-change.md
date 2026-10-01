@@ -21,3 +21,18 @@
   with costs.
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  🔎 **Reproduced and weighed 2026-10-02 (`faves-4f`, PR #78).**
+  `tests/stale-sync.test.js` drives the real client and Worker over a KV
+  stand-in with Cloudflare's documented 60 s per-location read cache. Four
+  tests fail on today's code and are marked `todo` until the fix: a fresh
+  heart removed, a heart lost on both devices, an un-heart undone on both, and
+  **the recipe move undone on both** (the Worker's `If-Match` reads through
+  the same stale cache, so a write built on a stale read is accepted). Options
+  paper: `docs/reviews/2026-10-01-1116-stale-sync-read-options.md`. It
+  recommends **B, one Durable Object per sync code**: the only option that
+  fixes the import-undone case and protects old builds without an app update.
+  It runs on Cloudflare's free tier (orchestrator re-read the DO pricing page
+  on 2026-10-02: SQLite backend only, 100,000 requests and 100,000 rows written
+  a day). Estimated two to three days. A (client-only, about a day) is an
+  optional stopgap.
