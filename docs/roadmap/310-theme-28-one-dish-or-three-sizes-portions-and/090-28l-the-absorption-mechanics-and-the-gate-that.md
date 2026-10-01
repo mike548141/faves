@@ -1,4 +1,4 @@
-- [ ] **28l — The absorption mechanics, and the gate that must exist BEFORE a
+- [~] **28l — The absorption mechanics, and the gate that must exist BEFORE a
       single row is merged** `[M][tools][js]` — the safety rail for `28o` and
       `28p`. Nothing under `site/data/` changes in this item either.
   🔎 **A FOURTH follow-on 28j does not list (measured 2026-09-28, 28s's
@@ -89,3 +89,5 @@
   *before* the data lands, not after.
 
   **Depends on:** `28h`, `28j`'s answer. **Blocks:** `28o`, `28p`.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`).**

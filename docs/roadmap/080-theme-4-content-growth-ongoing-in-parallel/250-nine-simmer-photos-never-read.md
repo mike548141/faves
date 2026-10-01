@@ -1,4 +1,4 @@
-- [ ] 🔎 **Nine Simmer photographs dropped into `intake/` on 2026-09-09 were
+- [~] 🔎 **Nine Simmer photographs dropped into `intake/` on 2026-09-09 were
   never read or recorded** `[S][content]` — found 2026-09-28 (session
   `faves-8e`) while checking that moving the stripped copies out of scratch
   had not disturbed `intake/`.
@@ -18,3 +18,5 @@
   the refresh rules (append, never overwrite: ADR 0047/0023). Then run
   `python3 tools/intake_exif.py --rebuild` so the record matches the disk,
   and confirm `check_provenance.py` exits 0.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`).**
