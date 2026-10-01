@@ -108,3 +108,7 @@
   never goes through `findDish`, so without wiring it would **hide the very
   dish the reader hearted**. A heart that resolves but cannot be found is not
   absorption; it is a different lie from the one this ruling removes.
+
+  🔨 **2026-10-02 (`faves-4f`):** the ruled absorption is built under 28l
+  (PR #86, ADR 0153), including the favourites-filter follow-on. Follow-on 3
+  (a saved order line on a retired row) is an open fork recorded on 28l.

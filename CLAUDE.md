@@ -451,7 +451,13 @@ Guard postures (cheap-failure vs. forbids-the-act) are declared in `docs/GUARDS.
 
 ```sh
 python3 tools/serve.py        # laptop + phone (same Wi-Fi); prints both URLs
-python3 tools/validate.py     # data validates against the schema
+python3 tools/validate.py     # data validates against the schema — and (28l,
+                              # ADR 0153) every dish id that existed at HEAD is
+                              # still answered for: claimed in a `formerIds`,
+                              # departed or withdrawn. `--against REF` sets the
+                              # "before"; CI passes the pre-push state. It prints
+                              # its scope every run, and "NOT CHECKED" if no ref
+                              # resolves
 python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051)
 python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
                               # the anchor comes from the id, so a heading can be
@@ -869,10 +875,12 @@ node tools/rename_check.mjs   # a stored heart SURVIVES its dish being renamed
                               # Served as an overlay — site/data untouched. Its
                               # CONTROL moves the id itself and requires the heart
                               # NOT to light, so a page that lit everything cannot
-                              # pass. It deliberately does NOT assert a heart under
-                              # a formerIds id: that does not light the row today
-                              # (measured 2026-09-28) and is roadmap 28l's to fix —
-                              # asserting today's behaviour would enforce the defect
+                              # pass. Since 2026-10-02 (28l, ADR 0153) it also
+                              # asserts a heart, a rating and the favourites query
+                              # reach a dish through its `formerIds` — 8 assertions.
+                              # Until then it deliberately did not: that row did not
+                              # light (measured 2026-09-28), and asserting the
+                              # behaviour of the day would have enforced the defect
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
                               # Reaches its end: "OK — 22 passed, 0 failed". Check the
                               # summary line is there AND that N is still 22 — a

@@ -1,4 +1,4 @@
-- [~] **28l — The absorption mechanics, and the gate that must exist BEFORE a
+- [x] **28l — The absorption mechanics, and the gate that must exist BEFORE a
       single row is merged** `[M][tools][js]` — the safety rail for `28o` and
       `28p`. Nothing under `site/data/` changes in this item either.
   🔎 **A FOURTH follow-on 28j does not list (measured 2026-09-28, 28s's
@@ -91,3 +91,21 @@
   **Depends on:** `28h`, `28j`'s answer. **Blocks:** `28o`, `28p`.
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  ✅ **Closed 2026-10-02 (`faves-4f`, PR #86, ADR 0153).** Premises checked
+  first: the filter had moved to `favouriteDishIds` (`favourites.js`), and
+  "hearts need no rewrite" was wrong (`dishId(e)` returns the stored id, and
+  matching both ids at read would make un-hearting add a second heart). Built:
+  `absorbFavourites`/`absorbRatings` in `dish-id.js` (a live id always wins;
+  an old heart folds into one already on the live dish), applied in memory
+  before render on the menu, recipe and home Favourites (the stored copy
+  changes on the person's next write, per ADR 0152); `validate.py --against
+  REF` refuses a dish id that nothing answers for (CI passes the pre-push
+  state; quiet on three historic refs); `split_data.py` folds rows reaching
+  one dish through a retired id; `rename_check` now asserts the `formerIds`
+  heart (8). Break-probed throughout. 28o and 28p are unblocked.
+  🎯 **Forks left for the owner:** (1) where a merged-away row's record goes:
+  `formerIds` only (recommended), plus a `data/withdrawn/` reason, or a third
+  store; (2) a saved order line on a retired row will not combine with "base
+  + size": accept (recommended for now) or record an option id beside each
+  `formerIds` entry for 28o.
