@@ -24,3 +24,22 @@
   imported Famous Brade Green Chicken Curry, today) is reachable only by a
   direct link until a list of your own recipes exists. That list is still
   `050`'s open fork (3).
+
+  ✅ **Built 2026-10-01 (`510-290`).** Favourites has no "My recipes" group: a
+  hearted personal recipe is a row of the Cook at Home group, in the order it
+  was hearted among the published ones, with a "My recipe" label inside its
+  link (words, so a screen reader says it with the dish). **Owner wording
+  change 2026-10-01: the label reads "My recipe", not "Private"**; the
+  markup is `.recipe-owner.recipe-owner-mine`, so a later "Our recipe" (a
+  recipe someone shared with you) is a second modifier and a line in
+  `OWNER_TEXT` (`favourites-ui.js`), and nothing of sharing is built. Counting:
+  Cook at Home is ONE place whether it holds published recipes, personal ones
+  or both, and each hearted personal recipe is a dish, so the summary matches
+  the rows on screen ("1 place, 2 dishes saved" for two personal recipes alone).
+  The grouping is the pure `groupFavourites` (`favourites.js`, 6 unit tests);
+  `device_check.mjs` section 9 asserts it in the real home screen (14 checks,
+  break-probed: separate group back fails 8, label dropped fails 2, label on
+  every row fails 2). The search row is untouched: the "My recipes" block at
+  `app.js` ~1199 was the Favourites group heading itself, not a search row, and
+  no search path renders personal recipes.
+
