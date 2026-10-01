@@ -12635,3 +12635,10 @@ worktrees. Atelier had not moved past the pin (`86da02c`). Session id
   The approved deletions went through `git worktree remove --force` after
   checking every file against git, and the 330 work was carried to a clean
   worktree as a patch.
+- **Last, at the owner's word ("put them on a board for a fresh session"):**
+  queued and NOT built: `350` (back from your recipe goes to Cook at Home),
+  `360` (searching "my recipe(s)" lists your recipes; diagnosed as a
+  missing feature, not a `310` fault), `370` (the Cook at Home card counts
+  every recipe its page shows), and `320`/`340` (the old hearts). A worker
+  started on 350–370 was stopped before it wrote anything, and all four
+  claims are released.
