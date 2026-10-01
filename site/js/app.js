@@ -32,8 +32,8 @@ import { initPicker } from "./picker.js";
 import { rebuildIndex, search } from "./search.js";
 import { rotateHints, defaultHints } from "./search-hints.js";
 import { initOrderUI } from "./cart-ui.js";
-import { favourites, favHref, favKey, groupForShare, unresolvedReason } from "./favourites.js";
-import { heartButton, markUnresolved } from "./favourites-ui.js";
+import { COOK_AT_HOME, favourites, favHref, favKey, groupFavourites, groupForShare, unresolvedReason } from "./favourites.js";
+import { heartButton, markUnresolved, ownerLabel } from "./favourites-ui.js";
 import { ratings } from "./ratings.js";
 import { toast } from "./toast.js";
 import { encodeShortlist, buildShareUrl } from "./share-codec.js";
@@ -48,7 +48,7 @@ import { initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initShoppingEntry } from "./shopping-ui.js";
 import { startSync } from "./sync-start.js";
-import { MY_RECIPES, MY_RECIPES_NAME, isPersonalVenue, recipes } from "./recipes.js";
+import { MY_RECIPES, isPersonalVenue, recipes } from "./recipes.js";
 import { startPersistence } from "./storage-persist.js";
 import { initBackToTop } from "./to-top.js";
 import { displayPrice, formatMoney, venueTimezone, zoneLabel } from "./place.js";
@@ -1191,20 +1191,11 @@ function wireFavourites(restaurants, compactIndex) {
   // dishes nested beneath. The parent's heart reflects the *venue's* own
   // favourite state (filled = saved, empty = tap to also save the place);
   // each dish keeps its own un-heart. Reads like "my usual at each spot".
+  //
+  // Your own recipes (roadmap 510/290) have no group of their own: a hearted
+  // one is a dish row inside Cook at Home, among the published ones, marked
+  // "My recipe". groupFavourites() has already merged them.
   function favVenueGroup(venueId, g) {
-    // Your own recipes (roadmap 510/050) are grouped under a heading that is
-    // not a place: no menu page to link to, and no place to heart.
-    if (isPersonalVenue(venueId)) {
-      const head = el("li", { className: "search-row fav-venue-head" }, [
-        el("span", { className: "search-row-name", textContent: `🏠 ${MY_RECIPES_NAME}` }),
-      ]);
-      const rows = g.dishes.map((e) =>
-        decorate(resultRow({ name: e.name, sub: "", href: favHref(e), trailing: heartButton(e, e.name) }), e, e.name)
-      );
-      return el("section", { className: "search-group fav-venue-group" }, [
-        el("ul", { className: "search-list" }, [head, ...rows]),
-      ]);
-    }
     const venueName = g.venueName || "This place";
     const venueEntry =
       g.venue || { type: "venue", venueId, venueName, isRecipe: g.isRecipe, sub: g.sub };
@@ -1233,6 +1224,8 @@ function wireFavourites(restaurants, compactIndex) {
           sub: e.sub && e.sub !== venueName ? e.sub : "",
           href: favHref(e),
           trailing: heartButton(e, e.name),
+          // Inside the link, so a screen reader reads it with the dish name.
+          badge: isPersonalVenue(e.venueId) ? ownerLabel("mine") : null,
         }),
         e,
         e.name
@@ -1254,30 +1247,16 @@ function wireFavourites(restaurants, compactIndex) {
     if (shareBtn) shareBtn.hidden = false;
     // Group by venue, preserving first-seen order. Facts (name, recipe flag,
     // area/cuisine sub) come from whichever entry carries them — the venue if
-    // hearted, otherwise a dish of it.
-    const order = [];
-    const byVenue = new Map();
-    for (const e of items) {
-      let g = byVenue.get(e.venueId);
-      if (!g) {
-        g = { venue: null, dishes: [], venueName: "", isRecipe: false, sub: "" };
-        byVenue.set(e.venueId, g);
-        order.push(e.venueId);
-      }
-      if (e.type === "venue") {
-        g.venue = e;
-        g.sub = e.sub || g.sub;
-      } else {
-        g.dishes.push(e);
-      }
-      g.venueName = g.venueName || e.venueName;
-      g.isRecipe = g.isRecipe || !!e.isRecipe;
-    }
+    // hearted, otherwise a dish of it. Your own recipes join Cook at Home
+    // (groupFavourites): a place count is a group count, and a personal recipe
+    // is a saved dish, so the summary matches the rows on screen.
+    const order = groupFavourites(items, {
+      cookAtHomeName: byId.get(COOK_AT_HOME)?.name || "Cook at Home",
+    });
     let dishTotal = 0;
-    for (const id of order) {
-      const g = byVenue.get(id);
+    for (const g of order) {
       dishTotal += g.dishes.length;
-      groups.append(favVenueGroup(id, g));
+      groups.append(favVenueGroup(g.venueId, g));
     }
     // Count the marked rows too, so the panel's live region states the fact
     // rather than leaving it to be noticed. The two counts are kept apart on

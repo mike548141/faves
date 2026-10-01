@@ -131,3 +131,20 @@ export function markUnresolved(li, { entry, state, name, alsoRated, onRefresh, o
   );
   return li;
 }
+
+/**
+ * Whose a recipe is, said in words (roadmap 510/290; wording owner-ruled
+ * 2026-10-01: "My recipe"). Today the only kind is "mine": a recipe in this
+ * device's own cookbook, listed in Favourites among the published Cook at Home
+ * ones. The `kind` argument and the `recipe-owner-<kind>` modifier are the room
+ * left for an "Our recipe" label (a recipe someone shared with you) when a way
+ * of sharing exists — nothing here builds it, so add its text to OWNER_TEXT then.
+ * Words, never a colour alone: the chip is plain text inside the row's link, so
+ * it is part of the link's accessible name and a screen reader says it with the
+ * dish.
+ */
+export function ownerLabel(kind = "mine") {
+  return el("span", { className: `recipe-owner recipe-owner-${kind}`, textContent: OWNER_TEXT[kind] });
+}
+const OWNER_TEXT = { mine: "My recipe" };
+
