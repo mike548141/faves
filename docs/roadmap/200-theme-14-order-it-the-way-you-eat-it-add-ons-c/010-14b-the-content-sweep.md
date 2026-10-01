@@ -1,4 +1,4 @@
-- [~] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
+- [ ] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
   2026-08-16** (wt: faves-schema30): `tools/find_addons.py` + 44 test cases +
   17 breakers, and a `validate.py` **warning** on the 15 high-confidence
   convertible rows. **The conversion half stays open and is the bulk of it** —
@@ -36,3 +36,20 @@
 
   📌 **Claimed 2026-10-02 (`faves-4f`): the 15 high-confidence rows
   `validate.py` warns on.**
+
+  ✅ **First batch landed 2026-10-02 (`faves-4f`, PR #90).** 13 of the 15
+  high-confidence rows (16 warnings: the Smashie tripped two) became add-on
+  groups on eight venues; validate's convertible warnings 16 → 2. Option tags
+  came from `tag_addon_options.py --apply`, plus two by hand: `gf` on Gold
+  Lining's "GF seeded toast" (the menu says GF; the tool proposed gluten) and,
+  in `8f9c1ac`, `has-meat` on both beef-patty options (the tool refuses
+  "patty"; both dishes print "beef patty", and the tag can only add a
+  warning). Left prose: Charley Noble's grill section note (sauce or butter,
+  with per-sauce gluten caveats) and Sprig & Fern Tawa's "$2 per topping"
+  (no toppings named). Unknown: Spices' stuffed naan filling (gluten only).
+  🛑 **Merged with two red CI checks** (my merge did not gate on the tally):
+  `test_validate` and `test_find_addons` leaned on rows this batch
+  converted. Fixed in `e87ae19` the same hour (fixtures clear the subject's
+  own groups; the classifier cases restore the rows' original wording in
+  their throwaway copy).
+  📌 **Claim released.** The 136-row 14b class beyond these is judgement work.
