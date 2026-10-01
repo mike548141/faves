@@ -1,4 +1,4 @@
-- [ ] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
+- [~] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
   RULED 2026-09-28 (option C, via AskUserQuestion, after an impact
   analysis)** `[M][tools]` — this replaces 340/250 part (4). **Nothing from
   `intake/` is committed to the public repo.**
@@ -37,3 +37,6 @@
   🚩 **Assumed, not asked:** that the owner's Google Workspace account (the
   only Drive on this machine) is the right Drive. Confirm with him in one
   line before the first copy.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`), part 1 (fingerprints) only.** Parts 2–3
+  wait on the one-line Drive confirmation; part 4 on the owner's go.
