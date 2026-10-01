@@ -1093,6 +1093,89 @@ test("a Worker that predates buckets: recipes stay on the device, nothing is los
   assert.deepEqual(recipesOf(a), ["u:ginger-crunch"], "the device that held it did not read the old agreement as a deletion");
 });
 
+/** Every request a device sends, as "METHOD <query>" — the query is the
+ *  whole of what 510/140 changed on the wire. */
+function recording(server) {
+  const log = [];
+  return {
+    log,
+    fetch: (u, i = {}) => {
+      const q = String(u).split("?")[1] ?? "";
+      const id = String(u).split("?")[0].split("/").pop();
+      log.push(`${i.method || "GET"}${id.includes(":") ? " bucket" : ""} ${q}`.trim());
+      return server.fetch(u, i);
+    },
+  };
+}
+
+test("a user with no recipes asks about no bucket, and says its family is empty (roadmap 510/140)", async () => {
+  // Survey finding 1: every GET asked about eight buckets (8 KV reads) and
+  // every PUT made the Worker read all sixteen possible bucket keys — for a
+  // user with no recipes, none of which exist.
+  const server = fakeServer();
+  const wire = recording(server);
+  const a = device({ favs: [venue("kk")] });
+  const s = mk(a, wire);
+  await s.enable();
+  wire.log.length = 0;
+  await s.syncNow(); // a pull, nothing changed
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  await s.syncNow(); // a heart
+  assert.deepEqual(wire.log, ["GET", "GET", "PUT family=0"]);
+});
+
+test("a recipe holder asks about its buckets and names a family of eight (roadmap 510/140)", async () => {
+  const server = fakeServer();
+  const wire = recording(server);
+  const a = withRecipes(device({ favs: [venue("kk")] }), [precipe("u:ginger-crunch")]);
+  const s = mk(a, wire);
+  await s.enable();
+  assert.ok(wire.log.includes(`PUT bucket family=${RECIPE_BUCKETS}`), wire.log.join(" | "));
+  wire.log.length = 0;
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  await s.syncNow();
+  assert.deepEqual(wire.log, [`GET buckets=${RECIPE_BUCKETS}`, `PUT family=${RECIPE_BUCKETS}`]);
+});
+
+test("another device's FIRST recipe still arrives on a device that was asking about no bucket (roadmap 510/140)", async () => {
+  // A and B agreed while neither had a recipe, so B has stopped asking. A
+  // then gets one. B's plain GET finds a core copy that records buckets and
+  // reads again, asking: one extra round trip, once.
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const b = device();
+  const wireB = recording(server);
+  const syncB = mk(b, wireB);
+  await syncB.join(code);
+  assert.ok(wireB.log.every((l) => !l.includes("buckets=")), "nobody has a recipe yet, so B asks about none");
+
+  withRecipes(a, [precipe("u:ginger-crunch")]);
+  await syncA.syncNow();
+
+  wireB.log.length = 0;
+  await syncB.syncNow();
+  assert.deepEqual(recipesOf(b), ["u:ginger-crunch"], "B never heard about A's first recipe");
+  assert.deepEqual(wireB.log.slice(0, 2), ["GET", `GET buckets=${RECIPE_BUCKETS}`]);
+  wireB.log.length = 0;
+  await syncB.syncNow();
+  assert.deepEqual(wireB.log, [`GET buckets=${RECIPE_BUCKETS}`], "once agreed on buckets, B asks straight away");
+});
+
+test("a new client against a Worker that predates 510/140 still syncs a recipe-less user (roadmap 510/140)", async () => {
+  // The deployed Worker ignores both queries; fakeServer({ buckets: false })
+  // is that Worker, and it parses no `family`.
+  const old = fakeServer({ buckets: false });
+  const a = device({ favs: [venue("kk")] });
+  const { code } = await mk(a, old).enable();
+  const b = device({ favs: [venue("pandan")] });
+  await mk(b, old).join(code);
+  await mk(a, old).syncNow();
+  assert.deepEqual(favsOf(a), ["v:kk", "v:pandan"]);
+  assert.deepEqual(favsOf(b), ["v:kk", "v:pandan"]);
+});
+
 test("a bucket that expired from the server is no opinion: its recipes stand and it is written again", async () => {
   const server = fakeServer();
   const a = withRecipes(device(), [precipe("u:ginger-crunch")]);

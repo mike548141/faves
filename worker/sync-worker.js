@@ -135,9 +135,21 @@ export function parseBlobKey(segment) {
   return { key: segment, blobId: m[1], bucket };
 }
 
-/** Every KV key that belongs to one user: the core copy and each bucket. */
-export function familyKeys(blobId) {
-  return [blobId, ...Array.from({ length: MAX_BUCKETS }, (_, n) => `${blobId}:r${n}`)];
+/** Every KV key that belongs to one user: the core copy and each of its
+ *  first `buckets` buckets (all MAX_BUCKETS when not told otherwise). */
+export function familyKeys(blobId, buckets = MAX_BUCKETS) {
+  return [blobId, ...Array.from({ length: buckets }, (_, n) => `${blobId}:r${n}`)];
+}
+
+/** How many buckets the writing client says this user has: `?family=<n>` on
+ *  a PUT (roadmap 510/140), clamped to MAX_BUCKETS. Absent or not a whole
+ *  number — every client before 510/140 — is MAX_BUCKETS: that client's
+ *  write re-arms every copy the user could have, exactly as before. `0` is a
+ *  user with no recipes, whose heart then reads no sibling at all. */
+export function familyAsked(searchParams) {
+  const raw = searchParams.get("family");
+  if (raw === null || !/^[0-9]{1,3}$/.test(raw)) return MAX_BUCKETS;
+  return Math.min(Number(raw), MAX_BUCKETS);
 }
 
 /** The `X-Faves-Buckets` report: `r0="<v>",r3="<v>"` for the buckets that
@@ -343,9 +355,9 @@ async function handleGet(parsed, asked, env, cors) {
  * still holds the change. Rare (a copy untouched for a month, written at the
  * same moment), and recoverable rather than silent.
  */
-async function refreshFamily(parsed, env, nowSeconds) {
+async function refreshFamily(parsed, env, nowSeconds, buckets) {
   await Promise.all(
-    familyKeys(parsed.blobId)
+    familyKeys(parsed.blobId, buckets)
       .filter((k) => k !== parsed.key)
       .map(async (k) => {
         const got = await env.SYNC_BLOBS.getWithMetadata(k, "arrayBuffer");
@@ -360,7 +372,7 @@ async function refreshFamily(parsed, env, nowSeconds) {
   );
 }
 
-async function handlePut(request, parsed, env, cors) {
+async function handlePut(request, parsed, family, env, cors) {
   const blobId = parsed.key;
   const contentLengthHeader = request.headers.get("Content-Length");
   if (contentLengthHeader && Number(contentLengthHeader) > MAX_BODY_BYTES) {
@@ -424,8 +436,12 @@ async function handlePut(request, parsed, env, cors) {
 
   // Every write keeps the whole user's copies alive (ADR 0146 §2, B1): a
   // heart re-arms a recipe bucket nobody has touched in months, and a recipe
-  // edit re-arms the core copy.
-  await refreshFamily(parsed, env, nowSeconds);
+  // edit re-arms the core copy. Only the buckets the client says exist are
+  // read (`family`, roadmap 510/140): reading all 16 possible keys cost a
+  // heart 16 KV reads, for most users with not one recipe. A bucket the
+  // client does not know of — one orphaned by a lost race — is not re-armed
+  // by this write; the next recipe sync detects and rewrites it.
+  await refreshFamily(parsed, env, nowSeconds, family);
 
   return empty(204, cors, { ETag: formatEtag(newVersion) });
 }
@@ -467,7 +483,7 @@ export default {
       if (!parsed) return empty(400, cors);
 
       if (request.method === "GET") return await handleGet(parsed, bucketsAsked(url, parsed), env, cors);
-      if (request.method === "PUT") return await handlePut(request, parsed, env, cors);
+      if (request.method === "PUT") return await handlePut(request, parsed, familyAsked(url.searchParams), env, cors);
 
       return empty(405, cors, { Allow: "GET, PUT, OPTIONS" });
     } catch {

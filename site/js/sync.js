@@ -45,6 +45,7 @@ import {
   RECIPE_BUCKETS,
   BUCKET_QUERY,
   BUCKET_HEADER,
+  FAMILY_QUERY,
   bucketName,
   bucketPlaintext,
   canonicalJson,
@@ -500,7 +501,7 @@ export function createSync({
         continue;
       }
       const sealed = await sealBlob(key, bucketPlaintext(b.k, b.map));
-      const put = await fetchImpl(url(`${blobId}:${b.name}`), {
+      const put = await fetchImpl(`${url(`${blobId}:${b.name}`)}?${FAMILY_QUERY}=${RECIPE_BUCKETS}`, {
         method: "PUT",
         body: sealed,
         headers: b.version ? { "If-Match": b.version } : {},
@@ -562,6 +563,46 @@ export function createSync({
     return inFlight;
   }
 
+  /**
+   * GET the core copy, asking for the bucket report when `ask`. Returns
+   * `{ actual, theirs, etag }`, or `{ result }` — the cycle's answer — when it
+   * must stop here: a copy that will not open, one in a newer shape, or no
+   * answer at all.
+   */
+  async function readCore(blobId, key, ask) {
+    const got = await fetchImpl(ask ? `${url(blobId)}?${BUCKET_QUERY}=${RECIPE_BUCKETS}` : url(blobId), { method: "GET" });
+    const actual = parseBucketHeader(got.headers.get(BUCKET_HEADER));
+    let theirs = null;
+    let etag = null;
+    if (got.status === 200) {
+      etag = got.headers.get("etag");
+      theirs = await openBlob(key, new Uint8Array(await got.arrayBuffer()));
+      if (theirs === null) {
+        // Authenticated decryption failed. The blob is not ours, or it is
+        // damaged. Refusing is the only safe move: overwriting it would
+        // destroy whatever it really is, and merging garbage is worse.
+        setState(ERROR, "That sync code doesn’t match the data on the server.");
+        return { result: { ok: false, error: "That sync code doesn’t match the data on the server." } };
+      }
+      // A store this build reads has been written in a newer shape. Merging
+      // it would misread it and write the misreading back for everyone, so
+      // this is the one case that pauses (ADR 0146 §3). A store this build
+      // has never heard of is NOT this case: it is carried, and sync goes on.
+      // Nothing is written and nothing local changes; the next foreground
+      // checks again, and an updated build simply passes.
+      const ahead = storesAhead(theirs);
+      if (ahead.length) {
+        setState(PAUSED, UPDATE_NEEDED);
+        return { result: { ok: false, error: "update-needed", stores: ahead } };
+      }
+      theirs = upgradeSnapshot(theirs) ?? theirs;
+    } else if (got.status !== 404) {
+      setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
+      return { result: { ok: false, error: "sync-unreachable" } };
+    }
+    return { actual, theirs, etag };
+  }
+
   /** One read → merge → write → record pass. `syncNow` runs it, and runs it
    *  again (a bounded number of times) when the write lost a race. */
   async function cycle(cfg, decisions) {
@@ -569,52 +610,40 @@ export function createSync({
     try {
       const { blobId, key } = await deriveSyncKeys(normaliseSyncCode(cfg.code));
 
-      // 1. read what the server has. The query asks a Worker that knows recipe
-      //    buckets to report which it holds and their versions, in one read;
-      //    an older Worker ignores it and reports nothing (roadmap 510/050).
-      const got = await fetchImpl(`${url(blobId)}?${BUCKET_QUERY}=${RECIPE_BUCKETS}`, { method: "GET" });
-      const actual = parseBucketHeader(got.headers.get(BUCKET_HEADER));
-      let theirs = null;
-      let etag = null;
-      if (got.status === 200) {
-        etag = got.headers.get("etag");
-        theirs = await openBlob(key, new Uint8Array(await got.arrayBuffer()));
-        if (theirs === null) {
-          // Authenticated decryption failed. The blob is not ours, or it is
-          // damaged. Refusing is the only safe move: overwriting it would
-          // destroy whatever it really is, and merging garbage is worse.
-          setState(ERROR, "That sync code doesn’t match the data on the server.");
-          return { ok: false, error: "That sync code doesn’t match the data on the server." };
-        }
-        // A store this build reads has been written in a newer shape. Merging
-        // it would misread it and write the misreading back for everyone, so
-        // this is the one case that pauses (ADR 0146 §3). A store this build
-        // has never heard of is NOT this case: it is carried, and sync goes on.
-        // Nothing is written and nothing local changes; the next foreground
-        // checks again, and an updated build simply passes.
-        const ahead = storesAhead(theirs);
-        if (ahead.length) {
-          setState(PAUSED, UPDATE_NEEDED);
-          return { ok: false, error: "update-needed", stores: ahead };
-        }
-        theirs = upgradeSnapshot(theirs) ?? theirs;
-      } else if (got.status !== 404) {
-        setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
-        return { ok: false, error: "sync-unreachable" };
-      }
-
-      // 2. merge against the last agreement. Collected through a view that
-      //    keeps the raw strings it read, so step 4 can tell in one compare
-      //    per key whether anything moved since (roadmap 510/190).
+      // 1. what this device holds, and what it last agreed. Collected through
+      //    a view that keeps the raw strings it read, so step 4 can tell in
+      //    one compare per key whether anything moved since (roadmap
+      //    510/190). Collected BEFORE the read since 510/140, because whether
+      //    to ask about recipe buckets depends on it; a tap during the read is
+      //    then caught by step 4 like a tap during the write, and carried by
+      //    the cycle it schedules.
       const reading = recordingStorage(storage);
       const mine = collectPersonalData(reading.view, { exportedAt: now() });
       const base = readBase();
+      // Every person's cookbook as one map, keyed recipe + person (510/120).
+      const mineRecipes = flattenCookbooks(mine.profiles);
+
+      // 2. read what the server has. Asking a Worker about recipe buckets
+      //    costs it one KV read per bucket (8), so it is asked only by a
+      //    device that holds a recipe or last agreed on buckets (roadmap
+      //    510/140, survey finding 1) — nobody else has a bucket to hear
+      //    about. A device that asked nothing and finds the core copy now
+      //    records buckets (another device's first recipe) reads again,
+      //    asking: one extra round trip, once. An older Worker ignores the
+      //    query and reports nothing (roadmap 510/050).
+      const holdsBuckets = Object.keys(mineRecipes).length > 0 || !!base?.recipeBuckets;
+      let read = await readCore(blobId, key, holdsBuckets);
+      if (!read.result && !holdsBuckets && read.theirs?.recipeBuckets?.n === RECIPE_BUCKETS) {
+        read = await readCore(blobId, key, true);
+      }
+      if (read.result) return read.result;
+      const { actual, etag } = read;
+      const theirs = read.theirs;
+
       const { merged, conflicts, changes } = mergePersonal(base, mine, theirs ?? mine);
 
       // 2b. the recipe buckets (roadmap 510/050). Read before any write, so a
       //     bucket that will not open stops the cycle with nothing written.
-      // Every person's cookbook as one map, keyed recipe + person (510/120).
-      const mineRecipes = flattenCookbooks(mine.profiles);
       const rec = await readRecipes({ blobId, key, actual, theirs, base, mineRecipes });
       if (rec.error === "mismatch") {
         setState(ERROR, "That sync code doesn’t match the data on the server.");
@@ -669,7 +698,13 @@ export function createSync({
       // every visibility change into a KV write.
       if (!(theirs && sameSnapshot(merged, theirs) && sameBuckets(merged.recipeBuckets, theirs.recipeBuckets))) {
         const sealed = await sealBlob(key, merged);
-        const put = await fetchImpl(url(blobId), {
+        // How many buckets this user has, so the Worker re-arms those and no
+        // others (roadmap 510/140): it read all 16 possible keys on every
+        // write, 16 KV reads per heart for someone with no recipes at all.
+        // The number the core copy being written records — 0 for nobody's
+        // recipes. An older Worker ignores it and reads all 16, as before.
+        const family = Number.isInteger(merged.recipeBuckets?.n) ? merged.recipeBuckets.n : 0;
+        const put = await fetchImpl(`${url(blobId)}?${FAMILY_QUERY}=${family}`, {
           method: "PUT",
           body: sealed,
           headers: etag ? { "If-Match": etag } : {},
