@@ -1115,6 +1115,14 @@ function wireFavourites(restaurants, compactIndex) {
   const byId = new Map(
     (restaurants || []).map((r) => [r.id, { ...r, menu: sectionsById.get(r.id) || [] }])
   );
+  // The same records carry each dish's `formerIds`, so a heart stored under a
+  // retired id is moved onto the dish that claims it here too — one row in
+  // this view, under the live name, rather than the retired row's name beside
+  // the live one (roadmap 28l, ADR 0153). In memory; nothing is written.
+  for (const rec of byId.values()) {
+    favourites.absorb(rec);
+    ratings.absorb(rec);
+  }
   // Personal recipes (roadmap 510/050) resolve against this device's own
   // cookbook, in the same record shape, so `unresolvedReason` needs no second
   // path. Read at each row's render, because a sync pull or

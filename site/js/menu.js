@@ -2364,6 +2364,12 @@ if (!id) {
       // can re-apply against it. Set BEFORE render so any change racing in during
       // this same microtask still repaints the right restaurant.
       current = r;
+      // A heart or a rating stored under a dish id this record has retired
+      // moves onto the dish whose `formerIds` claims it, BEFORE the rows are
+      // built — or the row reads dark, the rating empty, and the "favourites"
+      // query hides the very dish the reader hearted (roadmap 28l, ADR 0153).
+      favourites.absorb(r);
+      ratings.absorb(r);
       render(view(r));
       // The chrome renders in English with data-i18n keys; this applies the
       // stored language to it (later switches re-translate the whole page).

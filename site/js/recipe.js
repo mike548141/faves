@@ -431,6 +431,10 @@ async function main() {
     const found = recipeByRef(collection, dishRef);
     const item = personal && found ? composeRecipe(found) : found;
     if (!item) return fail();
+    // The ♥ and the rating here key off the live id; one stored under an id
+    // the collection has retired moves onto it first (roadmap 28l, ADR 0153).
+    favourites.absorb(collection);
+    ratings.absorb(collection);
     current = { collection, item };
     render(collection, item);
     markUpgradeRan(); // the upgraded data has been read and drawn (510/040)

@@ -33,7 +33,7 @@
 import { profileScopedStorage } from "./profiles.js";
 import { rawOf } from "./store.js";
 import { migrateRatingKeys } from "./renames.js";
-import { dishId, migrateDishKeys } from "./dish-id.js";
+import { absorbRatings, dishId, formerIdMoves, migrateDishKeys } from "./dish-id.js";
 import { RECIPES_KEY } from "./recipe-record.js";
 import { followRatings, movesOfStoredCookbook } from "./recipe-move.js";
 
@@ -82,7 +82,15 @@ export function createRatings(storage) {
 
   // A rating on a recipe this person moved follows it to the moved id
   // (roadmap 510/400; favourites.js says why on every read and every write).
-  const follow = (m) => followRatings(m, movesOfStoredCookbook(rawOf(storage, RECIPES_KEY)));
+  // A rating on a dish id the data has RETIRED is re-keyed onto the dish whose
+  // `formerIds` claims it (roadmap 28l, ADR 0153), once a page passes that
+  // record to `absorb`. Ratings, unlike hearts, have no screen of their own: a
+  // rating on a dish never also hearted is reachable ONLY through the menu
+  // row, which reads the live key — so without this it is stored for ever and
+  // shown nowhere. In memory on every read; the stored key changes at the
+  // person's next rating write, never as a rewrite of its own (ADR 0152).
+  const absorbed = new Map();
+  const follow = (m) => absorbRatings(followRatings(m, movesOfStoredCookbook(rawOf(storage, RECIPES_KEY))), absorbed);
 
   function read() {
     // Two key migrations, venue half then dish half (see dish-id.js on the
@@ -156,6 +164,27 @@ export function createRatings(storage) {
       map = { ...map };
       delete map[k];
       commit();
+      return true;
+    },
+
+    /**
+     * Learn the retired ids `record`'s dishes answer to (`formerIds`) and
+     * re-key any rating stored under one onto the live dish, so the menu row
+     * shows it. Call before rendering, with each record a page rates against.
+     * Writes nothing; returns whether anything moved (and tells subscribers).
+     */
+    absorb(record) {
+      let learned = false;
+      for (const [k, v] of formerIdMoves(record)) {
+        if (absorbed.has(k)) continue;
+        absorbed.set(k, v);
+        learned = true;
+      }
+      if (!learned) return false;
+      const next = follow(map);
+      if (next === map) return false;
+      map = next;
+      notify();
       return true;
     },
 

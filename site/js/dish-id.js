@@ -149,6 +149,113 @@ export function findDish(record, ref, { byNameSlug = false } = {}) {
   return null;
 }
 
+// --- absorbing a retired id (roadmap 28l, ADR 0153) ------------------------
+//
+// `findDish` above already resolves a retired id through a live dish's
+// `formerIds`, so a heart under one was never "No longer on the menu". But the
+// three things a reader actually SEES on the menu row never ask `findDish`:
+// the heart lights on `favKey(entry) === favKey(row)`, the rating reads
+// `map[ratingKey(row)]`, and the "favourites" query keeps a row whose id is in
+// `favouriteDishIds`. All three compare the RAW stored id with the row's live
+// one, so a heart stored under a retired id resolved and was invisible: dark
+// heart, empty rating, row hidden by the very filter that asks for it
+// (measured 2026-09-28 by roadmap 28s's worker; 10 rows in one venue carry a
+// former id today, so this is live, not migration scaffolding).
+//
+// The fix is to move the stored entry onto the dish that claims it, once the
+// record saying who claims it is in hand — the same in-memory rewrite on read
+// that renames.js does for a corrected venue id, persisted at once rather than
+// at the next tap, because a rating whose dish was never hearted has no other
+// screen and would otherwise sit on the old key for ever. Idempotent: a moved
+// entry is on a live id, which no `formerIds` claims, so a second pass moves
+// nothing and needs no "have I migrated" flag.
+
+/**
+ * Where each retired id in one record now lives: a Map from
+ * `"<venueId> <formerId>"` to `{ dishId, name }` of the live dish whose
+ * `formerIds` claims it. A former id that is ALSO some dish's live id is left
+ * out, for `findDish`'s reason — a live id always wins, so retiring an id can
+ * never hijack a heart on a dish that still exists (and `validate.py` refuses
+ * that data anyway). When two dishes claim one id the first wins, as in
+ * `findDish`; `validate.py` refuses that too.
+ */
+export function formerIdMoves(record) {
+  const out = new Map();
+  const venueId = record?.id;
+  if (typeof venueId !== "string" || !venueId) return out;
+  const dishes = eachDish(record);
+  const live = new Set(dishes.map((d) => dishId(d.item)));
+  for (const { item } of dishes) {
+    const former = item?.formerIds;
+    if (!Array.isArray(former)) continue;
+    const to = dishId(item);
+    if (!to) continue;
+    for (const old of former) {
+      if (typeof old !== "string" || !old || live.has(old)) continue;
+      const key = `${venueId} ${old}`;
+      if (!out.has(key)) out.set(key, { dishId: to, name: typeof item.name === "string" ? item.name : undefined });
+    }
+  }
+  return out;
+}
+
+/**
+ * A favourites list with every heart on a retired id moved onto the dish that
+ * claims it (`formerIdMoves`). The heart takes the live dish's id AND name —
+ * the owner ruled the heart was on the dish all along (roadmap 28j, 2026-09-09:
+ * "silently absorb it"), so the Favourites view stops printing the retired
+ * row's name. A moved heart that meets one already on the live dish is the
+ * same heart, and the one already there is kept. Returns the SAME list when
+ * nothing moved, so a caller can tell.
+ */
+export function absorbFavourites(list, moves) {
+  if (!moves?.size || !Array.isArray(list)) return list;
+  const keyOf = (e) => `${e.venueId} ${dishId(e)}`;
+  const isDish = (e) => !!e && typeof e === "object" && e.type === "dish";
+  const present = new Set(list.filter((e) => isDish(e) && !moves.has(keyOf(e))).map(keyOf));
+  let moved = false;
+  const out = [];
+  for (const e of list) {
+    const to = isDish(e) ? moves.get(keyOf(e)) : undefined;
+    if (!to) {
+      out.push(e);
+      continue;
+    }
+    moved = true;
+    const next = { ...e, dishId: to.dishId, ...(to.name ? { name: to.name } : {}) };
+    const k = keyOf(next);
+    if (present.has(k)) continue; // already hearted under the live id
+    present.add(k);
+    out.push(next);
+  }
+  return moved ? out : list;
+}
+
+/**
+ * A ratings map (`d:<venueId> <dishId>` keys) with every rating on a retired id
+ * re-keyed onto the dish that claims it. A rating already on the live key wins,
+ * as in `migrateDishKeys` and renames.js: it was written by a build that could
+ * see the live dish. Returns the SAME map when nothing moved.
+ */
+export function absorbRatings(map, moves) {
+  if (!moves?.size || !map || typeof map !== "object" || Array.isArray(map)) return map;
+  let moved = false;
+  const out = {};
+  const incoming = [];
+  for (const [key, value] of Object.entries(map)) {
+    const m = /^d:([^\s]+) (.+)$/s.exec(key);
+    const to = m ? moves.get(`${m[1]} ${m[2]}`) : undefined;
+    if (!to) {
+      out[key] = value;
+      continue;
+    }
+    moved = true;
+    incoming.push([`d:${m[1]} ${to.dishId}`, value]);
+  }
+  for (const [k, v] of incoming) if (!(k in out)) out[k] = v;
+  return moved ? out : map;
+}
+
 /**
  * Rewrite the dish half of stored favourites/ratings keys from a dish NAME to a
  * dish id: `d:<venueId> Fish and Chips` → `d:<venueId> fish-and-chips`.
