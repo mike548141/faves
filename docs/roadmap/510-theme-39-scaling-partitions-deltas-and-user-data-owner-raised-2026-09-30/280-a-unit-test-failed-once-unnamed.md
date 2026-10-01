@@ -1,4 +1,4 @@
-- [~] 🔎 **One unit test failed once in five runs, and its name was not
+- [x] 🔎 **One unit test failed once in five runs, and its name was not
       captured** `[XS] [tests]` — seen 2026-10-01 (session `faves-55`)
       on the merged `510-sw` tree.
 
@@ -14,3 +14,14 @@
   re-runs passed.
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  ✅ **Named and fixed 2026-10-02 (`faves-4f`).** Forty saved runs of
+  `node --test` on `main` (while two workers loaded the machine) failed once,
+  run 32: `tests/sync.test.js` "a change made while a cycle is in flight is
+  kept, not overwritten by the pull", at its last assertion (the second device
+  did not see the flag). The test waited a fixed 30 ms for the follow-up sync
+  to land; under load it had not. The file already had `settle(s)` (wait until
+  the engine stops syncing) for this class; two waits never adopted it, this
+  one and the "three changes cost one write" test. Both now use it, and no
+  fixed-timer wait remains in `tests/`. Probe: with later PUTs slowed 50 ms,
+  the old wait fails and `settle` passes. A test fault, not a sync fault.
