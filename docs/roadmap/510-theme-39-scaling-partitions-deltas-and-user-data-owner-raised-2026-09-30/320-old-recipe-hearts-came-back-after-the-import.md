@@ -83,3 +83,9 @@
   randomised two-device runs never produced the owner's state). Waiting on
   the owner: which browsers or apps have Faves with sync on. The Worker
   risk found on the way is `330`.
+
+  **Owner's answer 2026-10-01:** no other browser, profile or app with sync
+  on that he knows of: only his iPhone and Chrome (Work) on the laptop. So
+  the third-copy explanation is unconfirmed. The leading candidate is now
+  `340` (a stale KV read merged as another device's change), and this item
+  stays open until that is reproduced against his sequence.

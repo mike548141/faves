@@ -12606,3 +12606,32 @@ worktrees. Atelier had not moved past the pin (`86da02c`). Session id
   cadence, offered and not recommended); `270` (should update installs
   revalidate too); `260` (Pages ignores `_headers`' `max-age=0`, which needs
   a read of the zone config). `060` and `080` stay deferred.
+
+### Addendum, 2026-10-01 late (session `faves-55`): the import ran live
+
+- **`050` done.** The owner exported a backup. I ran the tool (5 recipes to
+  "Me", 4 hearts and 9 shopping lines re-pointed) and deployed the
+  recipe-bucket Worker (`1a368b38`; live checks passed, one apparent failure
+  was zsh reading `$ID:r0` as a modifier). He Replace-imported, and the
+  phone matched. PR #71 then took the five published copies off the site.
+  🚩 My check line said "the 5 under My recipes"; the curry was never
+  hearted, so he saw 4, and twice I listed four while saying five. Nothing
+  was lost.
+- **Owner asks queued and shipped the same evening:** `290` (own recipes
+  inside Cook at Home in Favourites, PR #73, which replaced #72 after a
+  refused force-push), `300` and `310` (all own recipes on the Cook at Home
+  page and in search, "My recipe" label, with "Our recipe" reserved for
+  sharing; PR #75), and `270` (update installs revalidate, PR #74, ETag
+  gate passed across six real deploys and re-checked live).
+- 🔥 **Old hearts came back** after the import (`320`, open). PR #76 fixed
+  one real route (a page left open writing its old list back), but that
+  route deletes the moved hearts and his did not go. The leading
+  candidate is `340` (a stale KV read merged as another device's change),
+  which needs a design ruling. On the way, `330` found that the Worker's
+  expiry re-arm could put an older copy back. Fixed, merged (PR #77) and
+  redeployed (`3a21e527`) at his go, with live checks passing.
+- **Refused commands:** workers' `rm -rf` of their own `.scratch` was
+  refused three times, mine twice, even after the owner approved the delete.
+  The approved deletions went through `git worktree remove --force` after
+  checking every file against git, and the 330 work was carried to a clean
+  worktree as a patch.

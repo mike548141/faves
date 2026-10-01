@@ -1,4 +1,4 @@
-- [ ] **Phase 4 — personal recipes, and recipe buckets in sync** `[L]
+- [x] **Phase 4 — personal recipes, and recipe buckets in sync** `[L]
       [data][sync][recipes]` — owner-raised 2026-09-30, revised the same day
       by [ADR 0146](../../decisions/0146-the-scaling-design-revised-after-its-cold-review.md). Needs `010` and `040`.
 
@@ -164,3 +164,10 @@
   search), `tools/cook_check.mjs` (section 13, no method). The search hint
   "ginger crunch" stays: the Groundup Cafe's own Ginger Crunch still answers it.
   Step 8 (delete the two backup files) is the owner's.
+
+  ✅ **Closed 2026-10-01 (`faves-55`).** Runbook steps 1–7 done: Worker
+  deployed and checked live, his backup moved (5 recipes to "Me", 4 hearts
+  and 9 shopping lines re-pointed), Replace-imported on his laptop, synced
+  to his phone (both confirmed by his screenshots), and the five published
+  copies removed (PR #71). Step 8, deleting the two backup files in his
+  Downloads folder, is his call. Old hearts that later came back are `320`.
