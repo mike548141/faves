@@ -142,6 +142,29 @@
           "tags": []
         }
       ]
+    },
+    {
+      "id": "naan-upgrade",
+      "name": "Naan upgrade",
+      "select": "one",
+      "options": [
+        {
+          "name": "Other breads",
+          "id": "other-breads",
+          "price": 1.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Stuffed naan",
+          "id": "stuffed-naan",
+          "price": 2.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        }
+      ]
     }
   ],
   "menu": [
@@ -819,7 +842,7 @@
         {
           "name": "Combo",
           "dishId": "combo",
-          "desc": "Half curry, half rice, plain naan and a cold drink can (without drink $12.00). Butter Chicken or Lamb Rogan Josh. Naan upgrade to other breads +$1.00, stuffed naan +$2.00.",
+          "desc": "Half curry, half rice, plain naan and a cold drink can (without drink $12.00). Butter Chicken or Lamb Rogan Josh.",
           "price": [
             {
               "value": 14.0,
@@ -831,7 +854,10 @@
             "contains-gluten",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “naan”.", "contains-dairy": "The menu says “Butter”."}
+          "tagNotes": {"contains-gluten": "The menu says “naan”.", "contains-dairy": "The menu says “Butter”."},
+          "addOns": [
+            "naan-upgrade"
+          ]
         },
         {
           "name": "Goat Curry",
