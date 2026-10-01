@@ -45,6 +45,7 @@ import {
   RECIPE_BUCKETS,
   BUCKET_QUERY,
   BUCKET_HEADER,
+  FAMILY_QUERY,
   bucketName,
   bucketPlaintext,
   canonicalJson,
@@ -222,6 +223,39 @@ export function writeRecipes(storage, flat) {
   return ok;
 }
 
+/**
+ * A read-only view of `storage` that keeps every raw string read through it
+ * (roadmap 510/190). `unchanged(profiles)` then answers "would collecting
+ * again give the same people?" by comparing strings rather than collecting:
+ * the registry plus every per-person store of each person collected. Those
+ * are all `sameSnapshot` and the recipe comparison look at, and each string
+ * collects to one value, so equal strings mean an equal snapshot. A key the
+ * view never read counts as moved — the safe answer, which costs the full
+ * collect this replaces and nothing more.
+ */
+export function recordingStorage(storage) {
+  const seen = new Map();
+  const view = {
+    getItem(k) {
+      const v = storage.getItem(k);
+      seen.set(k, v);
+      return v;
+    },
+    key: (i) => (typeof storage.key === "function" ? storage.key(i) : null),
+    get length() {
+      return storage.length;
+    },
+  };
+  const unchanged = (profiles) => {
+    const keys = [PROFILES_KEY];
+    for (const p of Array.isArray(profiles) ? profiles : []) {
+      for (const base of SCOPED_BASE_KEYS) keys.push(scopeKey(String(p?.id ?? ""), base));
+    }
+    return keys.every((k) => seen.has(k) && storage.getItem(k) === seen.get(k));
+  };
+  return { view, unchanged };
+}
+
 /** Two recipe maps hold the same recipes, field for field. */
 const sameRecipes = (a, b) => canonicalJson(a || {}) === canonicalJson(b || {});
 
@@ -346,7 +380,15 @@ export function createSync({
   const readBase = () => upgradeSnapshot(parse(storage.getItem(SYNC_BASE_KEY)));
   const writeBase = (snap) => {
     try {
-      storage.setItem(SYNC_BASE_KEY, JSON.stringify(snap));
+      const next = JSON.stringify(snap);
+      // A pull that changed nothing agrees on the same thing it agreed last
+      // time, and rewrote these exact bytes on every page load and foreground
+      // — 9.1 KB at 200 recipes (roadmap 510/190, survey finding 6). Compared
+      // with what storage holds NOW, not with what this cycle read at its
+      // start, so another tab's agreement landed mid-flight is still
+      // replaced exactly as before.
+      if (storage.getItem(SYNC_BASE_KEY) === next) return;
+      storage.setItem(SYNC_BASE_KEY, next);
     } catch {
       // Losing the base is not fatal but it IS a real degradation — the next
       // merge cannot tell a deletion from an addition. Surfaced rather than
@@ -459,7 +501,7 @@ export function createSync({
         continue;
       }
       const sealed = await sealBlob(key, bucketPlaintext(b.k, b.map));
-      const put = await fetchImpl(url(`${blobId}:${b.name}`), {
+      const put = await fetchImpl(`${url(`${blobId}:${b.name}`)}?${FAMILY_QUERY}=${RECIPE_BUCKETS}`, {
         method: "PUT",
         body: sealed,
         headers: b.version ? { "If-Match": b.version } : {},
@@ -521,6 +563,46 @@ export function createSync({
     return inFlight;
   }
 
+  /**
+   * GET the core copy, asking for the bucket report when `ask`. Returns
+   * `{ actual, theirs, etag }`, or `{ result }` — the cycle's answer — when it
+   * must stop here: a copy that will not open, one in a newer shape, or no
+   * answer at all.
+   */
+  async function readCore(blobId, key, ask) {
+    const got = await fetchImpl(ask ? `${url(blobId)}?${BUCKET_QUERY}=${RECIPE_BUCKETS}` : url(blobId), { method: "GET" });
+    const actual = parseBucketHeader(got.headers.get(BUCKET_HEADER));
+    let theirs = null;
+    let etag = null;
+    if (got.status === 200) {
+      etag = got.headers.get("etag");
+      theirs = await openBlob(key, new Uint8Array(await got.arrayBuffer()));
+      if (theirs === null) {
+        // Authenticated decryption failed. The blob is not ours, or it is
+        // damaged. Refusing is the only safe move: overwriting it would
+        // destroy whatever it really is, and merging garbage is worse.
+        setState(ERROR, "That sync code doesn’t match the data on the server.");
+        return { result: { ok: false, error: "That sync code doesn’t match the data on the server." } };
+      }
+      // A store this build reads has been written in a newer shape. Merging
+      // it would misread it and write the misreading back for everyone, so
+      // this is the one case that pauses (ADR 0146 §3). A store this build
+      // has never heard of is NOT this case: it is carried, and sync goes on.
+      // Nothing is written and nothing local changes; the next foreground
+      // checks again, and an updated build simply passes.
+      const ahead = storesAhead(theirs);
+      if (ahead.length) {
+        setState(PAUSED, UPDATE_NEEDED);
+        return { result: { ok: false, error: "update-needed", stores: ahead } };
+      }
+      theirs = upgradeSnapshot(theirs) ?? theirs;
+    } else if (got.status !== 404) {
+      setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
+      return { result: { ok: false, error: "sync-unreachable" } };
+    }
+    return { actual, theirs, etag };
+  }
+
   /** One read → merge → write → record pass. `syncNow` runs it, and runs it
    *  again (a bounded number of times) when the write lost a race. */
   async function cycle(cfg, decisions) {
@@ -528,49 +610,40 @@ export function createSync({
     try {
       const { blobId, key } = await deriveSyncKeys(normaliseSyncCode(cfg.code));
 
-      // 1. read what the server has. The query asks a Worker that knows recipe
-      //    buckets to report which it holds and their versions, in one read;
-      //    an older Worker ignores it and reports nothing (roadmap 510/050).
-      const got = await fetchImpl(`${url(blobId)}?${BUCKET_QUERY}=${RECIPE_BUCKETS}`, { method: "GET" });
-      const actual = parseBucketHeader(got.headers.get(BUCKET_HEADER));
-      let theirs = null;
-      let etag = null;
-      if (got.status === 200) {
-        etag = got.headers.get("etag");
-        theirs = await openBlob(key, new Uint8Array(await got.arrayBuffer()));
-        if (theirs === null) {
-          // Authenticated decryption failed. The blob is not ours, or it is
-          // damaged. Refusing is the only safe move: overwriting it would
-          // destroy whatever it really is, and merging garbage is worse.
-          setState(ERROR, "That sync code doesn’t match the data on the server.");
-          return { ok: false, error: "That sync code doesn’t match the data on the server." };
-        }
-        // A store this build reads has been written in a newer shape. Merging
-        // it would misread it and write the misreading back for everyone, so
-        // this is the one case that pauses (ADR 0146 §3). A store this build
-        // has never heard of is NOT this case: it is carried, and sync goes on.
-        // Nothing is written and nothing local changes; the next foreground
-        // checks again, and an updated build simply passes.
-        const ahead = storesAhead(theirs);
-        if (ahead.length) {
-          setState(PAUSED, UPDATE_NEEDED);
-          return { ok: false, error: "update-needed", stores: ahead };
-        }
-        theirs = upgradeSnapshot(theirs) ?? theirs;
-      } else if (got.status !== 404) {
-        setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
-        return { ok: false, error: "sync-unreachable" };
-      }
-
-      // 2. merge against the last agreement.
-      const mine = collectPersonalData(storage, { exportedAt: now() });
+      // 1. what this device holds, and what it last agreed. Collected through
+      //    a view that keeps the raw strings it read, so step 4 can tell in
+      //    one compare per key whether anything moved since (roadmap
+      //    510/190). Collected BEFORE the read since 510/140, because whether
+      //    to ask about recipe buckets depends on it; a tap during the read is
+      //    then caught by step 4 like a tap during the write, and carried by
+      //    the cycle it schedules.
+      const reading = recordingStorage(storage);
+      const mine = collectPersonalData(reading.view, { exportedAt: now() });
       const base = readBase();
+      // Every person's cookbook as one map, keyed recipe + person (510/120).
+      const mineRecipes = flattenCookbooks(mine.profiles);
+
+      // 2. read what the server has. Asking a Worker about recipe buckets
+      //    costs it one KV read per bucket (8), so it is asked only by a
+      //    device that holds a recipe or last agreed on buckets (roadmap
+      //    510/140, survey finding 1) — nobody else has a bucket to hear
+      //    about. A device that asked nothing and finds the core copy now
+      //    records buckets (another device's first recipe) reads again,
+      //    asking: one extra round trip, once. An older Worker ignores the
+      //    query and reports nothing (roadmap 510/050).
+      const holdsBuckets = Object.keys(mineRecipes).length > 0 || !!base?.recipeBuckets;
+      let read = await readCore(blobId, key, holdsBuckets);
+      if (!read.result && !holdsBuckets && read.theirs?.recipeBuckets?.n === RECIPE_BUCKETS) {
+        read = await readCore(blobId, key, true);
+      }
+      if (read.result) return read.result;
+      const { actual, etag } = read;
+      const theirs = read.theirs;
+
       const { merged, conflicts, changes } = mergePersonal(base, mine, theirs ?? mine);
 
       // 2b. the recipe buckets (roadmap 510/050). Read before any write, so a
       //     bucket that will not open stops the cycle with nothing written.
-      // Every person's cookbook as one map, keyed recipe + person (510/120).
-      const mineRecipes = flattenCookbooks(mine.profiles);
       const rec = await readRecipes({ blobId, key, actual, theirs, base, mineRecipes });
       if (rec.error === "mismatch") {
         setState(ERROR, "That sync code doesn’t match the data on the server.");
@@ -625,7 +698,13 @@ export function createSync({
       // every visibility change into a KV write.
       if (!(theirs && sameSnapshot(merged, theirs) && sameBuckets(merged.recipeBuckets, theirs.recipeBuckets))) {
         const sealed = await sealBlob(key, merged);
-        const put = await fetchImpl(url(blobId), {
+        // How many buckets this user has, so the Worker re-arms those and no
+        // others (roadmap 510/140): it read all 16 possible keys on every
+        // write, 16 KV reads per heart for someone with no recipes at all.
+        // The number the core copy being written records — 0 for nobody's
+        // recipes. An older Worker ignores it and reads all 16, as before.
+        const family = Number.isInteger(merged.recipeBuckets?.n) ? merged.recipeBuckets.n : 0;
+        const put = await fetchImpl(`${url(blobId)}?${FAMILY_QUERY}=${family}`, {
           method: "PUT",
           body: sealed,
           headers: etag ? { "If-Match": etag } : {},
@@ -676,8 +755,21 @@ export function createSync({
       //    there is two-sided safety data (ADR 0060). Then nothing local is
       //    written and the LAST agreement stands, so the next cycle sees both
       //    sides against a real ancestor and asks.
-      const now2 = collectPersonalData(storage, { exportedAt: now() });
-      const localMoved = !sameSnapshot(mine, now2) || !sameRecipes(mineRecipes, flattenCookbooks(now2.profiles));
+      //
+      //    WHETHER anything moved is asked of the raw strings first (roadmap
+      //    510/190): every key the comparison below depends on — the registry
+      //    and each person's stores — is compared with the string `mine` was
+      //    built from. Identical strings collect to an identical snapshot, so
+      //    the answer is the one the full collect would give, and the collect,
+      //    its parse and both canonical comparisons are skipped. Storage is
+      //    still READ, deliberately: another tab's write lands in storage
+      //    before its `storage` event is dispatched here (that is a queued
+      //    task), and a marker bumped by events would miss exactly the change
+      //    this step exists to catch.
+      const now2 = reading.unchanged(mine.profiles) ? mine : collectPersonalData(storage, { exportedAt: now() });
+      const localMoved =
+        now2 !== mine &&
+        (!sameSnapshot(mine, now2) || !sameRecipes(mineRecipes, flattenCookbooks(now2.profiles)));
       let local = merged;
       let agreed = true;
       if (localMoved) {
@@ -826,8 +918,26 @@ export function createSync({
       if (started) return () => {};
       started = true;
       const offs = [];
+      // A store also notifies when it RELOADS because another tab wrote to it:
+      // that tab's `storage` event reaches app.js/menu.js/recipe.js, they call
+      // `reload()`, and the subscribers fire exactly as on a tap here. Until
+      // 2026-10-01 that scheduled a sync in every other open tab, so one heart
+      // with two tabs open cost two pulls (roadmap 510/210, survey finding 8).
+      // The tab that wrote owns the push — its own commit scheduled it — so a
+      // notification raised INSIDE a `storage` event's dispatch is not a
+      // change to sync here. `window.event` is how a callback deep in that
+      // chain can tell (DOM Standard, "current event"; set in every engine we
+      // ship to). Where it is missing the check is false and this behaves as
+      // it always did — a spare pull, never a lost push. A same-tab reload
+      // (an import, a profile rename) is not inside a `storage` event, so it
+      // still schedules, as it must.
+      const fromOtherTab = () => win?.event?.type === "storage";
       for (const store of stores) {
-        if (typeof store?.subscribe === "function") offs.push(store.subscribe(() => schedule()));
+        if (typeof store?.subscribe === "function") {
+          offs.push(store.subscribe(() => {
+            if (!fromOtherTab()) schedule();
+          }));
+        }
       }
       if (doc?.addEventListener) {
         const onVis = () => {
