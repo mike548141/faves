@@ -86,6 +86,16 @@ are not ingredient statements at all:
             make that call.
   IGNORED   everything else — hours, prices, "12 and under".
 
+POINTER NOTES (roadmap 080/280). A note can refer to OTHER food — "see our
+cabinet of fresh filled paninis…" — and reading it as a statement about the
+dishes beneath it tagged five unrelated lunch dishes as gluten. Such a note is
+flagged in `tools/section-note-pointers.json` (keyed by venue + sectionId, and
+carrying the note's exact text so a rewritten note makes the entry stale and
+fails loudly) and is skipped by the section-note reading. It is a veto on one
+NOTE's reading, never on a dish. Tags already written stay; their tips say they
+are kept as a precaution. `--section-notes` lists every tip that cites a note,
+for the owner to rule on.
+
 WHAT THE EXIT CODE MEANS. A dry run always exits 0: reporting untagged dishes
 is its whole job, so a non-zero there would fire forever and be ignored. An
 `--apply` run exits **1** if any record it wanted to write could not be written.
@@ -97,6 +107,7 @@ unswept behind a green run.
     python3 tools/tag_allergens.py --tier PHOTO  # just what a caption says
     python3 tools/tag_allergens.py --swaps       # every substitution phrase
     python3 tools/tag_allergens.py --apply       # write them
+    python3 tools/tag_allergens.py --section-notes  # tips citing a section note
 """
 
 import argparse
@@ -1027,6 +1038,110 @@ def review_notes(record):
                 yield section, clause, reason, outstanding
 
 
+# --- POINTER notes (2026-10-01, roadmap 080/280) ------------------------------
+# A section note can refer to OTHER food rather than describe the dishes under
+# it. Groundup's lunch board says "see our cabinet of fresh filled paninis,
+# savouries, slices and cakes": the cabinet is another section, but "paninis"
+# gave `contains-gluten` to Nachos, a salad, corn fritters, wedges and fries.
+#
+# A pointer is marked in `tools/section-note-pointers.json`, and the SECTION-NOTE
+# reading skips it. 🛑 It is NOT a field on the venue file: ADR 0047 — nothing
+# on a screen would render the flag, and `site/data/` is downloaded by every
+# phone. It is this tool's own config, keyed by venue id + `sectionId`.
+#
+# The one-way rule is untouched. A pointer only STOPS the tool ADDING a tag
+# from that note; it never removes one. Tags already written from a pointer
+# stay until the owner rules on them (`--section-notes` lists them), and the
+# veto is narrow on purpose: it silences one NOTE'S reading, never the dish's
+# own words, its photo or its heading (an item-level veto would trade an
+# over-warning for a miss — the almonds beside the water chestnut).
+#
+# Each entry carries the note's EXACT TEXT, and an entry whose note no longer
+# matches is STALE: it names a section whose note has since been rewritten, and
+# a flag that outlives its note would silently skip a note that DOES describe
+# its dishes — a miss, in the one place a miss is not fail-safe. `validate.py`
+# and `--explain --check` both fail on it.
+POINTERS_FILE = pathlib.Path(__file__).resolve().parent / "section-note-pointers.json"
+
+
+def load_pointers(path=None):
+    """{(venue id, sectionId): note text} from the config file.
+
+    Raises ValueError on a malformed file or a duplicate entry: a config that
+    cannot be read must stop the tool, never fall back to "no pointers" — that
+    reading is the over-warning this file exists to remove, and it would hide
+    in silence.
+    """
+    path = pathlib.Path(path) if path else POINTERS_FILE
+    try:
+        doc = json.loads(path.read_text())
+    except (OSError, ValueError) as exc:
+        raise ValueError(f"{path.name}: unreadable — {exc}") from exc
+    entries = doc.get("pointers") if isinstance(doc, dict) else None
+    if not isinstance(entries, list):
+        raise ValueError(f"{path.name}: expected an object with a `pointers` list")
+    out = {}
+    for i, e in enumerate(entries):
+        ok = isinstance(e, dict) and all(
+            isinstance(e.get(k), str) and e[k].strip() for k in ("venue", "sectionId", "note", "why"))
+        if not ok:
+            raise ValueError(f"{path.name}: entry {i} needs non-empty venue, sectionId, note and why")
+        key = (e["venue"], e["sectionId"])
+        if key in out:
+            raise ValueError(f"{path.name}: {key[0]} / {key[1]} is listed twice")
+        out[key] = e["note"]
+    return out
+
+
+_POINTERS = None
+
+
+def pointers():
+    """The shipped config, read once."""
+    global _POINTERS
+    if _POINTERS is None:
+        _POINTERS = load_pointers()
+    return _POINTERS
+
+
+def is_pointer(record, section, pointer_map):
+    """True when this section's note is flagged as a pointer.
+
+    Matches the note's text as well as the section, so a note rewritten since it
+    was flagged is read normally (the safe direction) while `pointer_problems`
+    shouts about the stale entry.
+    """
+    note = section.get("note")
+    return bool(note) and pointer_map.get((record.get("id"), section.get("sectionId"))) == note
+
+
+def pointer_problems(records, pointer_map):
+    """Plain-language faults in the config against `records` (a list of venue
+    records). Empty means every entry still names a real venue, a real section
+    and that section's current note."""
+    by_id = {r.get("id"): r for r in records if isinstance(r, dict)}
+    problems = []
+    for (venue, sid), note in sorted(pointer_map.items()):
+        rec = by_id.get(venue)
+        if rec is None:
+            problems.append(f"{venue}: no such venue (entry for section {sid!r})")
+            continue
+        sections = [s for s in rec.get("menu") or [] if isinstance(s, dict) and s.get("sectionId") == sid]
+        if not sections:
+            problems.append(f"{venue}: no section with sectionId {sid!r}")
+        elif not sections[0].get("note"):
+            problems.append(f"{venue} / {sid}: the section no longer has a note")
+        elif sections[0]["note"] != note:
+            problems.append(f"{venue} / {sid}: the note has changed since it was flagged — "
+                            f"now {sections[0]['note']!r}")
+    return problems
+
+
+def corpus_pointer_problems():
+    records = [json.loads(p.read_text()) for p in sorted(DATA.glob("*.json"))]
+    return pointer_problems(records, pointers())
+
+
 # --- ingredients as objects, and PARTS (2026-09-28, roadmap 350/020 step 4) --
 # Since ADR 0070 an `ingredients` entry was a plain string or a group
 # `{"component": ..., "items": [...]}`. Owner-ruled 2026-09-28 (22e): an entry
@@ -1233,19 +1348,27 @@ def has_allergen_caveat(item):
     return False
 
 
-def audit(record, tier=None, refusals=None):
+def audit(record, tier=None, refusals=None, pointer_map=None):
     """Yield (item, tag, tier, why) for every tag this record is missing.
 
     `refusals`, when given a list, collects (item, tag, why) for PHOTO findings
     withheld because the dish carries no `needs: allergens` caveat. A skipped
     tag that nothing prints is the "swept behind a green line" failure this
     file has already paid for twice.
+
+    `pointer_map` is the pointer-note config (`load_pointers`); None reads the
+    shipped one. A flagged section's NOTE is not offered to its dishes.
     """
+    if pointer_map is None:
+        pointer_map = pointers()
     for section in record.get("menu", []) or []:
         if not isinstance(section, dict):
             continue
-        # Read the heading's note once, then offer it to every dish under it.
+        # Read the heading's note once, then offer it to every dish under it —
+        # unless it is flagged as a pointer to other food (roadmap 080/280).
         note_applies, _ = read_section_note(section.get("note"))
+        if is_pointer(record, section, pointer_map):
+            note_applies = []
         # …and the heading itself, read once for the same reason. A heading that
         # is NOTHING BUT the venue's free-from claim — a section called "Gluten
         # Free" — is read the way a `gf` tag is read, and silences that allergen
@@ -1678,8 +1801,25 @@ def ingredient_name(text):
     return name or text
 
 
-def tag_note(tag, item, note_applies, recipes):
-    """One sentence saying why `item` carries `tag`, or None if no rule can say."""
+# What a tip says when the ONLY thing that ever put a tag on a dish is a note
+# flagged as a pointer to other food (roadmap 080/280). The tag stays — this
+# tool never removes one, and the owner reviews them — but the tip may not go on
+# quoting evidence the tool no longer accepts as if it still stood, and may not
+# vanish either: a tag with no reason beside it reads as a confirmed fact. So it
+# says what is true under EVERY outcome of that review: the tag is kept as a
+# precaution, and its one recorded reason does not describe this dish.
+POINTER_TIP = ("Kept as a precaution: the only reason on record is a note over "
+               "this section that points to other food (“{note}”), so it may not "
+               "apply to this dish.")
+
+
+def tag_note(tag, item, note_applies, recipes, pointer_applies=()):
+    """One sentence saying why `item` carries `tag`, or None if no rule can say.
+
+    `pointer_applies` is what a FLAGGED pointer note would have applied. It is
+    asked last, after the dish's own words, the photo and any note that still
+    counts: any other evidence wins, and a tip falls back to POINTER_TIP only
+    when the pointer is all there is."""
     rules = [(tier, why, pattern, exclude)
              for t, tier, why, pattern, exclude in COMPILED if t == tag]
     # A recipe names its ingredients, and the owner's ask was exactly "tell me
@@ -1711,20 +1851,29 @@ def tag_note(tag, item, note_applies, recipes):
         if hit:
             return (f"The photo’s description says “{_quote(hit)}”"
                     + (f" — {why}." if tier == "DERIVED" else "."))
+    for t, _tier, why in pointer_applies:
+        if t == tag:
+            m = NOTE_CLAUSE.match(why)
+            return POINTER_TIP.format(note=m.group(1)) if m else None
     return None
 
 
-def explain(record):
+def explain(record, pointer_map=None):
     """Yield (flat item index, item, {tag: sentence}) for every dish."""
+    if pointer_map is None:
+        pointer_map = pointers()
     recipes = record.get("kind") == "recipes"
     n = 0
     for section in record.get("menu", []) or []:
         note_applies, _ = read_section_note(section.get("note"))
+        pointer_applies = []
+        if is_pointer(record, section, pointer_map):
+            note_applies, pointer_applies = [], note_applies
         for item in section.get("items") or []:
             notes = {}
             for tag in item.get("tags") or []:
                 if tag.startswith("contains-"):
-                    sentence = tag_note(tag, item, note_applies, recipes)
+                    sentence = tag_note(tag, item, note_applies, recipes, pointer_applies)
                     if sentence:
                         notes[tag] = sentence
             yield n, item, notes
@@ -1785,8 +1934,100 @@ def patch_tag_notes(raw, items, wanted):
     return new
 
 
+def other_evidence(item, section, tag):
+    """What, besides a section note, a rule can quote for `tag` on `item`.
+
+    The dish's own words, its photo caption and its section HEADING — the three
+    sources `audit` reads apart from the note. Empty means nothing the tool can
+    see supports the tag: the note is the only thing on record, which is not the
+    same as the tag being wrong (a hand correction leaves no trace here).
+    """
+    found = []
+    text = ingredient_text(item)
+    caption = photo_text(item)
+    heading = section_text(section)
+    for source, label, haystack in (("dish", "the dish", text), ("photo", "the photo caption", caption),
+                                    ("heading", "the heading", heading)):
+        if not haystack:
+            continue
+        for t, _tier, _why, pattern, exclude in COMPILED:
+            if t != tag or (exclude and exclude.search(haystack)):
+                continue
+            hit = first_unhedged(tag, pattern, haystack)
+            if hit:
+                found.append(f"{label}: “{_quote(hit)}”")
+                break
+    return found
+
+
+def section_note_rows(records, pointer_map):
+    """Every allergen tag whose tip quotes a SECTION NOTE, as dicts.
+
+    Computed as the tip writer would WITHOUT the pointer flag, so a flagged
+    note's rows stay on the list (and say `flagged`) — the review is about
+    exactly those tags, and a count that shrank when the flag landed would hide
+    them. Grouped by the caller.
+    """
+    rows = []
+    for record in records:
+        recipes = record.get("kind") == "recipes"
+        for section in record.get("menu", []) or []:
+            if not isinstance(section, dict) or not section.get("note"):
+                continue
+            note_applies, _ = read_section_note(section.get("note"))
+            if not note_applies:
+                continue
+            flagged = is_pointer(record, section, pointer_map)
+            for item in section.get("items") or []:
+                for tag in item.get("tags") or []:
+                    if not tag.startswith("contains-"):
+                        continue
+                    sentence = tag_note(tag, item, note_applies, recipes)
+                    if not (sentence or "").startswith("The note over this section says"):
+                        continue
+                    rows.append({
+                        "venue": record.get("id"), "section": section.get("section"),
+                        "sectionId": section.get("sectionId"), "note": section["note"],
+                        "flagged": flagged, "dish": item.get("name"), "tag": tag,
+                        "other": other_evidence(item, section, tag),
+                    })
+    return rows
+
+
+def run_section_notes():
+    """--section-notes: the review list, as Markdown. Read-only."""
+    pointer_map = pointers()
+    records = [json.loads(p.read_text()) for p in sorted(DATA.glob("*.json"))]
+    rows = section_note_rows(records, pointer_map)
+    print(f"{len(rows)} allergen tip(s) cite a section note, across "
+          f"{len({(r['venue'], r['sectionId']) for r in rows})} note(s) in "
+          f"{len({r['venue'] for r in rows})} venue(s). "
+          f"`flagged` = the note is marked a pointer, so the tool will not add from it again.\n")
+    groups = {}
+    for r in rows:
+        groups.setdefault((r["venue"], r["section"], r["note"], r["flagged"]), []).append(r)
+    for (venue, section, note, flagged), grp in sorted(groups.items(), key=lambda kv: (kv[0][0], kv[0][1])):
+        print(f"### {venue} / {section}" + ("  — FLAGGED AS A POINTER" if flagged else ""))
+        print(f"> {note}\n")
+        print("| Dish | Tag | Other evidence a rule can see |")
+        print("|---|---|---|")
+        for r in grp:
+            other = "; ".join(r["other"]) if r["other"] else "none"
+            print(f"| {r['dish']} | {r['tag']} | {other} |")
+        print()
+    return 0
+
+
 def run_explain(apply, check):
     """--explain: report, write (--apply) or gate (--check) every tagNotes."""
+    # A stale pointer entry decides what the tips SAY, so a run that cannot trust
+    # the config must not write or pass anything.
+    problems = corpus_pointer_problems()
+    if problems:
+        print(f"{len(problems)} stale entr(y/ies) in {POINTERS_FILE.name}:")
+        for p in problems:
+            print(f"  ✗ {p}")
+        return 1
     stale, written, notes_total, tags_total, skipped = [], 0, 0, 0, []
     for path in sorted(DATA.glob("*.json")):
         raw = path.read_text()
@@ -1838,7 +2079,13 @@ def main():
                     help="the tag tips: why each allergen tag is there (tagNotes); "
                          "with --apply writes them, with --check fails if they are stale")
     ap.add_argument("--check", action="store_true", help="with --explain: exit 1 if stale")
+    ap.add_argument("--section-notes", action="store_true",
+                    help="read-only review list: every tip that cites a section note, as "
+                         "Markdown, with whatever other evidence a rule can see (roadmap 080/280)")
     args = ap.parse_args()
+
+    if args.section_notes:
+        return run_section_notes()
 
     if args.explain:
         return run_explain(args.apply, args.check)
@@ -1930,6 +2177,7 @@ def main():
                     total[tier] -= 1
                     by_tag[tag] -= 1
 
+    stale_pointers = corpus_pointer_problems()
     verb = "applied" if args.apply else "missing (dry run)"
     # SAY WHAT WAS SWEPT, not just what was found. Until 2026-08-16 the summary
     # printed the finding count alone, so "0 tag(s) missing" was the same line
@@ -1987,10 +2235,15 @@ def main():
     # thing: it meant to write a record and could not. The run still finishes
     # first — aborting half-written is worse than finishing and shouting — but
     # it no longer finishes GREEN, which is how six venues stayed unswept.
+    if stale_pointers:
+        print(f"\n{len(stale_pointers)} stale entr(y/ies) in {POINTERS_FILE.name} — the sweep "
+              f"read a note it was told to skip, or skipped one it should read:")
+        for p in stale_pointers:
+            print(f"  ✗ {p}")
     if skipped:
         print(f"\n{len(skipped)} record(s) NOT written — the sweep is incomplete.")
         return 1
-    return 0
+    return 1 if stale_pointers else 0
 
 
 if __name__ == "__main__":

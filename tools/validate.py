@@ -2815,6 +2815,34 @@ def check_allergen_tags():
             warn(record.get("id", path.stem), f"{item['name']}: missing {tag} ({tier} — {why}) — run tools/tag_allergens.py")
 
 
+def check_section_note_pointers():
+    """Every entry in tools/section-note-pointers.json still names a real venue,
+    a real section and that section's CURRENT note (roadmap 080/280).
+
+    An ERROR, unlike the warnings beside it, because of what a stale entry does:
+    a flag that outlives the note it was made for makes the tagger skip a note
+    that now DESCRIBES its dishes, and a skipped note is a missed allergen —
+    the one direction the tagger's one-way rule does not make safe. A config
+    that cannot be read at all is an error for the same reason: falling back to
+    "no pointers" would quietly bring the over-warning back.
+    """
+    try:
+        sys.path.insert(0, str(Path(__file__).parent))
+        import tag_allergens as ta
+    except ImportError:  # tool removed or renamed — not worth failing validation
+        return
+    rid = ta.POINTERS_FILE.name
+    try:
+        pointer_map = ta.load_pointers()
+    except ValueError as exc:
+        err(rid, str(exc))
+        return
+    records = [r for r in (load_record(p) for p in sorted((DATA / "restaurants").glob("*.json")))
+               if isinstance(r, dict)]
+    for problem in ta.pointer_problems(records, pointer_map):
+        err(rid, f"stale entry — {problem}")
+
+
 def check_add_on_option_tags():
     """Warn where an add-on option's own name says what it contains and the tag
     is missing (ADR 0092, ADR 0095, ROADMAP 14h and Theme 5 item 060).
@@ -3102,6 +3130,7 @@ def main():
 
     check_version_bump()
     check_allergen_tags()
+    check_section_note_pointers()
     check_add_on_option_tags()
     check_twin_allergens()
     check_self_contradicting_claims()
