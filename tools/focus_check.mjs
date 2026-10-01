@@ -169,6 +169,20 @@ async function typeQuery(driver, q) {
   await driver.settle();
 }
 
+/** Choose the suggestion row with this label, by arrowing to it and pressing Enter
+ *  (what a keyboard reader does). Returns whether a row had that label. */
+function pickRowByLabel(driver, label) {
+  return driver.evalPage(`(() => {
+    const s = document.querySelector(".menu-search");
+    const rows = [...document.querySelectorAll(".suggest-list .suggest-row")];
+    const at = rows.findIndex((r) => (r.querySelector(".suggest-label")?.textContent || "").trim() === ${JSON.stringify(label)});
+    if (at < 0) return false;
+    for (let i = 0; i <= at; i++) s.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    s.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    return true;
+  })()`);
+}
+
 async function openVenue(driver, cdp, sessionId, port, id) {
   await cdp.send("Page.navigate", { url: `http://127.0.0.1:${port}/restaurant.html?id=${id}` }, sessionId);
   await untilPresent(() => driver.evalPage(`document.querySelectorAll("li.dish").length > 0`), {
@@ -626,6 +640,149 @@ async function run(opts) {
       !!both && cafeIds[0] === both.id,
       `expected ${both?.id ?? "(no such venue in the corpus)"} first, got ${cafeIds.join(" > ")}`
     );
+
+    // ─── Your own recipes are searched beside the published ones (510/310) ──
+    //
+    // Owner-raised 2026-10-01: "The search feature(s) should also work to find
+    // 'My recipes'". The home search reads the public, precached search index; a
+    // person's recipes are read from the DEVICE at the moment of the query and
+    // merged in, never written to that index. Three claims here a unit test cannot
+    // reach: the rendered row (label inside the link, the "Cook at Home · section"
+    // line, the href under u:mine), the ORDER on the page when a personal and a
+    // published recipe compete under one ranker, and that the page repaints when
+    // the person switches — the answer to a live query changes with nothing typed.
+    // The fixtures are synthetic. The home screen is already loaded on `port`.
+    const OWN = [
+      { dishId: "u:fixture-quokka-stew", name: "Quokka Stew", section: "Dinners", tags: ["v"] },
+      { dishId: "u:fixture-pad-thai", name: "Pad Thai Fixture", section: "Dinners" },
+      { dishId: "u:fixture-plain-bake", name: "Fixture Plain Bake", desc: "Mentions the quokka only in its description." },
+    ];
+    await driver.evalPage(`(async () => {
+      const r = await import("/js/recipes.js");
+      for (const rec of ${JSON.stringify(OWN)}) r.recipes.put(rec);
+    })()`);
+
+    /** Type into the home search and read the rendered Dishes rows, in order. */
+    async function searchDishRows(q) {
+      await driver.evalPage(
+        `(() => { const s = ${need("#search-input")}; s.focus(); s.value = ${JSON.stringify(q)};
+          s.dispatchEvent(new Event("input", { bubbles: true })); })()`
+      );
+      await sleep(160);
+      await driver.settle();
+      return driver.evalPage(`(() => {
+        const group = [...document.querySelectorAll("#search-groups .search-group")]
+          .find((g) => /Dishes/.test(g.querySelector(".search-group-title span")?.textContent || ""));
+        if (!group) return [];
+        return [...group.querySelectorAll("a.search-link")].map((a) => {
+          const o = a.querySelector(".recipe-owner");
+          return {
+            name: (a.querySelector(".search-row-name")?.textContent || "").trim(),
+            sub: (a.querySelector(".search-row-sub")?.textContent || "").trim(),
+            href: a.getAttribute("href"),
+            owner: o ? o.textContent.trim() : null,
+            ownerInLink: !!o && a.contains(o),
+          };
+        });
+      })()`);
+    }
+
+    const q1 = await searchDishRows("quokka");
+    report.check(
+      "home search finds your own recipes by name and by description, the name hit first (the published rule)",
+      q1.length === 2 && q1[0]?.name === "Quokka Stew" && q1[1]?.name === "Fixture Plain Bake",
+      JSON.stringify(q1.map((r) => r.name))
+    );
+    report.check(
+      'each own result wears "My recipe" inside its link, says where it sits, and opens under u:mine',
+      q1.every((r) => r.owner === "My recipe" && r.ownerInLink) &&
+        q1[0]?.sub === "Cook at Home · Dinners" && q1[1]?.sub === "Cook at Home" &&
+        q1[0]?.href === "recipe.html?id=u:mine&dish=u:fixture-quokka-stew",
+      JSON.stringify(q1.map((r) => [r.sub, r.owner, r.href]))
+    );
+    // ONE ranker for both kinds: a personal name-start hit outranks a published
+    // mid-name hit, and the published row beside it carries no label at all.
+    const q2 = await searchDishRows("pad thai");
+    const ownAt = q2.findIndex((r) => r.name === "Pad Thai Fixture");
+    const pubAt = q2.findIndex((r) => r.name === "Easy Pad Thai");
+    report.check(
+      "…and ranks with the published recipes: a personal name-start hit leads a published mid-name one",
+      ownAt >= 0 && pubAt > ownAt,
+      q2.map((r) => `${r.name}${r.owner ? "*" : ""}`).join(" > ")
+    );
+    report.check(
+      "…while a published result carries no owner label (the absence)",
+      pubAt >= 0 && q2[pubAt]?.owner === null && q2.filter((r) => r.owner).length === 1,
+      JSON.stringify(q2.map((r) => [r.name, r.owner]))
+    );
+    // Live: with a query on screen, switching person changes the answer.
+    const guestId = await driver.evalPage(`(async () => {
+      const { profiles } = await import("/js/profiles.js");
+      window.__ownBack = profiles.activeId();
+      return profiles.create("Guest");
+    })()`);
+    await sleep(160);
+    await driver.settle();
+    const q3 = await searchDishRows("quokka");
+    report.check(
+      "a different profile's recipes are NOT found, and the live results drop them the moment the person switches",
+      guestId && q3.length === 0,
+      `${q3.length} row(s) for "quokka" as the other profile`
+    );
+    await driver.evalPage(`(async () => {
+      const { profiles } = await import("/js/profiles.js");
+      profiles.setActive(window.__ownBack);
+    })()`);
+    await sleep(160);
+    await driver.settle();
+    const q4 = await driver.evalPage(
+      `[...document.querySelectorAll("#search-groups a.search-link .recipe-owner")].length`
+    );
+    report.check(
+      "…and they come back when the first person does",
+      q4 === 2,
+      `${q4} labelled row(s) after switching back`
+    );
+
+    // The Cook at Home page's own filter and suggestions read the same cookbook.
+    await openVenue(driver, cdp, sessionId, port, "cook-at-home");
+    await typeQuery(driver, "quokka");
+    const cookQ = await driver.evalPage(`(() => {
+      const rows = [...document.querySelectorAll("li.dish")].filter((d) => !d.hidden);
+      const sug = [...document.querySelectorAll(".suggest-list .suggest-row")].map((r) => ({
+        label: (r.querySelector(".suggest-label")?.textContent || "").trim(),
+        dish: r.classList.contains("suggest-dish"),
+      }));
+      return { shown: rows.map((d) => (d.querySelector(".dish-name")?.textContent || "").trim()), sug };
+    })()`);
+    report.check(
+      "Cook at Home's own filter finds your own recipes, labelled",
+      cookQ.shown.length === 2 && cookQ.shown.every((n) => /My recipe$/.test(n)) && /^Quokka Stew/.test(cookQ.shown[0]),
+      JSON.stringify(cookQ.shown)
+    );
+    report.check(
+      "…and its suggestions offer your own recipe as a dish",
+      cookQ.sug.some((x) => x.dish && x.label === "Quokka Stew"),
+      JSON.stringify(cookQ.sug)
+    );
+    await pickRowByLabel(driver, "Quokka Stew");
+    let landedUrl = "";
+    for (let waited = 0; waited < 4000; waited += 100) {
+      landedUrl = await driver.evalPage(`location.pathname + location.search`);
+      if (landedUrl.startsWith("/recipe.html")) break;
+      await sleep(100);
+    }
+    report.check(
+      "choosing that suggestion opens the recipe under u:mine, not under the page it was listed on",
+      landedUrl === "/recipe.html?id=u%3Amine&dish=u%3Afixture-quokka-stew" ||
+        landedUrl === "/recipe.html?id=u:mine&dish=u:fixture-quokka-stew",
+      landedUrl
+    );
+    await untilPresent(() => driver.evalPage(`!!document.querySelector("h1.menu-title")`), { label: "the personal recipe page" });
+    await driver.evalPage(`(async () => {
+      const r = await import("/js/recipes.js");
+      for (const id of ${JSON.stringify(OWN.map((o) => o.dishId))}) r.recipes.remove(id);
+    })()`);
 
     // ─── A venue that has CLOSED DOWN sorts last and SAYS SO ───────────────
     //

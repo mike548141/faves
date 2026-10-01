@@ -13,7 +13,7 @@
 import { profileScopedStorage } from "./profiles.js";
 import { migrateEntries, canonicalVenueId } from "./renames.js";
 import { dishId, findDish } from "./dish-id.js";
-import { isPersonalVenue } from "./recipe-record.js";
+import { MY_RECIPES, isPersonalVenue } from "./recipe-record.js";
 
 const KEY = "faves.favourites.v1";
 
@@ -74,8 +74,13 @@ export const favKey = (e) =>
  * 2026-09-28).
  */
 export function favouriteDishIds(entries, venueId) {
+  // Cook at Home's page lists your own recipes beside the published ones
+  // (roadmap 510/300), and a personal recipe is hearted under `u:mine` — so the
+  // page's "favourites" query has to read both, or an own recipe hearted a
+  // moment ago would be on the page, filled, and still missing from "faves".
+  const venues = venueId === COOK_AT_HOME ? [COOK_AT_HOME, MY_RECIPES] : [venueId];
   return new Set(
-    (entries || []).filter((e) => e.type !== "venue" && e.venueId === venueId).map((e) => dishId(e))
+    (entries || []).filter((e) => e.type !== "venue" && venues.includes(e.venueId)).map((e) => dishId(e))
   );
 }
 

@@ -911,6 +911,272 @@ async function run(opts) {
       for (const id of ${JSON.stringify([mineA.dishId, mineB.dishId, unhearted.dishId])}) r.recipes.remove(id);
     })()`);
 
+    // --- 10. The Cook at Home PAGE lists your own recipes (roadmap 510/300) ----
+    // Owner-ruled 2026-10-01: "Yes, all of mine." Every recipe in the active
+    // person's cookbook is on restaurant.html?id=cook-at-home beside the published
+    // ones, hearted or not, each wearing the "My recipe" label; its heart, rating
+    // and the page's filter work as on a published row; a switch of person changes
+    // the list live; and nothing of it is fetched or published. The recipe's own
+    // page wears the label too.
+    //
+    // Driven through the page's own store modules, as sections 8 and 9 are, because
+    // the seed rewrites favourites on every document load. The Network log runs for
+    // the whole section: "nothing is fetched for them" is a claim about requests,
+    // and only the log can say so.
+    const net = [];
+    cdp.on("Network.requestWillBeSent", (p) =>
+      net.push({ url: p.request.url, type: p.type, body: p.request.postData || "" })
+    );
+    await cdp.send("Network.enable", {}, sessionId);
+    const homeFixture = { ...mineA, section: "Desserts", tags: ["v"], desc: "A fixture." };
+    const ownFixtures = [homeFixture, { ...mineB, section: "Fixtures" }, { ...unhearted }];
+    await evalPage(`(async () => {
+      const r = await import("/js/recipes.js");
+      for (const rec of ${JSON.stringify(ownFixtures)}) r.recipes.put(rec);
+    })()`);
+    const cookUrl = url.replace(/restaurant\.html.*$/, "restaurant.html?id=cook-at-home");
+    await cdp.send("Page.navigate", { url: cookUrl }, sessionId);
+    await untilPresent(() => evalPage(`document.querySelectorAll("li.dish").length > 0`), {
+      label: "the Cook at Home page to render",
+    });
+    await settle();
+    await evalPage("window.__favesDeviceCheck = 'alive'");
+    const navsOnCook = navigations;
+    const cookView = () => evalPage(`(() => {
+      const rows = [...document.querySelectorAll("li.dish")].map((li) => {
+        const h3 = li.querySelector(".dish-name");
+        const own = h3?.querySelector(".recipe-owner");
+        const a = li.querySelector("a.dish-name-link");
+        const sec = li.closest(".menu-section");
+        return {
+          id: li.dataset.dishId,
+          name: a?.textContent.trim(),
+          href: a?.getAttribute("href"),
+          section: sec?.querySelector(".section-title")?.textContent.trim(),
+          sectionId: sec?.id,
+          owner: own ? own.textContent.trim() : null,
+          ownerInName: !!own && h3.contains(own),
+          hidden: li.hidden,
+          heart: li.querySelector(".dish-actions .heart")?.getAttribute("aria-pressed"),
+          rating: li.querySelector(".dish-rating [role=slider]")?.getAttribute("aria-valuenow"),
+          chips: li.querySelectorAll(".dish-tags .tag").length,
+        };
+      });
+      return {
+        rows,
+        nav: [...document.querySelectorAll(".section-link")].map((a) => a.textContent.trim()),
+        labels: document.querySelectorAll(".recipe-owner").length,
+        scrollX: document.documentElement.scrollWidth > innerWidth,
+        sentinel: window.__favesDeviceCheck || null,
+        profile: document.querySelector(".profile-caption-name")?.textContent || null,
+        count: document.querySelector(".menu-count:not([hidden]) .menu-count-text")?.textContent || null,
+      };
+    })()`);
+    const typeFilter = async (q) => {
+      await evalPage(`(() => { const s = ${need(".menu-search")}; s.value = ${JSON.stringify(q)};
+        s.dispatchEvent(new Event("input", { bubbles: true })); })()`);
+      await settle();
+    };
+    const publishedCount = (cookRecord.menu || []).flatMap((x) => x.items || []).length;
+    const rowFor = (v, d) => v.rows.find((r) => r.id === d.dishId);
+
+    const c1 = await cookView();
+    report.check(
+      "Cook at Home page: every recipe in your cookbook is listed beside the published ones — hearted or not",
+      c1.rows.length === publishedCount + 3 && [mineA, mineB, unhearted].every((d) => rowFor(c1, d)),
+      `${c1.rows.length} rows (${publishedCount} published + 3 own): ${JSON.stringify(c1.rows.map((r) => r.name))}`
+    );
+    report.check(
+      "Cook at Home page: …including the one that was never hearted (the imported-curry case)",
+      !!rowFor(c1, unhearted) && rowFor(c1, unhearted).heart === "false",
+      JSON.stringify(rowFor(c1, unhearted))
+    );
+    report.check(
+      'Cook at Home page: each of your own rows carries "My recipe" in its heading, and no published row does',
+      [mineA, mineB, unhearted].every((d) => rowFor(c1, d)?.owner === "My recipe" && rowFor(c1, d)?.ownerInName) &&
+        c1.rows.filter((r) => !r.id.startsWith("u:")).every((r) => r.owner === null) && c1.labels === 3,
+      `${c1.labels} label(s) on the page; own rows ${JSON.stringify([mineA, mineB, unhearted].map((d) => rowFor(c1, d)?.owner))}`
+    );
+    report.check(
+      "Cook at Home page: a recipe whose section matches a published one sits INSIDE it, after the published recipes",
+      (() => {
+        const inDesserts = c1.rows.filter((r) => r.section === "Desserts").map((r) => r.id);
+        return rowFor(c1, mineA)?.sectionId === "section-desserts" && inDesserts.at(-1) === mineA.dishId && inDesserts.length > 1;
+      })(),
+      JSON.stringify(c1.rows.filter((r) => r.section === "Desserts").map((r) => r.name))
+    );
+    report.check(
+      'Cook at Home page: any other recipe gets a section of its own after the published ones ("Fixtures", "My recipes")',
+      rowFor(c1, mineB)?.section === "Fixtures" && rowFor(c1, unhearted)?.section === "My recipes" &&
+        c1.nav.slice(-2).join("|") === "Fixtures|My recipes" && c1.rows.at(-1).id === unhearted.dishId,
+      `nav ${JSON.stringify(c1.nav)}`
+    );
+    report.check(
+      "Cook at Home page: a personal row opens its own page, under u:mine — not under the page it is listed on",
+      rowFor(c1, mineA)?.href === `recipe.html?id=u:mine&dish=${mineA.dishId}` &&
+        rowFor(c1, PUBLISHED_RECIPE)?.href === `recipe.html?id=cook-at-home&dish=${PUBLISHED_RECIPE.dishId}`,
+      `${rowFor(c1, mineA)?.href} | ${rowFor(c1, PUBLISHED_RECIPE)?.href}`
+    );
+    report.check(
+      'Cook at Home page: an untagged recipe shows NO tag chips — "not stated", never "free from"',
+      rowFor(c1, unhearted)?.chips === 0 && rowFor(c1, mineB)?.chips === 0 && rowFor(c1, mineA)?.chips > 0,
+      `chips: untagged ${rowFor(c1, unhearted)?.chips}, tagged ${rowFor(c1, mineA)?.chips}`
+    );
+    report.check("Cook at Home page: no sideways scroll at 390 px with the labels on", !c1.scrollX, `scrollX=${c1.scrollX}`);
+
+    // Hearts and ratings, as on a published row.
+    await evalPage(`document.querySelector('li.dish[data-dish-id="${unhearted.dishId}"] .dish-actions .heart').click()`);
+    await settle();
+    const h1 = await cookView();
+    const stored = await evalPage(`(async () => {
+      const f = await import("/js/favourites.js");
+      return f.favourites.items().filter((e) => e.venueId === "u:mine").map((e) => [e.dishId, e.venueName, e.isRecipe]);
+    })()`);
+    report.check(
+      "Cook at Home page: tapping an own recipe's heart hearts it under u:mine, exactly as the recipe page does",
+      rowFor(h1, unhearted)?.heart === "true" && JSON.stringify(stored) === JSON.stringify([[unhearted.dishId, "My recipes", true]]),
+      `${rowFor(h1, unhearted)?.heart} ${JSON.stringify(stored)}`
+    );
+    await evalPage(`document.querySelector('li.dish[data-dish-id="${unhearted.dishId}"] .dish-rating [role=slider]')
+      .dispatchEvent(new KeyboardEvent("keydown", { key: "4", bubbles: true, cancelable: true }))`);
+    await settle();
+    report.check(
+      "Cook at Home page: …and its rating steps",
+      rowFor(await cookView(), unhearted)?.rating === "4",
+      `rating ${rowFor(await cookView(), unhearted)?.rating}`
+    );
+    // The filter. "favourites" reads the heart under u:mine; a diet word reads
+    // only what the recipe states.
+    await typeFilter("favourites");
+    const fav = await cookView();
+    report.check(
+      'Cook at Home page: typing "favourites" finds the own recipe you hearted (a heart under u:mine)',
+      fav.rows.filter((r) => !r.hidden).map((r) => r.id).join() === unhearted.dishId,
+      JSON.stringify(fav.rows.filter((r) => !r.hidden).map((r) => r.name))
+    );
+    await evalPage(`document.querySelector('li.dish[data-dish-id="${unhearted.dishId}"] .dish-actions .heart').click()`);
+    await settle();
+    report.check(
+      "Cook at Home page: …and un-hearting it takes it out of that filter on the spot",
+      (await cookView()).rows.every((r) => r.hidden),
+      "all rows hidden"
+    );
+    await typeFilter("home stew");
+    const byName = await cookView();
+    report.check(
+      "Cook at Home page: the filter finds your own recipe by name, and only it",
+      byName.rows.filter((r) => !r.hidden).map((r) => r.id).join() === mineA.dishId,
+      JSON.stringify(byName.rows.filter((r) => !r.hidden).map((r) => r.name))
+    );
+    await typeFilter("vegetarian");
+    const veg = await cookView();
+    const shownIds = veg.rows.filter((r) => !r.hidden).map((r) => r.id);
+    report.check(
+      'Cook at Home page: a diet word finds the own recipe that states it ("v") and NOT the untagged ones',
+      shownIds.includes(mineA.dishId) && !shownIds.includes(mineB.dishId) && !shownIds.includes(unhearted.dishId),
+      `${shownIds.length} shown; tagged ${shownIds.includes(mineA.dishId)}, untagged ${shownIds.includes(mineB.dishId) || shownIds.includes(unhearted.dishId)}`
+    );
+    await typeFilter("");
+
+    // A different person's recipes are NOT on this person's page, and the page
+    // follows a switch live (no reload): the cookbook is per person (510/120).
+    const switchTo = async (who) => {
+      // The first switch leaves the sheet open on the profile list (as sections
+      // 3 and 4 rely on), so the second one only taps the chip.
+      if (!(await evalPage(`!!document.querySelector("dialog.settings-sheet[open]")`))) {
+        await click("#overflow-btn");
+        await click("#settings-btn");
+        await untilPresent(() => evalPage(`!!document.querySelector("dialog.settings-sheet[open]")`), { label: "Settings to open" });
+        await click(".settings-row", "using Faves");
+      }
+      await click(".profile-list .profile-chip", who);
+      await settle();
+    };
+    await switchTo(GUEST_NAME);
+    const guest = await cookView();
+    report.check(
+      "Cook at Home page: a different profile's recipes are NOT listed — the page follows the switch, with no reload",
+      guest.profile === GUEST_NAME && guest.rows.length === publishedCount && guest.labels === 0 &&
+        guest.sentinel === "alive" && navigations === navsOnCook,
+      `as "${guest.profile}": ${guest.rows.length} rows (${publishedCount} published), ${guest.labels} label(s), navigations ${navigations - navsOnCook}`
+    );
+    await evalPage(`(async () => {
+      const r = await import("/js/recipes.js");
+      r.recipes.put({ dishId: "u:fixture-guest-salad", name: "Fixture Guest Salad", section: "Dinners" });
+    })()`);
+    await settle();
+    await new Promise((r) => setTimeout(r, 150)); // the page repaints on a microtask after the store changes
+    const guestAdd = await cookView();
+    report.check(
+      "Cook at Home page: a recipe added in the store while the page is open appears on it live, labelled",
+      guestAdd.rows.some((r) => r.id === "u:fixture-guest-salad" && r.owner === "My recipe" && r.section === "Dinners"),
+      JSON.stringify(guestAdd.rows.filter((r) => r.id.startsWith("u:")).map((r) => [r.name, r.owner]))
+    );
+    await switchTo(firstProfile);
+    const mine2 = await cookView();
+    report.check(
+      "Cook at Home page: switching back restores YOUR recipes and drops the other profile's",
+      [mineA, mineB, unhearted].every((d) => rowFor(mine2, d)) && !mine2.rows.some((r) => r.id === "u:fixture-guest-salad") &&
+        navigations === navsOnCook,
+      JSON.stringify(mine2.rows.filter((r) => r.id.startsWith("u:")).map((r) => r.name))
+    );
+    // Leave the Guest cookbook as found: it is deleted with the throwaway profile.
+
+    // The recipe's own page wears the same label; a published recipe's does not.
+    await cdp.send("Page.navigate", { url: url.replace(/restaurant\.html.*$/, `recipe.html?id=u:mine&dish=${mineA.dishId}`) }, sessionId);
+    await untilPresent(() => evalPage(`!!document.querySelector("h1.menu-title")`), { label: "the personal recipe page" });
+    await settle();
+    const own = await evalPage(`(() => {
+      const o = document.querySelector(".recipe-owner");
+      const t = document.querySelector("h1.menu-title");
+      return { text: o?.textContent.trim() ?? null, cls: o?.className ?? null, title: t?.textContent.trim(),
+        below: !!o && !!t && o.getBoundingClientRect().top >= t.getBoundingClientRect().bottom - 1,
+        scrollX: document.documentElement.scrollWidth > innerWidth };
+    })()`);
+    report.check(
+      'a personal recipe\'s own page carries the "My recipe" label under its title',
+      own.text === "My recipe" && /recipe-owner-mine/.test(own.cls || "") && own.title === mineA.name && own.below && !own.scrollX,
+      JSON.stringify(own)
+    );
+    await cdp.send("Page.navigate", { url: url.replace(/restaurant\.html.*$/, `recipe.html?id=cook-at-home&dish=${PUBLISHED_RECIPE.dishId}`) }, sessionId);
+    await untilPresent(() => evalPage(`!!document.querySelector("h1.menu-title")`), { label: "the published recipe page" });
+    report.check(
+      "a PUBLISHED recipe's page carries no label (control)",
+      (await evalPage(`document.querySelectorAll(".recipe-owner").length`)) === 0,
+      "no .recipe-owner element"
+    );
+
+    // Nothing is fetched or published for them. Every NON-document request this
+    // section made (a navigation to your own recipe's page necessarily names it in
+    // the page's own address; that is a link, not a transfer) is searched for the
+    // fixtures' words, and the two shipped indexes are read as bytes.
+    const personal = /fixture|u:mine|u:fixture/i;
+    const leaked = net.filter((r) => r.type !== "Document" && (personal.test(decodeURIComponent(r.url)) || personal.test(r.body)));
+    report.check(
+      "no request other than a page navigation carries any of your recipes' text",
+      net.length > 20 && leaked.length === 0,
+      `${net.length} request(s) logged, ${leaked.length} naming a fixture${leaked[0] ? `: ${leaked[0].url}` : ""}`
+    );
+    const shipped = await evalPage(`(async () => {
+      const out = {};
+      for (const f of ["search-index.json", "summary.json", "catalogue.json", "index.json"]) {
+        out[f] = (await (await fetch("/data/" + f, { cache: "no-store" })).text()).toLowerCase();
+      }
+      return out;
+    })()`);
+    report.check(
+      "the shipped search index, summaries and catalogue hold none of them",
+      Object.values(shipped).every((t) => t.length > 100 && !/fixture home|fixture unhearted|u:fixture|u:mine/.test(t)),
+      Object.entries(shipped).map(([f, t]) => `${f} ${t.length}B`).join(", ")
+    );
+
+    // Leave the profile as it was found.
+    await evalPage(`(async () => {
+      const f = await import("/js/favourites.js"), r = await import("/js/recipes.js");
+      for (const e of [...f.favourites.items()]) f.favourites.removeKey(f.favKey(e));
+      for (const id of ${JSON.stringify([mineA.dishId, mineB.dishId, unhearted.dishId])}) r.recipes.remove(id);
+    })()`);
+
     return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();

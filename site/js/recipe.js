@@ -22,7 +22,7 @@ import { dishId, findDish } from "./dish-id.js";
 import { initOrderUI } from "./cart-ui.js";
 import { startSync } from "./sync-start.js";
 import { startPersistence } from "./storage-persist.js";
-import { heartButton } from "./favourites-ui.js";
+import { heartButton, ownerLabel } from "./favourites-ui.js";
 import { settings } from "./settings.js";
 import { effectiveAvoid, declaredClaims } from "./dietary.js";
 import { convertTemperatures } from "./units.js";
@@ -129,6 +129,10 @@ function render(collection, item) {
     titleGroup.append(btn, note);
   }
   parts.push(el("div", { className: "menu-title-row" }, [titleGroup, heart]));
+  // Whose it is, in words, under the name (roadmap 510/300) — the one label
+  // Favourites and the Cook at Home list use. Only a recipe from your own
+  // cookbook carries one; "Our recipe" joins it when sharing exists.
+  if (isPersonalVenue(id)) parts.push(el("p", { className: "recipe-owner-line" }, [ownerLabel("mine")]));
   // The description sits straight under the title and ABOVE the stats panel
   // (owner, 2026-09-29: "should be below 'Chocolate Lava Cakes' and above the
   // box that specifies Prep, Cook, Serves, Difficulty"). ADR 0125 listed it

@@ -54,12 +54,14 @@ import { wireDialog } from "./dialog.js";
 import { dishId, findDish } from "./dish-id.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { dishAddOns } from "./addons-ui.js";
-import { heartButton } from "./favourites-ui.js";
+import { heartButton, ownerLabel } from "./favourites-ui.js";
 import { ratingControl, curatedRating } from "./ratings-ui.js";
 import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
 import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
-import { favourites, favouriteDishIds } from "./favourites.js";
+import { COOK_AT_HOME, favourites, favouriteDishIds } from "./favourites.js";
+import { MY_RECIPES, MY_RECIPES_NAME, RECIPES_KEY, isPersonalId, recipes } from "./recipes.js";
+import { mergeCookbook } from "./cookbook-menu.js";
 import { ratings } from "./ratings.js";
 import { DIET_FILTERS, STATED_CLAIMS, dishFlagged, dishSatisfiesDiet, effectiveAvoid, declaredClaims } from "./dietary.js";
 import { tagRow, traceEntries } from "./tags.js";
@@ -1210,7 +1212,14 @@ function renderDish(
   onConfigured = null
 ) {
   const kind = kindOf(r);
-  const collectionId = r?.id ?? null;
+  // Your own recipes are listed on Cook at Home's page (roadmap 510/300) but
+  // belong to the virtual collection `u:mine`: that is the venue their heart,
+  // rating, note and recipe page are all keyed under (recipes.js), so a row's
+  // identity comes from the ROW, never from the page it happens to sit on. One
+  // test — `isPersonalId` on the dish id, a shape a published id can never
+  // take — decides the owner label and every key below.
+  const ownKind = isPersonalId(dishId(item)) ? "mine" : null;
+  const collectionId = ownKind ? MY_RECIPES : r?.id ?? null;
   // The price slot doubles as a recipe meta chip (serves · time). A value that
   // is OUR estimate (ADR 0125) carries a "~": most recipes gained one from
   // data/estimates/, and a bare number would present our guess as the recipe's
@@ -1268,6 +1277,10 @@ function renderDish(
   // nicety: unmarked, a screen reader reads Thai with English pronunciation
   // rules. The link carries the dish's id, never a translated rendering —
   // identity is one string per dish and recipe.js resolves the same one.
+  // "My recipe" after the name, as the order-number badge is: words in the
+  // heading, so a screen reader says it with the dish (the one label, shared
+  // with Favourites and the recipe page).
+  const ownerBadge = ownKind ? ownerLabel(ownKind) : null;
   const nameEl =
     kind.itemPage && collectionId
       ? el("h3", { className: "dish-name", lang: lead.lang }, [
@@ -1277,10 +1290,12 @@ function renderDish(
             textContent: lead.text,
           }),
           codeBadge,
+          ownerBadge,
         ].filter(Boolean))
       : el("h3", { className: "dish-name", lang: lead.lang }, [
           el("span", { className: "dish-name-text", textContent: lead.text }),
           codeBadge,
+          ownerBadge,
         ].filter(Boolean));
 
   // The name as the menu on the wall writes it, so you can point at it. A
@@ -1307,8 +1322,8 @@ function renderDish(
   const dishEntry = r
     ? {
         type: "dish",
-        venueId: r.id,
-        venueName: r.name,
+        venueId: ownKind ? MY_RECIPES : r.id,
+        venueName: ownKind ? MY_RECIPES_NAME : r.name,
         name: item.name,
         // What the heart and the rating key off. `name` stays because it is
         // what the favourites view prints; without the id, three dishes called
@@ -1965,7 +1980,10 @@ function render(r) {
   // home-search dish result already lands.
   const openDish = (id) => {
     if (isRecipeKind(r)) {
-      location.href = `recipe.html?id=${encodeURIComponent(r.id)}&dish=${encodeURIComponent(id)}`;
+      // Your own recipe on Cook at Home's page opens under `u:mine`, not under
+      // the page it was listed on (roadmap 510/300).
+      const venue = isPersonalId(id) ? MY_RECIPES : r.id;
+      location.href = `recipe.html?id=${encodeURIComponent(venue)}&dish=${encodeURIComponent(id)}`;
       return;
     }
     search.value = "";
@@ -2175,6 +2193,9 @@ initReo();
 // re-reads without a reload elsewhere).
 const activeProfileAtLoad = profiles.activeId();
 window.addEventListener("storage", (e) => {
+  // Your own recipes are listed on Cook at Home's page (roadmap 510/300): one
+  // written in another tab (an import) shows here without a reload.
+  if (e.key === profiles.scopedKey(RECIPES_KEY)) recipes.reload();
   if (e.key !== PROFILES_KEY) return;
   profiles.reload();
   if (profiles.activeId() !== activeProfileAtLoad) location.reload();
@@ -2185,6 +2206,14 @@ window.addEventListener("storage", (e) => {
 // change or profile switch that lands *during* load re-points the stores now but
 // defers painting to the first render (which then reads them fresh).
 let current = null;
+
+// What is drawn: the loaded record, and — on Cook at Home only — the active
+// person's own recipes folded into its menu (cookbook-menu.js, roadmap 510/300).
+// Built at every render from the device's store, so a profile switch, a sync
+// pull and an import all show up through the same re-render; `current` stays
+// the published record, which is what a fragment scroll and a refresh resolve
+// against.
+const view = (r) => (r.id === COOK_AT_HOME ? mergeCookbook(r, recipes.all()) : r);
 
 // SAFETY-CRITICAL re-apply. Re-runs the SAME render(current) the first paint
 // uses — re-reading settings.get().diet and rebuilding every dish through the
@@ -2204,7 +2233,7 @@ function reapply() {
   // placed. Every other settings change falls through as before.
   if (picksWrite) return;
   const ui = captureUiState(root);
-  render(current);
+  render(view(current));
   translate(root); // re-apply the stored UI language to the freshly built menu
   restoreUiState(root, ui);
 }
@@ -2228,6 +2257,20 @@ function initChrome() {
 
   // Any settings change (allergen/dietary prefs included) → re-apply live.
   settings.subscribe(reapply);
+  // Your own recipes changed under this page (a sync pull, an import, another
+  // tab, a switch of person). Coalesced to a microtask: a profile switch
+  // reloads the cookbook BEFORE the favourites and the allergen prefs, and a
+  // repaint between them would be one person's recipes under another's prefs.
+  // By the end of the synchronous dispatch every store is the new person's.
+  let recipesPending = false;
+  recipes.subscribe(() => {
+    if (current?.id !== COOK_AT_HOME || recipesPending) return;
+    recipesPending = true;
+    queueMicrotask(() => {
+      recipesPending = false;
+      reapply();
+    });
+  });
   // Profile switch (in-dialog, any time — even while still "Loading…") →
   // re-point every per-profile store NOW; settings.reload() (last, by contract)
   // fires `reapply`, so the caption flip and the allergen re-apply come from the
@@ -2315,7 +2358,7 @@ if (!id) {
       // can re-apply against it. Set BEFORE render so any change racing in during
       // this same microtask still repaints the right restaurant.
       current = r;
-      render(r);
+      render(view(r));
       // The chrome renders in English with data-i18n keys; this applies the
       // stored language to it (later switches re-translate the whole page).
       translate(root);
