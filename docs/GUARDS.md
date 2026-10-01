@@ -189,6 +189,14 @@ to type by hand. Nothing currently points a session at it at all except
 this document, ADR 0109, and the two roadmap items that named the
 undercount.
 
+`chatty_check.mjs` (roadmap 510/250, 2026-10-01) joins the family and
+takes the same declared posture, wiring and gap: browser-driven, so not
+in CI under the standing subset ruling, run only when typed. It differs
+from its siblings in what it asserts — *budgets* (counts of requests,
+storage writes, DOM mutations and sync KV operations), not behaviours —
+so its failure mode is a budget gone slack after the fix it was waiting
+for, not a wrong answer. Each budget names the item that should lower it.
+
 **This is not a defect in any one check.** It is the shape the item's
 own 🚩 already names: seventeen guards whose declared answer
 ("cheap-failure, because it's reported and fixed") is unsupported by

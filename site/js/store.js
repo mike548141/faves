@@ -118,14 +118,33 @@ export function watchStaleTab({ storage, win = globalThis.window, build = USER_S
   return () => win.removeEventListener("storage", on);
 }
 
+// The probe below WRITES to localStorage, and every write fires a `storage`
+// event in every other open tab. Six modules call safeStorage() as they load,
+// so an unmemoised probe was twelve writes (six sets, six removes) and twelve
+// cross-tab events on every page load (roadmap 510/200). The outcome is
+// remembered for the page, keyed by the `localStorage` object it probed — so a
+// test that swaps the global still gets its own probe, and a browser that
+// blocks storage still hands each caller its own in-memory shim as before.
+let probed = null; // { ls, ok }
+
 export function safeStorage() {
   let ls;
+  let ok = false;
   try {
     ls = globalThis.localStorage;
-    const probe = "__faves_probe__";
-    ls.setItem(probe, "1");
-    ls.removeItem(probe);
+    if (probed && probed.ls === ls) {
+      ok = probed.ok;
+    } else {
+      const probe = "__faves_probe__";
+      ls.setItem(probe, "1");
+      ls.removeItem(probe);
+      ok = true;
+      probed = { ls, ok };
+    }
   } catch {
+    ok = false;
+  }
+  if (!ok) {
     const mem = new Map();
     // No guard: an in-memory shim is this tab's alone, so no other tab can
     // upgrade it under this one.
