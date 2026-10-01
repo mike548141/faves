@@ -208,6 +208,51 @@ def split_venue(doc):
     return doc, prices, departed
 
 
+def resolve_tier(key, doc):
+    """`match_dish`, plus WHICH pass found it: "live", "former", or None."""
+    live = each_dish(doc)
+    for s, i in live:
+        if same_dish(key, s, i):
+            return (s, i), "live"
+    for s, i in live:
+        if same_dish(key, s, i, former=True):
+            return (s, i), "former"
+    return None, None
+
+
+def expected_round_trip(payload, hp):
+    """(price rows, superseded entries) a round trip of `payload` + `hp` must
+    re-emit — the arithmetic a ladder merge needs (roadmap 28l, ADR 0153).
+
+    `reconstruct` prepends EVERY row that reaches a dish onto that dish, and
+    `split_venue` then emits ONE row per dish. When a dish answers to retired
+    ids (`formerIds`), several rows can legitimately reach it: "Large Butter
+    Chicken"'s price history and "Butter Chicken"'s both belong to the dish the
+    two became. Comparing raw row counts called that loss on every merge — so
+    the count folds such rows into one, and the ENTRIES they held are counted
+    instead, because entries are what a lost row would actually lose.
+
+    It folds only where a retired id is involved. Two rows reaching one dish
+    through its LIVE id are a duplicated record, not a merge, and still fail.
+    A row reaching no dish is counted as itself, so it still fails as before
+    (and `check_orphans` names it)."""
+    targets = {}   # id(item) -> whether any row reaching it came through a former id
+    rows = entries = 0
+    for row in hp:
+        found, tier = resolve_tier(row.get("key") or {}, payload)
+        if found is None:
+            rows += 1
+            continue
+        entries += len(row.get("superseded") or [])
+        ident = id(found[1])
+        if ident in targets and (tier == "former" or targets[ident]):
+            targets[ident] = True
+            continue  # folds into the row already counted for this dish
+        targets[ident] = targets.get(ident, False) or tier == "former"
+        rows += 1
+    return rows, entries
+
+
 def reconstruct(doc, prices, departed):
     """Payload + record → the pre-split document. The inverse of split_venue."""
     menu = doc.get("menu")
@@ -603,10 +648,18 @@ def main(argv=None):
             again, p2, d2 = split_venue(json.loads(json.dumps(rebuilt)))
             if payload != again:
                 failures.append(f"{vid}: payload does not survive a round trip")
-            if len(p2) != len(hp) or len(d2) != len(hd):
+            want_rows, want_entries = expected_round_trip(payload, hp)
+            if len(p2) != want_rows or len(d2) != len(hd):
+                folded = (f" ({len(hp) - want_rows} folded onto a dish that "
+                          f"claims their retired id)" if want_rows != len(hp) else "")
                 failures.append(
-                    f"{vid}: record has {len(hp)} price row(s)/{len(hd)} dish "
-                    f"row(s), round trip yields {len(p2)}/{len(d2)}")
+                    f"{vid}: record has {len(hp)} price row(s){folded}/{len(hd)} "
+                    f"dish row(s), round trip yields {len(p2)}/{len(d2)}")
+            elif weight(p2, "prices") != want_entries:
+                failures.append(
+                    f"{vid}: record holds {want_entries} superseded price "
+                    f"entr(y/ies) on live dishes, round trip yields "
+                    f"{weight(p2, 'prices')}")
 
             failures += check_orphans(vid, payload, hp, hd)
             appended, baseline = check_append_only(vid, args.against, doc)

@@ -31,11 +31,13 @@ price row and dish row here is a LITERAL in a temporary tree; the real corpus is
 never opened — `ROOT` is only where the tool under test is copied from. So this
 stays green while every real history row is orphaned, and its CI job's name
 ("history is joined to dishes by id, not by name") describes the TOOL, not the
-data. The corpus is `python3 tools/split_data.py --check`'s job. And the one
-change it would have to learn for a ladder merge — N sibling rows folding into
-one dish, which `split_data.py`'s round-trip count cannot survive — is roadmap
-28l's to decide (re-key the history, or change the arithmetic); a case for it
-here would be written against an answer nobody has given yet.
+data. The corpus is `python3 tools/split_data.py --check`'s job.
+
+A ladder merge — N sibling rows folding into one dish that claims their retired
+ids — is now a permitted change like the others (roadmap 28l, ADR 0153 chose
+"change the arithmetic" over re-keying the history): the round trip folds rows
+that reach one dish through a retired id and counts their ENTRIES instead. Its
+probe puts the raw row count back, which is what failed every merge before.
 Stdlib only; the temporary tree is deleted on exit and nothing outside it is read
 or written.
 """
@@ -97,6 +99,25 @@ def _retire_dish_id(v):
     item["formerIds"] = ["fish-and-chips"]
 
 
+def _merge_ladder(v):
+    # "Large Burger" was a row of its own with a price history; it is now a
+    # size of "Burger", which claims its retired id. Both histories reach the
+    # one dish, and the round trip re-emits ONE row carrying both.
+    burger = v["menu"][0]["items"][1]
+    burger["price"] = [{"value": 15.0, "recorded": "2026-08-08"}]
+    burger["formerIds"] = ["large-burger"]
+
+
+MERGE_PRICES = [
+    {"key": {"section": "Mains", "sectionId": "mains", "name": "Burger",
+             "code": None, "dishId": "burger"},
+     "superseded": [{"value": 14.0, "recorded": "2025-01-01"}]},
+    {"key": {"section": "Mains", "sectionId": "mains", "name": "Large Burger",
+             "code": None, "dishId": "large-burger"},
+     "superseded": [{"value": 18.0, "recorded": "2025-01-01"}]},
+]
+
+
 def _rename_venue(v):
     v["id"] = "test-venue"
     v["formerIds"] = ["old-test-venue"]
@@ -116,12 +137,18 @@ PERMITTED = [
     ("a venue id corrected, history still under the old id", _rename_venue,
      "old-test-venue",
      ('    for old in doc.get("formerIds") or []:', "    for old in []:")),
+    ("a ladder merge: a sibling's price history folds onto the dish claiming "
+     "its id", _merge_ladder, None,
+     ("            want_rows, want_entries = expected_round_trip(payload, hp)",
+      '            want_rows, want_entries = len(hp), weight(hp, "prices")'),
+     MERGE_PRICES),
 ]
 
 
-def build(tree, venue, history_stem=None, extra_history=None):
+def build(tree, venue, history_stem=None, extra_history=None, extra_prices=()):
     """Lay out a one-venue repo. `history_stem` names the history files, which
-    is how the venue-rename case puts them under the id the venue used to have."""
+    is how the venue-rename case puts them under the id the venue used to have.
+    `extra_prices` adds price rows beside the standard one (the merge case)."""
     for d in ("site/data/restaurants", "data/history/prices",
               "data/history/dishes"):
         (tree / d).mkdir(parents=True, exist_ok=True)
@@ -129,7 +156,8 @@ def build(tree, venue, history_stem=None, extra_history=None):
         json.dumps(venue, indent=2) + "\n")
     stem = history_stem or venue["id"]
     (tree / "data/history/prices" / f"{stem}.json").write_text(json.dumps(
-        {"venue": stem, "note": "test", "rows": PRICE_ROWS}, indent=2) + "\n")
+        {"venue": stem, "note": "test", "rows": PRICE_ROWS + list(extra_prices)},
+        indent=2) + "\n")
     (tree / "data/history/dishes" / f"{stem}.json").write_text(json.dumps(
         {"venue": stem, "note": "test", "rows": DISH_ROWS}, indent=2) + "\n")
     if extra_history:
@@ -188,18 +216,19 @@ def main(argv=None):
         else:
             print("  ✓ control: a clean fixture passes --check")
 
-        for i, (name, mutate, stem, probe) in enumerate(PERMITTED):
+        for i, (name, mutate, stem, probe, *extra) in enumerate(PERMITTED):
             cases += 1
+            prices = extra[0] if extra else ()
             venue = copy.deepcopy(VENUE)
             mutate(venue)
             tree = fresh_tree(tmp, f"permitted{i}")
-            build(tree, venue, stem)
+            build(tree, venue, stem, extra_prices=prices)
             if run(tree, ["--check"], args.verbose).returncode != 0:
                 holes.append(f"{name}: --check FAILED on a permitted change")
                 print(f"  ✗ {name}: --check failed")
                 continue
             probed = fresh_tree(tmp, f"probe{i}", probe)
-            build(probed, copy.deepcopy(venue), stem)
+            build(probed, copy.deepcopy(venue), stem, extra_prices=prices)
             r = run(probed, ["--check"], args.verbose)
             if r.returncode == 0:
                 holes.append(f"{name}: the break-probe PASSED — reverting "
@@ -220,6 +249,21 @@ def main(argv=None):
             print("  ✗ an orphaned history file: not caught")
         else:
             print("  ✓ an orphaned history file: --check refuses it")
+
+        # The fold above is for RETIRED ids only. Two rows reaching one dish
+        # through its LIVE id are a duplicated record, not a merge — the writer
+        # merges same-key rows, so this shape means a hand edit went wrong —
+        # and must still fail. Asserts a refusal, so it needs no probe.
+        cases += 1
+        tree = fresh_tree(tmp, "duplicate")
+        build(tree, copy.deepcopy(VENUE), extra_prices=copy.deepcopy(PRICE_ROWS))
+        r = run(tree, ["--check"], args.verbose)
+        if r.returncode == 0 or "round trip yields" not in r.stdout:
+            holes.append("two price rows on one LIVE dish id passed --check — "
+                         "the merge fold is swallowing a duplicate")
+            print("  ✗ two rows on one live id: not caught")
+        else:
+            print("  ✓ two rows on one live id: --check still refuses it")
 
         # A refresh must APPEND (ADR 0023). Until 2026-09-08 the writer replaced
         # the file with whatever the current run moved, so refreshing one dish
