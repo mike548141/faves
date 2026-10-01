@@ -1,4 +1,4 @@
-- [~] **Groundup Cafe: menu and cabinet food from the owner's photos**
+- [x] **Groundup Cafe: menu and cabinet food from the owner's photos**
       `[M] [content]` — owner-supplied 2026-10-01 (session `faves-55`): 11
       photos in `intake/menus/Groundup Cafe/` (`IMG_9937`–`IMG_9947`), of the
       cabinet food and the menus. The venue is a `stub` today.
@@ -20,3 +20,10 @@
   ambiguous). Names read from no label (bagged cookies, loaves and muffins
   on the counter) are not in. Hours, phone and address are untouched: the
   photos show none of them.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** PR #62 merged with CI green (8 of
+  8). The orchestrator checked the lunch board (`IMG_9944`) against the
+  record: all eight prices match in order, and the Thai Beef Salad carries
+  `contains-peanuts`. Left out as unreadable: one cabinet label ("Chicken
+  Brie & Cranberry ???", $11.00), two fridge bottles, and the unlabelled
+  counter items. The section-note finding went to `280`.
