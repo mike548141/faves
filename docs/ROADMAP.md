@@ -448,3 +448,4 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [~] 🎯 [Should an update install revalidate too?](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/270-update-installs-revalidate-too.md)
 - [ ] 🔎 [One unit test failed once in five runs, and its name was not](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/280-a-unit-test-failed-once-unnamed.md)
 - [~] [Your own recipes sit with Cook at Home in Favourites, marked](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/290-my-recipes-sit-under-cook-at-home-in-favourites.md)
+- [~] [Your own recipes on the Cook at Home page, and labelled Private](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/300-your-recipes-on-the-cook-at-home-page-and-labelled.md)

@@ -145,3 +145,6 @@
   a second device, and only then remove the five published copies (the
   `050` worker's list of what else names them is in its hand-back, recorded
   in the 2026-10-01 `faves-55` session log).
+
+  ⚖️ **Fork (3) answered 2026-10-01 (`faves-55`):** the owner's own recipes are
+  listed on the Cook at Home page, all of them, labelled Private (`300`).
