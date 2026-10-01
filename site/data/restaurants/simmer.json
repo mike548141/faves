@@ -70,6 +70,21 @@
     "added": "2026-07-06"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "add-focaccia",
+      "name": "Add toasted focaccia",
+      "select": "one",
+      "options": [
+        {
+          "name": "Toasted focaccia",
+          "id": "toasted-focaccia",
+          "price": 1.5,
+          "tags": []
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Breakfast",
@@ -404,9 +419,12 @@
         {
           "name": "Soup of the day",
           "dishId": "soup-of-the-day",
-          "desc": "Ask the team for today's flavour. Add toasted focaccia +$1.50.",
+          "desc": "Ask the team for today's flavour.",
           "price": 12.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "add-focaccia"
+          ]
         }
       ]
     },
