@@ -12550,3 +12550,59 @@ and Sonnet workers in worktrees. Atelier had not moved past the pin
   from the last day pauses sync with "Update Faves" until it reloads. That
   is the designed behaviour, and no device holds a recipe yet. A new fork
   about who receives imported recipes on a shared phone is in `050`.
+
+## 2026-10-01 — the import tool, Groundup Cafe, and the chatty-app fixes (session `faves-55`)
+
+An orchestrated queue run on Opus 5.5, with Opus and Sonnet workers in
+worktrees. Atelier had not moved past the pin (`86da02c`). Session id
+`82ca03a7-20c7-4d58-a63e-48b0a859c69c`.
+
+- **Owner rulings, 2026-10-01.** `050`'s import goes by **backup file to his
+  devices only**: an upgrade step every device runs would have kept the
+  recipe text in public code. The recipient is the **active person**. The
+  list is the recipes with a person's name in the heading, plus the
+  Chocolate Self-Saucing Pudding (five; the brownie stays). He also ruled
+  `160` (about 90 s; his "scale it by staleness" idea is what a
+  `lastSyncedAt` throttle already does), `180` (about 3 min), `170` (yes,
+  gated), `280` (a pointer flag, then a review), and the five Groundup gluten
+  tags (drop Nachos and Bowl of Fries, keep three).
+- **Shipped (PRs #61–#70, each merged with CI 8 of 8):**
+  - `050`'s tool: `tools/move_recipes.mjs`, with the runbook in its header.
+    Its worker found that **a rating on any personal recipe was lost on the
+    next reload** (`migrateDishKeys` slugged the `u:` id). Fixed and tested.
+    The safe order is proven: remove the published copies only after the
+    import.
+  - `080/270` Groundup Cafe: 113 dishes from 11 photos, 40 with an unread
+    price recorded as `needs: price`. I checked the lunch board against the
+    photo: all eight prices match and the peanuts are tagged.
+  - `510/130` survey (`docs/reviews/2026-10-01-0418-chatty-app-survey.md`),
+    then fixes `140`, `150`, `160`, `170`, `180`, `190`, `200`, `210`,
+    `230` and `250`. A heart on a 264-dish menu is 795 → 3 DOM changes. Sync
+    is 9 → 1 KV reads per pull and 26 → 2 per heart. A first visit is
+    1,542 → 1,072 KB gzip, gated on a reproduction of 2026-08-16 (ADR 0149).
+    ADR 0148 covers the data-check window. `tools/chatty_check.mjs` holds
+    the budgets (36 of 36).
+  - `080/280`: a pointer-note flag in `tools/section-note-pointers.json`,
+    and the review of all 31 section-note tips
+    (`docs/reviews/2026-10-01-0551-section-note-tags-review.md`).
+- **Full browser sweep on `main` at `d737ec5`:** 20 checks, all OK, plus the
+  fixture self-test. The later merges were checked by their own subsets:
+  `chatty`, `precache`, `fetch`, `boot` and `sync` on the merged `510-sw`
+  tree.
+- 🚩 **Honesty notes.** `node --test` failed 1 of 1,674 once on the merged
+  `510-sw` tree; four re-runs passed and the name was lost to a pipe (filed
+  as `510/280`). The `280` worker ran a bare `git stash`/`pop`, against the
+  floor; the shared stack was checked clean afterwards. My `rm -rf` of two
+  finished workers' `.scratch` folders was refused, and I did not retry it.
+  The `faves-510-150` and `faves-510-tool` worktrees remain for the owner to
+  approve removing.
+- **For whoever removes the five published recipes** (`050`'s last step):
+  besides the menu entries, the venue's `picks` names two of them,
+  `focus_check` searches "self-saucing", `data/estimates/recipes.json` has
+  all five, `search-hints.js:159` quotes "ginger crunch", and `cook_check`,
+  `recipe_check` and some tests mention them.
+- **Open with the owner:** run the `050` import (needs his backup and the
+  Worker deploy); `220` (a design ruling, after `140`); `240` (write
+  cadence, offered and not recommended); `270` (should update installs
+  revalidate too); `260` (Pages ignores `_headers`' `max-age=0`, which needs
+  a read of the zone config). `060` and `080` stay deferred.

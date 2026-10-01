@@ -137,3 +137,11 @@
   - Rollback until the copies go: Replace-import the original backup.
   🐛 **Fixed with it:** a rating on any personal recipe was lost on the next
   reload — `migrateDishKeys` slugged `u:x` to `u-x` (`dish-id.js`).
+
+  📌 **Claim released 2026-10-01 (`faves-55`).** The tool and runbook are
+  merged (PR #61; runbook in `tools/move_recipes.mjs`'s header). What is
+  left needs the owner at the keyboard: deploy the Worker (with `140`'s
+  change now in it), export his backup, run the tool, Replace-import, check
+  a second device, and only then remove the five published copies (the
+  `050` worker's list of what else names them is in its hand-back, recorded
+  in the 2026-10-01 `faves-55` session log).

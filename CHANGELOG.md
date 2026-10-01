@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Faves asks the network far less.** A first visit downloads about 30%
+  less. Opening a menu you have already loaded makes no request at all, and
+  a phone checks for menu changes at most every few minutes. Sync reads
+  about a tenth of what it did and skips a pull you made seconds ago.
+  Hearting or rating a dish redraws just that dish, not the whole menu.
 - **Groundup Cafe has a menu.** The all-day breakfast and lunch boards, the
   coffee board, the cabinet food and the drinks fridges, read from photos taken
   in the cafe on 1 October 2026. Where a name could be read but not a price,
