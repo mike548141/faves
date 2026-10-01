@@ -27,7 +27,8 @@ import { moveBackup } from "../tools/move_recipes.mjs";
 import { mergePersonal, mergeSet } from "../site/js/sync-merge.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "../site/js/sync-crypto.js";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
-import { favKey } from "../site/js/favourites.js";
+import { createFavourites, favKey } from "../site/js/favourites.js";
+import { createRatings } from "../site/js/ratings.js";
 import { mintSyncCode, normaliseSyncCode } from "../site/js/sync-code.js";
 import { RECIPE_BUCKETS, BUCKET_PAD, bucketOf, bucketPlaintext, readBucket } from "../site/js/sync-buckets.js";
 import { cookbookKey } from "../site/js/recipe-record.js";
@@ -1443,6 +1444,40 @@ test("a moved backup Replace-imported on A crosses to B: old keys gone, new keys
   assert.equal(server.puts, puts, "the pair kept writing after the move");
   assert.deepEqual(favsOf(a), favsOf(b));
   assert.equal(`d:${MV} alpha-bake` in ratingsOf(a), false, "the old rating came back");
+});
+
+// Roadmap 510/320: the owner saw the old recipe hearts back after the move.
+// One way that happens, reproduced in real Chrome: a restaurant or recipe page
+// on B that loaded BEFORE the move keeps its hearts and ratings in memory. B's
+// sync runs in another page (or finds nothing to apply in this one), so this
+// page is never re-pointed, and its next tap wrote its whole old list back —
+// which sync then carried to every device as B's own change.
+test("a page that loaded before the move does not bring the old hearts back on its next tap (510/320)", async () => {
+  const { a, b, syncA, syncB } = await pairedBeforeTheMove();
+  const view = (st) => ({
+    getItem: (k) => st.getItem(scopeKey("default", k)),
+    setItem: (k, v) => st.setItem(scopeKey("default", k), v),
+    removeItem: (k) => st.removeItem(scopeKey("default", k)),
+  });
+  const pageFavs = createFavourites(view(b)); // B's menu page, open since before the move
+  const pageRatings = createRatings(view(b));
+  moveOnA(a);
+  assert.equal((await syncA.syncNow()).ok, true);
+  assert.equal((await syncB.syncNow()).ok, true);
+  // On B, that page: one heart and one rating, on things the move never touched.
+  pageFavs.toggle({ type: "dish", venueId: "kk", venueName: "KK", name: "Laksa", dishId: "laksa" });
+  pageRatings.set({ type: "dish", venueId: "kk", venueName: "KK", name: "Laksa", dishId: "laksa" }, 2);
+  assert.equal((await syncB.syncNow()).ok, true);
+  assert.equal((await syncA.syncNow()).ok, true);
+  const want = ["d:kk laksa", `d:${MV} delta-salad`, "d:u:mine u:alpha-bake"];
+  for (const [name, st] of [["A", a], ["B", b]]) {
+    assert.deepEqual(favsOf(st), want, `${name}: the old heart came back or the moved one went`);
+    assert.deepEqual(
+      ratingsOf(st),
+      { [`d:${MV} delta-salad`]: 3, "d:kk laksa": 2, "d:u:mine u:alpha-bake": 5 },
+      `${name}: the old rating came back or the moved one went`
+    );
+  }
 });
 
 // --- the pull window (roadmap 510/160, survey finding 5) -------------------

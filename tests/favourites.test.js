@@ -372,3 +372,73 @@ test("groupFavourites: nothing hearted, nothing grouped", () => {
   assert.deepEqual(groupFavourites([]), []);
   assert.deepEqual(groupFavourites(null), []);
 });
+
+// --- two pages over one storage (roadmap 510/320) ---------------------------
+// A restaurant or recipe page keeps the list it read when it loaded, and
+// nothing re-reads it when another tab or page changes the hearts. Every write
+// replaces the whole list, so its next tap used to write that OLD list back:
+// after the 510/050 move it put the old recipe hearts back and dropped the
+// moved ones (reproduced in real Chrome, two tabs of one profile).
+
+const old = { type: "dish", venueId: "cook-at-home", venueName: "Cook at Home", name: "Old Pudding", dishId: "old-pudding", isRecipe: true };
+const moved = { type: "dish", venueId: "u:mine", venueName: "My recipes", name: "Old Pudding", dishId: "u:old-pudding", isRecipe: true };
+const other = { type: "dish", venueId: "kk-malaysian", venueName: "KK Malaysian", name: "Laksa", dishId: "laksa" };
+
+test("a page loaded before another page's change does not write its old list back on its next tap", () => {
+  const st = fakeStorage(JSON.stringify([old]));
+  const menuPage = createFavourites(st); // loaded holding [old]
+  const homePage = createFavourites(st);
+  homePage.toggle(old); // the move, made elsewhere: old out…
+  homePage.toggle(moved); // …moved in
+  menuPage.toggle(other); // one tap on the page that loaded first
+  const keys = JSON.parse(st.getItem("faves.favourites.v1")).map(favKey).sort();
+  assert.deepEqual(keys, [favKey(other), favKey(moved)].sort(), "the old heart came back, or the moved one was lost");
+  assert.deepEqual(menuPage.items().map(favKey).sort(), keys, "the page that tapped still shows its old list");
+});
+
+test("a tap acts on the heart as the page SHOWED it, against the list as it is now", () => {
+  const st = fakeStorage(JSON.stringify([dish]));
+  const stalePage = createFavourites(st); // shows Mee Goreng hearted
+  createFavourites(st).toggle(dish); // un-hearted in another tab
+  // The person taps the filled heart to un-heart it. It must stay un-hearted,
+  // not be re-added because storage no longer held it.
+  assert.equal(stalePage.toggle(dish), false);
+  assert.equal(stalePage.has(dish), false);
+  assert.equal(st.getItem("faves.favourites.v1"), "[]");
+  // And the other way: shown empty, hearted elsewhere, tapped to heart → stays hearted, once.
+  const st2 = fakeStorage("[]");
+  const p2 = createFavourites(st2);
+  createFavourites(st2).toggle(dish);
+  assert.equal(p2.toggle(dish), true);
+  assert.equal(JSON.parse(st2.getItem("faves.favourites.v1")).length, 1);
+});
+
+test("removeKey and merge also start from what another page wrote", () => {
+  const st = fakeStorage(JSON.stringify([dish, venue]));
+  const stalePage = createFavourites(st);
+  createFavourites(st).toggle(other); // added elsewhere
+  stalePage.removeKey(favKey(venue));
+  assert.deepEqual(JSON.parse(st.getItem("faves.favourites.v1")).map(favKey), [favKey(dish), favKey(other)]);
+  const fresh = createFavourites(st);
+  createFavourites(st).toggle(dish); // removed elsewhere
+  assert.equal(fresh.merge([recipe]), 1);
+  assert.deepEqual(JSON.parse(st.getItem("faves.favourites.v1")).map(favKey), [favKey(other), favKey(recipe)]);
+});
+
+test("a write the browser refused does not cost the in-memory change on the next tap", () => {
+  const m = new Map();
+  let refuse = true;
+  const st = {
+    getItem: (k) => (m.has(k) ? m.get(k) : null),
+    setItem: (k, v) => {
+      if (refuse) throw new Error("QuotaExceededError");
+      m.set(k, v);
+    },
+    removeItem: (k) => m.delete(k),
+  };
+  const f = createFavourites(st);
+  f.toggle(dish); // refused: held in memory only
+  refuse = false;
+  f.toggle(venue);
+  assert.deepEqual(JSON.parse(m.get("faves.favourites.v1")).map(favKey), [favKey(dish), favKey(venue)]);
+});

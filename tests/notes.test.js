@@ -177,3 +177,15 @@ test("per-profile: two profiles keep disjoint notes; a switch re-points", () => 
   n.reload();
   assert.equal(n.get(rid), "default's note"); // default's note is untouched
 });
+
+// --- two pages over one storage (roadmap 510/320) ---------------------------
+
+test("a page loaded before another page's note does not write its old notes back", () => {
+  const st = fakeStorage(JSON.stringify({ [rid]: "old" }));
+  const stalePage = createNotes(st);
+  const other = createNotes(st);
+  other.clear(rid);
+  other.set("u:mine u:pudding", "moved");
+  stalePage.set("cook-at-home other", "new here");
+  assert.deepEqual(JSON.parse(st.getItem(NOTES_KEY)), { "u:mine u:pudding": "moved", "cook-at-home other": "new here" });
+});
