@@ -46,6 +46,7 @@ import {
   BUCKET_QUERY,
   BUCKET_HEADER,
   FAMILY_QUERY,
+  knownQuery,
   bucketName,
   bucketPlaintext,
   canonicalJson,
@@ -504,16 +505,30 @@ export function createSync({
   }
 
   /** Write the buckets that need it, each conditional on the version read.
-   *  Returns the versions the core copy should record, or a failure. */
-  async function writeBuckets({ blobId, key, buckets }) {
+   *  Returns the versions the core copy should record, or a failure.
+   *
+   *  It also returns `vouch`: the versions this device can stand behind for
+   *  the Worker's re-arm (roadmap 510/330). Each bucket write names the core
+   *  copy's version this cycle read and every other bucket's version as it
+   *  stands, so the Worker re-arms only copies it reads in step with this
+   *  device. A bucket in `mismatch` — the Worker's report and the core copy's
+   *  record disagree — is vouched for only once this cycle has written it: the
+   *  disagreement may be THIS device's stale read of a bucket another device
+   *  has just rewritten, and vouching for the stale version would let the
+   *  Worker put it back over theirs. */
+  async function writeBuckets({ blobId, key, buckets, coreEtag, mismatch = [] }) {
     const v = {};
+    const held = { core: coreEtag };
+    for (const b of buckets) if (b.version && !mismatch.includes(b.name)) held[b.name] = b.version;
     for (const b of buckets) {
       if (!b.needs) {
         if (b.version) v[b.name] = b.version;
         continue;
       }
       const sealed = await sealBlob(key, bucketPlaintext(b.k, b.map));
-      const put = await fetchImpl(`${url(`${blobId}:${b.name}`)}?${FAMILY_QUERY}=${RECIPE_BUCKETS}`, {
+      const others = { ...held };
+      delete others[b.name];
+      const put = await fetchImpl(`${url(`${blobId}:${b.name}`)}?${FAMILY_QUERY}=${RECIPE_BUCKETS}${knownQuery(others)}`, {
         method: "PUT",
         body: sealed,
         headers: b.version ? { "If-Match": b.version } : {},
@@ -524,8 +539,13 @@ export function createSync({
       // cycle reads as a mismatch and repairs with one extra read.
       const etag = put.headers.get("etag");
       if (etag) v[b.name] = etag;
+      // Written: the older version is no longer one to vouch for. Unknown
+      // (no readable ETag) vouches for nothing, so nothing re-arms it.
+      if (etag) held[b.name] = etag;
+      else delete held[b.name];
     }
-    return { v };
+    const { core: _core, ...vouch } = held;
+    return { v, vouch };
   }
 
   /**
@@ -685,8 +705,9 @@ export function createSync({
       //    bucket written and then orphaned by a lost core race is exactly the
       //    case `readRecipes` detects and repairs on the next cycle, while the
       //    other order would publish versions for bytes that never landed.
+      let vouch = {};
       if (rec.supported) {
-        const w = await writeBuckets({ blobId, key, buckets: rec.buckets });
+        const w = await writeBuckets({ blobId, key, buckets: rec.buckets, coreEtag: etag, mismatch: rec.mismatch });
         if (w.retry) {
           setState(IDLE);
           return { ok: false, retry: true, error: "raced" };
@@ -700,6 +721,7 @@ export function createSync({
         if (Object.keys(w.v).length || theirs?.recipeBuckets) {
           merged.recipeBuckets = { n: RECIPE_BUCKETS, v: w.v };
         }
+        vouch = w.vouch;
       } else if (theirs?.recipeBuckets) {
         // Not ours to change without reading the buckets: carried as found.
         merged.recipeBuckets = theirs.recipeBuckets;
@@ -716,7 +738,12 @@ export function createSync({
         // The number the core copy being written records — 0 for nobody's
         // recipes. An older Worker ignores it and reads all 16, as before.
         const family = Number.isInteger(merged.recipeBuckets?.n) ? merged.recipeBuckets.n : 0;
-        const put = await fetchImpl(`${url(blobId)}?${FAMILY_QUERY}=${family}`, {
+        // …and the version of each bucket this device stands behind (from
+        // writeBuckets), so the Worker re-arms a bucket only when it reads
+        // that version — never a stale read of one this cycle has just
+        // replaced (roadmap 510/330). Buckets carried unread vouch for nothing.
+        const known = knownQuery(vouch);
+        const put = await fetchImpl(`${url(blobId)}?${FAMILY_QUERY}=${family}${known}`, {
           method: "PUT",
           body: sealed,
           headers: etag ? { "If-Match": etag } : {},

@@ -114,7 +114,9 @@ export const MAX_BUCKETS = 16;
  *  re-armed only once it is more than 30 days past its last write. Every copy
  *  therefore has at least 150 of its 180 days left after any write under its
  *  key — the guarantee B1 needed — for at most nine extra writes a month per
- *  user, instead of up to eight per heart. */
+ *  user, instead of up to eight per heart. Since roadmap 510/330 only a copy
+ *  the writing client vouches for is re-armed (refreshFamily says why, and
+ *  why the guarantee survives it). */
 export const REFRESH_AFTER_SECONDS = 30 * 24 * 60 * 60;
 
 // ---------------------------------------------------------------------------
@@ -150,6 +152,30 @@ export function familyAsked(searchParams) {
   const raw = searchParams.get("family");
   if (raw === null || !/^[0-9]{1,3}$/.test(raw)) return MAX_BUCKETS;
   return Math.min(Number(raw), MAX_BUCKETS);
+}
+
+/** A copy's name in `?known`: `core` for the core copy, `r<n>` for bucket n. */
+export function copyName(key, blobId) {
+  return key === blobId ? "core" : key.slice(blobId.length + 1);
+}
+
+/** The versions the writing client holds of the user's OTHER copies:
+ *  `?known=core:<v>,r0:<v>,…` on a PUT (roadmap 510/330), each version bare or
+ *  quoted like an ETag. Returns a Map of name → version, or null when absent —
+ *  every client before 510/330 — and re-arming then touches nothing (see
+ *  refreshFamily for why that is the safe reading). Entries that do not parse
+ *  are dropped, never guessed at. */
+export function knownAsked(searchParams) {
+  const raw = searchParams.get("known");
+  if (raw === null) return null;
+  const out = new Map();
+  for (const part of raw.split(",").slice(0, MAX_BUCKETS + 1)) {
+    const m = /^(core|r(0|[1-9][0-9]?)):(.{1,130})$/.exec(part.trim());
+    if (!m || (m[2] !== undefined && Number(m[2]) >= MAX_BUCKETS)) continue;
+    const v = parseIfMatch(m[3]);
+    if (v) out.set(m[1], v);
+  }
+  return out;
 }
 
 /** The `X-Faves-Buckets` report: `r0="<v>",r3="<v>"` for the buckets that
@@ -347,21 +373,55 @@ async function handleGet(parsed, asked, env, cors) {
  * the core copy's record of each bucket's version stays true; only `t`, the
  * time of the last write, moves.
  *
- * HONEST LIMIT, the same one handlePut states: KV has no compare-and-swap, so
- * a device writing that same copy in the instant this re-writes it can lose its
- * bytes to the older ones. The version travels with the bytes, so what is left
- * is an old copy under its OLD version — which the core copy's record no longer
- * matches, so the next sync detects it and merges again from the device that
- * still holds the change. Rare (a copy untouched for a month, written at the
- * same moment), and recoverable rather than silent.
+ * ONLY A COPY THE CLIENT VOUCHES FOR, AND ONLY IF THE READ IS THAT COPY
+ * (roadmap 510/330). A re-arm writes back the bytes it READ, and KV is
+ * eventually consistent: a read can return an older value than the latest
+ * write for up to a minute or so. Until 2026-10-01 such a read was re-written
+ * as it came, with a fresh write time — so the older bytes won, under their old
+ * version, and the newer write was gone. In a KV model where a location does
+ * not see its own writes for 60 s, an import was undone on both devices that
+ * way (the 510/320 simulation; worker/sync-worker.test.js reproduces it, both
+ * ways round). The trigger that made it likely: every core copy written before
+ * 510/050 has no `t`, so it is due at once.
+ *
+ * KV offers no read that proves itself current, so the proof comes from the
+ * one party that knows: the writing client names, in `?known`, the version it
+ * holds of each other copy (the core copy's ETag on a bucket write; the bucket
+ * versions the core copy records on a core write). A read whose version is not
+ * that one is never re-written. Since a version names one write's bytes, a
+ * matching read re-writes exactly the bytes the client holds. And nothing is
+ * lost by skipping: a read that disagrees with the client is either stale or
+ * newer than the client, and either way that copy was written within KV's
+ * window — moments ago — so it already has its full 180 days. ADR 0146's
+ * "every copy keeps at least 150 of its 180 days after any write" still holds,
+ * at no extra KV write. A copy the client names nothing for is not even read.
+ *
+ * No `?known` at all — a client from before 510/330 — re-arms NOTHING. Its
+ * writes cannot vouch for a read, and every copy has at least 150 days left
+ * from the last re-arm, far longer than a page takes to load the new client.
+ *
+ * WHAT THIS DOES NOT CLOSE, the limit handlePut states: two devices writing
+ * through different locations inside KV's window. If another device rewrote a
+ * copy seconds ago and EVERYTHING this client read was stale too, it vouches
+ * for the older version, the read matches, and the older copy goes back. That
+ * needs the same conditions as two conditional PUTs both passing If-Match, and
+ * in it this client's core write loses the other device's core write anyway —
+ * so the re-arm adds a recipe bucket to what that race already loses, it does
+ * not open a new way to lose data. (The client narrows it: a bucket whose
+ * reported version disagrees with the core copy's record is not vouched for.)
+ * A Durable Object per user key would close both.
  */
-async function refreshFamily(parsed, env, nowSeconds, buckets) {
+async function refreshFamily(parsed, env, nowSeconds, buckets, known) {
+  if (!known || known.size === 0) return;
   await Promise.all(
     familyKeys(parsed.blobId, buckets)
-      .filter((k) => k !== parsed.key)
+      .filter((k) => k !== parsed.key && known.has(copyName(k, parsed.blobId)))
       .map(async (k) => {
         const got = await env.SYNC_BLOBS.getWithMetadata(k, "arrayBuffer");
         if (got.value === null || !got.metadata || !got.metadata.v) return;
+        // Not the copy the client holds: a stale read, or written since. Never
+        // re-written — see above.
+        if (got.metadata.v !== known.get(copyName(k, parsed.blobId))) return;
         const t = Number(got.metadata.t);
         if (Number.isFinite(t) && nowSeconds - t < REFRESH_AFTER_SECONDS) return;
         await env.SYNC_BLOBS.put(k, got.value, {
@@ -372,7 +432,7 @@ async function refreshFamily(parsed, env, nowSeconds, buckets) {
   );
 }
 
-async function handlePut(request, parsed, family, env, cors) {
+async function handlePut(request, parsed, family, known, env, cors) {
   const blobId = parsed.key;
   const contentLengthHeader = request.headers.get("Content-Length");
   if (contentLengthHeader && Number(contentLengthHeader) > MAX_BODY_BYTES) {
@@ -440,8 +500,11 @@ async function handlePut(request, parsed, family, env, cors) {
   // read (`family`, roadmap 510/140): reading all 16 possible keys cost a
   // heart 16 KV reads, for most users with not one recipe. A bucket the
   // client does not know of — one orphaned by a lost race — is not re-armed
-  // by this write; the next recipe sync detects and rewrites it.
-  await refreshFamily(parsed, env, nowSeconds, family);
+  // by this write; the next recipe sync detects and rewrites it. And only
+  // those the client vouches for (`known`, roadmap 510/330): a re-arm
+  // re-writes what KV read, and a stale read must never go back over a newer
+  // write.
+  await refreshFamily(parsed, env, nowSeconds, family, known);
 
   return empty(204, cors, { ETag: formatEtag(newVersion) });
 }
@@ -483,7 +546,9 @@ export default {
       if (!parsed) return empty(400, cors);
 
       if (request.method === "GET") return await handleGet(parsed, bucketsAsked(url, parsed), env, cors);
-      if (request.method === "PUT") return await handlePut(request, parsed, familyAsked(url.searchParams), env, cors);
+      if (request.method === "PUT") {
+        return await handlePut(request, parsed, familyAsked(url.searchParams), knownAsked(url.searchParams), env, cors);
+      }
 
       return empty(405, cors, { Allow: "GET, PUT, OPTIONS" });
     } catch {

@@ -44,7 +44,7 @@ This directory is source and deploy config only. It is deployed (see
 | File | Purpose |
 | --- | --- |
 | `sync-worker.js` | The Worker itself — plain ES module, `export default { fetch }`, no dependencies. |
-| `sync-worker.test.js` | Unit + fetch-handler tests, plain `node --test`, no dependencies. Uses a fake in-memory KV namespace — see the file for why that's a *more* forgiving stand-in than real KV, not an equivalent one. |
+| `sync-worker.test.js` | Unit + fetch-handler tests, plain `node --test`, no dependencies. Uses a fake in-memory KV namespace — see the file for why that's a *more* forgiving stand-in than real KV, not an equivalent one — and, since roadmap 510/330, a second one (`LaggyKV`) whose reads lag its writes the way KV's eventual consistency does. |
 | `wrangler.toml` | Deploy config for [Wrangler](https://developers.cloudflare.com/workers/wrangler/), Cloudflare's Workers CLI. Has placeholders — see "Deploying". |
 
 ## API
@@ -56,7 +56,8 @@ This directory is source and deploy config only. It is deployed (see
 | `/v1/blob/<blobId>` | `OPTIONS` | `204` CORS preflight. |
 | `/v1/blob/<blobId>?buckets=<n>` | `GET` | As `GET` above, plus `X-Faves-Buckets`: the version of each recipe bucket 0…n−1 that exists (`r0="<v>",r3="<v>"`), or `none`. On a `404` too. Costs one KV read per bucket asked about. |
 | `/v1/blob/<blobId>:r<n>` | `GET` / `PUT` | A recipe bucket, `n` from 0 to 15. Same rules as the core copy: ciphertext, `ETag`, conditional `PUT`, 256 KiB cap. |
-| `…?family=<n>` on any `PUT` | `PUT` | How many recipe buckets the user has (roadmap 510/140). After the write, only the core copy and buckets 0…n−1 are read to re-arm their expiry. `0` (no recipes) reads none. Absent or not a whole number: all 16, as before. |
+| `…?family=<n>` on any `PUT` | `PUT` | How many recipe buckets the user has (roadmap 510/140). After the write, only the core copy and buckets 0…n−1 are read to re-arm their expiry. `0` (no recipes) reads none. Absent or not a whole number: all 16. |
+| `…&known=core:<v>,r0:<v>,…` on any `PUT` | `PUT` | The version the client holds of each other copy (roadmap 510/330). Of the copies `family` allows, only those named are read, and one is re-armed only if KV returns exactly that version. Absent: nothing is read or re-armed. Never changes the response. |
 | anything else | any | `404` (unknown route) or `405` (wrong method on a real route). No index, no listing — there is no way to enumerate what blobIds exist. |
 
 `blobId` must be exactly 32 lowercase hex characters (128 bits) — anything
@@ -76,7 +77,7 @@ any recipe exists (`site/js/sync-buckets.js` says why).
 
 **Every write keeps all of a user's copies alive.** Each copy's metadata
 records `t`, when it was last written. After any successful `PUT`, the Worker
-reads every other copy under that user key and re-writes, with a fresh
+reads every other copy under that user key that the client vouches for (see below) and re-writes, with a fresh
 180-day expiry, the ones last written more than 30 days ago — keeping their
 bytes and their version, so an `ETag` a device holds stays valid. So a
 recipe bucket nobody has touched in months does not expire while the
@@ -86,8 +87,8 @@ the 30-day threshold spends at most nine a month per user and still leaves
 every copy at least 150 of its 180 days after any write.
 
 **A client that predates buckets** asks nothing (`?buckets` absent), gets no
-report and costs the one read it always did. Its writes still re-arm the
-buckets' expiry.
+report and costs the one read it always did. Since 510/330 its writes no
+longer re-arm anything (it names no versions; see below).
 
 **Only the buckets that exist are read (roadmap 510/140).** Until 2026-10-01
 every `PUT` read all 16 possible sibling keys and every client `GET` asked
@@ -105,6 +106,47 @@ What `family` gives up: a bucket the writing client does not know of (one
 orphaned by a lost race, with no core copy recording it) is not re-armed by
 that write. It is some device's merge that device still holds, and the next
 recipe sync detects it (the report names it) and writes it again.
+
+**A re-arm only re-writes a copy the client vouches for (roadmap 510/330).**
+Re-arming re-writes the bytes KV *read*, and KV is eventually consistent: a
+read can return an older value than the latest write for up to a minute or
+so. Until 2026-10-01 such a read was re-written as it came, with a fresh write
+time, so the older bytes won under their old version and the newer write was
+lost. Both ways round: a recipe edit re-reads and puts back the older core
+copy (the 510/320 simulation undid an import that way), and a core write puts
+back the older version of a bucket the same sync had just written. Copies the
+pre-050 Worker wrote carry no `t`, so they counted as due at once — that made
+it likely the day the import ran, but a user back after 30 days hits it too.
+
+Now every `PUT` carries `?known=core:<v>,r0:<v>,…`, the version the client
+holds of each *other* copy: on a bucket write, the core copy's version it read
+and the other buckets' versions; on a core write, the bucket versions that copy
+records. The Worker reads only the copies named there, and re-arms one only if
+the version it read is that one — and a version names one write's bytes, so a
+re-arm re-writes exactly what the client holds. A read that disagrees is stale
+or newer than the client, so that copy was written moments ago and already has
+its full 180 days: the 150-day promise holds, at no extra KV write. The client
+does not vouch for a bucket whose reported version disagrees with the core
+copy's record, unless it has just written it.
+
+| A user with one recipe, real client + real Worker | Before | After |
+| --- | --- | --- |
+| First sync | 90 R + 9 W | 54 R + 9 W |
+| Heart | 18 R + 1 W | 18 R + 1 W |
+| Recipe edit | 27 R + 2 W | 27 R + 2 W |
+| Heart, every bucket past 30 days | 18 R + 9 W | 18 R + 9 W |
+
+A user with no recipes sends no `known` and costs what it did (a heart 2 R +
+1 W). A `PUT` with no `known` at all — a client from before this change —
+re-arms nothing and reads no sibling: it cannot vouch for a read, every copy
+has at least 150 days from its last re-arm, and that client is replaced the
+next time its page loads.
+
+**What this does not close:** two devices writing through different locations
+inside KV's window, where *everything* one of them read was stale. Then it
+vouches for the older version and the re-arm can put it back. That is the race
+"Concurrency" below already describes — the same device's core write loses the
+other's core write in it — and a Durable Object would close both.
 
 ## Concurrency: compare-and-swap, honestly
 
@@ -381,3 +423,35 @@ on a fresh id → `204`, then the same with `If-Match` → `204`; and
 an error). The read counts themselves cannot be seen from outside; the
 Cloudflare dashboard's KV read graph for the namespace should fall once the
 site and Worker are both live.
+
+## Deploy owed — the re-arm fix, roadmap 510/330 (not deployed)
+
+🚩 **Built and tested, NOT deployed.** The live Worker (version
+`1a368b38…`, above) still re-arms from whatever KV reads. A deploy needs the
+owner's go, by the procedure above.
+
+**Either order is safe:**
+
+- **Site first** (this change merges to `main`, which deploys the site): the
+  client adds `&known=…` to its `PUT`s; the live Worker ignores it and keeps
+  re-arming as it does today. Nothing breaks, and the risk stays as it is
+  until the Worker goes.
+- **Worker first:** a client without `known` re-arms nothing. Every copy has
+  at least 150 days left from its last re-arm, and the site's next deploy
+  replaces those clients on their next page load.
+
+**After the deploy, verify live** (none of this is visible in a response, so
+the checks are that nothing broke and that the new query is accepted):
+
+1. `PUT /v1/blob/<fresh id>?family=8&known=r0:x` → `204` + `ETag`.
+2. The same with `If-Match` and `&known=core:"x",r0:y` (quoted and bare) →
+   `204`; `&known=r16:x` and `&known=garbage` → `204` (dropped, never an
+   error).
+3. `PUT /v1/blob/<id>:r0?family=8&known=core:<the core's etag>` → `204`, then
+   `GET /v1/blob/<id>?buckets=8` → `X-Faves-Buckets` names `r0`.
+4. A real recipe sync between two of the owner's devices still converges (a
+   recipe edit on one shows on the other).
+
+Re-arming itself cannot be seen from outside (it changes only expiry); the
+unit tests in `sync-worker.test.js` (`510/330`) and the real-client test in
+`tests/sync.test.js` are the evidence for it.

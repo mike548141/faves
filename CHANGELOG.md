@@ -194,6 +194,12 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Sync can no longer put an older copy of your data back.** When sync kept
+  a long-untouched copy alive, the server re-saved whatever it had just read,
+  and that read could be a minute out of date, so an import or a recent edit
+  could be undone on every device. Your device now tells the server which
+  version it holds, and only that version is re-saved. The server half takes
+  effect when the sync Worker is next deployed.
 - **A page left open no longer brings back hearts you changed elsewhere.** A
   menu or recipe page kept the hearts, ratings and notes it read when it
   opened. If they changed in another tab or by a sync, its next tap wrote the

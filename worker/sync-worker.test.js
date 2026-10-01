@@ -17,6 +17,8 @@ import worker, {
   parseBlobKey,
   familyKeys,
   familyAsked,
+  knownAsked,
+  copyName,
   formatBucketReport,
   MAX_BUCKETS,
   REFRESH_AFTER_SECONDS,
@@ -396,7 +398,7 @@ test("any write re-arms the expiry of a sibling copy last written more than 30 d
   kv.store.set(BUCKET(2), { ...aged, metadata: { v, t: now - REFRESH_AFTER_SECONDS - 86400 }, ttl: 12345 });
 
   const before = kv.puts;
-  await put(e, VALID_ID, [1]); // a heart: the core copy only
+  await putWith(e, VALID_ID, `?known=r2:${v}`, [1]); // a heart: the core copy only
   assert.equal(kv.puts - before, 2, "the core write plus one re-armed bucket");
   const after = kv.store.get(BUCKET(2));
   assert.deepEqual([...new Uint8Array(after.value)], [9, 9, 9], "same bytes");
@@ -420,11 +422,11 @@ test("a copy from before the write time was recorded is re-armed once, then left
   const kv = e.SYNC_BLOBS;
   // The deployed Worker wrote `{ v }` only.
   kv.store.set(VALID_ID, { value: new Uint8Array([5]).buffer, metadata: { v: "old" }, ttl: 99 });
-  await put(e, BUCKET(0), [1]);
+  await putWith(e, BUCKET(0), "?known=core:old", [1]);
   assert.equal(kv.store.get(VALID_ID).metadata.v, "old");
   assert.ok(Number.isFinite(kv.store.get(VALID_ID).metadata.t));
   const before = kv.puts;
-  await put(e, BUCKET(1), [1]);
+  await putWith(e, BUCKET(1), "?known=core:old", [1]);
   assert.equal(kv.puts - before, 1, "re-armed already, so not again");
 });
 
@@ -434,7 +436,7 @@ test("a bucket write re-arms the core copy too (B1: recipes and hearts expire to
   await put(e, VALID_ID, [1]);
   const c = kv.store.get(VALID_ID);
   kv.store.set(VALID_ID, { ...c, metadata: { ...c.metadata, t: 0 }, ttl: 1 });
-  await put(e, BUCKET(4), [4]);
+  await putWith(e, BUCKET(4), `?known=core:${c.metadata.v}`, [4]);
   assert.equal(kv.store.get(VALID_ID).ttl, 180 * 24 * 60 * 60);
 });
 
@@ -485,29 +487,75 @@ test("a heart from a user with no recipes (?family=0) costs one KV read and one 
   assert.equal(e.SYNC_BLOBS.puts - before, 1);
 });
 
+/** `?known=` naming every copy of a 16-bucket family but `self`, at `v`. */
+const knowAll = (self, v = "x") =>
+  `known=${["core", ...Array.from({ length: MAX_BUCKETS }, (_, n) => `r${n}`)].filter((n) => n !== self).map((n) => `${n}:${v}`).join(",")}`;
+
 test("?family=8 reads the eight buckets and no more; a bucket write reads the core and the other seven", async () => {
   const e = env();
   const first = await putWith(e, VALID_ID, "?family=8", [1]);
   let seen = countReads(e);
-  await putWith(e, VALID_ID, "?family=8", [2], first.headers.get("ETag"));
+  // The client names more than eight here on purpose: `family` still bounds it.
+  await putWith(e, VALID_ID, `?family=8&${knowAll("core")}`, [2], first.headers.get("ETag"));
   assert.equal(seen.length, 1 + 8);
   assert.ok(!seen.includes(BUCKET(8)), "bucket 8 is outside a family of 8");
   seen.length = 0;
-  await putWith(e, BUCKET(3), "?family=8", [3]);
+  await putWith(e, BUCKET(3), `?family=8&${knowAll("r3")}`, [3]);
   assert.equal(seen.length, 1 + 8, "its own read, the core, and the seven other buckets");
   assert.ok(seen.includes(VALID_ID));
 });
 
-test("an older client's write (no ?family) still reads, and re-arms, every copy the user could have", async () => {
+test("a client that names its family but no versions (no ?family, ?known) reads every copy it could have", async () => {
   const e = env();
   const kv = e.SYNC_BLOBS;
   await put(e, BUCKET(12), [7]);
   const aged = kv.store.get(BUCKET(12));
   kv.store.set(BUCKET(12), { ...aged, metadata: { ...aged.metadata, t: 0 }, ttl: 1 });
   const seen = countReads(e);
-  await put(e, VALID_ID, [1]);
+  await putWith(e, VALID_ID, `?${knowAll("core", aged.metadata.v)}`, [1]);
   assert.equal(seen.length, 1 + MAX_BUCKETS);
-  assert.equal(kv.store.get(BUCKET(12)).ttl, 180 * 24 * 60 * 60, "an old client's write keeps bucket 12 alive, as before");
+  assert.equal(kv.store.get(BUCKET(12)).ttl, 180 * 24 * 60 * 60, "bucket 12 kept alive");
+});
+
+test("510/330: a client from before ?known re-arms nothing, and reads no sibling to find out", async () => {
+  // Its write cannot vouch for a read, and a re-arm from an unvouched read is
+  // the revert this item fixed. Every copy has at least 150 days left from the
+  // last re-arm; that client is gone the next time its page loads.
+  const e = env();
+  const kv = e.SYNC_BLOBS;
+  await put(e, BUCKET(12), [7]);
+  const aged = kv.store.get(BUCKET(12));
+  kv.store.set(BUCKET(12), { ...aged, metadata: { ...aged.metadata, t: 0 }, ttl: 1 });
+  const seen = countReads(e);
+  const before = kv.puts;
+  await put(e, VALID_ID, [1]);
+  assert.deepEqual(seen, [VALID_ID]);
+  assert.equal(kv.puts - before, 1);
+  assert.equal(kv.store.get(BUCKET(12)).ttl, 1);
+});
+
+test("510/330: a sibling whose version is not the one the client names is neither re-written nor counted due", async () => {
+  const e = env();
+  const kv = e.SYNC_BLOBS;
+  await put(e, BUCKET(2), [9]);
+  const aged = kv.store.get(BUCKET(2));
+  kv.store.set(BUCKET(2), { ...aged, metadata: { ...aged.metadata, t: 0 }, ttl: 1 });
+  const before = kv.puts;
+  await putWith(e, VALID_ID, "?family=8&known=r2:someone-elses", [1]);
+  assert.equal(kv.puts - before, 1, "only the core write");
+  assert.equal(kv.store.get(BUCKET(2)).ttl, 1);
+});
+
+test("knownAsked: names and versions, bare or quoted; anything else dropped; absent is null", () => {
+  const q = (s) => knownAsked(new URLSearchParams(s));
+  assert.equal(q(""), null);
+  assert.deepEqual([...q("known=")], []);
+  assert.deepEqual([...q('known=core:"abc",r0:def,r15:g')], [["core", "abc"], ["r0", "def"], ["r15", "g"]]);
+  for (const bad of ["known=r16:x", "known=r01:x", "known=core", "known=core:", "known=x:y", "known=core:\"\""]) {
+    assert.deepEqual([...q(bad)], [], bad);
+  }
+  assert.equal(copyName(VALID_ID, VALID_ID), "core");
+  assert.equal(copyName(BUCKET(7), VALID_ID), "r7");
 });
 
 test("a stale sibling inside the family is still re-armed when the client names the family", async () => {
@@ -516,6 +564,144 @@ test("a stale sibling inside the family is still re-armed when the client names 
   await put(e, BUCKET(2), [9]);
   const aged = kv.store.get(BUCKET(2));
   kv.store.set(BUCKET(2), { ...aged, metadata: { ...aged.metadata, t: 0 }, ttl: 1 });
-  await putWith(e, VALID_ID, "?family=8", [1]);
+  await putWith(e, VALID_ID, `?family=8&known=r2:${aged.metadata.v}`, [1]);
   assert.equal(kv.store.get(BUCKET(2)).ttl, 180 * 24 * 60 * 60);
+});
+
+// --- Re-arming never writes back older bytes (roadmap 510/330) ---------------
+
+/**
+ * A KV stand-in with the one property FakeKV leaves out: Workers KV is
+ * eventually consistent, so a read can return an OLDER value — and older
+ * metadata — than the latest write, for a bounded time. Here a write is
+ * invisible to every read for `lagMs` after it is made, on the stand-in's own
+ * clock (`kv.clock`, in ms, which a test moves); a read returns the newest
+ * write at least that old, or what was seeded. Writes are last-writer-wins, so
+ * `latest(key)` is what KV really holds once the dust settles.
+ *
+ * This is the model the 510/320 simulation used: a location that does not see
+ * even its own writes for 60 s. Cloudflare documents writes as "usually"
+ * visible at once where they were made and up to 60 s or more elsewhere, so
+ * this is the worst case — a device whose next request lands somewhere else.
+ */
+class LaggyKV {
+  constructor(lagMs = 60_000) {
+    this.lagMs = lagMs;
+    this.clock = 0;
+    this.history = new Map(); // key -> [{ at, value, metadata, ttl }], oldest first
+    this.puts = 0;
+  }
+  seed(key, bytes, metadata) {
+    this.history.set(key, [{ at: -Infinity, value: new Uint8Array(bytes).buffer, metadata, ttl: null }]);
+  }
+  latest(key) {
+    const h = this.history.get(key) || [];
+    return h[h.length - 1] || null;
+  }
+  async getWithMetadata(key) {
+    const seen = (this.history.get(key) || []).filter((w) => w.at <= this.clock - this.lagMs);
+    const w = seen[seen.length - 1];
+    return w ? { value: w.value.slice(0), metadata: w.metadata } : { value: null, metadata: null };
+  }
+  async put(key, value, opts = {}) {
+    const bytes = value instanceof Uint8Array ? new Uint8Array(value) : new Uint8Array(value.slice(0));
+    const h = this.history.get(key) || [];
+    h.push({ at: this.clock, value: bytes.buffer, metadata: opts.metadata ?? null, ttl: opts.expirationTtl ?? null });
+    this.history.set(key, h);
+    this.puts += 1;
+  }
+}
+
+const laggyEnv = () => ({ SYNC_BLOBS: new LaggyKV(), ALLOWED_ORIGINS: ORIGIN });
+const bytesOf = (w) => [...new Uint8Array(w.value)];
+const etagOf = (res) => parseIfMatch(res.headers.get("ETag"));
+const DAY = 86400;
+const nowS = () => Math.floor(Date.now() / 1000);
+
+test("510/330: a bucket write does not put back an older core copy that a stale read returned (the pre-050 trigger: no `t`)", async () => {
+  // The deployed Worker before 510/050 wrote `{ v }` only, so such a core
+  // copy counts as due for re-arming at once. The import writes a new core
+  // copy; a bucket write a few seconds later reads the core copy from a
+  // location that has not seen that write yet.
+  const e = laggyEnv();
+  const kv = e.SYNC_BLOBS;
+  kv.seed(VALID_ID, [1], { v: "old" });
+  const core = await putWith(e, VALID_ID, "?family=8", [2], '"old"');
+  assert.equal(core.status, 204);
+  const vNew = etagOf(core);
+
+  kv.clock = 5_000;
+  // The client names the core version it holds — the one it just wrote.
+  const bucket = await putWith(e, BUCKET(0), `?family=8&known=core:${vNew}`, [7]);
+  assert.equal(bucket.status, 204);
+
+  const held = kv.latest(VALID_ID);
+  assert.deepEqual(bytesOf(held), [2], "the older core copy was written back over the import");
+  assert.equal(held.metadata.v, vNew);
+});
+
+test("510/330: the same revert without the trigger — a core copy last written 31 days ago, a heart, then a recipe edit", async () => {
+  // Treating a missing `t` as fresh would not reach this: a user back after a
+  // month hearts something, then edits a recipe inside a minute.
+  const e = laggyEnv();
+  const kv = e.SYNC_BLOBS;
+  kv.seed(VALID_ID, [1], { v: "c1", t: nowS() - 31 * DAY });
+  const heart = await putWith(e, VALID_ID, "?family=8", [2], '"c1"');
+  const vNew = etagOf(heart);
+  kv.clock = 10_000;
+  await putWith(e, BUCKET(3), `?family=8&known=core:${vNew}`, [7]);
+  assert.deepEqual(bytesOf(kv.latest(VALID_ID)), [2], "the heart was undone");
+});
+
+test("510/330: the mirror — a core write does not put back an older bucket a stale read returned", async () => {
+  // A sync cycle writes its buckets first, then the core copy recording their
+  // versions (site/js/sync.js). The core write's re-arm reads the bucket the
+  // cycle wrote a moment ago; if that read is stale and the bucket's previous
+  // write is more than 30 days old, the recipe edit is undone.
+  const e = laggyEnv();
+  const kv = e.SYNC_BLOBS;
+  kv.seed(VALID_ID, [1], { v: "c1", t: nowS() });
+  kv.seed(BUCKET(0), [7], { v: "b1", t: nowS() - 31 * DAY });
+  const edit = await putWith(e, BUCKET(0), "?family=8&known=core:c1", [8], '"b1"');
+  assert.equal(edit.status, 204);
+  const vB2 = etagOf(edit);
+
+  kv.clock = 1_000;
+  const core = await putWith(e, VALID_ID, `?family=8&known=r0:${vB2}`, [2], '"c1"');
+  assert.equal(core.status, 204);
+
+  const held = kv.latest(BUCKET(0));
+  assert.deepEqual(bytesOf(held), [8], "the older bucket was written back over the recipe edit");
+  assert.equal(held.metadata.v, vB2);
+});
+
+test("510/330: after the fix every copy still keeps 150 of its 180 days — the stale copies were written seconds ago", async () => {
+  // ADR 0146's promise: every copy under a user key keeps at least 150 of its
+  // 180 days after any write. A re-arm the fix skips is one whose read did not
+  // match the version the client holds — so that copy was written within KV's
+  // window, and its own write armed it in full.
+  const e = laggyEnv();
+  const kv = e.SYNC_BLOBS;
+  kv.seed(VALID_ID, [1], { v: "c1", t: nowS() - 31 * DAY });
+  kv.seed(BUCKET(0), [7], { v: "b1", t: nowS() - 31 * DAY });
+  kv.seed(BUCKET(1), [6], { v: "b2", t: nowS() - 31 * DAY });
+  const edit = await putWith(e, BUCKET(0), "?family=2&known=core:c1,r1:b2", [8], '"b1"');
+  kv.clock = 1_000;
+  await putWith(e, VALID_ID, `?family=2&known=r0:${etagOf(edit)},r1:b2`, [2], '"c1"');
+  for (const k of [VALID_ID, BUCKET(0), BUCKET(1)]) {
+    const w = kv.latest(k);
+    assert.ok(nowS() - Number(w.metadata.t) < REFRESH_AFTER_SECONDS, `${k} was left due`);
+    assert.equal(w.ttl, 180 * 24 * 60 * 60, `${k} expiry not re-armed`);
+  }
+  // …and the untouched bucket, read in step with what the client holds, was
+  // re-armed keeping its bytes and version. Twice, in fact: the second write
+  // read it before the first re-arm was visible. A version names one write's
+  // bytes, so a re-arm whose read matched what the client holds re-writes the
+  // newest bytes — wasted, as it was before 510/330, but never older.
+  const r1 = kv.history.get(BUCKET(1)).slice(1);
+  assert.ok(r1.length >= 1, "bucket 1 was not re-armed");
+  for (const w of r1) {
+    assert.deepEqual(bytesOf(w), [6]);
+    assert.equal(w.metadata.v, "b2");
+  }
 });
