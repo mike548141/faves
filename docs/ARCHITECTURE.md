@@ -1349,6 +1349,20 @@ its last write. `recipe-move.js` is the move map for the owner's one-off
 import (hearts, ratings, notes, ticks and shopping lines follow a recipe to
 its `u:` id); nothing runs it yet.
 
+**Your own recipes on screen** (roadmap 510/290, 300, 310). Three surfaces read
+the cookbook at render or query time and persist nothing of it: the Cook at
+Home page folds it into the menu (`cookbook-menu.js`: a recipe whose `section`
+names a published one sits in it, after the published ones; any other gets a
+section of its own); Favourites lists a hearted one inside the Cook at Home
+group (`groupFavourites`); and the home search merges it into the dish list
+per query (`search.js` `withCookbook`), never into `search-index.json`. A row's
+venue is decided by its own id (`isPersonalId`), so the heart, rating and link
+are `u:mine`'s wherever it is listed. Every surface labels it with
+`ownerLabel(kind)` (`favourites-ui.js`; `OWNER_TEXT` holds the words — "My
+recipe" today, and "Our recipe" for a shared one is a second line there and an
+`owner` kind on a search entry). An untagged recipe is "not stated": nothing
+adds a tag, and a diet word finds only what carries it.
+
 A `storage` event keeps other tabs in step (favourites/settings keys are now
 namespaced by the active profile; a registry change re-points them). Recipes
 (Cook at Home) can be
