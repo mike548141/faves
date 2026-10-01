@@ -1,4 +1,4 @@
-- [ ] 🔎 **One unit test failed once in five runs, and its name was not
+- [~] 🔎 **One unit test failed once in five runs, and its name was not
       captured** `[XS] [tests]` — seen 2026-10-01 (session `faves-55`)
       on the merged `510-sw` tree.
 
@@ -12,3 +12,5 @@
   **Seen again 2026-10-02 (`faves-4f`, the `350`–`370` worker):** 1 of 1,717
   failed once at the start of a browser sweep, name again not captured; nine
   re-runs passed.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`).**
