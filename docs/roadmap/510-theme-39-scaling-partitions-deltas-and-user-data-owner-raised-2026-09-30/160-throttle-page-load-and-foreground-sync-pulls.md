@@ -1,4 +1,4 @@
-- [~] **Throttle page-load and foreground sync pulls** `[S] [sync]` — from the
+- [x] **Throttle page-load and foreground sync pulls** `[S] [sync]` — from the
       `130` survey
       (session `faves-55`, 2026-10-01), its proposal **C**.
 
@@ -42,3 +42,5 @@
   new. Tests: 12 in `tests/sync.test.js`, break-probed four ways (see the PR).
   ⚠️ Cost: a change made on another device can take up to 90 s longer to
   appear on a device that opened a page inside the window (owner-ruled).
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #69), CI 8 of 8.
