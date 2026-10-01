@@ -11,7 +11,7 @@
 //     0145 as revised by ADR 0146). There is no DATA_VERSION any more: a menu
 //     edit changes no byte of this file, and the phone learns of it from
 //     data/catalogue.json instead — see "The data store" below.
-const SHELL_VERSION = "2026-10-01.15";
+const SHELL_VERSION = "2026-10-01.16";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
 const DATA_STORE = "faves-data";
@@ -289,27 +289,31 @@ function requireAsset(url, res) {
 // the owner's exact report, and it did not self-heal on the next cold start
 // because the skewed cache carries its READY sentinel. The menus came through
 // the same hole: 48 places cached when the site had 55.
-//   "reload" for the precache — bypass the HTTP cache and refresh it.
-//   "no-cache" for runtime data — revalidate rather than refetch, so a menu is
-//   never served from a four-hour-old copy while online.
+//   "reload" for the data store — bypass the HTTP cache and refresh it.
+//   "no-cache" for a runtime data miss (dataRead) — revalidate rather than
+//   refetch, so a menu is never served from a four-hour-old copy while online.
 // A `_headers` file setting max-age=0 on js/css would fix the deploy side too,
 // and is the belt to this braces; this is the half that protects a phone which
 // already has the old files.
+// Data keeps "reload": its `?h=` URLs are never in the HTTP cache (a file the
+// phone already holds is never fetched at all), so revalidating would save
+// nothing, and every download is hash-checked anyway (ADR 0147).
 const PRECACHE_FETCH = { cache: "reload" };
-// …except the SHELL on a FIRST install, which REVALIDATES instead (roadmap
-// 510/170, owner-ruled 2026-10-01, ADR 0149). A first visit has just loaded
-// most of the shell into the page, so `reload` downloaded it all a second time
-// (the 2026-10-01 survey: ~90 files, ~479 KB gzip). `no-cache` sends a
-// conditional request the SERVER answers: 304 for a file it still serves
-// unchanged, the new bytes for anything else. It never uses a stored copy the
-// server has not just vouched for, which is the whole of what ADR 0056
-// required — and tools/precache_check.mjs proves it on the incident itself:
-// with Pages' real headers, plain fetch() fills the new cache with the
-// previous deploy's app.js; "reload" and "no-cache" both hold the current one.
-// An UPDATE install keeps "reload" (the ruling covered the first install), and
-// data keeps it everywhere: its `?h=` URLs are never in the page's HTTP cache,
-// so revalidating them would save nothing.
-const FIRST_INSTALL_FETCH = { cache: "no-cache" };
+// The SHELL, on EVERY install, REVALIDATES instead (roadmap 510/170 for the
+// first install, ADR 0149; 510/270 for updates, ADR 0150 — both owner-ruled
+// 2026-10-01). `no-cache` sends a conditional request the SERVER answers: 304
+// for a file it still serves unchanged, the new bytes for anything else. It
+// never uses a stored copy the server has not just vouched for, which is the
+// whole of what ADR 0056 required — and tools/precache_check.mjs proves it on
+// the incident itself: with Pages' real headers, plain fetch() fills the new
+// cache with the previous deploy's app.js; "reload" and "no-cache" both hold
+// the current one, as a first install AND as an update.
+// 🔑 So this mode is exactly as safe as Pages' ETag. tools/etag_survey.py
+// measured it across five real deploys on 2026-10-01: every changed file got a
+// new ETag and every unchanged one kept its old one (ADR 0150). What it saves:
+// a SHELL_VERSION bump used to re-download all ~110 shell files on every
+// installed phone; now only the files that changed come down whole.
+const SHELL_FETCH = { cache: "no-cache" };
 
 // Build the shell cache only if it isn't already fully populated. The name
 // carries SHELL_VERSION, so an unchanged shell keeps its READY sentinel and is
@@ -330,9 +334,6 @@ async function ensureCache(name, populate) {
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
-      // No active worker ⇒ this is the first install on this origin (an update
-      // always has the old worker active while the new one installs).
-      const shellFetch = self.registration?.active ? PRECACHE_FETCH : FIRST_INSTALL_FETCH;
       await ensureCache(SHELL_CACHE, async (cache) => {
         // Per-URL put (not cache.addAll) so redirected shell pages get cleaned
         // first — but keep addAll's response.ok guard by hand: a 404/500 during
@@ -341,7 +342,7 @@ self.addEventListener("install", (event) => {
         // `requireAsset` adds the half `res.ok` cannot see on Pages (ADR 0100).
         await Promise.all(
           SHELL.map(async (u) => {
-            const res = requireAsset(u, await fetchClean(u, shellFetch));
+            const res = requireAsset(u, await fetchClean(u, SHELL_FETCH));
             await cache.put(u, res);
           })
         );

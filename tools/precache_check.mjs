@@ -15,11 +15,13 @@
 //   (c) `/restaurant?id=…` missed the shell cache, so the deep link a reader is
 //       most likely to have saved was the one route flight mode did not cover.
 //
-// And a fourth, from roadmap 510/170 (ADR 0149): (d) the 2026-08-16
-// stale-precache incident (ADR 0056), REPRODUCED on a server that sends the
-// caching headers Pages actually sends (`startPagesServer`), once per install
-// mode. Plain fetch() must reproduce it (asserted, or nothing else here means
-// anything); "reload", "no-cache" and the shipped worker must not.
+// And a fourth, from roadmap 510/170 (ADR 0149) and 510/270 (ADR 0150): (d)
+// the 2026-08-16 stale-precache incident (ADR 0056), REPRODUCED on a server
+// that sends the caching headers Pages actually sends (`startPagesServer`),
+// once per install mode. Plain fetch() must reproduce it (asserted, or nothing
+// else here means anything); "reload", "no-cache" and the shipped worker must
+// not — and the shipped worker must revalidate on an update as well as on a
+// first install.
 //
 // 🚩 WHAT THIS PROVES, AND WHAT IT CANNOT.
 //   · It proves the SERVICE WORKER's half: given a 200 carrying `text/html` for
@@ -132,7 +134,14 @@ const CACHE_STATE = `(async () => {
 // sentinel then made the skew permanent. ADR 0056's answer was
 // `cache: "reload"`. Roadmap 510/170 asks whether `cache: "no-cache"` — a
 // conditional request the SERVER answers, 304 when unchanged — is as safe,
-// because it would stop a first visit downloading the shell twice.
+// because it would stop a first visit downloading the shell twice. Roadmap
+// 510/270 (ADR 0150) asked the same of an UPDATE install, where it saves most
+// of the shell's download on every SHELL_VERSION bump.
+//
+// 🚩 `startPagesServer`'s ETag is a hash of the body BY CONSTRUCTION, so this
+// harness cannot tell you whether PAGES' ETag is. That was measured against
+// real deploys instead (tools/etag_survey.py, ADR 0150); re-run it if Pages
+// changes how it serves.
 //
 // So each install mode is run through the incident twice, on a server that
 // answers with the caching headers Pages ACTUALLY sends today
@@ -149,20 +158,20 @@ const CACHE_STATE = `(async () => {
 // browser under which the incident cannot happen — and says nothing.
 const INCIDENT_VICTIM = "/js/app.js"; // the incident's own file; the home page loads it
 const MODE_LINE = 'const PRECACHE_FETCH = { cache: "reload" };';
-const FIRST_LINE = /^const FIRST_INSTALL_FETCH = \{ cache: "[a-z-]+" \};$/m;
+const SHELL_LINE = /^const SHELL_FETCH = \{ cache: "[a-z-]+" \};$/m;
 const VERSION_LINE = /^const SHELL_VERSION = "[^"]+";$/m;
 const SW_SRC = readFileSync(join(SITE, "sw.js"), "utf8");
 
 /** sw.js renamed to `version`, and — when `mode` is given — with EVERY
  *  precache fetch forced to that mode (null = the shipped worker as it is). */
 function swFor(version, mode) {
-  if (!VERSION_LINE.test(SW_SRC) || !SW_SRC.includes(MODE_LINE)) {
-    throw new Error("site/sw.js changed shape — update MODE_LINE/VERSION_LINE in this tool");
+  if (!VERSION_LINE.test(SW_SRC) || !SW_SRC.includes(MODE_LINE) || !SHELL_LINE.test(SW_SRC)) {
+    throw new Error("site/sw.js changed shape — update MODE_LINE/SHELL_LINE/VERSION_LINE in this tool");
   }
   let s = SW_SRC.replace(VERSION_LINE, `const SHELL_VERSION = "${version}";`);
   if (mode) {
     s = s.replace(MODE_LINE, `const PRECACHE_FETCH = { cache: "${mode}" };`);
-    s = s.replace(FIRST_LINE, `const FIRST_INSTALL_FETCH = { cache: "${mode}" };`);
+    s = s.replace(SHELL_LINE, `const SHELL_FETCH = { cache: "${mode}" };`);
   }
   return s;
 }
@@ -271,15 +280,20 @@ async function staleBytesIncident(cdp, report) {
         `held ${r.marker}, ready ${r.ready}, worker ${r.state}; app.js asked ${r.victimAsks.join(", ") || "never"}`
       );
     }
+    // Every install revalidates: the first since 510/170 (ADR 0149), updates
+    // since 510/270 (ADR 0150). For the UPDATE the changed file must be asked
+    // CONDITIONALLY and answered 200 — the new bytes, sent because the
+    // validator moved — while the unchanged ones come back 304. "Holds B"
+    // above is the safety half; this is the half that says the saving is real
+    // and the worker is not quietly still reloading.
     const shipped = at("shipped", variant);
     report.check(
-      variant === "first"
-        ? "the SHIPPED worker's first install REVALIDATES (510/170): conditional requests, 304s for unchanged files"
-        : "the SHIPPED worker's update still RELOADS (the ruling covered the first install only)",
-      variant === "first"
-        ? shipped.victimAsks.every((a) => a.startsWith("conditional→")) && shipped.notModified > 0
-        : shipped.victimAsks.every((a) => a.startsWith("plain→")) && shipped.notModified === 0,
-      `app.js ${shipped.victimAsks.join(", ")}; ${shipped.notModified} of ${shipped.shellAsks} shell request(s) answered 304`
+      `the SHIPPED worker's ${variant === "first" ? "first install (510/170)" : "UPDATE (510/270)"} REVALIDATES: ` +
+        "the changed app.js asked conditionally and sent whole (200), unchanged files 304",
+      shipped.victimAsks.length > 0 &&
+        shipped.victimAsks.every((a) => a === "conditional→200") &&
+        shipped.notModified > 0,
+      `app.js ${shipped.victimAsks.join(", ") || "never asked"}; ${shipped.notModified} of ${shipped.shellAsks} shell request(s) answered 304`
     );
     const nc = at("no-cache", variant);
     report.check(
