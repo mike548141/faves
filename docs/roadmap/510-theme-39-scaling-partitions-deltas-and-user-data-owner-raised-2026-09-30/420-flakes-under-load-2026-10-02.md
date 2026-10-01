@@ -1,4 +1,4 @@
-- [ ] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
+- [~] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
       `[S] [tests]` — filed by session `faves-4f` from its workers' sweeps
       (load averages of 120 to 800 while several sweeps overlapped).
 
@@ -15,3 +15,5 @@
      re-run, twice today.
   Prove or refute that load alone causes each: run the check N times quiet
   and N times under a synthetic load, and name what differs.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`).**
