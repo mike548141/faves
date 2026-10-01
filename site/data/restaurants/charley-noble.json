@@ -71,6 +71,21 @@
     "added": "2026-07-06"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "additional-patty",
+      "name": "Additional patty",
+      "select": "one",
+      "options": [
+        {
+          "name": "Additional patty",
+          "id": "additional-patty",
+          "price": 10.0,
+          "tags": []
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Raw & Cured",
@@ -368,7 +383,7 @@
         {
           "name": "Charley Noble Burger",
           "dishId": "charley-noble-burger",
-          "desc": "Beef patty, smoked cheese, bacon, pickles, relish, mayo, milk bun, fries. +$10 for an additional patty. $40 with a gluten-free bun (Gluten Free Menu; cooked in the same oil/surface as gluten-containing items).",
+          "desc": "Beef patty, smoked cheese, bacon, pickles, relish, mayo, milk bun, fries. $40 with a gluten-free bun (Gluten Free Menu; cooked in the same oil/surface as gluten-containing items).",
           "price": 38,
           "tags": [
             "contains-dairy",
@@ -377,7 +392,10 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-pork": "The menu says “bacon”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-pork": "The menu says “bacon”."},
+          "addOns": [
+            "additional-patty"
+          ]
         },
         {
           "name": "Charley Noble Veg Burger",

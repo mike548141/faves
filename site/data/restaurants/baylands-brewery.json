@@ -78,6 +78,40 @@
           ]
         }
       ]
+    },
+    {
+      "id": "smashie-extras",
+      "name": "Extras",
+      "select": "many",
+      "options": [
+        {
+          "name": "Extra patty & cheese",
+          "id": "extra-patty-cheese",
+          "price": 6.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Onion rings",
+          "id": "onion-rings",
+          "price": 2.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "add-fries",
+      "name": "Add fries",
+      "select": "one",
+      "options": [
+        {
+          "name": "Fries",
+          "id": "fries",
+          "price": 15.0,
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -324,7 +358,7 @@
         {
           "name": "The Smashie",
           "dishId": "the-smashie",
-          "desc": "Smashed beef patty, bacon, cheddar cheese, pickles, Carolina & tomato sauces. Add extra patty & cheese $6.00; add onion rings $2.00. Gluten free on request.",
+          "desc": "Smashed beef patty, bacon, cheddar cheese, pickles, Carolina & tomato sauces. Gluten free on request.",
           "price": 22.9,
           "tags": [
             "gf-option",
@@ -332,7 +366,10 @@
             "contains-dairy",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-pork": "The menu says “bacon”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”.", "contains-pork": "The menu says “bacon”."},
+          "addOns": [
+            "smashie-extras"
+          ]
         }
       ]
     },
@@ -384,26 +421,32 @@
         {
           "name": "Fried Chicken Sliders",
           "dishId": "fried-chicken-sliders",
-          "desc": "6 brioche sliders with Paprika Lemon fried chicken, lettuce, cheese & pickles. Add fries $15.00.",
+          "desc": "6 brioche sliders with Paprika Lemon fried chicken, lettuce, cheese & pickles.",
           "price": 35.0,
           "tags": [
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “brioche”.", "contains-dairy": "The menu says “cheese”."}
+          "tagNotes": {"contains-gluten": "The menu says “brioche”.", "contains-dairy": "The menu says “cheese”."},
+          "addOns": [
+            "add-fries"
+          ]
         },
         {
           "name": "Cheese Burger Sliders",
           "dishId": "cheese-burger-sliders",
-          "desc": "6 brioche sliders with beef patty, cheddar cheese & pickles. Add fries $15.00.",
+          "desc": "6 brioche sliders with beef patty, cheddar cheese & pickles.",
           "price": 35.0,
           "tags": [
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “brioche”.", "contains-dairy": "The menu says “Cheese”."}
+          "tagNotes": {"contains-gluten": "The menu says “brioche”.", "contains-dairy": "The menu says “Cheese”."},
+          "addOns": [
+            "add-fries"
+          ]
         }
       ]
     },

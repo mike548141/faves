@@ -60,6 +60,47 @@
     "added": "2026-07-08"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "eggs-toast-extras",
+      "name": "Extras",
+      "select": "many",
+      "options": [
+        {
+          "name": "Creamy scrambled eggs",
+          "id": "creamy-scrambled-eggs",
+          "price": 1.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "GF seeded toast",
+          "id": "gf-seeded-toast",
+          "price": 1.0,
+          "tags": [
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "add-bacon",
+      "name": "Add bacon",
+      "select": "one",
+      "options": [
+        {
+          "name": "Bacon",
+          "id": "bacon",
+          "price": 7.0,
+          "tags": [
+            "has-meat",
+            "contains-pork"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "All Day Brunch",
@@ -102,7 +143,7 @@
         {
           "name": "Eggs on Toast",
           "dishId": "eggs-on-toast",
-          "desc": "Eggs your way on butter toasted ciabatta, house-made tomato relish. Creamy scrambled eggs +$1; GF seeded toast +$1.",
+          "desc": "Eggs your way on butter toasted ciabatta, house-made tomato relish.",
           "price": 14.0,
           "tags": [
             "v",
@@ -111,7 +152,10 @@
             "contains-gluten",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-gluten": "The menu says “Toast” — a wheat bakery item.", "contains-dairy": "The menu says “butter”."}
+          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-gluten": "The menu says “Toast” — a wheat bakery item.", "contains-dairy": "The menu says “butter”."},
+          "addOns": [
+            "eggs-toast-extras"
+          ]
         },
         {
           "name": "Eggs Benedict",
@@ -198,7 +242,7 @@
         {
           "name": "Cheese & Spinach Omelette",
           "dishId": "cheese-spinach-omelette",
-          "desc": "3 eggs filled with melty cheese, creamed spinach, crispy onions, mixed greens salad. Add bacon +$7.",
+          "desc": "3 eggs filled with melty cheese, creamed spinach, crispy onions, mixed greens salad.",
           "price": 21.0,
           "tags": [
             "v",
@@ -206,7 +250,10 @@
             "contains-egg",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-dairy": "The menu says “Cheese”."}
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-dairy": "The menu says “Cheese”."},
+          "addOns": [
+            "add-bacon"
+          ]
         },
         {
           "name": "Fried Chicken Chop",
