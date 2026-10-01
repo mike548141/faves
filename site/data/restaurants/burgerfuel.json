@@ -240,6 +240,74 @@
     "added": "2026-08-15"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "size-15-21",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Single",
+          "id": "single",
+          "dishPrice": 15.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Double",
+          "id": "double",
+          "dishPrice": 21.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-13p9-17p9",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Lightweight",
+          "id": "lightweight",
+          "dishPrice": 13.9,
+          "default": true,
+          "tags": [
+            "v",
+            "vg-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 17.9,
+          "tags": [
+            "v",
+            "vg-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quantity-11-14",
+      "name": "Quantity",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "4 pieces",
+          "id": "4-pieces",
+          "dishPrice": 11.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "6 pieces",
+          "id": "6-pieces",
+          "dishPrice": 14.0,
+          "tags": []
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Grass fed beef",
@@ -248,12 +316,15 @@
         {
           "name": "American Muscle",
           "dishId": "american-muscle",
-          "desc": "Grass fed beef, cheddar, pickles, BurgerFuel Mustard. Does not include salad. Single price shown; double $21.00.",
+          "desc": "Grass fed beef, cheddar, pickles, BurgerFuel Mustard. Does not include salad.",
           "price": 15,
           "tags": [
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheddar”."}
+          "tagNotes": {"contains-dairy": "The menu says “cheddar”."},
+          "addOns": [
+            "size-15-21"
+          ]
         },
         {
           "name": "C N Cheese",
@@ -522,7 +593,7 @@
         {
           "name": "Combustion Tofu",
           "dishId": "combustion-tofu",
-          "desc": "Organic tofu, teriyaki sauce, avocado, peanut satay, fresh salad and BurgerFuel Aioli, on a lightweight bun. Speak to staff to make it vegan friendly. Lightweight price shown; large $17.90.",
+          "desc": "Organic tofu, teriyaki sauce, avocado, peanut satay, fresh salad and BurgerFuel Aioli, on a lightweight bun. Speak to staff to make it vegan friendly.",
           "price": 13.9,
           "tags": [
             "v",
@@ -532,7 +603,10 @@
             "contains-egg",
             "vg-option"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-soy": "The menu says “Tofu”.", "contains-gluten": "The menu says “bun” — a wheat bakery item.", "contains-egg": "The menu says “Aioli” — an egg emulsion."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-soy": "The menu says “Tofu”.", "contains-gluten": "The menu says “bun” — a wheat bakery item.", "contains-egg": "The menu says “Aioli” — an egg emulsion."},
+          "addOns": [
+            "size-13p9-17p9"
+          ]
         }
       ]
     },
@@ -599,12 +673,15 @@
         {
           "name": "Chicken Fenders",
           "dishId": "chicken-fenders",
-          "desc": "Grilled chicken tenderloins seasoned with sea salt, garlic and rosemary, with your choice of BurgerFuel, lemon aioli or chipotle aioli. 4 pieces; 6 pieces $14.00.",
+          "desc": "Grilled chicken tenderloins seasoned with sea salt, garlic and rosemary, with your choice of BurgerFuel, lemon aioli or chipotle aioli.",
           "price": 11,
           "tags": [
             "contains-egg"
           ],
-          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."}
+          "tagNotes": {"contains-egg": "The menu says “aioli” — an egg emulsion."},
+          "addOns": [
+            "quantity-11-14"
+          ]
         },
         {
           "name": "Choppers",

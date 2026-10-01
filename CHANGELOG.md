@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Sizes become choices on 48 dishes.** Wine by the glass, large glass or
+  bottle, water by the bottle, half and full entrees, fries by the scoop and
+  burgers by the size are now picked on the dish (Southern Cross, Hotel
+  Bristol, Spices Indian, Baylands, BurgerFuel) instead of read from the
+  description. The dish, its heart and its price are unchanged.
 - **Saved orders — "my Subway".** In the order sheet, "Save this order" names
   what you have for a place ("My Subway") and keeps it on this phone, for you
   rather than for whoever else uses it. On that place's menu, "Your saved

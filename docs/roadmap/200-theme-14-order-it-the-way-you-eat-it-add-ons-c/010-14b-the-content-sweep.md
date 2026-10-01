@@ -1,4 +1,4 @@
-- [ ] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
+- [~] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
   2026-08-16** (wt: faves-schema30): `tools/find_addons.py` + 44 test cases +
   17 breakers, and a `validate.py` **warning** on the 15 high-confidence
   convertible rows. **The conversion half stays open and is the bulk of it** —
@@ -33,3 +33,6 @@
   "part-done", which the house board does not define — `[~]` means
   *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
   § Claiming work). What is done is carried in the body below.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`): the 15 high-confidence rows
+  `validate.py` warns on.**

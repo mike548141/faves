@@ -39,3 +39,20 @@
   **Depends on:** `28k`, `28m`. **Does not depend on** `28i`, `28j` or `28l` —
   no id moves, so none of them are in the path. That independence is the
   reason to sequence this item early.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`): every venue except Abrakebabra.**
+
+  ✅ **First batch landed 2026-10-02 (`faves-4f`, PR #88).** 48 rows became
+  `selects` groups: Southern Cross 21, Hotel Bristol 19, Spices Indian 3,
+  BurgerFuel 3, Baylands 2. Every dish count and price unchanged (asserted
+  per venue); no allergen tag changed; identical ladders share one group.
+  The rule applied: convert only when the menu names every rung, including
+  the one at the dish's printed price. So Victoria (56 offers), Borough (42),
+  Khandallah (9), Simmer (5), Petone (1) and 15 Southern Cross offers stay
+  prose: an unnamed larger pour, or an unlabelled rung at the dish's own
+  price. Victoria's one clean candidate (Lucky's espresso, black/white) was
+  reverted: trimming "with milk" orphaned the dish's `contains-dairy` tip.
+  🎯 **Owner fork:** ADRs 0130/0133 would allow an unlabelled rung to
+  convert, rendering as "$24 size". That would take most of the remaining
+  beers and wines. Convert them, or keep them prose?
+  📌 **Claim released.** Abrakebabra (the size × protein venue) stays 28o's.
