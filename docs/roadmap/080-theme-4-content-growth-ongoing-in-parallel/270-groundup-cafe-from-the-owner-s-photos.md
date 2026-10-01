@@ -12,3 +12,11 @@
 
   📌 **Claimed 2026-10-01 (`faves-55`).** Work starts after `510/050`'s
   tool lands, at his request.
+
+  ✅ **Transcribed 2026-10-01 (worker `080-270`).** 113 dishes in 15 sections
+  from all 11 photos, `verified: 2026-10-01` / `in-store` (the photos' EXIF
+  date). 73 carry a price; 40 are `needs: price` (34 fridge drinks that show
+  no price anywhere, and 6 cabinet items whose chalked price is hidden or
+  ambiguous). Names read from no label (bagged cookies, loaves and muffins
+  on the counter) are not in. Hours, phone and address are untouched: the
+  photos show none of them.

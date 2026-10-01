@@ -64,10 +64,1424 @@
   },
   "vibe": [],
   "picks": [],
-  "verified": null,
+  "verified": "2026-10-01",
   "lifecycle": {
     "added": "2026-07-12"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "All Day Breakfast",
+      "sectionId": "all-day-breakfast",
+      "items": [
+        {
+          "name": "The Big Breakfast",
+          "dishId": "the-big-breakfast",
+          "desc": "Bacon, eggs, kransky sausages, tomato, hash browns and toast.",
+          "price": 30.5,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “Bacon”.",
+            "contains-gluten": "The menu says “toast” — a wheat bakery item.",
+            "contains-egg": "The menu says “eggs”."
+          }
+        },
+        {
+          "name": "Eggs Benedict",
+          "dishId": "eggs-benedict",
+          "desc": "Toasted English muffin with bacon, poached eggs and hollandaise sauce.",
+          "price": 27.0,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “bacon”.",
+            "contains-gluten": "The menu says “muffin” — a wheat bakery item.",
+            "contains-egg": "The menu says “Eggs”."
+          }
+        },
+        {
+          "name": "Smoked Salmon Scramble",
+          "dishId": "smoked-salmon-scramble",
+          "desc": "Scrambled eggs with smoked salmon on Russian rye.",
+          "price": 26.0,
+          "tags": [
+            "contains-fish",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-fish": "The menu says “Salmon”.",
+            "contains-gluten": "The menu says “rye”.",
+            "contains-egg": "The menu says “eggs”."
+          }
+        },
+        {
+          "name": "Creamy Garlic Mushrooms",
+          "dishId": "creamy-garlic-mushrooms",
+          "desc": "Served with bacon on Russian rye.",
+          "price": 26.5,
+          "tags": [
+            "contains-pork",
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “bacon”.",
+            "contains-gluten": "The menu says “rye”."
+          }
+        },
+        {
+          "name": "Vege Breakfast",
+          "dishId": "vege-breakfast",
+          "desc": "Hash browns, eggs, tomato, mushrooms and spinach with multigrain toast.",
+          "price": 27.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “toast” — a wheat bakery item.",
+            "contains-egg": "The menu says “eggs”."
+          }
+        },
+        {
+          "name": "Hot Cakes",
+          "dishId": "hot-cakes",
+          "desc": "Bacon, banana, maple syrup, berries and cream.",
+          "price": 27.5,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “Bacon”.",
+            "contains-gluten": "The menu says “Cakes” — a wheat bakery item.",
+            "contains-dairy": "The menu says “cream”."
+          }
+        },
+        {
+          "name": "French Toast",
+          "dishId": "french-toast",
+          "desc": "Served with fresh fruit, maple syrup and cream.",
+          "price": 26.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Toast” — a wheat bakery item.",
+            "contains-dairy": "The menu says “cream”."
+          }
+        }
+      ]
+    },
+    {
+      "section": "Breakfast Additions",
+      "sectionId": "breakfast-additions",
+      "items": [
+        {
+          "name": "2 Eggs",
+          "dishId": "2-eggs",
+          "price": 7.0,
+          "tags": [
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-egg": "The menu says “Eggs”."
+          }
+        },
+        {
+          "name": "Mushrooms",
+          "dishId": "mushrooms",
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "2 Hash Browns",
+          "dishId": "2-hash-browns",
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Bacon",
+          "dishId": "bacon",
+          "price": 8.5,
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “Bacon”."
+          }
+        }
+      ]
+    },
+    {
+      "section": "Lunch and Light Bites",
+      "sectionId": "lunch-and-light-bites",
+      "note": "The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes.",
+      "items": [
+        {
+          "name": "The Big Max",
+          "dishId": "the-big-max",
+          "desc": "Angus beef pattie with lettuce, tomato, cheese, red onion and aioli, in a fresh bun.",
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “bun” — a wheat bakery item.",
+            "contains-dairy": "The menu says “cheese”.",
+            "contains-egg": "The menu says “aioli” — an egg emulsion."
+          }
+        },
+        {
+          "name": "Nachos",
+          "dishId": "nachos",
+          "desc": "Beef mince, chilli beans, Mexican tomato corn chips with melted cheese and sour cream.",
+          "price": 24.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-dairy": "The menu says “cheese”.",
+            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
+          }
+        },
+        {
+          "name": "B.L.A.T.",
+          "dishId": "b-l-a-t",
+          "desc": "Bacon, lettuce, avocado, tomato on foccacia bread, drizzled with honey mustard.",
+          "price": 22.5,
+          "tags": [
+            "contains-pork",
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “Bacon”.",
+            "contains-gluten": "The menu says “bread”."
+          }
+        },
+        {
+          "name": "The Club",
+          "dishId": "the-club",
+          "desc": "Club sandwich with bacon, tomato, lettuce, egg and chicken, served with fries.",
+          "price": 27.5,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “bacon”.",
+            "contains-gluten": "The menu says “sandwich” — a wheat bakery item.",
+            "contains-egg": "The menu says “egg”."
+          }
+        },
+        {
+          "name": "Thai Beef Salad",
+          "dishId": "thai-beef-salad",
+          "desc": "Beef in sweet chilli dressing on a bed of lettuce, tomato, cucumber and peppers, topped with crispy noodles and peanuts.",
+          "price": 25.5,
+          "tags": [
+            "contains-peanuts",
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-peanuts": "The menu says “peanuts”.",
+            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
+          }
+        },
+        {
+          "name": "Gourmet Toastie",
+          "dishId": "gourmet-toastie",
+          "desc": "Bacon, egg, cheese, lettuce, tomato, drizzled with honey mustard.",
+          "price": 22.5,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “Bacon”.",
+            "contains-gluten": "The menu says “Toastie” — a wheat bakery item.",
+            "contains-dairy": "The menu says “cheese”.",
+            "contains-egg": "The menu says “egg”."
+          }
+        },
+        {
+          "name": "Corn Fritters",
+          "dishId": "corn-fritters",
+          "desc": "Served with fries and salad.",
+          "price": 26.0,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
+          }
+        },
+        {
+          "name": "Wedges",
+          "dishId": "wedges",
+          "desc": "Served with melted cheese, salsa and sour cream.",
+          "price": 19.5,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-dairy": "The menu says “cheese”.",
+            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
+          }
+        },
+        {
+          "name": "Toasted Sandwiches",
+          "dishId": "toasted-sandwiches",
+          "desc": "Choice of 3 fillings: ham, cheese, tomato, corn, onion, pineapple.",
+          "price": 10.5,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “ham”.",
+            "contains-gluten": "The menu says “Sandwiches” — a wheat bakery item.",
+            "contains-dairy": "The menu says “cheese”."
+          },
+          "addOns": [
+            "extra-fillings"
+          ]
+        },
+        {
+          "name": "Bowl of Fries",
+          "dishId": "bowl-of-fries",
+          "price": 10.5,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
+          }
+        },
+        {
+          "name": "Chicken Nuggets",
+          "dishId": "chicken-nuggets",
+          "desc": "Served with fries.",
+          "price": 11.5,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Nuggets” — battered/crumbed coatings are wheat flour."
+          }
+        }
+      ]
+    },
+    {
+      "section": "Special",
+      "sectionId": "special",
+      "note": "A chalked special sign on top of the cabinet.",
+      "items": [
+        {
+          "name": "Chicken Salad",
+          "dishId": "chicken-salad",
+          "desc": "With pine nuts, feta cheese and sundried tomatoes.",
+          "price": 23.5,
+          "tags": [
+            "contains-nuts",
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-nuts": "The menu says “pine nuts”.",
+            "contains-dairy": "The menu says “feta”."
+          }
+        }
+      ]
+    },
+    {
+      "section": "Coffee",
+      "sectionId": "coffee",
+      "items": [
+        {
+          "name": "Latte",
+          "dishId": "latte",
+          "price": 6.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-dairy": "The menu says “Latte” — an espresso milk drink."
+          }
+        },
+        {
+          "name": "Flat White",
+          "dishId": "flat-white",
+          "price": 6.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-dairy": "The menu says “Flat White” — an espresso milk drink."
+          }
+        },
+        {
+          "name": "Cappuccino",
+          "dishId": "cappuccino",
+          "price": 6.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-dairy": "The menu says “Cappuccino” — an espresso milk drink."
+          }
+        },
+        {
+          "name": "Mochaccino",
+          "dishId": "mochaccino",
+          "price": 6.5,
+          "tags": []
+        },
+        {
+          "name": "Short Black",
+          "dishId": "short-black",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Long Black",
+          "dishId": "long-black",
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Americano",
+          "dishId": "americano",
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Short Macciato",
+          "dishId": "short-macciato",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Long Macciato",
+          "dishId": "long-macciato",
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Vienna",
+          "dishId": "vienna",
+          "price": 6.0,
+          "tags": []
+        }
+      ],
+      "addOns": [
+        "milks",
+        "coffee-extras"
+      ]
+    },
+    {
+      "section": "Takeaway Cups",
+      "sectionId": "takeaway-cups",
+      "note": "From the “Take Away” panel of the coffee board.",
+      "items": [
+        {
+          "name": "Takeaway — Small",
+          "dishId": "takeaway-small",
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Takeaway — Medium",
+          "dishId": "takeaway-medium",
+          "price": 6.5,
+          "tags": []
+        },
+        {
+          "name": "Takeaway — Large",
+          "dishId": "takeaway-large",
+          "price": 7.5,
+          "tags": []
+        },
+        {
+          "name": "Fluffy",
+          "dishId": "fluffy",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Takeaway — 6oz",
+          "dishId": "takeaway-6oz",
+          "desc": "From the chalked price on a takeaway cup on the counter; the same cups read Small 5.50, Regular 6.50, Large 7.50.",
+          "price": 5.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Tea and Hot Chocolate",
+      "sectionId": "tea-and-hot-chocolate",
+      "items": [
+        {
+          "name": "T Leaf Teas",
+          "dishId": "t-leaf-teas",
+          "desc": "A selection of t leaf teas.",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Hot Chocolate — Standard",
+          "dishId": "hot-chocolate-standard",
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Hot Chocolate — Kids",
+          "dishId": "hot-chocolate-kids",
+          "price": 4.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Iced Drinks",
+      "sectionId": "iced-drinks",
+      "items": [
+        {
+          "name": "Iced Chocolate",
+          "dishId": "iced-chocolate",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Iced Coffee",
+          "dishId": "iced-coffee",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Iced Mocha",
+          "dishId": "iced-mocha",
+          "price": 10.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-dairy": "The menu says “Mocha” — an espresso milk drink."
+          }
+        },
+        {
+          "name": "Iced Vanilla",
+          "dishId": "iced-vanilla",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Iced Caramel",
+          "dishId": "iced-caramel",
+          "price": 10.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Fresh Juice",
+      "sectionId": "fresh-juice",
+      "items": [
+        {
+          "name": "Fresh Juice — Orange",
+          "dishId": "fresh-juice-orange",
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Fresh Juice — Pineapple",
+          "dishId": "fresh-juice-pineapple",
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Fresh Juice — Apple",
+          "dishId": "fresh-juice-apple",
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Fresh Juice — Feijoa",
+          "dishId": "fresh-juice-feijoa",
+          "price": 7.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Smoothies",
+      "sectionId": "smoothies",
+      "items": [
+        {
+          "name": "Smoothie — Banana",
+          "dishId": "smoothie-banana",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Smoothie — Feijoa",
+          "dishId": "smoothie-feijoa",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Smoothie — Berry",
+          "dishId": "smoothie-berry",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Smoothie — Mango",
+          "dishId": "smoothie-mango",
+          "price": 10.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Cabinet — Savouries and Sandwiches",
+      "sectionId": "cabinet-savouries-and-sandwiches",
+      "items": [
+        {
+          "name": "Bacon and Egg Croissant",
+          "dishId": "bacon-and-egg-croissant",
+          "price": 11.0,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “Bacon”.",
+            "contains-gluten": "The menu says “Croissant”.",
+            "contains-egg": "The menu says “Egg”."
+          }
+        },
+        {
+          "name": "Bacon and Egg Muffin",
+          "dishId": "bacon-and-egg-muffin",
+          "price": 10.0,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “Bacon”.",
+            "contains-gluten": "The menu says “Muffin” — a wheat bakery item.",
+            "contains-egg": "The menu says “Egg”."
+          }
+        },
+        {
+          "name": "Chicken Brie and Cranberry Panini",
+          "dishId": "chicken-brie-and-cranberry-panini",
+          "price": 11.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-dairy": "The menu says “Brie”."
+          }
+        },
+        {
+          "name": "Chicken Asparagus Ficelle",
+          "dishId": "chicken-asparagus-ficelle",
+          "price": 10.5,
+          "tags": []
+        },
+        {
+          "name": "Pide Pocket",
+          "dishId": "pide-pocket",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Gourmet Sausage Roll",
+          "dishId": "gourmet-sausage-roll",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "The chalked price on the glass is partly hidden by the shelf and reads ambiguously; not transcribed rather than guessed.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “Sausage” — is usually pork in NZ unless the menu names another meat."
+          }
+        },
+        {
+          "name": "Veggie Pinwheel",
+          "dishId": "veggie-pinwheel",
+          "price": 8.4,
+          "tags": []
+        },
+        {
+          "name": "Bacon and Spinach Pinwheel",
+          "dishId": "bacon-and-spinach-pinwheel",
+          "price": 8.4,
+          "tags": [
+            "contains-pork"
+          ],
+          "tagNotes": {
+            "contains-pork": "The menu says “Bacon”."
+          }
+        },
+        {
+          "name": "Beef Pastrami Sandwich",
+          "dishId": "beef-pastrami-sandwich",
+          "price": 11.0,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Sandwich” — a wheat bakery item."
+          }
+        },
+        {
+          "name": "Chicken Sandwich",
+          "dishId": "chicken-sandwich",
+          "price": 11.0,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Sandwich” — a wheat bakery item."
+          }
+        }
+      ]
+    },
+    {
+      "section": "Cabinet — Slices and Cakes",
+      "sectionId": "cabinet-slices-and-cakes",
+      "items": [
+        {
+          "name": "Neenish Tart",
+          "dishId": "neenish-tart",
+          "price": 6.4,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Tart” — a wheat bakery item."
+          }
+        },
+        {
+          "name": "Citrus Slice",
+          "dishId": "citrus-slice",
+          "price": 6.4,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Slice” — a wheat bakery item."
+          }
+        },
+        {
+          "name": "Caramel Slice",
+          "dishId": "caramel-slice",
+          "price": 6.4,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Slice” — a wheat bakery item."
+          }
+        },
+        {
+          "name": "Monkey Chew",
+          "dishId": "monkey-chew",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "The name is written on the glass behind a reflection (“Mo?key Chew”) and the price is unreadable.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Fruit Tart",
+          "dishId": "fruit-tart",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "The leading digit of the chalked price is hidden behind the tart; not transcribed rather than guessed.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Tart” — a wheat bakery item."
+          }
+        },
+        {
+          "name": "Marshmallow Slice",
+          "dishId": "marshmallow-slice",
+          "price": 6.4,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Slice” — a wheat bakery item."
+          }
+        },
+        {
+          "name": "Ginger Crunch",
+          "dishId": "ginger-crunch",
+          "price": 6.4,
+          "tags": []
+        },
+        {
+          "name": "Double Chocolate Brownie",
+          "dishId": "double-chocolate-brownie",
+          "price": 6.4,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Chocolate Eclair",
+          "dishId": "chocolate-eclair",
+          "price": 6.4,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Eclair” — a wheat bakery item."
+          }
+        },
+        {
+          "name": "Apple and Cherry Shortcake",
+          "dishId": "apple-and-cherry-shortcake",
+          "price": 7.4,
+          "tags": []
+        },
+        {
+          "name": "Cheesecake",
+          "dishId": "cheesecake",
+          "price": 7.4,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {
+            "contains-dairy": "The menu says “Cheesecake” — the sauce is cream- or butter-based."
+          }
+        },
+        {
+          "name": "Carrot Cake",
+          "dishId": "carrot-cake",
+          "price": 7.4,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {
+            "contains-gluten": "The menu says “Cake” — a wheat bakery item."
+          }
+        },
+        {
+          "name": "Custard Square",
+          "dishId": "custard-square",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "The chalked price is overwritten by the shelf wire and reads ambiguously; not transcribed rather than guessed.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": [
+            "contains-egg"
+          ],
+          "tagNotes": {
+            "contains-egg": "The menu says “Custard” — an egg emulsion."
+          }
+        }
+      ]
+    },
+    {
+      "section": "Fridge — Soft Drinks",
+      "sectionId": "fridge-soft-drinks",
+      "items": [
+        {
+          "name": "Coca-Cola Classic",
+          "dishId": "coca-cola-classic",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Coca-Cola Zero Sugar",
+          "dishId": "coca-cola-zero-sugar",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Coca-Cola Diet",
+          "dishId": "coca-cola-diet",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Sprite",
+          "dishId": "sprite",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Fanta",
+          "dishId": "fanta",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Lemon and Paeroa",
+          "dishId": "lemon-and-paeroa",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Live Plus Energy Drink",
+          "dishId": "live-plus-energy-drink",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Schweppes Light Ginger Beer",
+          "dishId": "schweppes-light-ginger-beer",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Schweppes Classic Ginger Beer",
+          "dishId": "schweppes-classic-ginger-beer",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Schweppes Old Fashioned Lemonade",
+          "dishId": "schweppes-old-fashioned-lemonade",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Schweppes Lemon Lime and Bitters",
+          "dishId": "schweppes-lemon-lime-and-bitters",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Foxton Fizz Raspberry",
+          "dishId": "foxton-fizz-raspberry",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Foxton Fizz Lime",
+          "dishId": "foxton-fizz-lime",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Foxton Fizz Lemonade",
+          "dishId": "foxton-fizz-lemonade",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Foxton Fizz Kola",
+          "dishId": "foxton-fizz-kola",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Foxton Fizz Creaming Soda",
+          "dishId": "foxton-fizz-creaming-soda",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Fuze Tea Peach Black Iced Tea",
+          "dishId": "fuze-tea-peach-black-iced-tea",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Vitamin Water Antioxidant",
+          "dishId": "vitamin-water-antioxidant",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Vitamin Water Defence",
+          "dishId": "vitamin-water-defence",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Vitamin Water Power",
+          "dishId": "vitamin-water-power",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Fridge — Juices and Milk",
+      "sectionId": "fridge-juices-and-milk",
+      "items": [
+        {
+          "name": "Most Apple, Orange and Mango",
+          "dishId": "most-apple-orange-and-mango",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Most Sparkling Apple and Blackcurrant",
+          "dishId": "most-sparkling-apple-and-blackcurrant",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Most Apple and Peach",
+          "dishId": "most-apple-and-peach",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Most Apple and Guava",
+          "dishId": "most-apple-and-guava",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Benjer Apple Juice",
+          "dishId": "benjer-apple-juice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Benjer Orange Juice",
+          "dishId": "benjer-orange-juice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Benjer Cherry and Apple Juice",
+          "dishId": "benjer-cherry-and-apple-juice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Benjer Nectarine Juice",
+          "dishId": "benjer-nectarine-juice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Benjer Raspberry and Apple Juice",
+          "dishId": "benjer-raspberry-and-apple-juice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Benjer Boysenberry and Apple Juice",
+          "dishId": "benjer-boysenberry-and-apple-juice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Benjer Mango and Apple Juice",
+          "dishId": "benjer-mango-and-apple-juice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Benjer Feijoa and Apple Juice",
+          "dishId": "benjer-feijoa-and-apple-juice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Keri Fruity Drink Apple and Blackcurrant",
+          "dishId": "keri-fruity-drink-apple-and-blackcurrant",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Anchor Calci Yum",
+          "dishId": "anchor-calci-yum",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Fridge — Water",
+      "sectionId": "fridge-water",
+      "items": [
+        {
+          "name": "Pump Water",
+          "dishId": "pump-water",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Voyage Water",
+          "dishId": "voyage-water",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price is shown on the fridge or on the bottles.",
+              "since": "2026-10-01"
+            }
+          ],
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "verifiedBy": "in-store",
+  "addOnGroups": [
+    {
+      "id": "milks",
+      "name": "Milks",
+      "select": "one",
+      "options": [
+        {
+          "name": "Soy",
+          "id": "soy",
+          "price": 1.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Oat",
+          "id": "oat",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Almond",
+          "id": "almond",
+          "price": 1.0,
+          "tags": [
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Coconut",
+          "id": "coconut",
+          "price": 1.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "coffee-extras",
+      "name": "Coffee extras",
+      "select": "many",
+      "options": [
+        {
+          "name": "Extra Shot",
+          "id": "extra-shot",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Decaf",
+          "id": "decaf",
+          "price": 1.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "extra-fillings",
+      "name": "Extra fillings",
+      "select": "one",
+      "options": [
+        {
+          "name": "Extra Filling",
+          "id": "extra-filling",
+          "price": 1.0,
+          "tags": []
+        }
+      ]
+    }
+  ]
 }

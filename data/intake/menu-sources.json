@@ -111,6 +111,99 @@
         }
       ]
     },
+    "groundup-cafe": {
+      "folder": "intake/menus/Groundup Cafe",
+      "evidence": [
+        {
+          "file": "IMG_9937.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:38:33+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9938.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:38:40+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9939.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:38:42+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9940.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:38:46+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9941.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:38:48+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9942.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:38:52+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9943.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:39:00+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9944.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:39:02+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9945.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:39:04+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9946.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:39:19+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9947.jpeg",
+          "kind": "photo",
+          "captured": "2026-10-01",
+          "capturedAt": "2026-10-01T13:39:32+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
     "kc-cafe": {
       "folder": "intake/menus/KC cafe",
       "evidence": [
@@ -339,6 +432,78 @@
           "kind": "photo",
           "captured": "2026-08-25",
           "capturedAt": "2026-08-25T10:13:29+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9867.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-09",
+          "capturedAt": "2026-09-09T10:08:55+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9868.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-09",
+          "capturedAt": "2026-09-09T10:08:56+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9869.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-09",
+          "capturedAt": "2026-09-09T10:09:02+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9870.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-09",
+          "capturedAt": "2026-09-09T10:09:07+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9871.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-09",
+          "capturedAt": "2026-09-09T10:09:09+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9872.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-09",
+          "capturedAt": "2026-09-09T10:09:12+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9873.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-09",
+          "capturedAt": "2026-09-09T10:09:14+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9874.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-09",
+          "capturedAt": "2026-09-09T10:09:20+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9875.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-09",
+          "capturedAt": "2026-09-09T10:09:33+12:00",
           "device": "Apple iPhone 14 Pro",
           "gps": "present"
         }
