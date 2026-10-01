@@ -498,6 +498,20 @@ unit tests in `sync-worker.test.js` (`510/330`) and the real-client test in
 
 ## Deploy owed — the Durable Object store, roadmap 510/340
 
+✅ **Deployed 2026-10-02 (session `faves-4f`) at the owner's go, mirror on.**
+Version `efd2aeee-f179-410c-b042-20be14255ffb`, from `main` at `3750d4b`
+(Worker code as merged in PR #82), replacing `3a21e527`, with the
+`faves-sync-deploy` credential and a config filled outside this tree. The
+credential's two permission groups were enough to create the Durable Object
+class; nothing was widened. Live checks 1–5 below all passed (16 assertions):
+`503` with `Retry-After: 300` and CORS nine seconds after the deploy; after
+the window, `404` and `X-Faves-Buckets: none`; a copy planted in KV before the
+deploy came back `200` under its KV-era `ETag` and took a `PUT` on it; the
+interface checks; and two `PUT`s sent at once on one `ETag` gave one `204` and
+one `412`. Check 6 (the owner's devices) is his. Turning the mirror off is
+roadmap `510/410`, on or after 2026-10-09. The rest of this section is the
+pre-deploy record, kept as written.
+
 ⏳ **Built, not deployed.** The deploy, and with it the move off KV, needs the
 owner's go at the time (ruled 2026-10-02: option B, one Durable Object per
 sync code; ADR [0151](../docs/decisions/0151-each-sync-code-is-one-durable-object.md)).

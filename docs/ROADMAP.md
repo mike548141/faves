@@ -452,7 +452,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [Search finds your own recipes, labelled "My recipe"](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/310-search-finds-your-own-recipes.md)
 - [~] 🔥 [Old hearts on the moved recipes came back after the import](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/320-old-recipe-hearts-came-back-after-the-import.md)
 - ✅ 🔥 [The sync Worker can put back an older copy when it re-arms](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/330-the-worker-can-re-save-a-stale-core-copy.md)
-- [~] 🔥 [A stale sync read is merged as if another device had changed](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/340-a-stale-sync-read-is-merged-as-another-devices-change.md)
+- ✅ 🔥 [A stale sync read is merged as if another device had changed](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/340-a-stale-sync-read-is-merged-as-another-devices-change.md)
 - ✅ [Back from one of your recipes goes to Cook at Home, not the home](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/350-back-from-your-recipe-goes-to-cook-at-home.md)
 - ✅ [Searching "my recipe" lists your own recipes](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/360-search-does-not-find-your-recipes-live.md)
 - ✅ [The Cook at Home card counts every recipe its page shows](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/370-the-cook-at-home-card-counts-every-recipe-on-its-page.md)

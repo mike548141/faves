@@ -1,4 +1,4 @@
-- [~] 🔥 **A stale sync read is merged as if another device had changed
+- [x] 🔥 **A stale sync read is merged as if another device had changed
       it** `[M] [sync][data]` — found 2026-10-01 by the `330` worker
       (session `faves-55`), measured with the real client and the real
       Worker over a KV stand-in that lags 60 s. Not yet seen live.
@@ -56,3 +56,9 @@
   Durable Object store".
   🎯 **Owed to the owner:** the deploy go, and `KV_MIRROR` on (ships on: a
   rollback loses nothing) or off.
+
+  ✅ **Closed 2026-10-02 (`faves-4f`): deployed at the owner's go, mirror
+  on.** Version `efd2aeee`, live checks 1–5 passed (16 assertions, including
+  a KV-era copy imported under its old `ETag` and a live compare-and-swap:
+  two simultaneous `PUT`s on one `ETag` gave one `204` and one `412`). Check
+  6, a heart crossing his two devices, is the owner's. Mirror off: `410`.
