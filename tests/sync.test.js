@@ -593,6 +593,33 @@ test("a pull that changed nothing writes nothing — and a successful sync does 
   assert.equal(s._pendingWrite(), false);
 });
 
+test("a pull that changed nothing rewrites no base and collects the device once (roadmap 510/190)", async () => {
+  // Survey finding 6: every no-op pull rewrote the base with identical bytes
+  // (9.1 KB at 200 recipes) and collected the whole device twice. Only the
+  // `lastSyncedAt` stamp may still be written: the status row shows it.
+  const server = fakeServer();
+  const a = withRecipes(device({ favs: [venue("kk")] }), [precipe("u:ginger-crunch")]);
+  // A store nothing syncs, which only a COLLECT reads — so its read count
+  // says how many times the cycle collected the device.
+  a.setItem("faves.somethingelse.v1", "carried");
+  const s = mk(a, server);
+  await s.enable();
+  await s.syncNow(); // settle: the second cycle agrees on what the first wrote
+
+  const writes = [];
+  const reads = new Map();
+  const { setItem, getItem } = a;
+  a.setItem = (k, v) => (writes.push(k), setItem(k, v));
+  a.getItem = (k) => (reads.set(k, (reads.get(k) || 0) + 1), getItem(k));
+  const res = await s.syncNow();
+  a.setItem = setItem;
+  a.getItem = getItem;
+
+  assert.equal(res.ok, true);
+  assert.deepEqual(writes, [SYNC_KEY], "a no-op pull wrote more than its timestamp");
+  assert.equal(reads.get("faves.somethingelse.v1"), 1, "a no-op pull collected the device more than once");
+});
+
 test("a change made while a cycle is in flight is kept, not overwritten by the pull", async () => {
   // Safety-class: an allergen flag tapped during the round trip lived in
   // storage but not in the `mine` the cycle had collected; writing `merged`

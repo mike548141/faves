@@ -222,6 +222,39 @@ export function writeRecipes(storage, flat) {
   return ok;
 }
 
+/**
+ * A read-only view of `storage` that keeps every raw string read through it
+ * (roadmap 510/190). `unchanged(profiles)` then answers "would collecting
+ * again give the same people?" by comparing strings rather than collecting:
+ * the registry plus every per-person store of each person collected. Those
+ * are all `sameSnapshot` and the recipe comparison look at, and each string
+ * collects to one value, so equal strings mean an equal snapshot. A key the
+ * view never read counts as moved — the safe answer, which costs the full
+ * collect this replaces and nothing more.
+ */
+export function recordingStorage(storage) {
+  const seen = new Map();
+  const view = {
+    getItem(k) {
+      const v = storage.getItem(k);
+      seen.set(k, v);
+      return v;
+    },
+    key: (i) => (typeof storage.key === "function" ? storage.key(i) : null),
+    get length() {
+      return storage.length;
+    },
+  };
+  const unchanged = (profiles) => {
+    const keys = [PROFILES_KEY];
+    for (const p of Array.isArray(profiles) ? profiles : []) {
+      for (const base of SCOPED_BASE_KEYS) keys.push(scopeKey(String(p?.id ?? ""), base));
+    }
+    return keys.every((k) => seen.has(k) && storage.getItem(k) === seen.get(k));
+  };
+  return { view, unchanged };
+}
+
 /** Two recipe maps hold the same recipes, field for field. */
 const sameRecipes = (a, b) => canonicalJson(a || {}) === canonicalJson(b || {});
 
@@ -346,7 +379,15 @@ export function createSync({
   const readBase = () => upgradeSnapshot(parse(storage.getItem(SYNC_BASE_KEY)));
   const writeBase = (snap) => {
     try {
-      storage.setItem(SYNC_BASE_KEY, JSON.stringify(snap));
+      const next = JSON.stringify(snap);
+      // A pull that changed nothing agrees on the same thing it agreed last
+      // time, and rewrote these exact bytes on every page load and foreground
+      // — 9.1 KB at 200 recipes (roadmap 510/190, survey finding 6). Compared
+      // with what storage holds NOW, not with what this cycle read at its
+      // start, so another tab's agreement landed mid-flight is still
+      // replaced exactly as before.
+      if (storage.getItem(SYNC_BASE_KEY) === next) return;
+      storage.setItem(SYNC_BASE_KEY, next);
     } catch {
       // Losing the base is not fatal but it IS a real degradation — the next
       // merge cannot tell a deletion from an addition. Surfaced rather than
@@ -562,8 +603,11 @@ export function createSync({
         return { ok: false, error: "sync-unreachable" };
       }
 
-      // 2. merge against the last agreement.
-      const mine = collectPersonalData(storage, { exportedAt: now() });
+      // 2. merge against the last agreement. Collected through a view that
+      //    keeps the raw strings it read, so step 4 can tell in one compare
+      //    per key whether anything moved since (roadmap 510/190).
+      const reading = recordingStorage(storage);
+      const mine = collectPersonalData(reading.view, { exportedAt: now() });
       const base = readBase();
       const { merged, conflicts, changes } = mergePersonal(base, mine, theirs ?? mine);
 
@@ -676,8 +720,21 @@ export function createSync({
       //    there is two-sided safety data (ADR 0060). Then nothing local is
       //    written and the LAST agreement stands, so the next cycle sees both
       //    sides against a real ancestor and asks.
-      const now2 = collectPersonalData(storage, { exportedAt: now() });
-      const localMoved = !sameSnapshot(mine, now2) || !sameRecipes(mineRecipes, flattenCookbooks(now2.profiles));
+      //
+      //    WHETHER anything moved is asked of the raw strings first (roadmap
+      //    510/190): every key the comparison below depends on — the registry
+      //    and each person's stores — is compared with the string `mine` was
+      //    built from. Identical strings collect to an identical snapshot, so
+      //    the answer is the one the full collect would give, and the collect,
+      //    its parse and both canonical comparisons are skipped. Storage is
+      //    still READ, deliberately: another tab's write lands in storage
+      //    before its `storage` event is dispatched here (that is a queued
+      //    task), and a marker bumped by events would miss exactly the change
+      //    this step exists to catch.
+      const now2 = reading.unchanged(mine.profiles) ? mine : collectPersonalData(storage, { exportedAt: now() });
+      const localMoved =
+        now2 !== mine &&
+        (!sameSnapshot(mine, now2) || !sameRecipes(mineRecipes, flattenCookbooks(now2.profiles)));
       let local = merged;
       let agreed = true;
       if (localMoved) {
