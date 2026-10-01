@@ -459,3 +459,4 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [~] [A sync log on the device, readable in Settings](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/380-a-sync-log-on-the-device.md)
 - [~] [No silent merge without a base](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/390-no-silent-merge-without-a-base.md)
 - [~] [A heart on a moved recipe follows it](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/400-hearts-follow-a-moved-recipe.md)
+- [ ] ⏳ [Turn the KV mirror off after a clean week](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/410-turn-the-kv-mirror-off-after-a-clean-week.md)
