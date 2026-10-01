@@ -39,3 +39,20 @@
 
   🎯 **Owner ruled 2026-10-02: B, one Durable Object per sync code.** The
   Worker deploy (and the KV cutover) still needs his go at the time.
+
+  🔨 **Built 2026-10-02 (`faves-4f` worker, PR #82, ADR 0151), not
+  deployed.** One SQLite-backed Durable Object per sync code; the HTTP
+  interface is unchanged, `If-Match` is a synchronous compare-and-swap inside
+  `transactionSync`, retention is the KV Worker's to the day, and the 330
+  re-write hazard is gone (a re-arm moves only the time). The four 340 tests
+  pass with `todo` removed; break-probes (object reading KV, CAS with an
+  `await`, no settling window, unchained mirror) each fail what they should.
+  Fuzz, 1,000 seeds: 0 lost, 0 revived, 0 moves undone, against 328 and 312
+  on the frozen KV Worker. 🔎 Two corrections to the options paper: "refuse a
+  copy younger than a minute" cannot detect a stale read (the stale copy
+  carries its own older time), so the import waits 5 minutes from the deploy
+  instead; and the paper's fuzz "lost" counts include a no-op-heart artefact
+  (`lostEffective` added). Runbook: `worker/README.md`, "Deploy owed — the
+  Durable Object store".
+  🎯 **Owed to the owner:** the deploy go, and `KV_MIRROR` on (ships on: a
+  rollback loses nothing) or off.
