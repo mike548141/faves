@@ -1,4 +1,4 @@
-- [~] 🎯 **Should an update install revalidate too?** `[S] [pwa][sw]` —
+- [x] 🎯 **Should an update install revalidate too?** `[S] [pwa][sw]` —
       found 2026-10-01 by the `170` worker (session `faves-55`). **Waits on
       the owner:** his `170` ruling covered the first install only.
 
@@ -30,3 +30,7 @@
   🔎 For `260`: `faves.pages.dev` sends `_headers`' `max-age=0` for the same
   deploy, so the four hours come from the custom domain's zone.
   ⏳ After merge, re-run the survey on production (the review's last section).
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #74), ADR 0150. The
+  post-merge ETag survey on the live site passed: 0 changed files kept an
+  ETag. An update install is about 621 → 65 KB gzip.
