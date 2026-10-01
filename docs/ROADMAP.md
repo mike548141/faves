@@ -456,3 +456,6 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [Back from one of your recipes goes to Cook at Home, not the home](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/350-back-from-your-recipe-goes-to-cook-at-home.md)
 - ✅ [Searching "my recipe" lists your own recipes](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/360-search-does-not-find-your-recipes-live.md)
 - ✅ [The Cook at Home card counts every recipe its page shows](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/370-the-cook-at-home-card-counts-every-recipe-on-its-page.md)
+- [~] [A sync log on the device, readable in Settings](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/380-a-sync-log-on-the-device.md)
+- [~] [No silent merge without a base](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/390-no-silent-merge-without-a-base.md)
+- [~] [A heart on a moved recipe follows it](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/400-hearts-follow-a-moved-recipe.md)

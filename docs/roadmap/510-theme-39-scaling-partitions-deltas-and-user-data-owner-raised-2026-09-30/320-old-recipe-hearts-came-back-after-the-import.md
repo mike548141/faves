@@ -128,3 +128,9 @@
   `docs/reviews/2026-10-01-1209-old-hearts-320-routes.md`. Proposed guards
   (not built): a sync log on the device; no silent merge without a base;
   optionally hearts follow a moved recipe.
+
+  **Owner 2026-10-02:** no shared link either, and **no more diagnostic
+  questions to him on this** — every hypothesis has now been put and answered
+  no. He ruled all three guards: `380` (sync log), `390` (no silent merge
+  without a base), `400` (hearts follow a moved recipe). This item closes when
+  they land; the cause stays unknown, and the log is how it gets caught.
