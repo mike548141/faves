@@ -1,4 +1,4 @@
-- [ ] ✅ **Cook at Home should use the venue/branch structure, so two houses are
+- [~] ✅ **Cook at Home should use the venue/branch structure, so two houses are
       two branches** `[M][schema][design]` — **owner-raised 2026-09-08**, his
       words: *"cook at home should use our restaurant / branch data structure so
       if I have two houses I can differentiate between houses"*.
@@ -143,3 +143,6 @@
   🚩 **Nothing here changes the bracket.** It stays `- [ ]` because real build
   work is owed: the wildcard branch, the private-branch store and its ADR, and
   the validator change that lets a branch declare *"anywhere"* as a value.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`): the wildcard branch and its validator
+  value only; the private-branch store is not started.**
