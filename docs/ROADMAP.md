@@ -55,7 +55,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] ⏳ [Baylands — the food menu we hold is a festival menu](roadmap/080-theme-4-content-growth-ongoing-in-parallel/080-baylands-the-food-menu-we-hold-is-a-festival-m.md)
 - [ ] [Baylands has no drinks, and that is deliberate](roadmap/080-theme-4-content-growth-ongoing-in-parallel/090-baylands-has-no-drinks-and-that-is-deliberate.md)
 - [ ] 🎯 [Owner calls the menu fetch left owing](roadmap/080-theme-4-content-growth-ongoing-in-parallel/100-owner-calls-the-menu-fetch-left-owing.md)
-- [ ] [Restore The Victoria Tavern's dropped spirits](roadmap/080-theme-4-content-growth-ongoing-in-parallel/110-restore-the-victoria-tavern-s-dropped-spirits.md)
+- [~] [Restore The Victoria Tavern's dropped spirits](roadmap/080-theme-4-content-growth-ongoing-in-parallel/110-restore-the-victoria-tavern-s-dropped-spirits.md)
 - [ ] [🚩 Every chain we hold should carry all its Wellington-region](roadmap/080-theme-4-content-growth-ongoing-in-parallel/120-every-chain-we-hold-should-carry-all-its-welli.md)
 - [ ] [No branch of McDonald's or Subway has opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/130-no-branch-of-mcdonald-s-or-subway-has-opening.md)
 - [ ] [picks are empty on most venues](roadmap/080-theme-4-content-growth-ongoing-in-parallel/140-picks-are-empty-on-most-venues.md)

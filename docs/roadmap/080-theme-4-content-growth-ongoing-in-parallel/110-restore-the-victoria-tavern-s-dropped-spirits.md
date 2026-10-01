@@ -1,4 +1,4 @@
-- [ ] **Restore The Victoria Tavern's dropped spirits** `[S][data]` — the
+- [~] **Restore The Victoria Tavern's dropped spirits** `[S][data]` — the
       direct consequence of the ruling above. Roughly **40 unpriced spirits**
       were dropped from `the-victoria-tavern` during the fetch on the
       now-overruled convention; they are recoverable from the venue's own
@@ -14,3 +14,5 @@
       pre-split single list, so the item flagged as the owner's ask held one
       of the three questions it named and a reader could not see the other
       two. Moved 2026-08-19; nothing was reworded.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`).**
