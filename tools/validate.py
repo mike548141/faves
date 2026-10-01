@@ -3242,7 +3242,8 @@ def check_retired_dish_ids(against):
                          f"in silence (roadmap 28l)")
     unaccounted = retired - claimed - departed - withdrawn
     return (f"retired dish ids: {len(paths)} venue file(s) changed since {against} · "
-            f"{retired} id(s) retired — {claimed} claimed in formerIds, {departed} "
+            f"{retired} id(s) answered to there are not live ids now — {claimed} "
+            f"claimed in formerIds, {departed} "
             f"departed, {withdrawn} withdrawn, {unaccounted} answered for by nothing"
             + (f" · {gone_venues} venue file(s) gone entirely, not checked here"
                if gone_venues else ""))
