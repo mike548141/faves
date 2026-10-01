@@ -14,3 +14,9 @@
   their own items, each with the four costs; this item builds nothing.
 
   📌 **Claimed 2026-10-01 (`faves-55`)** for the survey.
+
+  ✅ **Survey done 2026-10-01 (`faves-55`, worker `510-130`):**
+  [the chatty-app survey](../../reviews/2026-10-01-0418-chatty-app-survey.md).
+  Top three: sync spends 9 KV reads a pull and 26 a heart even with no
+  recipes; one rating re-renders all 264 dishes (~600 ms at 4x CPU); a first
+  visit downloads ~40% of the app twice. Twelve fix items proposed, A to L.
