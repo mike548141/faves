@@ -1,4 +1,4 @@
-- [~] **The Cook at Home card counts every recipe its page shows** `[XS]
+- [x] **The Cook at Home card counts every recipe its page shows** `[XS]
       [home][recipes]` — owner-ruled 2026-10-01 (session `faves-55`).
 
   **His words:** *"it should count all of them - public, my recipes, our
@@ -15,3 +15,8 @@
   them on a board for a fresh session". Nothing was built; ready to take.
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  ✅ **Closed 2026-10-02 (`faves-4f`, PR #79):** the card counts published
+  plus the active person's own recipes, re-rendered on any cookbook change
+  (import, sync, profile switch). The shuffle picker's line uses the same
+  count. `focus_check` asserts it live across a profile switch; break-probed.

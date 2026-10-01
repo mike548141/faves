@@ -1,4 +1,4 @@
-- [~] **Searching "my recipe" lists your own recipes** `[S]
+- [x] **Searching "my recipe" lists your own recipes** `[S]
       [search][recipes]` — owner-reported 2026-10-01 (session `faves-55`),
       on `2026-10-01.20`, after `310` shipped (PR #75) with browser checks
       green.
@@ -31,3 +31,11 @@
   them on a board for a fresh session". Nothing was built; ready to take.
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  ✅ **Closed 2026-10-02 (`faves-4f`, PR #79):** "my recipe(s)" as the whole
+  query, any case or spacing, lists the active person's whole cookbook,
+  uncapped and labelled, on the home search and the Cook at Home page's own
+  search; "our recipe(s)" lists nothing and does not error. One parser
+  (`ownerQuery` in `search.js`); nothing in the shipped index. Three unit
+  tests and `focus_check` assertions, break-probed except the "our" absence
+  checks against plain text search, which would pass on the old code too.

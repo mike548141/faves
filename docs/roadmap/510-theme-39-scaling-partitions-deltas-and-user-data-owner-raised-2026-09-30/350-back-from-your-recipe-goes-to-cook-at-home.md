@@ -1,4 +1,4 @@
-- [~] **Back from one of your recipes goes to Cook at Home, not the home
+- [x] **Back from one of your recipes goes to Cook at Home, not the home
       screen** `[XS] [recipes]` — owner-reported 2026-10-01 (session
       `faves-55`), on `2026-10-01.20`.
 
@@ -14,3 +14,7 @@
   them on a board for a fresh session". Nothing was built; ready to take.
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  ✅ **Closed 2026-10-02 (`faves-4f`, PR #79):** back from one of your own
+  recipes reads "← Cook at Home" and goes to that page. `focus_check`
+  asserts the text, the link and the landing; break-probed.

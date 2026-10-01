@@ -106,3 +106,9 @@
   restore, or a sync base that will not load (no route seen). Next step: the
   owner's answer on Apply, a re-entered sync code, and Safari vs Home Screen
   app on the iPhone; then a guard on that route.
+
+  **Owner's answer 2026-10-02:** none of the three (no Safari plus Home
+  Screen copy, no Apply, no re-entered sync code). So no route reproduced in
+  the harness matches his account. The theoretical one left is a sync base
+  that will not load. Open: what else can make a base-less merge on a device
+  that has one.

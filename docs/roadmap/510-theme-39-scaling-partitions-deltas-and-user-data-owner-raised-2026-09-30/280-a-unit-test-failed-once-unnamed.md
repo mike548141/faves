@@ -8,3 +8,7 @@
   If it recurs, the likely suspects are tests with real timers among this
   session's sync throttle (`160`) and data-check window (`180`) tests
   (inferred, not shown).
+
+  **Seen again 2026-10-02 (`faves-4f`, the `350`–`370` worker):** 1 of 1,717
+  failed once at the start of a browser sweep, name again not captured; nine
+  re-runs passed.

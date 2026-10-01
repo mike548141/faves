@@ -36,3 +36,6 @@
   on 2026-10-02: SQLite backend only, 100,000 requests and 100,000 rows written
   a day). Estimated two to three days. A (client-only, about a day) is an
   optional stopgap.
+
+  🎯 **Owner ruled 2026-10-02: B, one Durable Object per sync code.** The
+  Worker deploy (and the KV cutover) still needs his go at the time.
