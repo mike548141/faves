@@ -9,6 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Groundup Cafe has a menu.** The all-day breakfast and lunch boards, the
+  coffee board, the cabinet food and the drinks fridges, read from photos taken
+  in the cafe on 1 October 2026. Where a name could be read but not a price,
+  the dish is listed with a "?" in place of the price rather than left out.
 - **A tab left behind by an update stops saving, and says so.** If Faves is
   updated in one tab while another is still open on the older version, the
   older tab now shows "Faves was updated in another tab" with a Reload
