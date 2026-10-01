@@ -9,7 +9,7 @@ decision 1, "at most once every 10 s". The rest of 0147 stands.
 ## Context
 
 ADR 0147 made a data read start a background check of
-`data/catalogue.json`, coalesced to one per 10 s. The 2026-10-01 survey
+`site/data/catalogue.json`, coalesced to one per 10 s. The 2026-10-01 survey
 (`docs/reviews/2026-10-01-0418-chatty-app-survey.md`, finding 4) measured what
 that costs: **one request on every page navigation more than 10 s after the
 last**. The bytes are nothing (197, 140 gzip). The cost is a round trip and a
