@@ -73,3 +73,13 @@
   If no, it was a page left open, fixed by PR #76, and the moved four need
   hearting again. Either way the four old rows point at recipes that no
   longer exist; Remove on them deletes only those rows and their ratings.
+
+  ⚖️ **Status 2026-10-01 (`faves-55`):** PR #76 merged. It fixes one real
+  route, where a page left open writes its old hearts back, but that route
+  deletes the moved hearts, and the owner's screenshot shows the moved
+  "My recipe" copies still hearted beside the old ones. So the evidence
+  matches the worker's second reproduction: a **third storage context**
+  holding an older list and no last-agreed copy (the worker's 2,050
+  randomised two-device runs never produced the owner's state). Waiting on
+  the owner: which browsers or apps have Faves with sync on. The Worker
+  risk found on the way is `330`.
