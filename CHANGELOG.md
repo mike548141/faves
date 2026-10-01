@@ -9,6 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **The Victoria Tavern lists its spirits again.** 51 unpriced lines from the
+  venue's own drinks list (gin, vodka, tequila and mezcal, rum, bourbon,
+  whisky, plus aperitifs and digestifs) are back, each showing `?` for the
+  price the list does not print.
 - **Extras become choices on 13 dishes.** Grilled chicken on the Caesar and
   tahini bowl, bacon on the omelette, fries on the sliders, a naan upgrade on
   the combo and eight more are now added on the dish, with the price, instead
