@@ -100,3 +100,21 @@
   devices (`add: "all"`) on a phone shared by several people, whose
   cookbook gets the moved recipes? Built: the active person. Alternatives:
   every profile on the phone, or the people his list names.
+
+  ⚖️ **Owner-ruled 2026-10-01 (session `faves-55`), all three open
+  questions:**
+  - **Route: his devices only, by backup file.** A local tool rewrites his
+    exported backup (`moveSnapshot`, `add: "all"`); he imports it with
+    Replace on one device; sync carries it to the rest. The step every
+    device runs was declined. It would have kept the recipe text in the
+    app's public code, since a step must ship what it copies.
+  - **Recipient: the active person** (as built).
+  - **His list: the recipes with a person's name in the heading, plus
+    one.** `booth-s-ginger-crunch`, `jesse-s-garlic-chicken-thighs`,
+    `shane-s-ribs`, `famous-brade-green-chicken-curry`, and
+    `chocolate-self-saucing-pudding`, which he added. `b-s-dope-as-brownie`
+    stays published (he left it out).
+
+  📌 **Claimed 2026-10-01 (`faves-55`)** for the tool, the runbook and the
+  removal of the published copies. The run itself needs his backup file,
+  and the Worker deploy goes with it.
