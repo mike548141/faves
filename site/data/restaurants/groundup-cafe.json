@@ -252,10 +252,7 @@
             "contains-dairy",
             "contains-gluten"
           ],
-          "tagNotes": {
-            "contains-dairy": "The menu says “cheese”.",
-            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
-          }
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-gluten": "Kept as a precaution: the only reason on record is a note over this section that points to other food (“The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”), so it may not apply to this dish."}
         },
         {
           "name": "B.L.A.T.",
@@ -296,10 +293,7 @@
             "contains-peanuts",
             "contains-gluten"
           ],
-          "tagNotes": {
-            "contains-peanuts": "The menu says “peanuts”.",
-            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
-          }
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-gluten": "Kept as a precaution: the only reason on record is a note over this section that points to other food (“The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”), so it may not apply to this dish."}
         },
         {
           "name": "Gourmet Toastie",
@@ -327,9 +321,7 @@
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {
-            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
-          }
+          "tagNotes": {"contains-gluten": "Kept as a precaution: the only reason on record is a note over this section that points to other food (“The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”), so it may not apply to this dish."}
         },
         {
           "name": "Wedges",
@@ -340,10 +332,7 @@
             "contains-dairy",
             "contains-gluten"
           ],
-          "tagNotes": {
-            "contains-dairy": "The menu says “cheese”.",
-            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
-          }
+          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-gluten": "Kept as a precaution: the only reason on record is a note over this section that points to other food (“The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”), so it may not apply to this dish."}
         },
         {
           "name": "Toasted Sandwiches",
@@ -371,9 +360,7 @@
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {
-            "contains-gluten": "The note over this section says “The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”."
-          }
+          "tagNotes": {"contains-gluten": "Kept as a precaution: the only reason on record is a note over this section that points to other food (“The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”), so it may not apply to this dish."}
         },
         {
           "name": "Chicken Nuggets",
