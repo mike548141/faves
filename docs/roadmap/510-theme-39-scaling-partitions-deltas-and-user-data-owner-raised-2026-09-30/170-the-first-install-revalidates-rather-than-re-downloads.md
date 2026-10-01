@@ -1,4 +1,4 @@
-- [~] **The first install revalidates rather than re-downloads** `[S]
+- [x] **The first install revalidates rather than re-downloads** `[S]
       [pwa][sw]` — from the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **D**.
 
@@ -38,3 +38,9 @@
   on an UPDATE install (106 of 107 shell files 304), which would save most
   of the shell's download on every `SHELL_VERSION` bump. Not built: the
   ruling covered the first install.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #67), CI 8 of 8. The
+  gate passed: `precache_check` §4 reproduces 2026-08-16 (plain `fetch()`
+  keeps the old `app.js`) and `no-cache` comes out current. ADR 0149. A first
+  visit is 1,542 → 1,072 KB gzip. Follow-ups filed: `260` (Pages ignores
+  `_headers`' `max-age=0`) and `270` (`no-cache` for update installs, 🎯).

@@ -1,4 +1,4 @@
-- [~] 🔎 **A section note that points elsewhere tags every dish under it**
+- [x] 🔎 **A section note that points elsewhere tags every dish under it**
       `[S] [content][allergens]` — found 2026-10-01 (session `faves-55`)
       reviewing Groundup Cafe (`270`).
 
@@ -34,3 +34,13 @@
   keep or drop the five Groundup gluten tags (recommendation: Nachos and Fries
   lean drop, Thai Beef Salad and Corn Fritters keep, Wedges ask the venue);
   the other 26 are recommended keep. This item stays open for that ruling.
+
+  ⚖️ **Owner-ruled 2026-10-01 (`faves-55`) on the five Groundup tags:**
+  drop Nachos and Bowl of Fries; keep Wedges, Thai Beef Salad and Corn
+  Fritters (their tips say they are kept as a precaution). The 26 tags from
+  the other seven notes stay, as the review recommended.
+  ✅ **Closed 2026-10-01 (`faves-55`):** mechanism merged in PR #68; the two
+  drops are a correction (we recorded it wrong), so no history row. The
+  tagger, re-run dry, does not re-add either. Not done: the sibling
+  `allergen_disagreements.py` does not know about pointer flags (it does
+  not misfire on Groundup today).

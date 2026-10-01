@@ -249,10 +249,9 @@
           "desc": "Beef mince, chilli beans, Mexican tomato corn chips with melted cheese and sour cream.",
           "price": 24.0,
           "tags": [
-            "contains-dairy",
-            "contains-gluten"
+            "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “cheese”.", "contains-gluten": "Kept as a precaution: the only reason on record is a note over this section that points to other food (“The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”), so it may not apply to this dish."}
+          "tagNotes": {"contains-dairy": "The menu says “cheese”."}
         },
         {
           "name": "B.L.A.T.",
@@ -356,11 +355,7 @@
         {
           "name": "Bowl of Fries",
           "dishId": "bowl-of-fries",
-          "price": 10.5,
-          "tags": [
-            "contains-gluten"
-          ],
-          "tagNotes": {"contains-gluten": "Kept as a precaution: the only reason on record is a note over this section that points to other food (“The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes”), so it may not apply to this dish."}
+          "price": 10.5
         },
         {
           "name": "Chicken Nuggets",

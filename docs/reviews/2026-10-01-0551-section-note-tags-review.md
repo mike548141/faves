@@ -68,11 +68,11 @@ reader to the cabinet. It says nothing about what these dishes contain.
 
 | Dish | Tag | Other evidence a rule can see | My lean (menu text only, not verified with the venue) | Your ruling (keep / drop) |
 |---|---|---|---|---|
-| Nachos | `contains-gluten` | none | **DROP** — Described as corn chips, beans, mince, cheese. Nothing on the menu names flour. Corn chips are normally wheat free, though some brands are not. | |
-| Thai Beef Salad | `contains-gluten` | none | **KEEP** — Topped with "crispy noodles", which are usually fried wheat noodles. | |
-| Corn Fritters | `contains-gluten` | none | **KEEP** — Fritters are a flour batter as a rule. The menu gives no description. | |
-| Wedges | `contains-gluten` | none | **ASK THE VENUE** — Plain wedges would not carry gluten, but many kitchens coat them in seasoned flour. The menu does not say. | |
-| Bowl of Fries | `contains-gluten` | none | **DROP** — Potato chips with no flour named. A shared fryer would be a cross-contact warning, which is a different thing from an ingredient and is not what this tag says. | |
+| Nachos | `contains-gluten` | none | **DROP** — Described as corn chips, beans, mince, cheese. Nothing on the menu names flour. Corn chips are normally wheat free, though some brands are not. || **DROP** (owner, 2026-10-01) |
+| Thai Beef Salad | `contains-gluten` | none | **KEEP** — Topped with "crispy noodles", which are usually fried wheat noodles. || **KEEP** (owner, 2026-10-01) |
+| Corn Fritters | `contains-gluten` | none | **KEEP** — Fritters are a flour batter as a rule. The menu gives no description. || **KEEP** (owner, 2026-10-01) |
+| Wedges | `contains-gluten` | none | **ASK THE VENUE** — Plain wedges would not carry gluten, but many kitchens coat them in seasoned flour. The menu does not say. || **KEEP** (owner, 2026-10-01) |
+| Bowl of Fries | `contains-gluten` | none | **DROP** — Potato chips with no flour named. A shared fryer would be a cross-contact warning, which is a different thing from an ingredient and is not what this tag says. || **DROP** (owner, 2026-10-01) |
 
 ### rock-yard-restaurant / Combo Lunch
 
