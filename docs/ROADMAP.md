@@ -168,7 +168,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/README.md)*
 
-- [ ] [26a — Save and recall](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/010-26a-save-and-recall.md)
+- [~] [26a — Save and recall](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/010-26a-save-and-recall.md)
 - [ ] [26b — Carry it across devices](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/020-26b-carry-it-across-devices.md)
 - [ ] [26c — What happens when the menu moves under it](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/030-26c-what-happens-when-the-menu-moves-under-it.md)
 
