@@ -1,4 +1,4 @@
-- [~] 🔎 **Hell Pizza's "Half Buffalo Half Beast" carries no dairy tag**
+- [x] 🔎 **Hell Pizza's "Half Buffalo Half Beast" carries no dairy tag**
       `[S][data]` Found 2026-09-29 by the independent review of PR #53
       (session `faves-41`).
 
@@ -15,3 +15,9 @@ checked against the halves' own rows, and look for other "half X half Y" rows
 differ.
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  ✅ **Closed 2026-10-02 (`faves-4f`, PR #85):** confirmed and corrected. The
+  row now carries `contains-dairy` (mozzarella on both halves) and
+  `contains-nuts` (the Buffalo half's pesto, as the tagger's rules read
+  pesto). A grep for other half-and-half composite rows found none; choice-of
+  rows were left alone.
