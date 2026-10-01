@@ -111,6 +111,13 @@ content freshness separately from this file.
 - **No more "est." on a recipe's stats panel** — neither the line under it
   nor the marker beside an estimated value (ADR 0135).
 ### Changed
+- **Five family recipes moved out of the public Cook at Home list and into the
+  owner's own cookbook.** Booth's Ginger Crunch, Jesse's Garlic Chicken Thighs,
+  Shane's Ribs, Famous Brade Green Chicken Curry and Chocolate Self-Saucing
+  Pudding are no longer published; they live under "My recipes" on his own
+  devices, with their hearts, ratings and notes. Cook at Home keeps the other
+  recipes, and its "first time, try…" picks now name only Easy Pad Thai and
+  Sticky Date Pudding.
 - **A menu change downloads only what changed.** Your phone now keeps one
   offline copy of the menus and, when something is updated, fetches just the
   files that changed — one edited menu and one venue's new hours is four small

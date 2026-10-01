@@ -148,3 +148,19 @@
 
   ⚖️ **Fork (3) answered 2026-10-01 (`faves-55`):** the owner's own recipes are
   listed on the Cook at Home page, all of them, labelled Private (`300`).
+
+  ✅ **Step 7 done 2026-10-01 (`faves-55` worker, branch `050-remove`).** The
+  owner ran steps 1–6 and confirmed the five under "My recipes" on his phone and
+  desktop. The five published copies then left `site/data/restaurants/cook-at-home.json`
+  by ADR 0047's route: whole, into `data/history/dishes/cook-at-home.json`
+  (a new file, five rows, each carrying `available.offBy: 2026-10-01`, which the
+  round-trip needs to put them back verbatim). The venue's `picks` lost "Booth's
+  Ginger Crunch" and "Shane's Ribs" and were NOT replaced: nothing says which
+  recipe he would pick instead, so they read "Easy Pad Thai" and "Sticky Date
+  Pudding". `data/estimates/recipes.json` is unchanged — `recipe_estimates.py`
+  already treats a recorded-but-unshipped recipe as a warning, and keeps it.
+  Re-pointed: `tests/units.test.js` (the oven-temperature count, 15 → 13: the
+  two `180°C` steps of the pudding), `tools/focus_check.mjs` (the one-recipe
+  search), `tools/cook_check.mjs` (section 13, no method). The search hint
+  "ginger crunch" stays: the Groundup Cafe's own Ginger Crunch still answers it.
+  Step 8 (delete the two backup files) is the owner's.
