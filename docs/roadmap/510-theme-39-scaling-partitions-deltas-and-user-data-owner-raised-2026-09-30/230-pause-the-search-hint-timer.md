@@ -1,4 +1,4 @@
-- [~] **Pause the home search hint timer when hidden** `[XS] [home]` — from
+- [x] **Pause the home search hint timer when hidden** `[XS] [home]` — from
       the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **J**.
 
@@ -17,3 +17,5 @@
   hidden 15 s 6 DOM mutations and 2 timers → 0 and 0; visible 30 s 4 placeholder
   changes → 3. Unit tests in `tests/search-hints.test.js`. Ships in
   `SHELL_VERSION` `2026-10-01.9`.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #66).

@@ -1,4 +1,4 @@
-- [~] **A `chatty_check` tool with asserted budgets** `[S] [tools]` — from the
+- [x] **A `chatty_check` tool with asserted budgets** `[S] [tools]` — from the
       `130` survey
       (session `faves-55`, 2026-10-01), its proposal **L**.
 
@@ -29,3 +29,5 @@
   875 / rating 2626 → a few dozen; `190` pull `setItem` 3 → 1; `210` second-tab
   pull 2 → 0; `160`/`180` warm and menu requests 3/2 → 1/1 (and idle 2 → 0);
   `170` cold install 296 req / 1,702 KB → ~210 / ~1,070.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #66).

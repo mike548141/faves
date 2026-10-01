@@ -1,4 +1,4 @@
-- [~] **Stop every dish re-rendering on every heart and rating** `[M]
+- [x] **Stop every dish re-rendering on every heart and rating** `[M]
       [perf][menu]` — from the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **B**.
 
@@ -20,3 +20,6 @@
   2,386 → 10 (script 20 → 1 ms, layout+style 90 → 9 ms); home heart 352 → 13
   changes, CPU unchanged (the ranking, not the cards, dominates there). Guard:
   `tools/device_check.mjs` § 7 and § 8, break-probed.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #64). `chatty_check`
+  budgets tightened to the merged values, 33 of 33 on two runs.

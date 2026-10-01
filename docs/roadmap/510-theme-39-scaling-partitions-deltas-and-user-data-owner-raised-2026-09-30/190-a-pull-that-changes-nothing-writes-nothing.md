@@ -1,4 +1,4 @@
-- [~] **A sync pull that changes nothing writes nothing** `[S] [sync]` — from
+- [x] **A sync pull that changes nothing writes nothing** `[S] [sync]` — from
       the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **F**.
 
@@ -25,3 +25,6 @@
   12.1–12.6 ms → 8.6–8.9 ms. Not what the survey forecast: reads went UP,
   348 → 373 KB, because the base is re-read to compare. The `lastSyncedAt`
   stamp is still written — the status row shows it and `160` throttles on it.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #65). `chatty_check`
+  budgets tightened to the merged values, 33 of 33 on two runs.

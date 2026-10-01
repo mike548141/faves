@@ -1,4 +1,4 @@
-- [~] **A cross-tab reload does not schedule a sync** `[XS] [sync]` — from the
+- [x] **A cross-tab reload does not schedule a sync** `[XS] [sync]` — from the
       `130` survey
       (session `faves-55`, 2026-10-01), its proposal **H**.
 
@@ -20,3 +20,6 @@
   tab a GET (+35 R, +1 W); after, the home tab sent nothing and the menu tab
   a GET + PUT (+26 R, +1 W). Where `window.event` is missing, behaviour is
   as before.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #65). `chatty_check`
+  budgets tightened to the merged values, 33 of 33 on two runs.

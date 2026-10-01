@@ -1,4 +1,4 @@
-- [~] **Stop probing recipe buckets that do not exist** `[M] [sync][worker]` —
+- [x] **Stop probing recipe buckets that do not exist** `[M] [sync][worker]` —
       from the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **A**.
 
@@ -26,3 +26,7 @@
   client on the new Worker: unchanged. Tests: three in `tests/sync.test.js`
   fail on the pre-140 client, two in `worker/sync-worker.test.js` fail with
   `family` ignored; without the re-read, nine fail.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #65). `chatty_check`
+  budgets tightened to the merged values, 33 of 33 on two runs.
+  The Worker half is deployed with `050`'s import.
