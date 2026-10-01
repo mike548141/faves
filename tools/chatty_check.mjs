@@ -36,7 +36,7 @@
 //
 // 🔑 IT BREAK-PROBES ITSELF, every run. Two scenarios are re-run against an
 // overlaid, deliberately chattier copy of one file (store.js re-probing storage on
-// every call; sync-buckets.js asking about 16 buckets), and the matching
+// every call; sync.js asking about buckets it does not hold), and the matching
 // budget MUST fail. A budget that passes both is measuring nothing.
 //
 // 🚩 WHAT THIS CANNOT SHOW: Cloudflare Pages (304s, brotli, HTTP/2), real KV
@@ -126,12 +126,15 @@ Object.assign(BUDGETS, {
   idleTimers: 0, idleMut: 0,
   lsSetHome: 2, lsRemHome: 2, evHome: 4, // was 6, 6, 12 → 1, 1, 2 with 510/200
   lsSetMenu: 2, lsRemMenu: 2, evMenu: 4,
-  mutHeart: 877, mutUnheart: 875, mutRating: 2626, // 795-797, 795, 2,387
+  // Tightened 2026-10-01 after 510/140, 150, 190 and 210 merged (measured
+  // on the merged tree): heart 4, un-heart 3, rating 11; sync reads 2/1/2;
+  // the pull's setItem 1; the second tab 0. Was 877, 875, 2,626; 29/10/29; 3; 2.
+  mutHeart: 6, mutUnheart: 5, mutRating: 13, // was 795-797, 795, 2,387
   hintHidden: 0, hintTimersHidden: 0, hintTurns: 4, // was 6, 2, 4 → 0, 0, 3 with 510/230
-  enableReq: 4, enableR: 29, enableW: 2, // 3, 26, 1
-  pullReq: 2, pullR: 10, pullW: 0, pullLsSet: 3, // 1, 9, 0, 2
-  heartReq: 4, heartR: 29, heartW: 2, // 3, 26, 1
-  tabReq: 2, // 0-1 (the second tab's own pull ~20 s after the storage event; a low flake is harmless to an upper bound)
+  enableReq: 4, enableR: 3, enableW: 2, // 3, 2, 1
+  pullReq: 2, pullR: 2, pullW: 0, pullLsSet: 2, // 1, 1, 0, 1
+  heartReq: 4, heartR: 3, heartW: 2, // 3, 2, 1
+  tabReq: 0, // 0 since 510/210; was 0-1, the second tab pulling ~20 s after the storage event
 });
 for (const [id, v] of Object.entries(BUDGETS)) B[id].budget = v;
 const measured = {};
@@ -570,18 +573,19 @@ async function run(opts) {
           `${p.home.set} setItem against a budget of ${B.lsSetHome.budget}`
         );
       }
-      // Break-probe 2: the client asks the Worker about 16 buckets, not 8.
-      const bucketsJs = readFileSync(join(SITE, "js", "sync-buckets.js"), "utf8");
-      const bucketsLine = "export const RECIPE_BUCKETS = 8;";
-      if (!bucketsJs.includes(bucketsLine)) {
-        report.check("break-probe: sync-buckets.js's RECIPE_BUCKETS line is where the probe expects", false, "site/js/sync-buckets.js changed shape — update bucketsLine in this tool");
+      // Break-probe 2: the client asks the Worker about its recipe buckets on
+      // every pull, holding none (the pre-510/140 behaviour).
+      const syncJs = readFileSync(join(SITE, "js", "sync.js"), "utf8");
+      const askLine = "readCore(blobId, key, holdsBuckets)";
+      if (!syncJs.includes(askLine)) {
+        report.check("break-probe: sync.js's bucket-ask line is where the probe expects", false, "site/js/sync.js changed shape — update askLine in this tool");
       } else {
         const p = await scenarioSync(cdp, report, {
           label: "break-probe/sync", probe: true,
-          overlay: new Map([["/js/sync-buckets.js", { body: bucketsJs.replace(bucketsLine, "export const RECIPE_BUCKETS = 16;"), type: "text/javascript" }]]),
+          overlay: new Map([["/js/sync.js", { body: syncJs.replace(askLine, "readCore(blobId, key, true)"), type: "text/javascript" }]]),
         });
         report.check(
-          "break-probe: a client asking about 16 buckets FAILS the pull KV-read budget",
+          "break-probe: a client that always asks about buckets FAILS the pull KV-read budget",
           p.pull.r > B.pullR.budget,
           `${p.pull.r} KV reads against a budget of ${B.pullR.budget}`
         );
