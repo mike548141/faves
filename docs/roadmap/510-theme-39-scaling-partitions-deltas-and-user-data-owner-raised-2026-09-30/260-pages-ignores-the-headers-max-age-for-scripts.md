@@ -18,3 +18,21 @@
   Cloudflare zone, likely its Browser Cache TTL (inferred, not read).
 
   📌 **Claimed 2026-10-02 (`faves-4f`).**
+
+  🔎 **Cause read 2026-10-02 (`faves-4f`), read-only token.** The `myspot.nz`
+  zone's **Browser Cache TTL is 14400** (four hours; `cache_level`
+  aggressive). Cloudflare raises an origin `max-age` below that setting to
+  it, which is exactly `max-age=0` becoming `14400` on `lets-eat.myspot.nz`
+  while `faves.pages.dev` (no zone) keeps `max-age=0` (re-curled the same
+  day). No cache rules and no response-header transforms exist in the zone.
+  Page Rules could not be read (the endpoint refuses account-owned tokens), so
+  one there is not excluded, but the setting matches the observed number
+  exactly.
+
+  **Options (a zone change is the owner's):** A, a Cache Rule scoped to
+  hostname `lets-eat.myspot.nz` with Browser TTL "respect origin" (touches no
+  other host); B, the zone-wide setting to "Respect Existing Headers" (every
+  `myspot.nz` host; hosts that send no `Cache-Control` then get browser
+  heuristics); C, leave it (the precache is protected by ADR 0149; a first
+  visit within four hours of another can run older scripts). Recommended: A,
+  done in the dashboard, so no token is minted or widened.

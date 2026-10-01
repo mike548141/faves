@@ -11,3 +11,9 @@
   🎯 **Owner ruling needed, and offered, not recommended:** a longer idle
   window, or flush only on hidden. There is no usage evidence to size it, and
   the ceiling is not close.
+
+  🔎 **Premise moving 2026-10-02 (`faves-4f`):** with `340` deployed, the
+  Durable Object allows 100,000 rows written a day on the free tier against
+  KV's 1,000; while the KV mirror is on (`410`), KV's limit still binds. Once
+  the mirror is off, the write ceiling this item sizes against is about 100×
+  higher.
