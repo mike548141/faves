@@ -1,4 +1,4 @@
-- [ ] **Stop probing recipe buckets that do not exist** `[M] [sync][worker]` —
+- [~] **Stop probing recipe buckets that do not exist** `[M] [sync][worker]` —
       from the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **A**.
 
@@ -9,3 +9,5 @@
 
   The four costs, before → after, and the risks are in
   [the survey](../../reviews/2026-10-01-0418-chatty-app-survey.md) under proposal A.
+
+  📌 **Claimed 2026-10-01 (`faves-55`).**

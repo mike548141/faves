@@ -1,4 +1,4 @@
-- [ ] **A cross-tab reload does not schedule a sync** `[XS] [sync]` — from the
+- [~] **A cross-tab reload does not schedule a sync** `[XS] [sync]` — from the
       `130` survey
       (session `faves-55`, 2026-10-01), its proposal **H**.
 
@@ -7,3 +7,5 @@
 
   The four costs, before → after, and the risks are in
   [the survey](../../reviews/2026-10-01-0418-chatty-app-survey.md) under proposal H.
+
+  📌 **Claimed 2026-10-01 (`faves-55`).**
