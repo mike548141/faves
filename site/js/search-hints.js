@@ -17,6 +17,10 @@
 //     vision is exactly the distraction that setting exists to stop.
 //   • It stops on focus and while the field has text, so it can never change
 //     under someone who is reading or typing it.
+//   • It stops while the page is hidden, and for good after a few turns
+//     (roadmap 510/230). Left running it was the one timer the app never
+//     released: a wake-up every 7 s on a tab nobody was looking at, and a
+//     placeholder that kept cycling long after every example had been seen.
 //   • The accessible name comes from the <label>, not the placeholder, so
 //     nothing here retitles the field mid-interaction (WCAG 2.5.3) and no
 //     live region announces it.
@@ -39,6 +43,11 @@ const FADE_MS = 450;
 // Toggled on the input while the placeholder is faded out.
 const FADING = "hint-fading";
 
+// How many times the hint changes before it settles for the rest of the page.
+// Three turns shows four of the nine examples — enough to teach that the box
+// takes more than a dish name — and then the page is left alone.
+const DEFAULT_MAX_TURNS = 3;
+
 /**
  * Cycle `input`'s placeholder through `hints`.
  *
@@ -48,6 +57,9 @@ const FADING = "hint-fading";
  *   setInterval / clearInterval   injectable timers
  *   reducedMotion                 () => boolean
  *   interval                      ms between hints
+ *   doc                           the document, for visibilityState and the
+ *                                 visibilitychange event
+ *   maxTurns                      hint changes before it stops for the page
  * @returns {{stop: () => void, current: () => string}} stop is idempotent.
  */
 export function rotateHints(input, hints, deps = {}) {
@@ -60,6 +72,8 @@ export function rotateHints(input, hints, deps = {}) {
       globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true,
     interval = DEFAULT_INTERVAL,
     fade = FADE_MS,
+    doc = globalThis.document,
+    maxTurns = DEFAULT_MAX_TURNS,
   } = deps;
 
   const list = (hints || []).filter(Boolean);
@@ -68,7 +82,10 @@ export function rotateHints(input, hints, deps = {}) {
   }
 
   let i = 0;
+  let turns = 0;
+  let spent = false; // maxTurns reached: no timer for the rest of this page
   let timer = null;
+  const hidden = () => doc?.visibilityState === "hidden";
   input.placeholder = list[0];
 
   let fading = null;
@@ -76,6 +93,11 @@ export function rotateHints(input, hints, deps = {}) {
   const swap = () => {
     i = (i + 1) % list.length;
     input.placeholder = list[i];
+    turns += 1;
+    if (turns >= maxTurns) {
+      spent = true;
+      pause();
+    }
   };
 
   // Cancel a fade caught mid-flight and put the placeholder back to visible.
@@ -114,7 +136,7 @@ export function rotateHints(input, hints, deps = {}) {
   };
 
   const start = () => {
-    if (timer !== null || list.length < 2 || reducedMotion()) return;
+    if (timer !== null || spent || list.length < 2 || reducedMotion() || hidden()) return;
     timer = setEvery(tick, interval);
   };
   const pause = () => {
@@ -134,12 +156,21 @@ export function rotateHints(input, hints, deps = {}) {
     if (input.value) pause();
   });
 
+  // A hidden page gets no timer at all; coming back resumes the count where it
+  // was, unless the field is focused or holds text (blur restarts it then).
+  const onVisibility = () => {
+    if (hidden()) pause();
+    else if (!input.value && doc?.activeElement !== input) start();
+  };
+  doc?.addEventListener?.("visibilitychange", onVisibility);
+
   start();
 
   return {
     stop: () => {
       pause();
       input.removeEventListener("focus", pause);
+      doc?.removeEventListener?.("visibilitychange", onVisibility);
     },
     current: () => list[i],
   };

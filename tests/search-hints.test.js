@@ -32,7 +32,7 @@ function fakeInput() {
   };
 }
 
-function harness({ reduced = false, hints = ["one", "two", "three"], fade } = {}) {
+function harness({ reduced = false, hints = ["one", "two", "three"], fade, doc, maxTurns } = {}) {
   let tick = null;
   let pending = null;
   let cleared = 0;
@@ -57,6 +57,8 @@ function harness({ reduced = false, hints = ["one", "two", "three"], fade } = {}
     },
     reducedMotion: () => reduced,
     ...(fade === undefined ? {} : { fade }),
+    ...(doc === undefined ? {} : { doc }),
+    ...(maxTurns === undefined ? {} : { maxTurns }),
   });
   return {
     input,
@@ -244,4 +246,76 @@ test("fade: 0 swaps instantly, with no class and no timeout", () => {
   assert.equal(input.placeholder, "two");
   assert.equal(input.faded(), false);
   assert.equal(pendingFade(), false);
+});
+
+// A stand-in for `document` that can be hidden and shown.
+function fakeDoc(state = "visible") {
+  const handlers = [];
+  return {
+    visibilityState: state,
+    activeElement: null,
+    addEventListener: (ev, fn) => ev === "visibilitychange" && handlers.push(fn),
+    removeEventListener: (ev, fn) => {
+      const k = handlers.indexOf(fn);
+      if (ev === "visibilitychange" && k >= 0) handlers.splice(k, 1);
+    },
+    set(next) {
+      this.visibilityState = next;
+      handlers.slice().forEach((f) => f());
+    },
+    listeners: () => handlers.length,
+  };
+}
+
+test("510/230: a hidden page stops the timer, and showing it again resumes", () => {
+  const doc = fakeDoc();
+  const { running } = harness({ doc });
+  assert.equal(running(), true);
+  doc.set("hidden");
+  assert.equal(running(), false, "no timer while the page is hidden");
+  doc.set("visible");
+  assert.equal(running(), true, "back in view, it carries on");
+});
+
+test("510/230: a page that loads hidden never starts a timer", () => {
+  const doc = fakeDoc("hidden");
+  const { running } = harness({ doc });
+  assert.equal(running(), false);
+  doc.set("visible");
+  assert.equal(running(), true);
+});
+
+test("510/230: showing a page with text in the field does not restart it", () => {
+  const doc = fakeDoc();
+  const { input, running } = harness({ doc });
+  input.value = "laksa";
+  input.fire("input");
+  doc.set("hidden");
+  doc.set("visible");
+  assert.equal(running(), false);
+});
+
+test("510/230: after maxTurns changes it stops for the rest of the page", () => {
+  const doc = fakeDoc();
+  const { input, advance, running } = harness({ doc, hints: ["a", "b", "c", "d", "e"], maxTurns: 3 });
+  advance();
+  advance();
+  assert.equal(running(), true, "still going after two turns");
+  advance();
+  assert.equal(input.placeholder, "d", "the third turn lands");
+  assert.equal(running(), false, "…and is the last");
+  input.fire("focus");
+  input.fire("blur");
+  assert.equal(running(), false, "blur does not bring it back");
+  doc.set("hidden");
+  doc.set("visible");
+  assert.equal(running(), false, "nor does coming back to the tab");
+});
+
+test("510/230: stop() releases the visibility listener", () => {
+  const doc = fakeDoc();
+  const { api } = harness({ doc });
+  assert.equal(doc.listeners(), 1);
+  api.stop();
+  assert.equal(doc.listeners(), 0);
 });
