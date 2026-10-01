@@ -1,4 +1,4 @@
-- [~] 🔎 **Pages serves scripts with a four-hour cache, not `_headers`'
+- [x] 🔎 **Pages serves scripts with a four-hour cache, not `_headers`'
       `max-age=0`** `[S] [pwa][deploy]` — found 2026-10-01 by the `170`
       worker (session `faves-55`), by `curl` against the live site.
 
@@ -36,3 +36,14 @@
   heuristics); C, leave it (the precache is protected by ADR 0149; a first
   visit within four hours of another can run older scripts). Recommended: A,
   done in the dashboard, so no token is minted or widened.
+
+  ✅ **Closed 2026-10-02 (`faves-4f`): option A, applied.** The owner chose a
+  minted token over doing it himself in the dashboard. A zone-scoped token
+  (Cache Settings Write and Zone Read, `myspot.nz` only; recorded in the
+  estate root's registry) created one Cache Rule: host `lets-eat.myspot.nz`,
+  browser TTL "respect origin". Re-curled the same minute: `js/app.js`,
+  `css/app.css`, `sw.js`, `/`, an icon and `data/summary.json` all answer
+  `max-age=0, must-revalidate`, as `faves.pages.dev` does. No other host is
+  touched. 🚩 The estate's mint tool first left the token at all-zones scope
+  (unused, a few minutes) before it was tightened by hand; that defect is
+  filed in the estate root's own board.
