@@ -12719,3 +12719,22 @@ recorded on its item and was put to him at the end.
 - **Triage of the 91 open items** found about a dozen buildable without the
   owner; of four it called "probably done", I checked and two were not
   (`150/010` still owes the passkey path, `340/020` says it does not close).
+- **Close, 2026-10-02.** Also landed after the addendum: `470/050`'s first
+  bullet (#92, ADR 0155: Cook at Home ships one "Anywhere" branch; nothing on
+  screen changed, sort and cut measured identical), and `500/050`'s R&S and
+  Spices halves settled with nothing to record. `510/420`'s quiet loop ran
+  40 of 40 clean (the flakes need load). A merged leftover branch from the
+  previous session (`510-110`, PR #60) was deleted on the evidence.
+- **Stopped because** the board has nothing left buildable without the
+  owner except two items I deferred on judgement: `010/010`'s record-field
+  rename (`services` → `orderMode` across 55 venues; low value, and an
+  installed phone on the old shell would briefly lose its filter) and
+  `080/120`'s chain branches (fetch work, partly blocked on hours). The
+  rest wait on rulings, listed for him in this session's close.
+- **Open with the owner, each on its item:** `410` mirror off (on or after
+  2026-10-09); `340` live check 6 (a heart crossing his devices); `390`
+  banner outside Settings?; 28l forks (formerIds only; order-line follow-on);
+  `28n` unlabelled rungs ("$24 size"?); `26a` forks (built as recommended);
+  `470/050` wildcard sort; `340/310` parts 2–4 (which Drive; deleting
+  `evidence-stripped/`); atelier PR #93 (leakscan hex digests) awaits
+  atelier.
