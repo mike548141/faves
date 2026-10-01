@@ -79,6 +79,23 @@
   "detailsVerified": "2026-08-15",
   "detailsVerifiedBy": "third-party",
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "add-grilled-chicken",
+      "name": "Add grilled chicken",
+      "select": "one",
+      "options": [
+        {
+          "name": "Grilled chicken",
+          "id": "grilled-chicken",
+          "price": 6.0,
+          "tags": [
+            "has-meat"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Burger Wellington 2026",
@@ -260,7 +277,7 @@
         {
           "name": "Classic Caesar",
           "dishId": "classic-caesar",
-          "desc": "Cos lettuce, bacon, herbed croutons, anchovy dressing, soft-boiled egg, parmesan snow. Add grilled chicken +$6.",
+          "desc": "Cos lettuce, bacon, herbed croutons, anchovy dressing, soft-boiled egg, parmesan snow.",
           "price": 24.0,
           "tags": [
             "contains-gluten",
@@ -269,7 +286,10 @@
             "contains-fish",
             "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “croutons”.", "contains-egg": "The menu says “egg”.", "contains-dairy": "The menu says “parmesan”.", "contains-fish": "The menu says “anchovy”.", "contains-pork": "The menu says “bacon”."}
+          "tagNotes": {"contains-gluten": "The menu says “croutons”.", "contains-egg": "The menu says “egg”.", "contains-dairy": "The menu says “parmesan”.", "contains-fish": "The menu says “anchovy”.", "contains-pork": "The menu says “bacon”."},
+          "addOns": [
+            "add-grilled-chicken"
+          ]
         },
         {
           "name": "Butcher's Cut Steak",
