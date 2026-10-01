@@ -3084,7 +3084,179 @@ def check_prose_addons():
                  f"tools/find_addons.py (ADR 0048)")
 
 
-def main():
+
+# --- a retired dish id must be ANSWERED FOR (roadmap 28l, ADR 0153) ----------
+#
+# A dish id is what a heart, a rating, a shared link and an order line hold on a
+# phone this repo cannot reach (ADR 0051). Every check above reads ONE tree, so
+# none of them can see an id that has GONE: `seed_dish_ids.py --check` reports a
+# missing id, never a vanished one, and the two `formerIds` rules above refuse a
+# claim that is wrong but never ask whether a retired id was claimed AT ALL. An
+# unclaimed one is a heart dropped silently on every phone that held it — and
+# roadmap 28o is about to retire hundreds in one pass.
+#
+# So this compares against a git ref (HEAD by default: for a person about to
+# commit, the working tree IS the change; CI passes the state before the push,
+# because a clean checkout compared with itself can only agree). Every id a
+# venue answered to there — live or former — must still be answered for here,
+# in one of the three homes the data model has:
+#   • a live dish's `formerIds` — it became part of another dish (a ladder
+#     merge, a corrected id); hearts follow it there (site/js/dish-id.js);
+#   • data/history/dishes/ — the shop stopped selling it (ADR 0047), and the
+#     heart truthfully reads "No longer on the menu";
+#   • data/withdrawn/ — Faves stopped showing it, by policy.
+# Which of the last two a merged-away row ALSO belongs in is an open question
+# with the owner (roadmap 28l item 4); a `formerIds` claim alone answers this
+# check, because it is the claim that keeps the heart.
+
+def _git(*args):
+    """stdout of a git command run against ROOT's own repository, or None.
+
+    ROOT's own: `git -C` walks UP to the nearest repository, so a copy of the
+    tree in a temporary directory that happens to sit inside some other
+    checkout would read THAT repo's history and compare against a stranger's
+    corpus. The toplevel must be ROOT or the answer is "no baseline"."""
+    try:
+        top = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--show-toplevel"],
+                             capture_output=True, text=True, timeout=15)
+        if top.returncode != 0 or Path(top.stdout.strip()).resolve() != ROOT.resolve():
+            return None
+        out = subprocess.run(["git", "-C", str(ROOT), *args],
+                             capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return out.stdout if out.returncode == 0 else None
+
+
+def _answered_ids(doc):
+    """Every dish id a venue answers to, live or former, with the dish name."""
+    out = {}
+    for section in (doc.get("menu") or []) if isinstance(doc, dict) else []:
+        for item in (section.get("items") or []) if isinstance(section, dict) else []:
+            if not isinstance(item, dict):
+                continue
+            name = item.get("name")
+            did = item.get("dishId")
+            if isinstance(did, str) and did:
+                out.setdefault(did, name)
+            former = item.get("formerIds")
+            for old in former if isinstance(former, list) else []:
+                if isinstance(old, str) and old:
+                    out.setdefault(old, name)
+    return out
+
+
+def _recorded_ids(store, names):
+    """Dish ids recorded in data/<store>/<venue>.json under any of `names` (the
+    venue's id and its former ids) — a departed row's key and item, a withdrawn
+    row's item."""
+    out = set()
+    for vid in names:
+        f = ROOT / "data" / store / f"{vid}.json"
+        try:
+            rows = json.loads(f.read_text(encoding="utf-8")).get("rows") or []
+        except (OSError, ValueError, AttributeError):
+            continue
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            for holder in (row.get("key"), row.get("item")):
+                if isinstance(holder, dict) and isinstance(holder.get("dishId"), str):
+                    out.add(holder["dishId"])
+    return out
+
+
+def check_retired_dish_ids(against):
+    """Errors for every dish id live (or claimed) at `against` that nothing in
+    the tree answers to now. Returns the scope line to print — always, pass or
+    fail, so "0 compared" can never read as "clean" (ADR 0072)."""
+    if _git("rev-parse", "--verify", "--quiet", f"{against}^{{commit}}") is None:
+        return (f"retired dish ids: NOT CHECKED — {against!r} is not a commit in "
+                f"this tree's own git repository, so there is nothing to compare with")
+    changed = _git("diff", "--name-only", against, "--", "site/data/restaurants/")
+    if changed is None:
+        return f"retired dish ids: NOT CHECKED — git could not diff against {against}"
+    paths = [l for l in changed.splitlines() if l.endswith(".json")]
+
+    current = {}
+    for path in sorted(RESTAURANTS.glob("*.json")):
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue  # check_restaurant reports it
+        if isinstance(doc, dict):
+            current[path.stem] = doc
+
+    def successor(vid):
+        """The venue that answers to `vid` now: the same file, or the record
+        whose venue-level `formerIds` carries it (a corrected venue id)."""
+        if vid in current:
+            return vid, current[vid]
+        for cid, doc in current.items():
+            if vid in (doc.get("formerIds") or []):
+                return cid, doc
+        return None, None
+
+    retired = claimed = departed = withdrawn = gone_venues = 0
+    for rel in paths:
+        vid = Path(rel).stem
+        before = _git("show", f"{against}:{rel}")
+        if before is None:
+            continue  # a venue added since — nothing could have been retired
+        try:
+            old_doc = json.loads(before)
+        except ValueError:
+            continue
+        cid, doc = successor(vid)
+        if doc is None:
+            gone_venues += 1
+            continue  # a whole venue removed is not a dish retired; not this check's
+        live, claims = set(), set()
+        for section in doc.get("menu") or []:
+            for item in (section.get("items") or []) if isinstance(section, dict) else []:
+                if not isinstance(item, dict):
+                    continue
+                if isinstance(item.get("dishId"), str):
+                    live.add(item["dishId"])
+                if isinstance(item.get("formerIds"), list):
+                    claims.update(x for x in item["formerIds"] if isinstance(x, str))
+        names = [cid] + [x for x in (doc.get("formerIds") or []) if isinstance(x, str)]
+        gone_rows = _recorded_ids("history/dishes", names)
+        pulled_rows = _recorded_ids("withdrawn", names)
+        for old, name in sorted(_answered_ids(old_doc).items()):
+            if old in live:
+                continue
+            retired += 1
+            if old in claims:
+                claimed += 1
+            elif old in gone_rows:
+                departed += 1
+            elif old in pulled_rows:
+                withdrawn += 1
+            else:
+                err(cid, f"dish id {old!r} ({name!r}) was answered to at {against} and "
+                         f"nothing answers to it now — put it in the formerIds of the "
+                         f"dish it became, or record the dish as departed "
+                         f"(data/history/dishes/) or withdrawn (data/withdrawn/). "
+                         f"Otherwise every heart, rating and link on it is dropped "
+                         f"in silence (roadmap 28l)")
+    unaccounted = retired - claimed - departed - withdrawn
+    return (f"retired dish ids: {len(paths)} venue file(s) changed since {against} · "
+            f"{retired} id(s) retired — {claimed} claimed in formerIds, {departed} "
+            f"departed, {withdrawn} withdrawn, {unaccounted} answered for by nothing"
+            + (f" · {gone_venues} venue file(s) gone entirely, not checked here"
+               if gone_venues else ""))
+
+
+def main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser(description="Validate site/data against the schema.")
+    ap.add_argument("--against", metavar="REF", default="HEAD",
+                    help="git ref the retired-dish-id check compares with (default "
+                         "HEAD — right before a commit). A clean CI checkout must "
+                         "pass the state BEFORE the push, or the check compares the "
+                         "tree with itself and can never fire.")
+    args = ap.parse_args(argv)
     if not RESTAURANTS.is_dir():
         print(f"error: {RESTAURANTS} not found", file=sys.stderr)
         return 1
@@ -3136,6 +3308,7 @@ def main():
     check_self_contradicting_claims()
     check_contradiction_tables()
     check_prose_addons()
+    retired_scope = check_retired_dish_ids(args.against)
 
     for w in warnings:
         print(f"warning: {w}")
@@ -3143,6 +3316,8 @@ def main():
         print(f"ERROR:   {e}")
 
     n = len(files)
+    # The population, before the verdict and whether it passed or failed.
+    print(f"  {retired_scope}")
     if errors:
         print(f"\n{len(errors)} error(s) across {n} restaurant file(s). FAILED.")
         return 1

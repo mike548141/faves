@@ -1050,8 +1050,13 @@ CASES = {
         "error", r"dishId 'Gold Card' on .* is not in slug form",
     ),
     "dishId that is an empty string": (lambda d: _first_item(d).update(dishId=""), "error", r'dishId for .* must be a non-empty string'),
+    # On a NEW dish. Until roadmap 28l this moved the first dish's live id, which
+    # is now the "moved with no formerIds claim" refusal below: the case was
+    # about the id's SHAPE, and moving an id nothing claims drops every heart.
     "a well-formed dishId is legal": (
-        lambda d: _first_item(d).update(dishId="eggs-on-toast-classic"),
+        lambda d: d["menu"][0]["items"].append(
+            {**copy.deepcopy(_first_item(d)), "name": "Eggs on Toast Classic",
+             "dishId": "eggs-on-toast-classic"}),
         "clean", None,
     ),
     # formerIds keeps an old shared link and an old stored heart resolving. A
@@ -1079,6 +1084,33 @@ CASES = {
     "a retired dish id is legal": (
         lambda d: _first_item(d).update(dishId="eggs-on-ciabatta", formerIds=["eggs-on-toast"]),
         "clean", None,
+    ),
+    # Roadmap 28l: an id that was live at the git baseline and that NOTHING
+    # answers to now is a heart dropped in silence on every phone holding it.
+    # These four need the sandbox to be a git repository whose HEAD is the
+    # pristine corpus — main() below makes it one; without that the check says
+    # "NOT CHECKED" and the two error cases fail here as PASSED SILENTLY.
+    "a dish deleted with nothing answering for its id": (
+        lambda d: d["menu"][0]["items"].pop(2),
+        "error", r"dish id 'salmon-and-avo-bagel' .* nothing answers to it now",
+    ),
+    "a dish id moved with no formerIds claim": (
+        lambda d: _first_item(d).update(dishId="eggs-on-ciabatta"),
+        "error", r"dish id 'eggs-on-toast' .* nothing answers to it now",
+    ),
+    "a ladder merge: a sibling folded in, its id claimed": (
+        lambda d: (
+            d["menu"][0]["items"][1].update(formerIds=["chilli-scrambled-eggs"]),
+            d["menu"][0]["items"].pop(3),
+        ),
+        "clean", None,
+    ),
+    "a merge that claims the wrong id still fails for the one it dropped": (
+        lambda d: (
+            d["menu"][0]["items"][1].update(formerIds=["chilli-scrambled-egg"]),
+            d["menu"][0]["items"].pop(3),
+        ),
+        "error", r"dish id 'chilli-scrambled-eggs' .* nothing answers to it now",
     ),
     # picks are written as names, and a name is not unique within a venue: this
     # one silently resolved to whichever row came first until ADR 0051.
@@ -1548,6 +1580,19 @@ def main() -> int:
         (work / "site" / "js").mkdir(parents=True, exist_ok=True)
         for mod in ("renames.js", "addons.js", "vibes.js", "dietary.js"):
             shutil.copy(ROOT / "site" / "js" / mod, work / "site" / "js" / mod)
+
+        # A git repository whose HEAD is the unmutated copy, so the retired-
+        # dish-id check (roadmap 28l) has a baseline to compare each mutation
+        # with. Its own repo, never the one this file lives in: validate.py
+        # refuses a git toplevel that is not its ROOT, so it cannot wander up
+        # into a parent checkout. Signing and hooks off — the sandbox is not a
+        # commit anyone keeps.
+        git = ["git", "-C", str(work), "-c", "user.name=test_validate",
+               "-c", "user.email=test-validate@invalid", "-c", "commit.gpgsign=false",
+               "-c", "core.hooksPath=/dev/null"]
+        for step in (["init", "-q"], ["add", "site", "tools"],
+                     ["commit", "-q", "--no-verify", "-m", "pristine corpus"]):
+            subprocess.run(git + step, check=True, capture_output=True, timeout=120)
 
         rc, out = run_validate(work)
         if rc != 0:

@@ -27,12 +27,35 @@ jobs:
     name: menu data validates
     runs-on: ubuntu-latest
     steps:
+      # Full history, and a base ref: one check in validate.py (roadmap 28l)
+      # asks whether a dish id that EXISTED before this change is still
+      # answered for — claimed in a `formerIds`, departed or withdrawn — and
+      # "before" is a git ref. On a clean checkout HEAD-versus-HEAD can only
+      # agree, so without the base this would run, print "0 changed", and prove
+      # nothing about the commit that dropped every heart on a retired id. Same
+      # range logic as split_data's step in the `guard` job.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Validate restaurant JSON against the schema
-        run: python3 tools/validate.py
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="origin/${{ github.base_ref }}"
+          elif [ -n "${{ github.event.before }}" ] && \
+               [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            BASE="${{ github.event.before }}"
+          else
+            BASE="HEAD"
+          fi
+          if ! git rev-parse --verify --quiet "$BASE^{commit}" >/dev/null; then
+            echo "::error::Base ref $BASE does not resolve — the retired-dish-id check would silently compare nothing."
+            exit 1
+          fi
+          echo "Comparing dish ids against: $BASE"
+          python3 tools/validate.py --against "$BASE"
       # A validator's failure mode is silence — a check that never fires looks
       # exactly like data that is always clean. This breaks a real record in
       # 124 specific ways (test_validate.py) and asserts the gate notices. It found a real hole on
