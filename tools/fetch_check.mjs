@@ -15,6 +15,9 @@
 //   · …and it SURVIVES FLIGHT MODE: the server is stopped (precache_check's
 //     method — CDP's `offline` flag never reaches a worker's own fetches) and
 //     the edited menu still opens, the home screen still lists places.
+//   · …and a data read inside the ~3 minute window (510/180, ADR 0148) asks
+//     for NOTHING, even from a worker the browser has stopped — then, with the
+//     window's record wound back, the unprompted natural path still delivers.
 //   · …and a broken deploy is not switched to: a venue file answered with
 //     Cloudflare Pages' 200-but-HTML stand-in (ADR 0100) leaves the held set
 //     exactly as it was.
@@ -110,6 +113,41 @@ const SYNC_NOW = `(async () => {
   worker.postMessage({ type: "SYNC_DATA", force: true }, [ch.port2]);
   return await reply;
 })()`;
+
+// Wind the worker's "last successful check" record back past its window
+// (510/180). The record is the only clock the window reads; 5 minutes is
+// comfortably past the ~3 minute window without depending on its exact value.
+const AGE_CHECK = `(async () => {
+  const store = await caches.open("faves-data");
+  const hit = await store.match("__data_checked__");
+  if (!hit) throw new Error("no __data_checked__ record — the worker never recorded a check");
+  const { at } = await hit.json();
+  await store.put("__data_checked__", new Response(JSON.stringify({ at: at - 5 * 60 * 1000 })));
+  return true;
+})()`;
+
+/**
+ * Stop every service worker, as the browser does to an idle one after ~30 s,
+ * and resolve true once one was seen to go from running to stopped. False
+ * means the stop could not be observed — the caller asserts on it, because a
+ * "restarted worker" that never stopped would pass the window assertion on
+ * the in-memory state this item exists to stop relying on.
+ */
+async function stopWorkers(cdp, sessionId) {
+  let sawStopped = false;
+  const onUpdate = (params) => {
+    for (const v of params.versions || []) if (v.runningStatus === "stopped") sawStopped = true;
+  };
+  cdp.on("ServiceWorker.workerVersionUpdated", onUpdate);
+  await cdp.send("ServiceWorker.enable", {}, sessionId);
+  await cdp.send("ServiceWorker.stopAllWorkers", {}, sessionId);
+  const t0 = Date.now();
+  while (!sawStopped && Date.now() - t0 < 5000) await sleep(50);
+  // Cdp has no `off`; the listener only flips this call's own local, so a
+  // stale one left registered is inert.
+  await cdp.send("ServiceWorker.disable", {}, sessionId).catch(() => {});
+  return sawStopped;
+}
 
 const POINTER = `(async () => {
   const store = await caches.open("faves-data");
@@ -237,8 +275,8 @@ async function run(opts) {
     );
     const storeSize = await h.driver.evalPage(`caches.open("faves-data").then((c) => c.keys()).then((k) => k.length)`);
     report.check(
-      "…and the replaced versions were swept (held files + one pointer, nothing else)",
-      storeSize === wantInstall + 1,
+      "…and the replaced versions were swept (held files + one pointer + the check record, nothing else)",
+      storeSize === wantInstall + 2,
       `${storeSize} entries in faves-data`
     );
 
@@ -262,15 +300,47 @@ async function run(opts) {
     );
 
     // THE NATURAL PATH — no message, no force: how an edit reaches an online
-    // phone. A data read starts a background check (at most once per
-    // SYNC_MIN_GAP_MS, 10 s); the screen that started it renders the set it
-    // already held; the NEXT screen after the switch shows the edit.
+    // phone. A data read starts a background check unless one SUCCEEDED inside
+    // the persisted window (DATA_CHECK_WINDOW_MS, ~3 minutes — 510/180, ADR
+    // 0148) or started inside the in-memory SYNC_MIN_GAP_MS (10 s). The screen
+    // that started it renders the set it already held; the NEXT screen after
+    // the switch shows the edit.
+    //
+    // 🔑 WHY THIS STEP AGES A RECORD INSTEAD OF WAITING. Until 510/180 it slept
+    // 10.5 s past the in-memory gap. The window is now three minutes, and a
+    // check that sleeps three minutes gets switched off. So it does the honest
+    // half first — proves the window HOLDS, across a worker the browser has
+    // genuinely stopped — and then winds the record back past the window, which
+    // is the only state the worker reads, and proves the natural path still
+    // runs. The worker under test is the shipped one throughout.
     const second = await editedVenues();
     const bumped = JSON.parse(second.get(`data/restaurants/${MENU_VENUE}.json`));
     bumped.menu.flatMap((x) => x.items || []).find((i) => i.price === NEW_PRICE).price = NEW_PRICE + 1;
     second.set(`data/restaurants/${MENU_VENUE}.json`, JSON.stringify(bumped, null, 2) + "\n");
     for (const [k, v] of stageEdits(second).overlay) h.overlay.set(k, v);
-    await sleep(10_500); // past the coalescing gap since the forced sync above
+    await sleep(10_500); // past the in-memory gap, so only the window can hold the check back
+    const stopped = await stopWorkers(cdp, h.sessionId);
+    report.check(
+      "the browser STOPPED the worker (the instrument arrived — its memory is gone)",
+      stopped,
+      stopped ? "" : "no running → stopped transition observed"
+    );
+    h.log.length = 0;
+    await cdp.send("Page.navigate", { url: `${h.base}/restaurant.html?id=${MENU_VENUE}` }, h.sessionId);
+    await untilPresent(
+      () => h.driver.evalPage(`document.querySelectorAll("[data-dish-id]").length > 0 || null`),
+      { label: "window: the menu rendered" }
+    );
+    await sleep(1500); // a background check, if one started, has long since asked
+    const inWindow = h.log.filter((u) => u.startsWith("/data/"));
+    const heldInWindow = await h.driver.evalPage(POINTER);
+    report.check(
+      "inside the ~3 minute window, a RESTARTED worker's data read makes NO request (510/180)",
+      inWindow.length === 0 && heldInWindow?.generation === h.after.generation,
+      inWindow.length ? `asked for: ${inWindow.join(", ")}` : `generation held at ${heldInWindow?.generation}`
+    );
+    await h.driver.evalPage(AGE_CHECK);
+    await stopWorkers(cdp, h.sessionId);
     const t0 = Date.now();
     await cdp.send("Page.navigate", { url: `${h.base}/restaurant.html?id=${MENU_VENUE}` }, h.sessionId);
     const firstScreen = await untilPresent(

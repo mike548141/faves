@@ -15,6 +15,12 @@
 //   (c) `/restaurant?id=…` missed the shell cache, so the deep link a reader is
 //       most likely to have saved was the one route flight mode did not cover.
 //
+// And a fourth, from roadmap 510/170 (ADR 0149): (d) the 2026-08-16
+// stale-precache incident (ADR 0056), REPRODUCED on a server that sends the
+// caching headers Pages actually sends (`startPagesServer`), once per install
+// mode. Plain fetch() must reproduce it (asserted, or nothing else here means
+// anything); "reload", "no-cache" and the shipped worker must not.
+//
 // 🚩 WHAT THIS PROVES, AND WHAT IT CANNOT.
 //   · It proves the SERVICE WORKER's half: given a 200 carrying `text/html` for
 //     a `.js` path, the install rejects and no shell cache is left marked
@@ -30,13 +36,14 @@
 //   · It is Chrome only, and says nothing about Safari — which is where a PWA
 //     lives on the owner's own phone.
 //
-//     node tools/precache_check.mjs        # all three
+//     node tools/precache_check.mjs        # all four
 //     node tools/precache_check.mjs -v     # narrate each step
 //
 // Exit 0 = all passed. 1 = an assertion failed. 2 = the browser stopped
 // answering (see tools/lib/browser.mjs) — that says nothing about the site.
 
 import { readFile, mkdtemp } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -49,6 +56,7 @@ import {
   exitFromError,
   launchChrome,
   sleep,
+  startPagesServer,
   startServer,
   stopChrome,
   untilPresent,
@@ -115,6 +123,172 @@ const CACHE_STATE = `(async () => {
   }
   return { names, shell, ready };
 })()`;
+
+// --- 4. The 2026-08-16 stale-bytes incident (ADR 0056), reproduced ---------
+//
+// The incident: Pages served `js/*` with four hours of `max-age`; an install
+// built its new, renamed shell cache with a plain `fetch()`, which the
+// browser's HTTP cache answered with the PREVIOUS deploy's `app.js`; the READY
+// sentinel then made the skew permanent. ADR 0056's answer was
+// `cache: "reload"`. Roadmap 510/170 asks whether `cache: "no-cache"` — a
+// conditional request the SERVER answers, 304 when unchanged — is as safe,
+// because it would stop a first visit downloading the shell twice.
+//
+// So each install mode is run through the incident twice, on a server that
+// answers with the caching headers Pages ACTUALLY sends today
+// (`startPagesServer`: 4 h on js/css, ETags, real 304s):
+//
+//   · UPDATE — the incident itself. Deploy A installs; deploy B changes
+//     `app.js` and SHELL_VERSION; the update's new shell cache must hold B.
+//   · FIRST — the same hole on a first install: a visit with no worker left
+//     A's `app.js` in the HTTP cache; deploy B's first install must hold B.
+//
+// 🔑 THE REPRODUCTION MUST FAIL WHERE THE INCIDENT DID. Plain `fetch()`
+// (`default`) is run too, and it is ASSERTED to cache the old bytes. If it ever
+// stops doing that, every "safe" verdict below is measuring a server or a
+// browser under which the incident cannot happen — and says nothing.
+const INCIDENT_VICTIM = "/js/app.js"; // the incident's own file; the home page loads it
+const MODE_LINE = 'const PRECACHE_FETCH = { cache: "reload" };';
+const FIRST_LINE = /^const FIRST_INSTALL_FETCH = \{ cache: "[a-z-]+" \};$/m;
+const VERSION_LINE = /^const SHELL_VERSION = "[^"]+";$/m;
+const SW_SRC = readFileSync(join(SITE, "sw.js"), "utf8");
+
+/** sw.js renamed to `version`, and — when `mode` is given — with EVERY
+ *  precache fetch forced to that mode (null = the shipped worker as it is). */
+function swFor(version, mode) {
+  if (!VERSION_LINE.test(SW_SRC) || !SW_SRC.includes(MODE_LINE)) {
+    throw new Error("site/sw.js changed shape — update MODE_LINE/VERSION_LINE in this tool");
+  }
+  let s = SW_SRC.replace(VERSION_LINE, `const SHELL_VERSION = "${version}";`);
+  if (mode) {
+    s = s.replace(MODE_LINE, `const PRECACHE_FETCH = { cache: "${mode}" };`);
+    s = s.replace(FIRST_LINE, `const FIRST_INSTALL_FETCH = { cache: "${mode}" };`);
+  }
+  return s;
+}
+
+const UPDATE_SETTLE = `(async () => {
+  const reg = await navigator.serviceWorker.getRegistration();
+  await reg.update();
+  const w = reg.installing || reg.waiting;
+  if (!w) return "none";
+  const done = ["installed", "activated", "redundant"];
+  if (done.includes(w.state)) return w.state;
+  return await new Promise((ok) => w.addEventListener("statechange", () => {
+    if (done.includes(w.state)) ok(w.state);
+  }));
+})()`;
+
+const victimIn = (cacheName) => `(async () => {
+  const c = await caches.open(${JSON.stringify(cacheName)});
+  if (!(await c.match("./__cache_ready__"))) return { ready: false, marker: null };
+  const hit = await c.match(${JSON.stringify("." + INCIDENT_VICTIM)});
+  const text = hit ? await hit.text() : "";
+  const m = text.match(/\\/\\/ deploy-marker: (\\w+)\\s*$/);
+  return { ready: true, marker: m ? m[1] : null };
+})()`;
+
+/** One install mode through one variant of the incident. Resolves what the
+ *  new shell cache holds and what the server was asked during the install. */
+async function incident(cdp, report, { mode, variant }) {
+  const app = readFileSync(join(SITE, INCIDENT_VICTIM));
+  const marked = (d) => Buffer.concat([app, Buffer.from(`\n// deploy-marker: ${d}\n`)]);
+  const overlay = new Map([[INCIDENT_VICTIM, { body: marked("A"), type: "text/javascript" }]]);
+  overlay.set("/sw.js", variant === "first" ? { status: 404 } : { body: swFor("repro-A", mode), type: "text/javascript" });
+  const srv = await startPagesServer(0, SITE, overlay);
+  const base = `http://127.0.0.1:${srv.port}`;
+  const sessionId = await newPage(cdp);
+  const label = `incident ${mode || "shipped"}/${variant}`;
+  const driver = createDriver(cdp, sessionId, (m) => report.step(`${label}: ${m}`));
+  try {
+    await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
+    await untilPresent(() => driver.evalPage(`document.readyState === "complete"`), { label: `${label}: deploy A loaded` });
+    if (variant === "update") {
+      const a = await driver.evalPage(SETTLE);
+      if (a !== "activated") throw new Error(`${label}: deploy A's worker ended ${a}`);
+    } else {
+      await sleep(300); // the failed registration settles; app.js A is in the HTTP cache
+    }
+    // Deploy B: new bytes at the same URL, a renamed shell.
+    overlay.set(INCIDENT_VICTIM, { body: marked("B"), type: "text/javascript" });
+    overlay.set("/sw.js", { body: swFor("repro-B", mode), type: "text/javascript" });
+    srv.log.length = 0;
+    let state;
+    if (variant === "update") {
+      state = await driver.evalPage(UPDATE_SETTLE);
+    } else {
+      await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
+      await untilPresent(() => driver.evalPage(`document.readyState === "complete"`), { label: `${label}: deploy B loaded` });
+      state = await driver.evalPage(SETTLE);
+    }
+    const held = await driver.evalPage(victimIn("faves-shell-repro-B"));
+    const asks = srv.log.filter((e) => e.url.split("?")[0] === INCIDENT_VICTIM);
+    const shell = srv.log.filter((e) => /\.(?:js|css|png|ico|svg)$/.test(e.url.split("?")[0]) && e.url !== "/sw.js");
+    return {
+      state,
+      ...held,
+      victimAsks: asks.map((e) => `${e.conditional ? "conditional" : "plain"}→${e.status}`),
+      notModified: shell.filter((e) => e.status === 304).length,
+      shellAsks: shell.length,
+    };
+  } finally {
+    srv.server.closeAllConnections?.();
+    srv.server.close?.();
+  }
+}
+
+async function staleBytesIncident(cdp, report) {
+  report.step("incident: Pages-like headers — js/css 4 h, ETags, 304s (measured live 2026-10-01)");
+  const rows = [];
+  for (const mode of ["default", "reload", "no-cache", null]) {
+    for (const variant of ["update", "first"]) {
+      const r = await incident(cdp, report, { mode, variant });
+      rows.push({ mode: mode || "shipped", variant, ...r });
+    }
+  }
+  console.log("\n  2026-08-16 incident, reproduced (new shell cache's app.js: A = previous deploy, B = current)");
+  for (const r of rows) {
+    console.log(
+      `    ${r.mode.padEnd(8)} ${r.variant.padEnd(6)} worker ${String(r.state).padEnd(9)} holds ${r.marker ?? "—"}` +
+        `  · app.js asked: ${r.victimAsks.join(", ") || "never (served from the HTTP cache)"}` +
+        `  · shell 304s ${r.notModified}/${r.shellAsks}`
+    );
+  }
+  console.log("");
+  const at = (mode, variant) => rows.find((r) => r.mode === mode && r.variant === variant);
+  for (const variant of ["update", "first"]) {
+    const plain = at("default", variant);
+    report.check(
+      `the incident REPRODUCES (${variant}): plain fetch() fills the new shell cache with the OLD app.js`,
+      plain.ready && plain.marker === "A",
+      `held ${plain.marker}, ready ${plain.ready} — if this is not A, the harness cannot see the incident and nothing below means anything`
+    );
+    for (const mode of ["reload", "no-cache", "shipped"]) {
+      const r = at(mode, variant);
+      report.check(
+        `${mode === "shipped" ? "the SHIPPED worker" : `cache: "${mode}"`} fails safe (${variant}): the new shell cache holds the CURRENT app.js`,
+        r.ready && r.marker === "B",
+        `held ${r.marker}, ready ${r.ready}, worker ${r.state}; app.js asked ${r.victimAsks.join(", ") || "never"}`
+      );
+    }
+    const shipped = at("shipped", variant);
+    report.check(
+      variant === "first"
+        ? "the SHIPPED worker's first install REVALIDATES (510/170): conditional requests, 304s for unchanged files"
+        : "the SHIPPED worker's update still RELOADS (the ruling covered the first install only)",
+      variant === "first"
+        ? shipped.victimAsks.every((a) => a.startsWith("conditional→")) && shipped.notModified > 0
+        : shipped.victimAsks.every((a) => a.startsWith("plain→")) && shipped.notModified === 0,
+      `app.js ${shipped.victimAsks.join(", ")}; ${shipped.notModified} of ${shipped.shellAsks} shell request(s) answered 304`
+    );
+    const nc = at("no-cache", variant);
+    report.check(
+      `cache: "no-cache" really REVALIDATES (${variant}): app.js was a conditional request, and unchanged files came back 304`,
+      nc.victimAsks.some((a) => a.startsWith("conditional→200")) && nc.notModified > 0,
+      `app.js ${nc.victimAsks.join(", ")}; ${nc.notModified} of ${nc.shellAsks} shell request(s) answered 304`
+    );
+  }
+}
 
 async function run(opts) {
   const report = new Report(opts.verbose);
@@ -288,6 +462,9 @@ async function run(opts) {
       menu.dishes > 0 && menu.id === venueId,
       JSON.stringify(menu)
     );
+
+    // --- 4. The 2026-08-16 incident, on Pages' real caching headers ---------
+    await staleBytesIncident(cdp, report);
 
     return report.summary(SITE);
   } finally {

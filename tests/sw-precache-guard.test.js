@@ -218,6 +218,30 @@ test("the data sync routes every download through requireAsset", () => {
   assert.match(sync, /take\(path, fp, path === DATA_FX\)/);
 });
 
+// Roadmap 510/170, ADR 0149: the install's fetch mode is the ONE line between
+// this worker and the 2026-08-16 stale-precache incident (ADR 0056). Plain
+// fetch() ("default") and "force-cache"/"only-if-cached" read the browser's
+// cache without asking the server, which is the incident. "reload" and
+// "no-cache" are the only two modes that cannot — tools/precache_check.mjs
+// reproduces the incident to prove it. Pinned here because a mode is one word,
+// and a one-word edit to it reads like a harmless tidy in any diff.
+test("the precache fetches only in the two modes the incident cannot reach", () => {
+  const mode = (name) => {
+    const m = src.match(new RegExp(`^const ${name} = \\{ cache: "([a-z-]+)" \\};$`, "m"));
+    assert.ok(m, `site/sw.js: ${name} is gone or changed shape — update this test`);
+    return m[1];
+  };
+  assert.equal(mode("PRECACHE_FETCH"), "reload");
+  assert.equal(mode("FIRST_INSTALL_FETCH"), "no-cache");
+  const install = src.slice(src.indexOf('self.addEventListener("install"'), src.indexOf('self.addEventListener("message"'));
+  // An UPDATE (an active worker exists) keeps "reload"; only a first install revalidates.
+  assert.match(install, /const shellFetch = self\.registration\?\.active \? PRECACHE_FETCH : FIRST_INSTALL_FETCH;/);
+  assert.match(install, /requireAsset\(u, await fetchClean\(u, shellFetch\)\)/);
+  // Code only: the comments name "default" to explain why it is not used.
+  const code = src.split("\n").filter((l) => !l.trim().startsWith("//")).join("\n");
+  assert.doesNotMatch(code, /cache: "(?:default|force-cache|only-if-cached)"/);
+});
+
 test("requireAsset keeps the status guard it is adding to, not replacing", () => {
   const fn = src.slice(
     src.indexOf("function requireAsset(url, res) {"),

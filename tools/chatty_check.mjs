@@ -39,8 +39,14 @@
 // every call; sync.js asking about buckets it does not hold), and the matching
 // budget MUST fail. A budget that passes both is measuring nothing.
 //
-// 🚩 WHAT THIS CANNOT SHOW: Cloudflare Pages (304s, brotli, HTTP/2), real KV
-// latency or eventual consistency (the stand-in is strictly consistent), Safari,
+// The WIRE scenario's server answers with the caching headers Pages actually
+// sends (measured live 2026-10-01: four hours on js/css, ETags, 304s), so a
+// revalidation shows as a bodiless 304 — 510/170's whole saving. The other
+// scenarios keep the plain no-store server.
+//
+// 🚩 WHAT THIS CANNOT SHOW: Cloudflare Pages itself (brotli, HTTP/2, its edge
+// cache), real KV latency or eventual consistency (the stand-in is strictly
+// consistent), Safari,
 // or a phone's CPU — counts are exact, byte figures are estimates, and the DOM
 // numbers are changes not milliseconds. The KV scenarios are for a user with NO
 // recipes (the survey's population). Browser-driven, so NOT in CI (the standing
@@ -62,6 +68,7 @@ import {
   exitFromError,
   launchChrome,
   sleep,
+  startPagesServer,
   startServer,
   stopChrome,
   untilPresent,
@@ -73,7 +80,10 @@ const SITE = join(ROOT, "site");
 
 const BIG_MENU = "regal-chinese-restaurant"; // 264 dishes — the survey's big menu
 const SYNC_HOST = "faves-sync.cakeit.workers.dev"; // sync.js's SYNC_ENDPOINT host
-const NAV_GAP_MS = 10_500; // sw.js coalesces data checks inside 10 s; step past it
+// sw.js coalesces data checks inside 10 s (in memory); step past it, so what
+// the warm rows measure is the PERSISTED ~3 minute window (510/180), which is
+// what a real session of screens a minute or two apart meets.
+const NAV_GAP_MS = 10_500;
 
 // --- The budgets -----------------------------------------------------------
 // id → { what, budget, unit, lowers }. `measured` is filled in as scenarios run.
@@ -83,7 +93,7 @@ const B = {
   coldGz: { what: "cold install: gzip-6 estimate", unit: "KB", budget: 0, lowers: "170" },
   warmReq: { what: "warm home load: requests", unit: "req", budget: 0, lowers: "160/180 (throttle the catalogue check)" },
   warmBytes: { what: "warm home load: response bytes", unit: "B", budget: 0, lowers: "160/180" },
-  menuReq: { what: "menu open (warm, >10 s after the last page): requests", unit: "req", budget: 0, lowers: "160/180" },
+  menuReq: { what: "menu open (warm, >10 s after the last page, inside the ~3 min data-check window): requests", unit: "req", budget: 0, lowers: "160/180" },
   idleReq: { what: "open menu, 4 s idle: requests", unit: "req", budget: 0, lowers: "—" },
   idleTimers: { what: "open menu, 4 s idle: timers started", unit: "n", budget: 0, lowers: "—" },
   idleMut: { what: "open menu, 4 s idle: DOM mutations", unit: "n", budget: 0, lowers: "—" },
@@ -122,9 +132,20 @@ Object.assign(BUDGETS, {
   // + margin: counts of 10 or fewer +1, above that max(+2, +10%); bytes +10%;
   // a zero baseline stays 0. Re-derive with this tool; tighten with the item
   // named in each row's `lowers`, never loosen without saying why.
-  coldReq: 296, coldGz: 1702, // 269 req, 1,547 KB
-  warmReq: 3, warmBytes: 37_859, // 2 req: catalogue + the sw.js update check (34,417 B when that fires; 197 B when it does not)
-  menuReq: 2, idleReq: 2, // 1 and 0-1: a late sw.js update check lands in the idle window some runs
+  // cold + warmBytes re-measured 2026-10-01 with 510/170 on the Pages-headers
+  // instrument (the wire scenario now gets ETags, 304s and Pages' real
+  // Cache-Control — see origin()), 3 runs agreed. Same instrument, the
+  // install on "reload": 268 req, 1,542 KB (5,747 KB raw); on "no-cache" (the
+  // first install revalidates): 268 req, 1,072 KB (4,461 KB raw). The old
+  // no-store instrument read 269 req, 1,547 KB, and could not see a 304 at all.
+  coldReq: 295, coldGz: 1179, // 268 req, 1,072 KB
+  // warm/menu tightened 2026-10-01 with 510/180 (the data check's window
+  // persisted, ~3 min): measured on 510-sw, 3 runs agreed. Was 2 req (catalogue
+  // + the sw.js update check) and 1. On the no-store instrument the one request
+  // left was the sw.js update check in full (37,308 B); on the Pages-headers
+  // instrument it is a conditional request answered 304, so 0 B (5 runs).
+  warmReq: 2, warmBytes: 0, // 1 req: the sw.js update check, 304
+  menuReq: 1, idleReq: 2, // 0, and 0-1: a late sw.js update check lands in the idle window some runs
   idleTimers: 0, idleMut: 0,
   lsSetHome: 2, lsRemHome: 2, evHome: 4, // was 6, 6, 12 → 1, 1, 2 with 510/200
   lsSetMenu: 2, lsRemMenu: 2, evMenu: 4,
@@ -251,9 +272,14 @@ async function newPage(cdp, { shimPort = null } = {}) {
   return { sessionId, targetId };
 }
 
-/** One fresh ORIGIN (a new port = new storage, new service worker) with a request log. */
-async function origin(overlay = null) {
-  const srv = await startServer(0, SITE, overlay);
+/** One fresh ORIGIN (a new port = new storage, new service worker) with a request log.
+ *  `pages`: answer with the caching headers Cloudflare Pages actually sends —
+ *  four hours on js/css, ETags, bodiless 304s (tools/lib/browser.mjs,
+ *  startPagesServer). Without it the server says `no-store` and never 304s,
+ *  so the browser's HTTP cache holds nothing and a revalidation (510/170) can
+ *  never save a byte: the instrument would read zero by construction. */
+async function origin(overlay = null, { pages = false } = {}) {
+  const srv = pages ? await startPagesServer(0, SITE, overlay || new Map()) : await startServer(0, SITE, overlay);
   const log = []; // { url, bytes, gz }
   srv.server.on("request", (req, res) => {
     const entry = { url: req.url, bytes: 0, gz: 0 };
@@ -320,7 +346,7 @@ const HELD = `(async () => {
 
 /** Cold install, then warm home, warm menu, idle menu, storage per load. */
 async function scenarioWire(cdp, report, { overlay = null, probe = false, label }) {
-  const o = await origin(overlay);
+  const o = await origin(overlay, { pages: true });
   const A = await newPage(cdp);
   const dA = createDriver(cdp, A.sessionId, (m) => report.step(`${label}: ${m}`));
   const Bp = await newPage(cdp); // the second tab: counts the storage events it is sent
