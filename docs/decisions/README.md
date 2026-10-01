@@ -1807,3 +1807,9 @@ deliberation those compact docs omit.
   **Data reads come from the phone's own store, and every download is
   checked** (`510/030`). Network-first reads are rejected; an edit reaches an
   online phone one screen later, a trade the owner kept (2026-10-01).
+- [0148](0148-the-data-check-waits-about-three-minutes-and-the-wait-survives-the-worker.md) — <!-- wrapscan:allow: a link target cannot wrap -->
+  **The data check waits about three minutes, and the wait survives the
+  worker** (owner-ruled 2026-10-01, `510/180`). A data read does not check the
+  catalogue within ~3 minutes of the last check that succeeded; the time is a
+  record in the data store, so a stopped worker keeps it. A resume and a forced
+  check still go at once. Amends 0147's "once every 10 s".

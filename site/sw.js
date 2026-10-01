@@ -11,7 +11,7 @@
 //     0145 as revised by ADR 0146). There is no DATA_VERSION any more: a menu
 //     edit changes no byte of this file, and the phone learns of it from
 //     data/catalogue.json instead — see "The data store" below.
-const SHELL_VERSION = "2026-10-01.9";
+const SHELL_VERSION = "2026-10-01.10";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
 const DATA_STORE = "faves-data";
@@ -196,8 +196,22 @@ const POINTER_PATH = /\/__data_pointer__\/v\d+$/;
 // cost control — one catalogue request (a few hundred bytes) is less than
 // the conditional request per data file every read made before 510/030 — but
 // a coalescer: a home screen reads three data files at once, and a burst of
-// navigations should share one check.
+// navigations should share one check. It lives in worker memory, so it also
+// covers a check that FAILED (offline), which the window below never records.
 const SYNC_MIN_GAP_MS = 10 * 1000;
+// …and a data read does not check at all within this long of the last check
+// that SUCCEEDED (roadmap 510/180, owner-ruled 2026-10-01: "about 3 minutes",
+// ADR 0148). The time is a record in the data store, not a variable, because
+// the browser stops an idle worker after ~30 s and a variable dies with it —
+// which is why the 10 s gap above never held across a session's screens.
+// The trade is freshness: a menu edit reaches an online phone up to this much
+// later. A resume (SYNC_DATA from js/sw-register.js) and a forced SYNC_DATA
+// ignore the window and check at once; only a data READ consults it.
+const DATA_CHECK_WINDOW_MS = 3 * 60 * 1000;
+// The record: `{ at }`, epoch ms. Not a pointer and not a file, so the sweep
+// keeps it by name (CHECKED_PATH).
+const CHECKED_KEY = "__data_checked__";
+const CHECKED_PATH = /\/__data_checked__$/;
 // Where this worker's scope starts, so a request's pathname maps to the
 // site-relative path the catalogue and the summary use.
 const BASE_URL = new URL("./", self.location.href).href;
@@ -361,7 +375,8 @@ self.addEventListener("install", (event) => {
 //     a waiting update's exact version, not just "something is ready".
 //   - SYNC_DATA: "check for new menus now" — sent by the page on resume
 //     (js/sw-register.js), and by tools/fetch_check.mjs with `force: true` to
-//     skip the coalescing gap. Replies with what the sync did.
+//     skip the coalescing gap. Replies with what the sync did. It never
+//     consults DATA_CHECK_WINDOW_MS (510/180): a resume checks at once.
 self.addEventListener("message", (event) => {
   if (!event.data) return;
   const port = event.ports?.[0];
@@ -484,12 +499,13 @@ self.addEventListener("fetch", (event) => {
       return;
     }
     // Every other data read is answered from the held set, and starts a
-    // background update check (coalesced — SYNC_MIN_GAP_MS). The read that
-    // started it is served the set as it stood, so one screen never mixes
-    // two generations; the NEXT screen opened after the switch shows the
-    // update. That is how quickly an edit reaches an online phone now.
-    const sync = requestSync();
-    if (sync) event.waitUntil(sync.catch(() => {}));
+    // background update check — unless one succeeded inside
+    // DATA_CHECK_WINDOW_MS (persisted) or started inside SYNC_MIN_GAP_MS. The
+    // read that started it is served the set as it stood, so one screen never
+    // mixes two generations; the NEXT screen opened after the switch shows the
+    // update. So an edit reaches an online phone on the first screen opened
+    // after the window, plus one (or at once on a resume).
+    event.waitUntil(backgroundCheck().catch(() => {}));
     event.respondWith(dataRead(req));
   } else if (url.pathname.includes("/img/")) {
     event.respondWith(imageCache(req));
@@ -658,7 +674,8 @@ async function sweepOrphans(store) {
   const live = liveKeys(pointers, BASE_URL);
   let removed = 0;
   for (const req of keys) {
-    if (POINTER_PATH.test(new URL(req.url).pathname) || live.has(req.url)) continue;
+    const path = new URL(req.url).pathname;
+    if (POINTER_PATH.test(path) || CHECKED_PATH.test(path) || live.has(req.url)) continue;
     await store.delete(req);
     removed++;
   }
@@ -737,7 +754,55 @@ async function syncData() {
     new Response(JSON.stringify(pointer), { headers: { "content-type": "application/json" } })
   );
   await sweepOrphans(store);
-  return { status: "updated", fetched, generation };
+  return { status: "updated", fetched, generation, complete };
+}
+
+/** When the last check that succeeded finished (epoch ms), or null. */
+async function readChecked(store) {
+  try {
+    const hit = await store.match(CHECKED_KEY);
+    const at = hit ? (await hit.json()).at : null;
+    return Number.isFinite(at) ? at : null;
+  } catch {
+    return null; // unreadable ⇒ "never checked" — the safe answer is to check
+  }
+}
+
+/** Is `at` inside the window ending `now`? A time in the FUTURE (the phone's
+ *  clock was wound back) is not: that check is due, not deferred for ever. */
+function insideWindow(at, now, windowMs) {
+  if (at === null) return false;
+  const age = now - at;
+  return age >= 0 && age < windowMs;
+}
+
+/**
+ * A sync, then — if it left the phone holding the current, complete set —
+ * the record that starts the window. A failed sync records nothing (the next
+ * read retries, coalesced by SYNC_MIN_GAP_MS), and neither does one whose
+ * rates file failed (`complete: false`), for the same reason syncData leaves
+ * that pointer's catalogue blank. "other-schema" IS recorded: nothing this
+ * worker can do will change that answer inside three minutes.
+ */
+async function syncAndRecord() {
+  const result = await syncData();
+  if (result.status !== "updated" || result.complete) {
+    const store = await caches.open(DATA_STORE);
+    await store.put(
+      CHECKED_KEY,
+      new Response(JSON.stringify({ at: Date.now() }), { headers: { "content-type": "application/json" } })
+    );
+  }
+  return result;
+}
+
+/** A data read's check: nothing inside the persisted window, else requestSync
+ *  (which still coalesces). Resolves to the sync's result, or null. */
+async function backgroundCheck() {
+  if (syncInFlight) return syncInFlight;
+  const at = await readChecked(await caches.open(DATA_STORE));
+  if (insideWindow(at, Date.now(), DATA_CHECK_WINDOW_MS)) return null;
+  return requestSync();
 }
 
 // One sync at a time across EVERY worker of this origin: during an update the
@@ -772,7 +837,7 @@ function requestSync({ force = false } = {}) {
   const gap = Date.now() - lastSyncStart;
   if (!force && gap >= 0 && gap < SYNC_MIN_GAP_MS) return null;
   lastSyncStart = Date.now();
-  syncInFlight = withSyncLock(syncData).finally(() => {
+  syncInFlight = withSyncLock(syncAndRecord).finally(() => {
     syncInFlight = null;
   });
   return syncInFlight;

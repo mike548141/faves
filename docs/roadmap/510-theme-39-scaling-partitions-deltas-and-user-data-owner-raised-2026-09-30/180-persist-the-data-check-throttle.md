@@ -15,3 +15,18 @@
   persisted so it survives the worker sleeping. A resume and a forced
   `SYNC_DATA` still check at once.
   📌 **Claimed 2026-10-01 (`faves-55`).**
+  ✅ **Built 2026-10-01 (`faves-55` worker, branch `510-sw`), ADR 0148.**
+  `site/sw.js`: a data read does not check the catalogue within
+  `DATA_CHECK_WINDOW_MS` (3 min) of the last check that succeeded; the time
+  is a `__data_checked__` record in `faves-data` that the sweep keeps. Failed
+  or incomplete checks record nothing; the 10 s in-memory gap stays as the
+  coalescer. A resume (`SYNC_DATA`) and a forced one ignore the window.
+  Measured (`chatty_check`, 3 runs): warm home load 2 requests → 1 (the
+  `sw.js` update check alone), warm menu open 1 → 0; budgets tightened to
+  2 and 1 (`warmBytes` went up to 41,039: the row is now `sw.js` alone,
+  37,308 B, and that file grew). `fetch_check`'s natural path no longer
+  sleeps past the gap: it stops the worker through CDP (asserted), proves a
+  read inside the window asks for nothing, then winds the record back and
+  proves the unprompted path still delivers. Break-probed: window 0 ⇒ that
+  assertion fails. 7 unit tests in `tests/sw-data-store.test.js`, each of
+  three mutations caught.

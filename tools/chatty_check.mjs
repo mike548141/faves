@@ -73,7 +73,10 @@ const SITE = join(ROOT, "site");
 
 const BIG_MENU = "regal-chinese-restaurant"; // 264 dishes — the survey's big menu
 const SYNC_HOST = "faves-sync.cakeit.workers.dev"; // sync.js's SYNC_ENDPOINT host
-const NAV_GAP_MS = 10_500; // sw.js coalesces data checks inside 10 s; step past it
+// sw.js coalesces data checks inside 10 s (in memory); step past it, so what
+// the warm rows measure is the PERSISTED ~3 minute window (510/180), which is
+// what a real session of screens a minute or two apart meets.
+const NAV_GAP_MS = 10_500;
 
 // --- The budgets -----------------------------------------------------------
 // id → { what, budget, unit, lowers }. `measured` is filled in as scenarios run.
@@ -83,7 +86,7 @@ const B = {
   coldGz: { what: "cold install: gzip-6 estimate", unit: "KB", budget: 0, lowers: "170" },
   warmReq: { what: "warm home load: requests", unit: "req", budget: 0, lowers: "160/180 (throttle the catalogue check)" },
   warmBytes: { what: "warm home load: response bytes", unit: "B", budget: 0, lowers: "160/180" },
-  menuReq: { what: "menu open (warm, >10 s after the last page): requests", unit: "req", budget: 0, lowers: "160/180" },
+  menuReq: { what: "menu open (warm, >10 s after the last page, inside the ~3 min data-check window): requests", unit: "req", budget: 0, lowers: "160/180" },
   idleReq: { what: "open menu, 4 s idle: requests", unit: "req", budget: 0, lowers: "—" },
   idleTimers: { what: "open menu, 4 s idle: timers started", unit: "n", budget: 0, lowers: "—" },
   idleMut: { what: "open menu, 4 s idle: DOM mutations", unit: "n", budget: 0, lowers: "—" },
@@ -121,8 +124,13 @@ Object.assign(BUDGETS, {
   // a zero baseline stays 0. Re-derive with this tool; tighten with the item
   // named in each row's `lowers`, never loosen without saying why.
   coldReq: 296, coldGz: 1702, // 269 req, 1,547 KB
-  warmReq: 3, warmBytes: 37_859, // 2 req: catalogue + the sw.js update check (34,417 B when that fires; 197 B when it does not)
-  menuReq: 2, idleReq: 2, // 1 and 0-1: a late sw.js update check lands in the idle window some runs
+  // warm/menu tightened 2026-10-01 with 510/180 (the data check's window
+  // persisted, ~3 min): measured on 510-sw, 3 runs agreed. Was 2 req (catalogue
+  // + the sw.js update check) and 1. warmBytes went UP, deliberately: the row
+  // is now the sw.js update check ALONE (37,308 B, every run), and that file
+  // grew by the window's own code — the catalogue's 197 B is what left.
+  warmReq: 2, warmBytes: 41_039, // 1 req: the sw.js update check, 37,308 B
+  menuReq: 1, idleReq: 2, // 0, and 0-1: a late sw.js update check lands in the idle window some runs
   idleTimers: 0, idleMut: 0,
   lsSetHome: 2, lsRemHome: 2, evHome: 4, // was 6, 6, 12 → 1, 1, 2 with 510/200
   lsSetMenu: 2, lsRemMenu: 2, evMenu: 4,

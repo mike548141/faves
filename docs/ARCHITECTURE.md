@@ -1395,12 +1395,16 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
     the network and is never stored — only a sync writes the store.
     `_fresh` rechecks (ADR 0020) go straight to the network, never stored.
   - **When a sync runs:** at install (a worker may activate only with a
-    complete set for its schema); on any data read, coalesced to at most one
-    per 10 s; on resume (`sw-register.js`'s 5-minute gate posts
-    `SYNC_DATA`). One sync at a time across workers (Web Locks, with a
-    per-worker chain where the API is missing).
+    complete set for its schema); on a data read, but **not within ~3 minutes
+    of the last check that succeeded** (`DATA_CHECK_WINDOW_MS`, roadmap
+    510/180, ADR 0148 — the time is a `__data_checked__` record in the store,
+    so it survives the browser stopping an idle worker) and coalesced in
+    memory to one per 10 s; on resume (`sw-register.js`'s 5-minute gate posts
+    `SYNC_DATA`, which ignores the window). One sync at a time across workers
+    (Web Locks, with a per-worker chain where the API is missing).
   - **How fast an edit reaches an online phone:** the first data-reading
-    screen opened after the deploy is live starts the sync; that screen
+    screen opened after the deploy is live **and outside the ~3 minute
+    window** starts the sync (a resume starts it at once); that screen
     renders the set it held, and the **next** screen opened after the switch
     shows the edit (`tools/fetch_check.mjs` asserts both; the switch came
     359 ms after the navigation on a local server). A PWA resumed from the

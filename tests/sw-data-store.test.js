@@ -81,7 +81,8 @@ function loadWorker({ caches, fetchImpl }) {
     "fetch",
     `${src}\nreturn { syncData, requestSync, dataRead, readPointer, sweepOrphans, storeKey, ` +
       `pointerKey, isRecheck, relativePath, hexPrefix, venueFiles, liveKeys, DATA_SCHEMA, ` +
-      `FINGERPRINT_LENGTH, DATA_STORE };`
+      `FINGERPRINT_LENGTH, DATA_STORE, backgroundCheck, readChecked, insideWindow, ` +
+      `DATA_CHECK_WINDOW_MS, CHECKED_KEY };`
   )(self, caches, fetchImpl);
 }
 
@@ -334,4 +335,94 @@ test("liveKeys keeps every file any pointer names, resolved against the scope", 
     BASE
   );
   assert.deepEqual([...live].sort(), [`${BASE}data/a.json?h=111111111111`, `${BASE}data/b.json?h=222222222222`]);
+});
+
+// --- The persisted data-check window (roadmap 510/180, ADR 0148) -------------
+//
+// "A restarted worker" is a SECOND worker loaded over the SAME caches: the
+// browser stops an idle worker after ~30 s and every variable goes with it,
+// which is exactly the state the 10 s in-memory gap could never survive.
+
+/** Age the recorded check by `ms` (the store is the only clock the window reads). */
+async function ageCheck(c, sw, ms) {
+  const store = await c.api.open("faves-data");
+  const at = await sw.readChecked(store);
+  await store.put(sw.CHECKED_KEY, new Response(JSON.stringify({ at: at - ms })));
+}
+
+async function installedViaRequest(files = tree(VENUES)) {
+  const c = fakeCaches();
+  const origin = fakeOrigin(files);
+  const sw = loadWorker({ caches: c.api, fetchImpl: origin.fetchImpl });
+  const first = await sw.requestSync({ force: true }); // as the install does
+  return { c, origin, sw, first, files };
+}
+
+test("a check that succeeds is recorded in the store, and the sweep keeps the record", async () => {
+  const { c, sw, first } = await installedViaRequest();
+  assert.equal(first.status, "updated");
+  const store = await c.api.open("faves-data");
+  const at = await sw.readChecked(store);
+  assert.ok(Number.isFinite(at) && Math.abs(Date.now() - at) < 5000, `recorded ${at}`);
+  await sw.sweepOrphans(store);
+  assert.equal(await sw.readChecked(store), at, "the sweep must not delete the record");
+  // 7 files + 1 pointer + the record
+  assert.equal(storeUrls(c).length, 9);
+});
+
+test("a RESTARTED worker's read inside the window makes no request", async () => {
+  const { c, origin, files } = await installedViaRequest();
+  const restarted = loadWorker({ caches: c.api, fetchImpl: origin.fetchImpl });
+  origin.log.length = 0;
+  assert.equal(await restarted.backgroundCheck(), null, "inside the window, a read starts nothing");
+  assert.deepEqual(origin.log, []);
+  // …and that is the window, not luck: the same read once it has passed checks.
+  await ageCheck(c, restarted, restarted.DATA_CHECK_WINDOW_MS + 1000);
+  const again = loadWorker({ caches: c.api, fetchImpl: origin.fetchImpl });
+  const r = await again.backgroundCheck();
+  assert.equal(r?.status, "current");
+  assert.deepEqual(origin.log, ["data/catalogue.json"]);
+  assert.ok(files.size > 0);
+});
+
+test("the window is about three minutes (owner-ruled 2026-10-01)", () => {
+  const sw = loadWorker({ caches: fakeCaches().api, fetchImpl: async () => {} });
+  assert.equal(sw.DATA_CHECK_WINDOW_MS, 3 * 60 * 1000);
+});
+
+test("a resume (an unforced SYNC_DATA → requestSync) ignores the window", async () => {
+  const { c, origin } = await installedViaRequest();
+  const restarted = loadWorker({ caches: c.api, fetchImpl: origin.fetchImpl });
+  origin.log.length = 0;
+  const r = await restarted.requestSync();
+  assert.equal(r?.status, "current");
+  assert.deepEqual(origin.log, ["data/catalogue.json"]);
+});
+
+test("a FAILED check records nothing, so the next read retries", async () => {
+  const { c, origin, sw, files } = await installedViaRequest();
+  await ageCheck(c, sw, sw.DATA_CHECK_WINDOW_MS + 1000);
+  const aged = await sw.readChecked(await c.api.open("faves-data"));
+  files.delete("data/catalogue.json"); // the network fails
+  const restarted = loadWorker({ caches: c.api, fetchImpl: origin.fetchImpl });
+  await assert.rejects(restarted.backgroundCheck(), /catalogue\.json → 404/);
+  assert.equal(await restarted.readChecked(await c.api.open("faves-data")), aged, "a failure must not start the window");
+});
+
+test("a sync whose rates file failed records nothing either", async () => {
+  const files = tree(VENUES);
+  files.delete("data/fx.json");
+  const { c, sw, first } = await installedViaRequest(files);
+  assert.equal(first.status, "updated");
+  assert.equal(first.complete, false);
+  assert.equal(await sw.readChecked(await c.api.open("faves-data")), null);
+});
+
+test("a recorded time in the FUTURE (clock wound back) does not defer the check", () => {
+  const sw = loadWorker({ caches: fakeCaches().api, fetchImpl: async () => {} });
+  const now = 1_000_000_000;
+  assert.equal(sw.insideWindow(now - 1000, now, 180_000), true);
+  assert.equal(sw.insideWindow(now - 180_000, now, 180_000), false);
+  assert.equal(sw.insideWindow(now + 1000, now, 180_000), false);
+  assert.equal(sw.insideWindow(null, now, 180_000), false);
 });

@@ -114,6 +114,11 @@ content freshness separately from this file.
   published fingerprint before it is used, and the switch to the new menus
   happens in one step, so flight mode never sees a half-updated set. An edit
   shows on the next screen you open after Faves notices it.
+- **Faves checks for menu updates at most every three minutes while you
+  move between screens**, instead of on almost every screen. Coming back to
+  the app still checks straight away. The catch: a menu edit can take up to
+  about three minutes longer to reach a phone that is already open on Faves
+  (ADR 0148).
 - **The home screen loads faster: it no longer fetches every venue's full
   menu just to draw the list.** It now reads two small, precomputed files —
   a card summary and a search index — and fetches a venue's own menu only
