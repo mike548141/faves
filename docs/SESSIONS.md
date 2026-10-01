@@ -12642,3 +12642,47 @@ worktrees. Atelier had not moved past the pin (`86da02c`). Session id
   every recipe its page shows), and `320`/`340` (the old hearts). A worker
   started on 350–370 was stopped before it wrote anything, and all four
   claims are released.
+
+## 2026-10-02 — stale sync reads fixed live, the old-hearts guards, and three owner asks (session `faves-4f`)
+
+An orchestrated queue run on Opus 5.5, with Sonnet and Opus workers in
+worktrees. Atelier had not moved past the pin (`86da02c`). Session id
+`5e6ea5fe-ab89-4b82-a98c-9c1ef0ea24c8`.
+
+- **Owner rulings, 2026-10-02.** Cook at Home's picks gain Lamb Shanks and
+  Liège Waffles (`050`); "My recipe" stays per selected person (`300`);
+  `340` is option B (a Durable Object per sync code), deployed with the KV
+  mirror on and turned off after a clean week (`410`); all three `320`
+  guards; `260` by a minted zone-scoped token. 🚩 **And: no more diagnostic
+  "did you do X?" questions on `320`** — five had been put across two
+  sessions. Recorded as memory; the sync log is the instrument now.
+- **Shipped (PRs #78–#83, each merged with CI 8 of 8):**
+  - `350`, `360`, `370` (#79): back from your recipe goes to Cook at Home;
+    "my recipe(s)" lists your cookbook; the card counts your recipes too.
+  - `340` (#78 evidence and options paper, #82 build, ADR 0151): stale KV
+    reads reproduced in four tests (a heart lost, a removed heart back, the
+    recipe move undone on both devices). **Deployed** as version `efd2aeee`;
+    live checks 1–5 passed, including a KV-era copy imported under its old
+    `ETag` and a live compare-and-swap. Check 6 (his devices) is the owner's.
+  - `320` (#81 route sweep, #83 guards, ADR 0152): 8,000 fuzz runs showed
+    stale reads never make his "old beside moved" state; fifteen routes run,
+    none reachable on his account. Guards built: a sync log in Settings
+    (`380`), no silent merge without a base (`390`), hearts follow a moved
+    recipe (`400`). Cause stays unknown.
+  - `280` (#80): the unnamed flake caught in 40 saved runs: `sync.test.js`
+    waited a fixed 30 ms for a follow-up sync. Both such waits now `settle`.
+  - `260`: the custom domain's zone Browser Cache TTL (4 h) overrode
+    `max-age=0`. A host-scoped Cache Rule fixed it, verified live.
+- 🚩 **Honesty notes.**
+  - The estate mint tool left the new cache token at **all-zones** scope for
+    a few minutes (unused) before I tightened it by hand; filed in the estate
+    root's board with the registry entry.
+  - I removed the `350`–`370` worker's worktree after its first "completed"
+    notice and before its final one (its own polling loop was still running;
+    no harm). Against the "wait for the final notification" rule.
+  - `cook_check` failed 83/85 once in the guards worker's sweep (two
+    notification assertions, no retry line), then 85/85 on the same commit.
+    Unexplained.
+- **Open with the owner:** `410` (mirror off, on or after 2026-10-09);
+  `340`'s live check 6; whether `390`'s question needs a banner outside
+  Settings. `220` and `240` premises moved with `340` (noted on each).
