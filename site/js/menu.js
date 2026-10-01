@@ -53,6 +53,8 @@ import { slug } from "./slug.js";
 import { wireDialog } from "./dialog.js";
 import { dishId, findDish } from "./dish-id.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
+import { savedOrdersPanel } from "./saved-orders-ui.js";
+import { savedOrders, SAVED_ORDERS_KEY } from "./saved-orders.js";
 import { dishAddOns } from "./addons-ui.js";
 import { heartButton, ownerLabel } from "./favourites-ui.js";
 import { ratingControl, curatedRating } from "./ratings-ui.js";
@@ -1704,6 +1706,9 @@ function render(r) {
   // go after. Splitting the controls to slot content into the middle of them is
   // what made the search hard to find in the first place.
   if (picks) main.append(picks);
+  // Theme 26a: this venue's saved orders, below the picks and above the menu —
+  // after the controls for the reason above. Hides itself when there are none.
+  if (kindOf(r).canOrder) main.append(savedOrdersPanel(r));
 
   const menuWrap = el("div", { className: "menu-sections" });
   const sectionEls = [];
@@ -2202,6 +2207,7 @@ window.addEventListener("storage", (e) => {
   // Your own recipes are listed on Cook at Home's page (roadmap 510/300): one
   // written in another tab (an import) shows here without a reload.
   if (e.key === profiles.scopedKey(RECIPES_KEY)) recipes.reload();
+  if (e.key === profiles.scopedKey(SAVED_ORDERS_KEY)) savedOrders.reload(); // a usual saved in another tab (26a)
   if (e.key !== PROFILES_KEY) return;
   profiles.reload();
   if (profiles.activeId() !== activeProfileAtLoad) location.reload();

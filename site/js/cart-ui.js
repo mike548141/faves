@@ -13,6 +13,7 @@ import { el } from "./dom.js";
 import { selectionKey, selectionSummary } from "./addons.js";
 import { dishId } from "./dish-id.js";
 import { displayPrice, formatMoney } from "./place.js";
+import { saveRow } from "./saved-orders-ui.js";
 
 // A line, subtotal or total always carries the currency it is in — an order
 // can span venues in different countries, and an unlabelled number then lies.
@@ -363,7 +364,12 @@ export function initOrderUI() {
           textContent: money(g.subtotal, g.currency) + (g.hasUnpriced ? "+" : ""),
         }),
       ]);
-      body.append(el("section", { className: "order-group" }, [head, lines, subtotal]));
+      // Saving is offered where the lines are, not in collect mode (that is
+      // someone at the till reading the list out) — and recalling is on the
+      // venue's menu page, where an EMPTY tally still has somewhere to start.
+      body.append(
+        el("section", { className: "order-group" }, [head, lines, subtotal, collectMode ? null : saveRow(g)])
+      );
     }
 
     // Saving a note rebuilds this whole body, so keyboard focus would otherwise

@@ -68,6 +68,12 @@ export const STORE_SCHEMA = Object.freeze({
   // A build at 1 would read that as an empty cookbook — a backup's recipes
   // silently skipped, a bucket's read as deleted — so it pauses instead.
   recipes: 2,
+  // Saved orders (Theme 26a): a per-person list of named orders, each line a
+  // dish id + option ids + a snapshot (saved-orders.js). On-device and in the
+  // backup file only — never synced — so this number is read by `parse` on an
+  // import: a file whose saved orders are in a newer shape pauses an older build
+  // rather than being misread.
+  savedOrders: 1,
 });
 
 /** The stores in `snapshot.stores` that this build KNOWS and that are numbered

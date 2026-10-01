@@ -1198,6 +1198,17 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   no payment, no account, no backend — it hands off to phone/website
   (STRATEGY non-goal). Prices are an *estimate* (menu data flagged for an
   in-store refresh), captioned as such.
+- **Saved orders** (`faves.savedorders.v1`, Theme 26a, ADR 0154): `saved-orders.js`
+  (store + sanitiser), `saved-recall.js` (pure: resolve a saved order against a
+  venue's live record), `saved-orders-ui.js` (the save control in the order
+  sheet; the list-and-recall block on the venue's menu page). A named order for
+  one venue, **per person**, on this device only. A line stores dish id and
+  add-on option ids (plus a name/price snapshot), never a name or position as an
+  identity; recall re-prices from today's menu and skips-and-names any line that
+  no longer resolves. Deliberately outside `SCOPED_BASE_KEYS` (so it never syncs
+  or migrates, like the cook ticks) but inside the profile-delete purge; the
+  backup file carries it as a named per-person `savedOrders` field, only when
+  `collectPersonalData(…, { localOnly: true })` — which sync never passes.
 - **Favourites** (`faves.favourites.v1`): `favourites.js` — a set of
   hearted venues + dishes (denormalised so the view renders from storage
   alone; the deep-link href is derived from the shared `slug`).

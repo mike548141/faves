@@ -393,7 +393,7 @@ function dataSection(syncCtl) {
   btn.addEventListener("click", () => {
     try {
       const exportedAt = new Date().toISOString();
-      const data = collectPersonalData(deviceStorage, { exportedAt });
+      const data = collectPersonalData(deviceStorage, { exportedAt, localOnly: true });
       const s = summarisePersonalData(data);
       const name = personalDataFilename(exportedAt);
       downloadText(name, personalDataJson(data));
@@ -404,6 +404,7 @@ function dataSection(syncCtl) {
       ];
       if (s.notes) bits.push(`${s.notes} ${s.notes === 1 ? "note" : "notes"}`);
       if (s.recipes) bits.push(`${s.recipes} ${s.recipes === 1 ? "recipe" : "recipes"}`);
+      if (s.savedOrders) bits.push(`${s.savedOrders} saved ${s.savedOrders === 1 ? "order" : "orders"}`);
       if (s.orderItems) bits.push(`${s.orderItems} order ${s.orderItems === 1 ? "item" : "items"}`);
       status.textContent = `Saved ${name} — ${bits.join(", ")}.`;
     } catch {

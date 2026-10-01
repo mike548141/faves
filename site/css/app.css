@@ -6444,6 +6444,148 @@ mark.search-match {
   text-align: left;
 }
 
+/* ---------- Saved orders (Theme 26a) ---------- */
+/* Two surfaces, one vocabulary. In the ORDER SHEET: a save control under a
+   venue's lines, built from the note control's own parts (.order-note-save /
+   .order-note-btn / .order-note-help are reused as they are). On the VENUE'S
+   MENU PAGE: a block listing that venue's saved orders. Every colour is a token,
+   so dark mode follows; no transition or transform anywhere, so there is no
+   motion for prefers-reduced-motion to reduce. Every target is >= 44 px, and
+   the field is 16 px type so iOS does not zoom on focus. */
+.order-save-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.order-save-btn {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  cursor: pointer;
+}
+.order-save-btn:hover {
+  background: var(--surface-2);
+}
+.order-save-input {
+  flex: 1 1 10rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--step-body); /* 1rem: under 16px iOS zooms the page on focus */
+}
+/* The Cancel beside Save needs the same 44 px the note control gives its own. */
+.order-save-row .order-note-btn,
+.order-save-row .order-note-save {
+  min-height: 44px;
+}
+
+.saved-orders {
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.saved-orders[hidden] {
+  display: none;
+}
+.saved-head {
+  margin: 0 0 var(--space-2);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.saved-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.saved-item {
+  display: grid;
+  gap: var(--space-2);
+}
+.saved-text {
+  display: grid;
+  gap: 0.15em;
+  min-width: 0;
+}
+.saved-name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.saved-lines {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  overflow-wrap: anywhere;
+}
+.saved-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.saved-add,
+.saved-delete {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-chip);
+  font-size: var(--step-body);
+  font-weight: 600;
+  cursor: pointer;
+}
+.saved-add {
+  flex: 1 1 auto;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+.saved-add:hover {
+  filter: brightness(0.96);
+}
+.saved-delete {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+}
+.saved-delete.confirming {
+  border-color: var(--warn);
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+}
+.saved-status {
+  margin-top: var(--space-2);
+  color: var(--ink);
+  font-size: var(--step-sub);
+}
+.saved-status:empty {
+  display: none;
+}
+.saved-status-line {
+  margin: 0;
+}
+.saved-skipped-head {
+  margin-top: var(--space-2);
+  font-weight: 700;
+}
+.saved-skipped {
+  margin: var(--space-1) 0 0;
+  padding-left: 1.2em;
+}
+
 /* ---------- Shopping list (ROADMAP 17e) ---------- */
 /* The SHEET reuses .order-sheet's frame and .order-* internals wholesale — see
    the selector lists above and shopping-ui.js's header. Only the parts a

@@ -14,6 +14,14 @@ content freshness separately from this file.
   burgers by the size are now picked on the dish (Southern Cross, Hotel
   Bristol, Spices Indian, Baylands, BurgerFuel) instead of read from the
   description. The dish, its heart and its price are unchanged.
+- **Saved orders — "my Subway".** In the order sheet, "Save this order" names
+  what you have for a place ("My Subway") and keeps it on this phone, for you
+  rather than for whoever else uses it. On that place's menu, "Your saved
+  orders" lists them: one tap on "Add to my order" puts it back in your order
+  at today's prices, and "Delete" removes it. If the menu has changed so that
+  a dish or add-on is gone, that line is left out and named, rather than
+  adding something you did not ask for. Included in the backup file; never
+  synced between devices.
 - **Sync history on this device.** Settings → Your data → Sync → "Show sync
   history" lists the last 20 syncs that changed something, asked something or
   didn't finish: when, which screen and which version of Faves ran it, whether

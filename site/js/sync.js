@@ -35,7 +35,7 @@
 // locks the phone.
 
 import { collectPersonalData, storesAhead, upgradePersonalData } from "./personal-data.js";
-import { deviceStorage, PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseRegistry, scopeKey } from "./profiles.js";
+import { deviceStorage, PROFILES_KEY, PURGED_BASE_KEYS, SCOPED_BASE_KEYS, sanitiseRegistry, scopeKey } from "./profiles.js";
 import { mergePersonal, needsDecision, baselessPeople, keepTheirsFor, CONFLICT_NO_BASE } from "./sync-merge.js";
 import { followMovesInSnapshot } from "./recipe-move.js";
 import { appendSyncLog, heartChange, readSyncLog } from "./sync-log.js";
@@ -204,7 +204,10 @@ export function writeSnapshot(storage, snapshot) {
   const surviving = new Set(profiles.map((p) => String(p?.id ?? "")));
   for (const p of registry.profiles) {
     if (surviving.has(p.id)) continue;
-    for (const base of SCOPED_BASE_KEYS) {
+    // PURGED, not just the synced stores: a person sync removed takes the
+    // on-device-only stores (saved orders, cook ticks) with them too, as deleting
+    // them here by hand does (profiles.js `remove`).
+    for (const base of PURGED_BASE_KEYS) {
       try {
         storage.removeItem(scopeKey(p.id, base));
       } catch {
