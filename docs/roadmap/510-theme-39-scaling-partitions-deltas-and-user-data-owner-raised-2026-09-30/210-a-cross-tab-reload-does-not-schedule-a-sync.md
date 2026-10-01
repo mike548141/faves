@@ -9,3 +9,14 @@
   [the survey](../../reviews/2026-10-01-0418-chatty-app-survey.md) under proposal H.
 
   📌 **Claimed 2026-10-01 (`faves-55`).**
+
+  ✅ 2026-10-01 (`faves-55` worker, branch `510-sync`): built. A store
+  notification raised inside a `storage` event's dispatch (`window.event`)
+  no longer schedules a sync; a tap, an import or a rename still does
+  (`sync.js` `start()`). Test: `tests/sync.test.js` "a store reloaded by
+  ANOTHER tab's write…" — fails with the check removed. Measured in real
+  Chrome, two tabs of one profile, real Worker behind a counting KV, one
+  heart in the menu tab: before, the home tab sent a GET + PUT and the menu
+  tab a GET (+35 R, +1 W); after, the home tab sent nothing and the menu tab
+  a GET + PUT (+26 R, +1 W). Where `window.event` is missing, behaviour is
+  as before.

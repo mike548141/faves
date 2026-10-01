@@ -1,4 +1,4 @@
-- [ ] **Persist the service worker's data-check throttle** `[S] [pwa][sw]` —
+- [~] **Persist the service worker's data-check throttle** `[S] [pwa][sw]` —
       from the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **E**.
 
@@ -10,3 +10,8 @@
 
   🎯 **Owner ruling needed:** a 2–5 minute window means a menu edit reaches an
   online phone that much later. That sits beside ADR 0147's freshness trade.
+
+  ⚖️ **Owner-ruled 2026-10-01 (`faves-55`): yes, about 3 minutes**,
+  persisted so it survives the worker sleeping. A resume and a forced
+  `SYNC_DATA` still check at once.
+  📌 **Claimed 2026-10-01 (`faves-55`).**

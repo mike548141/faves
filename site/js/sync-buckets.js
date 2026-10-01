@@ -51,6 +51,11 @@ export const BUCKET_FORMAT = "faves.recipe-bucket";
 export const BUCKET_QUERY = "buckets";
 export const BUCKET_HEADER = "x-faves-buckets";
 
+/** The query a PUT carries to say how many buckets the user has, so the
+ *  Worker re-arms the expiry of those copies and reads no others (roadmap
+ *  510/140). Absent — an older client — the Worker reads all it could hold. */
+export const FAMILY_QUERY = "family";
+
 /** `r0`…`r7`: a bucket's name, and the suffix of its key on the server. */
 export const bucketName = (k) => `r${k}`;
 
