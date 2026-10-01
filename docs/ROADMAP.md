@@ -228,7 +228,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - ✅ [⏸️ RULED NOT TO FIX 2026-08-16 — deliberately deferred, not](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/010-the-order-pill-eats-a-dietary-chip-s-tap-at-la.md)
 - ✅ 🎯 [The back-to-top arrow should appear on the way DOWN too — and still](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/020-the-arrow-should-appear-on-the-way-down-too.md)
-- [~] 🔎 [The ⋯ button may be covered once a menu is scrolled](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/030-the-overflow-button-is-covered-mid-menu.md)
+- ✅ 🔎 [The ⋯ button may be covered once a menu is scrolled](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/030-the-overflow-button-is-covered-mid-menu.md)
 
 ## Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)
 
