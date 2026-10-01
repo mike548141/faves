@@ -201,7 +201,10 @@ const SUMMARY_FIELDS = {
  *  name on the card's meta line), `lat`/`lng` (distance, coordinates),
  *  `hours` (the open/closed badge) and the resolved `closure` (per-branch
  *  shut state, ADR 0132). `address`/`phone` are dropped — read only by the
- *  menu page's own contact card (menu.js's branchAsPlace), never by home. */
+ *  menu page's own contact card (menu.js's branchAsPlace), never by home.
+ *  `anywhere` (ADR 0155) is KEPT, and only when true: with the address gone,
+ *  it is the one thing that tells home's `hasPlaceDetails` and `cardArea` that
+ *  this branch is the public wildcard rather than a place with a suburb. */
 export function thinBranch(branch) {
   if (!branch || typeof branch !== "object") return branch;
   const out = {};
@@ -210,6 +213,7 @@ export function thinBranch(branch) {
   if ("lng" in branch) out.lng = branch.lng;
   if ("hours" in branch) out.hours = branch.hours;
   if ("closure" in branch) out.closure = branch.closure;
+  if (branch.anywhere === true) out.anywhere = true;
   return out;
 }
 

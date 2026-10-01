@@ -21,7 +21,7 @@ import { initFiltersUI } from "./filters-ui.js";
 import { formatDriveTime } from "./distance.js";
 import { formatDistance, formatDial, widenDialTo } from "./units.js";
 import { rankVenues, isAvailableNow, splitByDistanceLimit } from "./ranking.js";
-import { venueHours, nearestBranch } from "./locations.js";
+import { venueHours, nearestBranch, hasPlaceDetails, branchPlaceLabel } from "./locations.js";
 import { recallOrigin, rememberOrigin } from "./geo.js";
 import { askSurface, suppressAsk, declineAsk, readConsent } from "./geo-consent.js";
 import { openStatus, makeClock, viewerOnVenueTime } from "./hours.js";
@@ -168,7 +168,10 @@ function cardArea(r, origin) {
   // venues have no label and fall through to the venue's own suburb, so their
   // card is unchanged. Whatever branch drives the hours drives the label: with
   // no origin that is the primary one, which is still an honest pairing.
-  return branch?.label || r.area || "";
+  //
+  // An "anywhere" branch's label (ADR 0155) names no suburb — it is the
+  // public branch that matches every address — so the venue's own area stands.
+  return branchPlaceLabel(branch) || r.area || "";
 }
 
 const zonesOf = (restaurants) => new Set(restaurants.map((r) => venueTimezone(r)));
@@ -294,13 +297,9 @@ function card(r, clock, origin = null) {
   // renders the header, contact card and map handoff, then says the menu is
   // still coming (menu.js). Owner, 2026-08-16: "the user should still be able
   // to drill into [it] if we have details like opening hours, address etc".
-  const hasDetails = !!(
-    r.hours ||
-    r.address ||
-    r.phone ||
-    r.lat != null ||
-    (r.locations && r.locations.length)
-  );
+  // An "anywhere" branch (ADR 0155) is not a detail: it says where you can
+  // cook, not where to go — so it never turns a nameless stub into a link.
+  const hasDetails = hasPlaceDetails(r);
 
   if (r.status === "stub" && !hasDetails) {
     // Nothing behind the name, so nothing to open — a link that leads to a

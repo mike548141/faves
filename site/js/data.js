@@ -13,6 +13,7 @@ import { canonicalVenueId } from "./renames.js";
 import { loadFx } from "./fx.js";
 import { findDish, dishId } from "./dish-id.js";
 import { composeRecipe } from "./ingredients.js";
+import { normaliseBranch } from "./locations.js";
 
 const INDEX_URL = "data/index.json";
 const SUMMARY_URL = "data/summary.json";
@@ -38,8 +39,18 @@ async function fetchJson(url) {
 // dropped out, so this — and every consumer downstream — reads the same plain
 // shape it always did. Time is a property of the data and of temporal.js, not
 // something the rest of the app has to know about.
+//
+// The "anywhere" branch (ADR 0155) is normalised HERE, before the projection:
+// its declared `{ anywhere: true }` address becomes `address: null` plus
+// `anywhere: true` (locations.normaliseBranch), so the top level never inherits
+// an object where every reader expects a street — search would index it, a
+// maps link would search for it. A record with no wildcard keeps its own
+// branch objects untouched.
 function normaliseVenue(r) {
   if (!Array.isArray(r.locations) || !r.locations.length) return r;
+  const locations = r.locations.map(normaliseBranch);
+  const changed = locations.some((b, i) => b !== r.locations[i]);
+  if (changed) r = { ...r, locations };
   const primary = r.locations[0];
   return {
     ...r,

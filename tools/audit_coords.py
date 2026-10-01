@@ -225,6 +225,11 @@ def inventory():
         branches = record.get("locations")
         if branches:
             for branch in branches:
+                # The "anywhere" branch (ADR 0155) has no pin to audit and must
+                # never get one: it matches every place, and its address is
+                # the object {"anywhere": true}, not a string to geocode.
+                if isinstance(branch.get("address"), dict):
+                    continue
                 label = branch.get("label") or "(unlabelled)"
                 slots.append(
                     {

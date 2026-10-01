@@ -734,6 +734,36 @@ def check_rating(rid, obj, where):
         err(rid, f"{where}: rating must be an integer 1..5 or absent, got {r!r}")
 
 
+# The "anywhere" branch (ADR 0155, owner-ruled 2026-09-08 on roadmap 470/050):
+# Cook at Home's one public branch "should match any address or GPS
+# coordinate". Declared as a VALUE in the address slot, exactly
+# `{"anywhere": true}` — never an absent field or a null, which already mean
+# "nobody has captured this yet". An object rather than a word because a
+# misspelt word is still a plausible street address, and this gate cannot tell
+# "Anywhere" the typo from "Anywhere" the street; a misspelt OBJECT is not a
+# string at all, so it is refused here. site/js/locations.js's `isAnywhere` is
+# the reader's twin of `is_anywhere` and must accept exactly the same value.
+ANYWHERE = {"anywhere": True}
+
+# Strings that are somebody reaching for the wildcard in the wrong spelling.
+# Compared with every non-letter stripped, so "*", "?" and "-" (no letters at
+# all — no real address is spelled without one) land on "" and are refused too.
+_ANYWHERE_NEAR_MISSES = {"", "anywhere", "everywhere", "any", "anyaddress", "wildcard", "wherever", "whereveryouare"}
+
+
+def is_anywhere(v):
+    """True for exactly `{"anywhere": true}`. `is True`, not `== True`: in
+    Python `1 == True`, so `{"anywhere": 1}` would otherwise slip through as
+    the wildcard while the app — which compares with `=== true` — reads it as
+    an object it cannot render."""
+    return isinstance(v, dict) and set(v) == {"anywhere"} and v["anywhere"] is True
+
+
+def looks_like_anywhere(v):
+    """A STRING address that reads as an attempt at the wildcard."""
+    return isinstance(v, str) and re.sub(r"[^a-z]", "", v.lower()) in _ANYWHERE_NEAR_MISSES
+
+
 def check_coords(rid, obj, where):
     """lat/lng on `obj`: optional decimal coordinates for the maps handoff and
     distance sort. If given they must be real numbers in range, both-or-neither.
@@ -2178,8 +2208,40 @@ def check_restaurant(path):
             check_keys(rid, b, BRANCH_KEYS, where)
             check_branch_id(rid, b, where, seen_branch_ids)
             addr = b.get("address")
-            if not (isinstance(addr, str) and addr.strip()):
+            anywhere = is_anywhere(addr)
+            if anywhere:
+                # Only Cook at Home is everywhere (ADR 0155). A place you can
+                # travel to always has a where, and "anywhere" on a restaurant
+                # would read as "we have no address" in a voice that hides it.
+                if not is_recipes:
+                    err(rid, f"{where}: address {{\"anywhere\": true}} is only for a recipe "
+                             "collection's public branch — a venue you travel to has an address")
+                # A coordinate puts the branch at ONE point, and a distance
+                # measured from that point would be a number about nowhere. A
+                # phone at "anywhere" rings nobody — and a home number is
+                # personal data, which the public payload never carries.
+                for field in ("lat", "lng", "phone"):
+                    if b.get(field) is not None:
+                        err(rid, f"{where}: a branch that is anywhere cannot also have {field} "
+                                 "— it matches every place, so it has no point of its own (ADR 0155)")
+            elif isinstance(addr, dict):
+                err(rid, f"{where}: address {addr!r} is not the wildcard — the one address that "
+                         'is not a string is exactly {"anywhere": true} (ADR 0155)')
+            elif looks_like_anywhere(addr):
+                err(rid, f"{where}: address {addr!r} reads as \"anywhere\" but is a string, so it "
+                         'would render as a street and become a maps search — spell the wildcard '
+                         '{"anywhere": true} (ADR 0155)')
+            elif not (isinstance(addr, str) and addr.strip()):
                 err(rid, f"{where}: address must be a non-empty string")
+            elif is_recipes:
+                # The hard rule (CLAUDE.md): no home address of a person,
+                # anywhere. A recipe collection's branches are houses, and a
+                # shipped one is precached onto every phone. The owner's ruling
+                # puts a house's real address on the reader's own device
+                # (470/050, the private branches), never in this payload.
+                err(rid, f"{where}: a recipe collection's shipped branch must be "
+                         '{"anywhere": true} — a house\'s address lives on the reader\'s '
+                         "device, never in the public data (ADR 0155)")
             label = b.get("label")
             if label is not None and not (isinstance(label, str) and label.strip()):
                 err(rid, f"{where}: label must be a non-empty string or null")
@@ -2190,7 +2252,7 @@ def check_restaurant(path):
             phone = b.get("phone")
             if phone is not None and not isinstance(phone, str):
                 err(rid, f"{where}: phone must be a string or null")
-            if not check_coords(rid, b, where):
+            if not check_coords(rid, b, where) and not anywhere:
                 warn(rid, f"{where}: no coordinates (lat/lng) — maps opens by address only")
             check_hours(rid, b.get("hours"), where)
             # Provenance is per-branch (see check_details_verification). Checked
@@ -2347,6 +2409,10 @@ def check_restaurant(path):
             continue
         for field in ("address", "phone"):
             for v in check_temporal(rid, branch, field, f"locations[{i}]"):
+                # The wildcard is the one non-string address, and the branch
+                # loop above has already judged it (and any near-miss of it).
+                if field == "address" and isinstance(v, dict):
+                    continue
                 if v is not None and not isinstance(v, str):
                     err(rid, f"locations[{i}]: {field} must be a string or null, got {v!r}")
 

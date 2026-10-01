@@ -1384,6 +1384,71 @@ SOURCE_CASES = {
             "error", 'no sectionId — run tools/seed_section_ids\\.py',
         ),
     },
+    # ADR 0155 — the "anywhere" branch (owner-ruled 2026-09-08, 470/050). Cook
+    # at Home's one public branch declares that it matches every address as a
+    # VALUE, exactly {"anywhere": true}. Mutated on the real file, text-level,
+    # so an anchor that stops matching fails loudly rather than passing. The
+    # first case is the positive one: a gate broken into refusing the wildcard
+    # outright fails it, and so does the unmutated baseline.
+    "site/data/restaurants/cook-at-home.json": {
+        "the wildcard branch as shipped — legal (the positive case)": (
+            lambda s: s.replace(_ANYWHERE, _ANYWHERE.replace("true", "true "), 1),
+            "clean", None,
+        ),
+        "the wildcard spelled as a word": (
+            lambda s: s.replace(_ANYWHERE, '      "address": "anywhere"', 1),
+            "error", r"locations\[0\]: address 'anywhere' reads as \"anywhere\" but is a string",
+        ),
+        "the wildcard spelled as a glob": (
+            lambda s: s.replace(_ANYWHERE, '      "address": "*"', 1),
+            "error", r"locations\[0\]: address '\*' reads as \"anywhere\" but is a string",
+        ),
+        "the wildcard capitalised as a word": (
+            lambda s: s.replace(_ANYWHERE, '      "address": "Anywhere"', 1),
+            "error", r"locations\[0\]: address 'Anywhere' reads as \"anywhere\"",
+        ),
+        "the wildcard object set false": (
+            lambda s: s.replace(_ANYWHERE, _ANYWHERE.replace("true", "false"), 1),
+            "error", r"locations\[0\]: address \{'anywhere': False\} is not the wildcard",
+        ),
+        # Python's `1 == True` is the trap this case exists for; the app's
+        # `=== true` would read it as an object it cannot render.
+        "the wildcard object set to 1": (
+            lambda s: s.replace(_ANYWHERE, _ANYWHERE.replace("true", "1"), 1),
+            "error", r"locations\[0\]: address \{'anywhere': 1\} is not the wildcard",
+        ),
+        "the wildcard object with a capital key": (
+            lambda s: s.replace(_ANYWHERE, _ANYWHERE.replace('"anywhere"', '"Anywhere"'), 1),
+            "error", r"locations\[0\]: address \{'Anywhere': True\} is not the wildcard",
+        ),
+        "the wildcard object carrying a second key": (
+            lambda s: s.replace(_ANYWHERE, _ANYWHERE.replace("true", 'true,\n        "lat": -41.2'), 1),
+            "error", r"locations\[0\]: address \{'anywhere': True, 'lat': -41\.2\} is not the wildcard",
+        ),
+        "the wildcard branch WITH coordinates": (
+            lambda s: s.replace(_ANYWHERE, _ANYWHERE + ',\n      "lat": -41.2,\n      "lng": 174.8', 1),
+            "error", r"locations\[0\]: a branch that is anywhere cannot also have lat",
+        ),
+        "the wildcard branch with a phone": (
+            lambda s: s.replace(_ANYWHERE, _ANYWHERE + ',\n      "phone": "+64 4 000 0000"', 1),  # leakscan:allow:nz-phone: synthetic fixture, not a real line
+            "error", r"locations\[0\]: a branch that is anywhere cannot also have phone",
+        ),
+        # The hard rule: no home address of a person, anywhere. A recipe
+        # collection's branches are houses; a shipped one is precached onto
+        # every phone. A REAL-looking address is refused, not just odd ones.
+        "a real street address on a recipe collection's branch": (
+            lambda s: s.replace(_ANYWHERE, '      "address": "1 Example Street, Exampletown"', 1),  # leakscan:allow:nz-address: synthetic fixture; no such street
+            "error", r"locations\[0\]: a recipe collection's shipped branch must be \{\"anywhere\": true\}",
+        ),
+        "the branch's address removed — absence is not the wildcard": (
+            lambda s: s.replace(_ANYWHERE + "\n", "", 1).replace('"id": "anywhere",', '"id": "anywhere"', 1),
+            "error", r"locations\[0\]: address must be a non-empty string",
+        ),
+        "the branch's address set null — null is not the wildcard": (
+            lambda s: s.replace(_ANYWHERE, '      "address": null', 1),
+            "error", r"locations\[0\]: address must be a non-empty string",
+        ),
+    },
     # Per-branch provenance. Pandan is the only record that carries it and the
     # record that forced it — Melling first-party, Press Hall's hours its
     # landlord's. The venue-level pair was already gated; the branch-level one
@@ -1429,6 +1494,13 @@ SOURCE_CASES = {
         "a branch id that is not a slug": (
             lambda s: s.replace('"id": "melling",', '"id": "Melling Road",', 1),
             "error", r"locations\[0\]: id 'Melling Road' is not a slug — expected 'melling-road'",
+        ),
+        # ADR 0155: only a recipe collection is everywhere. A restaurant's
+        # branch declaring it would read as "we have no address" in a voice
+        # that hides the gap.
+        "the wildcard on a restaurant's branch": (
+            lambda s: s.replace('"address": "5 Melling Road, Lower Hutt 5010",', '"address": {"anywhere": true},', 1),  # leakscan:allow:nz-address: a public venue's shop address, already in its record
+            "error", r"locations\[0\]: address \{\"anywhere\": true\} is only for a recipe collection",
         ),
         "a branch with no id at all": (
             lambda s: s.replace('      "id": "melling",\n', "", 1),
@@ -1500,6 +1572,12 @@ SOURCE_CASES = {
         ),
     },
 }
+
+
+# ADR 0155: the wildcard's exact text in cook-at-home.json, as the anchor every
+# case above edits. If the record is reformatted, every case fails as MUTATION
+# MATCHED NOTHING — loudly — rather than passing.
+_ANYWHERE = '      "address": {\n        "anywhere": true\n      }'
 
 
 # ADR 0132 helpers: put a `lifecycle` on one branch of the Pandan record by its
