@@ -74,6 +74,17 @@ export const SYNC_ENDPOINT = "https://faves-sync.cakeit.workers.dev";
  *  person editing favourites generates a burst, not a stream. */
 export const DEBOUNCE_MS = 20_000;
 
+/** A page load or a return to the foreground pulls only when the last sync is
+ *  older than this (roadmap 510/160, survey finding 5). The site is three
+ *  separate pages, so walking home to menu to home was three pulls a few
+ *  seconds apart, each a request and 9 KV reads that found nothing. Owner-ruled
+ *  ~90 s on 2026-10-01: a change made on another device can take this much
+ *  longer to appear, and a device that has not synced for longer than this —
+ *  a day, a week, never — pulls at once, because the rule is on the AGE of the
+ *  last sync and not on how often the page opens. Writes are never held back:
+ *  see `pullIfStale`. */
+export const PULL_WINDOW_MS = 90_000;
+
 /** How many times one sync goes round when its write loses a race (a 412) —
  *  the first try and two more (roadmap 510/070). Each extra round is one read
  *  and one conditional write; three is enough for two devices that happened
@@ -333,6 +344,7 @@ export function createSync({
   fetchImpl = globalThis.fetch?.bind(globalThis),
   now = () => new Date().toISOString(),
   debounceMs = DEBOUNCE_MS,
+  pullWindowMs = PULL_WINDOW_MS,
   setTimer = globalThis.setTimeout?.bind(globalThis),
   clearTimer = globalThis.clearTimeout?.bind(globalThis),
   // Called after a pull has been written to storage. `writeSnapshot` changes
@@ -839,6 +851,50 @@ export function createSync({
     syncNow();
   }
 
+  /**
+   * Does this device hold something the server has not accepted, that no timer
+   * or flag in THIS page knows about? `waiting` and `timer` are memory, and the
+   * site is three pages: a heart tapped on one is flushed as it goes hidden,
+   * and that request can be cut off by the navigation. The next page must then
+   * still send it, so this compares what storage holds with what was last
+   * agreed — the same two things step 4 of a cycle compares, from storage and
+   * no network. Any doubt (no base, a read that throws, recipes the Worker
+   * never reported on) answers yes, which only costs the pull it would have
+   * made anyway.
+   */
+  function holdsUnsent() {
+    try {
+      const base = readBase();
+      if (!base) return true;
+      const mine = collectPersonalData(storage, { exportedAt: now() });
+      if (!sameSnapshot(mine, base)) return true;
+      return !sameRecipes(hashRecipes(flattenCookbooks(mine.profiles)), base.recipeHashes || {});
+    } catch {
+      return true;
+    }
+  }
+
+  /**
+   * The opportunistic pull — a page load or a return to the foreground — which
+   * is the only caller the window applies to (roadmap 510/160). A pull is
+   * skipped only when ALL of these hold: the last sync succeeded under
+   * `pullWindowMs` ago, nothing is waiting or debounced here, and storage
+   * matches the last agreement. A pending local write therefore always goes,
+   * and a push cycle reads first exactly as it always did. An unreadable,
+   * absent or FUTURE `lastSyncedAt` (a clock that was wrong) is stale, so a
+   * wrong clock cannot silence pulls. Explicit "Sync now", enabling, joining,
+   * answering a question, the retry after a lost race and a reconnect with a
+   * change waiting all call `syncNow` directly and are never throttled.
+   */
+  function pullIfStale() {
+    const cfg = readConfig();
+    if (!cfg.code) return;
+    const age = Date.parse(now()) - Date.parse(cfg.lastSyncedAt || "");
+    const fresh = Number.isFinite(age) && age >= 0 && age < pullWindowMs;
+    if (fresh && !inFlight && !timer && !waiting && !holdsUnsent()) return;
+    syncNow();
+  }
+
   return {
     status,
     subscribe(fn) {
@@ -944,7 +1000,7 @@ export function createSync({
           // Hidden first: a flush on the way out is the case that actually
           // loses data — three hearts and then the phone locks.
           if (doc.visibilityState === "hidden") flush();
-          else if (readConfig().code) syncNow();
+          else pullIfStale();
         };
         doc.addEventListener("visibilitychange", onVis);
         offs.push(() => doc.removeEventListener("visibilitychange", onVis));
@@ -965,7 +1021,7 @@ export function createSync({
       }
       // A pull on load, so opening the app on the laptop shows what the phone
       // did. Fire-and-forget: a failure here must never block a page render.
-      if (readConfig().code) syncNow();
+      pullIfStale();
       return () => {
         for (const off of offs) off();
         started = false;
