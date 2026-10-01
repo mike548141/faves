@@ -70,6 +70,23 @@
     "added": "2026-07-06"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "add-grilled-chicken",
+      "name": "Add grilled chicken",
+      "select": "one",
+      "options": [
+        {
+          "name": "Grilled chicken",
+          "id": "grilled-chicken",
+          "price": 8.0,
+          "tags": [
+            "has-meat"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Pub Snacks",
@@ -264,7 +281,7 @@
         {
           "name": "Classic Caesar",
           "dishId": "classic-caesar",
-          "desc": "Cos lettuce, bacon, herbed croutons, anchovy dressing, soft-boiled egg, parmesan snow. Add grilled chicken +$8.",
+          "desc": "Cos lettuce, bacon, herbed croutons, anchovy dressing, soft-boiled egg, parmesan snow.",
           "price": 24.0,
           "tags": [
             "gf-option",
@@ -274,12 +291,15 @@
             "contains-gluten",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “egg”.", "contains-fish": "The menu says “anchovy”.", "contains-gluten": "The menu says “croutons”.", "contains-pork": "The menu says “bacon”."}
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-egg": "The menu says “egg”.", "contains-fish": "The menu says “anchovy”.", "contains-gluten": "The menu says “croutons”.", "contains-pork": "The menu says “bacon”."},
+          "addOns": [
+            "add-grilled-chicken"
+          ]
         },
         {
           "name": "Green Tahini Bowl",
           "dishId": "green-tahini-bowl",
-          "desc": "Roast carrots, lemon ricotta verde, winter leaves, toasted buckwheat, pumpkin seed crunch. Add grilled chicken +$8.",
+          "desc": "Roast carrots, lemon ricotta verde, winter leaves, toasted buckwheat, pumpkin seed crunch.",
           "price": 22.0,
           "tags": [
             "v",
@@ -287,7 +307,10 @@
             "contains-dairy",
             "contains-sesame"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “ricotta”.", "contains-sesame": "The menu says “Tahini”."}
+          "tagNotes": {"contains-dairy": "The menu says “ricotta”.", "contains-sesame": "The menu says “Tahini”."},
+          "addOns": [
+            "add-grilled-chicken"
+          ]
         }
       ]
     },
