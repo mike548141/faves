@@ -13,6 +13,7 @@
 import { profileScopedStorage } from "./profiles.js";
 import { migrateEntries, canonicalVenueId } from "./renames.js";
 import { dishId, findDish } from "./dish-id.js";
+import { isPersonalVenue } from "./recipe-record.js";
 
 const KEY = "faves.favourites.v1";
 
@@ -110,6 +111,53 @@ export function groupForShare(items) {
     g.sub = g.sub || e.sub || "";
   }
   return order.map((id) => byVenue.get(id));
+}
+
+/** The published collection that personal recipes are listed with. */
+export const COOK_AT_HOME = "cook-at-home";
+
+/**
+ * The Favourites view's groups: one per place, in first-seen order, EXCEPT that
+ * a hearted personal recipe (`u:mine`, roadmap 510/290) joins the Cook at Home
+ * group instead of having a "My recipes" group of its own. Owner, 2026-10-01:
+ * "I should see all the recipes together under Cook at home".
+ *
+ * Each group is `{ venueId, venue, dishes, venueName, isRecipe, sub }`:
+ * `venue` is the place's own heart entry when it is hearted (else null — a
+ * place shown only because one of its dishes is hearted), and `dishes` keeps
+ * the order the hearts were saved in, personal and published together. A
+ * personal entry never lends the group its NAME ("My recipes" must not become
+ * the heading), so a group made only of personal recipes takes
+ * `cookAtHomeName`.
+ *
+ * The caller counts places as `groups.length` and dishes as the sum of
+ * `dishes.length`: a personal recipe is a saved dish like any other, and
+ * Cook at Home is one place whether it holds published recipes, personal ones
+ * or both.
+ */
+export function groupFavourites(items, { cookAtHomeName = "Cook at Home" } = {}) {
+  const order = [];
+  const byVenue = new Map();
+  for (const e of items || []) {
+    const personal = isPersonalVenue(e.venueId);
+    const venueId = personal ? COOK_AT_HOME : e.venueId;
+    let g = byVenue.get(venueId);
+    if (!g) {
+      g = { venueId, venue: null, dishes: [], venueName: "", isRecipe: false, sub: "" };
+      byVenue.set(venueId, g);
+      order.push(g);
+    }
+    if (e.type === "venue") {
+      g.venue = e;
+      g.sub = e.sub || g.sub;
+    } else {
+      g.dishes.push(e);
+    }
+    if (!personal) g.venueName = g.venueName || e.venueName;
+    g.isRecipe = g.isRecipe || !!e.isRecipe;
+  }
+  for (const g of order) if (!g.venueName && g.venueId === COOK_AT_HOME) g.venueName = cookAtHomeName;
+  return order;
 }
 
 /** Deep link for a favourite — a venue's menu, or a dish's row / recipe.

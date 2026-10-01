@@ -8,6 +8,7 @@ import {
   favKey,
   favHref,
   favouriteDishIds,
+  groupFavourites,
   groupForShare,
   unresolvedReason,
   UNRESOLVED_VENUE,
@@ -307,4 +308,53 @@ test("favouriteDishIds keys a pre-id heart by its name, exactly as the heart doe
   for (const e of entries.filter((x) => x.venueId === "kk" && x.type === "dish")) {
     assert.ok(ids.has(favKey(e).split(" ").slice(1).join(" ")));
   }
+});
+
+// --- groupFavourites: personal recipes live inside Cook at Home (510/290) ----
+
+const mine = (name, dishId) => ({
+  type: "dish", venueId: "u:mine", venueName: "My recipes", name, dishId, isRecipe: true,
+});
+const pub = (name) => ({
+  type: "dish", venueId: "cook-at-home", venueName: "Cook at Home", name, isRecipe: true,
+});
+
+test("groupFavourites: a personal recipe joins the Cook at Home group, in the order hearted", () => {
+  const items = [pub("Alpha Bake"), dish, mine("Zed Stew", "u:zed-stew"), pub("Beta Pie"), mine("Ace Soup", "u:ace-soup")];
+  const groups = groupFavourites(items);
+  assert.deepEqual(groups.map((g) => g.venueId), ["cook-at-home", "kk-malaysian"]);
+  assert.deepEqual(groups[0].dishes.map((d) => d.name), ["Alpha Bake", "Zed Stew", "Beta Pie", "Ace Soup"]);
+  assert.equal(groups.some((g) => g.venueId === "u:mine"), false, "no My recipes group");
+});
+
+test("groupFavourites: only personal recipes still make a Cook at Home group, never named My recipes", () => {
+  const groups = groupFavourites([mine("Zed Stew", "u:zed-stew")]);
+  assert.equal(groups.length, 1);
+  assert.equal(groups[0].venueId, "cook-at-home");
+  assert.equal(groups[0].venueName, "Cook at Home");
+  assert.equal(groups[0].venue, null, "no place heart is invented");
+  assert.equal(groups[0].isRecipe, true);
+  assert.equal(groupFavourites([mine("Zed Stew", "u:zed-stew")], { cookAtHomeName: "Mahi Kāinga" })[0].venueName, "Mahi Kāinga");
+});
+
+test("groupFavourites: a personal entry never lends the group its name, whichever came first", () => {
+  const groups = groupFavourites([mine("Zed Stew", "u:zed-stew"), pub("Alpha Bake")], { cookAtHomeName: "Fallback" });
+  assert.equal(groups[0].venueName, "Cook at Home");
+});
+
+test("groupFavourites: the Cook at Home place heart stays its own entry, and counts are group and row counts", () => {
+  const home = { type: "venue", venueId: "cook-at-home", venueName: "Cook at Home", isRecipe: true };
+  const groups = groupFavourites([home, mine("Zed Stew", "u:zed-stew"), dish]);
+  assert.equal(groups[0].venue, home);
+  assert.equal(groups.length, 2); // places
+  assert.equal(groups.reduce((n, g) => n + g.dishes.length, 0), 2); // the personal recipe is a dish
+});
+
+test("groupFavourites: a personal entry still links to its own recipe page", () => {
+  assert.equal(favHref(mine("Zed Stew", "u:zed-stew")), "recipe.html?id=u:mine&dish=u:zed-stew");
+});
+
+test("groupFavourites: nothing hearted, nothing grouped", () => {
+  assert.deepEqual(groupFavourites([]), []);
+  assert.deepEqual(groupFavourites(null), []);
 });
