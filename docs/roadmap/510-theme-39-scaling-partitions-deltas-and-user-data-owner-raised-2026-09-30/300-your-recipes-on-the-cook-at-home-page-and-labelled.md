@@ -1,4 +1,4 @@
-- [~] **Your own recipes on the Cook at Home page, and labelled Private
+- [x] **Your own recipes on the Cook at Home page, and labelled Private
       wherever they appear** `[M] [menu][recipes]` — owner-raised
       2026-10-01 (session `faves-55`).
 
@@ -52,3 +52,6 @@
 
   ⚠️ **Not changed:** the home card still says "20 recipes", the published
   count; your own are on the page and not in that figure.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #75), live as
+  `2026-10-01.18`, and `main` CI green.

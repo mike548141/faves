@@ -1,4 +1,4 @@
-- [~] **Search finds your own recipes, labelled "My recipe"** `[M]
+- [x] **Search finds your own recipes, labelled "My recipe"** `[M]
       [search][recipes]` — owner-raised 2026-10-01 (session `faves-55`).
 
   **His words:** *"The search feature(s) should also work to find "My
@@ -43,3 +43,6 @@
   (`attachSuggestions` is wired only on menu pages), so there was no home
   suggestion list to extend; the Cook at Home page's suggestions are covered.
   The home Favourites list and the venue cards are untouched.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #75), live as
+  `2026-10-01.18`, and `main` CI green.
