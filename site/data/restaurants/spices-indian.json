@@ -82,6 +82,68 @@
     "added": "2026-07-06"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "portion-13-21",
+      "name": "Portion",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Half",
+          "id": "half",
+          "dishPrice": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Full",
+          "id": "full",
+          "dishPrice": 21.0,
+          "default": true,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "portion-12-20",
+      "name": "Portion",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Half",
+          "id": "half",
+          "dishPrice": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Full",
+          "id": "full",
+          "dishPrice": 20.0,
+          "default": true,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "portion-13-23",
+      "name": "Portion",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Half",
+          "id": "half",
+          "dishPrice": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Full",
+          "id": "full",
+          "dishPrice": 23.0,
+          "default": true,
+          "tags": []
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Entrée",
@@ -119,16 +181,20 @@
         {
           "name": "Seekh Kabab",
           "dishId": "seekh-kabab",
-          "desc": "Half $13.00 / full $21.00.",
           "price": 21.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "portion-13-21"
+          ]
         },
         {
           "name": "Garlic Tikka",
           "dishId": "garlic-tikka",
-          "desc": "Half $12.00 / full $20.00.",
           "price": 20.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "portion-12-20"
+          ]
         },
         {
           "name": "Fish Tikka",
@@ -143,9 +209,11 @@
         {
           "name": "Tandoori Chicken",
           "dishId": "tandoori-chicken",
-          "desc": "Half $13.00 / full $23.00.",
           "price": 23.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "portion-13-23"
+          ]
         },
         {
           "name": "Tandoori Prawn",
