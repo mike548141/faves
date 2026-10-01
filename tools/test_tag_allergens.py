@@ -1673,6 +1673,60 @@ NAIVE_SPANS = (
 )
 
 BREAKERS = {
+    # --- POINTER notes (2026-10-01, roadmap 080/280) -----------------------
+    # One breaker per claim, and the two that matter are the pair around the
+    # veto: removing it must fail the ABSENCE, and WIDENING it to the whole
+    # section must fail the dish's-own-words line and nothing about the note.
+    "the pointer skip removed": (
+        [("        if is_pointer(record, section, pointer_map):\n            note_applies = []",
+          "        if is_pointer(record, section, pointer_map):\n            pass")],
+        ["a flagged pointer note adds nothing"]),
+    "the pointer veto widened to the whole section": (
+        [("        if is_pointer(record, section, pointer_map):\n            note_applies = []",
+          "        if is_pointer(record, section, pointer_map):\n            continue")],
+        ["a pointer vetoes the note and never the dish's own words"]),
+    "the pointer matched on section alone, not on the note's text": (
+        [('    return bool(note) and pointer_map.get((record.get("id"), section.get("sectionId"))) == note',
+          '    return bool(note) and (record.get("id"), section.get("sectionId")) in pointer_map')],
+        ["a note rewritten since it was flagged is read again"]),
+    "every note flagged (the skip tested against nothing)": (
+        [('    return bool(note) and pointer_map.get((record.get("id"), section.get("sectionId"))) == note',
+          "    return bool(note)")],
+        ["the same note, unflagged, still tags (the control)"]),
+    "an unknown venue no longer reported": (
+        [('            problems.append(f"{venue}: no such venue (entry for section {sid!r})")\n            continue',
+          "            continue")],
+        ["a config entry for a venue that is gone is stale"]),
+    "an unknown section no longer reported": (
+        [('            problems.append(f"{venue}: no section with sectionId {sid!r}")', "            pass")],
+        ["a config entry for a section that is gone is stale"]),
+    "a vanished note no longer reported": (
+        [('            problems.append(f"{venue} / {sid}: the section no longer has a note")', "            pass")],
+        ["a config entry whose section lost its note is stale"]),
+    "a changed note no longer reported": (
+        [('        elif sections[0]["note"] != note:', "        elif False:")],
+        ["a config entry whose note changed is stale"]),
+    "a malformed config entry accepted": (
+        [("        if not ok:\n            raise ValueError", "        if False:\n            raise ValueError")],
+        ["a malformed or duplicated config stops the tool"]),
+    "a duplicate config entry accepted": (
+        [("        if key in out:\n            raise ValueError", "        if False:\n            raise ValueError")],
+        ["a malformed or duplicated config stops the tool"]),
+    "the explain gate no longer reads the config": (
+        [("    problems = corpus_pointer_problems()\n    if problems:\n        print(f\"{len(problems)} stale",
+          "    problems = []\n    if problems:\n        print(f\"{len(problems)} stale")],
+        ["`--explain --check` fails on a stale entry"]),
+    "the sweep no longer fails on a stale entry": (
+        [("    return 1 if stale_pointers else 0", "    return 0")],
+        ["the sweep fails on a stale entry"]),
+    "the tip ignores the flag (quotes the pointer as evidence again)": (
+        [("            note_applies, pointer_applies = [], note_applies",
+          "            pointer_applies = []")],
+        ["`--explain --check` is clean on the shipped corpus"]),
+    "validate.py no longer runs the pointer check": (
+        [("    check_section_note_pointers()\n    check_add_on_option_tags()",
+          "    check_add_on_option_tags()")],
+        ["validate.py fails on a stale entry"], "tools/validate.py"),
     # Take the lookbehind back out and water chestnut is a tree nut again.
     # This is the ONLY breaker whose bug over-warns rather than under-warns,
     # and it is here because an over-warning on a vegan side dish is how a
@@ -2173,6 +2227,238 @@ def run_alt_probes(work, name, verbose=False):
     return None
 
 
+# --- POINTER notes (2026-10-01, roadmap 080/280) ----------------------------
+# A section note that points at OTHER food ("see our cabinet of fresh filled
+# paninis…") is flagged in tools/section-note-pointers.json and the section-note
+# reading skips it. What is asserted, and why each half needs its partner:
+#
+#   • the flagged note adds nothing — and its CONTROL is the same note
+#     unflagged, which MUST tag. Without the control a note reader that reads
+#     nothing at all passes the absence.
+#   • the veto is on the NOTE and never on the dish: a Meat Pie in the same
+#     section keeps the gluten its own name gives it. An item-level veto trades
+#     an over-warning for a miss (the almonds beside the water chestnut), and
+#     every absence line passes while it does it — only this line can see it.
+#   • a flag that outlives its note is STALE and fails loudly, in all three
+#     places that read the config (the sweep, `--explain --check`, validate.py).
+#     The stale entry used is an UNKNOWN VENUE on purpose: a changed note would
+#     also make the tips drift, so `--explain --check` would go red for a
+#     different reason and the gate under test could be deleted unnoticed.
+POINTER_DRIVER = r"""
+import json, sys, tempfile, pathlib
+sys.path.insert(0, "tools")
+import tag_allergens as ta
+NOTE = "The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes."
+def rec(note=NOTE, venue="v", sid="lunch"):
+    section = {"section": "Lunch", "sectionId": sid,
+               "items": [{"name": "Nachos", "desc": "Corn chips and beans.", "tags": []},
+                         {"name": "Meat Pie", "desc": "Beef.", "tags": []}]}
+    if note is not None:
+        section["note"] = note
+    return {"id": venue, "menu": [section]}
+def tags(record, pm):
+    out = {}
+    for item, tag, tier, why in ta.audit(record, pointer_map=pm):
+        out.setdefault(item["name"], []).append(tag + "@" + tier)
+    return out
+def problems(record, pm):
+    return ta.pointer_problems([record], pm)
+def load(doc):
+    d = pathlib.Path(tempfile.mkdtemp())
+    f = d / "p.json"
+    f.write_text(json.dumps(doc))
+    try:
+        ta.load_pointers(f)
+        return "loaded"
+    except ValueError as exc:
+        return "refused: " + str(exc)
+ENTRY = {"venue": "v", "sectionId": "lunch", "note": NOTE, "why": "x"}
+flag = {("v", "lunch"): NOTE}
+out = {
+    "flagged": tags(rec(), flag),
+    "unflagged": tags(rec(), {}),
+    "rewritten": tags(rec(note="Our pastry is made in house."), flag),
+    "ok": problems(rec(), flag),
+    "venue": problems(rec(venue="other"), flag),
+    "section": problems(rec(sid="dinner"), flag),
+    "nonote": problems(rec(note=None), flag),
+    "changed": problems(rec(note="Something else entirely."), flag),
+    "malformed": load({"pointers": [{"venue": "v", "sectionId": "lunch", "note": NOTE}]}),
+    "dup": load({"pointers": [ENTRY, ENTRY]}),
+    "notalist": load({"pointers": {}}),
+    "good": load({"pointers": [ENTRY]}),
+}
+json.dump(out, sys.stdout)
+"""
+
+
+def _pointer_driver(work):
+    proc = subprocess.run([sys.executable, "-c", POINTER_DRIVER], cwd=work,
+                          capture_output=True, text=True, timeout=120)
+    if proc.returncode != 0:
+        return None, f"the driver would not run: {proc.stderr.strip().splitlines()[-1:]}"
+    return json.loads(proc.stdout), None
+
+
+def _gluten(tags, dish):
+    return any(t.startswith("contains-gluten") for t in tags.get(dish, []))
+
+
+POINTER_FILE = "tools/section-note-pointers.json"
+STALE_ENTRY = {"venue": "no-such-venue", "sectionId": "x", "note": "n", "why": "w"}
+
+
+def _with_config(work, edit, cmd):
+    """Run `cmd` in `work` with the pointer config edited, then put it back."""
+    path = work / POINTER_FILE
+    good = path.read_text(encoding="utf-8")
+    try:
+        doc = json.loads(good)
+        edit(doc)
+        path.write_text(json.dumps(doc), encoding="utf-8")
+        return subprocess.run([sys.executable, *cmd], cwd=work, capture_output=True,
+                              text=True, timeout=300)
+    finally:
+        path.write_text(good, encoding="utf-8")
+
+
+def _pc_adds_nothing(work):
+    got, bad = _pointer_driver(work)
+    if bad:
+        return bad
+    return (f"a flagged pointer note still tagged Nachos: {got['flagged']}"
+            if _gluten(got["flagged"], "Nachos") else None)
+
+
+def _pc_dish_words(work):
+    got, bad = _pointer_driver(work)
+    if bad:
+        return bad
+    return (None if _gluten(got["flagged"], "Meat Pie") else
+            f"the veto reached past the note and took the dish's own gluten: {got['flagged']}")
+
+
+def _pc_control(work):
+    got, bad = _pointer_driver(work)
+    if bad:
+        return bad
+    return (None if _gluten(got["unflagged"], "Nachos") else
+            f"the SAME note, unflagged, no longer tags — the absence proves nothing: {got['unflagged']}")
+
+
+def _pc_rewritten(work):
+    got, bad = _pointer_driver(work)
+    if bad:
+        return bad
+    return (None if _gluten(got["rewritten"], "Nachos") else
+            "a note rewritten since it was flagged is still skipped (a missed allergen)"
+            f": {got['rewritten']}")
+
+
+def _pc_problem(key, needle, label):
+    def run(work):
+        got, bad = _pointer_driver(work)
+        if bad:
+            return bad
+        if got["ok"]:
+            return f"a VALID entry was reported stale: {got['ok']}"
+        hit = [p for p in got[key] if needle in p]
+        return None if hit else f"{label} was not reported: {got[key]}"
+    return run
+
+
+def _pc_load(work):
+    got, bad = _pointer_driver(work)
+    if bad:
+        return bad
+    if got["good"] != "loaded":
+        return f"a good config was refused: {got['good']}"
+    for key in ("malformed", "dup", "notalist"):
+        if not got[key].startswith("refused"):
+            return f"a {key} config LOADED instead of stopping the tool: {got[key]}"
+    return None
+
+
+def _pc_explain_check_clean(work):
+    proc = subprocess.run([sys.executable, TOOL, "--explain", "--check"], cwd=work,
+                          capture_output=True, text=True, timeout=300)
+    return None if proc.returncode == 0 else f"exit {proc.returncode} on the unmutated corpus: {proc.stdout[-200:]}"
+
+
+def _pc_explain_check_flag_removed(work):
+    proc = _with_config(work, lambda d: d.update(pointers=[]), [TOOL, "--explain", "--check"])
+    if proc.returncode != 1 or "groundup-cafe" not in proc.stdout:
+        return (f"un-flagging Groundup left `--explain --check` at exit {proc.returncode}: "
+                "the tips no longer agree with the flag")
+    return None
+
+
+def _pc_explain_check_stale(work):
+    proc = _with_config(work, lambda d: d["pointers"].append(STALE_ENTRY),
+                        [TOOL, "--explain", "--check"])
+    if proc.returncode != 1 or "no such venue" not in proc.stdout:
+        return f"a stale entry did not fail `--explain --check` (exit {proc.returncode}): {proc.stdout[-200:]}"
+    return None
+
+
+def _pc_sweep_stale(work):
+    proc = _with_config(work, lambda d: d["pointers"].append(STALE_ENTRY), [TOOL, "--quiet"])
+    if proc.returncode != 1 or "no such venue" not in proc.stdout:
+        return f"a stale entry did not fail the sweep (exit {proc.returncode}): {proc.stdout[-200:]}"
+    return None
+
+
+def _pc_validate_stale(work):
+    # The control first: a validate.py that fails on EVERYTHING passes the
+    # stale-entry assertion below for the wrong reason.
+    clean = subprocess.run([sys.executable, "tools/validate.py"], cwd=work,
+                           capture_output=True, text=True, timeout=300)
+    if clean.returncode != 0:
+        return f"validate.py fails on the unmutated corpus: {(clean.stdout + clean.stderr)[-200:]}"
+    proc = _with_config(work, lambda d: d["pointers"].append(STALE_ENTRY), ["tools/validate.py"])
+    out = proc.stdout + proc.stderr
+    if proc.returncode != 1 or "stale entry" not in out:
+        return f"validate.py let a stale entry through (exit {proc.returncode}): {out[-200:]}"
+    return None
+
+
+def _pc_report(work):
+    before = {p: p.read_bytes() for p in (work / "site/data").rglob("*.json")}
+    proc = subprocess.run([sys.executable, TOOL, "--section-notes"], cwd=work,
+                          capture_output=True, text=True, timeout=300)
+    if proc.returncode != 0:
+        return f"--section-notes exited {proc.returncode}"
+    if "FLAGGED AS A POINTER" not in proc.stdout or "groundup-cafe / Lunch and Light Bites" not in proc.stdout:
+        return "the report does not show the flagged Groundup note"
+    if "sprig-and-fern-thorndon / Burgers" not in proc.stdout:
+        return "the report omits an ordinary (unflagged) note"
+    return "the report wrote to site/data" if any(
+        p.read_bytes() != d for p, d in before.items()) else None
+
+
+POINTER_CASES = {
+    "a flagged pointer note adds nothing": _pc_adds_nothing,
+    "a pointer vetoes the note and never the dish's own words": _pc_dish_words,
+    "the same note, unflagged, still tags (the control)": _pc_control,
+    "a note rewritten since it was flagged is read again": _pc_rewritten,
+    "a config entry for a venue that is gone is stale":
+        _pc_problem("venue", "no such venue", "an unknown venue"),
+    "a config entry for a section that is gone is stale":
+        _pc_problem("section", "no section with sectionId", "an unknown section"),
+    "a config entry whose section lost its note is stale":
+        _pc_problem("nonote", "no longer has a note", "a section with no note"),
+    "a config entry whose note changed is stale":
+        _pc_problem("changed", "note has changed", "a changed note"),
+    "a malformed or duplicated config stops the tool": _pc_load,
+    "`--explain --check` is clean on the shipped corpus": _pc_explain_check_clean,
+    "`--explain --check` notices the flag was removed": _pc_explain_check_flag_removed,
+    "`--explain --check` fails on a stale entry": _pc_explain_check_stale,
+    "the sweep fails on a stale entry": _pc_sweep_stale,
+    "validate.py fails on a stale entry": _pc_validate_stale,
+    "`--section-notes` lists flagged and unflagged notes and writes nothing": _pc_report,
+}
+
+
 def run_named(work, name, verbose=False):
     """Run a CASE or a PROBE group by name, whichever this is."""
     if name in CASES:
@@ -2185,6 +2471,8 @@ def run_named(work, name, verbose=False):
         return run_section_probes(work, name, verbose)
     if name in INGREDIENT_PROBES:
         return run_ingredient_probes(work, name, verbose)
+    if name in POINTER_CASES:
+        return POINTER_CASES[name](work)
     return f"no case or probe called {name!r}"
 
 
@@ -2236,6 +2524,10 @@ def main() -> int:
         work.mkdir(parents=True)
         shutil.copytree(ROOT / "tools", work / "tools")
         shutil.copytree(ROOT / "site" / "data", work / "site" / "data")
+        # validate.py reads four tables out of the shipped JS (see test_validate.py).
+        (work / "site" / "js").mkdir(parents=True, exist_ok=True)
+        for mod in ("renames.js", "addons.js", "vibes.js", "dietary.js"):
+            shutil.copy(ROOT / "site" / "js" / mod, work / "site" / "js" / mod)
 
         for label, fn in (("a dry run writes nothing", check_dry_run_writes_nothing),
                           ("every rule tolerates a plural",
@@ -2246,7 +2538,7 @@ def main() -> int:
                 failures.append(label)
 
         for name in (list(CASES) + list(PROBES) + list(ALT_PROBES) + list(SECTION_PROBES)
-                     + list(INGREDIENT_PROBES)):
+                     + list(INGREDIENT_PROBES) + list(POINTER_CASES)):
             complaint = run_named(work, name, args.verbose)
             print(f"  {'❌' if complaint else '✅'} {name:52} {complaint or 'as specified'}")
             if complaint:
@@ -2255,7 +2547,11 @@ def main() -> int:
         # …and now break it on purpose.
         tool = work / TOOL
         good = tool.read_text(encoding="utf-8")
-        for bug, (edits, covered) in BREAKERS.items():
+        for bug, (edits, covered, *rest) in BREAKERS.items():
+            # An optional third element names another file to break (the
+            # validate.py wiring); the default is the tagger itself.
+            tool = work / (rest[0] if rest else TOOL)
+            good = tool.read_text(encoding="utf-8")
             broken = good
             for old, new in edits:
                 if old not in broken:
@@ -2282,7 +2578,7 @@ def main() -> int:
         print(f"\n{len(failures)} failure(s): {', '.join(failures)}", file=sys.stderr)
         return 1
     total = (len(CASES) + len(PROBES) + len(ALT_PROBES) + len(SECTION_PROBES)
-             + len(INGREDIENT_PROBES) + len(BREAKERS) + 2)
+             + len(INGREDIENT_PROBES) + len(POINTER_CASES) + len(BREAKERS) + 2)
     print(f"\nAll {total} cases behaved as specified.")
     return 0
 

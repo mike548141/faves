@@ -100,10 +100,60 @@ ta.ingredient_name = saved_name
 # Break-probe for claim 1: a writer that explained every tag it could not
 # account for would turn the peanut case into a guess.
 saved = ta.tag_note
-ta.tag_note = lambda tag, item, note_applies, recipes: saved(tag, item, note_applies, recipes) or "guessed"
+ta.tag_note = lambda *a: saved(*a) or "guessed"
 check("break-probe: a guessing writer is caught by the no-guess case",
       "contains-peanuts" in notes_for(RECIPES)["Cake"])
 ta.tag_note = saved
+
+# --- a POINTER note (roadmap 080/280) --------------------------------------------
+# The tag stays (this tool never removes one), so its tip may not go on quoting a
+# note the tagger no longer accepts as evidence — and may not vanish, because a
+# tag with no reason beside it reads as a confirmed fact.
+PNOTE = "The board also says: see our cabinet of fresh filled paninis, savouries, slices and cakes."
+PTIP = ("Kept as a precaution: the only reason on record is a note over this section that "
+        f"points to other food (“{PNOTE.rstrip('.')}”), so it may not apply to this dish.")
+
+
+def pointer_record(extra=None):
+    return {"id": "v", "menu": [{"section": "Lunch", "sectionId": "lunch", "note": PNOTE, "items": [
+        dict({"name": "Nachos", "desc": "Corn chips and beans.", "tags": ["contains-gluten"]}, **(extra or {})),
+        {"name": "Meat Pie", "desc": "Beef.", "tags": ["contains-gluten"]},
+    ]}]}
+
+
+def pointer_notes(record, flagged):
+    pm = {("v", "lunch"): PNOTE} if flagged else {}
+    return {i["name"]: n for _, i, n in ta.explain(record, pointer_map=pm)}
+
+
+print("A pointer note")
+unflagged = pointer_notes(pointer_record(), False)["Nachos"].get("contains-gluten", "")
+check("CONTROL: an unflagged note's tip still quotes it as evidence",
+      unflagged.startswith("The note over this section says “The board also says"), repr(unflagged))
+flagged = pointer_notes(pointer_record(), True)["Nachos"].get("contains-gluten")
+check("a tag whose ONLY evidence is a pointer note is kept, and the tip says so plainly",
+      flagged == PTIP, repr(flagged))
+check("…and it no longer presents the pointer as the note saying anything about the dish",
+      "The note over this section says" not in (flagged or ""), repr(flagged))
+check("a dish's own words still win over the pointer (no precaution wording on a Meat Pie)",
+      pointer_notes(pointer_record(), True)["Meat Pie"].get("contains-gluten", "").startswith("The menu says"),
+      repr(pointer_notes(pointer_record(), True)["Meat Pie"]))
+photo = pointer_notes(pointer_record({"alt": "Nachos on a toasted bread bowl"}), True)["Nachos"]
+check("a photo caption that supports the tag beats the pointer fallback",
+      photo.get("contains-gluten", "").startswith("The photo’s description says"), repr(photo))
+# Break-probes: the exact-text case above is what stops the fallback being
+# reworded or dropped (a tag with no reason reads as a confirmed fact), and the
+# flag being ignored puts the old quoted-evidence tip straight back.
+saved_tip = ta.POINTER_TIP
+ta.POINTER_TIP = "{note}"
+check("break-probe: changing the precaution wording is caught by the exact-text case",
+      pointer_notes(pointer_record(), True)["Nachos"].get("contains-gluten") != PTIP)
+ta.POINTER_TIP = saved_tip
+saved_ptr = ta.is_pointer
+ta.is_pointer = lambda record, section, pm: False
+check("break-probe: ignoring the flag puts the quoted-evidence tip back",
+      pointer_notes(pointer_record(), True)["Nachos"].get("contains-gluten", "").startswith("The note over this section says"))
+ta.is_pointer = saved_ptr
 
 print("What the writer touches")
 MULTILINE = """{
