@@ -210,6 +210,10 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Hell Pizza's Half Buffalo Half Beast now warns about dairy and nuts.** It
+  was tagged only for gluten and pork, though both halves are mozzarella pizzas
+  and The Buffalo carries pesto. Simmer's caramel and citrus slices now show
+  their $5.50 price, and its loose leaf teas and daily focaccia are listed.
 - **Sync asks before adding this device's extras when it has lost track.** If
   a device has no record of when it last matched your other devices — or joins
   a sync code while already holding favourites — and holds favourites, ratings
