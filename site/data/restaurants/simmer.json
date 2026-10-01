@@ -64,7 +64,7 @@
   },
   "vibe": [],
   "picks": [],
-  "verified": "2026-08-25",
+  "verified": "2026-09-09",
   "verifiedBy": "in-store",
   "lifecycle": {
     "added": "2026-07-06"
@@ -935,6 +935,26 @@
       ]
     },
     {
+      "section": "Teas",
+      "sectionId": "teas",
+      "items": [
+        {
+          "name": "Loose leaf tea",
+          "dishId": "loose-leaf-tea",
+          "desc": "Earl grey, English breakfast, grapefruit & bitter lemon, mango star, energy blend, peppermint, feng shui green.",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "The Vital Fluids board prints “Teas – loose leaf, $” and the figure after the dollar sign is missing, so nothing is recorded.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": []
+        }
+      ]
+    },
+    {
       "section": "Fresh juices",
       "sectionId": "fresh-juices",
       "items": [
@@ -1260,14 +1280,7 @@
         {
           "name": "Caramel slice",
           "dishId": "caramel-slice",
-          "price": null,
-          "needs": [
-            {
-              "what": "price",
-              "note": "The handwritten tag reads “$55” with no decimal point, unlike the “$7·50” tags beside it. $5.50 is the obvious intent but is not what is written, so nothing is recorded.",
-              "since": "2026-09-07"
-            }
-          ],
+          "price": 5.5,
           "tags": [
             "contains-gluten"
           ],
@@ -1276,14 +1289,7 @@
         {
           "name": "Citrus slice",
           "dishId": "citrus-slice",
-          "price": null,
-          "needs": [
-            {
-              "what": "price",
-              "note": "The handwritten tag reads “$55” with no decimal point, the same as the caramel slice beside it. Not transcribed rather than guessed.",
-              "since": "2026-09-07"
-            }
-          ],
+          "price": 5.5,
           "tags": [
             "contains-gluten"
           ],
@@ -1490,6 +1496,20 @@
             "contains-dairy"
           ],
           "tagNotes": {"contains-gluten": "The menu says “scone” — a wheat bakery item.", "contains-dairy": "The menu says “Cheese”."}
+        },
+        {
+          "name": "Today's focaccia",
+          "dishId": "today-s-focaccia",
+          "desc": "Chicken, leaves and tomato.",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "The handwritten tag is partly hidden by the cling film and the price after “$8” cannot be read with confidence, so nothing is recorded.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": []
         }
       ]
     }

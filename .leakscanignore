@@ -53,3 +53,11 @@ tests/share-codec.test.js  # venue phone fixtures in share-payload round-trip ca
 # were rewritten to state the product fact instead. A structural scanner found
 # what a human review had passed over twice.
 data/products/*.json  # manufacturers' own printed factory addresses; private-address and coordinate checks live in tools/products.py
+
+# The intake evidence record. Each row now carries a 64-hex sha256 (roadmap
+# 340/310) and nz-phone matches digit runs INSIDE a hash: three false positives
+# on 88 hashes, which shift every time a file is re-fingerprinted. The file holds
+# file names, capture times, device names, GPS presence and hashes, nothing else
+# (tools/check_provenance.py writes it; a coordinate is never recorded). A
+# per-line marker is impossible in JSON, hence the glob.
+data/intake/menu-sources.json  # sha256 hex digests trip nz-phone on digit runs; file holds provenance rows only, no contact data

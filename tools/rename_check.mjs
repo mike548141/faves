@@ -21,25 +21,34 @@
 //      A heart and a rating stored under the old name and id must light the
 //      renamed row, and the menu's "favourites" query must still find it.
 //      This is the ADR 0051 promise, and the assertion 28o needs.
-//   2. THE CONTROL — the dish's `dishId` MOVES with no `formerIds` claim. The
+//   2. RETIRED, CLAIMED — the dish's `dishId` MOVES and the old id goes into
+//      its `formerIds` (roadmap 28j/28l: what a ladder merge does to every
+//      sibling it folds in). The heart, the rating and the "favourites" query
+//      must all reach the row exactly as in (1). This scenario was deliberately
+//      ABSENT until 2026-10-02: the row compared the raw stored id and never
+//      consulted `formerIds`, so a heart under a former id read dark, and
+//      asserting that would have enforced the defect — how `to_top_check` came
+//      to defend the very bug it was reported for. Roadmap 28l fixed it (the
+//      menu page absorbs the record's former ids into the stores before it
+//      draws a row, ADR 0153), and only then did it become an assertion.
+//   3. THE CONTROL — the dish's `dishId` MOVES with no `formerIds` claim. The
 //      same seeded heart must NOT light it. Without this, a page that lit every
-//      heart (or matched by something looser than the id) would pass (1).
+//      heart (or matched by something looser than the id) would pass (1) and
+//      (2) — and (2) is the one most at risk, because "absorb" done wrong is
+//      exactly a looser match.
 //
 // WHAT A GREEN RUN CANNOT TELL YOU:
-//   1. Anything about a RETIRED id carried in `formerIds`. That is roadmap 28j/
-//      28l's absorption, and it is deliberately not asserted here: read on
-//      2026-09-28, the row's heart is `favourites.has(entry)`, which compares
-//      `favKey` — the RAW stored id — and never consults `findDish`, so a heart
-//      under a former id reads as not-hearted on the row today (see 28l). An
-//      assertion of today's behaviour would enforce the defect, which is how
-//      `to_top_check` came to defend the very bug it was reported for.
-//   2. Anything about sync, import or a share link carrying the old name. Those
-//      re-key on read through the same `favKey`, but only the menu row is
+//   1. Anything about sync, import or a share link carrying the old name or
+//      the retired id. Those land in the same stores and are absorbed on the
+//      same read (tests/absorb-former-ids.test.js), but only the menu row is
 //      driven here.
+//   2. The home screen's Favourites view or the recipe page, which absorb the
+//      same way from their own copy of the record. Only the menu row.
 //   3. Safari/WebKit. Chrome only.
 //
 // Run after touching favourites.js, ratings.js, dish-id.js, favourites-ui.js,
-// the dish row in menu.js, or the "favourites" query in applyView.
+// the dish row in menu.js, the absorb call before menu.js's first render, or
+// the "favourites" query in applyView.
 
 import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -186,7 +195,30 @@ async function run(opts) {
     `row hidden=${kept.filtered.hidden}, ${kept.filtered.shown} row(s) shown`
   );
 
-  // 2. The control — the id MOVED and nothing claims the old one.
+  // 2. Retired and claimed — the id MOVED and the dish's formerIds holds the
+  //    old one (roadmap 28l). Everything (1) asserts must hold here too.
+  const claimed = await scenario(report, opts, venue, "id retired into formerIds", (dish) => {
+    dish.name = NEW_NAME;
+    dish.dishId = MOVED_ID;
+    dish.formerIds = [DISH_ID];
+  });
+  report.check(
+    `a heart stored under the RETIRED id "${DISH_ID}" lights the dish whose formerIds claims it`,
+    claimed.row.heart === "true",
+    `heart aria-pressed=${claimed.row.heart}`
+  );
+  report.check(
+    "…and so does its rating, re-keyed onto the live id",
+    claimed.row.rating === String(RATING),
+    `rating aria-valuenow=${claimed.row.rating}`
+  );
+  report.check(
+    'the menu\'s "favourites" query finds the claiming dish, and only it',
+    claimed.filtered.hidden === false && claimed.filtered.shown === 1,
+    `row hidden=${claimed.filtered.hidden}, ${claimed.filtered.shown} row(s) shown`
+  );
+
+  // 3. The control — the id MOVED and nothing claims the old one.
   const moved = await scenario(report, opts, venue, "id moved", (dish) => {
     dish.name = NEW_NAME;
     dish.dishId = MOVED_ID;

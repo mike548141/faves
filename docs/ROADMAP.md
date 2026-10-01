@@ -69,8 +69,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [🚩 Three allergen findings the caption sweep turned up, none of them](roadmap/080-theme-4-content-growth-ongoing-in-parallel/220-three-allergen-findings-the-alt-tier-sweep-turned-up.md)
 - [ ] 🎯 [Which of the remaining 47 venues deliver?](roadmap/080-theme-4-content-growth-ongoing-in-parallel/230-which-of-the-remaining-47-venues-deliver.md)
 - [ ] [A photo for every item, eventually — OWNER GOAL 2026-09-28, not a](roadmap/080-theme-4-content-growth-ongoing-in-parallel/240-a-photo-for-every-item-owner-goal.md)
-- [~] 🔎 [Nine Simmer photographs dropped into intake/ on 2026-09-09 were](roadmap/080-theme-4-content-growth-ongoing-in-parallel/250-nine-simmer-photos-never-read.md)
-- [~] 🔎 [Hell Pizza's "Half Buffalo Half Beast" carries no dairy tag](roadmap/080-theme-4-content-growth-ongoing-in-parallel/260-half-buffalo-half-beast-carries-no-dairy.md)
+- ✅ 🔎 [Nine Simmer photographs dropped into intake/ on 2026-09-09 were](roadmap/080-theme-4-content-growth-ongoing-in-parallel/250-nine-simmer-photos-never-read.md)
+- ✅ 🔎 [Hell Pizza's "Half Buffalo Half Beast" carries no dairy tag](roadmap/080-theme-4-content-growth-ongoing-in-parallel/260-half-buffalo-half-beast-carries-no-dairy.md)
 - ✅ [Groundup Cafe: menu and cabinet food from the owner's photos](roadmap/080-theme-4-content-growth-ongoing-in-parallel/270-groundup-cafe-from-the-owner-s-photos.md)
 - ✅ 🔎 [A section note that points elsewhere tags every dish under it](roadmap/080-theme-4-content-growth-ongoing-in-parallel/280-a-section-note-that-points-elsewhere-tags-every-dish-under-it.md)
 
@@ -168,7 +168,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/README.md)*
 
-- [ ] [26a — Save and recall](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/010-26a-save-and-recall.md)
+- [~] [26a — Save and recall](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/010-26a-save-and-recall.md)
 - [ ] [26b — Carry it across devices](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/020-26b-carry-it-across-devices.md)
 - [ ] [26c — What happens when the menu moves under it](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/030-26c-what-happens-when-the-menu-moves-under-it.md)
 

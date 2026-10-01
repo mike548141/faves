@@ -62,12 +62,24 @@ files, so a folder that gained a photo shows up as drift rather than as
 silence. Without it, the comparison still happens — against the committed
 record — and the output says which of the two it did.
 
+## Fingerprints (roadmap 340/310, part 1)
+
+Each evidence row carries a `sha256` of the file's bytes, written by `--rebuild`.
+The photographs are never committed, so the hash is what lets anyone prove later
+which bytes a reading came from, and that a private backup copy is intact. Every
+run compares each recorded hash with the file under `--intake`'s parent where it
+exists: verified / absent / mismatched are counted and printed. A mismatch FAILS
+naming the file; absent material is reported, not failed (CI and worktrees have
+none); a row with no `sha256` fails. `--rebuild` refuses to overwrite a hash
+whose file changed under the same name unless `--accept-changed`.
+
 Stdlib only (ADR 0001 binds the tools by habit if not by rule).
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import date
@@ -103,7 +115,24 @@ def venue_record(vid: str) -> dict | None:
     return json.loads(p.read_text())
 
 
-def scan_folder(folder: Path) -> list[dict]:
+def sha256_of(path: Path) -> str:
+    """Hex SHA-256 of a file's bytes, streamed (PDFs and photos run to megabytes)."""
+    h = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def without_hash(rows: list[dict]) -> list[dict]:
+    """Rows minus `sha256`, so the metadata-drift comparison and the fingerprint
+    comparison stay two separate verdicts. A changed byte must be reported as
+    a MISMATCH naming the file, not smeared into a generic "folder no longer
+    matches" line that cannot say which file or why."""
+    return [{k: v for k, v in r.items() if k != "sha256"} for r in rows]
+
+
+def scan_folder(folder: Path, fingerprint: bool = False) -> list[dict]:
     """Provenance rows for one intake folder, in file-name order.
 
     Deliberately shallow on content and loud on absence: a file whose EXIF
@@ -132,8 +161,56 @@ def scan_folder(folder: Path) -> list[dict]:
             # Presence only. A coordinate in a public repo is the leak ADR 0090
             # exists to stop; presence is what a strip-or-refuse rule needs.
             "gps": "present" if d.get("lat") is not None else "absent",
+            # Last, so the row reads as before with one more line. Same field
+            # name as recipe-sources.json's `sha256`. The photographs are never
+            # committed (340/310), so this is what lets a later session prove
+            # which bytes a reading came from, and prove a backup copy intact.
+            **({"sha256": sha256_of(f)} if fingerprint else {}),
         })
     return rows
+
+
+def verify_fingerprints(record: dict, base: Path) -> dict:
+    """Check every recorded `sha256` against the file under `base`, where present.
+
+    Three outcomes per file, and they are deliberately not symmetrical:
+
+    * verified   -- the file is on disk and its hash equals the record's.
+    * absent     -- no file on disk (a fresh clone, CI, any worktree). REPORTED,
+                    never failed: a guard that fails wherever the raw material
+                    is not would be switched off, and the material lives in one
+                    gitignored place by design.
+    * mismatched -- on disk and different. FAILS, naming the file. Same name,
+                    different bytes is exactly the substitution a fingerprint
+                    exists to catch.
+
+    A fourth, `missing`: the record row carries no `sha256` at all. This FAILS
+    whether or not the file is local. A committed record is only auditable if
+    every row can be checked; one with a blank would let a never-fingerprinted
+    file ride through every CI run as "absent", indistinguishable from material
+    that is merely elsewhere. The remedy is one command (`--rebuild` beside the
+    intake material), so refusing costs a developer little and hiding it costs
+    the audit trail its completeness.
+    """
+    out = {"verified": 0, "absent": [], "mismatched": [], "missing": [], "total": 0}
+    for vid, entry in record.get("venues", {}).items():
+        for r in entry.get("evidence", []):
+            rel = f"{entry['folder']}/{r['file']}"
+            out["total"] += 1
+            want = r.get("sha256")
+            if not want:
+                out["missing"].append(rel)
+                continue
+            f = base / rel
+            if not f.is_file():
+                out["absent"].append(rel)
+                continue
+            got = sha256_of(f)
+            if got == want:
+                out["verified"] += 1
+            else:
+                out["mismatched"].append((rel, want, got))
+    return out
 
 
 def material_present(intake: Path) -> bool:
@@ -229,7 +306,7 @@ def judge(vid: str, entry: dict, rows: list[dict], rec: dict | None = None) -> d
     return out
 
 
-def build_record(intake: Path, existing: dict) -> dict:
+def build_record(intake: Path, existing: dict) -> tuple[dict, list[str], list[str]]:
     """Regenerate the committed record from the live intake material.
 
     The folder→venue mapping is NOT re-derived. GPS sorts photos, it does not
@@ -249,7 +326,7 @@ def build_record(intake: Path, existing: dict) -> dict:
         # different words is how a gap gets closed once and looks open twice.
         if any(rel == s or rel.startswith(s + "/") for s in OWNED_ELSEWHERE):
             continue
-        rows = scan_folder(sub)
+        rows = scan_folder(sub, fingerprint=True)
         if not rows:
             continue
         vid = mapped_folders.get(rel)
@@ -260,9 +337,17 @@ def build_record(intake: Path, existing: dict) -> dict:
     for vid, e in existing.get("venues", {}).items():
         if vid not in venues:
             unmapped.append(f"{e['folder']} (mapped to {vid}, not found on disk)")
+    # A file whose name is unchanged and whose bytes are not. Rebuilding over
+    # it would quietly re-bless the substitution, so the caller refuses.
+    changed = []
+    for vid, e in existing.get("venues", {}).items():
+        old = {r["file"]: r.get("sha256") for r in e.get("evidence", [])}
+        for r in venues.get(vid, {}).get("evidence", []):
+            if old.get(r["file"]) and old[r["file"]] != r["sha256"]:
+                changed.append(f"{e['folder']}/{r['file']}")
     doc = dict(existing)
     doc["venues"] = {k: venues[k] for k in sorted(venues)}
-    return doc, sorted(set(unmapped))
+    return doc, sorted(set(unmapped)), sorted(changed)
 
 
 def serialise(doc: dict) -> str:
@@ -329,7 +414,40 @@ def selftest() -> int:
         failures += 0 if ok else 1
         print(f"  {'PASS' if ok else 'FAIL'}  {name}: expected {expect}, got {got}")
 
-    total = len(cases) + 2
+    # Fingerprints: control, one-byte change, absent, missing field.
+    row = lambda **k: {"file": "a.jpeg", "kind": "photo", "captured": None,
+                       "capturedAt": None, "device": None, "gps": "absent", **k}
+    good = hashlib.sha256(b"menu bytes").hexdigest()
+    fp_cases = []
+    with tempfile.TemporaryDirectory() as td:
+        base = Path(td)
+        (base / "intake/menus/X").mkdir(parents=True)
+        (base / "intake/menus/X/a.jpeg").write_bytes(b"menu bytes")
+        rec = lambda **k: {"venues": {"x": {"folder": "intake/menus/X", "evidence": [row(**k)]}}}
+        r = verify_fingerprints(rec(sha256=good), base)
+        fp_cases.append(("a matching hash verifies", r["verified"] == 1 and not r["mismatched"]
+                         and not r["absent"] and not r["missing"]))
+        (base / "intake/menus/X/a.jpeg").write_bytes(b"menu byteS")  # one byte
+        r = verify_fingerprints(rec(sha256=good), base)
+        fp_cases.append(("a one-byte change FAILS, naming the file",
+                         [m[0] for m in r["mismatched"]] == ["intake/menus/X/a.jpeg"] and r["verified"] == 0))
+        r = verify_fingerprints(rec(sha256=good), base / "nowhere")
+        fp_cases.append(("absent material is reported, not failed",
+                         r["absent"] == ["intake/menus/X/a.jpeg"] and not r["mismatched"] and not r["missing"]))
+        r = verify_fingerprints(rec(), base)
+        fp_cases.append(("a row with no sha256 FAILS even with local material",
+                         r["missing"] == ["intake/menus/X/a.jpeg"] and r["verified"] == 0))
+        r = verify_fingerprints(rec(), base / "nowhere")
+        fp_cases.append(("…and without it (a record cannot be left unfingerprinted)",
+                         r["missing"] == ["intake/menus/X/a.jpeg"] and not r["absent"]))
+        # The drift comparison must not read a hash as drift.
+        fp_cases.append(("sha256 is not metadata drift",
+                         without_hash([row(sha256=good)]) == [row()]))
+    for name, ok in fp_cases:
+        failures += 0 if ok else 1
+        print(f"  {'PASS' if ok else 'FAIL'}  {name}")
+
+    total = len(cases) + 2 + len(fp_cases)
     print(f"\n{'OK' if not failures else 'REFUSED'} — {total - failures} passed, {failures} failed")
     return 1 if failures else 0
 
@@ -344,6 +462,8 @@ def main() -> int:
                          "worktree — then the committed record is used instead.")
     ap.add_argument("--sweep", action="store_true", help="print every venue's row, not only the refusals")
     ap.add_argument("--rebuild", action="store_true", help="regenerate data/intake/menu-sources.json")
+    ap.add_argument("--accept-changed", action="store_true",
+                    help="with --rebuild: re-fingerprint files whose bytes changed under the same name")
     ap.add_argument("--selftest", action="store_true", help="prove the guard still refuses")
     args = ap.parse_args()
 
@@ -359,7 +479,13 @@ def main() -> int:
             print(f"intake not present ({args.intake}) — nothing to read. The committed "
                   "record is left exactly as it is.")
             return 0
-        doc, unmapped = build_record(intake, record)
+        doc, unmapped, changed = build_record(intake, record)
+        if changed and not args.accept_changed:
+            for c in changed:
+                print(f"CHANGED  {c} — same name, different bytes than the recorded sha256")
+            print("record NOT written. If the replacement is deliberate, re-run with "
+                  "--accept-changed; otherwise restore the original.")
+            return 1
         RECORD.parent.mkdir(parents=True, exist_ok=True)
         RECORD.write_text(serialise(doc))
         n = sum(len(v["evidence"]) for v in doc["venues"].values())
@@ -379,7 +505,7 @@ def main() -> int:
                 rows_by_venue[vid] = entry["evidence"]
                 continue
             fresh = scan_folder(folder)
-            if fresh != entry["evidence"]:
+            if fresh != without_hash(entry["evidence"]):
                 drift.append(f"{entry['folder']} no longer matches the record — "
                              f"{len(entry['evidence'])} file(s) recorded, {len(fresh)} on disk; "
                              "run --rebuild")
@@ -417,10 +543,22 @@ def main() -> int:
           "repo; do not start before the strip-or-refuse rule exists.")
     for d in drift:
         print(f"DRIFT  {d}")
+
+    # Fingerprints: recorded hash vs the bytes under the intake's parent, where
+    # they exist. `base` is the checkout holding intake/ (--intake's parent).
+    fp = verify_fingerprints(record, intake.parent)
+    for rel in fp["missing"]:
+        print(f"NO FINGERPRINT  {rel} — the record carries no sha256; run --rebuild beside the intake material")
+    for rel, want, got in fp["mismatched"]:
+        print(f"MISMATCH  {rel} — recorded sha256 {want[:12]}…, on disk {got[:12]}…")
+    print(f"fingerprints: {fp['total']} recorded file(s); {fp['verified']} verified, "
+          f"{len(fp['absent'])} absent (no local material), {len(fp['mismatched'])} mismatched, "
+          f"{len(fp['missing'])} without a sha256.")
+    fp_bad = bool(fp["mismatched"] or fp["missing"])
     if not live:
         print(f"intake not present ({args.intake}) — the comparison above used the committed "
               "record, so it proves what was recorded, not what is on disk today.")
-    return 1 if bad or drift else 0
+    return 1 if bad or drift or fp_bad else 0
 
 
 if __name__ == "__main__":
