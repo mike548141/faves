@@ -836,6 +836,27 @@ node tools/fetch_check.mjs    # an INSTALLED phone downloads only what changed
                               # re-downloads everything must FAIL the count.
                               # Run it after touching sw.js's data store,
                               # gen_summaries.mjs or data.js's loaders
+node tools/chatty_check.mjs   # how much the app TALKS (roadmap 510/250; the
+                              # chatty-app survey's proposal L). Fixed scenarios,
+                              # each with an ASSERTED BUDGET printed as measured vs
+                              # budget: requests and bytes on a cold install and a
+                              # warm load, requests per menu open, localStorage
+                              # writes and cross-tab `storage` events per page
+                              # load, DOM mutations per heart / un-heart / rating
+                              # step on a 264-dish menu, the search hint's idle
+                              # cost, and sync's HTTP requests and KV reads/writes
+                              # per first sync, pull and heart — against the REAL
+                              # worker/sync-worker.js with a counting KV stand-in.
+                              # A budget is the measured value plus a stated
+                              # margin, so it catches a regression; the item that
+                              # should LOWER it is printed beside it, and it is
+                              # tightened when that item lands. BREAK-PROBES
+                              # ITSELF every run (a store.js that re-probes, a
+                              # client asking about 16 buckets). ~3.5 min, because
+                              # the hint and the cross-tab pull are real waits.
+                              # Run it after touching store.js, sync*.js,
+                              # worker/, sw.js's install, the hint or any
+                              # heart/rating render. `--no-probe` skips the probes
 node tools/fixture_check.mjs --selftest # the degenerate-state venue fixtures
                               # (a venue with no hours, no menu, one branch…) are
                               # still valid under the REAL validate.py, and render.
@@ -995,7 +1016,7 @@ boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It do
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
 `note_check` · `served_check` · `geo_check` · `picks_check` · `focus_check` ·
 `distance_check` · `midnight_check` · `precache_check` · `rename_check` ·
-`fixture_check` · `fetch_check` — **every other** guard,
+`fixture_check` · `fetch_check` · `chatty_check` — **every other** guard,
 every one written
 precisely because unit tests had already missed a leak, a wreck or a mistap. Those run **only when a human or
 an agent types them from this list**. That is how `sync_check` sat dead through

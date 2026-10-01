@@ -6,6 +6,7 @@
 //
 //     node tools/chatty_check.mjs          # every scenario + the break-probes
 //     node tools/chatty_check.mjs -v       # narrate each step
+//     node tools/chatty_check.mjs --only hint   # one scenario (wire|hint|sync), no probes
 //
 // Exit 0 = every measurement within budget. 1 = a budget was exceeded.
 // 2 = the browser stopped answering (tools/lib/browser.mjs) — says nothing
@@ -34,8 +35,8 @@
 // after its fix is the decorative-guard shape in reverse — lower it.
 //
 // 🔑 IT BREAK-PROBES ITSELF, every run. Two scenarios are re-run against an
-// overlaid, deliberately chattier copy of one file (store.js probing storage
-// three times; sync-buckets.js asking about 16 buckets), and the matching
+// overlaid, deliberately chattier copy of one file (store.js re-probing storage on
+// every call; sync-buckets.js asking about 16 buckets), and the matching
 // budget MUST fail. A budget that passes both is measuring nothing.
 //
 // 🚩 WHAT THIS CANNOT SHOW: Cloudflare Pages (304s, brotli, HTTP/2), real KV
@@ -114,7 +115,8 @@ const B = {
 // to measured + margin on a stated date, so a reader sees numbers, not a rule.
 const BUDGETS = {};
 Object.assign(BUDGETS, {
-  // Measured on main 3f57a7f (2026-10-01; 3 runs agreed except where noted)
+  // Measured on main 3f57a7f (2026-10-01; 3 runs agreed except where noted;
+  // the storage and hint rows were tightened to the post-510/200 and 510/230 values)
   // + margin: counts of 10 or fewer +1, above that max(+2, +10%); bytes +10%;
   // a zero baseline stays 0. Re-derive with this tool; tighten with the item
   // named in each row's `lowers`, never loosen without saying why.
@@ -122,10 +124,10 @@ Object.assign(BUDGETS, {
   warmReq: 3, warmBytes: 37_859, // 2 req: catalogue + the sw.js update check (34,417 B when that fires; 197 B when it does not)
   menuReq: 2, idleReq: 2, // 1 and 0-1: a late sw.js update check lands in the idle window some runs
   idleTimers: 0, idleMut: 0,
-  lsSetHome: 7, lsRemHome: 7, evHome: 14, // 6, 6, 12
-  lsSetMenu: 7, lsRemMenu: 7, evMenu: 14,
+  lsSetHome: 2, lsRemHome: 2, evHome: 4, // was 6, 6, 12 → 1, 1, 2 with 510/200
+  lsSetMenu: 2, lsRemMenu: 2, evMenu: 4,
   mutHeart: 877, mutUnheart: 875, mutRating: 2626, // 795-797, 795, 2,387
-  hintHidden: 7, hintTimersHidden: 3, hintTurns: 5, // 6, 2, 4
+  hintHidden: 0, hintTimersHidden: 0, hintTurns: 4, // was 6, 2, 4 → 0, 0, 3 with 510/230
   enableReq: 4, enableR: 29, enableW: 2, // 3, 26, 1
   pullReq: 2, pullR: 10, pullW: 0, pullLsSet: 3, // 1, 9, 0, 2
   heartReq: 4, heartR: 29, heartW: 2, // 3, 26, 1
@@ -413,8 +415,12 @@ async function scenarioHint(cdp, report) {
       Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "hidden" });
       Object.defineProperty(document, "hidden", { configurable: true, get: () => true });
       document.dispatchEvent(new Event("visibilitychange"));
-      Object.assign(window.__chat, { timers: 0, mut: 0 });
     })()`);
+    // Let the hide's own settling (a class write, delivered as a mutation record
+    // a microtask later) land BEFORE the window opens: it is the cost of stopping,
+    // not of running.
+    await sleep(300);
+    await d.evalPage(`Object.assign(window.__chat, { timers: 0, mut: 0 })`);
     await sleep(15_000);
     const c = await chat(d);
     // The harness's own 100 ms poll above is a setInterval, not a setTimeout call per tick,
@@ -510,12 +516,13 @@ async function scenarioSync(cdp, report, { overlay = null, probe = false, label 
 }
 
 // --- The verdict ------------------------------------------------------------
-function judge(report) {
+function judge(report, partial) {
   const width = Math.max(...Object.values(B).map((r) => r.what.length));
   console.log("\n  measured vs budget (budget = today's value + margin; 'lowers' = the item that should tighten it)");
   for (const [id, r] of Object.entries(B)) {
     const m = measured[id];
     if (m === undefined) {
+      if (partial) continue; // --only: the other scenarios did not run
       report.check(`${r.what}: measured`, false, "no measurement was taken (a scenario aborted before it)");
       continue;
     }
@@ -539,24 +546,26 @@ async function run(opts) {
     chrome = await launchChrome({ profileDir, headed: false });
     cdp = await Cdp.connect(chrome.wsUrl);
 
-    await scenarioWire(cdp, report, { label: "wire" });
-    await scenarioHint(cdp, report);
-    await scenarioSync(cdp, report, { label: "sync" });
-    judge(report);
+    const want = (n) => !opts.only || opts.only === n;
+    if (want("wire")) await scenarioWire(cdp, report, { label: "wire" });
+    if (want("hint")) await scenarioHint(cdp, report);
+    if (want("sync")) await scenarioSync(cdp, report, { label: "sync" });
+    judge(report, !!opts.only);
 
-    if (!opts.noProbe) {
-      // Break-probe 1: store.js probes localStorage THREE times instead of once.
+    if (!opts.noProbe && !opts.only) {
+      // Break-probe 1: store.js forgets its probe result, so every safeStorage()
+      // call writes the probe key again (the pre-510/200 behaviour).
       const storeJs = readFileSync(join(SITE, "js", "store.js"), "utf8");
-      const probeLine = `    ls.setItem(probe, "1");\n    ls.removeItem(probe);`;
-      if (!storeJs.includes(probeLine)) {
-        report.check("break-probe: store.js's probe lines are where the probe expects", false, "site/js/store.js changed shape — update probeLine in this tool");
+      const memoLine = "if (probed && probed.ls === ls) {";
+      if (!storeJs.includes(memoLine)) {
+        report.check("break-probe: store.js's probe memo is where the probe expects", false, "site/js/store.js changed shape — update memoLine in this tool");
       } else {
         const p = await scenarioWire(cdp, report, {
           label: "break-probe/storage", probe: true,
-          overlay: new Map([["/js/store.js", { body: storeJs.replace(probeLine, probeLine + "\n    ls.setItem(probe, \"1\"); ls.removeItem(probe);\n    ls.setItem(probe, \"1\"); ls.removeItem(probe);"), type: "text/javascript" }]]),
+          overlay: new Map([["/js/store.js", { body: storeJs.replace(memoLine, "if (false) {"), type: "text/javascript" }]]),
         });
         report.check(
-          "break-probe: a store.js that probes three times FAILS the home-load setItem budget",
+          "break-probe: a store.js that re-probes on every call FAILS the home-load setItem budget",
           p.home.set > B.lsSetHome.budget,
           `${p.home.set} setItem against a budget of ${B.lsSetHome.budget}`
         );
@@ -589,7 +598,8 @@ const { values } = parseArgs({
   options: {
     verbose: { type: "boolean", short: "v", default: false },
     "no-probe": { type: "boolean", default: false },
+    only: { type: "string" }, // wire | hint | sync — one scenario, no probes (debugging)
   },
 });
 
-process.exit((await run({ verbose: values.verbose, noProbe: values["no-probe"] }).catch(exitFromError)) ? 0 : 1);
+process.exit((await run({ verbose: values.verbose, noProbe: values["no-probe"], only: values.only }).catch(exitFromError)) ? 0 : 1);
