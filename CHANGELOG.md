@@ -204,6 +204,13 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Sync asks before adding this device's extras when it has lost track.** If
+  a device has no record of when it last matched your other devices — or joins
+  a sync code while already holding favourites — and holds favourites, ratings
+  or notes that sync doesn't, it no longer adds them everywhere on its own:
+  Settings asks whether to keep what sync has or add this device's extras.
+  Nothing syncs from that device until you answer. Previously this could bring
+  back hearts you had removed on another device.
 - **A heart on a recipe you moved into your own recipes stays on the moved
   copy.** A heart, rating or note left on the recipe's old Cook at Home entry —
   by an old backup, a shared list, another device or a page left open — now

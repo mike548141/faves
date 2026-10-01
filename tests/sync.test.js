@@ -21,6 +21,10 @@ import {
   UPDATE_NEEDED,
   MAX_ATTEMPTS,
   PULL_WINDOW_MS,
+  ADD_EXTRAS,
+  KEEP_SYNCED,
+  NEEDS_DECISION,
+  IDLE,
 } from "../site/js/sync.js";
 import { applyPersonalData, collectPersonalData, USER_SCHEMA, STORE_SCHEMA } from "../site/js/personal-data.js";
 import { moveBackup } from "../tools/move_recipes.mjs";
@@ -141,6 +145,16 @@ const mk = (storage, server, extra = {}) =>
     ...extra,
   });
 
+/** Join a code and, if this device holds something the server does not and
+ *  has no last agreement, answer "add this device's extras" — the merge a join
+ *  made silently before 510/390, now made only on that answer. Returns the
+ *  final result, plus `asked` so a test can say the question was put. */
+async function joinAdding(s, code) {
+  const first = await s.join(code);
+  if (!first.noBase) return { ...first, asked: false };
+  return { ...(await s.resolve({ noBase: ADD_EXTRAS })), asked: true };
+}
+
 const favsOf = (storage, id = "default") =>
   JSON.parse(storage.getItem(scopeKey(id, "faves.favourites.v1")) || "[]").map(favKey).sort();
 const notesOf = (storage, id = "default") =>
@@ -157,7 +171,7 @@ test("two devices with different hearts end up holding the same set", async () =
   const { code } = await syncA.enable();
 
   const syncB = mk(b, server);
-  await syncB.join(code);
+  assert.equal((await joinAdding(syncB, code)).asked, true, "B joined holding a heart the server lacks, and was not asked (510/390)");
   await syncA.syncNow(); // A picks up what B pushed
 
   assert.deepEqual(favsOf(a), ["v:kk", "v:pandan"]);
@@ -173,7 +187,7 @@ test("two devices with different notes end up holding the same set (ADR 0131)", 
   const { code } = await syncA.enable();
 
   const syncB = mk(b, server);
-  await syncB.join(code);
+  assert.equal((await joinAdding(syncB, code)).asked, true, "B joined holding a note the server lacks, and was not asked (510/390)");
   await syncA.syncNow(); // A picks up what B pushed
 
   assert.deepEqual(notesOf(a), {
@@ -813,7 +827,7 @@ test("a server copy one version ahead keeps its unknown store after an old devic
 
   // The OLD device (this build) joins and adds a heart, so it must WRITE.
   const old = device({ favs: [venue("kk")] });
-  const res = await mk(old, server).join(code);
+  const res = await joinAdding(mk(old, server), code);
   assert.equal(res.ok, true, JSON.stringify(res));
   assert.equal(server.puts, 2, "the old device wrote the server copy");
 
@@ -1305,7 +1319,7 @@ test("a new client against a Worker that predates 510/140 still syncs a recipe-l
   const a = device({ favs: [venue("kk")] });
   const { code } = await mk(a, old).enable();
   const b = device({ favs: [venue("pandan")] });
-  await mk(b, old).join(code);
+  await joinAdding(mk(b, old), code);
   await mk(a, old).syncNow();
   assert.deepEqual(favsOf(a), ["v:kk", "v:pandan"]);
   assert.deepEqual(favsOf(b), ["v:kk", "v:pandan"]);

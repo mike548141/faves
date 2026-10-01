@@ -49,6 +49,7 @@ import {
 import currentWorker, { IMPORT_SETTLE_SECONDS } from "../worker/sync-worker.js";
 import { scopeKey } from "../site/js/profiles.js";
 import { RECIPES_KEY } from "../site/js/recipe-record.js";
+import { ADD_EXTRAS, KEEP_SYNCED } from "../site/js/sync.js";
 
 const S = 1_000;
 
@@ -304,19 +305,21 @@ async function movedPair(start, { unfollowable = false } = {}) {
   return { kv, a, b, code, before };
 }
 
-test("510/320: the detector is live — with nothing to follow, a third copy of the app and an Apply DO produce the union, on both devices", async () => {
+test("510/320: the detector is live — with nothing to follow, a third copy answered 'add' and an Apply DO produce the union, on both devices", async () => {
   // The positive control for the fuzz above (ADR 0072: a guard whose answer
   // cannot change is decorative). A storage context that joins the sync code
   // holding the pre-move list and three hearts since removed — Safari and a
   // Home Screen app on one iPhone keep separate storage — has no base, so its
   // first merge is a union: old hearts and others added, nothing removed.
-  // Since 510/400 the old ids follow the moved recipes, so the control strips
-  // the moves (forgetMoves) to keep the shape reachable, and the next test
-  // runs the same routes with the follow in place.
+  // Since 510/390 that merge happens only on the answer "add this device's
+  // extras", and since 510/400 the old ids follow the moved recipes — so the
+  // control strips the moves (forgetMoves) to keep the shape reachable, and
+  // the next test runs the same routes with the guards in place.
   const start = [venue("kk"), ...MOVED.map(kHeart)];
   const { kv, a, b, code } = await movedPair(start, { unfollowable: true });
   const third = phone(device([...start, venue("x1"), venue("x2"), venue("x3")]), kv);
-  await third.sync.join(code);
+  assert.equal((await third.sync.join(code)).noBase, true, "the third copy merged with no base instead of asking");
+  assert.equal((await third.sync.resolve({ noBase: ADD_EXTRAS })).ok, true);
   await settle(kv, a, b);
   for (const d of [a, b]) {
     const keys = favsOf(d.storage);
@@ -332,16 +335,20 @@ test("510/320: the detector is live — with nothing to follow, a third copy of 
   for (const x of [p2.a, p2.b]) assert.equal(moveShape(favsOf(x.storage)).both, MOVED.length);
 });
 
-test("510/320 guarded (510/400): the same third copy and Apply leave each moved recipe with ONE heart", async () => {
+test("510/320 guarded (510/390, 510/400): the same third copy and Apply leave each moved recipe with ONE heart, whichever way the question is answered", async () => {
   const start = [venue("kk"), ...MOVED.map(kHeart)];
-  const { kv, a, b, code } = await movedPair(start);
-  const third = phone(device([...start, venue("x1"), venue("x2"), venue("x3")]), kv);
-  await third.sync.join(code);
-  await settle(kv, a, b, third);
-  for (const d of [a, b, third]) {
-    const keys = favsOf(d.storage);
-    assert.equal(moveShape(keys).both, 0, "an old heart beside its moved copy");
-    assert.equal(moveShape(keys).movedOnly, MOVED.length, "a moved recipe lost its heart");
+  for (const answer of [KEEP_SYNCED, ADD_EXTRAS]) {
+    const { kv, a, b, code } = await movedPair(start);
+    const third = phone(device([...start, venue("x1"), venue("x2"), venue("x3")]), kv);
+    assert.equal((await third.sync.join(code)).noBase, true);
+    assert.equal((await third.sync.resolve({ noBase: answer })).ok, true);
+    await settle(kv, a, b, third);
+    for (const d of [a, b, third]) {
+      const keys = favsOf(d.storage);
+      assert.equal(moveShape(keys).both, 0, `${answer}: an old heart beside its moved copy`);
+      assert.equal(moveShape(keys).movedOnly, MOVED.length, `${answer}: a moved recipe lost its heart`);
+      assert.equal(keys.includes("v:x1"), answer === ADD_EXTRAS, `${answer}: the third copy's extras`);
+    }
   }
   const p2 = await movedPair(start);
   assert.equal(applyPersonalData(p2.a.storage, p2.before, { mode: "merge" }).ok, true);

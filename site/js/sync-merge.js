@@ -552,3 +552,94 @@ export function mergePersonal(base, mine, theirs) {
 /** Does this merge need a human before it can be written? Only the diet
  *  conflict blocks: the others are already resolved and merely reported. */
 export const needsDecision = (conflicts) => list(conflicts).some((c) => c.kind === CONFLICT_DIET);
+
+// --- a merge with no last agreement (roadmap 510/390, guard A of 510/320) ----
+
+/** The question sync puts when it would otherwise merge without a base. */
+export const CONFLICT_NO_BASE = "no-base";
+
+/** How many of a person's extra hearts the question names; the count is exact. */
+export const NO_BASE_SAMPLE = 6;
+
+/**
+ * The people a merge would add this device's extras for WITHOUT a last
+ * agreement to tell an addition from something removed elsewhere — and so the
+ * people sync must ask about rather than merge silently (510/390).
+ *
+ * A person counts when the server and this device both hold them, `base` does
+ * not (no base at all, one that will not read, or one for other people), and
+ * this device holds a heart, a rating or a note the server does not hold, or
+ * holds differently. Without the last condition there is nothing to decide:
+ * merging adds only the server's side, which is what "keep what sync has"
+ * would do anyway. Settings are deliberately NOT counted: the allergen
+ * question already stops a base-less diet difference (ADR 0060), and the
+ * answer here must never be what changes someone's allergens.
+ *
+ * Returns `[{ profileId, profileName, favourites, ratings, notes, sample }]`:
+ * counts, and up to NO_BASE_SAMPLE of the extra hearts' own names for the
+ * question to show. Empty when `theirs` is null (nothing on the server yet:
+ * turning sync on, which has nothing to ask about).
+ */
+export function baselessPeople(base, mine, theirs) {
+  if (!theirs) return [];
+  const covered = new Set(list(base?.profiles).map(profileKey));
+  const theirsById = new Map(list(theirs?.profiles).map((p) => [profileKey(p), p]));
+  const out = [];
+  for (const m of list(mine?.profiles)) {
+    const key = profileKey(m);
+    const t = theirsById.get(key);
+    if (!t || covered.has(key)) continue;
+    const held = new Set();
+    for (const e of list(t.favourites)) {
+      try {
+        held.add(favKey(e));
+      } catch {
+        /* unkeyable — cannot match anything */
+      }
+    }
+    const extraHearts = list(m.favourites).filter((e) => {
+      try {
+        return !held.has(favKey(e));
+      } catch {
+        return false;
+      }
+    });
+    const differs = (mm, tm) => Object.keys(map(mm)).filter((k) => !same(map(mm)[k], map(tm)[k])).length;
+    const ratings = differs(m.ratings, t.ratings);
+    const notes = differs(m.notes, t.notes);
+    if (!extraHearts.length && !ratings && !notes) continue;
+    out.push({
+      profileId: key,
+      profileName: String(m?.name ?? ""),
+      favourites: extraHearts.length,
+      ratings,
+      notes,
+      sample: extraHearts
+        .slice(0, NO_BASE_SAMPLE)
+        .map((e) => (e?.type === "venue" ? String(e.venueName || e.venueId || "") : `${e?.name || ""}${e?.venueName ? ` (${e.venueName})` : ""}`))
+        .filter(Boolean),
+    });
+  }
+  return out;
+}
+
+/**
+ * `mine` with each named person's hearts, ratings and notes replaced by the
+ * server's: the answer "keep what sync has" (510/390). Merged against that, the
+ * person comes out exactly as the server holds them, and this device's extras
+ * are dropped — here and everywhere — because the person said so. Their
+ * settings, every other person, and every other field are left as they are.
+ */
+export function keepTheirsFor(mine, theirs, profileIds) {
+  const ids = new Set(list(profileIds).map(String));
+  if (!ids.size || !isObj(mine)) return mine;
+  const theirsById = new Map(list(theirs?.profiles).map((p) => [profileKey(p), p]));
+  return {
+    ...mine,
+    profiles: list(mine.profiles).map((p) => {
+      const t = theirsById.get(profileKey(p));
+      if (!ids.has(profileKey(p)) || !t) return p;
+      return { ...p, favourites: list(t.favourites), ratings: map(t.ratings), notes: map(t.notes) };
+    }),
+  };
+}

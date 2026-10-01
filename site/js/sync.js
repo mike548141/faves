@@ -36,7 +36,7 @@
 
 import { collectPersonalData, storesAhead, upgradePersonalData } from "./personal-data.js";
 import { deviceStorage, PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseRegistry, scopeKey } from "./profiles.js";
-import { mergePersonal, needsDecision } from "./sync-merge.js";
+import { mergePersonal, needsDecision, baselessPeople, keepTheirsFor, CONFLICT_NO_BASE } from "./sync-merge.js";
 import { followMovesInSnapshot } from "./recipe-move.js";
 import { deriveSyncKeys, openBlob, sealBlob } from "./sync-crypto.js";
 import { mintSyncCode, normaliseSyncCode } from "./sync-code.js";
@@ -103,6 +103,19 @@ export const NEEDS_DECISION = "needs-decision";
  *  §3). Its own state, not ERROR (roadmap 510/090): ERROR's row reads "tap to
  *  retry" and offers Retry, and no retry can help until Faves is updated. */
 export const PAUSED = "paused";
+
+/** The two answers to "this device has things sync doesn't, and no last
+ *  agreement to tell whether they were removed elsewhere" (roadmap 510/390).
+ *  KEEP: this device takes what sync has, and its extras go. ADD: its extras
+ *  are added everywhere (what a merge with no base always did, silently). */
+export const KEEP_SYNCED = "keep";
+export const ADD_EXTRAS = "add";
+const NO_BASE_ANSWERS = new Set([KEEP_SYNCED, ADD_EXTRAS]);
+
+/** The open no-base question in a config, or null. Device-level, in the sync
+ *  config, so every tab and every page load sees the same one question. */
+const openQuestion = (cfg) => (cfg?.ask && typeof cfg.ask === "object" && !cfg.ask.answer ? cfg.ask : null);
+const askConflict = (ask) => ({ kind: CONFLICT_NO_BASE, people: Array.isArray(ask?.people) ? ask.people : [], at: ask?.at ?? null });
 
 /** What a tab says when another tab on this device has upgraded storage past
  *  this tab's build (roadmap 510/110). Nothing is read or sent until it reloads. */
@@ -424,12 +437,20 @@ export function createSync({
 
   function status() {
     const cfg = readConfig();
+    // The no-base question (510/390) is read from the CONFIG, not this tab's
+    // memory: it is one question for the device, and another tab may have
+    // asked it, or answered it, since this one last ran a cycle.
+    const ask = cfg.code ? openQuestion(cfg) : null;
+    const askedHere = !!pending?.conflicts?.some((c) => c.kind === CONFLICT_NO_BASE);
+    let s = cfg.code ? (state === OFF ? IDLE : state) : OFF;
+    if (ask && s !== SYNCING) s = NEEDS_DECISION;
+    else if (!ask && askedHere && s === NEEDS_DECISION) s = IDLE; // answered elsewhere
     return {
-      state: cfg.code ? state === OFF ? IDLE : state : OFF,
+      state: s,
       code: cfg.code || null,
       lastSyncedAt: cfg.lastSyncedAt || null,
       error,
-      conflicts: pending?.conflicts ?? null,
+      conflicts: ask ? [askConflict(ask)] : askedHere ? null : pending?.conflicts ?? null,
     };
   }
 
@@ -568,6 +589,17 @@ export function createSync({
       setState(PAUSED, RELOAD_NEEDED);
       return { ok: false, error: "reload-needed" };
     }
+    // A merge with no last agreement is waiting on the person (510/390).
+    // Nothing is read or sent until they answer — not by a background pull,
+    // a heart tapped meanwhile, a reconnect, or another tab — so no merge can
+    // go ahead silently while the question is open. No network either: the
+    // answer is the only thing that can change the outcome.
+    const ask = openQuestion(cfg);
+    if (ask && !NO_BASE_ANSWERS.has(decisions?.noBase)) {
+      pending = { conflicts: [askConflict(ask)], merged: null };
+      if (state !== NEEDS_DECISION) setState(NEEDS_DECISION);
+      return { ok: false, needsDecision: true, noBase: true, people: askConflict(ask).people };
+    }
 
     inFlight = (async () => {
       try {
@@ -700,12 +732,33 @@ export function createSync({
       }
       const theirs = followMovesInSnapshot(read.theirs, books);
       const baseF = followMovesInSnapshot(base, books);
-      const mineF = followMovesInSnapshot(mine, books);
+      let mineF = followMovesInSnapshot(mine, books);
+
+      // 2d. no silent merge without a base (roadmap 510/390). A person both
+      //     sides hold, whose last agreement this device does not have, and
+      //     for whom it holds something the server does not: merging now would
+      //     add those as if new, though they may be things removed on another
+      //     device since (510/320's union). So it asks, once, and waits —
+      //     unless the person has already answered.
+      const gap = baselessPeople(baseF, mineF, theirs);
+      const answer = NO_BASE_ANSWERS.has(decisions?.noBase) ? decisions.noBase : cfg.ask?.answer;
+      if (gap.length) {
+        if (!NO_BASE_ANSWERS.has(answer)) {
+          const ask = { at: now(), people: gap };
+          writeConfig({ ask });
+          pending = { conflicts: [askConflict(ask)], merged: null };
+          setState(NEEDS_DECISION);
+          return { ok: false, needsDecision: true, noBase: true, people: gap };
+        }
+        if (answer === KEEP_SYNCED) mineF = keepTheirsFor(mineF, theirs, gap.map((p) => p.profileId));
+      }
 
       const { merged, conflicts, changes } = mergePersonal(baseF, mineF, theirs ?? mineF);
       changes.recipeConflicts = rec.conflicts.length;
 
-      if (needsDecision(conflicts) && !decisions) {
+      // The allergen question blocks unless THIS run carries its answer: an
+      // answer to the no-base question alone is not one (510/390).
+      if (needsDecision(conflicts) && !decisions?.diet) {
         pending = { conflicts, merged };
         setState(NEEDS_DECISION);
         return { ok: false, conflicts, needsDecision: true };
@@ -869,7 +922,10 @@ export function createSync({
             : { recipeBuckets: base?.recipeBuckets ?? null, recipeHashes: base?.recipeHashes ?? {} };
         writeBase({ ...merged, ...recipeAgreement });
       }
-      writeConfig({ lastSyncedAt: now() });
+      // An agreement answers the no-base question (510/390) for good: there
+      // is a base now. Cleared in the same write as the stamp, so a no-op
+      // pull still writes one key.
+      writeConfig(agreed && readConfig().ask ? { lastSyncedAt: now(), ask: null } : { lastSyncedAt: now() });
       setState(IDLE);
       if (localMoved) schedule();
       return { ok: true, changes, deferredLocal: localMoved, bucketMismatch: rec.mismatch };
@@ -954,10 +1010,10 @@ export function createSync({
     /** Start syncing this device, on a brand-new code nobody else holds. */
     async enable() {
       const code = mintSyncCode();
-      writeConfig({ code, lastSyncedAt: null });
+      writeConfig({ code, lastSyncedAt: null, ask: null });
       // No base: this device has never agreed with anything, so the first cycle
-      // treats everything as an addition — which is correct, and is also why
-      // joining an existing code cannot lose anything.
+      // treats everything as an addition — which is correct (a new code holds
+      // nothing to ask about, 510/390).
       try {
         storage.removeItem(SYNC_BASE_KEY);
       } catch {
@@ -974,7 +1030,11 @@ export function createSync({
       if (!code) {
         return { ok: false, error: "That code doesn’t look right — check it and try again." };
       }
-      writeConfig({ code: input.trim().toUpperCase(), lastSyncedAt: null });
+      // No base, as above. Joining a code whose data differs from what this
+      // device holds is then the one moment a merge has no last agreement on
+      // purpose, so if this device holds anything the server does not, the
+      // first cycle ASKS whether to add it (510/390) rather than adding it.
+      writeConfig({ code: input.trim().toUpperCase(), lastSyncedAt: null, ask: null });
       try {
         storage.removeItem(SYNC_BASE_KEY);
       } catch {
@@ -984,8 +1044,20 @@ export function createSync({
       return syncNow();
     },
 
-    /** Answer a blocked merge (today: the allergen question) and finish it. */
+    /**
+     * Answer a blocked merge and finish it: `{ diet }` for the allergen
+     * question (ADR 0060), `{ noBase: "keep" | "add" }` for the no-base one
+     * (510/390). The no-base answer is kept in the device's sync config until
+     * a sync lands, so a cycle that cannot finish now (offline, or the
+     * allergen question after it) still carries it — and a second tab's
+     * answer after the first has landed changes nothing, because there is a
+     * base again and nothing left to ask.
+     */
     async resolve(decisions) {
+      if (NO_BASE_ANSWERS.has(decisions?.noBase)) {
+        const cfg = readConfig();
+        if (cfg.ask) writeConfig({ ask: { ...cfg.ask, answer: decisions.noBase } });
+      }
       return syncNow({ decisions });
     },
 
@@ -1066,6 +1138,15 @@ export function createSync({
         };
         win.addEventListener("online", onOnline);
         offs.push(() => win.removeEventListener("online", onOnline));
+        // Another tab asked, or answered, the no-base question (510/390): it
+        // lives in the shared sync config, so this tab's panel repaints from
+        // it rather than offering a question already answered. A repaint
+        // only — nothing is read from the network or written here.
+        const onStorage = (e) => {
+          if (e?.key === SYNC_KEY) emit();
+        };
+        win.addEventListener("storage", onStorage);
+        offs.push(() => win.removeEventListener("storage", onStorage));
       }
       // A pull on load, so opening the app on the laptop shows what the phone
       // did. Fire-and-forget: a failure here must never block a page render.

@@ -6,7 +6,8 @@
 //
 // A STATE MACHINE OF VIEWS, NOT A FLAT PANEL. The six views the brief names
 // (off, just-turned-on, on, use-an-existing-code, needs-decision, error) — and
-// a seventh, paused, since roadmap 510/090 — are
+// a seventh, paused, since roadmap 510/090, and an eighth, the no-base
+// question, since 510/390 — are
 // genuinely different screens, not one screen with things hidden — so this
 // module tracks a `viewKey` computed from the engine's status plus two purely
 // local flags (`joining`, `justOn` — see computeViewKey below) and only tears
@@ -39,7 +40,8 @@
 // reason: a scanner that recognises a URL will offer to "open" it, which is
 // exactly the share-sheet-adjacent path the code must never take.
 
-import { sync, OFF, SYNCING, ERROR, NEEDS_DECISION, PAUSED, RELOAD_NEEDED } from "./sync.js";
+import { sync, OFF, SYNCING, ERROR, NEEDS_DECISION, PAUSED, RELOAD_NEEDED, KEEP_SYNCED, ADD_EXTRAS } from "./sync.js";
+import { CONFLICT_NO_BASE } from "./sync-merge.js";
 import { isValidSyncCode } from "./sync-code.js";
 import { encodeQR } from "./qr.js";
 import { copyText } from "./share-core.js";
@@ -215,7 +217,10 @@ function buildCodeBlock(code) {
 export function computeViewKey(st, local) {
   if (st.state === ERROR) return "error";
   if (st.state === PAUSED) return "paused";
-  if (st.state === NEEDS_DECISION) return "decision";
+  // Two questions, two views: answering the no-base one can be followed at
+  // once by the allergen one, and one key for both would leave the first on
+  // screen (510/390).
+  if (st.state === NEEDS_DECISION) return (st.conflicts || []).some((c) => c.kind === CONFLICT_NO_BASE) ? "no-base" : "decision";
   if (st.state === OFF) return local.joining ? "join" : "off";
   return local.justOn ? "justOn" : "on";
 }
@@ -264,6 +269,7 @@ export function syncControls() {
     if (viewKey === "join") return buildJoin();
     if (viewKey === "justOn") return buildJustOn(st.code);
     if (viewKey === "decision") return buildDecision(st);
+    if (viewKey === "no-base") return buildNoBase(st);
     if (viewKey === "error") return buildError(st);
     if (viewKey === "paused") return buildPaused(st);
     return buildOn(st);
@@ -490,6 +496,78 @@ export function syncControls() {
         hideConfirm: off.hideConfirm,
       },
     };
+  }
+
+  // --- no last agreement (roadmap 510/390) --------------------------------------
+  //
+  // The engine found this device holding things sync does not, with no last
+  // agreement to tell an addition here from a removal elsewhere — the merge
+  // that once added them silently (510/320's union). Nothing syncs, in either
+  // direction, until this is answered: leaving the panel is not an answer.
+  //
+  // NOTHING IS PRE-SELECTED, as with the allergen question: each answer costs
+  // something the other does not (one drops this device's extras, the other
+  // can bring back something removed elsewhere), so a default would be a guess
+  // made on the person's behalf. Turning sync off stays reachable (ADR 0118).
+  function buildNoBase(st) {
+    const c = (st.conflicts || []).find((x) => x.kind === CONFLICT_NO_BASE) || { people: [] };
+    const heading = el("p", {
+      className: "settings-sub",
+      tabIndex: -1,
+      textContent: "This device has favourites sync doesn’t",
+    });
+    const explain = el("p", {
+      className: "settings-note",
+      textContent:
+        "This device has no record of when it last matched your other devices, so Faves can’t tell whether " +
+        "these were added here or removed on another device. Nothing syncs, either way, until you choose.",
+    });
+    const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+    const blocks = c.people.map((p) => {
+      const parts = [];
+      if (p.favourites) parts.push(plural(p.favourites, "favourite", "favourites"));
+      if (p.ratings) parts.push(plural(p.ratings, "rating", "ratings"));
+      if (p.notes) parts.push(plural(p.notes, "note", "notes"));
+      const more = p.favourites - (p.sample?.length || 0);
+      return el("div", { className: "import-q" }, [
+        el("p", { className: "import-entry-head", textContent: `${p.profileName || "This profile"}: ${parts.join(", ")} only on this device` }),
+        ...(p.sample?.length
+          ? [el("p", { className: "import-diff", textContent: `Including ${p.sample.join(", ")}${more > 0 ? ` and ${more} more` : ""}.` })]
+          : []),
+      ]);
+    });
+
+    let choice = null;
+    const resolveBtn = el("button", {
+      type: "button",
+      className: "profile-btn profile-btn-primary",
+      textContent: "Use this answer",
+      disabled: true,
+    });
+    const pick = (v) => {
+      choice = v;
+      resolveBtn.disabled = false;
+    };
+    const name = "sync-no-base-choice";
+    const choices = el("fieldset", { className: "import-q" }, [
+      el("legend", { textContent: "What should sync do with them?" }),
+      radio(name, KEEP_SYNCED, "Keep what sync has — remove them from this device", pick),
+      radio(name, ADD_EXTRAS, "Add them to all your devices", pick),
+    ]);
+    resolveBtn.addEventListener("click", () => {
+      if (!choice) return;
+      sync.resolve({ noBase: choice });
+    });
+    const off = turnOffControl();
+    const node = el("div", {}, [
+      heading,
+      explain,
+      ...blocks,
+      choices,
+      el("div", { className: "profile-form-actions" }, [resolveBtn, off.button]),
+      off.confirm,
+    ]);
+    return { node, focusTarget: heading, refs: { hideConfirm: off.hideConfirm } };
   }
 
   // --- needs a decision (ADR 0060) --------------------------------------------
