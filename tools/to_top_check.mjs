@@ -27,6 +27,14 @@
 // control's victim depends entirely on where you stop scrolling, and a single
 // sample is what every eyeball report of this bug had been.
 //
+// THE ⋯ (roadmap 300/030). The header's overflow button is hit-tested at every
+// swept position where it is on screen, after an instant jump back to the top
+// from mid-menu, and by a real tap; a control overlay proves the probe can say
+// "covered". Measured 2026-10-02: never covered at rest. For 1-2 frames after a
+// jump to the top the fixed compact contact bar (z-index 7) can still be up,
+// because its IntersectionObserver reports late — a transient, bounded here in
+// wall-clock time rather than asserted away.
+//
 // WHAT A GREEN RUN HERE CANNOT TELL YOU:
 //   1. Anything about Safari/WebKit — this is Chrome only, and iOS Safari's
 //      rubber-band scrolling is exactly where a scroll-driven control is most
@@ -97,6 +105,12 @@ const STEP = 37;
 // site/js/to-top.js's SHOW_AT. Below it the control is deliberately not offered
 // at all, so those positions are swept for occlusion but not for presence.
 const SHOW_AT = 600;
+// How long the ⋯ may stay under the contact bar after an instant jump to the top.
+// A WALL-CLOCK bound, not a frame count: the observer's report is a task, and on
+// a loaded machine it was seen to trail 24+ frames while a quiet one needs 1.
+// What this guards is that it ALWAYS clears, not how fast; the frames it took
+// are printed so a slowing observer is visible.
+const ARRIVE_MS = 5000;
 
 // What the button is doing right now, and what — if anything — of the reader's
 // is underneath it. `worst` is the largest fraction of any single price, heart
@@ -143,11 +157,66 @@ const PROBE_FN = `(() => {
   };
 })`;
 
+
+// Is the header's ⋯ (#overflow-btn) the thing a tap at its centre would reach?
+// (roadmap 300/030.) It lives in the NON-sticky header, so mid-menu it is
+// simply off-screen — "covered" is only a meaningful claim at positions where
+// its centre is inside the viewport, and there `elementFromPoint` is the
+// browser's own answer to what a tap would hit. Returns null when off-screen.
+const OVERFLOW_PROBE_FN = `(() => {
+  const b = document.getElementById("overflow-btn");
+  if (!b) return { missing: true };
+  const r = b.getBoundingClientRect();
+  const x = r.left + r.width / 2, y = r.top + r.height / 2;
+  if (r.width < 1 || x < 0 || y < 0 || x > innerWidth || y > innerHeight) return null;
+  const hit = document.elementFromPoint(x, y);
+  if (hit && (hit === b || b.contains(hit))) return { ok: true };
+  let cover = "nothing at all";
+  if (hit) {
+    const cs = getComputedStyle(hit);
+    const c = typeof hit.className === "string" ? hit.className.trim().split(/\\s+/).filter(Boolean).slice(0, 3).join(".") : "";
+    cover = (hit.id ? "#" + hit.id : hit.tagName.toLowerCase() + (c ? "." + c : "")) +
+      " (" + cs.position + ", z-index " + cs.zIndex + ")";
+  }
+  return { ok: false, cover };
+})`;
+
+// After an instant jump to the top, how many animation frames until the ⋯ is
+// reachable? The compact contact bar (fixed, z-index 7) is un-hidden by an
+// IntersectionObserver, which reports a frame or so AFTER the scroll — so the
+// first frame at the top can still carry a bar the page has already scrolled
+// away from. That is the "covered, with a <span> on top" a screenshot script
+// met mid-menu. It is a transient, not a resting state, and this measures it
+// rather than ignoring it: the bound is a few frames, never "eventually".
+const ARRIVE_AT_TOP = (fromY) => `(async () => {
+  const probe = ${OVERFLOW_PROBE_FN};
+  const raf = () => new Promise((r) => requestAnimationFrame(r));
+  window.scrollTo({ top: ${fromY}, behavior: "instant" });
+  await raf(); await raf();
+  const from = Math.round(window.scrollY);
+  window.scrollTo({ top: 0, behavior: "instant" });
+  const arrived = Math.abs(window.scrollY) <= 2;
+  // "Reachable" must HOLD, not just be seen once: the observer's report can land
+  // after a frame that looked clear (measured, on a loaded machine: clear at
+  // frame 0, covered again by frame 3). So count the frame at which it became
+  // clear and STAYED clear for three in a row.
+  const t0 = performance.now();
+  let n = 0, run = 0, clearFrom = null, firstCover = null, covers = 0;
+  for (; performance.now() - t0 < ${ARRIVE_MS} && run < 3; n++) {
+    const p = probe();
+    if (p && p.ok) { if (run === 0) clearFrom = n; run++; }
+    else { run = 0; clearFrom = null; if (p) { covers++; if (!firstCover) firstCover = p.cover; } }
+    await raf();
+  }
+  return { from, arrived, frames: clearFrom, ms: Math.round(performance.now() - t0), ok: run >= 3, firstCover, covers };
+})()`;
+
 // The sweep, run entirely inside the page. Doing it here rather than one CDP
 // round-trip per scroll position is what makes a whole-document sweep at four
 // combinations affordable enough that anyone actually runs it.
 const SWEEP = `(async () => {
   const probe = ${PROBE_FN};
+  const ovProbe = ${OVERFLOW_PROBE_FN};
   const raf = () => new Promise((r) => requestAnimationFrame(r));
   const btn = document.querySelector(".to-top");
   if (!btn) return { missing: true };
@@ -175,6 +244,10 @@ const SWEEP = `(async () => {
     // in the output invited a second look (roadmap 210/070).
     missed: 0,
     missedAt: [],
+    // The ⋯ (roadmap 300/030): positions where it is on screen, and the ones
+    // where something else would take the tap.
+    ovSeen: 0,
+    ovCovered: [],
   };
   for (let y = 0; y <= maxY; y += ${STEP}) {
     window.scrollTo({ top: y, behavior: "instant" });
@@ -185,6 +258,11 @@ const SWEEP = `(async () => {
     if (Math.abs(window.scrollY - Math.min(y, maxY)) > 2) {
       out.missed++;
       if (out.missedAt.length < 8) out.missedAt.push({ sent: y, reached: Math.round(window.scrollY) });
+    }
+    const ov = ovProbe();
+    if (ov && !ov.missing) {
+      out.ovSeen++;
+      if (!ov.ok && out.ovCovered.length < 6) out.ovCovered.push({ y, cover: ov.cover });
     }
     const p = probe();
     out.positions++;
@@ -236,6 +314,100 @@ const BOTH_WAYS = (depths) => `(async () => {
   }
   btn.style.transition = "";
   return { rows, missed };
+})()`;
+
+// Roadmap 300/030 — the header's ⋯ — shared by the full sweep and the lighter
+// one the two long named menus get. `s` carries ovSeen / ovCovered / positions /
+// maxY from whichever sweep ran.
+async function overflowChecks(report, driver, at, s) {
+  // --- 7. The header's ⋯ is never under something else (300/030). -----
+  // Mid-menu the ⋯ is scrolled away with its non-sticky header, so the
+  // only positions where it can be covered are the ones where it is on
+  // screen — and the sweep above hit-tested every one of those.
+  report.check(
+    `${at}: the ⋯ is on screen somewhere in the sweep, so its hit-test tests something`,
+    s.ovSeen > 0,
+    `${s.ovSeen} of ${s.positions} positions have its centre in the viewport`
+  );
+  report.check(
+    `${at}: at every position where the ⋯ is on screen, a tap at its centre reaches it`,
+    s.ovCovered.length === 0,
+    s.ovCovered.length
+      ? `covered at y=${s.ovCovered.map((c) => `${c.y} by ${c.cover}`).join("; ")}`
+      : `${s.ovSeen} of ${s.positions} positions on screen, none covered`
+  );
+  await sleep(50);
+  const depth = Math.min(1500, s.maxY);
+  const arr = await driver.evalPage(ARRIVE_AT_TOP(depth));
+  refuseUnlessItArrived(`${at}: the jump back to the top`, arr.arrived ? [] : [{ sent: 0, reached: "?" }]);
+  report.check(
+    `${at}: jumping from y=${arr.from} to the top, the ⋯ becomes reachable (and stays so) within ${ARRIVE_MS}ms`,
+    arr.ok,
+    arr.ok
+      ? `clear and staying clear from frame ${arr.frames} (${arr.ms}ms)${arr.covers ? `; ${arr.covers} covered frame(s), first under ${arr.firstCover}` : ""}`
+      : `never settled clear in ${ARRIVE_MS}ms; first covered by ${arr.firstCover}`
+  );
+  // The real tap, through the harness's own hit-test (which FAILS on a
+  // covered target and never scrolls away from it).
+  await driver.settle();
+  await driver.click("#overflow-btn");
+  await driver.settle();
+  const opened = await driver.evalPage(
+    `document.getElementById("overflow-btn").getAttribute("aria-expanded") === "true" && !document.getElementById("overflow-menu").hidden`
+  );
+  report.check(`${at}: tapping the ⋯ after the jump opens the menu`, opened === true, JSON.stringify({ opened }));
+  await driver.click("#overflow-btn");
+  await driver.settle();
+
+  // The control. A hit-test that can never fail proves nothing, so lay a
+  // fixed overlay over the ⋯ exactly as a pinned bar would and require
+  // the same probe to name it. Removed straight after.
+  const ctl = await driver.evalPage(`(() => {
+    const r = document.getElementById("overflow-btn").getBoundingClientRect();
+    const o = document.createElement("div");
+    o.id = "probe-overlay";
+    o.style.cssText = "position:fixed;z-index:9;left:" + (r.left - 4) + "px;top:" + (r.top - 4) +
+      "px;width:" + (r.width + 8) + "px;height:" + (r.height + 8) + "px";
+    document.body.append(o);
+    const v = (${OVERFLOW_PROBE_FN})();
+    o.remove();
+    return v;
+  })()`);
+  report.check(
+    `${at}: control — an overlay laid over the ⋯ IS reported as covering it`,
+    ctl && ctl.ok === false && /probe-overlay/.test(ctl.cover),
+    JSON.stringify(ctl)
+  );
+}
+
+// The lighter sweep for the long named menus. The ⋯ is only ever on screen in
+// the first ~100px of scroll (its header is not sticky), so 1px steps there and
+// a coarse stride for the rest covers the same ground as the full sweep at a
+// twentieth of the cost — and on a 60,000px menu under load that is the
+// difference between a check that finishes and one that times out.
+const OV_SWEEP = `(async () => {
+  const probe = ${OVERFLOW_PROBE_FN};
+  const raf = () => new Promise((r) => requestAnimationFrame(r));
+  const maxY = document.documentElement.scrollHeight - innerHeight;
+  const ys = [];
+  for (let y = 0; y <= Math.min(maxY, 200); y += 4) ys.push(y);
+  for (let y = 200; y <= maxY; y += 997) ys.push(y);
+  const out = { maxY, positions: 0, ovSeen: 0, ovCovered: [], missedAt: [] };
+  for (const y of ys) {
+    window.scrollTo({ top: y, behavior: "instant" });
+    await raf();
+    await raf();
+    if (Math.abs(window.scrollY - Math.min(y, maxY)) > 2 && out.missedAt.length < 8) {
+      out.missedAt.push({ sent: y, reached: Math.round(window.scrollY) });
+    }
+    out.positions++;
+    const ov = probe();
+    if (ov && !ov.missing) {
+      out.ovSeen++;
+      if (!ov.ok && out.ovCovered.length < 6) out.ovCovered.push({ y, cover: ov.cover });
+    }
+  }
+  return out;
 })()`;
 
 async function run(opts) {
@@ -298,9 +470,20 @@ async function run(opts) {
     // column stops well short of the button and the home grid does not. 24 px
     // root emulates the largest built-in browser text size, where every
     // rem-valued box grows and the px-valued button does not.
+    // The two long menus roadmap 300/030 names, at the phone width only: it was
+    // a screenshot script on a phone-width long menu that met the covered ⋯.
+    const NAMED = ["rs-satay-noodle-house", "regal-chinese-restaurant"].filter(
+      (id) => id !== venueId && index.includes(id)
+    );
+    const extra = NAMED.map((id) => ({
+      name: `menu ${id}`,
+      url: `http://127.0.0.1:${port}/restaurant.html?id=${encodeURIComponent(id)}`,
+      ready: `!!document.querySelector(".dish-price")`,
+      light: true,
+    }));
     for (const width of [390, 1200]) {
       for (const rootPx of [16, 24]) {
-        for (const screen of screens) {
+        for (const screen of width === 390 ? [...screens, ...extra] : screens) {
           const at = `${screen.name} @${width}px/${rootPx}px text`;
           await cdp.send(
             "Emulation.setDeviceMetricsOverride",
@@ -315,6 +498,12 @@ async function run(opts) {
           }
           await driver.settle();
 
+          if (screen.light) {
+            const l = await driver.evalPage(OV_SWEEP);
+            refuseUnlessItArrived(`${at}: the ⋯ sweep`, l.missedAt);
+            await overflowChecks(report, driver, at, l);
+            continue;
+          }
           const s = await driver.evalPage(SWEEP);
           if (s.missing) {
             report.check(`${at}: the back-to-top control exists`, false, "no .to-top in the DOM");
@@ -448,6 +637,8 @@ async function run(opts) {
             top.hidden === true,
             JSON.stringify({ hidden: top.hidden })
           );
+
+          await overflowChecks(report, driver, at, s);
         }
       }
     }
