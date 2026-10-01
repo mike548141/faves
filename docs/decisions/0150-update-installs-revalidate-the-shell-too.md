@@ -32,6 +32,10 @@ compared production and four earlier Pages deploys
   but a different ETag.
 - No (file, ETag) pair named two different bodies.
 - The custom domain sends the same ETag as `pages.dev` for the same bytes.
+- Production itself redeployed during the survey (`ac9ea6f` → `32a7292`). Its
+  4 changed shell files got new ETags and its 104 unchanged ones kept theirs.
+  The pre-deploy `app.js` ETag then got a 200, which is an update install's
+  exact case.
 - On production, the current ETag gets a 304. An ETag from an earlier deploy
   gets a 200 with the full current file.
 - HTML gets no ETag, so it is always fetched whole.

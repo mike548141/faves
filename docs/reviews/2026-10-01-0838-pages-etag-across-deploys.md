@@ -45,6 +45,33 @@ claims to be.
 The set of files is `site/sw.js`'s `SHELL` list (112 paths) plus `sw.js`
 itself. Each one was fetched uncompressed, following Pages' 308 redirects.
 
+## Production through its own deploy, and this PR's deploy
+
+The best data point was not planned. **Production redeployed between two
+surveys of the same hostname.** At 08:17 UTC it served `ac9ea6f`, with
+`SHELL_VERSION` `.12`. By 08:50 UTC it served `32a7292`, with `.15`, and every
+body was checked against that commit. The same URLs, before and after a real
+production deploy:
+
+| `https://lets-eat.myspot.nz`, 08:17 → 08:50 UTC | Count |
+|---|---|
+| unchanged bytes, unchanged ETag | **104** |
+| changed bytes, new ETag (`css/app.css`, `js/app.js`, `js/favourites.js`, `js/favourites-ui.js`) | **4** |
+| unchanged bytes, new ETag | 0 |
+| **changed bytes, unchanged ETag** | **0** |
+
+After that deploy, sending `app.js`'s pre-deploy ETag
+(`"5102af9e…"`) got **200, 73,828 B**. Sending the new ETag (`"a6543172…"`)
+got **304, 0 B**. This is exactly what an installed phone's update install
+will do.
+
+Then this PR's own deploy (`https://5b864cb1.faves.pages.dev`, commit
+`23f2c04`) was added as a sixth deploy. The survey was run again across all
+six: **1,452** same/same and **173** diff/diff, with **0** in either unsafe or
+wasteful column, and 143 distinct (file, ETag) pairs, none naming two bodies.
+Against production, the PR deploy differs in `sw.js` alone, and that is the one
+`diff/diff` row.
+
 ## How it was measured: two independent instruments
 
 1. **`curl` and `shasum`** (a throwaway script, not committed): one GET per
@@ -136,7 +163,7 @@ version), run:
 
 ```
 python3 tools/etag_survey.py https://lets-eat.myspot.nz \
-  https://d542a23f.faves.pages.dev https://<the 510/270 PR's deploy>.faves.pages.dev
+  https://d542a23f.faves.pages.dev https://5b864cb1.faves.pages.dev
 ```
 
 **Pass:** exit 0, and the `diff/SAME` column is 0. `sw.js` must show up as
