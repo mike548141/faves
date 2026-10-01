@@ -657,10 +657,27 @@ async function run(opts) {
       { dishId: "u:fixture-pad-thai", name: "Pad Thai Fixture", section: "Dinners" },
       { dishId: "u:fixture-plain-bake", name: "Fixture Plain Bake", desc: "Mentions the quokka only in its description." },
     ];
+    // The Cook at Home card's count (510/370): published + the active person's
+    // own, read off the rendered card. Not clipped by the search taking over the
+    // page — the card list is hidden, not rebuilt away.
+    const cardCount = () =>
+      driver.evalPage(`(() => {
+        const m = /(\\d+) recipes?/.exec(document.querySelector("li.card.card-recipes .card-meta")?.textContent || "");
+        return m ? Number(m[1]) : null;
+      })()`);
+    const publishedCount = await cardCount();
     await driver.evalPage(`(async () => {
       const r = await import("/js/recipes.js");
       for (const rec of ${JSON.stringify(OWN)}) r.recipes.put(rec);
     })()`);
+    await sleep(160);
+    await driver.settle();
+    const withOwnCount = await cardCount();
+    report.check(
+      "the Cook at Home card counts the published recipes plus your own, live as they arrive (no reload)",
+      publishedCount > 0 && withOwnCount === publishedCount + OWN.length,
+      `published ${publishedCount}, with ${OWN.length} own ${withOwnCount}`
+    );
 
     /** Type into the home search and read the rendered Dishes rows, in order. */
     async function searchDishRows(q) {
@@ -729,6 +746,12 @@ async function run(opts) {
       guestId && q3.length === 0,
       `${q3.length} row(s) for "quokka" as the other profile`
     );
+    const guestCount = await cardCount();
+    report.check(
+      "…and the card count follows the person: another profile's card counts the published recipes alone",
+      guestCount === publishedCount,
+      `guest ${guestCount}, published ${publishedCount}`
+    );
     await driver.evalPage(`(async () => {
       const { profiles } = await import("/js/profiles.js");
       profiles.setActive(window.__ownBack);
@@ -742,6 +765,36 @@ async function run(opts) {
       "…and they come back when the first person does",
       q4 === 2,
       `${q4} labelled row(s) after switching back`
+    );
+    const backCount = await cardCount();
+    report.check(
+      "…and the card count comes back with them",
+      backCount === publishedCount + OWN.length,
+      `${backCount} after switching back, expected ${publishedCount + OWN.length}`
+    );
+
+    // ─── "my recipes" lists the whole cookbook; "our recipes" lists nothing (510/360) ──
+    // The question is whose, not what: none of these three names or descriptions
+    // contains the words, so a text match could never answer it. The control for
+    // the absence is the "my recipes" run just before it, on the same page.
+    const mine = await searchDishRows("My Recipes");
+    report.check(
+      '"my recipes" (any case) lists every recipe in the active cookbook, labelled, and no published dish',
+      mine.length === 3 && mine.every((r) => r.owner === "My recipe" && r.ownerInLink) &&
+        ["Fixture Plain Bake", "Pad Thai Fixture", "Quokka Stew"].every((n) => mine.some((r) => r.name === n)),
+      JSON.stringify(mine.map((r) => [r.name, r.owner]))
+    );
+    const mineSingular = await searchDishRows("my recipe");
+    report.check('…and the singular "my recipe" answers the same', mineSingular.length === 3, `${mineSingular.length} row(s)`);
+    const ours = await searchDishRows("our recipes");
+    const oursState = await driver.evalPage(`(() => ({
+      summary: (document.querySelector("#search-summary")?.textContent || "").trim(),
+      rows: document.querySelectorAll("#search-groups a.search-link").length,
+    }))()`);
+    report.check(
+      '"our recipes" finds nothing until sharing exists — the search ran (it names the query) and shows no row',
+      ours.length === 0 && oursState.rows === 0 && /our recipes/i.test(oursState.summary),
+      JSON.stringify(oursState)
     );
 
     // The Cook at Home page's own filter and suggestions read the same cookbook.
@@ -765,6 +818,27 @@ async function run(opts) {
       cookQ.sug.some((x) => x.dish && x.label === "Quokka Stew"),
       JSON.stringify(cookQ.sug)
     );
+    // The same two questions on the Cook at Home page's own search (510/360).
+    const shownRows = () => driver.evalPage(`(() => ({
+      shown: [...document.querySelectorAll("li.dish")].filter((d) => !d.hidden)
+        .map((d) => (d.querySelector(".dish-name")?.textContent || "").trim()),
+      empty: !document.querySelector(".menu-status")?.hidden,
+    }))()`);
+    await typeQuery(driver, "My Recipes");
+    const cookMine = await shownRows();
+    report.check(
+      'Cook at Home\'s own search: "my recipes" shows exactly your three recipes, labelled, and no published one',
+      cookMine.shown.length === 3 && cookMine.shown.every((n) => /My recipe$/.test(n)),
+      JSON.stringify(cookMine.shown)
+    );
+    await typeQuery(driver, "our recipes");
+    const cookOurs = await shownRows();
+    report.check(
+      '…and "our recipes" shows no row and says so in the page\'s own words (the "my recipes" run above is the control)',
+      cookOurs.shown.length === 0 && cookOurs.empty,
+      JSON.stringify(cookOurs)
+    );
+    await typeQuery(driver, "quokka");
     await pickRowByLabel(driver, "Quokka Stew");
     let landedUrl = "";
     for (let waited = 0; waited < 4000; waited += 100) {
@@ -779,6 +853,25 @@ async function run(opts) {
       landedUrl
     );
     await untilPresent(() => driver.evalPage(`!!document.querySelector("h1.menu-title")`), { label: "the personal recipe page" });
+    // Back from your own recipe goes to the Cook at Home page that lists it, as a
+    // published recipe's goes to its venue (510/350) — not the home screen.
+    const backLink = await driver.evalPage(`(() => {
+      const a = document.getElementById("recipe-back");
+      return { href: a?.getAttribute("href"), text: (a?.textContent || "").trim() };
+    })()`);
+    report.check(
+      "back from your own recipe says Cook at Home and points at its page, not the home screen",
+      backLink.href === "restaurant.html?id=cook-at-home" && backLink.text === "← Cook at Home",
+      JSON.stringify(backLink)
+    );
+    await driver.click("#recipe-back");
+    let backUrl = "";
+    for (let waited = 0; waited < 4000; waited += 100) {
+      backUrl = await driver.evalPage(`location.pathname + location.search`);
+      if (backUrl.startsWith("/restaurant.html")) break;
+      await sleep(100);
+    }
+    report.check("…and following it lands on the Cook at Home page", backUrl === "/restaurant.html?id=cook-at-home", backUrl);
     await driver.evalPage(`(async () => {
       const r = await import("/js/recipes.js");
       for (const id of ${JSON.stringify(OWN.map((o) => o.dishId))}) r.recipes.remove(id);

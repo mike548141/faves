@@ -186,6 +186,17 @@ function timezoneNote(restaurants) {
     : "Open/closed times are each place’s own local time.";
 }
 
+// A recipe collection's card counts what its page LISTS. The summary's
+// `dishCount` is the published recipes only; Cook at Home's page also lists the
+// active person's own (cookbook-menu.js folds every one in), so the card adds
+// them — read from the store at render time, never stored in the summary
+// (roadmap 510/370). Shared recipes will count here when they exist.
+function withOwnRecipes(r) {
+  if (r.id !== COOK_AT_HOME) return r;
+  const own = recipes.count();
+  return own ? { ...r, dishCount: (r.dishCount || 0) + own } : r;
+}
+
 function card(r, clock, origin = null) {
   const kind = kindOf(r);
   const labels = labelsOf(r);
@@ -693,7 +704,7 @@ function init(restaurants, compactIndex) {
     const { shown, beyond, nearestBeyondKm } = ready?.ranked ?? rankedFor(clock);
     const { farKm, units } = settings.get();
     shownIds = shown.map((r) => r.id);
-    listEl.replaceChildren(...shown.map((r) => card(r, clock, state.origin)));
+    listEl.replaceChildren(...shown.map((r) => card(withOwnRecipes(r), clock, state.origin)));
     const distanceEmptied = renderDistanceCut({
       hidden: beyond.length,
       nearestBeyondKm,
@@ -806,6 +817,9 @@ function init(restaurants, compactIndex) {
     render({ clock, ranked });
   });
   settings.subscribe(() => render());
+  // The Cook at Home card counts your own recipes, so an import, a sync pull or
+  // a switch of person (which reloads the cookbook) changes what it says.
+  recipes.subscribe(() => render());
 
   render();
   // The shuffle prefers places you can actually order from now (open or
@@ -817,7 +831,7 @@ function init(restaurants, compactIndex) {
     const filtered = applyFilters(restaurants, state, clock);
     const { farKm } = settings.get();
     const available = filtered.filter((r) => isAvailableNow(r, { clock, origin: state.origin, farKm }));
-    return available.length ? available : filtered;
+    return (available.length ? available : filtered).map(withOwnRecipes);
   }, (r) => favouriteVenueIds().has(r.id));
   initOrderUI();
   startSync(); // continual sync, if the user turned it on (Theme 9 v2)

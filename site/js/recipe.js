@@ -45,7 +45,7 @@ import { recipeStats } from "./recipe-stats.js";
 // decide which allergens are flagged, and no way to reach Favourites, Share or
 // About without going back twice (owner). Same modules, same markup and the
 // same order as restaurant.html, so all three ⋯ menus read identically.
-import { favourites } from "./favourites.js";
+import { COOK_AT_HOME, favourites } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
@@ -76,11 +76,13 @@ function render(collection, item) {
   const id = collection.id;
   document.title = `${item.name} — Faves`;
   const back = document.getElementById("recipe-back");
-  // A personal recipe has no collection page to go back to (there is no list
-  // of your own recipes yet — the editor item will bring one), so its back
-  // link goes home rather than to a menu that does not exist.
-  back.href = isPersonalVenue(id) ? "index.html" : `restaurant.html?id=${id}`;
-  back.textContent = isPersonalVenue(id) ? "← All places" : `← ${collection.name}`;
+  // A personal recipe has no page of its own to go back to, but since 510/300
+  // the Cook at Home page lists it — and that is where it is found from — so
+  // back goes there, as a published recipe's goes to its venue (510/350). The
+  // name is not read from `collection`, whose own name is the virtual "My
+  // recipes".
+  back.href = `restaurant.html?id=${isPersonalVenue(id) ? COOK_AT_HOME : id}`;
+  back.textContent = `← ${isPersonalVenue(id) ? "Cook at Home" : collection.name}`;
 
   // Two regions, laid out by CSS (ADR 0125): the HERO — photo, title,
   // description, stats, tags, the cook and shopping controls — and the BODY, where the

@@ -9,6 +9,13 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Search "my recipes" to see your whole cookbook.** On the home screen and on
+  the Cook at Home page, "my recipe" or "my recipes" (any case) lists every
+  recipe you own, marked "My recipe". "Our recipes" is kept for shared recipes
+  and finds nothing until sharing exists.
+- **The Cook at Home card counts your own recipes too**, so its number always
+  matches the rows on the page, and follows a switch of person, an import or a
+  sync.
 - **Your own recipes are on the Cook at Home page.** Every recipe in your
   cookbook is listed beside the published ones, hearted or not, marked "My
   recipe". One that names an existing section ("Desserts") sits inside it, after
@@ -126,6 +133,9 @@ content freshness separately from this file.
 - **No more "est." on a recipe's stats panel** — neither the line under it
   nor the marker beside an estimated value (ADR 0135).
 ### Changed
+- **Back from one of your own recipes goes to Cook at Home**, where it is
+  listed, as a published recipe goes back to its place. It used to go to the home
+  screen.
 - **Five family recipes moved out of the public Cook at Home list and into the
   owner's own cookbook.** Booth's Ginger Crunch, Jesse's Garlic Chicken Thighs,
   Shane's Ribs, Famous Brade Green Chicken Curry and Chocolate Self-Saucing
