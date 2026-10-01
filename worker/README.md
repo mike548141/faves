@@ -424,11 +424,17 @@ an error). The read counts themselves cannot be seen from outside; the
 Cloudflare dashboard's KV read graph for the namespace should fall once the
 site and Worker are both live.
 
-## Deploy owed — the re-arm fix, roadmap 510/330 (not deployed)
+## Deployed — the re-arm fix, roadmap 510/330, 2026-10-01
 
-🚩 **Built and tested, NOT deployed.** The live Worker (version
-`1a368b38…`, above) still re-arms from whatever KV reads. A deploy needs the
-owner's go, by the procedure above.
+✅ **Deployed 2026-10-01 (session `faves-55`) at the owner's go**, version
+`3a21e527-49ed-49a1-9dd3-10e58dac6d34`, from `main` at `c9d51a8`. Live checks
+1–3 below passed against it: every `PUT` with `known` (valid, quoted, bare,
+out of range, garbage) answered `204` with an `ETag`, and a bucket `PUT`
+vouching for the core copy's ETag was then reported by
+`GET ?buckets=8`. Check 4 (a real two-device recipe sync) is the owner's.
+Residue: one test copy and one bucket under a random id, junk bytes only.
+
+The rest of this section is the pre-deploy record, kept as written.
 
 **Either order is safe:**
 

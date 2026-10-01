@@ -1,4 +1,4 @@
-- [~] 🔥 **The sync Worker can put back an older copy when it re-arms
+- [x] 🔥 **The sync Worker can put back an older copy when it re-arms
       expiry** `[S] [worker][sync]` — found 2026-10-01 by the `320`
       worker (session `faves-55`), by simulation. Not seen live.
 
@@ -69,3 +69,6 @@
      versions it has already replaced. Not filed: for the orchestrator.
   8. **Deploy owed**, either order safe; the live checks are in
      `worker/README.md` ("Deploy owed — the re-arm fix").
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #77) and the Worker
+  redeployed (version `3a21e527`); live checks 1–3 passed.
