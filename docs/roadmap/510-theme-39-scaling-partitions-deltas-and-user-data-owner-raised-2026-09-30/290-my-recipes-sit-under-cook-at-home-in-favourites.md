@@ -18,3 +18,9 @@
   in the same place later, and that waits for a sharing feature.
 
   📌 **Claimed 2026-10-01 (`faves-55`).**
+
+  ⚖️ **Owner-ruled 2026-10-01 (`faves-55`): only HEARTED own recipes show**,
+  the same rule as published dishes. So an unhearted personal recipe (the
+  imported Famous Brade Green Chicken Curry, today) is reachable only by a
+  direct link until a list of your own recipes exists. That list is still
+  `050`'s open fork (3).
