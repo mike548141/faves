@@ -112,3 +112,19 @@
   the harness matches his account. The theoretical one left is a sync base
   that will not load. Open: what else can make a base-less merge on a device
   that has one.
+
+  🔎 **Routes run, 2026-10-02 (`faves-4f` worker, PR #81).** Fifteen routes
+  through the 340 harness, real client and Worker. The shape needs an **old
+  list** (old ids plus the three since-removed hearts) **and** a merge with no
+  usable base, in one sync; either alone is harmless. None of the routes the
+  owner has not ruled out is it: the upgrade chain does nothing (user-data
+  version 1 at every commit), `110` has never fired, Replace keeps profile ids,
+  a base under another profile id fixes itself in one sync, 290/300/310
+  rewrite no key, and an old page beside a new one undoes the move rather
+  than doubling it. Only enable, join and disable remove the base (now pinned
+  by a test). **New candidate, unasked:** a favourites shortlist shared before
+  the move, opened after it, "Add to favourites": reproduces his exact state
+  on both devices. 3 `todo` tests in `tests/old-hearts-320.test.js`; note
+  `docs/reviews/2026-10-01-1209-old-hearts-320-routes.md`. Proposed guards
+  (not built): a sync log on the device; no silent merge without a base;
+  optionally hearts follow a moved recipe.
