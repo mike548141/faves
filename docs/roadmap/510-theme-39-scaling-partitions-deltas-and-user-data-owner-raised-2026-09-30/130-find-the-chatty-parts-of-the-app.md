@@ -1,4 +1,4 @@
-- [~] **Find the "chatty" parts of the app, and what each would save**
+- [x] **Find the "chatty" parts of the app, and what each would save**
       `[M] [perf][sync][pwa]` — owner-raised 2026-10-01 (session
       `faves-55`): *"we should look at what parts of the app code are
       "chatty" and could be made more efficent"*.
@@ -20,3 +20,7 @@
   Top three: sync spends 9 KV reads a pull and 26 a heart even with no
   recipes; one rating re-renders all 264 dishes (~600 ms at 4x CPU); a first
   visit downloads ~40% of the app twice. Twelve fix items proposed, A to L.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** the fixes are filed as `140`–`250`.
+  Four of them need a ruling (`160`, `170`, `180`, `240`), and `220` needs a
+  design ruling.
