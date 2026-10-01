@@ -936,6 +936,22 @@ html:has(.home-tools) {
   padding-left: var(--space-3);
   border-left: 2px solid var(--line);
 }
+/* Who a recipe in the list belongs to (roadmap 510/290). Words in a bordered
+   pill, so it reads without colour; the border and the muted ink are the same
+   tokens the rest of the list uses, so it holds in dark mode with no rule of its
+   own. `align-self: flex-start` because the row's link is a column and a pill
+   must not stretch across it. A "Shared by <name>" label would be a second
+   `.recipe-owner-*` modifier ("Our recipe") on this same element. */
+.recipe-owner {
+  align-self: flex-start;
+  padding: 0.05em 0.6em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
 
 /* Reference integrity (ADR 0020): a saved heart whose venue or dish isn't in
    the data this device holds. The row is MARKED, never dropped.

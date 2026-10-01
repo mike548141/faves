@@ -9,6 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Your own recipes now sit with Cook at Home in Favourites.** A recipe you
+  imported or wrote shows up in the Cook at Home group alongside the published
+  ones, in the order you hearted them, marked "My recipe". There is no separate
+  "My recipes" group any more. Only recipes you have hearted appear.
 - **Faves asks the network far less.** A first visit downloads about 30%
   less. Opening a menu you have already loaded makes no request at all, and
   a phone checks for menu changes at most every few minutes. Sync reads
