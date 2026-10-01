@@ -321,7 +321,9 @@ test("cook-at-home: only the °C steps change, and every one of them converts", 
     assert.equal(strip(before), strip(after), `${path} lost or gained words`);
   }
 
-  assert.equal(changed.length, 15, "the collection's 15 oven temperatures");
+  // 15 until 2026-10-01, when Chocolate Self-Saucing Pudding (two of them) left
+  // the published list for the owner's own cookbook (roadmap 510/050).
+  assert.equal(changed.length, 13, "the collection's 13 oven temperatures");
 });
 
 // --- widenDialTo (ADR 0091) -----------------------------------------------
