@@ -12,7 +12,8 @@
           "captured": "2026-09-01",
           "capturedAt": "2026-09-01T12:54:09+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "b852047e2badae2ba428503515ee1ba483f25b21026e11016f88da1aec1c78b2"
         },
         {
           "file": "IMG_9846.jpeg",
@@ -20,7 +21,8 @@
           "captured": "2026-09-01",
           "capturedAt": "2026-09-01T12:54:16+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "6a683165eefda97759a18e21405efbf5072ee2648f55c0b2ccd06687c07435e3"
         }
       ]
     },
@@ -33,7 +35,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:07:05+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "7327316fe9f1443951ec350ed54bfe26b43c9c6fc0c52acdd8702f7a715abed7"
         },
         {
           "file": "IMG_9796.jpeg",
@@ -41,7 +44,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:07:06+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "ea95cae74a6b7409350a93f3387ad20356e893671b5457fcc8229cc00bef430a"
         }
       ]
     },
@@ -54,7 +58,8 @@
           "captured": "2025-11-15",
           "capturedAt": "2025-11-15T13:28:36+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "d148ff8c5a4850963cb9aa2e67329598690e1a766922251c931a9d4c3d7d4727"
         }
       ]
     },
@@ -67,7 +72,8 @@
           "captured": "2026-08-07",
           "capturedAt": "2026-08-07T11:17:54+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "7e739b80ac65c81506ed733b323d8f727af2ba64de71f983a8770db73a3e28a1"
         },
         {
           "file": "IMG_9740.jpeg",
@@ -75,7 +81,8 @@
           "captured": "2026-08-07",
           "capturedAt": "2026-08-07T11:18:00+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "4dd0ed5991f689fa09db97af8777eb16aa80fa4c269a2d384d0632fb9131a543"
         },
         {
           "file": "IMG_9741.jpeg",
@@ -83,7 +90,8 @@
           "captured": "2026-08-07",
           "capturedAt": "2026-08-07T11:19:23+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "47c6241512d4440defa9a38ce875a47627754dcc73e28910850686d009dfdcce"
         },
         {
           "file": "IMG_9742.jpeg",
@@ -91,7 +99,8 @@
           "captured": "2026-08-07",
           "capturedAt": "2026-08-07T11:19:27+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "ac25a8c9460dd4acbd661a905b58409e6e774e0104b8c4ba4ec89917f11c5e31"
         },
         {
           "file": "IMG_9743.jpeg",
@@ -99,7 +108,8 @@
           "captured": "2026-08-07",
           "capturedAt": "2026-08-07T11:19:29+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "0febf584afdedc2cb6db8ef4b5ab3d4ebd3d48beb7a0c1a4ba2cab75c59f76c4"
         },
         {
           "file": "IMG_9744.jpeg",
@@ -107,7 +117,8 @@
           "captured": "2026-08-07",
           "capturedAt": "2026-08-07T11:19:32+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "0cc8f67ef258f3449ffbd9b650aae8551e4981086ed60f3ab4d740c82ff94ca8"
         }
       ]
     },
@@ -120,7 +131,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:38:33+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "1998addc6be6a502f1b6b213b14e541e4c918805bec63f47833b6d17e30e8e09"
         },
         {
           "file": "IMG_9938.jpeg",
@@ -128,7 +140,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:38:40+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "bccc1eb45a8c1ade3c7cfa4c05a5dd037c8da37a24afe46f5bea7a2c97d1ef34"
         },
         {
           "file": "IMG_9939.jpeg",
@@ -136,7 +149,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:38:42+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "31a1ad0a9b3d17c7b294b28efe95d0647a56a9f35e3f2e3e1d8304170ea7d0c7"
         },
         {
           "file": "IMG_9940.jpeg",
@@ -144,7 +158,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:38:46+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "7b0487d32e70d64c00560e3aa76701eaee42a7131b864e754670fb68ab6562ad"
         },
         {
           "file": "IMG_9941.jpeg",
@@ -152,7 +167,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:38:48+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "8c38397a6819d6f6e277016c432928c5ba82fab4a3afe64356f3e5a0b937a093"
         },
         {
           "file": "IMG_9942.jpeg",
@@ -160,7 +176,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:38:52+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "63a28f93758fc5b40fec356e8c194279ec4c05005ebc6683ee791826c69f0dd8"
         },
         {
           "file": "IMG_9943.jpeg",
@@ -168,7 +185,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:39:00+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "475275ed3d6b24cb015653df00aa003bd23a3ac8143ee114901d240181066d6d"
         },
         {
           "file": "IMG_9944.jpeg",
@@ -176,7 +194,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:39:02+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "fea670d9968ee293b5789b208914dfd855773d8ba66b9a3fc2badc6d3f4249bf"
         },
         {
           "file": "IMG_9945.jpeg",
@@ -184,7 +203,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:39:04+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "a72f36c3c6e64f253377d741eeded71e296d80b4e3c1ef23147b8fbcc86c3969"
         },
         {
           "file": "IMG_9946.jpeg",
@@ -192,7 +212,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:39:19+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "3448136f488bec27626970d852b4c0978ec9a49130df41fa50aaa397b471faab"
         },
         {
           "file": "IMG_9947.jpeg",
@@ -200,7 +221,8 @@
           "captured": "2026-10-01",
           "capturedAt": "2026-10-01T13:39:32+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "6e52c4e3ec0226721076ee10680c1ddb0bb0e981e9fad8c130787e7eff1afe1f"
         }
       ]
     },
@@ -213,7 +235,8 @@
           "captured": "2015-09-29",
           "capturedAt": "2015-09-29T21:58:40+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "4b1ca5fd3b3b63426a2195f8328e49d9299589213d79faa380d5cc8fecb49d9d"
         },
         {
           "file": "2015-09-29 21.58.58.jpeg",
@@ -221,7 +244,8 @@
           "captured": "2015-09-29",
           "capturedAt": "2015-09-29T21:58:58+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "577f368f468016a9cc02780fa6d0365f837add6ce9e81b0392e93ccf888b69ad"
         },
         {
           "file": "2015-09-29 21.59.34.jpeg",
@@ -229,7 +253,8 @@
           "captured": "2015-09-29",
           "capturedAt": "2015-09-29T21:59:34+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "9232ba5dcfe4e79ee19a0d8b6d5745a0fa982fa0516fef1dd936213245ecf0de"
         },
         {
           "file": "IMG_0327 (1).jpeg",
@@ -237,7 +262,8 @@
           "captured": "2015-01-17",
           "capturedAt": "2015-01-17T21:22:58+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "21d046e9522a815d8cf52a73781279b5d0b0207bf2b1ed141c9a72f3cc1c410f"
         },
         {
           "file": "IMG_0636.jpeg",
@@ -245,7 +271,8 @@
           "captured": "2015-09-29",
           "capturedAt": "2015-09-29T21:58:40+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "7e760484294aef6948baccf2d3b6b719f27f55b98470683887418a75073b5832"
         },
         {
           "file": "IMG_0637.jpeg",
@@ -253,7 +280,8 @@
           "captured": "2015-09-29",
           "capturedAt": "2015-09-29T21:58:58+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "42928dd565d99182b5f6f2d5f9011f914816fc2550d29c102fc427dee7477655"
         },
         {
           "file": "IMG_0638.jpeg",
@@ -261,7 +289,8 @@
           "captured": "2015-09-29",
           "capturedAt": "2015-09-29T21:59:34+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "d0db98d7f43f1faea6ae09784dc6e89dd47874e3f96a316c8470b9c1a4a4607c"
         },
         {
           "file": "IMG_0639.jpeg",
@@ -269,7 +298,8 @@
           "captured": "2015-09-29",
           "capturedAt": "2015-09-29T22:00:02+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "9150a2f098662477e288fda0f294d336a6d4cea081f533c848e14f365d004e10"
         },
         {
           "file": "IMG_0640.jpeg",
@@ -277,7 +307,8 @@
           "captured": "2015-09-29",
           "capturedAt": "2015-09-29T22:00:13+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "a4623db6506eb7b27c0ee884dfe788b37fb1121a121254dc2ba2db0c70f7d5bf"
         },
         {
           "file": "menu 1.pdf",
@@ -285,7 +316,8 @@
           "captured": "2026-07-06",
           "capturedAt": null,
           "device": null,
-          "gps": "absent"
+          "gps": "absent",
+          "sha256": "4806ddb2e9775e55c1f293c51ea95421a8ae38d5f603bd7d6759686a57106685"
         }
       ]
     },
@@ -298,7 +330,8 @@
           "captured": "2026-08-26",
           "capturedAt": "2026-08-26T18:32:18+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "5c3d8c55e679e4fe6c91471a30b45a0829d7fa1d1a8924e6774a7638fb4a5628"
         },
         {
           "file": "IMG_9836.jpeg",
@@ -306,7 +339,8 @@
           "captured": "2026-08-26",
           "capturedAt": "2026-08-26T18:32:23+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "dbbbab62d48175ceff4ab087afa229e49b194400732652ee521140182411c585"
         }
       ]
     },
@@ -319,7 +353,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:05:36+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "c9c7ab33b4655f22ffc094f2914c16d1ea38e99e5d328a6bbd50d758e1c353d0"
         },
         {
           "file": "IMG_9783.jpeg",
@@ -327,7 +362,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:05:38+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "ef5d175cc0d84f31c7b6a9d67529b040fecdcf9a33a3f79abd57c94d5828d84e"
         },
         {
           "file": "IMG_9784.jpeg",
@@ -335,7 +371,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:05:40+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "8466f41541ed761c7e85a4fff3009f389f1f60f1789a6eca252a2a2f8ea6adea"
         },
         {
           "file": "IMG_9785.jpeg",
@@ -343,7 +380,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:05:42+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "933fbc0e4b473ba9ce04ae717aa0f40e5692eb788349d5871c9069148005ba68"
         },
         {
           "file": "IMG_9786.jpeg",
@@ -351,7 +389,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:05:44+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "6740e4db2cb6a9112e57937c1a387c663c799affb478b626a3a4aa6ca1d6917d"
         },
         {
           "file": "IMG_9787.jpeg",
@@ -359,7 +398,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:05:47+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "e95fd84cc20fc21aea428f53b3fb934d67229ad2ddfcca96773a257338a3e590"
         },
         {
           "file": "IMG_9788.jpeg",
@@ -367,7 +407,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:05:49+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "603a7e35a2a1ccf1f9177efee170e2855c5c4e448bcee372fa85615a8926473d"
         }
       ]
     },
@@ -380,7 +421,8 @@
           "captured": "2017-01-11",
           "capturedAt": "2017-01-11T18:58:27+13:00",
           "device": "Apple iPhone 6",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "e63caa6170630e4c30d29c1e9135297bb9f14fe930a1dedfbcdec7dbf7c19f41"
         },
         {
           "file": "IMG_9833.jpeg",
@@ -388,7 +430,8 @@
           "captured": "2026-08-26",
           "capturedAt": "2026-08-26T18:29:40+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "9dbb1e478346ef6859631fabc74340823dc81810d75c2542311506bc8eedd5e5"
         },
         {
           "file": "IMG_9834.jpeg",
@@ -396,7 +439,8 @@
           "captured": "2026-08-26",
           "capturedAt": "2026-08-26T18:29:43+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "093ac20622e2a5e97e327713bd9e5034880c7835c536155c41f0f23f494628a2"
         }
       ]
     },
@@ -409,7 +453,8 @@
           "captured": "2026-08-25",
           "capturedAt": "2026-08-25T09:49:44+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "c59654264d1e93d4ab644fbd69bc8d48e2c6853a3dda29a2b8e149e531d83c90"
         },
         {
           "file": "IMG_7256.jpeg",
@@ -417,7 +462,8 @@
           "captured": "2026-08-25",
           "capturedAt": "2026-08-25T09:49:53+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "d0467cdcac0b84739026b0c8b20c5b3b49f9305e7e107327247b3b17419d1239"
         },
         {
           "file": "IMG_7257.jpeg",
@@ -425,7 +471,8 @@
           "captured": "2026-08-25",
           "capturedAt": "2026-08-25T10:13:25+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "753e1165b49891672a9599d1d05f388387de85194c18240950cd18e7d0499cf1"
         },
         {
           "file": "IMG_7258.jpeg",
@@ -433,7 +480,8 @@
           "captured": "2026-08-25",
           "capturedAt": "2026-08-25T10:13:29+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "5b180edacd482a0da1d02bded6843c776fcff870bb7fcca52b097df9d5a9be5c"
         },
         {
           "file": "IMG_9867.jpeg",
@@ -441,7 +489,8 @@
           "captured": "2026-09-09",
           "capturedAt": "2026-09-09T10:08:55+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "01745eae8a643491c1e2ec642efc23c88b9270e310becb0d82fdd0ebb135b782"
         },
         {
           "file": "IMG_9868.jpeg",
@@ -449,7 +498,8 @@
           "captured": "2026-09-09",
           "capturedAt": "2026-09-09T10:08:56+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "85e48ca7b24cabdd8071e57c3b7dbde00fe3334f9631a0619b58aee675c12b95"
         },
         {
           "file": "IMG_9869.jpeg",
@@ -457,7 +507,8 @@
           "captured": "2026-09-09",
           "capturedAt": "2026-09-09T10:09:02+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "fc54bac7c8ac47bfae1a61ecb20a2d141f57bea6071dd87ba5b0e6a4f7e2a7fd"
         },
         {
           "file": "IMG_9870.jpeg",
@@ -465,7 +516,8 @@
           "captured": "2026-09-09",
           "capturedAt": "2026-09-09T10:09:07+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "3357aa321030acd5ca94814059e079b02402d3841dc3e58e2b20db4a743d881f"
         },
         {
           "file": "IMG_9871.jpeg",
@@ -473,7 +525,8 @@
           "captured": "2026-09-09",
           "capturedAt": "2026-09-09T10:09:09+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "c8fb468dd64bb72689a63aa34a75d0c8a62114947652c4bc6af9120178d7f745"
         },
         {
           "file": "IMG_9872.jpeg",
@@ -481,7 +534,8 @@
           "captured": "2026-09-09",
           "capturedAt": "2026-09-09T10:09:12+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "a4a70455b71fdc14fc05ef556a51c11beb3937207ddf48eda7fa201fc2e34e9f"
         },
         {
           "file": "IMG_9873.jpeg",
@@ -489,7 +543,8 @@
           "captured": "2026-09-09",
           "capturedAt": "2026-09-09T10:09:14+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "91444ddd0479a8cc03199148e3a60779615ef6c91dcbd6dc886a0bcddebaf4e8"
         },
         {
           "file": "IMG_9874.jpeg",
@@ -497,7 +552,8 @@
           "captured": "2026-09-09",
           "capturedAt": "2026-09-09T10:09:20+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "1aa9e50ef964dadf418224cc04928425901157230758738b96f1f621f2cfa190"
         },
         {
           "file": "IMG_9875.jpeg",
@@ -505,7 +561,8 @@
           "captured": "2026-09-09",
           "capturedAt": "2026-09-09T10:09:33+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "de74e37cfaaf40ad5d8ea493825e168fa8689329a32f300ed890e3ec49517b47"
         }
       ]
     },
@@ -518,7 +575,8 @@
           "captured": "2023-11-28",
           "capturedAt": "2023-11-28T19:36:59+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "a1b1e697111761103e86271f2e8ac1871e9489f7e98b22ac188b244eb5f6167a"
         },
         {
           "file": "IMG_2295.jpeg",
@@ -526,7 +584,8 @@
           "captured": "2023-11-28",
           "capturedAt": "2023-11-28T19:37:28+13:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "3d31a27aad2e92bdb3edf6a8c384047b99c29489263e2009eea920973a3880df"
         },
         {
           "file": "menu 3.pdf",
@@ -534,7 +593,8 @@
           "captured": "2026-07-06",
           "capturedAt": null,
           "device": null,
-          "gps": "absent"
+          "gps": "absent",
+          "sha256": "8bc8f2008126902bb7ed390bc74b524ee94d83980dbd7da98638b3fc668e690a"
         }
       ]
     },
@@ -547,7 +607,8 @@
           "captured": "2019-06-04",
           "capturedAt": "2019-06-04T13:24:34+12:00",
           "device": "Apple iPhone 7",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "6475cfa91afdccf73e853f586685a6917724a0645c0946b4b3176b01658375ac"
         },
         {
           "file": "IMG_2690.jpeg",
@@ -555,7 +616,8 @@
           "captured": "2019-06-04",
           "capturedAt": "2019-06-04T13:24:43+12:00",
           "device": "Apple iPhone 7",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "90341f06a9b5a4fd88a2cd332392da6d0c7b0514346804e6d61c763590e3a7bf"
         },
         {
           "file": "IMG_9745.jpeg",
@@ -563,7 +625,8 @@
           "captured": "2026-08-08",
           "capturedAt": "2026-08-08T18:07:15+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "5cae59ae6f2e727523b507efcf7e8257bc9aaf57b0abe8b8c4ff11fe246202b8"
         },
         {
           "file": "IMG_9746.jpeg",
@@ -571,7 +634,8 @@
           "captured": "2026-08-08",
           "capturedAt": "2026-08-08T18:07:23+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "7ef7be2191071a75ad77ef7039f31c5708c1fe68d7cf7dd897994f6274368752"
         },
         {
           "file": "menu 2.pdf",
@@ -579,7 +643,8 @@
           "captured": "2026-07-06",
           "capturedAt": null,
           "device": null,
-          "gps": "absent"
+          "gps": "absent",
+          "sha256": "0f30fde21c985b4fb1a14d2ededf505b9702734b4296180297139c8806cc08a7"
         }
       ]
     },
@@ -592,7 +657,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:03:05+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "e5e49d63f5ee5eaddb9ce5aa017ce518be948ead28ac86ad57b30b5e23e91872"
         },
         {
           "file": "IMG_9769.jpeg",
@@ -600,7 +666,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:03:08+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "b4c5db4822f8e1ef5a2cc89b2f6aff47743b40187f0cfd435b18e35772353249"
         },
         {
           "file": "IMG_9770.jpeg",
@@ -608,7 +675,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:03:10+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "e50100d2ab9f7b6aecd46cf023eebc28f3662af300f06f098073e0700a3299b4"
         },
         {
           "file": "IMG_9771.jpeg",
@@ -616,7 +684,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:03:15+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "2f50bc609b4a84bf4ca145e0eabd6fc999817e5a43865d8ea220451f634dba7a"
         },
         {
           "file": "IMG_9772.jpeg",
@@ -624,7 +693,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:03:18+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "c55bd3280bd600b30b509acc275c08c6fc7d71c26bea5b578933a399b285a223"
         },
         {
           "file": "IMG_9773.jpeg",
@@ -632,7 +702,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:03:23+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "ee591dea233963e531225f43f5976d41bd3370d63456467d826e1df3ca3309fa"
         },
         {
           "file": "IMG_9774.jpeg",
@@ -640,7 +711,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:03:28+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "f9c8c429681eddac826862808b74ba35d395ebf0cfaa1a7c2b12998791fbfc99"
         },
         {
           "file": "IMG_9803.jpeg",
@@ -648,7 +720,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T16:15:18+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "03bdc9a8dcf6d4f618bbbdd9c3c51cd065da038d4b8f832dc0089dd500393ede"
         },
         {
           "file": "IMG_9804.jpeg",
@@ -656,7 +729,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T16:15:26+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "e180a72c8c06cab8d21d2b5ba99e6622ac0ea0962e44ac37c095a6141146c860"
         },
         {
           "file": "menu 4.pdf",
@@ -664,7 +738,8 @@
           "captured": "2026-07-06",
           "capturedAt": null,
           "device": null,
-          "gps": "absent"
+          "gps": "absent",
+          "sha256": "4913a3155ab11fe1462746ddf59a292b5d33d5fc6d937a7c9dc503b12b2f4b91"
         }
       ]
     },
@@ -677,7 +752,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:06:01+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "02abbbf0ba556e8a1fd8f6ff5a5844d120dc029492aa16caa93953d43b46d679"
         },
         {
           "file": "IMG_9790.jpeg",
@@ -685,7 +761,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:06:04+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "84f474858783e5f6e72135686682f93d12bf6b15100a7b4f9c9a48ff9748c9be"
         },
         {
           "file": "IMG_9791.jpeg",
@@ -693,7 +770,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:06:07+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "efe7ec2f207d2acacbfb9da5fe1761b1e3c0b662e9c7956d4a637c66e31bcc89"
         },
         {
           "file": "IMG_9792.jpeg",
@@ -701,7 +779,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:06:11+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "52bbb4650d2f0316ab1c0e48090ab79ffb40a2e560b75eb258c6a232a40b5568"
         },
         {
           "file": "IMG_9793.jpeg",
@@ -709,7 +788,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:06:14+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "149b7a2aad2095bed937e234683c94dc78d4bbd1f55e9b613c2d19b55407784a"
         },
         {
           "file": "IMG_9794.jpeg",
@@ -717,7 +797,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:06:21+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "c77dc4dded5e0c3ebc6dfe6645a387553f950456cf8b525680028fb353381a79"
         }
       ]
     },
@@ -730,7 +811,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:04:20+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "67c65100fe2c591c662ac4fa3c1990ad86c3c518a37be354c9babaf0707990a1"
         },
         {
           "file": "IMG_9776.jpeg",
@@ -738,7 +820,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:04:26+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "0b0de44146473905fb9c608ed1025e1e2abdf769d2d22322fe11178c377475a1"
         },
         {
           "file": "IMG_9777.jpeg",
@@ -746,7 +829,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:04:30+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "4d2279e96ba0004c2db3991fb9c10fece7488293af274e4c23bd5bd367e22118"
         },
         {
           "file": "IMG_9778.jpeg",
@@ -754,7 +838,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:04:33+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "08424e636bb1d663b0a1b7f10af3c28cc7a352e387af3067c1ea59257b71c1c0"
         },
         {
           "file": "IMG_9779.jpeg",
@@ -762,7 +847,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:04:38+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "f28530ee6ccf91b033ed3ace25e8ecc05a66fb2888357383f14c561208e8b6e4"
         },
         {
           "file": "IMG_9780.jpeg",
@@ -770,7 +856,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:04:45+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "ea9836b29e32e597bb40f275157b5c7bbad8d70f9bfa761d4a33b3d44cb194d1"
         },
         {
           "file": "IMG_9781.jpeg",
@@ -778,7 +865,8 @@
           "captured": "2026-08-15",
           "capturedAt": "2026-08-15T14:04:49+12:00",
           "device": "Apple iPhone 14 Pro",
-          "gps": "present"
+          "gps": "present",
+          "sha256": "b1f605d2cf684edc53b6a31a4fa4396e3cda89f13e37318088ebe628f4faf3a5"
         }
       ]
     }
