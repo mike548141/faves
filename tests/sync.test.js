@@ -20,6 +20,7 @@ import {
   SYNC_BASE_KEY,
   UPDATE_NEEDED,
   MAX_ATTEMPTS,
+  PULL_WINDOW_MS,
 } from "../site/js/sync.js";
 import { applyPersonalData, collectPersonalData, USER_SCHEMA, STORE_SCHEMA } from "../site/js/personal-data.js";
 import { moveBackup } from "../tools/move_recipes.mjs";
@@ -1442,4 +1443,238 @@ test("a moved backup Replace-imported on A crosses to B: old keys gone, new keys
   assert.equal(server.puts, puts, "the pair kept writing after the move");
   assert.deepEqual(favsOf(a), favsOf(b));
   assert.equal(`d:${MV} alpha-bake` in ratingsOf(a), false, "the old rating came back");
+});
+
+// --- the pull window (roadmap 510/160, survey finding 5) -------------------
+//
+// A page load or a return to the foreground pulls only when the last sync is
+// older than PULL_WINDOW_MS. Every other way into a cycle is untouched. The
+// helpers model a PAGE as a fresh engine over the same storage — which is what
+// navigating between the site's three pages is.
+
+/** A clock the test moves. */
+function clock(startIso = "2026-10-01T00:00:00.000Z") {
+  let t = Date.parse(startIso);
+  return { now: () => new Date(t).toISOString(), advance: (ms) => { t += ms; } };
+}
+
+/** A document stand-in: visibilitychange is fired by hand. */
+function fakeDoc() {
+  const ls = new Map();
+  return {
+    visibilityState: "visible",
+    addEventListener: (t, fn) => ls.set(t, fn),
+    removeEventListener: (t) => ls.delete(t),
+    fire: (t) => ls.get(t)?.(),
+  };
+}
+
+/** A synced device plus a way to open "the next page" on it. */
+async function syncedDevice() {
+  const server = fakeServer();
+  const clk = clock();
+  const a = device({ favs: [venue("kk")] });
+  await mk(a, server, { now: clk.now }).enable();
+  const page = (extra = {}) => mk(a, server, { now: clk.now, ...extra });
+  return { server, clk, a, page };
+}
+
+/** Let whatever the engine started finish: one tick to start it, then until
+ *  it is no longer syncing. A bare tick is not enough — a cycle derives keys
+ *  and awaits a fetch first, and a flaky assertion on `puts` was the proof. */
+async function settle(s) {
+  await new Promise((r) => setTimeout(r, 0));
+  while (s.status().state === "syncing") await new Promise((r) => setTimeout(r, 1));
+}
+
+test("a page load inside the window makes no request; a foreground inside it makes none either", async () => {
+  const { server, clk, page } = await syncedDevice();
+  const gets = server.gets;
+  clk.advance(PULL_WINDOW_MS - 1_000);
+  const s = page();
+  const doc = fakeDoc();
+  const stop = s.start({ stores: [], doc, win: null });
+  await settle(s);
+  assert.equal(server.gets, gets, "a page load 89 s after a sync pulled");
+  doc.fire("visibilitychange");
+  await settle(s);
+  assert.equal(server.gets, gets, "a foreground 89 s after a sync pulled");
+  stop();
+});
+
+test("a device whose last sync is older than the window pulls at once, on load and on foreground", async () => {
+  const { server, clk, page } = await syncedDevice();
+  clk.advance(PULL_WINDOW_MS + 1_000);
+  const s = page();
+  const doc = fakeDoc();
+  const gets = server.gets;
+  const stop = s.start({ stores: [], doc, win: null });
+  await settle(s);
+  assert.equal(server.gets, gets + 1, "a stale device did not pull on load");
+  // That pull restarted the clock, so the next foreground is inside the window...
+  doc.fire("visibilitychange");
+  await settle(s);
+  assert.equal(server.gets, gets + 1, "a foreground straight after a pull pulled again");
+  // ...and a week later the same device pulls again without being asked twice.
+  clk.advance(7 * 24 * 3_600_000);
+  doc.fire("visibilitychange");
+  await settle(s);
+  assert.equal(server.gets, gets + 2, "a device a week stale did not pull");
+  stop();
+});
+
+test("a device that has never synced, or whose stamp is unreadable or in the future, pulls", async () => {
+  for (const stamp of [null, "not a date", "2099-01-01T00:00:00.000Z"]) {
+    const { server, a, page } = await syncedDevice();
+    const cfg = JSON.parse(a.getItem(SYNC_KEY));
+    a.setItem(SYNC_KEY, JSON.stringify({ ...cfg, lastSyncedAt: stamp }));
+    const gets = server.gets;
+    const s = page();
+    const stop = s.start({ stores: [], doc: null, win: null });
+    await settle(s);
+    assert.equal(server.gets, gets + 1, `a stamp of ${JSON.stringify(stamp)} was treated as fresh`);
+    stop();
+  }
+});
+
+test("a skipped pull touches nothing: no write, no state change, the stamp stays", async () => {
+  const { server, clk, a, page } = await syncedDevice();
+  const [puts, cfg, base] = [server.puts, a.getItem(SYNC_KEY), a.getItem(SYNC_BASE_KEY)];
+  clk.advance(30_000);
+  const s = page();
+  const states = [];
+  s.subscribe((x) => states.push(x.state));
+  const stop = s.start({ stores: [], doc: null, win: null });
+  await settle(s);
+  assert.equal(server.puts, puts);
+  assert.equal(a.getItem(SYNC_KEY), cfg, "a skipped pull rewrote the config");
+  assert.equal(a.getItem(SYNC_BASE_KEY), base);
+  assert.deepEqual(states, [], "a skipped pull flickered the status row");
+  stop();
+});
+
+test("a change made on another page and not yet sent still goes on the next page's load, inside the window", async () => {
+  // The previous page's flush as it went hidden can be cut off by the
+  // navigation; the in-memory flags died with it, so storage is what says.
+  const { server, clk, a, page } = await syncedDevice();
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  clk.advance(10_000);
+  const puts = server.puts;
+  const s = page();
+  const stop = s.start({ stores: [], doc: null, win: null });
+  await settle(s);
+  assert.equal(server.puts, puts + 1, "an unsent heart was held back by the window");
+  assert.ok(a.getItem(SYNC_BASE_KEY).includes("new"));
+  stop();
+});
+
+test("an unsent recipe edit also goes on the next page's load, inside the window", async () => {
+  const { server, clk, a, page } = await syncedDevice();
+  withRecipes(a, [precipe("u:alpha-bake")]);
+  clk.advance(10_000);
+  const puts = server.puts;
+  const s = page();
+  const stop = s.start({ stores: [], doc: null, win: null });
+  await settle(s);
+  assert.ok(server.puts > puts, "an unsent recipe was held back by the window");
+  stop();
+});
+
+test("a debounced change on this page is pushed by a foreground inside the window", async () => {
+  const { server, clk, a, page } = await syncedDevice();
+  const store = { subs: new Set(), subscribe(fn) { this.subs.add(fn); return () => this.subs.delete(fn); } };
+  const s = page({ debounceMs: 60_000 });
+  const doc = fakeDoc();
+  const stop = s.start({ stores: [store], doc, win: null });
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  for (const fn of store.subs) fn();
+  assert.equal(s._pendingWrite(), true);
+  clk.advance(5_000);
+  const puts = server.puts;
+  doc.fire("visibilitychange"); // back to the foreground with the debounce still running
+  await settle(s);
+  assert.equal(server.puts, puts + 1, "a pending write was swallowed by the window");
+  s.flush(); // the debounce is still armed; clear it so the runner can exit
+  await settle(s);
+  stop();
+});
+
+test("a failed push is retried by the next foreground inside the window", async () => {
+  const { server, clk, a } = await syncedDevice();
+  let offline = false;
+  const flaky = { fetch: (u, i) => (offline ? Promise.reject(new TypeError("offline")) : server.fetch(u, i)) };
+  const s = mk(a, flaky, { now: clk.now });
+  const doc = fakeDoc();
+  const stop = s.start({ stores: [], doc, win: null });
+  await settle(s);
+  offline = true;
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  assert.equal((await s.syncNow()).ok, false);
+  offline = false;
+  clk.advance(5_000);
+  const puts = server.puts;
+  doc.fire("visibilitychange");
+  await settle(s);
+  await s.syncNow();
+  assert.equal(server.puts, puts + 1, "a change that failed to send waited out the window");
+  stop();
+});
+
+test("explicit Sync now, joining and enabling are never throttled", async () => {
+  const { server, clk, a, page } = await syncedDevice();
+  clk.advance(1_000);
+  const s = page();
+  const gets = server.gets;
+  await s.syncNow();
+  assert.equal(server.gets, gets + 1, "Sync now was throttled");
+  // enable() on a fresh device and join() onto the same code, both inside the window of an earlier sync
+  const b = device({ favs: [venue("pandan")] });
+  const sb = mk(b, server, { now: clk.now });
+  const before = server.gets;
+  await sb.join(s.status().code);
+  assert.ok(server.gets > before, "join was throttled");
+  const c = device({ favs: [] });
+  const sc = mk(c, server, { now: clk.now });
+  const beforeEnable = server.gets + server.puts;
+  await sc.enable();
+  assert.ok(server.gets + server.puts > beforeEnable, "enable was throttled");
+});
+
+test("a reconnect with a change waiting sends it inside the window", async () => {
+  const { server, clk, a } = await syncedDevice();
+  let offline = false;
+  const flaky = { fetch: (u, i) => (offline ? Promise.reject(new TypeError("offline")) : server.fetch(u, i)) };
+  const s = mk(a, flaky, { now: clk.now });
+  const win = fakeWin();
+  const stop = s.start({ stores: [], doc: null, win });
+  await settle(s);
+  offline = true;
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  await s.syncNow();
+  offline = false;
+  clk.advance(2_000);
+  const puts = server.puts;
+  win.fire("online");
+  await settle(s);
+  await s.syncNow();
+  assert.equal(server.puts, puts + 1, "a reconnect was throttled");
+  stop();
+});
+
+test("a stale page load that loses a race still goes round again and lands the change", async () => {
+  const { server, clk, a } = await syncedDevice();
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("new")]));
+  clk.advance(PULL_WINDOW_MS + 1_000);
+  const racing = racingServer(server, 1);
+  const s = mk(a, racing, { now: clk.now });
+  const stop = s.start({ stores: [], doc: null, win: null });
+  await settle(s);
+  await s.syncNow();
+  assert.equal(racing.puts412, 1, "the first write should have lost the race");
+  assert.ok(a.getItem(SYNC_BASE_KEY).includes("new"), "the retry did not land");
+  stop();
+});
+
+test("the window is 90 seconds, as ruled", () => {
+  assert.equal(PULL_WINDOW_MS, 90_000);
 });
