@@ -1,0 +1,289 @@
+{
+  "venue": "cook-at-home",
+  "note": "Dishes confirmed off the published list (`available.offBy`). The whole item is kept so it can be restored verbatim. The five rows here left on 2026-10-01 because the owner moved those recipes into his own cookbook (roadmap 510/050) — a departure from the public list, not a correction.",
+  "rows": [
+    {
+      "key": {
+        "section": "Baking & sweets",
+        "sectionId": "baking-sweets",
+        "name": "Booth's Ginger Crunch",
+        "code": null,
+        "dishId": "booth-s-ginger-crunch"
+      },
+      "item": {
+        "name": "Booth's Ginger Crunch",
+        "dishId": "booth-s-ginger-crunch",
+        "desc": "Base doubled and icing tripled from the original recipe.",
+        "serves": 24,
+        "difficulty": "easy",
+        "estimated": [
+          "serves",
+          "difficulty"
+        ],
+        "ingredients": [
+          "250g butter, softened",
+          "1 cup sugar",
+          "3 cups plain flour",
+          "2 tsp baking powder",
+          "4 tsp ginger",
+          {
+            "component": "Ginger icing",
+            "items": [
+              "225g butter",
+              "2¼ cups icing sugar",
+              "6 tablespoons golden syrup",
+              "9 teaspoons ginger"
+            ]
+          }
+        ],
+        "steps": [],
+        "tags": [
+          "v",
+          "contains-gluten",
+          "contains-dairy"
+        ],
+        "tagNotes": {
+          "contains-gluten": "From the ingredients: plain flour.",
+          "contains-dairy": "From the ingredients: butter, softened; butter."
+        },
+        "available": {
+          "offBy": "2026-10-01",
+          "note": "Moved into the owner's own cookbook, not withdrawn from the world (roadmap 510/050); no longer published here."
+        }
+      }
+    },
+    {
+      "key": {
+        "section": "Dinners",
+        "sectionId": "dinners",
+        "name": "Famous Brade Green Chicken Curry",
+        "code": null,
+        "dishId": "famous-brade-green-chicken-curry"
+      },
+      "item": {
+        "name": "Famous Brade Green Chicken Curry",
+        "dishId": "famous-brade-green-chicken-curry",
+        "desc": null,
+        "serves": 4,
+        "prepMinutes": 5,
+        "cookMinutes": 35,
+        "difficulty": "very-easy",
+        "estimated": [
+          "serves",
+          "prepMinutes",
+          "cookMinutes",
+          "difficulty"
+        ],
+        "ingredients": [
+          "Chicken",
+          "Onion",
+          "Rubbed mint & rubbed basil (a lot — about a tablespoon)",
+          "Green curry paste, about a tablespoon (e.g. Masterfoods)",
+          "1 can coconut cream and 1 can coconut milk",
+          "Peas, as many as you like",
+          "Brown sugar, to taste"
+        ],
+        "steps": [
+          "Brown the chicken and onion in a pan.",
+          "Add the rubbed mint and rubbed basil (use plenty for the flavour, about a tablespoon).",
+          "Add the green curry paste, about a tablespoon.",
+          "Add the coconut cream and coconut milk.",
+          "Add the peas.",
+          "Let it simmer for a while, then add brown sugar to taste — the more you add, the milder the heat."
+        ],
+        "tags": [
+          "df",
+          "spicy-1"
+        ],
+        "goesWith": [
+          "Turkish Flatbread"
+        ],
+        "available": {
+          "offBy": "2026-10-01",
+          "note": "Moved into the owner's own cookbook, not withdrawn from the world (roadmap 510/050); no longer published here."
+        }
+      }
+    },
+    {
+      "key": {
+        "section": "Dinners",
+        "sectionId": "dinners",
+        "name": "Jesse's Garlic Chicken Thighs",
+        "code": null,
+        "dishId": "jesse-s-garlic-chicken-thighs"
+      },
+      "item": {
+        "name": "Jesse's Garlic Chicken Thighs",
+        "dishId": "jesse-s-garlic-chicken-thighs",
+        "desc": null,
+        "serves": 4,
+        "prepMinutes": 5,
+        "cookMinutes": 45,
+        "difficulty": "easy",
+        "estimated": [
+          "serves",
+          "prepMinutes",
+          "cookMinutes",
+          "difficulty"
+        ],
+        "ingredients": [
+          "6–8 garlic cloves, crushed",
+          "1 onion, chopped thin",
+          "Chilli flakes, a sprinkle",
+          "Salt, as needed",
+          "Pepper, as needed",
+          "Chicken thighs",
+          "1 cup chicken stock",
+          "1 can evaporated milk",
+          "1 packet chicken cup-of-soup (cream of chicken)"
+        ],
+        "steps": [
+          "Heat oil in a pan or tagine.",
+          "Sauté the garlic, onion, chilli, salt and pepper.",
+          "Once the onion is softened, lightly brown the chicken thighs.",
+          "Add the chicken stock and slowly reduce down (approx half).",
+          "Add the powdered chicken soup and mix.",
+          "Slowly add the evaporated milk so it doesn't split.",
+          "Reduce the heat, put the lid on and cook a further 15 minutes.",
+          "A few minutes before serving, add green beans or chopped bok choy.",
+          "Serve with rice."
+        ],
+        "tags": [
+          "spicy-1",
+          "contains-dairy"
+        ],
+        "tagNotes": {
+          "contains-dairy": "From the ingredients: evaporated milk; chicken cup-of-soup (cream of chicken)."
+        },
+        "available": {
+          "offBy": "2026-10-01",
+          "note": "Moved into the owner's own cookbook, not withdrawn from the world (roadmap 510/050); no longer published here."
+        }
+      }
+    },
+    {
+      "key": {
+        "section": "Dinners",
+        "sectionId": "dinners",
+        "name": "Shane's Ribs",
+        "code": null,
+        "dishId": "shane-s-ribs"
+      },
+      "item": {
+        "name": "Shane's Ribs",
+        "dishId": "shane-s-ribs",
+        "desc": "Made up from a few recipes, but it went something like this.",
+        "serves": 4,
+        "time": "8 hr (slow cooker)",
+        "prepMinutes": 5,
+        "cookMinutes": 505,
+        "difficulty": "easy",
+        "estimated": [
+          "serves",
+          "prepMinutes",
+          "cookMinutes",
+          "difficulty"
+        ],
+        "ingredients": [
+          "1 tsp coriander seeds",
+          "1 tsp cumin seeds",
+          "1 tsp salt",
+          "2 garlic cloves",
+          "½ a dried chilli, all ground up",
+          "½ cup Whitlock's smoky BBQ sauce",
+          "½ cup Coke",
+          "3 tbsp brown sugar",
+          "Pork ribs"
+        ],
+        "steps": [
+          "Mix everything (except the ribs) over medium heat for 10 minutes.",
+          "Put the ribs and sauce in a slow cooker and mix.",
+          "Cook on low for 8 hours.",
+          "Remove the ribs, reduce the sauce in a pot until thick, then pour over the ribs."
+        ],
+        "tags": [
+          "spicy-1",
+          "contains-pork"
+        ],
+        "tagNotes": {
+          "contains-pork": "From the ingredients: Pork ribs."
+        },
+        "goesWith": [
+          "Creamy Mushrooms",
+          "Turkish Flatbread",
+          "Sticky Date Pudding"
+        ],
+        "available": {
+          "offBy": "2026-10-01",
+          "note": "Moved into the owner's own cookbook, not withdrawn from the world (roadmap 510/050); no longer published here."
+        }
+      }
+    },
+    {
+      "key": {
+        "section": "Desserts",
+        "sectionId": "desserts",
+        "name": "Chocolate Self-Saucing Pudding",
+        "code": null,
+        "dishId": "chocolate-self-saucing-pudding"
+      },
+      "item": {
+        "name": "Chocolate Self-Saucing Pudding",
+        "dishId": "chocolate-self-saucing-pudding",
+        "desc": "A Clements family dessert since the early 1980s. Doubles well for a crowd.",
+        "serves": 6,
+        "time": "~35 min",
+        "prepMinutes": 10,
+        "cookMinutes": 35,
+        "difficulty": "easy",
+        "estimated": [
+          "prepMinutes",
+          "difficulty"
+        ],
+        "ingredients": [
+          "¾ cup (190 ml) white sugar",
+          "100g butter, softened",
+          "1 egg",
+          "1 tsp (5 ml) vanilla essence",
+          "1¼ cups (310 ml) white flour",
+          "2 tsp (10 ml) baking powder",
+          "1 tbsp (15 ml) cocoa",
+          "Water or milk, as required for a thick batter",
+          {
+            "component": "Sauce",
+            "items": [
+              "½ cup (125 ml) brown sugar",
+              "¼ cup (60 ml) cocoa",
+              "1 tbsp (15 ml) cornflour",
+              "2 cups (500 ml) boiling water"
+            ]
+          }
+        ],
+        "steps": [
+          "Preheat the oven to 180°C and line a 1.5–2L ovenproof dish with baking paper, or grease it.",
+          "Beat together the white sugar, softened butter, egg and vanilla.",
+          "Sift the flour, baking powder and cocoa together, then fold into the beaten mixture, adding water or milk as needed for a thick cake batter.",
+          "Spoon the mixture into the dish.",
+          "Sprinkle over the brown sugar, cocoa and cornflour, then gently pour the boiling water over the back of a spoon to make the sauce.",
+          "Bake at 180°C for 35 minutes, or until cooked through (try covering two-thirds of the dish with a lid)."
+        ],
+        "tags": [
+          "v",
+          "contains-gluten",
+          "contains-dairy",
+          "contains-egg"
+        ],
+        "tagNotes": {
+          "contains-gluten": "From the ingredients: white flour.",
+          "contains-dairy": "From the ingredients: butter, softened; Water or milk, as required for a thick batter.",
+          "contains-egg": "From the ingredients: egg."
+        },
+        "attribution": "Adapted from the Edmonds cookbook",
+        "available": {
+          "offBy": "2026-10-01",
+          "note": "Moved into the owner's own cookbook, not withdrawn from the world (roadmap 510/050); no longer published here."
+        }
+      }
+    }
+  ]
+}
