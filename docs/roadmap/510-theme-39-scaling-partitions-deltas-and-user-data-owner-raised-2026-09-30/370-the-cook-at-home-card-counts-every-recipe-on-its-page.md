@@ -1,4 +1,4 @@
-- [ ] **The Cook at Home card counts every recipe its page shows** `[XS]
+- [~] **The Cook at Home card counts every recipe its page shows** `[XS]
       [home][recipes]` — owner-ruled 2026-10-01 (session `faves-55`).
 
   **His words:** *"it should count all of them - public, my recipes, our
@@ -13,3 +13,5 @@
 
   📌 **Claim released 2026-10-01 (`faves-55`)** at the owner's word: "put
   them on a board for a fresh session". Nothing was built; ready to take.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`).**

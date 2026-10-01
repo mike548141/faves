@@ -1,4 +1,4 @@
-- [ ] 🔥 **A stale sync read is merged as if another device had changed
+- [~] 🔥 **A stale sync read is merged as if another device had changed
       it** `[M] [sync][data]` — found 2026-10-01 by the `330` worker
       (session `faves-55`), measured with the real client and the real
       Worker over a KV stand-in that lags 60 s. Not yet seen live.
@@ -19,3 +19,5 @@
   Object per user key, which the Worker's README already names as the real
   fix for KV's lack of compare-and-swap. A design ruling for the owner,
   with costs.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`).**

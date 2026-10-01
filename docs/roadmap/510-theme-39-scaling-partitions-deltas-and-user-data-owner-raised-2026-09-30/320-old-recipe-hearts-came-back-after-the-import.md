@@ -1,4 +1,4 @@
-- [ ] 🔥 **Old hearts on the moved recipes came back after the import**
+- [~] 🔥 **Old hearts on the moved recipes came back after the import**
       `[S] [sync][data]` — seen by the owner 2026-10-01 at 21:50 NZDT
       (session `faves-55`), on his laptop's Favourites screen.
 
@@ -92,3 +92,5 @@
 
   📌 **Claim released 2026-10-01 (`faves-55`)** at the owner's word: "put
   them on a board for a fresh session". Nothing was built; ready to take.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`).**
