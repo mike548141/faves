@@ -1,4 +1,4 @@
-- [~] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
+- [ ] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
   RULED 2026-09-28 (option C, via AskUserQuestion, after an impact
   analysis)** `[M][tools]` — this replaces 340/250 part (4). **Nothing from
   `intake/` is committed to the public repo.**
@@ -40,3 +40,17 @@
 
   📌 **Claimed 2026-10-02 (`faves-4f`), part 1 (fingerprints) only.** Parts 2–3
   wait on the one-line Drive confirmation; part 4 on the owner's go.
+
+  ✅ **Part 1 done 2026-10-02 (`faves-4f`, PR #87).** `check_provenance.py
+  --rebuild` writes a `sha256` per evidence row (88 files, 15 venues); every
+  run verifies each against local material (88/88 on the primary checkout),
+  reports absent material without failing (CI, worktrees), fails a mismatch
+  by name and fails a row with no hash; `--rebuild` refuses to re-bless
+  changed bytes without `--accept-changed`. Self-test 15/15; break-probed by
+  the orchestrator (mismatch counted as verified ⇒ the one-byte case fails).
+  🚩 `.leakscanignore` gained `data/intake/menu-sources.json`: leakscan's
+  `nz-phone` rule matches digit runs inside hex digests (its lookarounds
+  refuse only a neighbouring digit, not a hex letter). The rule defect is
+  atelier's and is filed there.
+  📌 **Claim released** after part 1. Parts 2–3 wait on the owner's one-line
+  Drive confirmation; part 4 (deleting `evidence-stripped/`) on his go.
