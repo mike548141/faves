@@ -1,4 +1,4 @@
-- [ ] 🔎 **A complete menu carries no `verified` date, and three older menu
+- [~] 🔎 **A complete menu carries no `verified` date, and three older menu
       photo sets have no price history** `[S][data]` — found 2026-09-08 by the
       intake audit (session faves-o1). **(a) delivered 2026-09-08; (b) KC Cafe
       delivered 2026-09-20; R&S and Spices still owed** — see the notes at the
@@ -280,3 +280,5 @@
   `split_data.py --check` (227/227 history rows join on `dishId`) ·
   `check_no_deps.py` · `check_fallback.py` · `check_versions.py --range` ·
   `node --test` · `boot_check.mjs`. `DATA_VERSION` → `2026-09-08.2`.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`): R&S and Spices price history.**
