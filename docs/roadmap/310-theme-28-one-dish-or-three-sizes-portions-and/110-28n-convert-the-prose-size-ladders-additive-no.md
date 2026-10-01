@@ -1,4 +1,4 @@
-- [ ] **28n — Convert the prose size ladders: additive, and no id moves**
+- [~] **28n — Convert the prose size ladders: additive, and no id moves**
       `[L][data]` — population A of `28h`'s measurement, and this is `28b`'s
       long-standing work finally given a shape to land in.
 
@@ -39,3 +39,5 @@
   **Depends on:** `28k`, `28m`. **Does not depend on** `28i`, `28j` or `28l` —
   no id moves, so none of them are in the path. That independence is the
   reason to sequence this item early.
+
+  📌 **Claimed 2026-10-02 (`faves-4f`): every venue except Abrakebabra.**
