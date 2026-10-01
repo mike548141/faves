@@ -1,4 +1,4 @@
-- [~] 🔎 **A complete menu carries no `verified` date, and three older menu
+- [ ] 🔎 **A complete menu carries no `verified` date, and three older menu
       photo sets have no price history** `[S][data]` — found 2026-09-08 by the
       intake audit (session faves-o1). **(a) delivered 2026-09-08; (b) KC Cafe
       delivered 2026-09-20; R&S and Spices still owed** — see the notes at the
@@ -282,3 +282,15 @@
   `node --test` · `boot_check.mjs`. `DATA_VERSION` → `2026-09-08.2`.
 
   📌 **Claimed 2026-10-02 (`faves-4f`): R&S and Spices price history.**
+
+  🔎 **R&S and Spices settled 2026-10-02 (`faves-4f`): nothing to record.**
+  R&S's 2017 photograph (`IMG_1859`) is a captioned photo poster with no
+  prices, so its price layer cannot be recovered; dishes on it and absent
+  today (named, unpriced): S18 Asam Laksa, S6 Bak Kut Teh, S3 Lor Mee, a
+  seafood curry laksa. Spices' 2023 board prices 12 dishes: the 11 that
+  ship are at those same prices today (none appears in the 2026 PDF, so
+  nothing supersedes them), and the one that moved, Tandoori Chicken half
+  ($13.50 → $13.00), has no payload dish to key it to. No history file was
+  written; an empty one would be the wrong record. Part (b) is now closed
+  for all three venues; the KC Cafe 2015-01-17 re-read is the residual.
+  📌 **Claim released.**
