@@ -551,7 +551,7 @@ test("a burst of changes debounces into one write, and a flush sends it early", 
   assert.equal(s._pendingWrite(), true);
 
   s.flush();
-  await new Promise((r) => setTimeout(r, 30));
+  await settle(s);
   assert.equal(server.puts, after + 1, "three changes must cost exactly one write");
 });
 
@@ -647,7 +647,7 @@ test("a change made while a cycle is in flight is kept, not overwritten by the p
   assert.equal(s._pendingWrite(), true, "…and a follow-up cycle is scheduled to carry it out");
   // The follow-up carries the flag to the server.
   s.flush();
-  await new Promise((r) => setTimeout(r, 30));
+  await settle(s);
   const b = device({ favs: [] });
   await mk(b, server).join(s.status().code);
   assert.deepEqual(JSON.parse(b.getItem(scopeKey("default", "faves.settings.v1"))).diet.avoid, ["contains-nuts"]);
