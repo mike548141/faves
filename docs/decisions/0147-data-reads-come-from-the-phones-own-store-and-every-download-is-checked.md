@@ -2,6 +2,8 @@
 
 **Status:** accepted. Built by roadmap `510/030` (PR #57). The freshness
 trade below is open with the owner.
+**Amended by** [ADR 0148](0148-the-data-check-waits-about-three-minutes-and-the-wait-survives-the-worker.md) <!-- wrapscan:allow: a link target cannot wrap -->
+(decision 1: a read checks at most every ~3 minutes, persisted).
 **Date:** 2026-10-01
 **Builds on:** [ADR 0145](0145-faves-scales-by-partition-and-fingerprint-and-user-data-by-versioned-store.md)
 as revised by [ADR 0146](0146-the-scaling-design-revised-after-its-cold-review.md);

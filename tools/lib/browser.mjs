@@ -42,6 +42,7 @@
 //     (ADR 0101).
 
 import { execFileSync, spawn, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { createServer } from "node:http";
 import { readFile, readdir, rm, stat } from "node:fs/promises";
 import { existsSync, readFileSync, rmSync } from "node:fs";
@@ -135,6 +136,102 @@ export function startServer(port, siteDir, overlay = null) {
       // was retrying.
       liveServers.add(server);
       res({ server, port: server.address().port });
+    });
+  });
+}
+
+/**
+ * The Cache-Control Cloudflare Pages ACTUALLY sends for a path — curl'd against
+ * the live site on 2026-10-01 (roadmap 510/170), not what `site/_headers` asks
+ * for. The two disagree: `_headers` asks `max-age=0` for `js/` and `css/`, and
+ * the live answer for those, for `sw.js` and for the icons is four hours —
+ * every extension the edge caches. HTML, `data/` (JSON) and the web manifest
+ * get `max-age=0`; `img/` is immutable, as asked.
+ */
+export function pagesCacheControl(path) {
+  if (path.startsWith("/img/")) return "public, max-age=31536000, immutable";
+  if (/\.(?:js|mjs|css|png|ico|svg|jpe?g|webp)$/i.test(path)) {
+    return "public, max-age=14400, must-revalidate";
+  }
+  return "public, max-age=0, must-revalidate";
+}
+
+/**
+ * A static server that answers the way CLOUDFLARE PAGES does about CACHING:
+ * the measured Cache-Control above, a content-derived ETag on every 200, and a
+ * bodiless 304 to an If-None-Match that matches. Measured live 2026-10-01: a
+ * matching If-None-Match (strong, and the `W/` form Cloudflare sends with
+ * brotli) is answered 304, and Pages' ETag is 32 hex digits. That it is
+ * derived from the content is INFERRED — it is not the MD5 of the bytes, and
+ * no deploy was watched changing it. {@link startServer} answers
+ * `no-store` with no validators, under which the browser's HTTP cache never
+ * holds anything — which is exactly the condition under which the 2026-08-16
+ * stale-precache incident (ADR 0056) CANNOT happen, so no check served by it
+ * can reproduce that incident or measure a revalidation.
+ *
+ * `overlay` is LIVE: a check changes it between page loads to stage a new
+ * deploy at the same URLs. An entry is a string, `{ body, type }`, or
+ * `{ status }` for a path the deploy does not have. `log` records every
+ * request: `{ url, status, conditional }`.
+ *
+ * 🚩 NOT staged: the 308 from `/foo.html` to `/foo`, the 200-HTML stand-in for
+ * a missing path (stage it with an overlay), brotli, HTTP/2, the edge cache.
+ */
+export function startPagesServer(port, siteDir, overlay = new Map()) {
+  const log = [];
+  const server = createServer(async (req, res) => {
+    const path = decodeURIComponent(new URL(req.url, "http://x").pathname);
+    const entry = { url: req.url, status: 0, conditional: !!req.headers["if-none-match"] };
+    log.push(entry);
+    let body;
+    let type;
+    const stub = overlay.get(path);
+    if (stub !== undefined) {
+      if (typeof stub === "object" && stub.status) {
+        entry.status = stub.status;
+        res.writeHead(stub.status, { "Content-Type": "text/plain", "Cache-Control": "no-store" });
+        res.end("not found");
+        return;
+      }
+      ({ body, type } = typeof stub === "string" ? { body: stub, type: null } : stub);
+      body = Buffer.from(body);
+    } else {
+      let file = normalize(join(siteDir, path));
+      if (!file.startsWith(siteDir)) {
+        entry.status = 403;
+        res.writeHead(403).end("forbidden");
+        return;
+      }
+      if (path.endsWith("/")) file = join(file, "index.html");
+      try {
+        body = await readFile(file);
+      } catch {
+        entry.status = 404;
+        res.writeHead(404, { "Content-Type": "text/plain", "Cache-Control": "no-store" }).end("not found");
+        return;
+      }
+      type = MIME[extname(file)];
+    }
+    const etag = `"${createHash("sha256").update(body).digest("hex").slice(0, 32)}"`;
+    const headers = { ETag: etag, "Cache-Control": pagesCacheControl(path.endsWith("/") ? `${path}index.html` : path) };
+    const asked = String(req.headers["if-none-match"] || "")
+      .split(",")
+      .map((t) => t.trim().replace(/^W\//, ""));
+    if (asked.includes(etag)) {
+      entry.status = 304;
+      res.writeHead(304, headers);
+      res.end();
+      return;
+    }
+    entry.status = 200;
+    res.writeHead(200, { ...headers, "Content-Type": type || MIME[extname(path)] || "application/octet-stream" });
+    res.end(body);
+  });
+  return new Promise((ok, bad) => {
+    server.once("error", bad);
+    server.listen(port, "127.0.0.1", () => {
+      liveServers.add(server);
+      ok({ server, port: server.address().port, log, overlay });
     });
   });
 }

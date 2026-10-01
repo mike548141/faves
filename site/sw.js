@@ -296,6 +296,20 @@ function requireAsset(url, res) {
 // and is the belt to this braces; this is the half that protects a phone which
 // already has the old files.
 const PRECACHE_FETCH = { cache: "reload" };
+// …except the SHELL on a FIRST install, which REVALIDATES instead (roadmap
+// 510/170, owner-ruled 2026-10-01, ADR 0149). A first visit has just loaded
+// most of the shell into the page, so `reload` downloaded it all a second time
+// (the 2026-10-01 survey: ~90 files, ~479 KB gzip). `no-cache` sends a
+// conditional request the SERVER answers: 304 for a file it still serves
+// unchanged, the new bytes for anything else. It never uses a stored copy the
+// server has not just vouched for, which is the whole of what ADR 0056
+// required — and tools/precache_check.mjs proves it on the incident itself:
+// with Pages' real headers, plain fetch() fills the new cache with the
+// previous deploy's app.js; "reload" and "no-cache" both hold the current one.
+// An UPDATE install keeps "reload" (the ruling covered the first install), and
+// data keeps it everywhere: its `?h=` URLs are never in the page's HTTP cache,
+// so revalidating them would save nothing.
+const FIRST_INSTALL_FETCH = { cache: "no-cache" };
 
 // Build the shell cache only if it isn't already fully populated. The name
 // carries SHELL_VERSION, so an unchanged shell keeps its READY sentinel and is
@@ -316,6 +330,9 @@ async function ensureCache(name, populate) {
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
+      // No active worker ⇒ this is the first install on this origin (an update
+      // always has the old worker active while the new one installs).
+      const shellFetch = self.registration?.active ? PRECACHE_FETCH : FIRST_INSTALL_FETCH;
       await ensureCache(SHELL_CACHE, async (cache) => {
         // Per-URL put (not cache.addAll) so redirected shell pages get cleaned
         // first — but keep addAll's response.ok guard by hand: a 404/500 during
@@ -324,7 +341,7 @@ self.addEventListener("install", (event) => {
         // `requireAsset` adds the half `res.ok` cannot see on Pages (ADR 0100).
         await Promise.all(
           SHELL.map(async (u) => {
-            const res = requireAsset(u, await fetchClean(u, PRECACHE_FETCH));
+            const res = requireAsset(u, await fetchClean(u, shellFetch));
             await cache.put(u, res);
           })
         );

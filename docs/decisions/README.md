@@ -1813,3 +1813,10 @@ deliberation those compact docs omit.
   catalogue within ~3 minutes of the last check that succeeded; the time is a
   record in the data store, so a stopped worker keeps it. A resume and a forced
   check still go at once. Amends 0147's "once every 10 s".
+- [0149](0149-the-first-install-revalidates-the-shell.md) —
+  **The first install revalidates the shell rather than re-downloading it**
+  (owner-ruled 2026-10-01, `510/170`). A first install fetches the shell with
+  `cache: "no-cache"`: the server's 304 or the new bytes, never a stored copy
+  on the browser's own say-so. `precache_check` reproduces the 2026-08-16
+  incident to prove it. Update installs and data keep `reload`. Supersedes
+  part of 0056; records that 0056's `_headers` half is not live for `js/`.

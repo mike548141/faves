@@ -1,6 +1,8 @@
 # 0056 — A precache must not be filled from the browser's cache
 
-**Status:** accepted
+**Status:** accepted, **superseded in part by
+[ADR 0149](0149-the-first-install-revalidates-the-shell.md)** (decision 1:
+a first install revalidates the shell with `no-cache`; updates keep `reload`)
 **Date:** 2026-08-16
 **Extends:** [0015](0015-split-precache-versioning.md) — split versioning was
 correct and was not enough · [0027](0027-pwa-update-flow.md) — the

@@ -1362,7 +1362,11 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
   `faves-shell-<SHELL_VERSION>` → the three HTML shells, CSS, JS,
   `site.webmanifest`, icons. Install skips an already-complete cache and
   uses a `__cache_ready__` sentinel so an interrupted install rebuilds
-  rather than serving a half-filled cache. **Cache-first.** Any byte change
+  rather than serving a half-filled cache. The shell is fetched with
+  `cache: "reload"` (ADR 0056), except on a **first** install, which
+  revalidates with `cache: "no-cache"` — the server's 304 or the new bytes,
+  never a stored copy on the browser's say-so (ADR 0149; `precache_check`
+  reproduces the 2026-08-16 incident to prove it). **Cache-first.** Any byte change
   to `sw.js` triggers the browser's SW update cycle; `SHELL_VERSION` decides
   whether the shell rebuilds. **Lockstep:** any `site/` change outside
   `site/data/` → bump `SHELL_VERSION`.
