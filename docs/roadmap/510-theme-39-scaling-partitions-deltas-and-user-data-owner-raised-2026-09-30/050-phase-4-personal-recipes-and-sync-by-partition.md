@@ -176,3 +176,7 @@
   dropped Booth's Ginger Crunch and Shane's Ribs from Cook at Home's
   "first time, try…" `picks`, leaving Easy Pad Thai and Sticky Date
   Pudding. Does he want two others in their place?
+
+  ✅ **Answered 2026-10-02 (`faves-4f`):** add Lamb Shanks and Liège Waffles.
+  The picks are now Easy Pad Thai, Lamb Shanks, Liège Waffles and Sticky
+  Date Pudding (the removed two's slots, in order).

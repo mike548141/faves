@@ -60,3 +60,6 @@
   shared phone, "My recipe" means the person currently selected, so Booth
   sees "My recipe" on his own recipes and none on the owner's. Kept as
   built unless he wants the label to name the owner.
+
+  ✅ **Answered 2026-10-02 (`faves-4f`):** keep as built. "My recipe" means
+  the person currently selected.
