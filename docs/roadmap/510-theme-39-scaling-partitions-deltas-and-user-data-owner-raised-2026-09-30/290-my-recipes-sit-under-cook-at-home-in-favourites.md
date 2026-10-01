@@ -1,4 +1,4 @@
-- [~] **Your own recipes sit with Cook at Home in Favourites, marked
+- [x] **Your own recipes sit with Cook at Home in Favourites, marked
       private** `[S] [home][recipes]` — owner-raised 2026-10-01 (session
       `faves-55`), on seeing the import's result.
 
@@ -45,3 +45,6 @@
   every row fails 2). The search row is untouched: the "My recipes" block at
   `app.js` ~1199 was the Favourites group heading itself, not a search row, and
   no search path renders personal recipes.
+
+  ✅ **Closed 2026-10-01 (`faves-55`):** merged (PR #73, which replaced #72), CI
+  8 of 8.
