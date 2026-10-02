@@ -95,3 +95,28 @@
 
   📌 **Claimed 2026-10-03 (`faves-77`): Google Maps hours for both chains, ADR
   0157 reserved; worker in a worktree.**
+
+  🛑 **Google Maps attempt 2026-10-03 (`faves-77` worker): BLOCKED, nothing
+  written to the data, no ADR or validator built.** Tool: a headless Playwright
+  browser (Chromium; Firefox once), unauthenticated, loading
+  `google.com/maps/search/<chain>+<address>` for all 10 branches. Maps answers
+  (HTTP 200) but serves its "limited view": the side panel shows ONE status
+  line for today only and never the weekly table. `google.com/search` is
+  refused outright ("unusual traffic"). So no branch yielded a week:
+  - McDonald's Courtenay Place: listing is a different street
+    number and "Permanently closed". Address differs; ambiguous, no hours.
+  - McDonald's Lambton Quay: "Temporarily closed", no hours.
+  - McDonald's Bunny St: "Open 24 hours" (today's line only).
+  - McDonald's Johnsonville: "Open 24 hours" (today's line only).
+  - McDonald's Porirua: no hours listed at all.
+  - Subway Johnsonville: "Open, closes 9 pm", "See more hours" inert.
+  - Subway Tawa: "Open, closes 9 pm" (phone-updated 12 weeks ago).
+  - Subway Karori: "Open, closes 8 pm".
+  - Subway Courtenay Place: listing's street number differs from ours;
+    "closes 3 am".
+  - Subway Mulgrave St: listing's street number differs from ours;
+    "closes 5 pm".
+  A single day's closing time is not a week, and "Open 24 hours" cannot be
+  told from a 24/7 week. Two address mismatches and two closure flags also
+  need a human look. Next attempt needs a browser that gets Maps' full view
+  (signed in, or one that can click "See more hours"). Claim stays `[~]`.
