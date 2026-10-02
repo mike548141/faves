@@ -159,7 +159,8 @@ excluded from both stores, always.
   "ordering": [                      // 0..n online-order links (link out, never build)
     { "platform": "Uber Eats", "url": "https://..." }
   ],
-  "services": ["dine-in", "takeaway", "delivery"],  // the DOORS this venue opens;
+  "orderMode": ["dine-in", "takeaway", "delivery"],  // the DOORS this venue opens;
+                                     //   (`services` until 2026-10-02, roadmap 010);
                                      //   "delivery" added 2026-09-09 (ADR 0117).
                                      //   Declared, never derived from `ordering`
                                      //   or from a dish's `prices.delivery`
@@ -354,7 +355,7 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
 
 - `kind`: `"venue"` (default when absent) or `"recipes"`.
 - For `"recipes"`, the venue-only fields relax: `area`/`city`/`address`
-  may be `null`, `services` is an empty list (a recipe is neither
+  may be `null`, `orderMode` is an empty list (a recipe is neither
   dine-in nor takeaway), and there is no contact/order card.
 - **That relaxation is declared, not scattered (ADR 0065).**
   `site/js/kinds.js` is the one table saying what each `kind` has and can

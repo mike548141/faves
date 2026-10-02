@@ -10,7 +10,7 @@
   "address": "27 Dundas Street, Seatoun, Wellington 6022",
   "lat": -41.32253,
   "lng": 174.83089,
-  "services": [
+  "orderMode": [
     "dine-in"
   ],
   "phone": "+64 4 388 3397",

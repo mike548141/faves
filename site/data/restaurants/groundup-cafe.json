@@ -11,7 +11,7 @@
   "address": "15 Paekākāriki Hill Road, Pāuatahanui 5381",
   "lat": -41.10487,
   "lng": 174.91647,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

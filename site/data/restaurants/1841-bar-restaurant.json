@@ -16,7 +16,7 @@
   },
   "website": "https://www.1841.co.nz",
   "ordering": [],
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

@@ -11,7 +11,7 @@
   "address": "61 Manners Street, Te Aro, Wellington 6011",
   "lat": -41.29065,
   "lng": 174.77629,
-  "services": [
+  "orderMode": [
     "takeaway"
   ],
   "phone": null,

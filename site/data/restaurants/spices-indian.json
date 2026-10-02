@@ -10,7 +10,7 @@
   "address": "B2/69 Lakewood Avenue, Churton Park, Wellington 6037",
   "lat": -41.20273,
   "lng": 174.80847,
-  "services": [
+  "orderMode": [
     "takeaway",
     "delivery"
   ],

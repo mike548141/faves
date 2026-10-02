@@ -10,7 +10,7 @@
   "address": "1 Whitmore Street, Wellington Central, Wellington 6011",
   "lat": -41.28171,
   "lng": 174.77872,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

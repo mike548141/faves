@@ -10,7 +10,7 @@
   "address": "342 Tinakori Road, Wellington 6011",
   "lat": -41.27879,
   "lng": 174.76902,
-  "services": [
+  "orderMode": [
     "dine-in"
   ],
   "phone": "+64 4 499 1390",

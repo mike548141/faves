@@ -10,7 +10,7 @@
   "address": "18 Allen Street, Te Aro, Wellington 6011",
   "lat": -41.293,
   "lng": 174.78224,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

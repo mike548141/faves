@@ -132,7 +132,35 @@ export async function loadRestaurants() {
   // it arrived. Failure is fine and quiet — fx.js falls back to no conversion,
   // which is always a correct answer.
   const [summaries] = await Promise.all([fetchJson(SUMMARY_URL), loadFx(fetchJson)]);
-  return summaries;
+  return summaries.map(readOrderMode);
+}
+
+/**
+ * THE READ-BOTH-NAMES BRIDGE for the 2026-10-02 `services` → `orderMode`
+ * rename (roadmap 010). A summary record that still spells the field
+ * `services` gets it under the new name, so no reader below this line knows
+ * the old one existed.
+ *
+ * It is needed because a NEW shell can meet an OLD summary: a worker's
+ * install tolerates a failed data sync when a data set is already held (sw.js
+ * install), so a phone updated offline-ish or mid-deploy runs the new shell
+ * on the previous data. (The reverse skew — an OLD shell on NEW data, which
+ * the worker's install and an old worker's own background sync both cause —
+ * is covered on the other side: gen_summaries.mjs still writes `services`
+ * into summary.json.)
+ *
+ * #!# Remove this, and the `services` mirror in tools/gen_summaries.mjs,
+ * once no phone can still hold a pre-2026-10-02 shell or summary — i.e. any
+ * release after 2026-10-16 (two weeks, ample for an installed phone to have
+ * updated). Delete `readOrderMode`, its test (tests/data-loader.test.js) and
+ * the generator mirror together.
+ */
+export function readOrderMode(record) {
+  if (record?.orderMode === undefined && Array.isArray(record?.services)) {
+    const { services, ...rest } = record;
+    return { ...rest, orderMode: services };
+  }
+  return record;
 }
 
 /**

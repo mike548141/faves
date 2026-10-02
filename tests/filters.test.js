@@ -32,7 +32,7 @@ const clockAt = (now) => ({ date: new Date(0), at: () => now });
 // and what the data was migrated to in 37k — never the raw strings the corpus
 // used to hold.
 const FIXTURE = [
-  { id: "cook", kind: "recipes", area: null, cuisine: [], services: [], vibe: ["sit-down"] },
+  { id: "cook", kind: "recipes", area: null, cuisine: [], orderMode: [], vibe: ["sit-down"] },
   {
     id: "kk",
     name: "KK Malaysian",
@@ -42,7 +42,7 @@ const FIXTURE = [
     // (ADR 0117) has to be provable as a THIRD door rather than a synonym for
     // takeaway, which needs one venue carrying both and one carrying only the
     // one (`churton`, below).
-    services: ["dine-in", "takeaway", "delivery"],
+    orderMode: ["dine-in", "takeaway", "delivery"],
     vibe: ["sit-down", "byo"],
   },
   {
@@ -50,7 +50,7 @@ const FIXTURE = [
     name: "R & S",
     area: "Te Aro",
     cuisine: ["Malaysian", "Chinese"],
-    services: ["dine-in", "takeaway"],
+    orderMode: ["dine-in", "takeaway"],
     vibe: ["quick-eats", "cheap-and-cheerful"],
   },
   {
@@ -58,7 +58,7 @@ const FIXTURE = [
     name: "Khandallah Trading Co",
     area: "Khandallah",
     cuisine: ["Cafe"],
-    services: ["dine-in"],
+    orderMode: ["dine-in"],
     vibe: ["sit-down", "dog-friendly"],
   },
   {
@@ -66,7 +66,7 @@ const FIXTURE = [
     name: "Takeaway @ Churton",
     area: "Churton Park",
     cuisine: ["Fish and chips"],
-    services: ["takeaway"],
+    orderMode: ["takeaway"],
     // No `vibe` at all — the case that must not become a silent match.
   },
 ];
@@ -80,7 +80,7 @@ test("deriveFacets: sorted, de-duped, recipes excluded", () => {
 
 test("deriveFacets: the recipes collection contributes no area or cuisine", () => {
   const { areas, cuisines, styles } = deriveFacets([
-    { id: "cook", kind: "recipes", area: "Nowhere", cuisine: ["Ghost"], services: [], vibe: ["banquet"] },
+    { id: "cook", kind: "recipes", area: "Nowhere", cuisine: ["Ghost"], orderMode: [], vibe: ["banquet"] },
   ]);
   assert.deepEqual(areas, []);
   assert.deepEqual(cuisines, []);
@@ -112,9 +112,9 @@ test("deriveFacets: styles come back in VOCABULARY order, not alphabetical", () 
 
 test("deriveFacets: vocabulary order is not alphabetical order", () => {
   const { styles } = deriveFacets([
-    { id: "a", cuisine: [], services: [], vibe: ["fine-dining"] },
-    { id: "b", cuisine: [], services: [], vibe: ["quick-eats"] },
-    { id: "c", cuisine: [], services: [], vibe: ["banquet"] },
+    { id: "a", cuisine: [], orderMode: [], vibe: ["fine-dining"] },
+    { id: "b", cuisine: [], orderMode: [], vibe: ["quick-eats"] },
+    { id: "c", cuisine: [], orderMode: [], vibe: ["banquet"] },
   ]);
   // Alphabetically: banquet, fine-dining, quick-eats. By commitment: the
   // reverse-ish order below. The two disagree, which is the point.
@@ -122,7 +122,7 @@ test("deriveFacets: vocabulary order is not alphabetical order", () => {
 });
 
 test("deriveFacets: only styles the data actually carries are offered", () => {
-  const { styles } = deriveFacets([{ id: "a", cuisine: [], services: [], vibe: ["sit-down"] }]);
+  const { styles } = deriveFacets([{ id: "a", cuisine: [], orderMode: [], vibe: ["sit-down"] }]);
   assert.deepEqual(styles.map((s) => s.key), ["sit-down"]);
 });
 
@@ -131,7 +131,7 @@ test("deriveFacets: an amenity or a character tag is not a style", () => {
   // 21 of the corpus's 38 taggings, and a style vocabulary that swallowed them
   // would be lying about what it means (vibes.js).
   const { styles } = deriveFacets([
-    { id: "a", cuisine: [], services: [], vibe: ["craft-beer", "wellington-icon", "byo"] },
+    { id: "a", cuisine: [], orderMode: [], vibe: ["craft-beer", "wellington-icon", "byo"] },
   ]);
   assert.deepEqual(styles, []);
 });
@@ -141,14 +141,14 @@ test("deriveFacets: a pre-migration string contributes no style", () => {
   // somehow still holds "quick-lunch" must not create a phantom option — it is
   // not in the vocabulary, so vibesFor drops it.
   const { styles } = deriveFacets([
-    { id: "a", cuisine: [], services: [], vibe: ["quick-lunch", "craft beer"] },
+    { id: "a", cuisine: [], orderMode: [], vibe: ["quick-lunch", "craft beer"] },
   ]);
   assert.deepEqual(styles, []);
 });
 
 test("deriveFacets: tolerates vibe being absent, empty or not an array", () => {
   for (const vibe of [undefined, null, [], "sit-down", 7]) {
-    const { styles } = deriveFacets([{ id: "a", cuisine: [], services: [], vibe }]);
+    const { styles } = deriveFacets([{ id: "a", cuisine: [], orderMode: [], vibe }]);
     assert.deepEqual(styles, [], `vibe: ${JSON.stringify(vibe)}`);
   }
 });
@@ -187,7 +187,7 @@ test("applyFilters: delivery is a THIRD door, not a spelling of takeaway", () =>
 });
 
 test("applyFilters: a recipe has no doors, so delivery drops it", () => {
-  // `services: []` — the relaxation kinds.js declares. Same rule the other two
+  // `orderMode: []` — the relaxation kinds.js declares. Same rule the other two
   // modes follow, asserted here because a new mode is exactly where an
   // "empty means anything" shortcut gets written.
   const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode: "delivery" });
@@ -216,7 +216,7 @@ test("applyFilters: a venue that is genuinely two styles answers to both", () =>
   // and it does both. Matching only the first in vocabulary order left the
   // card rendering a "Banquet" chip while "Banquet" was absent from the filter,
   // measured in real Chrome 2026-08-17 — a dead end in both directions.
-  const two = [{ id: "regal", cuisine: [], services: [], vibe: ["sit-down", "banquet"] }];
+  const two = [{ id: "regal", cuisine: [], orderMode: [], vibe: ["sit-down", "banquet"] }];
   assert.deepEqual(applyFilters(two, { ...DEFAULT_FILTERS, style: "sit-down" }).map((r) => r.id), ["regal"]);
   assert.deepEqual(applyFilters(two, { ...DEFAULT_FILTERS, style: "banquet" }).map((r) => r.id), ["regal"]);
   // …and the dropdown offers both, so neither chip names an unreachable option.
@@ -271,10 +271,10 @@ const dailyHours = (o, c) =>
   Object.fromEntries(["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map((d) => [d, [[o, c]]]));
 
 const OPEN_FIXTURE = [
-  { id: "open", services: ["takeaway"], cuisine: [], hours: dailyHours("09:00", "22:00") },
-  { id: "shut", services: ["takeaway"], cuisine: [], hours: dailyHours("18:00", "22:00") },
-  { id: "nohours", services: ["takeaway"], cuisine: [], hours: null },
-  { id: "cook", kind: "recipes", services: [], cuisine: [] },
+  { id: "open", orderMode: ["takeaway"], cuisine: [], hours: dailyHours("09:00", "22:00") },
+  { id: "shut", orderMode: ["takeaway"], cuisine: [], hours: dailyHours("18:00", "22:00") },
+  { id: "nohours", orderMode: ["takeaway"], cuisine: [], hours: null },
+  { id: "cook", kind: "recipes", orderMode: [], cuisine: [] },
 ];
 const MON_NOON = { dow: 1, minutes: 12 * 60 };
 
@@ -292,7 +292,7 @@ test("openNow: a venue whose TODAY was never published drops out too", () => {
   // where its card reads "Hours not published today" rather than "Closed".
   const partial = {
     id: "partial",
-    services: ["takeaway"],
+    orderMode: ["takeaway"],
     cuisine: [],
     hours: { ...dailyHours("09:00", "22:00"), mon: null },
   };
@@ -325,7 +325,7 @@ const shutDown = (id, type) =>
   resolveRecord(
     {
       id,
-      services: ["takeaway"],
+      orderMode: ["takeaway"],
       cuisine: [],
       hours: dailyHours("09:00", "22:00"), // the posted week still says open
       lifecycle: { added: "2026-07-06", events: [{ type, date: "2026-06-01" }] },
@@ -334,7 +334,7 @@ const shutDown = (id, type) =>
   );
 
 const CLOSURE_FIXTURE = [
-  { id: "open", services: ["takeaway"], cuisine: [], hours: dailyHours("09:00", "22:00") },
+  { id: "open", orderMode: ["takeaway"], cuisine: [], hours: dailyHours("09:00", "22:00") },
   shutDown("gone", "closed-permanently"),
   shutDown("refit", "closed-temporarily"),
 ];
@@ -359,10 +359,10 @@ test("openNow off: a shut-down venue is STILL LISTED, wearing its badge", () => 
 // "Cheap eats" filter — needs priced menus (see price.isCheapEats: $ band only).
 const menuOf = (...prices) => [{ section: "All", items: prices.map((price, i) => ({ name: `d${i}`, price })) }];
 const CHEAP_FIXTURE = [
-  { id: "cheap", services: [], cuisine: [], menu: menuOf(8, 10, 12) }, // median 10 → $
-  { id: "mid", services: [], cuisine: [], menu: menuOf(18, 24, 30) }, // $$
-  { id: "thin", services: [], cuisine: [], menu: menuOf(6, 6) }, // < 3 priced → no band
-  { id: "cook", kind: "recipes", services: [], cuisine: [], menu: menuOf(5, 5, 5) },
+  { id: "cheap", orderMode: [], cuisine: [], menu: menuOf(8, 10, 12) }, // median 10 → $
+  { id: "mid", orderMode: [], cuisine: [], menu: menuOf(18, 24, 30) }, // $$
+  { id: "thin", orderMode: [], cuisine: [], menu: menuOf(6, 6) }, // < 3 priced → no band
+  { id: "cook", kind: "recipes", orderMode: [], cuisine: [], menu: menuOf(5, 5, 5) },
 ];
 
 test("cheap: keeps only $ venues; unpriced/thin/recipes drop out", () => {

@@ -16,7 +16,7 @@
   },
   "website": "https://stargroup.nz/venues/southerncross",
   "ordering": [],
-  "services": [
+  "orderMode": [
     "dine-in"
   ],
   "hours": {

@@ -198,7 +198,7 @@ export function defaultHints(t) {
     // tell a reader they can ask for a beer garden.
     t("search.hint.vibe", "Search a vibe — “dog friendly”, “quick eats”…"),
     t("search.hint.area", "Search an area or street — “Cuba St”…"),
-    t("search.hint.service", "Search “takeaway” or “dine in”…"),
+    t("search.hint.orderMode", "Search “takeaway” or “dine in”…"),
     t("search.hint.phone", "Search a phone number you half remember…"),
   ];
 }

@@ -11,7 +11,7 @@
   "address": "5 Bunny Street, Pipitea, Wellington 6011",
   "lat": -41.28025,
   "lng": 174.77993,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

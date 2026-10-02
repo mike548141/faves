@@ -10,7 +10,7 @@
   "address": "461 Adelaide Road, Berhampore, Wellington 6023",
   "lat": -41.32005,
   "lng": 174.77547,
-  "services": [
+  "orderMode": [
     "dine-in"
   ],
   "phone": "+64 4 380 0244",

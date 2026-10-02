@@ -11,7 +11,7 @@
   "address": "48 Courtenay Place, Te Aro, Wellington 6011",
   "lat": -41.29343,
   "lng": 174.78166,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

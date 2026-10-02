@@ -26,7 +26,7 @@ RESTAURANTS = DATA / "restaurants"
 # ADR 0117) — it is the same axis as the other two, not a new one, and it is
 # DECLARED here rather than derived from a dish's `prices.delivery` (ADR 0089)
 # or from an `ordering` link, both of which answer different questions.
-SERVICES = {"dine-in", "takeaway", "delivery"}
+ORDER_MODES = {"dine-in", "takeaway", "delivery"}
 STATUSES = {"stub", "menu-complete", "verified"}
 PRICE_BANDS = {"$", "$$", "$$$"}
 KINDS = {"venue", "recipes"}
@@ -180,7 +180,7 @@ WRAP_ADVISORY_MIN = 16 * 60
 VENUE_KEYS = {
     "id", "kind", "name", "cuisine", "area", "city", "address",
     "timezone", "currency", "language", "formerIds", "lat", "lng", "phone",
-    "lifecycle", "website", "ordering", "services", "hours", "locations",
+    "lifecycle", "website", "ordering", "orderMode", "hours", "locations",
     "image", "alt", "vibe", "picks", "priceBand", "pricePerPerson",
     "verified", "verifiedBy", "detailsVerified", "detailsVerifiedBy",
     "rating", "status", "addOnGroups", "priceChannels", "menu",
@@ -2167,17 +2167,19 @@ def check_restaurant(path):
     elif any(not c.strip() for c in cuisine):
         err(rid, "cuisine entries must be non-empty strings")
 
-    # services — a non-empty subset of SERVICES for venues; recipes carry
+    # orderMode — a non-empty subset of ORDER_MODES for venues; recipes carry
     # none (they're neither dine-in nor takeaway), so an empty list is fine.
-    services = data.get("services")
-    if not isinstance(services, list):
-        err(rid, "services must be a list")
-    elif not services and not is_recipes:
-        err(rid, "services must be a non-empty list")
+    # Called `services` until 2026-10-02 (roadmap 010); a venue file still
+    # spelling it that way fails here (no orderMode) and as an unknown key.
+    order_mode = data.get("orderMode")
+    if not isinstance(order_mode, list):
+        err(rid, "orderMode must be a list")
+    elif not order_mode and not is_recipes:
+        err(rid, "orderMode must be a non-empty list")
     else:
-        for s in services:
-            if s not in SERVICES:
-                err(rid, f"unknown service {s!r} (allowed: {sorted(SERVICES)})")
+        for s in order_mode:
+            if s not in ORDER_MODES:
+                err(rid, f"unknown order mode {s!r} (allowed: {sorted(ORDER_MODES)})")
 
     # phone / website: string or null
     for field in ("phone", "website"):

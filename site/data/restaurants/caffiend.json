@@ -10,7 +10,7 @@
   "address": "233-235 Jackson Street, Petone, Lower Hutt 5012",
   "lat": -41.22593,
   "lng": 174.88086,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

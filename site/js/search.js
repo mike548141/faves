@@ -124,10 +124,10 @@ function dietLabels(tags) {
 
 /**
  * One venue's PLACE search entry: { id, name, area, cuisine[], kind, address,
- * city, services[], phone, vibes[], closure, hay }.
+ * city, orderMode[], phone, vibes[], closure, hay }.
  *
  * Exported (roadmap 510/020) because it reads ONLY venue-level fields —
- * name, area, cuisine, address, city, services, phone, vibe, closure — every
+ * name, area, cuisine, address, city, orderMode, phone, vibe, closure — every
  * one of which `site/data/summary.json` already carries unchanged. That makes
  * this the SAME function whether it runs here against a full resolved record
  * or in the browser (`rebuildIndex`, below) against a summary record: no
@@ -155,7 +155,7 @@ export function placeEntry(r) {
     // land on?" (Theme 27b — matchField()/matchText() do that asking).
     address: r.address || "",
     city: r.city || "",
-    services: r.services || [],
+    orderMode: r.orderMode || [],
     phone: r.phone || "",
     vibes,
     // The venue's lifecycle state for TODAY, already folded by
@@ -166,7 +166,7 @@ export function placeEntry(r) {
     // record that was never resolved — a raw fixture, a caller of `buildIndex`
     // outside the app — which `isTrading` reads as trading, the safe default.
     closure: r.closure || null,
-    // Address, city, service, phone and vibe join name/area/cuisine: people
+    // Address, city, order mode, phone and vibe join name/area/cuisine: people
     // look for a place by the street they remember it on, by "takeaway", by
     // the number in their call history, or by what the place is like — not
     // only by its name.
@@ -177,7 +177,7 @@ export function placeEntry(r) {
         ...(r.cuisine || []),
         r.address,
         r.city,
-        ...(r.services || []),
+        ...(r.orderMode || []),
         r.phone,
         digits(r.phone),
         // Both forms of every vibe: the LABEL is what a person types ("dog
@@ -225,7 +225,7 @@ export function dishHay(item, record) {
  * Build the search index once from the loaded restaurants. Returns
  * { places, dishes }; each entry carries a lowercased `hay` (haystack) and,
  * for dishes, a ready-to-use deep-link `href`.
- *   place: { id, name, area, cuisine[], kind, address, city, services[],
+ *   place: { id, name, area, cuisine[], kind, address, city, orderMode[],
  *            phone, vibes[], closure, hay }
  *   dish:  { name, venueId, venueName, isRecipe, section, href, hay }
  * Stubs (no menu) contribute a place but no dishes — which is correct: you
@@ -390,7 +390,7 @@ function score(name, hay, q) {
 }
 
 // Theme 27b — "say which field matched". The haystack is deliberately wide
-// (name, area, cuisine, address, city, service, phone for a place; name,
+// (name, area, cuisine, address, city, order mode, phone for a place; name,
 // description, ingredients, code, diet label for a dish) because a narrow
 // one would lose real finds ("Charley Noble" is a fair answer to "Noble").
 // But a wide haystack means a result can carry a property it doesn't
@@ -422,7 +422,7 @@ function findForm(text, forms) {
 // Malaysian" sub), then vibe (which the row grows a fourth part for when, and
 // only when, that is what matched). Only those are visible in the row, so only
 // those come back with a literal `text` to highlight — a hit that
-// lands in address/city/phone/service is just as real but invisible on
+// lands in address/city/phone/order mode is just as real but invisible on
 // screen, so it comes back as a field name with no text, for a caller to
 // turn into a plain-language note instead of a highlight nothing shows.
 // The final "details" is a fallback, not a fourth real field: it exists so a
@@ -458,8 +458,8 @@ function placeMatchField(p, forms) {
   if (findForm(p.phone, forms) || findForm(digits(p.phone), forms)) {
     return { field: "phone", text: null };
   }
-  for (const s of p.services || []) {
-    if (findForm(s, forms)) return { field: "service", text: null };
+  for (const s of p.orderMode || []) {
+    if (findForm(s, forms)) return { field: "orderMode", text: null };
   }
   return { field: "details", text: null };
 }
@@ -482,7 +482,7 @@ function dishMatchField(d, forms) {
 // facet links filter the browse list by (ADR 0050), and the only two fields a
 // reader can also arrive at from a control instead of by typing. A hit on
 // either is the venue saying "I am this". A hit on name/address/city/phone/
-// service is a hit on a string that happens to contain the word.
+// order mode is a hit on a string that happens to contain the word.
 //
 // Deliberately NOT here: `vibe`. It is a closed vocabulary like the two above,
 // so the case for including it is real — but its KEYS are hyphenated compounds

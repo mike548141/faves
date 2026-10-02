@@ -8,7 +8,7 @@
   "city": "Wellington",
   "currency": "NZD",
   "address": "99 Cuba Street, Te Aro, Wellington 6011",
-  "services": [
+  "orderMode": [
     "takeaway"
   ],
   "phone": null,

@@ -883,7 +883,7 @@ function wireSearch(restaurants, compactIndex) {
   // one the row displays, the literal text to highlight (`matchText`). Here
   // that's turned into what resultRow needs: a highlight on `name` or `sub`
   // for a visible field, or a plain-text note for a field the row never
-  // shows at all (address/city/phone/service; a dish's description,
+  // shows at all (address/city/phone/order mode; a dish's description,
   // ingredients, order code or diet label) — so a hit is never left with no
   // stated reason, and never claims a property (like cuisine) it didn't
   // actually match.
@@ -891,7 +891,7 @@ function wireSearch(restaurants, compactIndex) {
     address: "Matched: address",
     city: "Matched: city",
     phone: "Matched: phone number",
-    service: "Matched: service",
+    orderMode: "Matched: dining", // the filter's visible label, owner-worded 2026-08-17
     details: "Matched: other details",
   };
   const DISH_NOTE = { details: "Matched: menu details" };

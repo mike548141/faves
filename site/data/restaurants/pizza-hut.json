@@ -64,7 +64,7 @@
       }
     }
   ],
-  "services": [
+  "orderMode": [
     "takeaway",
     "delivery"
   ],

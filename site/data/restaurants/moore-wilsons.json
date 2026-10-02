@@ -12,7 +12,7 @@
   "address": "Cnr Tory & College Streets, Te Aro, Wellington 6011",
   "lat": -41.29575,
   "lng": 174.78069,
-  "services": [
+  "orderMode": [
     "takeaway"
   ],
   "phone": null,

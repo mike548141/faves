@@ -10,7 +10,7 @@
   "address": "14 Leeds Street, Te Aro, Wellington 6011",
   "lat": -41.29278,
   "lng": 174.77707,
-  "services": [
+  "orderMode": [
     "dine-in"
   ],
   "phone": null,

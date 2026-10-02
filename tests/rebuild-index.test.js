@@ -26,7 +26,7 @@ const FIXTURE = [
     city: "Wellington",
     address: "ADDR-PLACEHOLDER",
     phone: "PHONE-PLACEHOLDER",
-    services: ["dine-in", "takeaway"],
+    orderMode: ["dine-in", "takeaway"],
     vibe: [],
     closure: { state: "trading" },
     menu: [

@@ -172,7 +172,7 @@ const WIDE = [
     cuisine: ["Cafe"],
     address: "5 Cuba Street, Tawa", // leakscan:allow:nz-address: synthetic fixture; no such venue
     phone: "04 232 1234", // leakscan:allow:nz-phone: synthetic test fixture, not a real line
-    services: ["takeaway", "dine-in"],
+    orderMode: ["takeaway", "dine-in"],
     menu: [
       {
         section: "Brunch",
@@ -380,7 +380,7 @@ test("says a place hit found by phone has no visible field to highlight", () => 
 
 test("says a place hit found by service has no visible field to highlight", () => {
   const [hitService] = hit("takeaway").places.items;
-  assert.equal(hitService.matchField, "service");
+  assert.equal(hitService.matchField, "orderMode");
   assert.equal(hitService.matchText, null);
 });
 

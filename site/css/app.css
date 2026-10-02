@@ -1263,11 +1263,6 @@ html:has(.home-tools) {
   color: var(--ink);
   margin-right: 0.15em;
 }
-.chip-service {
-  background: transparent;
-  border: 1px solid var(--line);
-  color: var(--ink-soft);
-}
 .chip-status {
   background: var(--surface);
   border: 1px dashed var(--line);
