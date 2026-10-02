@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Pizza Hut now lists 15 Wellington-region branches, up from one.** Each has
+  its own address, phone and opening hours, read from Pizza Hut's own site.
+- **BurgerFuel grew from four branches to nine** (Hataitai, Kāpiti Coast,
+  Lower Hutt, Porirua, Upper Hutt), **Gong Cha from one to three** (Lambton
+  Quay, Queensgate) and **Hell Pizza gained Masterton**, its Wairarapa store.
 - **A banner when sync is waiting for your answer.** If sync has paused to ask
   whether to keep what it has or add this device's extras, every screen now
   says so at the top, with a button that opens the question. It goes, in every
