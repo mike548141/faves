@@ -86,6 +86,65 @@
           ]
         }
       ]
+    },
+    {
+      "id": "cheese-one",
+      "name": "Choose one",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Brie de Moutere",
+          "id": "brie-de-moutere",
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Goat's Blue",
+          "id": "goat-s-blue",
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Barry's Bay Extra Mature Cheddar",
+          "id": "barry-s-bay-extra-mature-cheddar",
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cheese-two",
+      "name": "Choose two",
+      "select": "many",
+      "max": 2,
+      "price": 0,
+      "options": [
+        {
+          "name": "Brie de Moutere",
+          "id": "brie-de-moutere",
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Goat's Blue",
+          "id": "goat-s-blue",
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Barry's Bay Extra Mature Cheddar",
+          "id": "barry-s-bay-extra-mature-cheddar",
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
     }
   ],
   "menu": [
@@ -861,19 +920,25 @@
             "contains-gluten",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."}
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."},
+          "addOns": [
+            "cheese-one"
+          ]
         },
         {
           "name": "Cheese Selection (Two)",
           "dishId": "cheese-selection-two",
-          "desc": "Choose two of: Brie de Moutere, Goat's Blue, Barry's Bay Extra Mature Cheddar. Served with lavosh, toasted bread, fruit.",
+          "desc": "Served with lavosh, toasted bread, fruit.",
           "price": 24,
           "tags": [
             "contains-dairy",
             "contains-gluten",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."}
+          "tagNotes": {"contains-dairy": "The menu says “Cheese”.", "contains-gluten": "The menu says “bread”."},
+          "addOns": [
+            "cheese-two"
+          ]
         },
         {
           "name": "Cheese Selection (Three)",

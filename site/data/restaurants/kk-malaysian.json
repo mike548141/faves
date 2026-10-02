@@ -95,6 +95,29 @@
     "added": "2026-07-06"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "noodle-type",
+      "name": "Noodles",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Egg noodles",
+          "id": "egg-noodles",
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Rice noodles",
+          "id": "rice-noodles",
+          "tags": []
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Starters",
@@ -319,7 +342,10 @@
           ],
           "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-egg": "The menu says “egg”.", "contains-fish": "The menu says “fishcakes”."},
           "desc": "Noodles with prawn, fishcakes, fishballs and chicken pieces in chicken soup. Choice of egg or rice noodles.",
-          "code": "29"
+          "code": "29",
+          "addOns": [
+            "noodle-type"
+          ]
         },
         {
           "name": "Vegetarian Sin Chew Mee Hoon",

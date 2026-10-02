@@ -75,6 +75,36 @@
   "detailsVerified": "2026-08-15",
   "detailsVerifiedBy": "official-site",
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "sundae-topping",
+      "name": "Topping",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Chocolate",
+          "id": "chocolate",
+          "tags": []
+        },
+        {
+          "name": "Strawberry",
+          "id": "strawberry",
+          "tags": []
+        },
+        {
+          "name": "Caramel",
+          "id": "caramel",
+          "tags": []
+        },
+        {
+          "name": "Passionfruit",
+          "id": "passionfruit",
+          "tags": []
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Starters",
@@ -833,7 +863,7 @@
         {
           "name": "Ice Cream Sundae",
           "dishId": "ice-cream-sundae",
-          "desc": "Hokey pokey ice cream, fresh whipped cream, maraschino cherries, wafer. Choose from chocolate, strawberry, caramel or passionfruit topping. Gluten free without the wafer.",
+          "desc": "Hokey pokey ice cream, fresh whipped cream, maraschino cherries, wafer. Gluten free without the wafer.",
           "price": [
             {
               "value": 10.0,
@@ -845,7 +875,10 @@
             "gf-option",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cream”."}
+          "tagNotes": {"contains-dairy": "The menu says “Cream”."},
+          "addOns": [
+            "sundae-topping"
+          ]
         },
         {
           "name": "Double Chocolate Brownie",

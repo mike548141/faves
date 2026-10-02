@@ -386,6 +386,53 @@
           "tags": []
         }
       ]
+    },
+    {
+      "id": "schnitty-side",
+      "name": "Fries or mash",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Fries",
+          "id": "fries",
+          "tags": []
+        },
+        {
+          "name": "Mash",
+          "id": "mash",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "rosti-benedict-choice",
+      "name": "Bacon, hot-smoked salmon or spinach & kale",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Bacon",
+          "id": "bacon",
+          "tags": [
+            "has-meat",
+            "contains-pork"
+          ]
+        },
+        {
+          "name": "Hot-smoked salmon",
+          "id": "hot-smoked-salmon",
+          "tags": [
+            "has-fish",
+            "contains-fish"
+          ]
+        },
+        {
+          "name": "Spinach & kale",
+          "id": "spinach-kale",
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -533,13 +580,16 @@
         {
           "name": "Chicken Schnitty",
           "dishId": "chicken-schnitty",
-          "desc": "Crumbed chicken breast, green herb slaw, gravy. Choose fries or mash.",
+          "desc": "Crumbed chicken breast, green herb slaw, gravy.",
           "price": 32.5,
           "tags": [
             "contains-gluten",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."}
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."},
+          "addOns": [
+            "schnitty-side"
+          ]
         },
         {
           "name": "Fish & Chips",
@@ -791,7 +841,10 @@
             "contains-fish",
             "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-fish": "The menu says “salmon”.", "contains-pork": "The menu says “bacon”."}
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-fish": "The menu says “salmon”.", "contains-pork": "The menu says “bacon”."},
+          "addOns": [
+            "rosti-benedict-choice"
+          ]
         },
         {
           "name": "Eggs Your Way",
