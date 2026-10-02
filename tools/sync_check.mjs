@@ -7,8 +7,8 @@
 //     node tools/sync_check.mjs             # headless, exit 0 = pass
 //     node tools/sync_check.mjs --help
 //
-// CURRENT STATUS — the run reaches the end. 39 assertions, all passing, in a
-// real two-browser run (2026-10-02: +7 for the banner while sync waits for an
+// CURRENT STATUS — the run reaches the end. 40 assertions, all passing, in a
+// real two-browser run (2026-10-02: +8 for the banner while sync waits for an
 // answer, 510/430 — the header said 33 but the run printed 32 before it; +3 for the sync log, 510/380, and +4 for
 // the no-base question, 510/390; 26 from 2026-09-30, 22 from 2026-09-20, +4
 // with roadmap 510/050's personal recipes in buckets; 16 until then, +6 with
@@ -18,7 +18,7 @@
 // not exit 1 (see "the verdict" in tools/lib/browser.mjs), so an abort leaves
 // the assertions after it ABSENT, not failed, and the run still looks orderly.
 // Trust nothing until the run has printed its own final "OK/FAILED — N passed,
-// N failed" summary line, and check that N is 39 — a *shrunken* N is the shape
+// N failed" summary line, and check that N is 40 — a *shrunken* N is the shape
 // this file failed in for however long nobody ran it.
 //
 // HOW THIS FILE WENT DECORATIVE, because the next refactor will try it again.
@@ -1277,6 +1277,16 @@ async function run(opts) {
       "[B] answering removes the banner here and in the other tab, with no reload",
       (await B.d.evalPage(bannerExpr)) === null && (await tab2.d.evalPage(bannerExpr)) === null,
       "a banner outlived the answer"
+    );
+    // The dialog's opener was the banner's button, which the answer removed;
+    // the browser's own focus restore then lands on <body> — the top of the
+    // document for a keyboard reader. The ⋯ menu button (the way to Settings,
+    // on every page) catches it.
+    const focusAfter = await B.d.evalPage(`document.activeElement?.id || document.activeElement?.tagName`);
+    report.check(
+      "[B] closing Settings after answering puts focus on the ⋯ menu button, not <body>",
+      focusAfter === "overflow-btn",
+      `focus is on ${focusAfter}`
     );
     await tab2.close();
     await syncNowAndWait(A.d);

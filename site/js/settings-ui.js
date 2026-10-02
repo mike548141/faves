@@ -1420,7 +1420,16 @@ export function initSettingsUI() {
     if (!topic) return;
     e.preventDefault();
     sync();
-    if (!dialog.open) dialog.showModal();
+    if (!dialog.open) {
+      // The browser hands focus back on close to whatever had it on open. That
+      // would be the banner's button, which answering removes, so focus would
+      // fall to <body> — the top of the document for a keyboard reader. Open
+      // from the ⋯ menu button instead: it is on every page and is the way to
+      // Settings. (Settings' own button sits inside that menu, closed and
+      // unrendered here, so it cannot take focus.)
+      (document.getElementById("overflow-btn") ?? btn).focus();
+      dialog.showModal();
+    }
     open(topic, null);
     const q = dialog.querySelector(".sync-body .settings-sub[tabindex]");
     if (q) {
