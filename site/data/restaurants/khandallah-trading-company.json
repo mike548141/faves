@@ -85,6 +85,64 @@
           ]
         }
       ]
+    },
+    {
+      "id": "size-5-6",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 5.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 6.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-5p5-6p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 5.5,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 6.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-7-11p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "500ml",
+          "id": "500ml",
+          "dishPrice": 7.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "1L",
+          "id": "1l",
+          "dishPrice": 11.5,
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -719,73 +777,89 @@
         {
           "name": "Long Black",
           "dishId": "long-black",
-          "desc": "Large $6.0.",
           "price": 5.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-5-6"
+          ]
         },
         {
           "name": "Americano",
           "dishId": "americano",
-          "desc": "Large $6.0.",
           "price": 5.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-5-6"
+          ]
         },
         {
           "name": "Latte",
           "dishId": "latte",
-          "desc": "Large $6.5.",
           "price": 5.5,
           "tags": [
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Latte” — an espresso milk drink."}
+          "tagNotes": {"contains-dairy": "The menu says “Latte” — an espresso milk drink."},
+          "addOns": [
+            "size-5p5-6p5"
+          ]
         },
         {
           "name": "Flat White",
           "dishId": "flat-white",
-          "desc": "Large $6.5.",
           "price": 5.5,
           "tags": [
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Flat White” — an espresso milk drink."}
+          "tagNotes": {"contains-dairy": "The menu says “Flat White” — an espresso milk drink."},
+          "addOns": [
+            "size-5p5-6p5"
+          ]
         },
         {
           "name": "Cappuccino",
           "dishId": "cappuccino",
-          "desc": "Large $6.5.",
           "price": 5.5,
           "tags": [
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cappuccino” — an espresso milk drink."}
+          "tagNotes": {"contains-dairy": "The menu says “Cappuccino” — an espresso milk drink."},
+          "addOns": [
+            "size-5p5-6p5"
+          ]
         },
         {
           "name": "Mocha",
           "dishId": "mocha",
-          "desc": "Large $6.5.",
           "price": 5.5,
           "tags": [
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Mocha” — an espresso milk drink."}
+          "tagNotes": {"contains-dairy": "The menu says “Mocha” — an espresso milk drink."},
+          "addOns": [
+            "size-5p5-6p5"
+          ]
         },
         {
           "name": "Chai Latte",
           "dishId": "chai-latte",
-          "desc": "Large $6.5.",
           "price": 5.5,
           "tags": [
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Latte” — an espresso milk drink."}
+          "tagNotes": {"contains-dairy": "The menu says “Latte” — an espresso milk drink."},
+          "addOns": [
+            "size-5p5-6p5"
+          ]
         },
         {
           "name": "Hot Chocolate",
           "dishId": "hot-chocolate",
-          "desc": "Large $6.5.",
           "price": 5.5,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-5p5-6p5"
+          ]
         },
         {
           "name": "Iced (Coffee / Mocha / Chocolate)",
@@ -871,9 +945,11 @@
         {
           "name": "Voyage Water (Sparkling / Still) 500ml",
           "dishId": "voyage-water-sparkling-still-500ml",
-          "desc": "1L $11.5.",
           "price": 7.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-7-11p5"
+          ]
         },
         {
           "name": "Pink Panther (Kids)",
