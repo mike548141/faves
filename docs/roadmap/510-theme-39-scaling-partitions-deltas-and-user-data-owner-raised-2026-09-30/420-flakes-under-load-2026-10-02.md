@@ -32,3 +32,18 @@
   harness (Chrome never started), both green on re-run. If it keeps
   recurring, the boot job wants a launch retry (a harness retry, unlike an
   assertion retry, re-issues nothing the page sees).
+
+  🔎 **`device_check` flaked twice more on 2026-10-02 (`faves-77`), two
+  different ways, neither retried by design (ADR 0101):**
+  - a worker's run: `UNREACHABLE ELEMENT: #overflow-btn covered by
+    #geo-dialog`, reported failing on `main` too; not reproduced — 69/0 and
+    then 81/0 on later runs;
+  - the orchestrator's post-merge sweep of all 21 browser checks on `main`
+    (`58a73d8`): `UNSTABLE ELEMENT — #favourites-toggle has no clickable box`,
+    0×0 after 2 s and 122 frames. The very next run on the same commit, at
+    load 8–13, passed 81/0. The other 20 checks in that sweep were green.
+  The geo dialog covering ⋯ and a toggle that never gets a box both look like
+  a page state reached out of order, not slowness — the stable-click wait
+  measured frames, and the box stayed 0×0 throughout. Unexplained; the
+  harness does not record what was on screen, so the next occurrence should
+  capture a screenshot at the failure.
