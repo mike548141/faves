@@ -1,4 +1,4 @@
-- [~] 🔎 **A required choice still offers "None"** `[S][js][schema]` — found
+- [x] 🔎 **A required choice still offers "None"** `[S][js][schema]` — found
   2026-10-02 (`faves-77`) reviewing 14b batch two at 390 px.
 
   Every pick-one add-on group renders a **None** radio, checked by default
@@ -63,3 +63,10 @@
   instead); every "Add …" group (gravy, bacon, milks, naan upgrade, kids
   swirl and drink, affogato liqueur, salad protein).
   Not done: pick-many minimums (no wording asks for one).
+
+  ✅ **Closed 2026-10-03 (`faves-77`, PR #100, merged with CI 8 of 8; ADR
+  0156).** 33 groups on 19 venues are `required`; the orchestrator checked
+  the Satay Kingdom stir-fry at 390 px before and after choosing. 🎯 Four
+  groups were left optional as unsure (Berhampore wing sauce, Victoria
+  margarita flavour and grill sauces, Gong Cha's add-on "Size") — listed
+  above for the owner to overrule; none blocks anything.
