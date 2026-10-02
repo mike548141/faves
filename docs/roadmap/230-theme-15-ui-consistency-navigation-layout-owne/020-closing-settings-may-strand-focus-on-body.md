@@ -1,4 +1,4 @@
-- [~] 🔎 **Closing Settings may leave focus on `<body>`** `[S][js][a11y]` —
+- [x] 🔎 **Closing Settings may leave focus on `<body>`** `[S][js][a11y]` —
   found 2026-10-02 (`faves-77`) while reviewing `510/430`.
 
   A modal `<dialog>` hands focus back on close to whatever had it when it
@@ -43,3 +43,6 @@
   mouse x 3 closers, plus keyboard-open x Escape per page). Break-probe:
   settings-ui.js reverted to HEAD gave 69 passed, 12 failed (all twelve
   new); restored, 81 passed, 0 failed.
+
+  ✅ **Closed 2026-10-02 (`faves-77`, PR #95, merged with CI 8 of 8).**
+  It stranded on every page and every close path (18 of 18); now none do.
