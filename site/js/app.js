@@ -891,7 +891,7 @@ function wireSearch(restaurants, compactIndex) {
     address: "Matched: address",
     city: "Matched: city",
     phone: "Matched: phone number",
-    orderMode: "Matched: order mode",
+    orderMode: "Matched: dining", // the filter's visible label, owner-worded 2026-08-17
     details: "Matched: other details",
   };
   const DISH_NOTE = { details: "Matched: menu details" };

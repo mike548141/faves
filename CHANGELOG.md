@@ -166,9 +166,10 @@ content freshness separately from this file.
 - **No more "est." on a recipe's stats panel** — neither the line under it
   nor the marker beside an estimated value (ADR 0135).
 ### Changed
-- **A search hit on takeaway or dine-in now says "Matched: order mode"** (it
-  said "Matched: service"). The venue field behind it was renamed `orderMode`
-  too; phones on the old version keep their filter for one release.
+- **A search hit on takeaway or dine-in now says "Matched: dining"**, the
+  same word as the filter it belongs to (it said "Matched: service"). The
+  venue field behind it was renamed `orderMode` too; phones on the old version
+  keep their filter for one release.
 - **Cook at Home is now a place with one branch, and that branch is
   anywhere.** It matches every address and location, so it is true for
   everyone who opens it. This is the groundwork for adding your own kitchens
