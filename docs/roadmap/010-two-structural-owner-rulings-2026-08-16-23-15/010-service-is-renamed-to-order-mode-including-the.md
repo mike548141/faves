@@ -1,4 +1,4 @@
-- [~] 🛑 **`service` is renamed to `order-mode`, INCLUDING the shipped filter**
+- [x] 🛑 **`service` is renamed to `order-mode`, INCLUDING the shipped filter**
       `[M][js]` — owner-ruled 2026-08-16.
       ✅ **THE CODE RENAME IS SHIPPED 2026-08-17 (`7bc0ee6`)** — claim released.
       `filters.js`, `app.js`, `index.html`, `reo.js` and `tests/filters.test.js`
@@ -132,8 +132,10 @@ URL parameter than the description above assumed.
   (`ORDER_MODES`, `VENUE_KEYS`, messages), the `ARCHITECTURE.md` schema,
   `search.js` (`orderMode`, `matchField: "orderMode"`), `picker.js`, and
   `search.hint.orderMode`. The dead `.chip-service` rule is deleted. One
-  user-visible string moved: *"Matched: service"* is now *"Matched: order
-  mode"* (the visible filter label, "Dining", is untouched). Still open: the
+  user-visible string moved: *"Matched: service"* is now *"Matched: dining"*
+  (the orchestrator changed the worker's "order mode" at review: nothing on
+  screen uses that term, and "Dining" is the filter's own owner-worded label,
+  which is untouched). Still open: the
   te reo for the label, as ruled.
   🔎 **Skew, established from `sw.js`:** the home filter reads
   `data/summary.json` only (`loadRestaurants`); no shell reader takes
@@ -150,3 +152,9 @@ URL parameter than the description above assumed.
   Break-probe: with both halves removed, `tests/data-loader.test.js` failed
   two tests (`orderMode` undefined where `['takeaway','dine-in']` expected;
   legacy mirror undefined); restored, 22 pass.
+
+  ✅ **Closed 2026-10-02 (`faves-77`, PR #93, merged with CI 8 of 8;
+  `SHELL_VERSION` re-bumped to `.7` after rebasing past #94).** Re-verified
+  after the rebase: `validate.py`, `node --test` 1844/0, `boot_check` 38/0,
+  `device_check` 69/0. The label's te reo is `340/140`'s; the bridge's
+  removal is [`040`](040-remove-the-ordermode-bridge-after-2026-10-16.md).
