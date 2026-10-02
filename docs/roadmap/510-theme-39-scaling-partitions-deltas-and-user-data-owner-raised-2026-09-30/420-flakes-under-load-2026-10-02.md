@@ -28,7 +28,7 @@
   📌 **Claim released.**
   **Recurred 2026-10-02 (`faves-4f`), a second time:** CI's `every screen
   boots` exited 2 with "timed out waiting for Chrome's DevToolsActivePort" on
-  `3032a82` (a board-only commit). Twice in one day on the runner, both
+  `30327a8` (a board-only commit). Twice in one day on the runner, both
   harness (Chrome never started), both green on re-run. If it keeps
   recurring, the boot job wants a launch retry (a harness retry, unlike an
   assertion retry, re-issues nothing the page sees).
