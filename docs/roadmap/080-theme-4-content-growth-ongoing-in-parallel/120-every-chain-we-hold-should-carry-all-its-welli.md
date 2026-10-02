@@ -117,6 +117,10 @@
   other stores (its site publishes no per-store hours); Pizza Hut
   Wainuiomata (the listed phone has an extra digit); Gong Cha North City
   (no phone); McDonald's and Subway (`130`).
-  🔎 **Found, not fixed:** Sushi Bi's own site shows Woodward Street open
-  Saturday 10:30–5:00; we hold it closed. A one-line hours refresh, owed.
+  🔎 **Checked and left (orchestrator, same day):** the worker reported
+  Sushi Bi's site showing Woodward Street open Saturday 10:30–5:00, where we
+  hold it closed. The site says both: that store's block reads "Saturday,
+  10:30 to 5:00pm", and the page's own Opening Hours footer reads "Saturday:
+  temporally closed". With the source contradicting itself, the record stays
+  closed; an in-person look or the owner settles it.
   📌 **Claim released.**
