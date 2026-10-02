@@ -1,4 +1,4 @@
-- [~] 🚩 **Every chain we hold should carry all its Wellington-region
+- [ ] 🚩 **Every chain we hold should carry all its Wellington-region
       branches** `[L][content]` — owner-directed 2026-08-16: *"Many of the
       restaurants are chains or at least have multiple branches/locations. Where
       that is true lets ensure that we at least have all their locations in the
@@ -73,3 +73,54 @@
 
   📌 **Claimed 2026-10-02 05:15 UTC (`faves-77`): the chains already held
   (not McDonald's or Subway, which are `130`'s), worker in a worktree.**
+
+  ✅ **Sweep of the chains already held, 2026-10-02 (`faves-77` worker).**
+  Every branch added has address, OSM-geocoded pin, phone and hours from the
+  chain's own site or the API that site itself calls. Per chain, before to
+  after:
+  - Pizza Hut 1 to 15: its find-a-hut SPA calls the phdvasia API (client id
+    and headers are in the page's own network traffic); store list plus
+    carry-out opening hours, converted from UTC. Johnsonville's stored hours
+    matched the API exactly. Refused: Wainuiomata (phone "04 428 01256" has an
+    extra digit, unusable).
+  - BurgerFuel 4 to 9: own store pages (Hataitai, Kāpiti Coast, Lower Hutt,
+    Porirua, Upper Hutt). "Temporarily Closed" is the hidden Webflow tag again.
+    Hataitai and Kāpiti pins are OSM's BurgerFuel shop node, as the street
+    address alone gave only a street centroid.
+  - Gong Cha 1 to 3: own store-locator JSON (Lambton Quay, Queensgate; the
+    hours are in each store's detail panel). Queensgate pin is the mall's OSM
+    node (address is the mall's corner). Refused: North City, Porirua, which
+    lists no phone.
+  - Hell Pizza 14 to 15: own API, Masterton (Wairarapa). Wellington region
+    store list matches the 14 we held.
+  - Noodle Canteen stays 1: 8 Wellington-region stores listed on its own site,
+    but no per-store hours anywhere (only the chain-wide blurb, already shown
+    wrong for Johnsonville). Refused: Paraparaumu, Upper Hutt, Porirua,
+    Wainuiomata, Wellington City (Courtenay Place), Masterton, Lower Hutt.
+  - Unchanged, own site lists exactly what we hold: Kaffee Eis (3), Pandan
+    (2), Sushi Bi (3), TJ Katsu (7). Single-site records checked and found
+    to be independents: Babaili, Abrakebabra, Crepes A Go Go, Satay Kingdom,
+    Dragonfly, The Catch.
+  Pizza Hut Paraparaumu: OSM puts 109 Kāpiti Road about 500 m from the
+  chain's own coordinate; OSM house-level kept per the geocoding rule.
+  Pizza Hut Te Aro: the chain's own coordinate was 570 m out; OSM agreed
+  with its Courtenay Place shop node.
+
+  ✅ **Merged 2026-10-02 (`faves-77`, PR #96, CI 8 of 8;** merged with
+  `main` once, summaries regenerated, `branch_check` 147/0 on the merged
+  tree). Orchestrator re-ran `audit_coords.py` over the merged corpus: every
+  added branch that geocodes reads `fine` at house level; five added pins
+  (BurgerFuel Hataitai, Kāpiti Coast and Upper Hutt, Gong Cha Queensgate,
+  Pizza Hut Karori) are `no-geocode`. Their addresses do not geocode, so
+  they rest on OSM's own shop or mall node, not on the address.
+  **Still open, so the bracket goes back to `[ ]`:** Noodle Canteen's seven
+  other stores (its site publishes no per-store hours); Pizza Hut
+  Wainuiomata (the listed phone has an extra digit); Gong Cha North City
+  (no phone); McDonald's and Subway (`130`).
+  🔎 **Checked and left (orchestrator, same day):** the worker reported
+  Sushi Bi's site showing Woodward Street open Saturday 10:30–5:00, where we
+  hold it closed. The site says both: that store's block reads "Saturday,
+  10:30 to 5:00pm", and the page's own Opening Hours footer reads "Saturday:
+  temporally closed". With the source contradicting itself, the record stays
+  closed; an in-person look or the owner settles it.
+  📌 **Claim released.**

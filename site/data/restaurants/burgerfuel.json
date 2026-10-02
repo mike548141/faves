@@ -216,6 +216,276 @@
           ]
         ]
       }
+    },
+    {
+      "label": "Hataitai",
+      "id": "hataitai",
+      "address": "Corner Moxham Avenue and Taurima Street, Hataitai, Wellington",
+      "lat": -41.30475,
+      "lng": 174.7936,
+      "phone": "+64 4 386 1118",
+      "hours": {
+        "mon": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "tue": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "wed": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "thu": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "fri": [
+          [
+            "10:00",
+            "23:00"
+          ]
+        ],
+        "sat": [
+          [
+            "10:00",
+            "23:00"
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-02",
+      "detailsVerifiedBy": "official-site"
+    },
+    {
+      "label": "Kāpiti Coast",
+      "id": "kapiti-coast",
+      "address": "Kāpiti Coast Shopping Centre, 159 Kāpiti Road, Paraparaumu",
+      "lat": -40.90499,
+      "lng": 174.99583,
+      "phone": "+64 4 212 7417",
+      "hours": {
+        "mon": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "tue": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "wed": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "thu": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "fri": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "sat": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-02",
+      "detailsVerifiedBy": "official-site"
+    },
+    {
+      "label": "Lower Hutt",
+      "id": "lower-hutt",
+      "address": "529 High Street, Lower Hutt",
+      "lat": -41.20475,
+      "lng": 174.91233,
+      "phone": "+64 4 586 1243",
+      "hours": {
+        "mon": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "tue": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "wed": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "thu": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "fri": [
+          [
+            "10:00",
+            "23:00"
+          ]
+        ],
+        "sat": [
+          [
+            "10:00",
+            "23:00"
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-02",
+      "detailsVerifiedBy": "official-site"
+    },
+    {
+      "label": "Porirua",
+      "id": "porirua",
+      "address": "3D Kilkerran Place, Porirua City Centre, Porirua",
+      "lat": -41.13408,
+      "lng": 174.83976,
+      "phone": "+64 4 237 4444",
+      "hours": {
+        "mon": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "tue": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "wed": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "thu": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "fri": [
+          [
+            "10:00",
+            "23:00"
+          ]
+        ],
+        "sat": [
+          [
+            "10:00",
+            "23:00"
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-02",
+      "detailsVerifiedBy": "official-site"
+    },
+    {
+      "label": "Upper Hutt",
+      "id": "upper-hutt",
+      "address": "Shop 201, Unit 12, 181 Main Street, The Mall, Upper Hutt",
+      "lat": -41.12405,
+      "lng": 175.07294,
+      "phone": "+64 4 528 6888",
+      "hours": {
+        "mon": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "tue": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "wed": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "thu": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "fri": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "sat": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            "22:00"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-02",
+      "detailsVerifiedBy": "official-site"
     }
   ],
   "orderMode": [
