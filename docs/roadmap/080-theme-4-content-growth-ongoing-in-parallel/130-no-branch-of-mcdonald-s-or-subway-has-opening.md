@@ -81,3 +81,14 @@
   the sites refuse an automated browser, the session reports that and
   stops; options (a) and (c) were not chosen. Ready to take, in a session
   that has an interactive-browser tool.
+
+  🔁 **Superseded the same day: the owner asked for the question again and
+  ruled option (c)** (2026-10-03, `faves-77`, via AskUserQuestion), then
+  named the source in a follow-up: **Google Maps listings** (each store's
+  Google Business Profile hours). This changes the standing first-party
+  rule for opening hours on these two chains, so it needs: its own
+  provenance value (e.g. `google-maps`) accepted by `validate.py` and
+  visible on the record, never laundered into first-party; an ADR recording
+  the exception and its bounds (hours only, these chains, Google Maps only);
+  and the date read. The ruling above for option (b) no longer stands.
+  Ready to take.
