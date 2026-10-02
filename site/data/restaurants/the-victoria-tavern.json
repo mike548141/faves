@@ -110,6 +110,383 @@
           "tags": []
         }
       ]
+    },
+    {
+      "id": "size-7p5-12-14",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 7.5,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "425ml",
+          "id": "425ml",
+          "dishPrice": 12.0,
+          "tags": []
+        },
+        {
+          "name": "570ml",
+          "id": "570ml",
+          "dishPrice": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-8-13-15",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 8.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "425ml",
+          "id": "425ml",
+          "dishPrice": 13.0,
+          "tags": []
+        },
+        {
+          "name": "570ml",
+          "id": "570ml",
+          "dishPrice": 15.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-7p5-14",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 7.5,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "560ml",
+          "id": "560ml",
+          "dishPrice": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-7p5-13p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 7.5,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "500ml",
+          "id": "500ml",
+          "dishPrice": 13.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-13-45",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 13.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 45.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-12-45",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 12.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 45.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-13-65",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 13.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 65.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-18-100",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 18.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 100.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-11-19-50",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 11.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 19.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 50.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-13-21-60",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 13.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 21.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 60.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-15-23-70",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 15.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 23.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 70.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-13-21-65",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 13.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 21.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 65.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-14-22-65",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 14.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 22.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 65.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-12-20-55",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 12.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 20.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 55.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-18-26-75",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 18.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 26.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 75.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-4p5-6p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 4.5,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 6.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-4-5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 4.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 5.0,
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -786,108 +1163,132 @@
         {
           "name": "Steinlager Super Cold",
           "dishId": "steinlager-super-cold",
-          "desc": "425ml $12.00; 570ml $14.00.",
           "price": 7.5,
           "tags": [
             "contains-gluten"
+          ],
+          "addOns": [
+            "size-7p5-12-14"
           ]
         },
         {
           "name": "Speight's Gold Medal Ale",
           "dishId": "speight-s-gold-medal-ale",
-          "desc": "425ml $12.00; 570ml $14.00.",
           "price": 7.5,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."},
+          "addOns": [
+            "size-7p5-12-14"
+          ]
         },
         {
           "name": "Steinlager Ultra Low Carb",
           "dishId": "steinlager-ultra-low-carb",
-          "desc": "425ml $12.00; 570ml $14.00.",
           "price": 7.5,
           "tags": [
             "contains-gluten"
+          ],
+          "addOns": [
+            "size-7p5-12-14"
           ]
         },
         {
           "name": "Emerson's Pilsner",
           "dishId": "emerson-s-pilsner",
-          "desc": "425ml $13.00; 570ml $15.00.",
           "price": 8.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."},
+          "addOns": [
+            "size-8-13-15"
+          ]
         },
         {
           "name": "Panhead Supercharger APA",
           "dishId": "panhead-supercharger-apa",
-          "desc": "425ml $13.00; 570ml $15.00.",
           "price": 8.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."},
+          "addOns": [
+            "size-8-13-15"
+          ]
         },
         {
           "name": "Panhead Sandman Hazy Pale Ale",
           "dishId": "panhead-sandman-hazy-pale-ale",
-          "desc": "425ml $13.00; 570ml $15.00.",
           "price": 8.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."},
+          "addOns": [
+            "size-8-13-15"
+          ]
         },
         {
           "name": "Panhead Pickup Hazy IPA",
           "dishId": "panhead-pickup-hazy-ipa",
-          "desc": "425ml $13.00; 570ml $15.00.",
           "price": 8.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."},
+          "addOns": [
+            "size-8-13-15"
+          ]
         },
         {
           "name": "Mac's Cloudy Apple Cider",
           "dishId": "mac-s-cloudy-apple-cider",
-          "desc": "425ml $12.00; 570ml $14.00.",
           "price": 7.5,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-7p5-12-14"
+          ]
         },
         {
           "name": "Kirin Hyoketsu",
           "dishId": "kirin-hyoketsu",
-          "desc": "425ml $13.00; 570ml $15.00.",
           "price": 8.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-8-13-15"
+          ]
         },
         {
           "name": "Mac's Ginger Giant Alcoholic Ginger Beer",
           "dishId": "mac-s-ginger-giant-alcoholic-ginger-beer",
-          "desc": "425ml $12.00; 570ml $14.00.",
           "price": 7.5,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-7p5-12-14"
+          ]
         },
         {
           "name": "Guinness",
           "dishId": "guinness",
-          "desc": "560ml $14.00.",
           "price": 7.5,
           "tags": [
             "contains-gluten"
+          ],
+          "addOns": [
+            "size-7p5-14"
           ]
         },
         {
           "name": "Stella Artois",
           "dishId": "stella-artois",
-          "desc": "500ml $13.50.",
           "price": 7.5,
           "tags": [
             "contains-gluten"
+          ],
+          "addOns": [
+            "size-7p5-13p5"
           ]
         }
       ]
@@ -981,30 +1382,42 @@
         {
           "name": "Lindauer Prosecco",
           "dishId": "lindauer-prosecco",
-          "desc": "Italy. Bottle $45.00.",
+          "desc": "Italy.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-45"
+          ]
         },
         {
           "name": "Lindauer Prosecco Rosé",
           "dishId": "lindauer-prosecco-ros",
-          "desc": "Italy. Bottle $45.00.",
+          "desc": "Italy.",
           "price": 12.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-12-45"
+          ]
         },
         {
           "name": "Daniel Le Brun NV Brut",
           "dishId": "daniel-le-brun-nv-brut",
-          "desc": "Marlborough. Bottle $65.00.",
+          "desc": "Marlborough.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-65"
+          ]
         },
         {
           "name": "Collet Art Deco NV Brut",
           "dishId": "collet-art-deco-nv-brut",
-          "desc": "AY Champagne, France. Bottle $100.00.",
+          "desc": "AY Champagne, France.",
           "price": 18.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-18-100"
+          ]
         },
         {
           "name": "Taittinger NV",
@@ -1022,30 +1435,42 @@
         {
           "name": "Vavasour Pinot Gris",
           "dishId": "vavasour-pinot-gris",
-          "desc": "Marlborough. Large glass $19.00; bottle $50.00.",
+          "desc": "Marlborough.",
           "price": 11.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-11-19-50"
+          ]
         },
         {
           "name": "Mt Difficulty Pinot Gris",
           "dishId": "mt-difficulty-pinot-gris",
-          "desc": "Central Otago. Large glass $21.00; bottle $60.00.",
+          "desc": "Central Otago.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-60"
+          ]
         },
         {
           "name": "Heaphy Chardonnay",
           "dishId": "heaphy-chardonnay",
-          "desc": "Moutere. Large glass $21.00; bottle $60.00.",
+          "desc": "Moutere.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-60"
+          ]
         },
         {
           "name": "Bogle Chardonnay",
           "dishId": "bogle-chardonnay",
-          "desc": "California. Large glass $23.00; bottle $70.00.",
+          "desc": "California.",
           "price": 15.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-15-23-70"
+          ]
         },
         {
           "name": "Palliser Estate Chardonnay",
@@ -1057,16 +1482,22 @@
         {
           "name": "Mt Difficulty 'Target Gully' Riesling",
           "dishId": "mt-difficulty-target-gully-riesling",
-          "desc": "Central Otago. Large glass $21.00; bottle $60.00.",
+          "desc": "Central Otago.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-60"
+          ]
         },
         {
           "name": "Martinborough Vineyard 'Te Tera' Sauvignon Blanc",
           "dishId": "martinborough-vineyard-te-tera-sauvignon-blanc",
-          "desc": "Martinborough. Large glass $19.00; bottle $50.00.",
+          "desc": "Martinborough.",
           "price": 11.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-11-19-50"
+          ]
         },
         {
           "name": "Mt Difficulty Sauvignon Blanc",
@@ -1078,9 +1509,12 @@
         {
           "name": "Nautilus Estate Sauvignon Blanc",
           "dishId": "nautilus-estate-sauvignon-blanc",
-          "desc": "Marlborough. Large glass $21.00; bottle $65.00.",
+          "desc": "Marlborough.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-65"
+          ]
         }
       ]
     },
@@ -1105,9 +1539,12 @@
         {
           "name": "Mt Difficulty Pinot Noir",
           "dishId": "mt-difficulty-pinot-noir",
-          "desc": "Central Otago, rosé style. Large glass $22.00; bottle $65.00.",
+          "desc": "Central Otago, rosé style.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14-22-65"
+          ]
         }
       ]
     },
@@ -1125,9 +1562,12 @@
         {
           "name": "Frankland Estate 'Rocky Gully' Cabernets",
           "dishId": "frankland-estate-rocky-gully-cabernets",
-          "desc": "Western Australia. Large glass $20.00; bottle $55.00.",
+          "desc": "Western Australia.",
           "price": 12.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-12-20-55"
+          ]
         },
         {
           "name": "Yalumba 'The Cigar' Cabernet Sauvignon",
@@ -1146,9 +1586,12 @@
         {
           "name": "The Nessus Shiraz",
           "dishId": "the-nessus-shiraz",
-          "desc": "McLaren Vale. Large glass $20.00; bottle $55.00.",
+          "desc": "McLaren Vale.",
           "price": 12.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-12-20-55"
+          ]
         },
         {
           "name": "Kalleske 'Moppa' Shiraz",
@@ -1167,23 +1610,32 @@
         {
           "name": "Bodega Catena Zapata Malbec",
           "dishId": "bodega-catena-zapata-malbec",
-          "desc": "Argentina. Large glass $21.00; bottle $60.00.",
+          "desc": "Argentina.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-60"
+          ]
         },
         {
           "name": "Stoneweaver Pinot Noir",
           "dishId": "stoneweaver-pinot-noir",
-          "desc": "Marlborough. Large glass $21.00; bottle $60.00.",
+          "desc": "Marlborough.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-60"
+          ]
         },
         {
           "name": "Mt Difficulty Pinot Noir",
           "dishId": "mt-difficulty-pinot-noir-red",
-          "desc": "Central Otago, red style. Large glass $26.00; bottle $75.00.",
+          "desc": "Central Otago, red style.",
           "price": 18.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-18-26-75"
+          ]
         },
         {
           "name": "Mt Edward Pinot Noir",
@@ -2169,9 +2621,12 @@
         {
           "name": "Juice",
           "dishId": "juice",
-          "desc": "Orange, pineapple, apple, cranberry, tomato or grapefruit. Large $6.50.",
+          "desc": "Orange, pineapple, apple, cranberry, tomato or grapefruit.",
           "price": 4.5,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-4p5-6p5"
+          ]
         },
         {
           "name": "Six Barrel Soda Co.",
@@ -2225,9 +2680,11 @@
         {
           "name": "Soft drinks",
           "dishId": "soft-drinks",
-          "desc": "Large $5.00.",
           "price": 4.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-4-5"
+          ]
         }
       ]
     },

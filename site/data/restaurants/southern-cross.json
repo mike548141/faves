@@ -340,6 +340,52 @@
           ]
         }
       ]
+    },
+    {
+      "id": "size-14-28-56",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 14.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "id": "size-2",
+          "dishPrice": 28.0,
+          "tags": []
+        },
+        {
+          "id": "size-3",
+          "dishPrice": 56.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-10-20-40",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 10.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "id": "size-2",
+          "dishPrice": 20.0,
+          "tags": []
+        },
+        {
+          "id": "size-3",
+          "dishPrice": 40.0,
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -1103,28 +1149,34 @@
         {
           "name": "Tiger Crystal Ultra Low Carb",
           "dishId": "tiger-crystal-ultra-low-carb",
-          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
           "price": 14.0,
           "tags": [
             "contains-gluten"
+          ],
+          "addOns": [
+            "size-14-28-56"
           ]
         },
         {
           "name": "Export 33",
           "dishId": "export-33",
-          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
           "price": 10.0,
           "tags": [
             "contains-gluten"
+          ],
+          "addOns": [
+            "size-10-20-40"
           ]
         },
         {
           "name": "Tui",
           "dishId": "tui",
-          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
           "price": 10.0,
           "tags": [
             "contains-gluten"
+          ],
+          "addOns": [
+            "size-10-20-40"
           ]
         },
         {
@@ -1140,113 +1192,137 @@
         {
           "name": "Tuatara Regenerate Pilsner",
           "dishId": "tuatara-regenerate-pilsner",
-          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
           "price": 14.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."},
+          "addOns": [
+            "size-14-28-56"
+          ]
         },
         {
           "name": "Tuatara Hazy Pale Ale",
           "dishId": "tuatara-hazy-pale-ale",
-          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
           "price": 14.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."},
+          "addOns": [
+            "size-14-28-56"
+          ]
         },
         {
           "name": "Tuatara Adapt APA",
           "dishId": "tuatara-adapt-apa",
-          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
           "price": 14.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."},
+          "addOns": [
+            "size-14-28-56"
+          ]
         },
         {
           "name": "Tuatara Interstellar IPA",
           "dishId": "tuatara-interstellar-ipa",
-          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
           "price": 14.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."},
+          "addOns": [
+            "size-14-28-56"
+          ]
         },
         {
           "name": "Tuatara Hazy IPA",
           "dishId": "tuatara-hazy-ipa",
-          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
           "price": 14.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."},
+          "addOns": [
+            "size-14-28-56"
+          ]
         },
         {
           "name": "Monteith's Golden Light Lager",
           "dishId": "monteith-s-golden-light-lager",
-          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
           "price": 10.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."},
+          "addOns": [
+            "size-10-20-40"
+          ]
         },
         {
           "name": "Monteith's Golden Light Lager 2.5%",
           "dishId": "monteith-s-golden-light-lager-2-5",
-          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
           "price": 10.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."},
+          "addOns": [
+            "size-10-20-40"
+          ]
         },
         {
           "name": "Monteith's West Coastin' Hazy IPA",
           "dishId": "monteith-s-west-coastin-hazy-ipa",
-          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
           "price": 10.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."},
+          "addOns": [
+            "size-10-20-40"
+          ]
         },
         {
           "name": "Monteith's Pilsner",
           "dishId": "monteith-s-pilsner",
-          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
           "price": 10.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."},
+          "addOns": [
+            "size-10-20-40"
+          ]
         },
         {
           "name": "Monteith's Crushed Apple Cider",
           "dishId": "monteith-s-crushed-apple-cider",
-          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-20-40"
+          ]
         },
         {
           "name": "Monteith's Hazy Lemonade",
           "dishId": "monteith-s-hazy-lemonade",
-          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-20-40"
+          ]
         },
         {
           "name": "Monteith's Alcoholic Ginger Beer",
           "dishId": "monteith-s-alcoholic-ginger-beer",
-          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
           "price": 10.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-10-20-40"
+          ]
         }
       ]
     },
