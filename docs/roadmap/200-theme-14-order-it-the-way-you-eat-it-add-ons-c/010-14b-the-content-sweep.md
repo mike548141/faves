@@ -1,4 +1,4 @@
-- [ ] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
+- [~] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
   2026-08-16** (wt: faves-schema30): `tools/find_addons.py` + 44 test cases +
   17 breakers, and a `validate.py` **warning** on the 15 high-confidence
   convertible rows. **The conversion half stays open and is the bulk of it** —
@@ -53,3 +53,7 @@
   own groups; the classifier cases restore the rows' original wording in
   their throwaway copy).
   📌 **Claim released.** The 136-row 14b class beyond these is judgement work.
+
+  📌 **Claimed 2026-10-02 06:20 UTC (`faves-77`): batch two, the
+  `addon-unpriced-choice` (44) and `addon-priced` (2) rows only, Abrakebabra
+  excluded (worker in a worktree).**
