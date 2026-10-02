@@ -102,8 +102,12 @@
   text-leaning test files re-run green on the merged tree). Orchestrator's
   review at 390 px found the picker offers **None** on every pick-one group,
   including a menu's mandatory "choice of" sauce — filed as
-  [`090`](090-a-required-choice-still-offers-none.md). 🎯 The Ebi question
-  above is put to the owner at the session close.
+  [`090`](090-a-required-choice-still-offers-none.md). The Ebi question
+  above is settled from the venue's own menu, not asked: the same menu calls
+  its "Ebi katsu" a "Deep fried prawn katsu", and its "Spicy ebi ramen"
+  already carries `contains-shellfish`. So the curry rice bowl's "Ebi"
+  option now carries it too (`main`, same day). Before #98 the bowl, which
+  offered ebi in prose, carried no shellfish tag at all.
   📌 **Claim released.** Left in 14b: `section-is-a-group` (14),
   `dish-is-an-addon` (30), `addon-options-not-listed` (37),
   `diet-substitution-price` (15); each needs a call on which dishes an

@@ -113,7 +113,9 @@
         {
           "name": "Ebi",
           "id": "ebi",
-          "tags": []
+          "tags": [
+            "contains-shellfish"
+          ]
         }
       ]
     },
