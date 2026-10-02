@@ -29,3 +29,37 @@
 
   📌 **Claimed 2026-10-03 (`faves-77`): the required flag, ADR 0156 reserved;
   worker in a worktree.**
+
+  📌 **Built 2026-10-03 (worker for `faves-77`), PR open, not merged.**
+  ADR 0156. `required: true` on a pick-one `adds` group; `validate.py`
+  refuses it on `selects` and pick-many groups and refuses `false`. The
+  picker drops None and pre-selects nothing; both Adds (picker and row)
+  are `aria-disabled` with the reason in words until answered, and a tap
+  opens the picker and focuses the first unanswered radio. `addon_check`
+  block (z) asserts both shapes on real records; break-probed.
+  **Flagged required (33 groups, 19 venues), each from the dish's own
+  words ("choice of", "choose", "your choice"), read from the description
+  or from the pre-conversion text in git history:** 1841 sundae-topping;
+  burgerfuel choppers-sauce; charley-noble cheese-one; gold-lining
+  benedict-choice, bowl-choice; hell-pizza rib-sauce, donut-chocolate;
+  hotel-bristol, khandallah, southern-cross, the-borough-tawa
+  schnitty-side; khandallah and the-borough-tawa burger-side;
+  khandallah, southern-cross, the-borough-tawa rosti-benedict-choice;
+  kk-malaysian noodle-type; noodle-canteen heat; rock-yard baguette-
+  filling, salad-protein, rice-paper-filling, spring-roll-filling,
+  vermicelli-protein; satay-kingdom stir-fry-sauce; sprig-and-fern-petone
+  croquette-filling; sprig-and-fern-tawa steak-sauce, sundae-sauce;
+  takeaway-at-churton combination-seafood-base; the-ramen-shop
+  curry-rice-protein, kids-ramen-protein, yakisoba-protein;
+  the-victoria-tavern spritz-aperitif; wellington-kebab-grill
+  kebab-style (the group's name is the menu's "Choose your kebab toasted
+  or fresh").
+  **Left optional, for the owner to overrule:** sprig-and-fern-berhampore
+  wing-sauce (name says "Your way", original wording not in git, dish is
+  "Buffalo" wings); the-victoria-tavern margarita-flavour (source said
+  "Flavour options", a margarita has a default) and grill-sauces (only some
+  grill dishes say "topping of your choice"); gong-cha size (an `adds`
+  group named Size, no compulsory wording; arguably a `selects` group
+  instead); every "Add …" group (gravy, bacon, milks, naan upgrade, kids
+  swirl and drink, affogato liqueur, salad protein).
+  Not done: pick-many minimums (no wording asks for one).
