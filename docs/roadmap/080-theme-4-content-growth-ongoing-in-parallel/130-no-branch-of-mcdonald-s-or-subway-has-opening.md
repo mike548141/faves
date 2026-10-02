@@ -1,4 +1,4 @@
-- [~] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
+- [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
       — ~~**10 of the corpus's 22 branches**, measured 2026-08-16~~ →
       **10 of the corpus's 47 branches**, re-measured 2026-09-09. This is now
       load-bearing rather than cosmetic: [ADR 0054](../../decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
@@ -120,3 +120,15 @@
   told from a 24/7 week. Two address mismatches and two closure flags also
   need a human look. Next attempt needs a browser that gets Maps' full view
   (signed in, or one that can click "See more hours"). Claim stays `[~]`.
+
+  📌 **Claim released 2026-10-03 (`faves-77`, PR #99 merged).** Nothing was
+  written: an unauthenticated browser gets Maps' "limited view" (today's
+  line only, no weekly table) for all ten branches, and Google Search
+  refused automated traffic. The ruling (Google Maps, hours only, these two
+  chains) stands; what is missing is a browser Maps will show the full
+  week to — signed in, or one that can click "See more hours".
+  🚩 **Seen on the listings, not acted on** (Maps is ruled a source for
+  hours only, not for whether a store trades): McDonald's Courtenay Place
+  reads *permanently closed* and Lambton Quay *temporarily closed*; we show
+  both as trading. Two Subway listings carry a different street number from
+  ours. 🎯 Put to the owner at the close.
