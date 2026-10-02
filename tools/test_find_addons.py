@@ -390,15 +390,49 @@ UNCONVERTED = {
     ),
 }
 
+# 28n's second batch converted Victoria's wine and beer ladders and Borough's
+# beer pours (unlabelled rungs), so the live corpus no longer carries the prose
+# two cases classify. `as_prose` turns the throwaway copy's `selects` groups
+# back into the sentences the menu printed, row by row, so the classifier is
+# still tested on that wording; the live data stays converted and `run_case`
+# restores it afterwards. A callable takes the file's text and returns the
+# mutated text (None if it found nothing to change).
+def as_prose(raw):
+    doc = json.loads(raw)
+    groups = {g["id"]: g for g in doc.get("addOnGroups", []) if g.get("kind") == "selects"}
+    changed = 0
+    for section in doc["menu"]:
+        for item in section["items"]:
+            gid = next((a for a in item.get("addOns", []) if a in groups), None)
+            if gid is None:
+                continue
+            rungs = groups[gid]["options"][1:]
+            if all("name" not in r for r in rungs):
+                sentence = f"Larger pour ${rungs[0]['dishPrice']:.2f}; the menu doesn't label the size."
+            else:
+                parts = [f"{r['name']} ${r['dishPrice']:.2f}" for r in rungs]
+                parts = [parts[0]] + [q[0].lower() + q[1:] if not q[0].isdigit() else q for q in parts[1:]]
+                sentence = "; ".join(parts) + "."
+            item["desc"] = f"{item['desc']} {sentence}" if item.get("desc") else sentence
+            item["addOns"] = [a for a in item["addOns"] if a != gid]
+            if not item["addOns"]:
+                del item["addOns"]
+            changed += 1
+    return json.dumps(doc, indent=2, ensure_ascii=False) + "\n" if changed else None
+
+
+VICTORIA = "site/data/restaurants/the-victoria-tavern.json"
+BOROUGH = "site/data/restaurants/the-borough-tawa.json"
+
 CASES = {
     "a +$N inside the pub group's stock idiom is found": (
         ["--only", "southern-cross"], [], 0, check_the_killer),
     "the same idiom with no price is 14c, not 14b": (
         ["--only", "southern-cross"], [], 0, check_idiom_alone_is_not_an_addon),
     "a wine list is 28b, every row of it": (
-        ["--only", "the-victoria-tavern"], [], 0, check_wine_list_is_28b),
+        ["--only", "the-victoria-tavern"], [(VICTORIA, None, as_prose)], 0, check_wine_list_is_28b),
     "a beer pour ladder is 28b": (
-        ["--only", "the-borough-tawa"], [], 0, check_beer_pours_are_28b),
+        ["--only", "the-borough-tawa"], [(BOROUGH, None, as_prose)], 0, check_beer_pours_are_28b),
     "a priced pairing is vetoed, visibly": (
         ["--only", "baylands-brewery"], [], 0, check_priced_pairing_is_thrown_away),
     "a whole-dish alternate price is not a surcharge": (
@@ -597,6 +631,12 @@ def run_case(work, name, verbose=False):
         for subject_rel, old, new in edits:
             subject = work / subject_rel
             raw = subject.read_text(encoding="utf-8")
+            if old is None:  # `new` is a function of the whole file
+                mutated = new(raw)
+                if mutated is None:
+                    return f"MUTATION MATCHED NOTHING in {subject_rel}"
+                subject.write_text(mutated, encoding="utf-8")
+                continue
             if old not in raw:
                 return f"MUTATION MATCHED NOTHING in {subject_rel}"
             subject.write_text(raw.replace(old, new, 1), encoding="utf-8")
