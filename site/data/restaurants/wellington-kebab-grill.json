@@ -94,6 +94,7 @@
       "id": "kebab-style",
       "name": "Choose your kebab toasted or fresh",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

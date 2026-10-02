@@ -307,6 +307,7 @@
       "id": "schnitty-side",
       "name": "Fries or mash",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

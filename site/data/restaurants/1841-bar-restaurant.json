@@ -80,6 +80,7 @@
       "id": "sundae-topping",
       "name": "Topping",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

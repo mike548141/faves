@@ -391,6 +391,7 @@
       "id": "schnitty-side",
       "name": "Fries or mash",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
@@ -409,6 +410,7 @@
       "id": "rosti-benedict-choice",
       "name": "Bacon, hot-smoked salmon or spinach & kale",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

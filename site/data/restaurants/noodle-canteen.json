@@ -112,6 +112,7 @@
       "id": "heat",
       "name": "Heat",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
