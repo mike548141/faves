@@ -9,6 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A banner when sync is waiting for your answer.** If sync has paused to ask
+  whether to keep what it has or add this device's extras, every screen now
+  says so at the top, with a button that opens the question. It goes, in every
+  open tab, as soon as you answer.
 - **The Victoria Tavern lists its spirits again.** 51 unpriced lines from the
   venue's own drinks list (gin, vodka, tequila and mezcal, rum, bourbon,
   whisky, plus aperitifs and digestifs) are back, each showing `?` for the

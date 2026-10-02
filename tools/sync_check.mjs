@@ -7,8 +7,9 @@
 //     node tools/sync_check.mjs             # headless, exit 0 = pass
 //     node tools/sync_check.mjs --help
 //
-// CURRENT STATUS — the run reaches the end. 33 assertions, all passing, in a
-// real two-browser run (2026-10-02: +3 for the sync log, 510/380, and +4 for
+// CURRENT STATUS — the run reaches the end. 40 assertions, all passing, in a
+// real two-browser run (2026-10-02: +8 for the banner while sync waits for an
+// answer, 510/430 — the header said 33 but the run printed 32 before it; +3 for the sync log, 510/380, and +4 for
 // the no-base question, 510/390; 26 from 2026-09-30, 22 from 2026-09-20, +4
 // with roadmap 510/050's personal recipes in buckets; 16 until then, +6 with
 // ADR 0118 —
@@ -17,7 +18,7 @@
 // not exit 1 (see "the verdict" in tools/lib/browser.mjs), so an abort leaves
 // the assertions after it ABSENT, not failed, and the run still looks orderly.
 // Trust nothing until the run has printed its own final "OK/FAILED — N passed,
-// N failed" summary line, and check that N is 33 — a *shrunken* N is the shape
+// N failed" summary line, and check that N is 40 — a *shrunken* N is the shape
 // this file failed in for however long nobody ran it.
 //
 // HOW THIS FILE WENT DECORATIVE, because the next refactor will try it again.
@@ -628,6 +629,49 @@ async function closeSettings(d) {
   });
 }
 
+/** A second tab on the same Chrome profile (the banner's "disappears in every
+ *  tab" claim needs one). Gets the same fake-server shim as the first, or its
+ *  sync would reach the real endpoint. Returns a driver and a close(). */
+async function openExtraTab({ cdp, url, fakeBlobPort, report, label }) {
+  const { targetId } = await cdp.send("Target.createTarget", { url: "about:blank" });
+  const { sessionId } = await cdp.send("Target.attachToTarget", { targetId, flatten: true });
+  await cdp.send("Page.enable", {}, sessionId);
+  await cdp.send("Runtime.enable", {}, sessionId);
+  await cdp.send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: false }, sessionId);
+  await cdp.send("Page.addScriptToEvaluateOnNewDocument", { source: fetchShimSource(fakeBlobPort) }, sessionId);
+  const d = createDriver(cdp, sessionId, (m) => report.step(`[${label}] ${m}`));
+  await cdp.send("Page.navigate", { url }, sessionId);
+  await untilPresent(async () => d.evalPage(`document.readyState === "complete" && !!document.querySelector("main")`), {
+    label: `[${label}] ${url} to render`,
+  });
+  return { d, targetId, close: () => cdp.send("Target.closeTarget", { targetId }) };
+}
+
+/** What the sync banner looks like on a page right now (510/430). */
+const bannerExpr = `(() => {
+  const b = document.querySelector(".sync-banner");
+  if (!b) return null;
+  const btn = b.querySelector("button");
+  const cs = getComputedStyle(b);
+  const r = b.getBoundingClientRect();
+  // Everything else on the page that is laid out must start at or below the
+  // banner's bottom edge: in flow, nothing underneath it.
+  const others = [...document.body.children].filter((e) => e !== b && e.getBoundingClientRect().height > 0);
+  const topOfRest = Math.min(...others.map((e) => e.getBoundingClientRect().top));
+  return {
+    text: b.querySelector("p").textContent,
+    label: b.getAttribute("aria-label"),
+    role: b.getAttribute("role"),
+    btnText: btn.textContent,
+    btnH: btn.getBoundingClientRect().height,
+    position: cs.position,
+    first: document.body.firstElementChild === b,
+    bottom: r.bottom,
+    topOfRest,
+    overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
 /** Turn on sync from the "off" view, capture the minted code, dismiss the
  *  reveal, and leave Settings closed (so the dish rows behind it — inert while
  *  the modal <dialog> is open — are interactable again). */
@@ -857,7 +901,7 @@ async function openDevice({ label, profileDir, headed, siteUrl, fakeBlobPort, re
   await cdp.send("Page.navigate", { url: siteUrl }, sessionId);
   await waitForMenu();
 
-  return { chrome, cdp, d };
+  return { chrome, cdp, d, targetId };
 }
 
 // --- Runner -------------------------------------------------------------
@@ -1174,7 +1218,49 @@ async function run(opts) {
       (await dishState(A.d, DISH_Z)).heart === "false",
       `A sees ${DISH_Z}: heart=${(await dishState(A.d, DISH_Z)).heart}`
     );
-    await openSyncPanel(B.d);
+
+    // --- 5f. THE BANNER (roadmap 510/430) ----------------------------------
+    // A paused sync must not sit unnoticed in a Settings row. The question is
+    // open on B, so B shows a banner on EVERY screen — here the menu and, in a
+    // second tab, the home screen — and it goes in every tab once answered.
+    const bBanner = await B.d.evalPage(bannerExpr);
+    report.check(
+      "[B] the open question puts a banner on the menu: plain words, labelled region, a 44 px button",
+      !!bBanner && bBanner.role === "region" && bBanner.label === "Sync needs your answer" &&
+        /paused/i.test(bBanner.text) && !/merge|base|conflict/i.test(bBanner.text) &&
+        bBanner.btnText === "Answer it now" && bBanner.btnH >= 44 && !bBanner.overflowX,
+      JSON.stringify(bBanner)
+    );
+    report.check(
+      "[B] the banner is in flow at the very top and covers nothing — not fixed, and everything else starts below it",
+      !!bBanner && bBanner.first && bBanner.position === "static" && bBanner.topOfRest >= bBanner.bottom - 0.5,
+      `position=${bBanner?.position} first=${bBanner?.first} bottom=${bBanner?.bottom} rest starts at ${bBanner?.topOfRest}`
+    );
+    report.check(
+      "[A] a device with nothing to answer shows no banner (the control)",
+      (await A.d.evalPage(bannerExpr)) === null,
+      "A grew a banner for B's question"
+    );
+    const homeUrl = siteUrl.replace(/restaurant\.html\?id=.*$/, "index.html");
+    const tab2 = await openExtraTab({ cdp: B.cdp, url: homeUrl, fakeBlobPort: blobPort, report, label: "B tab 2" });
+    const tab2Banner = await tab2.d.evalPage(bannerExpr);
+    report.check(
+      "[B, a second tab on the HOME screen] the same banner is there",
+      !!tab2Banner && tab2Banner.first && tab2Banner.position === "static" && tab2Banner.btnText === "Answer it now",
+      JSON.stringify(tab2Banner)
+    );
+    await B.cdp.send("Target.activateTarget", { targetId: B.targetId });
+    await B.d.click(".sync-banner-btn", "Answer it now");
+    await untilPresent(async () => B.d.evalPage(syncBodyVisibleExpr), { label: "the banner's button to open the question", timeout: 15_000 });
+    const landed = await B.d.evalPage(`(() => {
+      const a = document.activeElement;
+      return { focus: a ? a.textContent : null, open: !!document.querySelector(${JSON.stringify(NAV.sheet)}) };
+    })()`);
+    report.check(
+      "[B] the banner's button opens Settings straight on the question, focus on its heading",
+      landed.open && landed.focus === NAV.noBaseHeading,
+      `sheet open=${landed.open}; focus is "${landed.focus}"`
+    );
     await B.d.click(NAV.noBaseChoice, "Add them to all your devices");
     await B.d.click(".sync-body .profile-btn-primary", "Use this answer");
     await untilPresent(async () => B.d.evalPage(`!!document.querySelector(".sync-body .settings-reset")`), {
@@ -1182,6 +1268,27 @@ async function run(opts) {
       timeout: 15_000,
     });
     await closeSettings(B.d);
+    await untilPresent(async () => (await B.d.evalPage(bannerExpr)) === null, { label: "the banner to go once answered", timeout: 15_000 });
+    await untilPresent(async () => (await tab2.d.evalPage(bannerExpr)) === null, {
+      label: "the banner to go in the OTHER tab once answered",
+      timeout: 15_000,
+    });
+    report.check(
+      "[B] answering removes the banner here and in the other tab, with no reload",
+      (await B.d.evalPage(bannerExpr)) === null && (await tab2.d.evalPage(bannerExpr)) === null,
+      "a banner outlived the answer"
+    );
+    // The dialog's opener was the banner's button, which the answer removed;
+    // the browser's own focus restore then lands on <body> — the top of the
+    // document for a keyboard reader. The ⋯ menu button (the way to Settings,
+    // on every page) catches it.
+    const focusAfter = await B.d.evalPage(`document.activeElement?.id || document.activeElement?.tagName`);
+    report.check(
+      "[B] closing Settings after answering puts focus on the ⋯ menu button, not <body>",
+      focusAfter === "overflow-btn",
+      `focus is on ${focusAfter}`
+    );
+    await tab2.close();
     await syncNowAndWait(A.d);
     report.check(
       "[A] once B answers \"add\", B's heart reaches A",
