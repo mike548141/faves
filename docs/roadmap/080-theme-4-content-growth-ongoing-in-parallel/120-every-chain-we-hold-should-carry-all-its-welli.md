@@ -73,3 +73,35 @@
 
   📌 **Claimed 2026-10-02 05:15 UTC (`faves-77`): the chains already held
   (not McDonald's or Subway, which are `130`'s), worker in a worktree.**
+
+  ✅ **Sweep of the chains already held, 2026-10-02 (`faves-77` worker).**
+  Every branch added has address, OSM-geocoded pin, phone and hours from the
+  chain's own site or the API that site itself calls. Per chain, before to
+  after:
+  - Pizza Hut 1 to 15: its find-a-hut SPA calls the phdvasia API (client id
+    and headers are in the page's own network traffic); store list plus
+    carry-out opening hours, converted from UTC. Johnsonville's stored hours
+    matched the API exactly. Refused: Wainuiomata (phone "04 428 01256" has an
+    extra digit, unusable).
+  - BurgerFuel 4 to 9: own store pages (Hataitai, Kāpiti Coast, Lower Hutt,
+    Porirua, Upper Hutt). "Temporarily Closed" is the hidden Webflow tag again.
+    Hataitai and Kāpiti pins are OSM's BurgerFuel shop node, as the street
+    address alone gave only a street centroid.
+  - Gong Cha 1 to 3: own store-locator JSON (Lambton Quay, Queensgate; the
+    hours are in each store's detail panel). Queensgate pin is the mall's OSM
+    node (address is the mall's corner). Refused: North City, Porirua, which
+    lists no phone.
+  - Hell Pizza 14 to 15: own API, Masterton (Wairarapa). Wellington region
+    store list matches the 14 we held.
+  - Noodle Canteen stays 1: 8 Wellington-region stores listed on its own site,
+    but no per-store hours anywhere (only the chain-wide blurb, already shown
+    wrong for Johnsonville). Refused: Paraparaumu, Upper Hutt, Porirua,
+    Wainuiomata, Wellington City (Courtenay Place), Masterton, Lower Hutt.
+  - Unchanged, own site lists exactly what we hold: Kaffee Eis (3), Pandan
+    (2), Sushi Bi (3), TJ Katsu (7). Single-site records checked and found
+    to be independents: Babaili, Abrakebabra, Crepes A Go Go, Satay Kingdom,
+    Dragonfly, The Catch.
+  Pizza Hut Paraparaumu: OSM puts 109 Kāpiti Road about 500 m from the
+  chain's own coordinate; OSM house-level kept per the geocoding rule.
+  Pizza Hut Te Aro: the chain's own coordinate was 570 m out; OSM agreed
+  with its Courtenay Place shop node.
