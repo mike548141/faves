@@ -1,4 +1,4 @@
-- [ ] **28n — Convert the prose size ladders: additive, and no id moves**
+- [~] **28n — Convert the prose size ladders: additive, and no id moves**
       `[L][data]` — population A of `28h`'s measurement, and this is `28b`'s
       long-standing work finally given a shape to land in.
 
@@ -62,3 +62,7 @@
   invented). Those accepted ADRs supersede this item's older "stays prose"
   line for unlabelled sizes; the other two refusals (two volumes at one
   price, an empty slot) still bind. Ready to take, Abrakebabra still last.
+
+  📌 **Claimed 2026-10-02 04:40 UTC (`faves-77`): the second batch, the
+  unlabelled rungs the owner ruled convertible (worker in a worktree).
+  Abrakebabra still excluded.**
