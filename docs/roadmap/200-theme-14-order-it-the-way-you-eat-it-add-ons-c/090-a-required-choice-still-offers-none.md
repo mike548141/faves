@@ -1,4 +1,4 @@
-- [ ] 🔎 **A required choice still offers "None"** `[S][js][schema]` — found
+- [~] 🔎 **A required choice still offers "None"** `[S][js][schema]` — found
   2026-10-02 (`faves-77`) reviewing 14b batch two at 390 px.
 
   Every pick-one add-on group renders a **None** radio, checked by default
@@ -26,3 +26,6 @@
   optional extras keep theirs. Needs an ADR, the schema line in
   `ARCHITECTURE.md`, `validate.py`, and `addon_check` asserting both shapes.
   Ready to take.
+
+  📌 **Claimed 2026-10-03 (`faves-77`): the required flag, ADR 0156 reserved;
+  worker in a worktree.**

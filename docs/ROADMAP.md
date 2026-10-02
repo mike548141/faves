@@ -58,7 +58,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🎯 [Owner calls the menu fetch left owing](roadmap/080-theme-4-content-growth-ongoing-in-parallel/100-owner-calls-the-menu-fetch-left-owing.md)
 - ✅ [Restore The Victoria Tavern's dropped spirits](roadmap/080-theme-4-content-growth-ongoing-in-parallel/110-restore-the-victoria-tavern-s-dropped-spirits.md)
 - [ ] [🚩 Every chain we hold should carry all its Wellington-region](roadmap/080-theme-4-content-growth-ongoing-in-parallel/120-every-chain-we-hold-should-carry-all-its-welli.md)
-- [ ] [No branch of McDonald's or Subway has opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/130-no-branch-of-mcdonald-s-or-subway-has-opening.md)
+- [~] [No branch of McDonald's or Subway has opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/130-no-branch-of-mcdonald-s-or-subway-has-opening.md)
 - [ ] [picks are empty on most venues](roadmap/080-theme-4-content-growth-ongoing-in-parallel/140-picks-are-empty-on-most-venues.md)
 - [ ] [Venues still stub](roadmap/080-theme-4-content-growth-ongoing-in-parallel/150-venues-still-stub.md)
 - [ ] [The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
@@ -151,7 +151,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [The chip row still says Veg on a dish the warning has just said is](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/060-the-chip-row-still-says-veg.md)
 - ✅ 🔎 [The picker still says one SUBSTANCE two ways when the option carries](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/070-the-picker-says-one-substance-two-ways.md)
 - ✅ [A spicy- tag on an add-on option is legal and renders nothing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/080-a-spicy-tag-on-an-add-on-option-renders-nothing.md)
-- [ ] 🔎 [A required choice still offers "None"](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/090-a-required-choice-still-offers-none.md)
+- [~] 🔎 [A required choice still offers "None"](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/090-a-required-choice-still-offers-none.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
 
