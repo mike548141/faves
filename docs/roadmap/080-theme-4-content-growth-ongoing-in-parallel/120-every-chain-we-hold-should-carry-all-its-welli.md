@@ -1,4 +1,4 @@
-- [ ] 🚩 **Every chain we hold should carry all its Wellington-region
+- [~] 🚩 **Every chain we hold should carry all its Wellington-region
       branches** `[L][content]` — owner-directed 2026-08-16: *"Many of the
       restaurants are chains or at least have multiple branches/locations. Where
       that is true lets ensure that we at least have all their locations in the
@@ -70,3 +70,6 @@
       calls before declaring a chain unreadable.
       **Still open:** the three refused chains, and the rest of the region for the
       chains already in. Claim released.
+
+  📌 **Claimed 2026-10-02 05:15 UTC (`faves-77`): the chains already held
+  (not McDonald's or Subway, which are `130`'s), worker in a worktree.**
