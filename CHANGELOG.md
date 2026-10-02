@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Named choices on 39 more dishes.** Fries or mash on a schnitty, a protein
+  or a sauce on a bowl, a spice level on a noodle dish: where a menu names the
+  options in the dish's own words, the picker now offers them (and warns on
+  any allergen an option carries) at 16 venues. Seven dishes whose choices the
+  menu leaves vague stay as printed.
 - **A banner when sync is waiting for your answer.** If sync has paused to ask
   whether to keep what it has or add this device's extras, every screen now
   says so at the top, with a button that opens the question. It goes, in every
