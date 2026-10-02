@@ -64,7 +64,7 @@
       }
     }
   ],
-  "services": [
+  "orderMode": [
     "dine-in"
   ],
   "website": "https://sprigandfern.co.nz/pages/tawa",

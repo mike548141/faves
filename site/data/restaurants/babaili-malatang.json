@@ -11,7 +11,7 @@
   "address": "45 Dixon Street, Te Aro, Wellington 6011",
   "lat": -41.29195,
   "lng": 174.77688,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

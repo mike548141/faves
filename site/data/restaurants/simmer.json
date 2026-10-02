@@ -11,7 +11,7 @@
   "address": "103D Westchester Drive, Churton Park, Wellington 6037",
   "lat": -41.20249,
   "lng": 174.80757,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

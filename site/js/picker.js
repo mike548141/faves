@@ -8,7 +8,7 @@ import { el } from "./dom.js";
 import { wireDialog } from "./dialog.js";
 import { kindOf, labelsOf } from "./kinds.js";
 
-const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
+const ORDER_MODE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 // Guarded so the pure helpers below import cleanly under `node --test` (no
 // window). In the browser this resolves to the real media-query list.
 const REDUCED =
@@ -49,8 +49,8 @@ function metaText(r) {
     const n = r.dishCount || 0;
     return n ? `${browseLabel} · ${n} ${itemNoun}${n === 1 ? "" : "s"}` : browseLabel;
   }
-  const services = (r.services || []).map((s) => SERVICE_LABEL[s] || s).join(", ");
-  return [r.area, services].filter(Boolean).join(" · ");
+  const modes = (r.orderMode || []).map((s) => ORDER_MODE_LABEL[s] || s).join(", ");
+  return [r.area, modes].filter(Boolean).join(" · ");
 }
 
 function chips(r) {

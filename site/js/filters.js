@@ -74,14 +74,14 @@ export function filterHref(facet, value, page = "index.html") {
 
 /** The values the order-mode axis offers. "all" is the absence of a
  *  filter, so it is not one of them. These are also the values a venue's
- *  `services` array holds — the record field kept its name (see applyFilters).
+ *  `orderMode` array holds (the record field was `services` until 2026-10-02).
  *
  *  `delivery` joined the other two on 2026-09-09, owner-asked, and it is the
  *  same axis rather than a fourth word: he framed it that way himself in 30g —
  *  *"choosing dine-in vs takeaway (pickup) vs delivery?"*.
  *
  *  🚩 A DOOR IS DECLARED, NEVER DERIVED (ADR 0117). A venue is a delivery venue
- *  because its record says `services: [… "delivery"]`, not because some dish of
+ *  because its record says `orderMode: [… "delivery"]`, not because some dish of
  *  its carries a `prices.delivery` (ADR 0089). The two answer different
  *  questions — *does this place deliver* against *what does this dish cost
  *  through that door* — and a venue can deliver at counter prices, which would
@@ -260,11 +260,10 @@ export function activeFilters(state) {
  */
 export function applyFilters(restaurants, state, clock = null) {
   return restaurants.filter((r) => {
-    // 🚩 The state key is `orderMode`; the RECORD field is still `services`.
-    // The 2026-08-16 ruling renamed the filter axis, and renaming the data field
-    // would mean 55 venue files, `validate.py`'s `SERVICES`, and the schema —
-    // which lives in `docs/ARCHITECTURE.md`. Left deliberately, not missed.
-    if (state.orderMode !== "all" && !(r.services || []).includes(state.orderMode)) {
+    // The state key and the record field are both `orderMode` (the field was
+    // `services` until 2026-10-02, roadmap 010). A record still carrying the
+    // old name never reaches here: data.js's loadRestaurants() bridges it.
+    if (state.orderMode !== "all" && !(r.orderMode || []).includes(state.orderMode)) {
       return false;
     }
     if (state.area !== "all" && r.area !== state.area) return false;

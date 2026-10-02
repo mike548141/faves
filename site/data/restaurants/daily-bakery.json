@@ -10,7 +10,7 @@
   "address": "463 High Street, Hutt Central, Lower Hutt 5010",
   "lat": -41.20545,
   "lng": 174.91069,
-  "services": [
+  "orderMode": [
     "takeaway",
     "delivery"
   ],

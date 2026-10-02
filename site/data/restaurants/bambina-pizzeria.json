@@ -11,7 +11,7 @@
   "address": "38 Bowen Street, Pipitea, Wellington 6011",
   "lat": -41.27846,
   "lng": 174.77479,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

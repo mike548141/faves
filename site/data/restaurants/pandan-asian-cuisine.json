@@ -9,7 +9,7 @@
   "area": "Melling",
   "city": "Lower Hutt",
   "currency": "NZD",
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

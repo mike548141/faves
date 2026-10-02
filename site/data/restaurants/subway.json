@@ -8,7 +8,7 @@
   "area": "Johnsonville",
   "city": "Wellington",
   "currency": "NZD",
-  "services": [
+  "orderMode": [
     "takeaway",
     "dine-in"
   ],

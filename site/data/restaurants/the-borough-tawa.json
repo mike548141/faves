@@ -16,7 +16,7 @@
   },
   "website": "https://www.theboroughtawa.co.nz",
   "ordering": [],
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

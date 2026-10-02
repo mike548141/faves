@@ -41,7 +41,7 @@ const VENUE_LABELS = {
   cardModifier: null,
   itemModifier: null,
   itemNoun: null, // a venue's card never counts its dishes
-  browseLabel: null, // the suburb and services say where and how instead
+  browseLabel: null, // the suburb and order modes say where and how instead
   tagline: null, // the menu header uses the cuisine/area facet links
   stubChip: "Menu coming soon",
   // null, not a string: an empty venue menu says something different when we

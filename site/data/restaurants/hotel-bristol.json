@@ -10,7 +10,7 @@
   "address": "131-133 Cuba Street, Te Aro, Wellington 6011",
   "lat": -41.29296,
   "lng": 174.77606,
-  "services": [
+  "orderMode": [
     "dine-in"
   ],
   "phone": null,

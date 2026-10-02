@@ -736,7 +736,7 @@
       }
     }
   ],
-  "services": [
+  "orderMode": [
     "takeaway"
   ],
   "website": "https://hellpizza.nz",

@@ -11,7 +11,7 @@
   "address": "109 Johnsonville Road, Johnsonville, Wellington 6037",
   "lat": -41.22515,
   "lng": 174.80748,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway",
     "delivery"

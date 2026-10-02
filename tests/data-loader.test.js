@@ -13,6 +13,7 @@ import { test, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import {
   loadRestaurants,
+  readOrderMode,
   loadSearchIndex,
   loadRestaurant,
   recheckReferences,
@@ -99,6 +100,33 @@ test("loadRestaurants fetches data/summary.json and returns it as-is", async () 
   });
   const all = await loadRestaurants();
   assert.deepEqual(all, SUMMARY);
+});
+
+// The one-release bridge for the `services` → `orderMode` rename (roadmap 010).
+// A NEW shell can be handed the PREVIOUS data set (a worker's install tolerates
+// a failed data sync when it already holds a set), whose summary spells the
+// field `services`. Without the bridge the order-mode filter would read nothing
+// off those records and quietly empty itself.
+test("loadRestaurants reads a pre-rename summary's `services` as `orderMode`", async () => {
+  const OLD = [{ id: "t", name: "T", services: ["takeaway", "dine-in"] }];
+  globalThis.fetch = async (url) => ({
+    ok: true,
+    json: async () => (url.includes("summary.json") ? structuredClone(OLD) : {}),
+  });
+  const [r] = await loadRestaurants();
+  assert.deepEqual(r.orderMode, ["takeaway", "dine-in"]);
+  assert.equal("services" in r, false, "the old name does not leak past the loader");
+  // …and the filter that motivated the bridge actually finds it.
+  const { applyFilters, DEFAULT_FILTERS } = await import("../site/js/filters.js");
+  const kept = applyFilters([r], { ...DEFAULT_FILTERS, orderMode: "takeaway" });
+  assert.equal(kept.length, 1, "an old-spelling record still passes the takeaway filter");
+});
+
+test("readOrderMode leaves a current record, and one with neither name, alone", () => {
+  const cur = { id: "a", orderMode: ["delivery"], services: ["takeaway"] };
+  assert.equal(readOrderMode(cur), cur, "orderMode wins and the record is returned as-is");
+  const none = { id: "b" };
+  assert.equal(readOrderMode(none), none);
 });
 
 test("loadRestaurants propagates a failed fetch — the caller falls back to the static list", async () => {
@@ -275,4 +303,16 @@ test("the copy table never lets local knowledge claim a removal", () => {
   // Offline says it could not check, and does not imply the thing is gone.
   assert.match(referenceWhyFor("offline"), /Can’t check while you’re offline/);
   assert.match(referenceWhyFor("unreachable"), /still unchecked/);
+});
+
+// The OTHER half of the bridge: an OLD shell reads `services` from summary.json,
+// and a NEW worker's install can leave it serving that shell the NEW summary.
+// So the generator must keep writing the old name beside the new one.
+test("summarise mirrors orderMode into `services` for a not-yet-updated shell", async () => {
+  const { summarise } = await import("../tools/gen_summaries.mjs");
+  const out = summarise({ id: "t", name: "T", orderMode: ["takeaway"], menu: [] });
+  assert.deepEqual(out.orderMode, ["takeaway"]);
+  assert.deepEqual(out.services, ["takeaway"], "legacy mirror for the old shell");
+  const none = summarise({ id: "r", name: "R", menu: [] });
+  assert.equal("services" in none, false, "no field, no mirror");
 });

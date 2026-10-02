@@ -10,7 +10,7 @@
   "address": "146 Jackson Street, Petone, Lower Hutt 5012",
   "lat": -41.22425,
   "lng": 174.87455,
-  "services": [
+  "orderMode": [
     "dine-in"
   ],
   "phone": "+64 4 566 0649",

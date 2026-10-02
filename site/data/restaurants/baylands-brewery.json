@@ -10,7 +10,7 @@
   "address": "22 Victoria Street, Petone, Lower Hutt 5012",
   "lat": -41.22588,
   "lng": 174.87323,
-  "services": [
+  "orderMode": [
     "dine-in",
     "takeaway"
   ],

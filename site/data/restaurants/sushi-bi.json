@@ -8,7 +8,7 @@
   "area": "Wellington Central",
   "city": "Wellington",
   "currency": "NZD",
-  "services": [
+  "orderMode": [
     "takeaway"
   ],
   "website": "https://sushibi.co.nz/",

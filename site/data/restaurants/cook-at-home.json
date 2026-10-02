@@ -9,7 +9,7 @@
   "city": null,
   "currency": "NZD",
   "address": null,
-  "services": [],
+  "orderMode": [],
   "phone": null,
   "website": null,
   "ordering": [],
