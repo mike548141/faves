@@ -1,4 +1,4 @@
-- [~] **28n — Convert the prose size ladders: additive, and no id moves**
+- [x] **28n — Convert the prose size ladders: additive, and no id moves**
       `[L][data]` — population A of `28h`'s measurement, and this is `28b`'s
       long-standing work finally given a shape to land in.
 
@@ -81,3 +81,12 @@
     not a size) and the samosa (no dish price to be the default).
   - Petone 1: "All pizzas $24" is a section note, not a ladder.
   Khandallah's Voyage water names its 500ml rung because the dish title does.
+
+  ✅ **Closed 2026-10-02 (`faves-77`, PR #97, merged with CI 8 of 8).** Batch
+  two converted 82 rows at four venues (counts and reasons above); every
+  convertible ladder outside Abrakebabra is now a choice. What stays prose
+  does so under the refusals that still bind, or is not a ladder at all
+  (Simmer's five, Spices' two, Petone's section note, Lucky's espresso).
+  Abrakebabra stays `28o`'s. Orchestrator checked the Victoria wine render
+  at 390 px ("$11 size", "Large glass $19", "Bottle $50") and re-ran
+  `gen_summaries --check` and `validate.py` on `main` after the merge.
