@@ -48,8 +48,12 @@ let focusNoteKey = null;
  * The + / − / count control for one dish. Bound to the shared order store
  * and self-updating, so the menu row and the dialog line always agree.
  * `meta` = { venueId, venueName, phone, name, dishId?, price }.
+ *
+ * `gate` = { reason, onBlocked } when the dish cannot be added yet because a
+ * required add-on choice is unanswered (ADR 0156): the ＋ Add is then drawn
+ * aria-disabled, says why, and a tap calls `onBlocked` instead of ordering.
  */
-export function dishStepper(meta) {
+export function dishStepper(meta, gate = null) {
   const wrap = el("div", { className: "stepper" });
   // The configuration this stepper counts (ADR 0048 §4). "Eggs on toast with
   // bacon" is a different line from "eggs on toast", so the stepper has to ask
@@ -76,6 +80,25 @@ export function dishStepper(meta) {
   function render() {
     const q = order.qtyOf(meta.venueId, id(), sel(), note());
     wrap.dataset.qty = q;
+    if (gate) {
+      // The dish is not yet a dish a kitchen can make (ADR 0156): a required
+      // choice is unanswered. aria-disabled, never `disabled` — the button stays
+      // in the tab order and is announced as dimmed, so a keyboard or screen
+      // reader user finds it and is TOLD why; a tap on it carries them to the
+      // unanswered group rather than doing nothing. It also stands in for the
+      // −/＋ pair even when a line for this exact (incomplete) configuration
+      // exists from before the flag, so an incomplete line cannot grow.
+      const add = el("button", {
+        type: "button",
+        className: "stepper-add is-blocked",
+        textContent: "＋ Add",
+      });
+      add.setAttribute("aria-disabled", "true");
+      add.setAttribute("aria-label", `Add ${said()} to your order — ${gate.reason}`);
+      add.addEventListener("click", () => gate.onBlocked?.());
+      wrap.replaceChildren(add);
+      return;
+    }
     if (q === 0) {
       const add = el("button", {
         type: "button",

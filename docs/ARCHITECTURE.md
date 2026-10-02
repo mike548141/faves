@@ -219,6 +219,9 @@ excluded from both stores, always.
       "kind": "adds",                //   OPTIONAL: "adds" (absent = adds) | "selects"
                                      //   — a variant ladder, see "Add-ons" (ADR 0130)
       "select": "many",              //   "one" | "many" ("adds" only)
+      "required": true,              //   OPTIONAL, true only: the menu makes this
+                                     //   choice compulsory ("choice of…"). pick-one
+                                     //   "adds" groups only (ADR 0156)
       "max": 3,                      //   optional cap, "many" only, <= option count
       "price": 0,                    //   optional group default for its options
       "options": [                   //   1..n. tags is REQUIRED on every option and
@@ -829,6 +832,13 @@ section is written once.
 - `select` is `"one"` or `"many"`. `max` caps a pick-many group ("choose
   up to 3"); it is a rule the venue set, so it lives in the data rather
   than the UI, and it may not exceed the number of options.
+- **`required: true`** (ADR 0156) marks a pick-one group whose choice the menu
+  makes compulsory ("choice of…", "choose…"): the picker offers no None,
+  pre-selects nothing, and ＋ Add (picker and row) waits, `aria-disabled` with
+  the reason in words, until it is answered. Only `true` is valid (absent =
+  optional); it is an error on a `selects` group and on a pick-many group.
+  It never changes tags or warnings. Set it only where the wording is
+  compulsory; when unsure leave the group optional.
 - **A price must be resolvable** — the option's `price`, or its group's as
   a default. Absent at both levels is an **error**, not a zero: a
   forgotten price would otherwise become a silently free add-on and an

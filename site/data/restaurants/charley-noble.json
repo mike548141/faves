@@ -91,6 +91,7 @@
       "id": "cheese-one",
       "name": "Choose one",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

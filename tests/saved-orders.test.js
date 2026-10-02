@@ -306,6 +306,22 @@ test("a selection the group's cap now refuses is skipped, not put on the sheet",
   assert.equal(skipped[0].reason, "its add-ons no longer fit together");
 });
 
+test("a choice the venue has since made compulsory skips a line that never made it (ADR 0156)", () => {
+  const s = saved();
+  const live = {
+    ...RECORD,
+    addOnGroups: RECORD.addOnGroups.map((g) => (g.id === "sauces" ? { ...g, select: "one", required: true, max: undefined } : g)),
+  };
+  // The saved Meatball Marinara line carries a sauce, so it answers the question.
+  const answered = planRecall(s, live);
+  assert.equal(answered.lines.some((l) => l.dishId === "meatball-marinara"), true);
+  // …and one with no sauce does not.
+  s.lines[0].options = s.lines[0].options.filter((o) => o.group !== "sauces");
+  const { lines, skipped } = planRecall(s, live);
+  assert.equal(lines.some((l) => l.dishId === "meatball-marinara"), false);
+  assert.match(skipped[0].reason, /needs a choice now/);
+});
+
 test("a saved order for a venue with nothing left recalls nothing and says so line by line", () => {
   const { lines, skipped } = planRecall(saved(), { ...RECORD, menu: [] });
   assert.equal(lines.length, 0);

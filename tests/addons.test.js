@@ -18,6 +18,8 @@ import {
   selectionKey,
   selectionSummary,
   optionId,
+  isRequired,
+  missingRequired,
   CONTRADICTS,
 } from "../site/js/addons.js";
 import { readFileSync, readdirSync } from "node:fs";
@@ -525,4 +527,32 @@ test("composeTags: shellfish kills Kosher and leaves Halal standing", () => {
   const out = composeTags(["halal", "kosher"], [prawns]);
   assert.ok(out.tags.includes("halal"));
   assert.ok(!out.tags.includes("kosher"));
+});
+
+// --- ADR 0156: a required pick-one group ---------------------------------
+
+const SAUCE = { id: "sauce", name: "Sauce", kind: "adds", select: "one", required: true, options: [] };
+const SIDE = { id: "side", name: "Side", select: "one", options: [] };
+const SIZE = { id: "size", name: "Size", kind: "selects", required: true, options: [] };
+
+test("isRequired: only an explicit true on an adds group counts", () => {
+  assert.equal(isRequired(SAUCE), true);
+  assert.equal(isRequired(SIDE), false);
+  assert.equal(isRequired({ ...SIDE, required: false }), false);
+  assert.equal(isRequired({ ...SIDE, required: "yes" }), false, "a truthy string is not the flag");
+  assert.equal(isRequired(SIZE), false, "a selects group is always chosen already, so never gated");
+  assert.equal(isRequired(undefined), false);
+});
+
+test("missingRequired: names the required groups with no entry, in offered order, and nothing else", () => {
+  const filling = { ...SAUCE, id: "filling", name: "Filling" };
+  assert.deepEqual(missingRequired([SIDE, SAUCE, filling], []).map((g) => g.id), ["sauce", "filling"]);
+  assert.deepEqual(
+    missingRequired([SIDE, SAUCE, filling], [{ group: "sauce", id: "satay" }]).map((g) => g.id),
+    ["filling"],
+  );
+  assert.deepEqual(missingRequired([SIDE, SAUCE], [{ group: "sauce", id: "satay" }]), []);
+  assert.deepEqual(missingRequired([SIDE], []), [], "an optional group never blocks");
+  assert.deepEqual(missingRequired([SIZE], []), []);
+  assert.deepEqual(missingRequired(undefined, undefined), []);
 });

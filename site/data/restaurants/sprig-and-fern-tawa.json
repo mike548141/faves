@@ -321,6 +321,7 @@
       "id": "steak-sauce",
       "name": "Choice of garlic butter or mushroom sauce",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
@@ -345,6 +346,7 @@
       "id": "sundae-sauce",
       "name": "Choice of caramel, strawberry or chocolate sauce",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

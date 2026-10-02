@@ -811,6 +811,7 @@
       "id": "rib-sauce",
       "name": "Sauce",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
@@ -836,6 +837,7 @@
       "id": "donut-chocolate",
       "name": "Chocolate",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

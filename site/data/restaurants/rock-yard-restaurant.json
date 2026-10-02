@@ -99,6 +99,7 @@
       "id": "baguette-filling",
       "name": "Filling",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
@@ -138,6 +139,7 @@
       "id": "salad-protein",
       "name": "Protein",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
@@ -161,6 +163,7 @@
       "id": "rice-paper-filling",
       "name": "Filling",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
@@ -183,6 +186,7 @@
       "id": "spring-roll-filling",
       "name": "Filling",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
@@ -207,6 +211,7 @@
       "id": "vermicelli-protein",
       "name": "Protein",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

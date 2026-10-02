@@ -1415,7 +1415,28 @@ function renderDish(
   // read down the phone.
   let plainStepper = null;
   let plainStepperMeta = null;
-  let plainStepperKey = JSON.stringify([item.price ?? null, []]);
+  let plainStepperKey = JSON.stringify([item.price ?? null, [], false]);
+  // What the picker last said about the row's own ＋ Add: the chosen variant
+  // (ADR 0133) and whether a required choice is still open (ADR 0156). Kept
+  // together because either one rebuilds the stepper.
+  let plainVariant = null;
+  let plainGate = null;
+  let plainCarry = null;
+  const restepPlain = () => {
+    if (!plainStepper || !plainStepperMeta) return;
+    // Rebuilt only when something moved: a stepper subscribes to the order
+    // store for life, so one per tap on the same state would pile up.
+    // The picker's `carry` (variant + required choices) supersedes the bare
+    // variant once it has spoken; both are the same thing for a dish with no
+    // required group.
+    const st = plainCarry ?? plainVariant;
+    const key = JSON.stringify([st?.price ?? item.price ?? null, st?.options ?? [], plainGate?.reason ?? false]);
+    if (key === plainStepperKey) return;
+    plainStepperKey = key;
+    const next = dishStepper(st ? { ...plainStepperMeta, price: st.price, options: st.options } : plainStepperMeta, plainGate);
+    plainStepper.replaceWith(next);
+    plainStepper = next;
+  };
   if (r) {
     // ⚑ leftmost, furthest from the primary "Add" — a report is a rare,
     // deliberate action and must never be a mis-tap of the order stepper. Venue
@@ -1512,15 +1533,14 @@ function renderDish(
       // The row's own ＋ Add follows, so it orders the plate whose price is
       // printed beside it; for the default that is the plain dish, unchanged.
       if (aside && aside.classList.contains("dish-price")) aside.textContent = money(variant.price);
-      // Rebuilt only when the plate moved: a stepper subscribes to the order
-      // store for life, so one per tap on the same variant would pile up.
-      const key = JSON.stringify([variant.price, variant.options]);
-      if (plainStepper && plainStepperMeta && key !== plainStepperKey) {
-        plainStepperKey = key;
-        const next = dishStepper({ ...plainStepperMeta, price: variant.price, options: variant.options });
-        plainStepper.replaceWith(next);
-        plainStepper = next;
-      }
+      plainVariant = variant;
+      restepPlain();
+    }, (gate, carry) => {
+      // A required choice still open (ADR 0156): the row's own ＋ Add must not
+      // order the dish without it, any more than the picker's can.
+      plainGate = gate;
+      plainCarry = carry;
+      restepPlain();
     });
     if (picker) li.append(picker.node);
   }

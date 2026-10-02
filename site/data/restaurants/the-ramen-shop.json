@@ -89,6 +89,7 @@
       "id": "curry-rice-protein",
       "name": "Choice of",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
@@ -123,6 +124,7 @@
       "id": "kids-ramen-protein",
       "name": "Choice of",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {
@@ -157,6 +159,7 @@
       "id": "yakisoba-protein",
       "name": "Choice of",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

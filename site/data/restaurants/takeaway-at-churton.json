@@ -73,6 +73,7 @@
       "id": "combination-seafood-base",
       "name": "Choose from",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

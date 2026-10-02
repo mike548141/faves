@@ -462,6 +462,19 @@ const LARGE_LABEL = "Large";
 const THIRD_LABEL = `${formatMoney(24, "NZD")} size`;
 
 /** The size fixture's dish: its row price, its variant radios, its warning. */
+// --- 200/090 (ADR 0156): a REQUIRED pick-one group, on two REAL records -------
+// Satay Kingdom's stir fry is "with choice of sweet & sour sauce, satay sauce or
+// chef special sauce" — the case that found this. Sprig & Fern Berhampore's
+// kids' pizza has an OPTIONAL pick-one ("Add a sauce swirl (if you want)"): the
+// other shape, which must keep its None. Both are served from disk untouched,
+// not through an overlay, so the data's own `required` flags are what is tested.
+const REQ_VENUE = "satay-kingdom-cafe";
+const REQ_DISH = "Stir Fry Vegetables";
+const REQ_GROUP = "Sauce";
+const REQ_OPTION = "Satay sauce";
+const OPT_VENUE = "sprig-and-fern-berhampore";
+const OPT_DISH = "Mini Pizza + Fries";
+
 const sizeExpr = `(() => {
   const dish = ${need(dishSel(SIZE_DISH))};
   const box = ${need(".dish-addons", "dish")};
@@ -487,6 +500,33 @@ const sizeExpr = `(() => {
 })()`;
 
 /** The raw stored order — the thing a family's phone actually holds. */
+/** One dish's picker as the required-choice block reads it (ADR 0156). */
+const requiredExpr = (name) => `(() => {
+  const dish = ${need(dishSel(name))};
+  const box = ${need(".dish-addons", "dish")};
+  const groups = [...box.querySelectorAll("fieldset.addon-group")].map((f) => ({
+    name: f.querySelector(".addon-group-name")?.textContent ?? null,
+    rule: f.querySelector(".addon-rule")?.textContent ?? null,
+    options: [...f.querySelectorAll(".addon-option-name")].map((n) => n.textContent),
+    radios: [...f.querySelectorAll("input[type=radio]")].length,
+    checked: [...f.querySelectorAll("input:checked")].map((i) => i.value),
+  }));
+  const pick = box.querySelector(".addon-stepper .stepper-add");
+  const row = dish.querySelector(".dish-actions .stepper-add");
+  const need = box.querySelector(".addon-need");
+  const chip = box.querySelector(".addon-summary-need");
+  const a = document.activeElement;
+  return {
+    groups,
+    open: box.open,
+    pickAdd: pick ? { disabled: pick.getAttribute("aria-disabled"), label: pick.getAttribute("aria-label") } : null,
+    rowAdd: row ? { disabled: row.getAttribute("aria-disabled"), label: row.getAttribute("aria-label") } : null,
+    needText: need && !need.hidden ? need.textContent : null,
+    chipText: chip && !chip.hidden ? chip.textContent : null,
+    focus: a && a.closest("li.dish") === dish ? { tag: a.tagName, type: a.type || null, value: a.value || null } : null,
+  };
+})()`;
+
 const storedExpr = `JSON.parse(localStorage.getItem("faves.order.v1") || "[]")`;
 
 /** What the first picker's OWN stepper counts: `order.qtyOf` for exactly the
@@ -504,7 +544,19 @@ const occurrences = (hay, needle) => hay.split(needle).length - 1;
 
 async function run(opts) {
   const report = new Report(opts.verbose);
-  const venue = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${opts.id}.json`), "utf8"));
+  const realVenue = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${opts.id}.json`), "utf8"));
+  // ADR 0156: Wellington Kebab Grill's kebab-style group ("Choose your kebab
+  // toasted or fresh") is REQUIRED in the data, so Add would wait on it in every
+  // block below that adds the first dish. Those blocks are about sauces, caps,
+  // currency and saved orders — not about that choice — so they run on this
+  // record with the flag lifted, served in place of the real path and used as
+  // the base of every fixture derived from it. The flag itself is asserted in
+  // block (z) on two untouched records. (Cost, stated: nothing here shows the
+  // kebab venue's own gate; Satay Kingdom stands in for it.)
+  const venue = {
+    ...realVenue,
+    addOnGroups: (realVenue.addOnGroups || []).map(({ required: _lifted, ...g }) => g),
+  };
   const group = (venue.addOnGroups || []).find((g) => g.id === SAUCES);
   if (!group) throw new Error(`${opts.id} has no "${SAUCES}" add-on group — pick another --id`);
   if (typeof group.max !== "number") throw new Error(`the "${SAUCES}" group has no max — this check exists to prove the cap`);
@@ -514,6 +566,7 @@ async function run(opts) {
   const langSection = (venue.menu || []).find((s) => !s.addOnsOnly);
   if (!langSection?.sectionId) throw new Error(`${opts.id} has no printed section with a sectionId`);
   const overlay = new Map([
+    [`/data/restaurants/${opts.id}.json`, JSON.stringify(venue)],
     [`/data/restaurants/${GBP_ID}.json`, JSON.stringify({ ...venue, id: GBP_ID, currency: "GBP" })],
     // 28q: the venue renamed its satay, and its transcriber — correctly — left
     // the option's id where it was. Nothing else about the record moves.
@@ -1705,6 +1758,113 @@ async function run(opts) {
       "(y) another venue's page does not list this venue's saved orders",
       pn.present && pn.hidden === true && pn.names.length === 0,
       JSON.stringify({ hidden: pn.hidden, names: pn.names }),
+    );
+
+    // --- (z) 200/090, ADR 0156: a required choice, and an optional one -------
+    // Two shapes, because either alone proves little: a build that dropped None
+    // from EVERY pick-one group, or that blocked Add on every dish, passes the
+    // required half and breaks the optional one.
+    const reqUrl = `http://127.0.0.1:${port}/restaurant.html?id=${REQ_VENUE}`;
+    const reqDish = dishSel(REQ_DISH);
+    const openAt = async (u, sel, label) => {
+      await cdp.send("Page.navigate", { url: u }, sessionId);
+      await untilPresent(async () => (await driver.evalPage(`!!document.querySelector(${JSON.stringify(`${sel} .dish-addons`)})`)), { label });
+    };
+    await openAt(reqUrl, reqDish, `${REQ_VENUE} to render the required-choice dish`);
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await openAt(reqUrl, reqDish, `${REQ_VENUE} to render with an empty order`);
+    let rq = await driver.evalPage(requiredExpr(REQ_DISH));
+    const sauce = rq.groups.find((g) => g.name === REQ_GROUP);
+    report.check(
+      "(z) a REQUIRED group offers no None — the three sauces and nothing else",
+      !!sauce && sauce.options.length === 3 && !sauce.options.includes("None") && sauce.radios === 3,
+      JSON.stringify(sauce),
+    );
+    report.check(
+      "(z) …nothing is pre-selected: a default would be a choice the reader never made",
+      !!sauce && sauce.checked.length === 0,
+      JSON.stringify(sauce?.checked),
+    );
+    report.check(
+      "(z) …and says it is required in WORDS, in the legend",
+      !!sauce && /required/i.test(sauce.rule || ""),
+      JSON.stringify(sauce?.rule),
+    );
+    report.check(
+      "(z) Add is aria-disabled on the picker AND on the row, and each says why in its label",
+      rq.pickAdd?.disabled === "true" && rq.rowAdd?.disabled === "true" &&
+        /choose Sauce first/.test(rq.pickAdd?.label || "") && /choose Sauce first/.test(rq.rowAdd?.label || ""),
+      JSON.stringify({ picker: rq.pickAdd, row: rq.rowAdd }),
+    );
+    report.check(
+      "(z) …with the reason visible as text beside the picker and as a chip on its summary",
+      /Sauce/.test(rq.needText || "") && /choice needed/i.test(rq.chipText || ""),
+      JSON.stringify({ need: rq.needText, chip: rq.chipText }),
+    );
+    // The row's Add first: closed disclosure, the commonest way in.
+    await driver.click(`${reqDish} .dish-actions .stepper-add`);
+    let rs = await driver.evalPage(storedExpr);
+    rq = await driver.evalPage(requiredExpr(REQ_DISH));
+    report.check(
+      "(z) a tap on the row's blocked Add orders NOTHING…",
+      rs.length === 0,
+      JSON.stringify(rs),
+    );
+    report.check(
+      "(z) …opens the picker and moves keyboard focus to the first sauce, not to <body>",
+      rq.open === true && rq.focus?.type === "radio" && rq.focus?.value === "Sweet & sour sauce",
+      JSON.stringify({ open: rq.open, focus: rq.focus }),
+    );
+    await driver.click(`${reqDish} .addon-stepper .stepper-add`);
+    rs = await driver.evalPage(storedExpr);
+    report.check("(z) …and so does a tap on the picker's own blocked Add", rs.length === 0, JSON.stringify(rs));
+    // Choose, and it opens up.
+    await driver.click(`${reqDish} .addon-option`, REQ_OPTION);
+    rq = await driver.evalPage(requiredExpr(REQ_DISH));
+    report.check(
+      "(z) choosing a sauce lifts the gate on both Adds and takes the reason away",
+      !rq.pickAdd?.disabled && !rq.rowAdd?.disabled && rq.needText === null && rq.chipText === null,
+      JSON.stringify({ picker: rq.pickAdd?.disabled, row: rq.rowAdd?.disabled, need: rq.needText, chip: rq.chipText }),
+    );
+    await driver.click(`${reqDish} .addon-stepper .stepper-add`);
+    rs = await driver.evalPage(storedExpr);
+    report.check(
+      "(z) …and Add now orders the dish WITH that sauce on the line",
+      rs.length === 1 && rs[0].options?.length === 1 && rs[0].options[0].name === REQ_OPTION,
+      JSON.stringify(rs.map((l) => [l.name, l.qty, (l.options || []).map((o) => o.name)])),
+    );
+    // The row's own Add must carry the choice too, or it reopens the hole.
+    await driver.click(`${reqDish} .dish-actions .stepper-add, ${reqDish} .dish-actions .stepper-btn`, "＋");
+    rs = await driver.evalPage(storedExpr);
+    report.check(
+      "(z) the row's Add, once unblocked, adds the SAME configured line — it cannot order the dish bare",
+      rs.length === 1 && rs[0].qty === 2 && rs[0].options?.[0]?.name === REQ_OPTION,
+      JSON.stringify(rs.map((l) => [l.name, l.qty, (l.options || []).map((o) => o.name)])),
+    );
+
+    // The optional shape, on a real record whose pick-one groups are optional.
+    const optUrl = `http://127.0.0.1:${port}/restaurant.html?id=${OPT_VENUE}`;
+    const optDish = dishSel(OPT_DISH);
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await openAt(optUrl, optDish, `${OPT_VENUE} to render the optional-choice dish`);
+    const oq = await driver.evalPage(requiredExpr(OPT_DISH));
+    const pickOnes = oq.groups.filter((g) => g.radios > 0);
+    report.check(
+      "(z) OPTIONAL pick-one groups still offer None, first, and start on it",
+      pickOnes.length >= 1 && pickOnes.every((g) => g.options[0] === "None" && g.checked.join() === "" && !/required/i.test(g.rule || "")),
+      JSON.stringify(pickOnes),
+    );
+    report.check(
+      "(z) …and Add is NOT blocked, with no reason shown, before anything is chosen",
+      oq.pickAdd?.disabled === null && oq.rowAdd?.disabled === null && oq.needText === null && oq.chipText === null,
+      JSON.stringify({ picker: oq.pickAdd?.disabled, row: oq.rowAdd?.disabled, need: oq.needText, chip: oq.chipText }),
+    );
+    await driver.click(`${optDish} .dish-actions .stepper-add`);
+    rs = await driver.evalPage(storedExpr);
+    report.check(
+      "(z) …so the row's Add orders the plain dish in one tap",
+      rs.length === 1 && rs[0].qty === 1 && (rs[0].options || []).length === 0,
+      JSON.stringify(rs.map((l) => [l.name, l.qty, (l.options || []).length])),
     );
 
     return report.summary(SITE) ? 0 : 1;

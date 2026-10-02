@@ -1864,3 +1864,10 @@ deliberation those compact docs omit.
   to `address: null` + `anywhere: true` before any renderer sees it. The sort
   and the distance cut are unchanged (no distance). Sorting it at the reader's
   position is left to the owner.
+- [0156](0156-a-required-choice-has-no-none-and-add-waits.md) —
+  **A required choice has no None, and Add waits for it** (`200/090`,
+  owner-ruled 2026-10-03). `"required": true` on a pick-one `adds` group, set
+  only where the menu says "choice of" / "choose": no None, nothing
+  pre-selected, and both Adds (picker and row) go `aria-disabled` with the
+  reason in words until it is answered. Refused on `selects` and pick-many
+  groups. Never changes an allergen warning.

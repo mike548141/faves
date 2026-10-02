@@ -9,6 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A choice the menu makes compulsory is now compulsory.** Where a dish comes
+  "with choice of" sauce, filling, side or heat, the picker no longer offers
+  "None": Add waits, says why, and takes you to the question (33 choices at 19
+  venues, e.g. Satay Kingdom's stir fry sauce). Optional extras keep their None.
 - **Named choices on 39 more dishes.** Fries or mash on a schnitty, a protein
   or a sauce on a bowl, a spice level on a noodle dish: where a menu names the
   options in the dish's own words, the picker now offers them (and warns on

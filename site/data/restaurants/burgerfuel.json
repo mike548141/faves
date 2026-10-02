@@ -581,6 +581,7 @@
       "id": "choppers-sauce",
       "name": "Sauce",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

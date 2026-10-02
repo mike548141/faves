@@ -79,6 +79,7 @@
       "id": "stir-fry-sauce",
       "name": "Sauce",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

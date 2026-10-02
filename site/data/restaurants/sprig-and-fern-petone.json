@@ -76,6 +76,7 @@
       "id": "croquette-filling",
       "name": "Choose from chicken, spicy beef or vegetarian",
       "select": "one",
+      "required": true,
       "price": 0,
       "options": [
         {

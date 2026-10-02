@@ -888,6 +888,30 @@ CASES = {
         _breaks(lambda g, d: g.update(maxx=2)),
         "error", r"add-on group 'sauces': unknown key 'maxx'",
     ),
+    # --- ADR 0156: a REQUIRED pick-one group (roadmap 200/090) ------------
+    # The legal shape first, then each way it can be mis-set. The positive case
+    # is the one that proves the gate can still ACCEPT: a validator that refused
+    # every `required` would pass all the refusals below.
+    "a required pick-one group is legal": (
+        _breaks(lambda g, d: (g.update(select="one", required=True), g.pop("max"))),
+        "clean", None,
+    ),
+    "required on a pick-many group": (
+        _breaks(lambda g, d: g.update(required=True)),
+        "error", r"add-on group 'sauces': required only applies to a pick-one group",
+    ),
+    "required written as false": (
+        _breaks(lambda g, d: (g.update(select="one", required=False), g.pop("max"))),
+        "error", r"add-on group 'sauces': required must be true or absent, got False",
+    ),
+    "required written as a string": (
+        _breaks(lambda g, d: (g.update(select="one", required="yes"), g.pop("max"))),
+        "error", r"add-on group 'sauces': required must be true or absent, got 'yes'",
+    ),
+    "required on a selects group": (
+        _ladder(lambda g, d: g.update(required=True)),
+        "error", r"add-on group 'size': required does not apply to a selects group",
+    ),
     # --- ADR 0130: a group that SELECTS a variant (roadmap 28k) -----------
     # The positive cases first, because the field arrives on a corpus of 50
     # groups that must not notice: absent `kind` is `adds`, and so is the word.

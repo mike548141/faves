@@ -26,6 +26,7 @@ import {
   optionId,
   optionPrice,
   isSelects,
+  missingRequired,
   variantLabel,
   selectionAllowed,
   configuredPrice,
@@ -39,6 +40,9 @@ export const REASONS = {
   dish: "no longer on the menu",
   option: (name) => `“${name || "an add-on"}” is no longer offered`,
   cap: "its add-ons no longer fit together",
+  // A choice the venue now makes compulsory (ADR 0156) that this saved line
+  // never made — the picker would not add it, so recall does not either.
+  required: (names) => `needs a choice now: ${names}`,
 };
 
 /**
@@ -95,6 +99,12 @@ export function planRecall(saved, record) {
     const capped = groups.some((g) => !selectionAllowed(g, selection.filter((s) => s.group === g.id).length));
     if (capped) {
       miss(REASONS.cap);
+      continue;
+    }
+
+    const unanswered = missingRequired(groups, selection);
+    if (unanswered.length) {
+      miss(REASONS.required(unanswered.map((g) => g.name).join(", ")));
       continue;
     }
 
