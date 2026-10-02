@@ -131,6 +131,26 @@ export function groupsFor(record, section, item) {
 export const isSelects = (group) => group?.kind === "selects";
 
 /**
+ * Does the venue make this group's choice compulsory? (ADR 0156)
+ *
+ * `required: true` is set only where the menu says "choice of" / "choose": the
+ * dish is not complete until one option is picked. validate.py allows it on a
+ * pick-one `adds` group alone — a `selects` group is already always chosen
+ * (ADR 0130), and a pick-many group has no "how many at least" rule to state.
+ */
+export const isRequired = (group) => group?.required === true && !isSelects(group);
+
+/**
+ * The required groups `selection` has not yet answered, in offered order.
+ * Empty means the dish may be added. Pure so the picker, the row's own Add and
+ * a recalled saved order all ask the same question (saved-recall.js).
+ */
+export function missingRequired(groups, selection) {
+  const chosen = new Set((selection || []).map((s) => s.group));
+  return (groups || []).filter((g) => isRequired(g) && !chosen.has(g.id));
+}
+
+/**
  * The option a `selects` group starts on: the one marked `default`. validate.py
  * requires exactly one; the first option is a fallback for a record that got
  * past it, so the control can never render with nothing chosen.

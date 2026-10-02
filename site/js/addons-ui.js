@@ -60,6 +60,8 @@ import {
   selectionAllowed,
   composeTags,
   isSelects,
+  isRequired,
+  missingRequired,
   defaultVariant,
   variantLabel,
   configuredPrice,
@@ -353,8 +355,14 @@ const heatChips = (option) =>
  * variant's whole `dishPrice` — never the dish's price plus it — and `options`
  * is what the row's own ＋ Add should record for it (empty for the default,
  * which IS the dish as listed). Never called for a dish with no variant group.
+ *
+ * `onGate(gate, { price, options })` is called on build and on every change:
+ * `gate` is `null` when the dish may be added, or `{ reason, onBlocked }` while
+ * a REQUIRED group (ADR 0156) is unanswered, and the second argument is what
+ * the row's own ＋ Add should record — the variant plus any required choice —
+ * so the row cannot order the dish without the choice the picker insists on.
  */
-export function dishAddOns(record, section, item, onCompose, onVariant) {
+export function dishAddOns(record, section, item, onCompose, onVariant, onGate) {
   // WHICH plate before WHAT is on it: a variant group is offered first,
   // whatever order the section and the dish named their groups in. The control
   // is otherwise the same fieldset of radios a pick-one sauce is (Theme 14's
@@ -396,7 +404,17 @@ export function dishAddOns(record, section, item, onCompose, onVariant) {
 
   const warn = el("p", { className: "addon-warning", hidden: true });
   warn.setAttribute("role", "status"); // announced when it changes, not on focus
+  // Said in words, not only by a dimmed button: what is missing, and where.
+  const need = el("p", { className: "addon-need", hidden: true });
   const stepperSlot = el("div", { className: "addon-stepper" });
+  // The first radio of each required group, so a blocked tap can take the
+  // reader to the question rather than leave them to hunt for it.
+  const firstInput = new Map();
+  const requiredIds = new Set(groups.filter(isRequired).map((g) => g.id));
+  // In the DOM only while a choice is open — a hidden span would still be part
+  // of the summary's textContent.
+  const needChip = el("span", { className: "addon-summary-need", textContent: "Choice needed" });
+  const summary = el("summary", { className: "dish-addons-summary" }, [el("span", { textContent: "" })]);
 
   function meta() {
     return {
@@ -451,7 +469,30 @@ export function dishAddOns(record, section, item, onCompose, onVariant) {
     warn.classList.toggle("is-flagged", flagged || dishFlagged(tags, avoidSet));
     warn.textContent = lines.join(" ");
 
-    stepperSlot.replaceChildren(dishStepper(meta()));
+    // A required group with nothing chosen blocks Add, here and on the row.
+    const missing = missingRequired(groups, selection);
+    const gate = missing.length
+      ? {
+          reason: `choose ${missing.map((g) => g.name).join(" and ")} first`,
+          onBlocked() {
+            details.open = true;
+            // Asked again NOW: the row's stepper outlives this closure, and
+            // the first unanswered group may have moved since it was built.
+            const first = missingRequired(groups, selection)[0];
+            if (first) firstInput.get(first.id)?.focus();
+          },
+        }
+      : null;
+    need.hidden = !gate;
+    if (gate) summary.append(needChip);
+    else needChip.remove();
+    need.textContent = gate ? `To add this, choose one under ${missing.map((g) => `“${g.name}”`).join(" and ")}.` : "";
+    stepperSlot.replaceChildren(dishStepper(meta(), gate));
+    // What the row's own ＋ Add must record: the plate (variant) AND any required
+    // choice already made. Without the second, answering the question here
+    // would lift the gate and let the row order the dish with no sauce on it.
+    const rowSel = selection.filter((x) => typeof x.dishPrice === "number" || requiredIds.has(x.group));
+    onGate?.(gate, { price: configuredPrice(base, rowSel), options: lineOptions(rowSel) });
     const v = variantState();
     if (v) onVariant?.(v);
   }
@@ -516,8 +557,13 @@ export function dishAddOns(record, section, item, onCompose, onVariant) {
     }
     const single = group.select === "one";
     const cap = single ? 1 : group.max;
+    const required = isRequired(group);
+    // "Required" is a word, not a colour: the venue made this choice
+    // compulsory, and the reader should see that before they reach Add.
     const rule = single
-      ? "Choose one"
+      ? required
+        ? "Required — choose one"
+        : "Choose one"
       : typeof cap === "number"
         ? `Choose up to ${cap}`
         : "Choose any";
@@ -535,7 +581,11 @@ export function dishAddOns(record, section, item, onCompose, onVariant) {
     // is deliberately NOT pushed into the selection: it carries no tags, and
     // an empty tag list run through the intersection rule would strip every
     // dietary claim off the dish for choosing nothing.
-    if (single) {
+    // A REQUIRED group (ADR 0156) has none: the venue's menu says "choice of",
+    // so there is no valid "nothing", and nothing is pre-selected either —
+    // a default would be a choice the reader never made, on a dish whose
+    // allergens depend on it. Add waits instead (refresh → the gate).
+    if (single && !required) {
       const none = el("input", {
         type: "radio",
         className: "addon-input",
@@ -569,6 +619,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant) {
         name: `addon-${record.id}-${id}-${group.id}`,
         value: option.name,
       });
+      if (required && !firstInput.has(group.id)) firstInput.set(group.id, input);
       input.addEventListener("change", () => {
         if (single) {
           // A radio group replaces rather than accumulates.
@@ -626,12 +677,12 @@ export function dishAddOns(record, section, item, onCompose, onVariant) {
       : variantGroups.length > 0 && variantGroups.length < groups.length
         ? `${variantGroups.map((g) => g.name).join(", ")} and extras`
         : "Add extras";
+  summary.firstChild.textContent = summaryText;
   const details = el("details", { className: "dish-addons" }, [
-    el("summary", { className: "dish-addons-summary" }, [
-      el("span", { textContent: summaryText }),
-    ]),
+    summary,
     body,
     warn,
+    need,
     stepperSlot,
   ]);
 

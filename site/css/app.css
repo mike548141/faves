@@ -1956,6 +1956,15 @@ body.filters-inline .filter-foot {
   white-space: nowrap;
   cursor: pointer;
 }
+/* A required add-on choice is still open (ADR 0156). Dashed outline, no fill
+   (no opacity: dimmed text would fail AA contrast), and the
+   words "choose …first" ride in its aria-label and the picker's note — never
+   colour alone. aria-disabled, not `disabled`: it stays focusable so the reason
+   can be reached, and a tap takes the reader to the unanswered group. */
+.stepper-add.is-blocked {
+  border-style: dashed;
+  background: transparent;
+}
 .stepper-btn {
   width: 44px;
   height: 44px;
@@ -6230,6 +6239,23 @@ body:not(.menu-page):has(> .order-fab:not([hidden])) > main {
 .addon-warning.is-flagged {
   background: var(--warn-bg);
   color: var(--warn-ink);
+  font-weight: 700;
+}
+/* Why Add is waiting, in words (ADR 0156). Present only while a required
+   group is unanswered. */
+.addon-need {
+  margin: var(--space-1) 0 0;
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+}
+.addon-summary-need {
+  margin-left: var(--space-1);
+  padding: 0.1em 0.6em;
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius-chip);
+  color: var(--accent);
+  font-size: var(--step-sub);
   font-weight: 700;
 }
 .addon-stepper {

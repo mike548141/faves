@@ -129,7 +129,7 @@ ADD_ON_SELECT = {"one", "many"}
 # is the default, and each option states the dish's whole price for that
 # variant (`dishPrice`), never a surcharge.
 ADD_ON_KINDS = {"adds", "selects"}
-ADD_ON_GROUP_KEYS = {"id", "name", "kind", "select", "max", "price", "options"}
+ADD_ON_GROUP_KEYS = {"id", "name", "kind", "select", "required", "max", "price", "options"}
 ADD_ON_OPTION_KEYS = {"name", "id", "price", "dishPrice", "default", "tags"}
 # The tags that make a dietary CLAIM, `-option` forms included — the Python
 # mirror of DIET_FILTERS' `satisfies` lists in site/js/dietary.js, which is what
@@ -1542,6 +1542,28 @@ def check_add_on_groups(rid, data):
             if g.get("select") not in ADD_ON_SELECT:
                 err(rid, f"{where}: select must be one of {sorted(ADD_ON_SELECT)}, got {g.get('select')!r}")
             check_add_on_price(rid, g, where)
+
+        # `required` (ADR 0156): the venue's menu makes this choice compulsory
+        # ("choice of…", "choose…"), so the picker offers no None and Add waits.
+        # Only `true` is meaningful, and only on a pick-one `adds` group:
+        #  - `false` is refused, not tolerated: absence already means optional,
+        #    and a second spelling of it is a field a transcriber believes is
+        #    doing something.
+        #  - a `selects` group is always chosen already (ADR 0130).
+        #  - a pick-many group would need a MINIMUM ("choose at least 2"), which
+        #    is a different rule nobody has asked for; refusing `required` there
+        #    leaves the door open to design it, rather than guessing now that it
+        #    means "at least one".
+        if "required" in g:
+            if g["required"] is not True:
+                err(rid, f"{where}: required must be true or absent, got {g['required']!r} "
+                         "— absent already means optional (ADR 0156)")
+            elif selects:
+                err(rid, f"{where}: required does not apply to a selects group — a "
+                         "variant is always chosen (ADR 0130, ADR 0156)")
+            elif g.get("select") != "one":
+                err(rid, f"{where}: required only applies to a pick-one group — a pick-many "
+                         "group has no minimum to state (ADR 0156)")
 
         # "Choose up to 3" is a rule the venue set, so it lives in the data — but
         # only a pick-many group can have one, and a cap above the options is a
