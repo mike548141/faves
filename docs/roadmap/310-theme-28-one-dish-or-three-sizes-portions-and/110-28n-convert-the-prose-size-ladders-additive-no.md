@@ -1,4 +1,4 @@
-- [~] **28n — Convert the prose size ladders: additive, and no id moves**
+- [x] **28n — Convert the prose size ladders: additive, and no id moves**
       `[L][data]` — population A of `28h`'s measurement, and this is `28b`'s
       long-standing work finally given a shape to land in.
 
@@ -66,3 +66,27 @@
   📌 **Claimed 2026-10-02 04:40 UTC (`faves-77`): the second batch, the
   unlabelled rungs the owner ruled convertible (worker in a worktree).
   Abrakebabra still excluded.**
+
+  ✅ **Second batch built 2026-10-02 (`faves-77` worker, PR pending).** 82
+  rows became `selects` groups with unlabelled rungs: Victoria 31, Borough 27,
+  Southern Cross 15, Khandallah 9. Dish counts (189, 132, 141, 72), ids,
+  prices, tags and tagNotes are identical before and after. An unlabelled rung
+  has no name and an id `size-N`; a rung the menu names ("425ml", "Large
+  glass", "Bottle", "Large", "1L") keeps its name. Left as prose:
+  - Victoria 2 rows: Lucky's espresso. Trimming "with milk" orphans the
+    `contains-dairy` tip (re-tried, `--explain --check` red, reverted).
+  - Simmer 5: two dishes printed on one line ($18 / $16), three happy-hour
+    "$1 off" lines. None is a ladder of one dish.
+  - Spices Indian 2: the Combo's "without drink" price (a different plate,
+    not a size) and the samosa (no dish price to be the default).
+  - Petone 1: "All pizzas $24" is a section note, not a ladder.
+  Khandallah's Voyage water names its 500ml rung because the dish title does.
+
+  ✅ **Closed 2026-10-02 (`faves-77`, PR #97, merged with CI 8 of 8).** Batch
+  two converted 82 rows at four venues (counts and reasons above); every
+  convertible ladder outside Abrakebabra is now a choice. What stays prose
+  does so under the refusals that still bind, or is not a ladder at all
+  (Simmer's five, Spices' two, Petone's section note, Lucky's espresso).
+  Abrakebabra stays `28o`'s. Orchestrator checked the Victoria wine render
+  at 390 px ("$11 size", "Large glass $19", "Bottle $50") and re-ran
+  `gen_summaries --check` and `validate.py` on `main` after the merge.

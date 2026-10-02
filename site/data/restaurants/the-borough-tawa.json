@@ -94,6 +94,154 @@
           ]
         }
       ]
+    },
+    {
+      "id": "size-11-22",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 11.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "id": "size-2",
+          "dishPrice": 22.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-14-28",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 14.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "id": "size-2",
+          "dishPrice": 28.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-12-24",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 12.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "id": "size-2",
+          "dishPrice": 24.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-11-50",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 11.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 50.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-11-18-50",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 11.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 50.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-14-23-65",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 14.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 23.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 65.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-13-21-60",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "id": "size-1",
+          "dishPrice": 13.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Large glass",
+          "id": "large-glass",
+          "dishPrice": 21.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 60.0,
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -869,103 +1017,136 @@
         {
           "name": "Export Ultra Low Carb Lager",
           "dishId": "export-ultra-low-carb-lager",
-          "desc": "4.2%. Larger pour $22.00; the menu doesn't label the size.",
+          "desc": "4.2%.",
           "price": 11.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."},
+          "addOns": [
+            "size-11-22"
+          ]
         },
         {
           "name": "Tuatara Hazy Pale Ale",
           "dishId": "tuatara-hazy-pale-ale",
-          "desc": "5.5%. Larger pour $28.00; the menu doesn't label the size.",
+          "desc": "5.5%.",
           "price": 14.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."},
+          "addOns": [
+            "size-14-28"
+          ]
         },
         {
           "name": "Tuatara Adapt APA",
           "dishId": "tuatara-adapt-apa",
-          "desc": "5%. Larger pour $28.00; the menu doesn't label the size.",
+          "desc": "5%.",
           "price": 14.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product."},
+          "addOns": [
+            "size-14-28"
+          ]
         },
         {
           "name": "Tuatara Interstellar IPA",
           "dishId": "tuatara-interstellar-ipa",
-          "desc": "6%. Larger pour $28.00; the menu doesn't label the size.",
+          "desc": "6%.",
           "price": 14.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."},
+          "addOns": [
+            "size-14-28"
+          ]
         },
         {
           "name": "Monteith's Wayfarer Pilsner",
           "dishId": "monteith-s-wayfarer-pilsner",
-          "desc": "4.9%. Larger pour $22.00; the menu doesn't label the size.",
+          "desc": "4.9%.",
           "price": 11.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."},
+          "addOns": [
+            "size-11-22"
+          ]
         },
         {
           "name": "Monteith's Original Ale",
           "dishId": "monteith-s-original-ale",
-          "desc": "4%. Larger pour $22.00; the menu doesn't label the size.",
+          "desc": "4%.",
           "price": 11.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."},
+          "addOns": [
+            "size-11-22"
+          ]
         },
         {
           "name": "Monteith's West Coast Hazy IPA",
           "dishId": "monteith-s-west-coast-hazy-ipa",
-          "desc": "5.5%. Larger pour $24.00; the menu doesn't label the size.",
+          "desc": "5.5%.",
           "price": 12.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."},
+          "addOns": [
+            "size-12-24"
+          ]
         },
         {
           "name": "Monteith's Golden Lager",
           "dishId": "monteith-s-golden-lager",
-          "desc": "2.5%. Larger pour $22.00; the menu doesn't label the size.",
+          "desc": "2.5%.",
           "price": 11.0,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."},
+          "addOns": [
+            "size-11-22"
+          ]
         },
         {
           "name": "Monteith's Crushed Apple Cider",
           "dishId": "monteith-s-crushed-apple-cider",
-          "desc": "4.5%. Larger pour $24.00; the menu doesn't label the size.",
+          "desc": "4.5%.",
           "price": 12.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-12-24"
+          ]
         },
         {
           "name": "Monteith's Hazy Lemonade",
           "dishId": "monteith-s-hazy-lemonade",
-          "desc": "4.2%. Larger pour $24.00; the menu doesn't label the size.",
+          "desc": "4.2%.",
           "price": 12.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-12-24"
+          ]
         },
         {
           "name": "Guest Tap",
           "dishId": "guest-tap",
-          "desc": "Strength varies. Larger pour $28.00; the menu doesn't label the size.",
+          "desc": "Strength varies.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14-28"
+          ]
         }
       ]
     },
@@ -1184,9 +1365,12 @@
         {
           "name": "De Bortoli KV Prosecco",
           "dishId": "de-bortoli-kv-prosecco",
-          "desc": "Australia. $50.00 bottle.",
+          "desc": "Australia.",
           "price": 11.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-11-50"
+          ]
         },
         {
           "name": "Mionetto Prestige Prosecco",
@@ -1204,51 +1388,72 @@
         {
           "name": "Fleur de Lis Sauvignon Blanc",
           "dishId": "fleur-de-lis-sauvignon-blanc",
-          "desc": "Marlborough. $18.00 large glass; $50.00 bottle.",
+          "desc": "Marlborough.",
           "price": 11.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-11-18-50"
+          ]
         },
         {
           "name": "Ngā Waka Sauvignon Blanc",
           "dishId": "ng-waka-sauvignon-blanc",
-          "desc": "Martinborough. $23.00 large glass; $65.00 bottle.",
+          "desc": "Martinborough.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14-23-65"
+          ]
         },
         {
           "name": "Divinity Cross Pinot Gris",
           "dishId": "divinity-cross-pinot-gris",
-          "desc": "Gisborne. $18.00 large glass; $50.00 bottle.",
+          "desc": "Gisborne.",
           "price": 11.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-11-18-50"
+          ]
         },
         {
           "name": "Devil's Staircase Pinot Gris",
           "dishId": "devil-s-staircase-pinot-gris",
-          "desc": "Central Otago. $23.00 large glass; $65.00 bottle.",
+          "desc": "Central Otago.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14-23-65"
+          ]
         },
         {
           "name": "Growers Mark Chardonnay",
           "dishId": "growers-mark-chardonnay",
-          "desc": "Gisborne. $21.00 large glass; $60.00 bottle.",
+          "desc": "Gisborne.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-60"
+          ]
         },
         {
           "name": "Three Paddles Chardonnay",
           "dishId": "three-paddles-chardonnay",
-          "desc": "Martinborough. $23.00 large glass; $65.00 bottle.",
+          "desc": "Martinborough.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14-23-65"
+          ]
         },
         {
           "name": "Lake Chalice The Falcon Riesling",
           "dishId": "lake-chalice-the-falcon-riesling",
-          "desc": "Marlborough. $21.00 large glass; $60.00 bottle.",
+          "desc": "Marlborough.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-60"
+          ]
         }
       ]
     },
@@ -1259,16 +1464,22 @@
         {
           "name": "Bijou Terre de Providence Rosé",
           "dishId": "bijou-terre-de-providence-ros",
-          "desc": "Pays d'Oc, France. $21.00 large glass; $60.00 bottle.",
+          "desc": "Pays d'Oc, France.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-60"
+          ]
         },
         {
           "name": "Monarch Rosé",
           "dishId": "monarch-ros",
-          "desc": "Gisborne. $18.00 large glass; $50.00 bottle.",
+          "desc": "Gisborne.",
           "price": 11.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-11-18-50"
+          ]
         }
       ]
     },
@@ -1279,37 +1490,52 @@
         {
           "name": "Rebel Merlot",
           "dishId": "rebel-merlot",
-          "desc": "Hawke's Bay. $18.00 large glass; $50.00 bottle.",
+          "desc": "Hawke's Bay.",
           "price": 11.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-11-18-50"
+          ]
         },
         {
           "name": "Fire Eagle Pinot Noir",
           "dishId": "fire-eagle-pinot-noir",
-          "desc": "Marlborough. $18.00 large glass; $50.00 bottle.",
+          "desc": "Marlborough.",
           "price": 11.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-11-18-50"
+          ]
         },
         {
           "name": "The Bluff Pinot Noir",
           "dishId": "the-bluff-pinot-noir",
-          "desc": "Central Otago. $23.00 large glass; $65.00 bottle.",
+          "desc": "Central Otago.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14-23-65"
+          ]
         },
         {
           "name": "Brookfields Cabernet Sauvignon",
           "dishId": "brookfields-cabernet-sauvignon",
-          "desc": "Hawke's Bay. $21.00 large glass; $60.00 bottle.",
+          "desc": "Hawke's Bay.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-13-21-60"
+          ]
         },
         {
           "name": "Trinity Hill Syrah",
           "dishId": "trinity-hill-syrah",
-          "desc": "Hawke's Bay. $23.00 large glass; $65.00 bottle.",
+          "desc": "Hawke's Bay.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-14-23-65"
+          ]
         }
       ]
     },
@@ -1320,9 +1546,12 @@
         {
           "name": "Marlborough Sun 0% Sauvignon Blanc",
           "dishId": "marlborough-sun-0-sauvignon-blanc",
-          "desc": "Marlborough. $18.00 large glass; $50.00 bottle.",
+          "desc": "Marlborough.",
           "price": 11.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-11-18-50"
+          ]
         }
       ]
     },

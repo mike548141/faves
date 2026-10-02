@@ -33,6 +33,11 @@ content freshness separately from this file.
   burgers by the size are now picked on the dish (Southern Cross, Hotel
   Bristol, Spices Indian, Baylands, BurgerFuel) instead of read from the
   description. The dish, its heart and its price are unchanged.
+- **Sizes the menu never names become choices on 82 more dishes.** Beers,
+  wines, juice and coffee at The Victoria Tavern, The Borough, Khandallah
+  Trading Company and Southern Cross list a second or third price without
+  saying what it is. They are now picked on the dish and read "$24 size"
+  rather than being given a name the menu never printed.
 - **Saved orders — "my Subway".** In the order sheet, "Save this order" names
   what you have for a place ("My Subway") and keeps it on this phone, for you
   rather than for whoever else uses it. On that place's menu, "Your saved
