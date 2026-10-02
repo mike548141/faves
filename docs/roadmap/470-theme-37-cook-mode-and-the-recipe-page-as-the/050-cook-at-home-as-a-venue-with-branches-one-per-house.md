@@ -161,3 +161,7 @@
   comparison, used only when no private house is near (needs the private
   store). Recommended: 1 now, decide 1 or 3 when the private store is built.
   📌 **Claim released.** Still owed: the private-branch store and its ADR.
+
+  ✅ **Owner ruled 2026-10-02: no distance for the wildcard now**; decide
+  between that and "only when no private house is near" when the
+  private-branch store is built.

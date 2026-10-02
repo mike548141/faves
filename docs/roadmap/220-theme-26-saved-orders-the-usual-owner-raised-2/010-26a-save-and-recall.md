@@ -17,3 +17,6 @@
   🎯 **Forks recorded for the owner, each built as recommended:** recall
   ADDS to the tally rather than replacing it; per person, not per device;
   save lives in the order sheet, recall on the menu page.
+
+  ✅ **Owner ruled 2026-10-02: keep as built** (recall adds; per person;
+  save in the sheet, recall on the menu page).

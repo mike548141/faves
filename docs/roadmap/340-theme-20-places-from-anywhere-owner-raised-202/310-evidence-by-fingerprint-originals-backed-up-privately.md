@@ -54,3 +54,10 @@
   atelier's and is filed there.
   📌 **Claim released** after part 1. Parts 2–3 wait on the owner's one-line
   Drive confirmation; part 4 (deleting `evidence-stripped/`) on his go.
+
+  ✅ **Owner ruled 2026-10-02: yes to parts 2–4.** The destination is his
+  Google Workspace Drive (the only Drive on this machine), and
+  `evidence-stripped/` (derived copies) may be deleted once part 3's re-hash
+  of the Drive copies passes. The health transcripts and food-log exports
+  are still never opened or copied. Ready to take; do it in a fresh session
+  and verify before the delete, which cannot be undone.

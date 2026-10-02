@@ -109,3 +109,7 @@
   store; (2) a saved order line on a retired row will not combine with "base
   + size": accept (recommended for now) or record an option id beside each
   `formerIds` entry for 28o.
+
+  ✅ **Owner ruled 2026-10-02: accept both recommendations** — `formerIds` is
+  the only record of a merged-away row, and the saved-order line edge case
+  is accepted for now (revisit if 28o needs it).

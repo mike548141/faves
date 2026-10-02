@@ -461,3 +461,4 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [A heart on a moved recipe follows it](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/400-hearts-follow-a-moved-recipe.md)
 - [ ] ⏳ [Turn the KV mirror off after a clean week](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/410-turn-the-kv-mirror-off-after-a-clean-week.md)
 - [ ] 🔎 [Two flakes seen under heavy load on 2026-10-02, neither named](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/420-flakes-under-load-2026-10-02.md)
+- [ ] [A banner outside Settings while sync waits for an answer](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/430-a-banner-when-sync-waits-for-an-answer.md)

@@ -56,3 +56,9 @@
   convert, rendering as "$24 size". That would take most of the remaining
   beers and wines. Convert them, or keep them prose?
   📌 **Claim released.** Abrakebabra (the size × protein venue) stays 28o's.
+
+  ✅ **Owner ruled 2026-10-02: convert the unlabelled rungs** as ADRs 0130 and
+  0133 already allow (an unlabelled variant reads "$24 size"; nothing
+  invented). Those accepted ADRs supersede this item's older "stays prose"
+  line for unlabelled sizes; the other two refusals (two volumes at one
+  price, an empty slot) still bind. Ready to take, Abrakebabra still last.

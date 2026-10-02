@@ -117,3 +117,9 @@ URL parameter than the description above assumed.
   "part-done", which the house board does not define — `[~]` means
   *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
   § Claiming work). What is done is carried in the body above.
+
+  ✅ **Owner ruled 2026-10-02: do the remaining rename** (the `services`
+  record field across the venues, `validate.py`, the schema, and the
+  `search.js` "service" vocabulary), with a read-both-names bridge for one
+  release so an installed phone on the old shell keeps its filter. The
+  visible label stays a separate te reo question. Ready to take.
