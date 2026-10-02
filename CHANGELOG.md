@@ -251,6 +251,9 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Closing Settings puts you back on the ⋯ button.** It used to drop focus to
+  the top of the page, so a keyboard or screen-reader user lost their place.
+  Closing by the ✕, Escape or a tap outside now all return to ⋯.
 - **Hell Pizza's Half Buffalo Half Beast now warns about dairy and nuts.** It
   was tagged only for gluten and pork, though both halves are mozzarella pizzas
   and The Buffalo carries pesto. Simmer's caramel and citrus slices now show

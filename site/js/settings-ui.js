@@ -1407,10 +1407,23 @@ export function initSettingsUI() {
     settings.set({ farKm: dialKm(far.input.value, "farKm", settings.get().units) })
   );
 
-  btn.addEventListener("click", () => {
+  // The ONE way the sheet opens. The browser hands focus back on close to
+  // whatever had it on open. Every opener loses that element first: the menu
+  // item (#settings-btn) sits inside the ⋯ menu, which closes on the same
+  // click and stops rendering it; the banner's button and the "change your
+  // distance limit" buttons are removed by what they do. Focus would fall to
+  // <body> — the top of the document for a keyboard reader (roadmap 230/020).
+  // So park focus on the always-rendered ⋯ button first. Checking
+  // `activeElement` from the dialog's own `close` event does not work: by then
+  // the restore has already happened.
+  function openSheet() {
     sync();
+    if (dialog.open) return;
+    (document.getElementById("overflow-btn") ?? btn).focus();
     dialog.showModal();
-  });
+  }
+
+  btn.addEventListener("click", openSheet);
   // The "sync is waiting for you" banner's button (roadmap 510/430): straight
   // to the question, not to the top of Settings for the reader to hunt. Sync
   // is a section of "Your data", so that is the panel; the question's own
@@ -1419,17 +1432,7 @@ export function initSettingsUI() {
     const topic = TOPICS.find((t) => t.key === "data");
     if (!topic) return;
     e.preventDefault();
-    sync();
-    if (!dialog.open) {
-      // The browser hands focus back on close to whatever had it on open. That
-      // would be the banner's button, which answering removes, so focus would
-      // fall to <body> — the top of the document for a keyboard reader. Open
-      // from the ⋯ menu button instead: it is on every page and is the way to
-      // Settings. (Settings' own button sits inside that menu, closed and
-      // unrendered here, so it cannot take focus.)
-      (document.getElementById("overflow-btn") ?? btn).focus();
-      dialog.showModal();
-    }
+    openSheet();
     open(topic, null);
     const q = dialog.querySelector(".sync-body .settings-sub[tabindex]");
     if (q) {
