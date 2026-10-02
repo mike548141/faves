@@ -265,6 +265,9 @@ CASES = {
     "menu item loses its name": (lambda d: _first_item(d).pop("name", None), "error", r'menu item missing a name'),
     "price becomes a string": (lambda d: _first_item(d).update(price="free"), "error", 'price for .* must be a number or null \\(not a string\\)'),
     "price becomes a boolean": (lambda d: _first_item(d).update(price=True), "error", r'price for .* must not be a boolean'),
+    "order mode set to nonsense": (lambda d: d.update(orderMode=["drive-thru"]), "error", r"unknown order mode 'drive-thru'"),
+    "order mode emptied on a venue": (lambda d: d.update(orderMode=[]), "error", r"orderMode must be a non-empty list"),
+    "venue file still spells the old name": (lambda d: d.update(services=d.get("orderMode")), "error", r"unknown key 'services'"),
     "status set to nonsense": (lambda d: d.update(status="banana"), "error", r"status 'banana' not in "),
     "bogus dietary tag": (lambda d: _first_item(d).update(tags=["not-a-real-tag"]), "error", r"unknown tag 'not-a-real-tag' on "),
     # All four dietary claims have an `-option` form (owner ruling, 2026-08-16).
