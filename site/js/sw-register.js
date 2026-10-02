@@ -19,6 +19,8 @@ import { isTabStale } from "./store.js";
 // The "reload this tab" notice (roadmap 510/110): listens for store.js marking
 // this tab stale, from the first write or storage event that shows it.
 import "./stale-tab-ui.js";
+// The "sync is waiting for your answer" banner (roadmap 510/430), on every page.
+import "./sync-banner-ui.js";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

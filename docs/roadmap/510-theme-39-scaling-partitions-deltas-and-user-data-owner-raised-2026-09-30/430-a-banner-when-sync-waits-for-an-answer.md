@@ -12,3 +12,17 @@
 
   📌 **Claimed 2026-10-02 04:12 UTC (`faves-77`): the banner (worker in a
   worktree).**
+
+  📌 **Shipped 2026-10-02 (worker for `faves-77`, PR pending merge).**
+  `sync-banner.js` (pure: shows only while `sync.status()` carries the
+  no-base question, so it follows `faves.sync.v1.ask`) and
+  `sync-banner-ui.js`, imported by `sw-register.js`, which all three shells
+  load. In flow at the top of `<body>`, never fixed, so it covers nothing;
+  a labelled region, silent at load, announced politely only when it
+  appears mid-page. Its button fires an event Settings answers by opening
+  Your data on the question, focus on its heading. Other tabs learn through
+  `sync.subscribe` (the existing `storage`-event repaint), no new mechanism.
+  Cook mode is a modal over the recipe page and is left alone. Verified:
+  `tests/sync-banner.test.js`; `sync_check` 39 passed (+7, two tabs); three
+  break-probes (banner off, no subscribe, never removed) each fail it;
+  `to_top_check`, `chatty_check`, `boot_check`, `device_check` green.

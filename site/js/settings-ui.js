@@ -54,6 +54,7 @@ import {
   futureAllergens,
 } from "./settings.js";
 import { recallOrigin } from "./geo.js";
+import { OPEN_SYNC_QUESTION } from "./sync-banner.js";
 import { UNIT_OPTIONS, unitsLabel, dialSpec, dialValue, dialKm, formatDial } from "./units.js";
 import { fxAsOf, fxCurrencies } from "./fx.js";
 import { localCurrency } from "./locale.js";
@@ -1409,6 +1410,23 @@ export function initSettingsUI() {
   btn.addEventListener("click", () => {
     sync();
     dialog.showModal();
+  });
+  // The "sync is waiting for you" banner's button (roadmap 510/430): straight
+  // to the question, not to the top of Settings for the reader to hunt. Sync
+  // is a section of "Your data", so that is the panel; the question's own
+  // heading takes focus so a screen reader lands on it.
+  document.addEventListener(OPEN_SYNC_QUESTION, (e) => {
+    const topic = TOPICS.find((t) => t.key === "data");
+    if (!topic) return;
+    e.preventDefault();
+    sync();
+    if (!dialog.open) dialog.showModal();
+    open(topic, null);
+    const q = dialog.querySelector(".sync-body .settings-sub[tabindex]");
+    if (q) {
+      q.scrollIntoView({ block: "start" });
+      q.focus();
+    }
   });
   wireDialog(dialog, { closeBtn: close });
 
