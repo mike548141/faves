@@ -7,8 +7,8 @@
   are not optional: Satay Kingdom's Stir Fry Vegetables is "with choice of
   sweet & sour sauce, satay sauce or chef special sauce", and the picker
   offers None first. The order line then names no sauce, so the kitchen has
-  to ask, and a peanut-allergic reader can leave satay unflagged by not
-  choosing.
+  to ask. (Not an allergen hole today: the dish's own chips still carry
+  every option's allergens — PEANUTS shows on that dish whatever is picked.)
 
   Size groups already refuse None ("a plate always has a size", ADR 0130).
   The gap is that a group has no way to say *required* — the min/max
