@@ -1,4 +1,4 @@
-- [~] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
+- [ ] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
   RULED 2026-09-28 (option C, via AskUserQuestion, after an impact
   analysis)** `[M][tools]` — this replaces 340/250 part (4). **Nothing from
   `intake/` is committed to the public repo.**
@@ -65,3 +65,30 @@
   📌 **Claimed 2026-10-02 04:12 UTC (`faves-77`): parts 2–4 (Drive copy,
   re-hash, then the delete), inline on the primary checkout, which is the only
   one holding `intake/`.**
+
+  ✅ **Parts 2–3 done 2026-10-02 (`faves-77`).** 294 files copied, with
+  their GPS, to `My Drive/Faves evidence/intake/`, mirroring `intake/`:
+  `menus/` 87, `recipes/` 23 (two HEIC included), `ingredients/
+  raw_food_photos/` 183, and the one fetched web page whose fingerprint
+  `recipe-sources.json` carries. Selection was an ALLOW-list of those three
+  trees, not "every image": `ingredients/Healthy Mike_files/` holds 105 images
+  that are the saved transcript's own assets, and an images-only filter
+  would have copied them. Nothing from that transcript, the Gemini file or
+  the food-log exports was opened or copied.
+  **Verified three ways:** every copy re-hashed equal to its source
+  (294/294); every committed fingerprint matched its copy (89/89: 88 menu
+  rows + the recipe snapshot; none fingerprinted-but-unselected; nothing
+  extra in the Drive folder); and upload, not just the local cache — Drive
+  for desktop stamps a cloud item id on each file once uploaded (294/294
+  carry one), and three ids were resolved through the Drive API to the same
+  name and byte size. The scripts were session scratch, not committed.
+  🛑 **Part 4 is NOT done: the permission system refused `rm -rf` of
+  `evidence-stripped/`**, and it was not routed around. Checked before the
+  attempt: all 406 files in it are derived copies whose originals are in
+  `intake/` (two are HEIC transcodes of `recipes/Archive/Attachments/`), and
+  nothing in `tools/` reads it — so deleting it loses nothing.
+  🎯 **Owed: the owner deletes it himself
+  (`rm -rf ~/.pets/faves/evidence-stripped`, 1.7 GB), or allows the command
+  for a session.** Claim released.
+  💡 **Not built, noted:** photos added to `intake/` after today are not
+  backed up by anything; a re-run copies only what is new or changed in size.
