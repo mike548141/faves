@@ -74,3 +74,10 @@
   2026-09-09).** Options (a), (b) and (c) all stand; nothing here answers them,
   and (c) still changes a standing rule and is his alone. The bracket stays
   `- [ ]`.
+
+  ✅ **Owner ruled 2026-10-03 (asked by `faves-77`, via AskUserQuestion):
+  option (b), a session with a browser that can click** reads each store's
+  hours widget on the chains' OWN sites (first-party, no rule change). If
+  the sites refuse an automated browser, the session reports that and
+  stops; options (a) and (c) were not chosen. Ready to take, in a session
+  that has an interactive-browser tool.

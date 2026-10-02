@@ -19,3 +19,10 @@
   which would wrongly force optional free extras; (c) leave it.
   Any of these is a schema change and wants an ADR; `addon_check` must
   assert both the required and the optional shape.
+
+  ✅ **Owner ruled 2026-10-03 (asked by `faves-77`, via AskUserQuestion):
+  option (a), a `required` flag** — set only where the menu says "choice
+  of"/"choose"; a required group shows no None and Add waits for a choice;
+  optional extras keep theirs. Needs an ADR, the schema line in
+  `ARCHITECTURE.md`, `validate.py`, and `addon_check` asserting both shapes.
+  Ready to take.

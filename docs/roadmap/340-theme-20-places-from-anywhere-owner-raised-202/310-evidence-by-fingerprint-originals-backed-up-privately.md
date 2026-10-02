@@ -92,3 +92,7 @@
   for a session.** Claim released.
   💡 **Not built, noted:** photos added to `intake/` after today are not
   backed up by anything; a re-run copies only what is new or changed in size.
+
+  ✅ **Owner ruled 2026-10-03 (asked by `faves-77`): he runs the delete
+  himself** (`rm -rf ~/.pets/faves/evidence-stripped`). A session does not
+  take this; the item closes when he says it is done.
