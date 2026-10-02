@@ -126,3 +126,27 @@ URL parameter than the description above assumed.
 
   📌 **Claimed 2026-10-02 04:12 UTC (`faves-77`): the record-field rename, the
   `search.js` vocabulary and the one-release bridge (worker in a worktree).**
+
+  ✅ **Shipped 2026-10-02 (`faves-77`, branch `faves-77/010-ordermode-field`):**
+  the record field is `orderMode` in all venue files, `validate.py`
+  (`ORDER_MODES`, `VENUE_KEYS`, messages), the `ARCHITECTURE.md` schema,
+  `search.js` (`orderMode`, `matchField: "orderMode"`), `picker.js`, and
+  `search.hint.orderMode`. The dead `.chip-service` rule is deleted. One
+  user-visible string moved: *"Matched: service"* is now *"Matched: order
+  mode"* (the visible filter label, "Dining", is untouched). Still open: the
+  te reo for the label, as ruled.
+  🔎 **Skew, established from `sw.js`:** the home filter reads
+  `data/summary.json` only (`loadRestaurants`); no shell reader takes
+  `services` from a venue file, and `search-index.json` never carried it.
+  Both skews are reachable. OLD shell + NEW data: a new worker's install
+  syncs data into the shared `faves-data` store (pointer is per schema, not
+  per shell) while the old shell is still the one running, and the old
+  worker's own background sync does the same. NEW shell + OLD data: install
+  tolerates a failed data sync when a set is already held. Bridge, one half
+  each: `gen_summaries.mjs` mirrors `orderMode` into `services` in
+  `summary.json` only (one duplicated array per venue, one file; ADR 0047);
+  `data.js` `readOrderMode` maps a `services`-only summary record to
+  `orderMode` at load. Both `#!#`-marked: remove after 2026-10-16.
+  Break-probe: with both halves removed, `tests/data-loader.test.js` failed
+  two tests (`orderMode` undefined where `['takeaway','dine-in']` expected;
+  legacy mirror undefined); restored, 22 pass.
