@@ -271,7 +271,7 @@ async function run(opts) {
       sessionId
     );
 
-    const { evalPage, settle, click } = createDriver(cdp, sessionId, (m) => report.step(m));
+    const { evalPage, settle, click, press } = createDriver(cdp, sessionId, (m) => report.step(m));
 
     const snap = () => evalPage(snapshotExpr(seedDish.name));
 
@@ -1169,6 +1169,77 @@ async function run(opts) {
       Object.values(shipped).every((t) => t.length > 100 && !/fixture home|fixture unhearted|u:fixture|u:mine/.test(t)),
       Object.entries(shipped).map(([f, t]) => `${f} ${t.length}B`).join(", ")
     );
+
+    // --- 11. Closing Settings hands focus to something that still exists -------
+    // (roadmap 230/020.) A modal <dialog> restores focus on close to whatever had
+    // it on open. Settings is opened from #settings-btn, which sits inside the ⋯
+    // menu that closes on the same click, so the target was unrendered and focus
+    // fell to <body> — a keyboard reader back at the top of the document. (On
+    // Escape Chrome left it on the hidden #settings-title instead: equally
+    // nowhere.) No unit test can see this: it is where the BROWSER puts focus.
+    // Three pages x three ways to close, opened with the mouse, plus a
+    // keyboard-opened (Enter, ArrowDown, Enter) run per page. The fix is in
+    // settings-ui.js's openSheet(); the expected landing is #overflow-btn.
+    const focusUrl = {
+      home: url.replace(/restaurant\.html.*$/, "index.html"),
+      menu: url,
+      recipe: url.replace(/restaurant\.html.*$/, `recipe.html?id=cook-at-home&dish=${PUBLISHED_RECIPE.dishId}`),
+    };
+    const settingsOpen = `!!document.querySelector("dialog.settings-sheet[open]")`;
+    const focusNow = `(() => { const a = document.activeElement;
+      return a === document.body ? "<body>" : (a.id ? "#" + a.id : a.tagName.toLowerCase()); })()`;
+    const key = async (k, code, text) => {
+      const base = { key: k, code: k, windowsVirtualKeyCode: code, nativeVirtualKeyCode: code };
+      await cdp.send("Input.dispatchKeyEvent", { ...base, type: text ? "keyDown" : "rawKeyDown", text }, sessionId);
+      await cdp.send("Input.dispatchKeyEvent", { ...base, type: "keyUp" }, sessionId);
+      await settle();
+    };
+    for (const [page, pageUrl] of Object.entries(focusUrl)) {
+      for (const how of ["mouse", "keyboard"]) {
+        for (const closer of how === "mouse" ? ["close button", "Escape", "backdrop"] : ["Escape"]) {
+          await cdp.send("Page.navigate", { url: pageUrl }, sessionId);
+          await untilPresent(
+            () => evalPage(`!!document.querySelector(".overflow") && !document.querySelector(".overflow").hidden && !document.querySelector("#settings-btn").hidden`),
+            { label: `the ${page} page's ⋯ menu` }
+          );
+          await settle();
+          if (how === "mouse") {
+            await click("#overflow-btn");
+            await click("#settings-btn");
+          } else {
+            await evalPage(`document.getElementById("overflow-btn").focus()`);
+            await key("Enter", 13, "\r");
+            const ids = await evalPage(`[...document.querySelectorAll('#overflow-menu [role=menuitem]:not([hidden])')].map((e) => e.id)`);
+            for (let i = 0; i < ids.indexOf("settings-btn"); i++) await key("ArrowDown", 40);
+            await key("Enter", 13, "\r");
+          }
+          await untilPresent(() => evalPage(settingsOpen), { label: "Settings to open" });
+          if (closer === "close button") {
+            await click(".settings-sheet .settings-close");
+          } else if (closer === "Escape") {
+            await press("Escape");
+          } else {
+            // A click outside the sheet lands on the dialog's backdrop. The
+            // sheet is a bottom sheet at 390 px, so widen to find one.
+            await cdp.send("Emulation.setDeviceMetricsOverride", { width: 1000, height: 800, deviceScaleFactor: 1, mobile: false }, sessionId);
+            await settle();
+            const at = { x: 20, y: 20, button: "left", clickCount: 1 };
+            await cdp.send("Input.dispatchMouseEvent", { ...at, type: "mousePressed", buttons: 1 }, sessionId);
+            await cdp.send("Input.dispatchMouseEvent", { ...at, type: "mouseReleased" }, sessionId);
+            await settle();
+            await cdp.send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: false }, sessionId);
+            await settle();
+          }
+          const closed = !(await evalPage(settingsOpen));
+          const landed = await evalPage(focusNow);
+          report.check(
+            `${page} page, opened by ${how}, closed by ${closer}: focus returns to the ⋯ button, not <body>`,
+            closed && landed === "#overflow-btn",
+            `closed=${closed}, focus on ${landed}`
+          );
+        }
+      }
+    }
 
     // Leave the profile as it was found.
     await evalPage(`(async () => {
