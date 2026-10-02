@@ -1,4 +1,4 @@
-- [ ] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
+- [~] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
   RULED 2026-09-28 (option C, via AskUserQuestion, after an impact
   analysis)** `[M][tools]` — this replaces 340/250 part (4). **Nothing from
   `intake/` is committed to the public repo.**
@@ -61,3 +61,7 @@
   of the Drive copies passes. The health transcripts and food-log exports
   are still never opened or copied. Ready to take; do it in a fresh session
   and verify before the delete, which cannot be undone.
+
+  📌 **Claimed 2026-10-02 04:12 UTC (`faves-77`): parts 2–4 (Drive copy,
+  re-hash, then the delete), inline on the primary checkout, which is the only
+  one holding `intake/`.**

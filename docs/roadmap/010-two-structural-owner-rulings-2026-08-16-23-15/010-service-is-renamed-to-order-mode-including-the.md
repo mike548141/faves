@@ -1,4 +1,4 @@
-- [ ] 🛑 **`service` is renamed to `order-mode`, INCLUDING the shipped filter**
+- [~] 🛑 **`service` is renamed to `order-mode`, INCLUDING the shipped filter**
       `[M][js]` — owner-ruled 2026-08-16.
       ✅ **THE CODE RENAME IS SHIPPED 2026-08-17 (`7bc0ee6`)** — claim released.
       `filters.js`, `app.js`, `index.html`, `reo.js` and `tests/filters.test.js`
@@ -123,3 +123,6 @@ URL parameter than the description above assumed.
   `search.js` "service" vocabulary), with a read-both-names bridge for one
   release so an installed phone on the old shell keeps its filter. The
   visible label stays a separate te reo question. Ready to take.
+
+  📌 **Claimed 2026-10-02 04:12 UTC (`faves-77`): the record-field rename, the
+  `search.js` vocabulary and the one-release bridge (worker in a worktree).**

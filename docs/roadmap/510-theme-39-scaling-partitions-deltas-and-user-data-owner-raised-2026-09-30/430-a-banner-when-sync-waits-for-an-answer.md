@@ -1,4 +1,4 @@
-- [ ] **A banner outside Settings while sync waits for an answer** `[S]
+- [~] **A banner outside Settings while sync waits for an answer** `[S]
       [sync][ui]` — owner-ruled 2026-10-02 (session `faves-4f`), follow-on to
       `390`.
 
@@ -9,3 +9,6 @@
   devices drift. It must link straight to the question, meet the house
   accessibility bar, and disappear in every tab once answered (the question
   is stored once in `faves.sync.v1.ask`). Extend `sync_check`'s `390` block.
+
+  📌 **Claimed 2026-10-02 04:12 UTC (`faves-77`): the banner (worker in a
+  worktree).**
