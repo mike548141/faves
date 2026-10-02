@@ -70,6 +70,114 @@
           ]
         ]
       }
+    },
+    {
+      "label": "Lambton Quay",
+      "id": "lambton-quay",
+      "address": "336 Lambton Quay, Wellington Central, Wellington 6011",
+      "lat": -41.28569,
+      "lng": 174.77574,
+      "phone": "+64 4 499 6688",
+      "hours": {
+        "mon": [
+          [
+            "10:00",
+            "19:00"
+          ]
+        ],
+        "tue": [
+          [
+            "10:00",
+            "19:00"
+          ]
+        ],
+        "wed": [
+          [
+            "10:00",
+            "19:00"
+          ]
+        ],
+        "thu": [
+          [
+            "10:00",
+            "19:00"
+          ]
+        ],
+        "fri": [
+          [
+            "10:00",
+            "19:00"
+          ]
+        ],
+        "sat": [
+          [
+            "10:00",
+            "19:00"
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            "19:00"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-02",
+      "detailsVerifiedBy": "official-site"
+    },
+    {
+      "label": "Queensgate",
+      "id": "queensgate",
+      "address": "Cnr Queens Drive and Bunny Street, Lower Hutt 5010",
+      "lat": -41.2099,
+      "lng": 174.9064,
+      "phone": "+64 4 213 8888",
+      "hours": {
+        "mon": [
+          [
+            "09:00",
+            "18:00"
+          ]
+        ],
+        "tue": [
+          [
+            "09:00",
+            "18:00"
+          ]
+        ],
+        "wed": [
+          [
+            "09:00",
+            "18:00"
+          ]
+        ],
+        "thu": [
+          [
+            "09:00",
+            "21:00"
+          ]
+        ],
+        "fri": [
+          [
+            "09:00",
+            "18:00"
+          ]
+        ],
+        "sat": [
+          [
+            "09:00",
+            "18:00"
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            "17:30"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-02",
+      "detailsVerifiedBy": "official-site"
     }
   ],
   "vibe": [],
