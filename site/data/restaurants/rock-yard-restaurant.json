@@ -94,6 +94,139 @@
     "added": "2026-07-08"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "baguette-filling",
+      "name": "Filling",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Grilled pork",
+          "id": "grilled-pork",
+          "tags": [
+            "has-meat",
+            "contains-pork"
+          ]
+        },
+        {
+          "name": "Lemongrass beef",
+          "id": "lemongrass-beef",
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Lemongrass chicken",
+          "id": "lemongrass-chicken",
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Soy-glazed tofu",
+          "id": "soy-glazed-tofu",
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "salad-protein",
+      "name": "Protein",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Lemongrass chicken",
+          "id": "lemongrass-chicken",
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Soy-glazed tofu",
+          "id": "soy-glazed-tofu",
+          "tags": [
+            "vg",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rice-paper-filling",
+      "name": "Filling",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Prawn",
+          "id": "prawn",
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Tofu",
+          "id": "tofu",
+          "tags": [
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spring-roll-filling",
+      "name": "Filling",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Pork & mushroom",
+          "id": "pork-mushroom",
+          "tags": [
+            "has-meat",
+            "contains-pork"
+          ]
+        },
+        {
+          "name": "Vegetables",
+          "id": "vegetables",
+          "tags": [
+            "gf",
+            "vg"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vermicelli-protein",
+      "name": "Protein",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Pork",
+          "id": "pork",
+          "tags": [
+            "has-meat",
+            "contains-pork"
+          ]
+        },
+        {
+          "name": "Chicken",
+          "id": "chicken",
+          "tags": [
+            "has-meat"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Combo Lunch",
@@ -176,7 +309,10 @@
             "contains-soy",
             "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Baguette”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “soy”.", "contains-pork": "The menu says “pork”."}
+          "tagNotes": {"contains-gluten": "The menu says “Baguette”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “soy”.", "contains-pork": "The menu says “pork”."},
+          "addOns": [
+            "baguette-filling"
+          ]
         },
         {
           "name": "Hue Spicy Beef Noodle Soup",
@@ -216,7 +352,10 @@
             "contains-shellfish",
             "contains-soy"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “soy”."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “soy”."},
+          "addOns": [
+            "salad-protein"
+          ]
         },
         {
           "name": "Roti Rolls",
@@ -252,7 +391,10 @@
             "contains-shellfish",
             "contains-soy"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."},
+          "addOns": [
+            "rice-paper-filling"
+          ]
         },
         {
           "name": "Freshly Rolled Rice Paper Roll (3 Rolls)",
@@ -266,7 +408,10 @@
             "contains-shellfish",
             "contains-soy"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."},
+          "addOns": [
+            "rice-paper-filling"
+          ]
         },
         {
           "name": "Fried Spring Rolls",
@@ -278,7 +423,10 @@
             "contains-gluten",
             "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."}
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."},
+          "addOns": [
+            "spring-roll-filling"
+          ]
         },
         {
           "name": "Pork & Prawn Shumai Dumplings",
@@ -327,7 +475,10 @@
             "contains-shellfish",
             "contains-soy"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."},
+          "addOns": [
+            "rice-paper-filling"
+          ]
         },
         {
           "name": "Freshly Rolled Rice Paper Roll (3 Rolls)",
@@ -341,7 +492,10 @@
             "contains-shellfish",
             "contains-soy"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-shellfish": "The menu says “prawn”.", "contains-soy": "The menu says “tofu”."},
+          "addOns": [
+            "rice-paper-filling"
+          ]
         },
         {
           "name": "Fried Spring Rolls",
@@ -353,7 +507,10 @@
             "contains-gluten",
             "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."}
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper.", "contains-pork": "The menu says “pork”."},
+          "addOns": [
+            "spring-roll-filling"
+          ]
         },
         {
           "name": "Pork & Prawn Shumai Dumplings",
@@ -748,7 +905,10 @@
             "contains-peanuts",
             "contains-pork"
           ],
-          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-pork": "The menu says “pork”."}
+          "tagNotes": {"contains-peanuts": "The menu says “peanut”.", "contains-pork": "The menu says “pork”."},
+          "addOns": [
+            "vermicelli-protein"
+          ]
         },
         {
           "name": "Soy-Glazed Tofu Noodles",

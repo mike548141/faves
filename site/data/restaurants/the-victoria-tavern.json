@@ -487,6 +487,62 @@
           "tags": []
         }
       ]
+    },
+    {
+      "id": "margarita-flavour",
+      "name": "Flavour",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Lime",
+          "id": "lime",
+          "tags": []
+        },
+        {
+          "name": "Pomegranate",
+          "id": "pomegranate",
+          "tags": []
+        },
+        {
+          "name": "Spiced passionfruit",
+          "id": "spiced-passionfruit",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "spritz-aperitif",
+      "name": "Choice of",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Aperol",
+          "id": "aperol",
+          "tags": []
+        },
+        {
+          "name": "Campari",
+          "id": "campari",
+          "tags": []
+        },
+        {
+          "name": "Chinola (passionfruit)",
+          "id": "chinola-passionfruit",
+          "tags": []
+        },
+        {
+          "name": "Limoncello",
+          "id": "limoncello",
+          "tags": []
+        },
+        {
+          "name": "Kir Royale",
+          "id": "kir-royale",
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -1724,9 +1780,12 @@
         {
           "name": "Cadillac Margarita",
           "dishId": "cadillac-margarita",
-          "desc": "Jose Cuervo Tradicional Reposado tequila, Cointreau, agave syrup, lime. Flavour options: lime, pomegranate, spiced passionfruit.",
+          "desc": "Jose Cuervo Tradicional Reposado tequila, Cointreau, agave syrup, lime.",
           "price": 17.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "margarita-flavour"
+          ]
         },
         {
           "name": "Bloody Floradora",
@@ -1863,7 +1922,10 @@
           "dishId": "spritz",
           "desc": "Prosecco, soda and garnish, with a choice of Aperol, Campari, Chinola (passionfruit), limoncello or Kir Royale. Chinola, limoncello and Kir Royale are served without soda.",
           "price": 14.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "spritz-aperitif"
+          ]
         }
       ]
     },

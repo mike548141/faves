@@ -576,6 +576,24 @@
           "tags": []
         }
       ]
+    },
+    {
+      "id": "choppers-sauce",
+      "name": "Sauce",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "BBQ Sauce",
+          "id": "bbq-sauce",
+          "tags": []
+        },
+        {
+          "name": "Sriracha",
+          "id": "sriracha",
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -956,12 +974,15 @@
         {
           "name": "Choppers",
           "dishId": "choppers",
-          "desc": "Southern fried chicken pieces with a drizzle of BurgerFuel Aioli and your choice of BBQ Sauce or sriracha.",
+          "desc": "Southern fried chicken pieces with a drizzle of BurgerFuel Aioli.",
           "price": 13.5,
           "tags": [
             "contains-egg"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."}
+          "tagNotes": {"contains-egg": "The menu says “Aioli” — an egg emulsion."},
+          "addOns": [
+            "choppers-sauce"
+          ]
         }
       ]
     },

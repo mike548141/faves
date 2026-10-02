@@ -107,6 +107,31 @@
     "added": "2026-08-15"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "heat",
+      "name": "Heat",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Mild",
+          "id": "mild",
+          "tags": []
+        },
+        {
+          "name": "Medium",
+          "id": "medium",
+          "tags": []
+        },
+        {
+          "name": "Hot",
+          "id": "hot",
+          "tags": []
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Noodles",
@@ -213,7 +238,7 @@
           "name": "Hot box",
           "dishId": "hot-box",
           "code": "8",
-          "desc": "Egg noodles with roast pork, chicken, beef and fresh vegetables in a Thai chilli sauce. Choice of mild, medium or hot.",
+          "desc": "Egg noodles with roast pork, chicken, beef and fresh vegetables in a Thai chilli sauce.",
           "price": 19.5,
           "tags": [
             "spicy-1",
@@ -221,7 +246,10 @@
             "contains-egg",
             "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “pork”."}
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-pork": "The menu says “pork”."},
+          "addOns": [
+            "heat"
+          ]
         },
         {
           "name": "Teriyaki",
@@ -239,7 +267,7 @@
           "name": "Seafood mee goreng",
           "dishId": "seafood-mee-goreng",
           "code": "10",
-          "desc": "Egg noodles with prawns, calamari, fish cakes, crab meat, tofu and fresh vegetables in an Indonesian style sauce. Choice of mild, medium or hot.",
+          "desc": "Egg noodles with prawns, calamari, fish cakes, crab meat, tofu and fresh vegetables in an Indonesian style sauce.",
           "price": 21,
           "tags": [
             "spicy-1",
@@ -249,7 +277,10 @@
             "contains-soy",
             "contains-fish"
           ],
-          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “mee goreng” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”.", "contains-fish": "The menu says “fish”."}
+          "tagNotes": {"contains-shellfish": "The menu says “prawns”.", "contains-gluten": "The menu says “mee goreng” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”.", "contains-fish": "The menu says “fish”."},
+          "addOns": [
+            "heat"
+          ]
         },
         {
           "name": "Thai sweet chilli beef",
@@ -268,10 +299,13 @@
           "name": "Sambal chicken",
           "dishId": "sambal-chicken",
           "code": "12",
-          "desc": "Thin rice noodles with chicken and fresh vegetables in a Malaysian sambal sauce. Choice of mild, medium or hot.",
+          "desc": "Thin rice noodles with chicken and fresh vegetables in a Malaysian sambal sauce.",
           "price": 13.5,
           "tags": [
             "spicy-1"
+          ],
+          "addOns": [
+            "heat"
           ]
         },
         {
@@ -333,14 +367,17 @@
           "name": "Chilli beef",
           "dishId": "chilli-beef",
           "code": "18",
-          "desc": "Egg noodles with beef and fresh vegetables in chilli sauce. Choice of mild, medium or hot.",
+          "desc": "Egg noodles with beef and fresh vegetables in chilli sauce.",
           "price": 19,
           "tags": [
             "spicy-1",
             "contains-gluten",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."}
+          "tagNotes": {"contains-gluten": "The menu says “Egg noodles” — a wheat noodle.", "contains-egg": "The menu says “Egg”."},
+          "addOns": [
+            "heat"
+          ]
         },
         {
           "name": "Seafood combination noodles",
@@ -395,7 +432,7 @@
           "name": "Vegetarian mee goreng",
           "dishId": "vegetarian-mee-goreng",
           "code": "22",
-          "desc": "Egg noodles with tofu, mushrooms, tomato and fresh vegetables in an Indonesian style sauce. Choice of mild, medium or hot.",
+          "desc": "Egg noodles with tofu, mushrooms, tomato and fresh vegetables in an Indonesian style sauce.",
           "price": 18.5,
           "tags": [
             "v",
@@ -404,7 +441,10 @@
             "contains-egg",
             "contains-soy"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “mee goreng” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-gluten": "The menu says “mee goreng” — a wheat noodle.", "contains-egg": "The menu says “Egg”.", "contains-soy": "The menu says “tofu”."},
+          "addOns": [
+            "heat"
+          ]
         },
         {
           "name": "Vegetarian Singapore noodles",

@@ -806,6 +806,53 @@
     "added": "2026-07-08"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "rib-sauce",
+      "name": "Sauce",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "APA spicy",
+          "id": "apa-spicy",
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Cola BBQ",
+          "id": "cola-bbq",
+          "tags": []
+        },
+        {
+          "name": "Smokey BBQ",
+          "id": "smokey-bbq",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "donut-chocolate",
+      "name": "Chocolate",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Dark chocolate",
+          "id": "dark-chocolate",
+          "tags": []
+        },
+        {
+          "name": "Milk chocolate",
+          "id": "milk-chocolate",
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "'96 Originals",
@@ -1536,7 +1583,10 @@
             "contains-gluten",
             "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product.", "contains-pork": "The menu says “Pork”."}
+          "tagNotes": {"contains-gluten": "The menu says “APA” — beer is a barley product.", "contains-pork": "The menu says “Pork”."},
+          "addOns": [
+            "rib-sauce"
+          ]
         },
         {
           "name": "Lamb Shank and Mash",
@@ -1696,7 +1746,10 @@
             "contains-gluten",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Donut” — a wheat bakery item.", "contains-dairy": "The menu says “milk”."}
+          "tagNotes": {"contains-gluten": "The menu says “Donut” — a wheat bakery item.", "contains-dairy": "The menu says “milk”."},
+          "addOns": [
+            "donut-chocolate"
+          ]
         },
         {
           "name": "Chocolate Gelato",

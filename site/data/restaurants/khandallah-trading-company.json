@@ -143,6 +143,71 @@
           "tags": []
         }
       ]
+    },
+    {
+      "id": "schnitty-side",
+      "name": "Fries or mash",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Fries",
+          "id": "fries",
+          "tags": []
+        },
+        {
+          "name": "Mash",
+          "id": "mash",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "rosti-benedict-choice",
+      "name": "Bacon, hot-smoked salmon or kale & mushrooms",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Bacon",
+          "id": "bacon",
+          "tags": [
+            "has-meat",
+            "contains-pork"
+          ]
+        },
+        {
+          "name": "Hot-smoked salmon",
+          "id": "hot-smoked-salmon",
+          "tags": [
+            "has-fish",
+            "contains-fish"
+          ]
+        },
+        {
+          "name": "Kale & mushrooms",
+          "id": "kale-mushrooms",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "burger-side",
+      "name": "Fries or rosti",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Fries",
+          "id": "fries",
+          "tags": []
+        },
+        {
+          "name": "Rosti",
+          "id": "rosti",
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -281,12 +346,15 @@
         {
           "name": "Chicken Schnitty",
           "dishId": "chicken-schnitty",
-          "desc": "Crumbed chicken breast, green herb slaw, gravy. Choose fries or mash.",
+          "desc": "Crumbed chicken breast, green herb slaw, gravy.",
           "price": 32.5,
           "tags": [
             "contains-gluten"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."}
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."},
+          "addOns": [
+            "schnitty-side"
+          ]
         },
         {
           "name": "Fish & Chips",
@@ -514,7 +582,10 @@
             "contains-fish",
             "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-fish": "The menu says “salmon”.", "contains-pork": "The menu says “bacon”."}
+          "tagNotes": {"contains-egg": "The menu says “eggs”.", "contains-fish": "The menu says “salmon”.", "contains-pork": "The menu says “bacon”."},
+          "addOns": [
+            "rosti-benedict-choice"
+          ]
         },
         {
           "name": "Eggs Your Way",
@@ -545,7 +616,7 @@
         {
           "name": "Breakfast Burger",
           "dishId": "breakfast-burger",
-          "desc": "Fried egg, bacon, cheese, relish, rocket. Choose fries or rosti.",
+          "desc": "Fried egg, bacon, cheese, relish, rocket.",
           "price": 29.0,
           "tags": [
             "gf-option",
@@ -554,7 +625,10 @@
             "contains-egg",
             "contains-pork"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “bacon”."}
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item.", "contains-dairy": "The menu says “cheese”.", "contains-egg": "The menu says “egg”.", "contains-pork": "The menu says “bacon”."},
+          "addOns": [
+            "burger-side"
+          ]
         },
         {
           "name": "Mushroom on Toast",

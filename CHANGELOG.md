@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Named choices on 39 more dishes.** Fries or mash on a schnitty, a protein
+  or a sauce on a bowl, a spice level on a noodle dish: where a menu names the
+  options in the dish's own words, the picker now offers them (and warns on
+  any allergen an option carries) at 16 venues. Seven dishes whose choices the
+  menu leaves vague stay as printed.
 - **Pizza Hut now lists 15 Wellington-region branches, up from one.** Each has
   its own address, phone and opening hours, read from Pizza Hut's own site.
 - **BurgerFuel grew from four branches to nine** (Hataitai, Kāpiti Coast,

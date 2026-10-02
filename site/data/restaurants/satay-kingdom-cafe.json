@@ -74,6 +74,34 @@
     "added": "2026-07-08"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "stir-fry-sauce",
+      "name": "Sauce",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Sweet & sour sauce",
+          "id": "sweet-sour-sauce",
+          "tags": []
+        },
+        {
+          "name": "Satay sauce",
+          "id": "satay-sauce",
+          "tags": [
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Chef special sauce",
+          "id": "chef-special-sauce",
+          "tags": []
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Starters",
@@ -554,7 +582,10 @@
             "contains-peanuts",
             "contains-gluten"
           ],
-          "tagNotes": {"contains-soy": "The menu says “tofu”.", "contains-peanuts": "The menu says “satay” — satay sauce is peanut sauce.", "contains-gluten": "The menu says “roti”."}
+          "tagNotes": {"contains-soy": "The menu says “tofu”.", "contains-peanuts": "The menu says “satay” — satay sauce is peanut sauce.", "contains-gluten": "The menu says “roti”."},
+          "addOns": [
+            "stir-fry-sauce"
+          ]
         }
       ]
     },

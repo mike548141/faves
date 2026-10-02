@@ -302,6 +302,24 @@
           "tags": []
         }
       ]
+    },
+    {
+      "id": "schnitty-side",
+      "name": "Fries or mash",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Fries",
+          "id": "fries",
+          "tags": []
+        },
+        {
+          "name": "Mash",
+          "id": "mash",
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -449,13 +467,16 @@
         {
           "name": "Chicken Schnitty",
           "dishId": "chicken-schnitty",
-          "desc": "Crumbed chicken breast, green herb slaw, gravy. Choose fries or mash.",
+          "desc": "Crumbed chicken breast, green herb slaw, gravy.",
           "price": 32.5,
           "tags": [
             "contains-gluten",
             "contains-egg"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."}
+          "tagNotes": {"contains-gluten": "The menu says “Crumbed” — battered/crumbed coatings are wheat flour."},
+          "addOns": [
+            "schnitty-side"
+          ]
         },
         {
           "name": "Fish & Chips",

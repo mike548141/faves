@@ -57,3 +57,42 @@
   📌 **Claimed 2026-10-02 06:20 UTC (`faves-77`): batch two, the
   `addon-unpriced-choice` (44) and `addon-priced` (2) rows only, Abrakebabra
   excluded (worker in a worktree).**
+
+  ✅ **Batch two landed 2026-10-02 (`faves-77`, worker branch
+  `faves-77/14b-named-choices`):** 39 dishes at 16 venues became add-on
+  groups. Each is `select: one`, `price: 0`, no `max`, the Sprig + Fern
+  precedent: the menu says "choose"/"choice of" and states no charge, so
+  free is written down (ADR 0048 §2); only "choose two" got `many` + `max: 2`.
+  Converted: 1841 Sundae topping; BurgerFuel Choppers sauce; Charley Noble
+  cheese one and two; Gold Lining Eggs Benedict and Nourish Bowl; Hell NZ
+  BBQ ribs sauce and Unholy Donut chocolate; Hotel Bristol, Khandallah,
+  Southern Cross and Borough schnitty side; Khandallah, Southern Cross and
+  Borough Rosti Benedict; Khandallah and Borough Breakfast Burger side; KK
+  Teo Chew noodle type; Noodle Canteen heat (5 dishes); Rock Yard baguette,
+  salad, rice paper rolls (2 and 3, both sections), spring rolls (both
+  sections) and vermicelli; Satay Kingdom stir-fry sauce; Churton
+  Combination Seafood base; Ramen Shop curry rice, kids ramen, yakisoba;
+  Victoria Margarita flavour and Spritz.
+  Description trimmed only where no `tagNotes` quote the removed words and
+  nothing else is lost (1841, BurgerFuel Choppers, Charley cheese two, the
+  four schnittys, two burgers, Noodle Canteen, Curry rice, Margarita). The
+  rest keep the sentence, because a note quotes it or it carries detail.
+  Left prose, 7 rows: Charley grill-section sauce/butter and its "$4
+  additional" (per-sauce gluten caveats, a section note, as batch one);
+  Charley kids ice cream ("choice of two toppings" lists only two, so
+  choose-two-of-two is not credible); KK Nasi Lemak chicken and beef (the
+  dish is already split into a priced row per protein, a group would state
+  it twice); Borough Mini VIP Pizza (toppings named but no price stated,
+  so not plainly nil); Sprig Tawa Cheese Pizza (no toppings named).
+  Tags: `tag_addon_options.py --apply` wrote 58. By hand, each from the
+  menu's own words: `v` on Gold Lining Halloumi and Mushroom (printed
+  "(V)"), `v` on Gold Lining bowl Halloumi, `vg` on its Falafel ("(VG)"),
+  `v`+`vg` on Rock Yard baguette tofu ("vegetarian/vegan"), `vg` on salad
+  tofu ("vegan"), `gf`+`vg` on spring-roll Vegetables ("GF, vegan"),
+  `contains-dairy` on Charley Goat's Blue, both groups (the menu says
+  "goat's milk"). NOT tagged, flagged: Ramen Shop "Ebi" (no rule knows ebi
+  is prawn; the menu never says so; a shellfish flag would be the safe
+  direction but is not the menu's claim). Known cost: a dish carrying a
+  `v`/`gf` claim (Veg mee goreng, Benedicts) shows ADR 0092's one hedging
+  sentence once an option without that claim is picked, spice level
+  included (the Gong Cha class, left open there).

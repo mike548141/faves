@@ -68,6 +68,35 @@
     "added": "2026-07-06"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "combination-seafood-base",
+      "name": "Choose from",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Fried rice",
+          "id": "fried-rice",
+          "tags": []
+        },
+        {
+          "name": "Chow mein",
+          "id": "chow-mein",
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Egg fu young",
+          "id": "egg-fu-young",
+          "tags": [
+            "contains-egg"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Soup",
@@ -1351,7 +1380,10 @@
             "contains-egg"
           ],
           "tagNotes": {"contains-shellfish": "The menu says “Seafood” — an unnamed seafood mix reliably includes prawn or squid.", "contains-gluten": "The menu says “chow mein” — a wheat noodle.", "contains-egg": "The menu says “egg”."},
-          "code": "77"
+          "code": "77",
+          "addOns": [
+            "combination-seafood-base"
+          ]
         },
         {
           "name": "Steak Tomato Onion on Rice",

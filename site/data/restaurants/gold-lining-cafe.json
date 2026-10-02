@@ -99,6 +99,75 @@
           ]
         }
       ]
+    },
+    {
+      "id": "benedict-choice",
+      "name": "Your choice",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Bacon",
+          "id": "bacon",
+          "tags": [
+            "has-meat",
+            "contains-pork"
+          ]
+        },
+        {
+          "name": "Smoked salmon",
+          "id": "smoked-salmon",
+          "tags": [
+            "has-fish",
+            "contains-fish"
+          ]
+        },
+        {
+          "name": "Halloumi",
+          "id": "halloumi",
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mushroom",
+          "id": "mushroom",
+          "tags": [
+            "v"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bowl-choice",
+      "name": "Your choice",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Grilled chicken",
+          "id": "grilled-chicken",
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Halloumi",
+          "id": "halloumi",
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Falafel",
+          "id": "falafel",
+          "tags": [
+            "vg"
+          ]
+        }
+      ]
     }
   ],
   "menu": [
@@ -169,7 +238,10 @@
             "contains-fish",
             "contains-pork"
           ],
-          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-dairy": "The menu says “halloumi”.", "contains-fish": "The menu says “salmon”.", "contains-pork": "The menu says “bacon”."}
+          "tagNotes": {"contains-egg": "The menu says “Eggs”.", "contains-dairy": "The menu says “halloumi”.", "contains-fish": "The menu says “salmon”.", "contains-pork": "The menu says “bacon”."},
+          "addOns": [
+            "benedict-choice"
+          ]
         },
         {
           "name": "Salmon and Avo Bagel",
@@ -237,7 +309,10 @@
             "gf",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “halloumi”."}
+          "tagNotes": {"contains-dairy": "The menu says “halloumi”."},
+          "addOns": [
+            "bowl-choice"
+          ]
         },
         {
           "name": "Cheese & Spinach Omelette",
