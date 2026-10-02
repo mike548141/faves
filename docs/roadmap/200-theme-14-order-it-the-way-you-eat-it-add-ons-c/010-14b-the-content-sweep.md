@@ -1,4 +1,4 @@
-- [~] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
+- [ ] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
   2026-08-16** (wt: faves-schema30): `tools/find_addons.py` + 44 test cases +
   17 breakers, and a `validate.py` **warning** on the 15 high-confidence
   convertible rows. **The conversion half stays open and is the bulk of it** —
@@ -96,3 +96,15 @@
   `v`/`gf` claim (Veg mee goreng, Benedicts) shows ADR 0092's one hedging
   sentence once an option without that claim is picked, spice level
   included (the Gong Cha class, left open there).
+
+  ✅ **Batch two merged 2026-10-02 (`faves-77`, PR #98, CI 8 of 8;** merged
+  with `main` once, summaries regenerated, `addon_check` 108/0 and the two
+  text-leaning test files re-run green on the merged tree). Orchestrator's
+  review at 390 px found the picker offers **None** on every pick-one group,
+  including a menu's mandatory "choice of" sauce — filed as
+  [`090`](090-a-required-choice-still-offers-none.md). 🎯 The Ebi question
+  above is put to the owner at the session close.
+  📌 **Claim released.** Left in 14b: `section-is-a-group` (14),
+  `dish-is-an-addon` (30), `addon-options-not-listed` (37),
+  `diet-substitution-price` (15); each needs a call on which dishes an
+  extra attaches to, which the menu does not say.
