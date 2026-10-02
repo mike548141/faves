@@ -12787,7 +12787,10 @@ workers on Sonnet. Session id `6716bbef-2a69-4b21-9692-68034652b2ef`.
 - **Stopped because** the queue holds nothing more buildable without the
   owner: every remaining open item waits on a ruling, a standing re-check,
   or a date (`410` mirror off from 2026-10-09; `010/040` from 2026-10-16).
+- **Allergen hole closed (`dc4c0b1`):** the Ramen Shop curry bowl offered
+  "ebi" with no shellfish tag, before and after #98; the same menu calls ebi
+  katsu "prawn katsu", so the option now carries `contains-shellfish`.
 - **Open with the owner (put at the close):** delete `evidence-stripped/`;
-  tag Ramen Shop's "Ebi" as shellfish; `200/090` required choices;
+  `200/090` required choices;
   `080/130` McDonald's and Subway hours (an interactive browser may now
   make option (b) cheap).
