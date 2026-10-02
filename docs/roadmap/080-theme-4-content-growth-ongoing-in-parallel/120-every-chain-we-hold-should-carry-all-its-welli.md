@@ -1,4 +1,4 @@
-- [~] 🚩 **Every chain we hold should carry all its Wellington-region
+- [ ] 🚩 **Every chain we hold should carry all its Wellington-region
       branches** `[L][content]` — owner-directed 2026-08-16: *"Many of the
       restaurants are chains or at least have multiple branches/locations. Where
       that is true lets ensure that we at least have all their locations in the
@@ -105,3 +105,18 @@
   chain's own coordinate; OSM house-level kept per the geocoding rule.
   Pizza Hut Te Aro: the chain's own coordinate was 570 m out; OSM agreed
   with its Courtenay Place shop node.
+
+  ✅ **Merged 2026-10-02 (`faves-77`, PR #96, CI 8 of 8;** merged with
+  `main` once, summaries regenerated, `branch_check` 147/0 on the merged
+  tree). Orchestrator re-ran `audit_coords.py` over the merged corpus: every
+  added branch that geocodes reads `fine` at house level; five added pins
+  (BurgerFuel Hataitai, Kāpiti Coast and Upper Hutt, Gong Cha Queensgate,
+  Pizza Hut Karori) are `no-geocode`. Their addresses do not geocode, so
+  they rest on OSM's own shop or mall node, not on the address.
+  **Still open, so the bracket goes back to `[ ]`:** Noodle Canteen's seven
+  other stores (its site publishes no per-store hours); Pizza Hut
+  Wainuiomata (the listed phone has an extra digit); Gong Cha North City
+  (no phone); McDonald's and Subway (`130`).
+  🔎 **Found, not fixed:** Sushi Bi's own site shows Woodward Street open
+  Saturday 10:30–5:00; we hold it closed. A one-line hours refresh, owed.
+  📌 **Claim released.**
