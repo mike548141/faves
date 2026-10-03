@@ -19,9 +19,8 @@
   a choice was made for them.
 
   **Design points for whoever builds it:**
-  - Should every `selects` ladder be must-see without a flag? A ladder with a
-    default is exactly the screenshot's case, and deriving it from the ladder
-    saves flagging all 57 by hand. 🎯 This is a question for the owner.
+  - ✅ **Owner ruled 2026-10-03 (asked by `faves-de`): every `selects`
+    ladder is must-see by rule, and other groups opt in with a flag.**
   - Should `required` imply must-see? It already behaves that way.
   - ⚠️ Read with **14g** (`200/030`, open, designed but not approved). 14g
     expands the picker on Add for **every** dish. Ruling 4 says the optional
@@ -33,9 +32,9 @@
 
   🔎 **Survey candidates 2026-10-03** (`200/100`,
   [the review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)):
-  defaulted ladders and choices where a silent default changes the dish or the bill. Examples
-  are Spices Indian Half/Full, BurgerFuel Single/Double, Gong Cha
-  Regular/Large, the unnamed `size-1` pours, and a coffee's milk.
+  defaulted ladders and choices where a silent default changes the dish or the
+  bill. Examples are Spices Indian Half/Full, BurgerFuel Single/Double, Gong
+  Cha Regular/Large, the unnamed `size-1` pours, and a coffee's milk.
 
   Lands in: an ADR, the group schema in `ARCHITECTURE.md`, `validate.py`,
   `addons-ui.js`/`cart-ui.js`, and `addon_check.mjs`. That check must show a

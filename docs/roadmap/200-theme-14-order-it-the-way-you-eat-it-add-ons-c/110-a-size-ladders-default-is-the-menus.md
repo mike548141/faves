@@ -1,4 +1,4 @@
-- [ ] 🎯 **A size ladder's default is the menu's — and when the menu names none?**
+- [ ] **A size ladder's default is the menu's; failing that, the cheapest**
   `[S][data][schema]` — **owner-ruled 2026-10-03**, raised on Spices Indian's
   Garlic Tikka (Half $12 / Full $20, Full pre-selected and the row priced $20):
 
@@ -58,6 +58,20 @@
   - ⚠️ Converting a choice deletes the menu's wording from the dish (e.g.
     `f56eda63`). A default *inferred from the wording* therefore needs that
     wording kept somewhere checkable.
+
+  ✅ **Owner ruled 2026-10-03 (asked by `faves-de`, via AskUserQuestion):**
+  - **When the menu names no default, (c): the cheapest option, with the
+    dish priced there.** He noted his opening words already said this:
+    (c) is the rule for any default the menu did not name. The fork above
+    was a misreading, kept here so nobody re-asks it.
+  - **A printed headline price counts as the menu naming the default**, as
+    much as wording such as "regular" does. So Spices Indian's Full stays
+    the default on its 3 dishes, and **no record changes**.
+  - The rule is therefore: the menu's default, from wording or the
+    headline price; otherwise the cheapest. A validator can enforce the
+    second half only if a non-cheapest default records which cue it came
+    from (a field like `defaultFrom: "wording" | "headline"`). Designing
+    that is the builder's job.
 
   Lands in: an ADR (amending 0130's default rule), `ARCHITECTURE.md`'s
   `selects` paragraph, `validate.py`, the 3 Spices Indian records if the ruling

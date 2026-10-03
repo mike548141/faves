@@ -1,4 +1,4 @@
-- [ ] 🎯 **An unfinished dish on the order sheet: warn, and finish it there**
+- [ ] **An unfinished dish on the order sheet: warn, and finish it there**
   `[M][js]` — **owner-ruled 2026-10-03:**
 
   > *"If a dish has a mandatory addon and the user has not made a selection
@@ -29,6 +29,12 @@
     and ruling 2's must-see expansion is what asks the question. This
     supersedes 0156's gate and makes the warning the main path, not the
     fallback.
+
+  ✅ **Owner ruled 2026-10-03 (asked by `faves-de`): (i). ADR 0156's
+  Add-waits stays on the menu.** The sheet's warning and finish-in-place
+  cover every line that arrives unfinished by another route. Saved-order
+  recall therefore **lands such a line flagged instead of dropping it**,
+  and that is a change to `saved-recall.js`.
 
   Build notes: finishing a line changes its identity (`cart.js` `lineKey`
   includes the selection), so a finished line may need to **merge** with an
