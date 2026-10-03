@@ -12835,8 +12835,9 @@ workers on Sonnet. Session id `6716bbef-2a69-4b21-9692-68034652b2ef`.
   - ADR 0156's Add-waits stays, and recall lands unfinished lines flagged;
   - every ladder is must-see by rule, plus a flag for other groups.
 - 🚩 **Lessons:**
-  - The default question was **already ruled in his opening words**, and I
-    re-asked it.
+  - Two of the questions were **already answered in his opening words**,
+    and I re-asked them: the cheapest default, and a must-see mark set in
+    the data model.
   - He then said he had asked only for the items to be filed, not worked.
 - ⏳ **atelier has moved past the `94d5cc6` pin** (seen at session start, not
   read, not bumped). Owed to a session that takes it on.
