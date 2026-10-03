@@ -1,4 +1,4 @@
-- [ ] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
+- [x] 🔥 **Evidence by fingerprint, originals backed up privately — OWNER
   RULED 2026-09-28 (option C, via AskUserQuestion, after an impact
   analysis)** `[M][tools]` — this replaces 340/250 part (4). **Nothing from
   `intake/` is committed to the public repo.**
@@ -96,3 +96,8 @@
   ✅ **Owner ruled 2026-10-03 (asked by `faves-77`): he runs the delete
   himself** (`rm -rf ~/.pets/faves/evidence-stripped`). A session does not
   take this; the item closes when he says it is done.
+
+  ✅ **Part 4 done 2026-10-03: the owner deleted `evidence-stripped/`
+  himself**, as ruled; `faves-77` confirmed the folder is gone. All four
+  parts are complete. **Closed.** (The 💡 above — nothing backs up intake
+  photos added after 2026-10-02 — is unbuilt and unfiled.)
