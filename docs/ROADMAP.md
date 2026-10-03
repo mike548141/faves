@@ -417,6 +417,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [ADR 0090 promised a name index of the prior food databases and none](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/040-adr-0090-promised-a-name-index-of-the-food-exports-and-none-exists.md)
 - [ ] 🔎 [A complete menu carries no verified date, and three older menu](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/050-a-menu-with-92-prices-carries-no-verified-date.md)
 - ✅ 🎯 [ADR 0090's "No location, ever" is wider than the reason it gives, and](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/060-the-no-location-rule-is-wider-than-its-reason.md)
+- [ ] 🔎 [Intake added after 2026-10-02 is backed up by nothing](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/070-new-intake-photos-are-not-backed-up.md)
 
 ## Theme 39 — scaling: partitions, deltas and user data (owner-raised 2026-09-30)
 
