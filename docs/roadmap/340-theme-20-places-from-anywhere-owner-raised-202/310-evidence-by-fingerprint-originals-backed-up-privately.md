@@ -100,4 +100,5 @@
   ✅ **Part 4 done 2026-10-03: the owner deleted `evidence-stripped/`
   himself**, as ruled; `faves-77` confirmed the folder is gone. All four
   parts are complete. **Closed.** (The 💡 above — nothing backs up intake
-  photos added after 2026-10-02 — is unbuilt and unfiled.)
+  photos added after 2026-10-02 — is filed as
+  [`500/070`](../500-intake-harvest-audit-owner-raised-2026-09-08/070-new-intake-photos-are-not-backed-up.md).)
