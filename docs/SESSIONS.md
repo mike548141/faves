@@ -12794,3 +12794,22 @@ workers on Sonnet. Session id `6716bbef-2a69-4b21-9692-68034652b2ef`.
   `200/090` required choices;
   `080/130` McDonald's and Subway hours (an interactive browser may now
   make option (b) cheap).
+
+### Addendum, 2026-10-03 (session `faves-77`): three rulings, two more items
+
+- **Owner ruled at the close** (AskUserQuestion): he deletes
+  `evidence-stripped/` himself; `200/090` option (a), a `required` flag;
+  `080/130` option (b), then — asked again at his request — option (c),
+  Google Maps named as the source, for hours only on McDonald's and Subway.
+- **Shipped:** `200/090` (#100, ADR 0156): 33 groups on 19 venues are
+  required; no None, Add waits, the reason is in words; recalling a saved
+  order that now lacks a compulsory choice skips that line and says so.
+  Four groups were left optional as unsure and are listed on the item.
+- **`080/130` wrote nothing (#99, note only):** an unauthenticated browser
+  gets Maps' limited view, today's line only, for all ten branches; Google
+  Search refused automated traffic. The ruling stands, waiting on a
+  browser Maps shows the full week to. 🚩 The listings read McDonald's
+  Courtenay Place permanently closed and Lambton Quay temporarily closed;
+  two Subway street numbers differ from ours. Not acted on.
+- **All 21 browser checks green on `main` after #100**, plus CI 8 of 8 on
+  every merge. No worktrees, branches or claims left.
