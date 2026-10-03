@@ -12813,3 +12813,8 @@ workers on Sonnet. Session id `6716bbef-2a69-4b21-9692-68034652b2ef`.
   two Subway street numbers differ from ours. Not acted on.
 - **All 21 browser checks green on `main` after #100**, plus CI 8 of 8 on
   every merge. No worktrees, branches or claims left.
+- **Then ruled: trust Google Maps for closures too** (these two chains).
+  McDonald's Lambton Quay now carries `closed-temporarily` (`f3bb2d7`),
+  matched by phone as well as address. Courtenay Place is NOT closed: the
+  *permanently closed* listing is a different store in Courtenay Central.
+  Not checked visually; `branch_check`, `boot_check`, `distance_check` green.
