@@ -26,3 +26,8 @@
   answer is the first design call: whether a combo references its members
   **by id** so the order line can itemise and dietary tags compose. That is
   still open, and ADR 0048 §5's constraint on it stands unchanged.
+
+  🔎 *2026-10-03: `200/100`'s survey found combos at about a dozen venues,
+  almost all in prose. The pattern is Pizza Hut's deals ("Choose 3 … & 2
+  Sides"), and they carry exact-count choices (`200/140`) — see
+  [its review](../../reviews/2026-10-03-0759-dish-configuration-survey.md).*

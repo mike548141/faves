@@ -31,6 +31,12 @@
   - Expanding the picker must not move focus. 14g already reasons about this
     for repeat-tappers.
 
+  🔎 **Survey candidates 2026-10-03** (`200/100`,
+  [the review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)):
+  defaulted ladders and choices where a silent default changes the dish or the bill. Examples
+  are Spices Indian Half/Full, BurgerFuel Single/Double, Gong Cha
+  Regular/Large, the unnamed `size-1` pours, and a coffee's milk.
+
   Lands in: an ADR, the group schema in `ARCHITECTURE.md`, `validate.py`,
   `addons-ui.js`/`cart-ui.js`, and `addon_check.mjs`. That check must show a
   must-see group opening on Add **and** an unflagged optional group staying

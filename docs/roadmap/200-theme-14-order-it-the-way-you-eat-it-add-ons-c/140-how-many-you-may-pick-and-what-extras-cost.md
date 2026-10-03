@@ -24,6 +24,20 @@
     build-your-own: *"up to 8 toppings — … plus 1 meat, 1 vegetable and 1
     sauce. Extra toppings priced individually."*
 
+  🔎 **Survey evidence 2026-10-03 (`200/100`):**
+  - **The cap is already in the data.** Wellington Kebab Grill's `sauces`
+    is `max: 3` over 12 sauces, which is the kebab example exactly.
+  - **"Exactly N" cannot be said.** Charley Noble's `cheese-two` is named
+    "Choose two" but has `max: 2` and no minimum. Other cases are
+    GroundUp's "Choice of 3 fillings", Pizza Hut's "Choose 3 … & 2 Sides"
+    and Sushi Bi's "11 nigiri of your choice".
+  - **"N included, then $X" cannot be said.** Examples are Charley Noble's
+    grill, Hell Pizza's dips (1 or 2 included, extra $1.50), Thai Tara's
+    meat (standard free, upgrade +$4) and Sprig & Fern Tawa's kids pizza
+    ($2 per topping).
+  - **Gong Cha adds a third shape:** caps that differ per drink over one
+    list, with two price tiers ($1.00 / $1.30) inside a group.
+
   How often each shape occurs is `200/100`'s survey to measure, before the
   schema is designed. Lands in: an ADR, `ARCHITECTURE.md`, `validate.py`,
   `addons.js` (`selectionAllowed`, `configuredPrice`), the picker's words

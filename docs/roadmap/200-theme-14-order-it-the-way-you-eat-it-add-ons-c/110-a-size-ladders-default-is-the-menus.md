@@ -44,6 +44,21 @@
     default ("regular"). That is the same question as this item, asked of an
     `adds` group instead of a `selects` group.
 
+  🔎 **Survey evidence 2026-10-03** (`200/100`,
+  [the review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)):
+  - When the menu names a default, the cue is reliable. Abrakebabra prints
+    "Regular $14.50; large $16.00" on 43 dishes (still prose), BurgerFuel
+    says "Milk price shown", and Thai Tara says "standard choice of meat —
+    no charge".
+  - More often the headline price is the only cue.
+  - Four venues' ladders (Southern Cross, The Borough, Khandallah, The
+    Victoria) default to an **unnamed** `size-1`.
+  - Gong Cha's size is an optional pick-one `adds` group (Regular +$0 /
+    Large +$1), which is exactly the coffee case.
+  - ⚠️ Converting a choice deletes the menu's wording from the dish (e.g.
+    `f56eda63`). A default *inferred from the wording* therefore needs that
+    wording kept somewhere checkable.
+
   Lands in: an ADR (amending 0130's default rule), `ARCHITECTURE.md`'s
   `selects` paragraph, `validate.py`, the 3 Spices Indian records if the ruling
   moves them, and `28r`'s intake rule, so new ladders are written to it.
