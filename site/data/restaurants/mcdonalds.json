@@ -27,7 +27,16 @@
       "address": "276 Lambton Quay, Wellington Central, Wellington 6011",
       "lat": -41.28407,
       "lng": 174.77522,
-      "phone": "+64 4 472 1808"
+      "phone": "+64 4 472 1808",
+      "lifecycle": {
+        "events": [
+          {
+            "type": "closed-temporarily",
+            "date": "2026-10-03",
+            "note": "Its Google Maps listing reads “Temporarily closed” (read 2026-10-03; when it closed is unknown)."
+          }
+        ]
+      }
     },
     {
       "label": "Bunny Street",

@@ -132,3 +132,18 @@
   reads *permanently closed* and Lambton Quay *temporarily closed*; we show
   both as trading. Two Subway listings carry a different street number from
   ours. 🎯 Put to the owner at the close.
+
+  ✅ **Owner ruled 2026-10-03 (asked by `faves-77`): trust Google Maps for
+  closures too, on these two chains**, recorded the same visible way.
+  Re-read before acting, matching each listing to our branch by phone as
+  well as address:
+  - **Lambton Quay** — the listing's phone is the one we hold, and it
+    reads *Temporarily closed*: the branch now carries a
+    `closed-temporarily` event dated 2026-10-03, the day it was read, with
+    the source in its note (the schema has no source key; the real
+    closing date is unknown).
+  - **Courtenay Place — NOT closed.** The *permanently closed* listing is a
+    different store, inside the Courtenay Central mall, with a different
+    street number and phone from ours. The worker's "different street
+    number" was that, not a stale address.
+  Subway's two street-number mismatches are untouched (no closure claimed).
