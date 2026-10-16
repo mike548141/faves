@@ -61,4 +61,4 @@ data/products/*.json  # manufacturers' own printed factory addresses; private-ad
 # (tools/check_provenance.py writes it; a coordinate is never recorded). A
 # per-line marker is impossible in JSON, hence the glob.
 data/intake/menu-sources.json  # sha256 hex digests trip nz-phone on digit runs; file holds provenance rows only, no contact data
-data/intake/maps-hours-readings.json  # the street addresses of two fast-food chains' shops as their Google listings print them, mirroring site/data/ (ADR 0022 gate 1); no person's detail, no phone (ADR 0161)
+data/intake/maps-hours-readings.json  # the street addresses of two fast-food chains' shops as their Google listings print them, mirroring site/data/ (ADR 0022 gate 1); no person's detail; the only phones are McDonald's listing numbers already in site/data, kept for the phone match (ADR 0161)
