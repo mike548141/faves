@@ -1,5 +1,4 @@
-- [~] 🚩 **Three allergen findings the caption sweep turned up, none of them
-  (claimed 2026-10-16-0714, faves-11, wt: faves-080-220)
+- [x] 🚩 **Three allergen findings the caption sweep turned up, none of them
       this item's to fix** `[S][data]` — raised 2026-09-09 by the session
       delivering `210` (ADR 0114). All three were measured on the real corpus,
       and each is left alone deliberately: two are rule-set decisions with
@@ -165,3 +164,58 @@
 
   §1 (`slices?` reaching *Slice of Heaven*) and §2 (the Soft Serve Cone's
   wafer) are **untouched and still owed** — the item stays open on those two.
+
+### ✅ Done 2026-10-16 (faves-11 worker) — §1 and §3 were already resolved; §2 landed here
+
+**§1 (`slices?` firing on "slice of X") — resolved before this session.**
+Verified at HEAD `9fc0b119`, not from this item's prose: the wheat-bakery rule
+in `tools/tag_allergens.py` reads
+`(?<!fungus )(?<!duck )(?<!leg )(?<!sirloin )slice(?!s?\s+of\b)s?` under the
+comment *"A SLICE OF SOMETHING IS NOT A SLICE (2026-09-20, roadmap 470/030)"* —
+option (1) of the list above plus the four cut-piece heads. The probe groups
+`a cabinet slice is still a wheat bakery item` / `a cut piece is not a cabinet
+slice` and three breakers sit in `tools/test_tag_allergens.py`, and the shipped
+`Dave Dobbyn • Slice of Heaven` row (charley-noble) carries `tags: []`.
+
+**§3 (`Gluten friendly bun` proposed on every dry run) — resolved 2026-09-09,
+ADR 0116** (`swapped_away()` in the tagger; this item's own §3 note records it).
+Re-measured: the `burgerfuel` row carries `["gf-option"]` only, and the dry run
+before this change reported `0 tag(s) missing`.
+
+**§2 (the wafer cone) — landed.** Corpus sweep, all 57 records, every string
+(names, descriptions, ingredients, options, notes, captions, ids):
+
+| Word | Hits | Verdict |
+|---|---|---|
+| `wafer` | 1841-bar-restaurant *Ice Cream Sundae* desc ("…maraschino cherries, wafer. Gluten free without the wafer.") | true wheat (the second mention is the free-from claim) |
+| | sprig-and-fern-tawa *Kids Ice Cream Sundae* desc ("…with wafers.") | true wheat |
+| | mcdonalds *Soft Serve Cone* caption ("…in a wafer cone") | true wheat |
+| | the-victoria-tavern *Samoan Oka* name ("…coconut cream and **taro wafers**") | FALSE — a taro chip |
+| `cone` / `cones` | mcdonalds *Soft Serve Cone* name + caption | true (ice-cream cone); no other whole-word hit |
+| `cornet` | none | not added |
+| `\w+wafer`/`\w+cone` compounds | only `scone` (already a rule word) | n/a |
+
+Rule change (wheat-bakery rule, `contains-gluten` DERIVED): `wafer` with a
+lookbehind refusing `taro ` / `taro-` and a lookahead refusing `wafer thin` /
+`wafer-thin`; and `(soft serve|ice cream|sugar) cone`. Bare `cone` was NOT
+added: it has no false hit in the corpus today, but "a paper cone of chips" or
+a pine cone would print a false basis, so it is qualified by the ice-cream
+words (waffle cone and wafer cone are already caught by `waffle` and `wafer`).
+The `wafer-thin` guard is not corpus-evidenced (0 hits) — it is a cheap
+guard against a stock menu phrase; say so if you would rather it went.
+Narrowings are lookbehind/lookahead, never an `exclude`.
+
+Applied with `tag_allergens.py --apply` then `--explain --apply`, then
+`gen_summaries.mjs`: **3 dishes gained `contains-gluten`, nothing else changed**
+(checked in the JSON diff): *Ice Cream Sundae* (1841), *Soft Serve Cone*
+(mcdonalds; matched on its name, so it quotes "Soft Serve Cone"), *Kids Ice
+Cream Sundae* (sprig-and-fern-tawa); each with a `tagNotes` entry quoting the
+menu. The Victoria Tavern taro oka stays untagged.
+
+Verified: `test_tag_allergens.py` gained 5 probe groups, 1 caption probe and 6
+breakers (each break-probe caught; two presence controls were added after the
+runner refused absence-only groups); `validate.py`, `test_validate.py` (261
+mutations), `tag_allergens.py --explain --check`, `test_tag_notes.py`,
+`test_allergen_disagreements.py` (20 cases), `gen_summaries.mjs --check`,
+`split_data.py --check`, `seed_dish_ids.py --check`, `check_decisions.py`,
+`check_fallback.py`, `node --test`. No `site/js` change, so no SHELL_VERSION bump.

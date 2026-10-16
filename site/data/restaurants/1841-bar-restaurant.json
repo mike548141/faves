@@ -874,9 +874,10 @@
           "tags": [
             "v",
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cream”."},
+          "tagNotes": {"contains-dairy": "The menu says “Cream”.", "contains-gluten": "The menu says “wafer” — a wheat bakery item."},
           "addOns": [
             "sundae-topping"
           ]

@@ -265,6 +265,10 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **Ice-cream wafers and cones now warn about gluten.** McDonald's Soft Serve
+  Cone, Sprig & Fern Tawa's Kids Ice Cream Sundae and 1841 Bar & Restaurant's
+  Ice Cream Sundae warned about dairy and said nothing about the wheat in the
+  wafer. Taro wafers (a root-vegetable chip) are not flagged.
 - **Closing Settings puts you back on the ⋯ button.** It used to drop focus to
   the top of the page, so a keyboard or screen-reader user lost their place.
   Closing by the ✕, Escape or a tap outside now all return to ⋯.

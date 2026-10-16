@@ -479,10 +479,34 @@ RULES = [
     # tool only ever adds (ADR 0025). Regal's three keep theirs: a Chinese
     # sautéed dish is finished with soy sauce far too often to call it wheat
     # free, and removing on no evidence is the absence claim this repo refuses.
+    #
+    # A WAFER IS WHEAT, AND SO IS THE CONE IT MAKES (2026-10-16, roadmap 080/220
+    # §2). McDonald's `Soft Serve Cone` — "a soft serve ice cream in a wafer
+    # cone" — warned dairy from `cream` and said nothing of the wheat it is
+    # served in; the vocabulary had no word for either. Swept over every string
+    # in all 57 records first: `wafer` 5 hits in 3 dishes (two sundaes, whose
+    # wafer is a biscuit, are right; the Victoria Tavern's "taro wafers" are a
+    # taro CHIP and wrong); `cone` 2 hits in 1 dish, both the ice-cream cone.
+    #   (1) `taro wafers` is a root-vegetable chip — a LOOKBEHIND, never an
+    #       `exclude`, for the water-chestnut reason: the same string could
+    #       carry a real wafer two clauses on, and a veto would lose it. Taro
+    #       is the one head the corpus holds; a second is added by sweeping
+    #       again, not by guessing.
+    #   (2) `wafer-thin` is a thickness, not a food. NOT corpus-evidenced (0
+    #       hits today) — it is here because "wafer thin ham" is a stock menu
+    #       phrase and the bare word would print a false basis on it (ADR 0110's
+    #       `katsu` lesson). Cheap, and tested by a break-probe.
+    #   (3) `cone` is NOT a bare alternative: a "paper cone of chips" or a pine
+    #       cone is no bakery item, and the printed basis would be false. It is
+    #       the three ice-cream spellings the cone is named by — `waffle cone`
+    #       and `wafer cone` need no entry, `waffle` and `wafer` already catch
+    #       them. A bare "Cone" under an Ice Cream heading is the SECTION tier's
+    #       to report (ADR 0123), not this rule's to guess.
     ("contains-gluten", "DERIVED", "a wheat bakery item",
      r"\b((?<!lettuce )(?<!lettuce-)buns?|\w*burgers?|sandwich|sando|toast|toastie|pies?|cakes?|biscuits?|cookies?|"
      r"brownies?|\w*muffins?|scones?|doughnuts?|donuts?|pizzas?|pancakes?|waffles?|"
      r"crackers?|tarts?|"
+     r"(?<!taro )(?<!taro-)wafer(?![\s-]thin)|(?:soft\s?serve|ice\s?cream|sugar)\s+cone|"
      r"(?<!fungus )(?<!duck )(?<!leg )(?<!sirloin )slice(?!s?\s+of\b)s?|"
      r"danish|éclair|eclair)\b",
      r"\b(pie\s?spice|(fish|crab|rice)\s?cakes?)\b"),
