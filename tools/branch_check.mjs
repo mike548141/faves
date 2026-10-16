@@ -86,8 +86,9 @@ const SITE = join(ROOT, "site");
 
 // Three shapes, all real, chosen because they fail differently.
 //   tj-katsu   7 branches, ALL with hours → exercises the openness rule.
-//   mcdonalds  5 branches, ONE with hours (Johnsonville, from Google Maps, ADR 0161)
-//              → exercises the honesty rule on the other four, and is
+//   mcdonalds  6 branches, THREE with hours (Johnsonville, Bunny Street and Kenepuru
+//              Drive, from Google Maps, ADR 0161)
+//              → exercises the honesty rule on the other three, and is
 //              the venue in the screenshot that prompted the redesign.
 //   hell-pizza 14 branches, all with hours → the corpus's largest chain since
 //              the 2026-08-16 Wellington sweep, and the reason this line is no
@@ -749,12 +750,29 @@ const PROVENANCE = [
     id: "subway", branch: "tawa", amber: false,
     want: /Opening hours at Tawa read from its Google Maps listing on 16 Oct 2026\./,
   },
-  { id: "subway", branch: "courtenay-place", amber: false, want: null },
+  // Both were one street number off Google's until the owner ruled to take
+  // Google's (2026-10-17), and Courtenay Place trades past midnight.
+  {
+    id: "subway", branch: "courtenay-place", amber: false,
+    want: /Opening hours at Courtenay Place read from its Google Maps listing on 16 Oct 2026\./,
+  },
+  {
+    id: "subway", branch: "mulgrave-street", amber: false,
+    want: /Opening hours at Mulgrave Street read from its Google Maps listing on 16 Oct 2026\./,
+  },
   {
     id: "mcdonalds", branch: "johnsonville", amber: true,
     want: /Opening hours at Johnsonville read from its Google Maps listing on 16 Oct 2026\./,
   },
-  { id: "mcdonalds", branch: "bunny-street", amber: true, want: null },
+  {
+    id: "mcdonalds", branch: "bunny-street", amber: true,
+    want: /Opening hours at Bunny Street read from its Google Maps listing on 16 Oct 2026\./,
+  },
+  // The branch nobody read: Maps lists no hours for North City Plaza, and the
+  // phone that used to sit here belongs to Kenepuru Drive. Kenepuru Drive has
+  // hours but no pin (a street-level geocode only), so it can never be the
+  // NEAREST branch the note describes and cannot be put under test here.
+  { id: "mcdonalds", branch: "porirua", amber: true, want: null },
 ];
 
 async function checkMapsProvenance(driver, report, port) {

@@ -1,5 +1,4 @@
-- [~] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
-  (claimed 2026-10-16-1212, faves-11, wt: faves-080-130b)
+- [x] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
       — ~~**10 of the corpus's 22 branches**, measured 2026-08-16~~ →
       **10 of the corpus's 47 branches**, re-measured 2026-09-09. This is now
       load-bearing rather than cosmetic: [ADR 0054](../../decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
@@ -215,3 +214,56 @@ browser. Phones were not added to any record.
   - McDonald's Courtenay Place was not asked and stays as it is: a
     missing listing proves nothing about a closure.
 
+
+✅ **Done 2026-10-17 (faves-11 worker).** The owner's four rulings of 2026-10-17
+are applied, data only (no `site/js` change, no `SHELL_VERSION` bump). Final
+state of every branch, all hours `detailsVerifiedBy: "google-maps"` dated
+2026-10-16 except where stated:
+- **McDonald's Johnsonville** 24 hours (unchanged from the first landing).
+- **McDonald's Bunny Street** Mon-Tue 7am-10pm, Wed-Thu 7am-11pm, **Fri 7am to
+  midnight** (`["07:00","00:00"]`, ADR 0094's wrap, running into Saturday),
+  **Sat open 24 hours** (`["00:00", null]`), Sun 12am-10pm. Friday is the owner's
+  ruling on the store's window sign, not what Google printed ("7 am-12 pm");
+  both are recorded beside the reading in `data/intake/maps-hours-readings.json`.
+- **McDonald's Porirua is now two branches.** *North City Plaza* keeps branch id
+  `porirua` (an id never moves, ADR 0103; only its `label` changed), address
+  unchanged, **phone removed** (it belonged to the other store), no hours (Maps
+  lists none). *Kenepuru Drive* is new (id `kenepuru-drive`, seeded by
+  `tools/seed_branch_ids.py`, which reproduced the same id byte for byte), with
+  the phone from our old record and 24-hour hours. Its address is written
+  without a postcode: none of our sources
+  states one (Nominatim answers 5240 where our other Porirua address says 5022).
+  **No pin:** OSM resolves its street number only to street level, and two
+  different unit records of that street, about 130 m apart, so the pin is left
+  empty on the Pandan precedent (a consequence: it can never be "the nearest
+  branch" the confidence note describes, so `branch_check` cannot put it under
+  test).
+- **McDonald's Courtenay Place** untouched (ruling 4).
+- **McDonald's Lambton Quay** untouched: still `closed-temporarily` from
+  2026-10-03, no hours to write.
+- **Subway Johnsonville, Tawa, Karori** unchanged from the first landing.
+- **Subway Courtenay Place** address 23 to **15**; Mon-Thu 8am-11pm, Fri 8am-3am,
+  Sat 9am-3am (both close the next morning, ADR 0094), Sun 9am-11pm. **Pin
+  moved:** the old pin geocoded "23"; a house-level OSM geocode of "15" sits
+  31.6 m from it, over the audit's 30 m "review" line, so it was replaced with
+  the house-level answer.
+- **Subway Mulgrave Street** address 18 to **19**; Mon-Fri 7am-7pm, Sat
+  10am-5pm, Sun 10am-3pm. It had no pin; a house-level OSM geocode of "19"
+  exists, so it was **filled**.
+No phones were added to any Subway record. Of the corpus's branches, none of
+Subway's five now lacks hours; McDonald's holds three branches with hours of six.
+
+**Verified:** `validate.py` (58 files valid; the only new warnings are the ADR
+0094 "17h span closing after midnight" transposition checks on Bunny Street's
+Friday and Subway Courtenay's Fri and Sat, each correct against the source);
+`seed_branch_ids.py --check` (71 branches); `test_validate.py` 285 of 285
+mutations behaved (the "Maps reading on a branch with no hours" case moved from
+Subway, which has none left, to McDonald's Courtenay Place); `gen_summaries.mjs
+--check`; `check_fallback.py`; `split_data.py --check`; `node --test` 1895
+passed, 0 failed (includes the new `tests/maps-hours-night.test.js`, which reads
+the shipped records at the midnight edges); `branch_check` 177 passed, 0 failed
+and `--provenance` 26 passed, 0 failed; `midnight_check` 89 passed; `boot_check`
+38 passed. `tools/branch_check.mjs` was edited: Bunny Street and Subway's
+Courtenay Place and Mulgrave Street now assert the Maps sentence, and the
+"branch nobody read" probe moved to North City Plaza. The new test was not
+break-probed.

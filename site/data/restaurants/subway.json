@@ -180,18 +180,110 @@
     {
       "label": "Courtenay Place",
       "id": "courtenay-place",
-      "address": "23 Courtenay Place, Te Aro, Wellington 6011",
-      "lat": -41.29398,
-      "lng": 174.78238,
+      "address": "15 Courtenay Place, Te Aro, Wellington 6011",
+      "lat": -41.29421,
+      "lng": 174.78261,
       "phone": null,
-      "hours": null
+      "hours": {
+        "mon": [
+          [
+            "08:00",
+            "23:00"
+          ]
+        ],
+        "tue": [
+          [
+            "08:00",
+            "23:00"
+          ]
+        ],
+        "wed": [
+          [
+            "08:00",
+            "23:00"
+          ]
+        ],
+        "thu": [
+          [
+            "08:00",
+            "23:00"
+          ]
+        ],
+        "fri": [
+          [
+            "08:00",
+            "03:00"
+          ]
+        ],
+        "sat": [
+          [
+            "09:00",
+            "03:00"
+          ]
+        ],
+        "sun": [
+          [
+            "09:00",
+            "23:00"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-16",
+      "detailsVerifiedBy": "google-maps"
     },
     {
       "label": "Mulgrave Street",
       "id": "mulgrave-street",
-      "address": "18 Mulgrave Street, Thorndon, Wellington 6011",
+      "address": "19 Mulgrave Street, Thorndon, Wellington 6011",
+      "lat": -41.27724,
+      "lng": 174.77968,
       "phone": null,
-      "hours": null
+      "hours": {
+        "mon": [
+          [
+            "07:00",
+            "19:00"
+          ]
+        ],
+        "tue": [
+          [
+            "07:00",
+            "19:00"
+          ]
+        ],
+        "wed": [
+          [
+            "07:00",
+            "19:00"
+          ]
+        ],
+        "thu": [
+          [
+            "07:00",
+            "19:00"
+          ]
+        ],
+        "fri": [
+          [
+            "07:00",
+            "19:00"
+          ]
+        ],
+        "sat": [
+          [
+            "10:00",
+            "17:00"
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            "15:00"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-16",
+      "detailsVerifiedBy": "google-maps"
     }
   ],
   "vibe": [
