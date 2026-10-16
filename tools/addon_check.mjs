@@ -1776,6 +1776,65 @@ async function run(opts) {
       JSON.stringify(pn.skipped),
     );
 
+    // (w) …and a line that DOES resolve at a different price is landed at TODAY'S
+    // price and the change is SAID (roadmap 220/030). Three recalls of the same
+    // line: saved 2 under today's (a rise), saved dearer (a fall — also news),
+    // and saved with NO price snapshot (no evidence, no claim: nothing said).
+    const livePrice = good.price;
+    const recallWith = async (price, label) => {
+      const line = { ...good };
+      if (price === undefined) delete line.price; else line.price = price;
+      await driver.evalPage(`localStorage.removeItem("faves.order.v1");
+        localStorage.setItem(${JSON.stringify(SAVED_KEY)}, ${JSON.stringify(JSON.stringify([{ ...savedNow[0], lines: [line] }]))}); true`);
+      await loadMenu(`${opts.id} to render over a saved order priced differently (${label})`);
+      await driver.click(".saved-orders .saved-add");
+      return {
+        tally: await driver.evalPage(storedExpr),
+        changed: await driver.evalPage(`[...document.querySelectorAll(".saved-orders .saved-changed li")].map((e) => e.textContent)`),
+        head: await driver.evalPage(`(document.querySelector(".saved-orders .saved-changed-head") || {}).textContent || null`),
+      };
+    };
+    const rise = await recallWith(livePrice - 2, "rise");
+    report.check(
+      "(w) a price that ROSE since saving is said in words, both prices and the amount",
+      rise.changed.length === 1 && /^2× .+ — now \$[\d.]+ each, was \$[\d.]+ when you saved it \(up \$2\)$/.test(rise.changed[0]) &&
+        /changed/.test(rise.head || ""),
+      JSON.stringify(rise.changed),
+    );
+    report.check(
+      "(w) …and the tally holds TODAY'S price, never the saved one",
+      rise.tally.length === 1 && rise.tally[0].price === livePrice,
+      JSON.stringify(rise.tally.map((l) => [l.name, l.qty, l.price])) + ` live ${livePrice}`,
+    );
+    const fall = await recallWith(livePrice + 1.5, "fall");
+    report.check(
+      "(w) a price that FELL is said too",
+      fall.changed.length === 1 && /was \$[\d.]+ when you saved it \(down \$1\.50\)$/.test(fall.changed[0]) && fall.tally[0].price === livePrice,
+      JSON.stringify([fall.changed, fall.tally.map((l) => l.price)]),
+    );
+    const bare = await recallWith(undefined, "no snapshot");
+    report.check(
+      "(w) a saved line with NO price snapshot is added and says nothing about a change",
+      bare.tally.length === 1 && bare.tally[0].price === livePrice && bare.changed.length === 0 && bare.head === null,
+      JSON.stringify([bare.changed, bare.head]),
+    );
+    // The three status blocks must read alike (bold heading, indented list): the
+    // unfinished one cannot be provoked here, so build the markup recall builds
+    // and ask the stylesheet — an unstyled class falls back to a plain <p>/<ul>.
+    const look = await driver.evalPage(`(() => {
+      const s = document.querySelector(".saved-orders .saved-status");
+      const mk = (cls) => { const h = document.createElement("p"); h.className = "saved-status-line " + cls + "-head"; const u = document.createElement("ul"); u.className = cls; s.append(h, u);
+        const c = (e) => getComputedStyle(e); return [c(h).fontWeight, c(h).marginTop, c(u).paddingLeft]; };
+      const out = { skipped: mk("saved-skipped"), unfinished: mk("saved-unfinished"), changed: mk("saved-changed") };
+      return out;
+    })()`);
+    report.check(
+      "(w) the changed and unfinished blocks look like the left-out one: bold heading, same top margin, indented list",
+      JSON.stringify(look.unfinished) === JSON.stringify(look.skipped) && JSON.stringify(look.changed) === JSON.stringify(look.skipped) &&
+        Number(look.skipped[0]) >= 700 && look.skipped[2] !== "0px",
+      JSON.stringify(look),
+    );
+
     // (x) delete: two taps, then gone, and focus does not fall to <body>.
     await driver.evalPage(`localStorage.setItem(${JSON.stringify(SAVED_KEY)}, ${JSON.stringify(JSON.stringify([
       savedNow[0], { ...savedNow[0], id: "second", name: "Second usual" },

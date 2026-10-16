@@ -260,6 +260,85 @@ test("a price the venue has changed is the price recalled, not the saved one", (
   assert.equal(lines[0].price, 16.5);
 });
 
+// --- 26c: the menu moved under a saved order --------------------------------
+
+test("a dearer dish lands at TODAY'S price and is SAID, with both prices (26c)", () => {
+  const dearer = structuredClone(RECORD);
+  dearer.addOnGroups[0].options[1].dishPrice = 16; // footlong 14 -> 16: line 14.50 -> 16.50
+  const { lines, changed } = planRecall(saved(), dearer);
+  assert.equal(lines[0].price, 16.5, "the tally gets the live price, never the snapshot");
+  assert.equal(changed.length, 1, "the unchanged cookie is not mentioned");
+  assert.deepEqual([changed[0].name, changed[0].qty, changed[0].was, changed[0].now], ["Meatball Marinara", 2, 14.5, 16.5]);
+  assert.equal(changed[0].text, "2× Meatball Marinara — now $16.50 each, was $14.50 when you saved it (up $2)");
+});
+
+test("a price that went DOWN is said too, in words (26c)", () => {
+  const cheaper = structuredClone(RECORD);
+  cheaper.menu[1].items[0].price = 2;
+  const { changed } = planRecall(saved(), cheaper);
+  assert.equal(changed.length, 1);
+  assert.equal(changed[0].text, "1× Cookie — now $2, was $2.50 when you saved it (down $0.50)");
+});
+
+test("an unchanged menu says nothing, and so does a difference below a cent (26c)", () => {
+  assert.deepEqual(planRecall(saved(), RECORD).changed, []);
+  const s = saved();
+  s.lines[1].price = 2.5000001;
+  assert.deepEqual(planRecall(s, RECORD).changed, []);
+});
+
+test("NO EVIDENCE, NO CLAIM: a line with no price snapshot never reports a change (26c)", () => {
+  const dearer = structuredClone(RECORD);
+  dearer.menu[1].items[0].price = 3;
+  for (const price of [null, undefined, "2.5", NaN]) {
+    const s = saved();
+    s.lines[1].price = price;
+    assert.deepEqual(planRecall(s, dearer).changed, [], `snapshot ${String(price)}`);
+  }
+  // …and through the store's own gate: a stored line with no price comes back null.
+  const store = createSavedOrders(fakeStorage());
+  const { saved: kept } = store.save({ venueId: "sub-way", name: "n", lines: [{ dishId: "cookie", name: "Cookie", qty: 1 }] });
+  assert.equal(kept.lines[0].price, null);
+  assert.deepEqual(planRecall(kept, dearer).changed, []);
+});
+
+test("a snapshot in another currency is not compared (26c)", () => {
+  const dearer = structuredClone(RECORD);
+  dearer.menu[1].items[0].price = 3;
+  const s = saved();
+  s.lines[1].currency = "AUD";
+  assert.deepEqual(planRecall(s, dearer).changed, []);
+});
+
+test("a dish that has lost its price is said, not totalled by guessing (26c)", () => {
+  const unpriced = structuredClone(RECORD);
+  delete unpriced.menu[1].items[0].price;
+  const { lines, changed } = planRecall(saved(), unpriced);
+  assert.equal(lines.find((l) => l.dishId === "cookie").price, null);
+  assert.equal(changed[0].now, null);
+  assert.equal(changed[0].text, "1× Cookie — no price listed now (was $2.50 when you saved it)");
+});
+
+test("a skipped line is not also reported as a price change; an unfinished one is not compared (26c)", () => {
+  const gone = structuredClone(RECORD);
+  gone.menu[1].items = [];
+  assert.deepEqual(planRecall(saved(), gone).changed, []);
+
+  // The venue made sauce compulsory AND the saved line has none: the live price
+  // lacks a choice not yet made, so a difference there is not the menu moving.
+  const s = saved();
+  s.lines[0].options = s.lines[0].options.filter((o) => o.group !== "sauces");
+  const live = {
+    ...RECORD,
+    addOnGroups: RECORD.addOnGroups.map((g) =>
+      g.id === "sauces" ? { ...g, select: "one", required: true, max: undefined, options: g.options.map((o) => ({ ...o, price: 1 })) } : g
+    ),
+  };
+  const r = planRecall(s, live);
+  assert.equal(r.unfinished.length, 1);
+  assert.equal(r.changed.some((c) => c.name === "Meatball Marinara"), false);
+});
+
 test("a renamed option still resolves, under its new name (matched by id)", () => {
   const renamed = structuredClone(RECORD);
   renamed.addOnGroups[1].options[1].name = "Roasted garlic";

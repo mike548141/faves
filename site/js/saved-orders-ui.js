@@ -139,7 +139,7 @@ export function savedOrdersPanel(record) {
   );
 
   function recall(saved) {
-    const { lines, skipped, unfinished } = planRecall(saved, record);
+    const { lines, skipped, unfinished, changed } = planRecall(saved, record);
     if (lines.length) order.merge(lines);
     const added = lines.reduce((n, l) => n + l.qty, 0);
     const bits = [];
@@ -158,6 +158,19 @@ export function savedOrdersPanel(record) {
           "ul",
           { className: "saved-unfinished" },
           unfinished.map((u) => el("li", { textContent: `${u.qty}× ${u.name} — choose ${u.groups.join(" and ")}` }))
+        )
+      );
+    }
+    if (changed.length) {
+      // Landed at TODAY'S price (the tally is never given a stale one) and said
+      // in words — "up" / "down", not a colour — so the reader decides whether to
+      // keep the line (ADR 0036's shape). A fall is news too.
+      status.append(
+        el("p", { className: "saved-status-line saved-changed-head", textContent: "Prices have changed since you saved this:" }),
+        el(
+          "ul",
+          { className: "saved-changed" },
+          changed.map((c) => el("li", { textContent: c.text }))
         )
       );
     }
