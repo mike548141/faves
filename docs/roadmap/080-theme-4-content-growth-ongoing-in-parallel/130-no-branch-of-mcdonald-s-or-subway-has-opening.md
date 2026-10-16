@@ -1,4 +1,5 @@
-- [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
+- [~] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
+  (claimed 2026-10-16-1212, faves-11, wt: faves-080-130b)
       — ~~**10 of the corpus's 22 branches**, measured 2026-08-16~~ →
       **10 of the corpus's 47 branches**, re-measured 2026-09-09. This is now
       load-bearing rather than cosmetic: [ADR 0054](../../decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
@@ -196,3 +197,21 @@ says "Opening hours at Tawa read from its Google Maps listing on 16 Oct 2026." <
 caution, which is unchanged; and a 24-hour day reads "Open 24 hours" in the week
 table rather than "12am–late". `tools/branch_check.mjs` asserts all of it in a
 browser. Phones were not added to any record.
+
+  ✅ **Owner ruled 2026-10-17 (asked by `faves-11`, via AskUserQuestion), on
+  the Maps reading's open rows:**
+  - **Bunny St: Friday is open from 7 am until midnight**, running on into
+    Saturday's 24 hours. Google printed "7 am–12 pm" (noon), but the store's
+    own window sign in the same listing reads "Friday & Saturday open 24
+    hours". Record the printed text and the sign beside the reading.
+  - **Porirua: two branches.** North City Plaza, on Titahi Bay Road (Maps
+    lists no phone and no hours, so neither is recorded), and Porirua on
+    Kenepuru Drive, which the phone in our record belongs to, with 24-hour
+    hours. The phone moves off the North City branch. Exact addresses and
+    the number: `data/intake/maps-hours-readings.json`.
+  - **Subway: take Google's street numbers** for Courtenay Place and
+    Mulgrave Street (each one number off ours; see the readings record), with
+    their Maps hours.
+  - McDonald's Courtenay Place was not asked and stays as it is: a
+    missing listing proves nothing about a closure.
+
