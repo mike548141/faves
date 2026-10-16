@@ -929,9 +929,10 @@
             }
           ],
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ],
-          "tagNotes": {"contains-dairy": "The photo’s description says “cream”."}
+          "tagNotes": {"contains-dairy": "The photo’s description says “cream”.", "contains-gluten": "The menu says “Soft Serve Cone” — a wheat bakery item."}
         },
         {
           "name": "Hot Fudge Sundae",

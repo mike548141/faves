@@ -1063,9 +1063,10 @@
           "desc": "Vanilla ice cream sundae with wafers.",
           "price": 5.0,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “Cream”."},
+          "tagNotes": {"contains-dairy": "The menu says “Cream”.", "contains-gluten": "The menu says “wafers” — a wheat bakery item."},
           "addOns": [
             "sundae-sauce"
           ]

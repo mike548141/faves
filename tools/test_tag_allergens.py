@@ -1301,6 +1301,52 @@ PROBES = {
         # broken into matching nothing fails here rather than passing quietly.
         ("Crispy duck slices with pancake wraps", {"contains-gluten"}, set()),
     ],
+    # (h) A WAFER IS WHEAT, AND SO IS THE CONE IT MAKES (2026-10-16, roadmap
+    # 080/220 §2). The corpus sweep behind these lines: `wafer` 5 hits in 3
+    # dishes, `cone` 2 hits in 1. The presence block is first because it is the
+    # half whose loss is DANGEROUS — a missed wheat warning on a dessert.
+    "a wafer is a wheat bakery item": [
+        # 1841 Bar & Restaurant, verbatim. The second "wafer" is a free-from
+        # claim about the wafer and cancels nothing about the first.
+        ("Vanilla ice cream, fresh whipped cream, maraschino cherries, wafer. "
+         "Gluten free without the wafer.", {"contains-gluten", "contains-dairy"},
+         set()),
+        ("Vanilla ice cream sundae with wafers.", {"contains-gluten"}, set()),
+        ("Ice cream wafer", {"contains-gluten"}, set()),
+        # The wafer stands next to a taro chip in one string: a veto of the
+        # item would lose it, a lookbehind does not.
+        ("Taro wafers, with a wafer biscuit on the side",
+         {"contains-gluten"}, set()),
+    ],
+    "a taro wafer is a root-vegetable chip": [
+        ("Samoan Oka – raw fish salad w/ tomato, cucumber, shallots, spring "
+         "onion, vanilla bean, coconut cream and taro wafers",
+         set(), {"contains-gluten"}),
+        ("Oka served with taro-wafers", set(), {"contains-gluten"}),
+        # The presence control the runner requires: the lookbehind cancels the
+        # taro match and `finditer` walks on to the real wafer after it.
+        ("Oka with taro wafers, then an ice cream wafer for dessert",
+         {"contains-gluten"}, set()),
+    ],
+    "wafer-thin is a thickness, not a food": [
+        ("Wafer thin ham", set(), {"contains-gluten"}),
+        ("Wafer-thin cucumber, lemon", set(), {"contains-gluten"}),
+        # Control: the lookahead cancels `wafer thin` only, not every wafer in
+        # the string.
+        ("Wafer thin ham with a vanilla wafer", {"contains-gluten"}, set()),
+    ],
+    "an ice-cream cone is a wheat bakery item": [
+        ("Soft Serve Cone", {"contains-gluten"}, set()),
+        ("Ice cream cone", {"contains-gluten"}, set()),
+        ("Sugar cones", {"contains-gluten"}, set()),
+        ("Soft serve in a waffle cone", {"contains-gluten"}, set()),
+    ],
+    "a cone that is not a biscuit warns nothing": [
+        ("Paper cone of chips", set(), {"contains-gluten"}),
+        ("Roasted pine cone syrup", set(), {"contains-gluten"}),
+        # Control: a paper cone of chips beside a real ice-cream cone.
+        ("Paper cone of chips, then a soft serve cone", {"contains-gluten"}, set()),
+    ],
 }
 
 # --- the PHOTO tier's probes (2026-09-09, ADR 0114, roadmap 080/210) --------
@@ -1384,6 +1430,14 @@ ALT_PROBES = {
          set(), {"contains-gluten@PHOTO"}),
         ("Item two", "Gluten free bread beside a bowl of pasta", True,
          {"contains-gluten@PHOTO"}, set()),
+    ],
+    # Roadmap 080/220 §2: McDonald's caption, verbatim. The name is meaningless
+    # to the rules for the reason the block above gives — name it "Soft Serve
+    # Cone" and the NAME earns the tag first, the caption's finding is deduped
+    # away, and the probe passes with the caption's wafer gone.
+    "a wafer cone in a caption warns wheat as well as dairy": [
+        ("Item one", "A soft serve ice cream in a wafer cone", True,
+         {"contains-gluten@PHOTO", "contains-dairy@PHOTO"}, set()),
     ],
 }
 
@@ -2069,6 +2123,35 @@ BREAKERS = {
          (r'r"\b(pie\s?spice|(fish|crab|rice)\s?cakes?)\b"),',
           r'r"\b(pie\s?spice|slices?\s+of|(fish|crab|rice)\s?cakes?)\b"),')],
         ["a cabinet slice is still a wheat bakery item"]),
+    # (2d) Roadmap 080/220 §2 — the wafer/cone vocabulary, one breaker per piece.
+    # `wafer` taken back out: the sundaes and the caption lose their wheat, and
+    # so does the control that proves `wafer thin` cancels one match only.
+    "the wafer word removed": (
+        [(r'r"(?<!taro )(?<!taro-)wafer(?![\s-]thin)|(?:soft\s?serve|ice\s?cream|sugar)\s+cone|"',
+          r'r"(?:soft\s?serve|ice\s?cream|sugar)\s+cone|"')],
+        ["a wafer is a wheat bakery item", "wafer-thin is a thickness, not a food",
+         "a wafer cone in a caption warns wheat as well as dairy"]),
+    "the taro lookbehind removed": (
+        [(r'r"(?<!taro )(?<!taro-)wafer(?![\s-]thin)|',
+          r'r"wafer(?![\s-]thin)|')],
+        ["a taro wafer is a root-vegetable chip"]),
+    "the wafer-thin lookahead removed": (
+        [(r'(?<!taro-)wafer(?![\s-]thin)|', r'(?<!taro-)wafer|')],
+        ["wafer-thin is a thickness, not a food"]),
+    # 🛑 The dangerous rewrite: the taro narrowing as an item-level `exclude`.
+    # Every absence line in the taro group still passes; what dies is the real
+    # wafer biscuit standing beside a taro chip — a missed wheat warning.
+    "the taro narrowing rewritten as an item-level exclude": (
+        [(r'(?<!taro )(?<!taro-)wafer(?![\s-]thin)|', r'wafer(?![\s-]thin)|'),
+         (r'r"\b(pie\s?spice|(fish|crab|rice)\s?cakes?)\b"),',
+          r'r"\b(pie\s?spice|taro[\s-]wafers?|(fish|crab|rice)\s?cakes?)\b"),')],
+        ["a wafer is a wheat bakery item"]),
+    "the ice-cream cone words removed": (
+        [(r'|(?:soft\s?serve|ice\s?cream|sugar)\s+cone|"', r'|"')],
+        ["an ice-cream cone is a wheat bakery item"]),
+    "cone made a bare word": (
+        [(r'(?:soft\s?serve|ice\s?cream|sugar)\s+cone|"', r'cone|"')],
+        ["a cone that is not a biscuit warns nothing"]),
     # (3) 🛑 The one that would be easiest to "tidy" — recording a caption's
     # finding at the RULE's tier instead of PHOTO. Nothing on screen changes and
     # the same 34 tags land, so only an assertion about the tier can see it.
