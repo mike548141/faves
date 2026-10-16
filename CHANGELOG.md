@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Sizes and fillings that were separate rows are now one dish with a choice.**
+  Pizza Pomodoro's 26 pizzas (Small and Large), Wellington Kebab's mixed kebabs
+  and gyrus, Groundup's takeaway cups, Pandan's varuval, KK Malaysian's nasi
+  lemak, Regal's ginger and spring onion and The Catch's donburi teriyaki each
+  show once, priced at the cheapest option, with the rest one tap away. A heart
+  or rating on an old row moves to the merged dish.
 - **A size choice now opens when you press Add.** On a dish with a size to pick
   (a half or full portion, a pour size, single or double) the Add button still
   orders the dish as listed, and the choices open underneath with a line saying
