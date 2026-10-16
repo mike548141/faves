@@ -20,16 +20,21 @@
   snapshot, a different currency, a skipped line, or an unfinished line (its live
   price lacks the compulsory choice not yet made) produce no claim. A dish that
   has since lost its price is said too ("no price listed now"). Compared in whole
-  cents. Verified: `node --test` 1871/1871, `boot_check` 38/38, `addon_check` (read-only
-  run; it drives recall) 146/146, `check_versions --range` / `check_precache` /
+  cents. Verified: `node --test` 1871/1871, `boot_check` 38/38,
+  `addon_check` 151/151, `check_versions --range` / `check_precache` /
   `check_decisions` clean; 7 new unit tests in
   `tests/saved-orders.test.js` incl. pre-snapshot and a price decrease, two
   break-probes (a missing snapshot read as 0; unfinished lines compared) each
   fail exactly the test written for them. A browser run of the real recall on
   daily-bakery (rise, fall, unchanged, pre-snapshot) passed 4/4 from a scratch
-  driver. 🚩 **Not committed as a check:** the right home for a permanent browser
-  assertion is `tools/addon_check.mjs` section (w), which another worker's open PR
-  owns; owed there: seed a line with `price` below/above the live one and assert
-  `.saved-changed li` text and that the tally holds the live price.
+  driver.
+  Browser coverage lives in `tools/addon_check.mjs` section (w) (151 passed; was
+  146): a rise and a fall are said with both prices, a line with no snapshot says
+  nothing, the tally holds the live price, and the changed / unfinished /
+  left-out blocks compute identical heading weight, margin and list indent
+  (`.saved-unfinished*` and `.saved-changed*` now share the `.saved-skipped*`
+  rules). Break-probes: a missing snapshot read as 0 fails the no-snapshot
+  assertion alone; the stylesheet without the new selectors fails the look
+  assertion.
   The reo queue has no saved-orders family (26a's strings were never queued), so
   none was added.

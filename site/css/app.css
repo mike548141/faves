@@ -6689,11 +6689,13 @@ mark.search-match {
   margin: 0;
 }
 .saved-skipped-head,
+.saved-unfinished-head,
 .saved-changed-head {
   margin-top: var(--space-2);
   font-weight: 700;
 }
 .saved-skipped,
+.saved-unfinished,
 .saved-changed {
   margin: var(--space-1) 0 0;
   padding-left: 1.2em;
