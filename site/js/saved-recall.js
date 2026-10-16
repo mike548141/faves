@@ -15,6 +15,14 @@
 // behaviour; Theme 26c (a changed price, a renamed option, "this is $2 dearer")
 // is the item that will do better, and it needs only what is already stored.
 //
+// ONE exception to "skipped and named", owner-ruled 2026-10-03 (roadmap 200/130,
+// ADR 0158): a line that is missing a choice the venue has since made COMPULSORY
+// (ADR 0156) is LANDED, unfinished, and reported in `unfinished`. Nothing about it
+// is altered or guessed — the dish and every option it had are exactly what the
+// reader saved — and the order sheet flags it and lets them finish it there. The
+// ADR 0156 version of this file dropped it, on the reasoning that the picker would
+// not add it; the owner's ruling is that the reader, not the recall, decides.
+//
 // Matching is by id through the repo's own resolvers — `findDish` (dish-id.js:
 // the four strict tiers, so a former id still finds a renamed dish and a
 // same-NAME dish under a new id does not) and `optionId` — never by name or
@@ -40,21 +48,21 @@ export const REASONS = {
   dish: "no longer on the menu",
   option: (name) => `“${name || "an add-on"}” is no longer offered`,
   cap: "its add-ons no longer fit together",
-  // A choice the venue now makes compulsory (ADR 0156) that this saved line
-  // never made — the picker would not add it, so recall does not either.
-  required: (names) => `needs a choice now: ${names}`,
 };
 
 /**
  * Resolve one saved order against the venue's live `record`.
  *
- * Returns `{ lines, skipped }`: `lines` are `order.merge()`-ready (a line's
- * shape plus `qty`), `skipped` is `[{ name, qty, reason }]` for each saved line
- * that could not be rebuilt faithfully.
+ * Returns `{ lines, skipped, unfinished }`: `lines` are `order.merge()`-ready (a
+ * line's shape plus `qty`), `skipped` is `[{ name, qty, reason }]` for each saved
+ * line that could not be rebuilt faithfully, and `unfinished` is
+ * `[{ name, qty, groups: [name] }]` for the lines in `lines` that still owe a
+ * compulsory choice.
  */
 export function planRecall(saved, record) {
   const lines = [];
   const skipped = [];
+  const unfinished = [];
   const currency = venueCurrency(record);
   const fmt = (n) => formatMoney(n, currency);
 
@@ -102,10 +110,12 @@ export function planRecall(saved, record) {
       continue;
     }
 
+    // Landed, not dropped (header). The group is named so the recall's status
+    // line can say what is owed; the sheet works it out again from the live
+    // record, so nothing needs to be remembered on the line itself.
     const unanswered = missingRequired(groups, selection);
     if (unanswered.length) {
-      miss(REASONS.required(unanswered.map((g) => g.name).join(", ")));
-      continue;
+      unfinished.push({ name: item.name, qty: l.qty, groups: unanswered.map((g) => g.name) });
     }
 
     const base = typeof item.price === "number" ? item.price : null;
@@ -124,5 +134,5 @@ export function planRecall(saved, record) {
     if (note) line.note = note;
     lines.push(line);
   }
-  return { lines, skipped };
+  return { lines, skipped, unfinished };
 }

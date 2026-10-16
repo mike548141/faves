@@ -306,7 +306,7 @@ test("a selection the group's cap now refuses is skipped, not put on the sheet",
   assert.equal(skipped[0].reason, "its add-ons no longer fit together");
 });
 
-test("a choice the venue has since made compulsory skips a line that never made it (ADR 0156)", () => {
+test("a choice the venue has since made compulsory LANDS the line, unfinished, and says so (ADR 0158)", () => {
   const s = saved();
   const live = {
     ...RECORD,
@@ -315,11 +315,17 @@ test("a choice the venue has since made compulsory skips a line that never made 
   // The saved Meatball Marinara line carries a sauce, so it answers the question.
   const answered = planRecall(s, live);
   assert.equal(answered.lines.some((l) => l.dishId === "meatball-marinara"), true);
-  // …and one with no sauce does not.
+  assert.deepEqual(answered.unfinished, []);
+  // …and one with no sauce is landed as it was saved, not dropped and not altered.
   s.lines[0].options = s.lines[0].options.filter((o) => o.group !== "sauces");
-  const { lines, skipped } = planRecall(s, live);
-  assert.equal(lines.some((l) => l.dishId === "meatball-marinara"), false);
-  assert.match(skipped[0].reason, /needs a choice now/);
+  const { lines, skipped, unfinished } = planRecall(s, live);
+  const landed = lines.find((l) => l.dishId === "meatball-marinara");
+  assert.ok(landed, "the line is on the sheet");
+  assert.equal(landed.options.some((o) => o.group === "sauces"), false, "no sauce was invented");
+  assert.equal(skipped.some((x) => x.name === "Meatball Marinara"), false);
+  assert.equal(unfinished.length, 1);
+  assert.equal(unfinished[0].name, "Meatball Marinara");
+  assert.deepEqual(unfinished[0].groups, ["Sauces"]);
 });
 
 test("a saved order for a venue with nothing left recalls nothing and says so line by line", () => {

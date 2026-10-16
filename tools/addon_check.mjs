@@ -117,6 +117,20 @@
 // this is the only browser check that already reads `.section-title` and
 // `.section-link` — it does so for the `addOnsOnly` assertion above.
 //
+// AND SINCE 2026-10-16 (roadmap 200/130, ADR 0158), AN UNFINISHED DISH ON THE
+// ORDER SHEET — block (aa). The menu cannot make a line that lacks a compulsory
+// choice (block z), so every such line is STAGED in storage, as a phone from
+// before the flag, a recalled saved order or a shared order would hold it. It
+// drives, at 390 px and from a non-menu page (so the record is fetched), that the
+// line shows with its warning in words, cannot grow, prices as a floor with a
+// total that says it is short; that the finish control asks the picker's own
+// question and its allergen sentence equals the MENU picker's word for word;
+// that finishing moves the price by exactly the choice, clears the warning and
+// lands focus; that finishing onto an identical line MERGES (1 + 2 = 3); and
+// that recall lands the line flagged. Its three load-bearing assertions were
+// break-probed by reintroducing the bug (no merge; total silent; finish ignoring
+// the choice when composing) — see the roadmap item's closing note.
+//
 // AND SINCE 2026-09-28 (roadmap 28m, ADR 0133), A DISH WITH SIZES. A `selects`
 // group (ADR 0130) chooses WHICH plate rather than adding to it, and its price
 // is the WHOLE plate (`dishPrice`), never a surcharge. No record carries one
@@ -473,6 +487,16 @@ const REQ_DISH = "Stir Fry Vegetables";
 const REQ_GROUP = "Sauce";
 const REQ_OPTION = "Satay sauce";
 const OPT_VENUE = "sprig-and-fern-berhampore";
+
+// --- 200/130 (ADR 0158): an UNFINISHED dish on the order sheet ---------------
+// Satay Kingdom's record served back under a second id with two changes the real
+// one cannot supply: the stir fry's own tags drop the peanuts it already carries
+// (so choosing the satay sauce genuinely ADDS an allergen — on the real record
+// the dish pre-declares everything and the composer has nothing to say), and the
+// satay sauce costs $2 (all three are free in the corpus, and a free choice can
+// never show whether the total is honest about what it is missing).
+const FIN_ID = `${REQ_VENUE}-finish-fixture`;
+const FIN_SAUCE_COST = 2;
 const OPT_DISH = "Mini Pizza + Fries";
 
 const sizeExpr = `(() => {
@@ -614,6 +638,34 @@ async function run(opts) {
       menu: warnVenue.menu.map((x) => ({
         ...x,
         items: x.items.map((i) => (i.name === SIZE_DISH ? { ...i, addOns: [...(i.addOns || []), SIZE_GROUP.id] } : i)),
+      })),
+    }),
+  );
+  // 200/130: the unfinished-dish fixture, derived from the real Satay Kingdom record.
+  const reqVenue = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${REQ_VENUE}.json`), "utf8"));
+  const finSauce = reqVenue.addOnGroups.find((g) => g.required);
+  if (!finSauce || !finSauce.options.some((o) => o.name === REQ_OPTION)) {
+    throw new Error(`${REQ_VENUE} no longer has a required group offering "${REQ_OPTION}" — the 200/130 block needs one`);
+  }
+  const finDishDef = reqVenue.menu.flatMap((x) => x.items).find((i) => i.name === REQ_DISH);
+  // A dish with NO add-on groups at all, as the control line that must stay complete.
+  const finOther = reqVenue.menu
+    .filter((x) => !(x.addOns || []).length)
+    .flatMap((x) => x.items)
+    .find((i) => !(i.addOns || []).length && typeof i.price === "number");
+  overlay.set(
+    `/data/restaurants/${FIN_ID}.json`,
+    JSON.stringify({
+      ...reqVenue,
+      id: FIN_ID,
+      addOnGroups: reqVenue.addOnGroups.map((g) =>
+        g.id !== finSauce.id
+          ? g
+          : { ...g, options: g.options.map((o) => (o.name === REQ_OPTION ? { ...o, price: FIN_SAUCE_COST } : o)) },
+      ),
+      menu: reqVenue.menu.map((x) => ({
+        ...x,
+        items: x.items.map((i) => (i.name === REQ_DISH ? { ...i, tags: ["v"], tagNotes: undefined } : i)),
       })),
     }),
   );
@@ -1866,6 +1918,320 @@ async function run(opts) {
       rs.length === 1 && rs[0].qty === 1 && (rs[0].options || []).length === 0,
       JSON.stringify(rs.map((l) => [l.name, l.qty, (l.options || []).length])),
     );
+
+    {
+    // --- (aa) 200/130, ADR 0158: an UNFINISHED dish on the order sheet --------
+    // The owner's ruling (2026-10-03): a dish missing a compulsory choice SHOWS on
+    // the order screen with a warning, and the choice can be made THERE, which
+    // clears the warning. The menu cannot make such a line (block z) — so every
+    // line here is STAGED in storage, the way a phone that held one before the
+    // flag, a recalled saved order or a shared order would. What is asserted is
+    // what the READER sees and what the store then holds, not the pure verdict
+    // (tests/order-finish.test.js has that).
+    const finUrl = `http://127.0.0.1:${port}/restaurant.html?id=${FIN_ID}`;
+    const homeUrl = `http://127.0.0.1:${port}/`;
+    const finLine = (over) => ({
+      venueId: FIN_ID,
+      venueName: reqVenue.name,
+      currency: "NZD",
+      phone: null,
+      name: REQ_DISH,
+      dishId: finDishDef.dishId,
+      price: finDishDef.price,
+      options: [],
+      qty: 1,
+      collected: false,
+      ...over,
+    });
+    const finOtherLine = finLine({ name: finOther.name, dishId: finOther.dishId, price: finOther.price });
+    const finSatay = { group: finSauce.id, id: "satay-sauce", name: REQ_OPTION, price: FIN_SAUCE_COST };
+    const stage = (lines) => driver.evalPage(`localStorage.setItem("faves.order.v1", ${JSON.stringify(JSON.stringify(lines))}); true`);
+    const money = (n) => formatMoney(n, "NZD");
+
+    // What the MENU's picker says for the same configuration — the reference the
+    // sheet's sentence must equal. Read on the real menu page, picker ticked.
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await openAt(finUrl, dishSel(REQ_DISH), `${FIN_ID} to render`);
+    await driver.click(`${dishSel(REQ_DISH)} .dish-addons-summary`);
+    await driver.click(`${dishSel(REQ_DISH)} .addon-option`, REQ_OPTION);
+    const menuSaid = await driver.evalPage(dishExpr(REQ_DISH));
+    report.check(
+      "(aa) fixture sanity: on the MENU the satay sauce adds peanuts, and that is the flagged treatment",
+      /Satay sauce contains peanuts/.test(menuSaid.warnText),
+      JSON.stringify(menuSaid.warnText),
+    );
+
+    // The sheet is read from a page that is NOT a menu (the home screen), so the
+    // venue's record has to be fetched — and the unfinished line is flagged anyway.
+    const sheetFin = `(() => {
+      const sheet = document.querySelector("dialog.order-sheet[open]");
+      const norm = (t) => (t || "").replace(/\\s+/g, " ").trim();
+      const a = document.activeElement;
+      const li = a && a.closest ? a.closest("li.order-line") : null;
+      const f = sheet.querySelector(".order-finish-form");
+      const done = sheet.querySelector(".order-finish-done");
+      const note = sheet.querySelector(".order-unfinished-note");
+      const box = (e) => (e ? { w: Math.round(e.getBoundingClientRect().width), h: Math.round(e.getBoundingClientRect().height) } : null);
+      return {
+        lines: [...sheet.querySelectorAll("li.order-line")].map((l) => ({
+          name: l.querySelector(".order-line-name")?.firstChild?.textContent ?? null,
+          unfinished: l.classList.contains("is-unfinished"),
+          warn: norm(l.querySelector(".order-line-unfinished")?.textContent) || null,
+          price: norm(l.querySelector(".order-line-price")?.textContent),
+          buttons: [...l.querySelectorAll(".stepper button")].map((b) => b.textContent),
+          count: l.querySelector(".stepper-count")?.textContent ?? null,
+          config: norm(l.querySelector(".order-line-config")?.textContent) || null,
+        })),
+        total: norm(sheet.querySelector(".order-total")?.textContent),
+        subtotal: norm(sheet.querySelector(".order-subtotal-amount")?.textContent),
+        note: note && !note.hidden ? norm(note.textContent) : null,
+        open: !!f,
+        opener: box(sheet.querySelector(".order-finish-open")),
+        form: f
+          ? {
+              groups: [...f.querySelectorAll("fieldset")].map((g) => ({
+                name: g.querySelector(".addon-group-name")?.textContent ?? null,
+                rule: g.querySelector(".addon-rule")?.textContent ?? null,
+                options: [...g.querySelectorAll(".addon-option-name")].map((n) => n.textContent),
+                radios: g.querySelectorAll("input[type=radio]").length,
+                checked: [...g.querySelectorAll("input:checked")].map((i) => i.value),
+              })),
+              warnHidden: f.querySelector(".addon-warning").hidden,
+              warnText: f.querySelector(".addon-warning").textContent,
+              warnFlagged: f.querySelector(".addon-warning").classList.contains("is-flagged"),
+              need: f.querySelector(".addon-need").hidden ? null : f.querySelector(".addon-need").textContent,
+              doneDisabled: done?.getAttribute("aria-disabled") ?? null,
+              doneBox: box(done),
+              cancelBox: box(f.querySelector(".order-finish-cancel")),
+              radioRows: [...f.querySelectorAll(".addon-option")].map((r) => Math.round(r.getBoundingClientRect().height)),
+              hint: norm(f.querySelector(".order-note-help")?.textContent) || null,
+            }
+          : null,
+        focus: a
+          ? {
+              tag: a.tagName,
+              type: a.type || null,
+              value: a.value || null,
+              cls: a.className || null,
+              line: li ? li.querySelector(".order-line-name")?.firstChild?.textContent : null,
+              inSheet: !!sheet.contains(a),
+            }
+          : null,
+        hOverflow: sheet.scrollWidth > sheet.clientWidth,
+      };
+    })()`;
+    const openFinSheet = async (label) => {
+      await cdp.send("Page.navigate", { url: homeUrl }, sessionId);
+      // The pathname matters: `Page.navigate` returns before the old page is gone,
+      // and its own order button would satisfy the wait on the WRONG page.
+      await untilPresent(
+        async () => await driver.evalPage(`location.pathname === "/" && !!document.querySelector(".order-fab:not([hidden])")`),
+        { label },
+      );
+      await openSheet();
+      await untilPresent(async () => await driver.evalPage(`!!document.querySelector("dialog.order-sheet .order-line")`), {
+        label: "the sheet's lines",
+      });
+    };
+
+    await stage([finLine({ qty: 2 }), finOtherLine]);
+    await openFinSheet("the order button, with an unfinished line staged");
+    // The verdict needs the venue's record, fetched after the sheet opened.
+    await untilPresent(async () => await driver.evalPage(`!!document.querySelector("dialog.order-sheet .order-line.is-unfinished")`), {
+      label: "the unfinished line to be flagged (the record is fetched off a non-menu page)",
+    });
+    let fin = await driver.evalPage(sheetFin);
+    const bad = fin.lines.find((l) => l.name === REQ_DISH);
+    const ok = fin.lines.find((l) => l.name === finOther.name);
+    report.check(
+      "(aa) a line missing a compulsory choice is ON the sheet, flagged, and says what it needs in WORDS",
+      !!bad && bad.unfinished && /^⚠️?\s*Needs a choice: Sauce$/.test(bad.warn || ""),
+      JSON.stringify(bad),
+    );
+    report.check(
+      "(aa) …while a complete line beside it carries no warning at all",
+      !!ok && !ok.unfinished && ok.warn === null,
+      JSON.stringify(ok),
+    );
+    report.check(
+      "(aa) an unfinished line can be lowered but not GROWN: − and the count, no ＋ (ADR 0156 §4)",
+      !!bad && bad.buttons.join() === "−" && bad.count === "2",
+      JSON.stringify(bad),
+    );
+    const naive = finDishDef.price * 2 + finOther.price;
+    report.check(
+      "(aa) the unfinished line's price is a floor (\"+\"), never the base dish priced as if complete",
+      !!bad && bad.price.startsWith(money(finDishDef.price * 2)) && bad.price.includes("+"),
+      JSON.stringify(bad?.price),
+    );
+    report.check(
+      "(aa) the TOTAL says it is short — a \"+\" and a sentence — rather than pricing the dish at its base",
+      fin.total === `${money(naive)}+` && /1 dish still needs a choice, so this total is short/.test(fin.note || ""),
+      JSON.stringify({ total: fin.total, note: fin.note }),
+    );
+
+    // Open the finish control.
+    await driver.click("dialog.order-sheet .order-finish-open");
+    fin = await driver.evalPage(sheetFin);
+    const sg = fin.form?.groups?.[0];
+    report.check(
+      "(aa) the finish control is the picker's own question: Sauce, required, three options, NO None, nothing pre-selected",
+      fin.form?.groups?.length === 1 && sg.name === REQ_GROUP && /required/i.test(sg.rule) && sg.radios === 3 &&
+        !sg.options.includes("None") && sg.checked.length === 0,
+      JSON.stringify(fin.form?.groups),
+    );
+    report.check(
+      "(aa) …focus moves INTO it, to the first sauce (not left on the button that vanished)",
+      fin.focus?.type === "radio" && fin.focus?.value === "Sweet & sour sauce" && fin.focus?.inSheet === true,
+      JSON.stringify(fin.focus),
+    );
+    report.check(
+      "(aa) …Finish waits (aria-disabled), says why in words, and a quantity of 2 is told the choice covers both",
+      fin.form?.doneDisabled === "true" && /choose one under .*Sauce/.test(fin.form?.need || "") && /all 2/.test(fin.form?.hint || ""),
+      JSON.stringify({ done: fin.form?.doneDisabled, need: fin.form?.need, hint: fin.form?.hint }),
+    );
+    report.check(
+      "(aa) …every target is at least 44 px tall, and the sheet does not scroll sideways at 390 px",
+      fin.form.doneBox.h >= 44 && fin.form.cancelBox.h >= 44 && fin.form.radioRows.every((h) => h >= 44) && !fin.hOverflow,
+      JSON.stringify({ done: fin.form.doneBox, cancel: fin.form.cancelBox, rows: fin.form.radioRows, overflow: fin.hOverflow }),
+    );
+    // A blocked Finish changes nothing and takes the reader to the question.
+    const before = JSON.stringify(await driver.evalPage(storedExpr));
+    await driver.click("dialog.order-sheet .order-finish-done");
+    fin = await driver.evalPage(sheetFin);
+    report.check(
+      "(aa) a tap on the blocked Finish changes NOTHING in the order and puts focus on the first unanswered radio",
+      JSON.stringify(await driver.evalPage(storedExpr)) === before && fin.focus?.type === "radio" && fin.open,
+      JSON.stringify({ focus: fin.focus }),
+    );
+
+    // Choose the satay sauce: the SAME sentence the menu gave, before committing.
+    await driver.click("dialog.order-sheet .addon-option", REQ_OPTION);
+    fin = await driver.evalPage(sheetFin);
+    report.check(
+      "(aa) choosing shows the allergen sentence BEFORE committing — word for word what the MENU picker said, flagged the same",
+      fin.form.warnText === menuSaid.warnText && fin.form.warnHidden === false && fin.form.warnFlagged === true,
+      JSON.stringify({ sheet: fin.form.warnText, menu: menuSaid.warnText, flagged: fin.form.warnFlagged }),
+    );
+    report.check(
+      "(aa) …and Finish is live now",
+      fin.form.doneDisabled === "false" && fin.form.need === null,
+      JSON.stringify({ done: fin.form.doneDisabled, need: fin.form.need }),
+    );
+    // Not now: back to the opener, focus on it, nothing changed.
+    await driver.click("dialog.order-sheet .order-finish-cancel");
+    fin = await driver.evalPage(sheetFin);
+    report.check(
+      "(aa) \"Not now\" closes the control, changes nothing, and returns focus to the button that opened it",
+      !fin.open && fin.focus?.cls === "order-finish-open" && JSON.stringify(await driver.evalPage(storedExpr)) === before,
+      JSON.stringify(fin.focus),
+    );
+
+    // Finish for real.
+    await driver.click("dialog.order-sheet .order-finish-open");
+    await driver.click("dialog.order-sheet .addon-option", REQ_OPTION);
+    await driver.click("dialog.order-sheet .order-finish-done");
+    fin = await driver.evalPage(sheetFin);
+    let st = await driver.evalPage(storedExpr);
+    const done = st.find((l) => l.name === REQ_DISH);
+    report.check(
+      "(aa) FINISH: the stored line now carries the sauce, the same quantity, and the price moved by exactly the sauce's cost",
+      st.length === 2 && done?.qty === 2 && done.options?.length === 1 && done.options[0].id === "satay-sauce" &&
+        Math.abs(done.price - (finDishDef.price + FIN_SAUCE_COST)) < 1e-9,
+      JSON.stringify(st.map((l) => [l.name, l.qty, l.price, (l.options || []).map((o) => o.name)])),
+    );
+    const now = fin.lines.find((l) => l.name === REQ_DISH);
+    report.check(
+      "(aa) …the warning is GONE and the line reads its sauce like any configured line, with − and ＋ back",
+      !!now && !now.unfinished && now.warn === null && now.config === REQ_OPTION && now.buttons.join() === "−,＋",
+      JSON.stringify(now),
+    );
+    const finished = (finDishDef.price + FIN_SAUCE_COST) * 2 + finOther.price;
+    report.check(
+      "(aa) …the total is exact again (no \"+\", no sentence) and equals the sum of the real lines",
+      fin.total === money(finished) && fin.note === null,
+      JSON.stringify({ total: fin.total, note: fin.note, want: money(finished) }),
+    );
+    report.check(
+      "(aa) …and focus lands on the finished line's note button, not on <body>",
+      fin.focus?.cls === "order-note-btn" && fin.focus?.line === REQ_DISH,
+      JSON.stringify(fin.focus),
+    );
+
+    // The MERGE: finishing onto a line that is already the finished one.
+    await stage([finLine({ qty: 1 }), finLine({ qty: 2, price: finDishDef.price + FIN_SAUCE_COST, options: [finSatay] })]);
+    await openFinSheet("the order button, for the merge case");
+    await untilPresent(async () => await driver.evalPage(`!!document.querySelector("dialog.order-sheet .order-line.is-unfinished")`), {
+      label: "the unfinished line to be flagged (merge case)",
+    });
+    await driver.click("dialog.order-sheet .order-finish-open");
+    await driver.click("dialog.order-sheet .addon-option", REQ_OPTION);
+    await driver.click("dialog.order-sheet .order-finish-done");
+    st = await driver.evalPage(storedExpr);
+    fin = await driver.evalPage(sheetFin);
+    report.check(
+      "(aa) MERGE: finishing a line identical to an existing finished one makes ONE line of the summed quantity (1 + 2 = 3)",
+      st.length === 1 && st[0].qty === 3 && st[0].options?.[0]?.id === "satay-sauce" &&
+        Math.abs(st[0].price - (finDishDef.price + FIN_SAUCE_COST)) < 1e-9,
+      JSON.stringify(st.map((l) => [l.name, l.qty, l.price, (l.options || []).map((o) => o.name)])),
+    );
+    report.check(
+      "(aa) …the sheet shows that one line, warning-free, with focus still on its note button",
+      fin.lines.length === 1 && fin.lines[0].count === "3" && !fin.lines[0].unfinished && fin.focus?.cls === "order-note-btn",
+      JSON.stringify({ lines: fin.lines, focus: fin.focus }),
+    );
+
+    // A venue whose choice is FREE: nothing for the total to be short by.
+    // (The real record: all three sauces cost nothing.)
+    await stage([{ ...finLine({ venueId: REQ_VENUE, qty: 1 }) }]);
+    await openAt(`http://127.0.0.1:${port}/restaurant.html?id=${REQ_VENUE}`, dishSel(REQ_DISH), `${REQ_VENUE} for the free-choice case`);
+    await openSheet();
+    await untilPresent(async () => await driver.evalPage(`!!document.querySelector("dialog.order-sheet .order-line.is-unfinished")`), {
+      label: "the unfinished line to be flagged on a MENU page (record handed over by the page)",
+    });
+    fin = await driver.evalPage(sheetFin);
+    report.check(
+      "(aa) a line is flagged on a menu page too, and when every option is FREE the total is not called short",
+      fin.lines[0]?.unfinished === true && !fin.total.endsWith("+") && /still needs a choice\. Finish it above/.test(fin.note || "") &&
+        !/short/.test(fin.note || ""),
+      JSON.stringify({ total: fin.total, note: fin.note, price: fin.lines[0]?.price }),
+    );
+
+    // RECALL lands the line, flagged, instead of dropping it (the owner's ruling).
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1");
+      localStorage.setItem(${JSON.stringify(SAVED_KEY)}, ${JSON.stringify(JSON.stringify([
+        {
+          id: "usual-1",
+          venueId: REQ_VENUE,
+          venueName: reqVenue.name,
+          name: "My usual",
+          lines: [{ dishId: finDishDef.dishId, name: REQ_DISH, qty: 1, price: finDishDef.price, currency: "NZD" }],
+        },
+      ]))}); true`);
+    await openAt(`http://127.0.0.1:${port}/restaurant.html?id=${REQ_VENUE}`, dishSel(REQ_DISH), `${REQ_VENUE} for the recall`);
+    await driver.click(".saved-orders .saved-add");
+    const rc = await driver.evalPage(panelExpr);
+    st = await driver.evalPage(storedExpr);
+    report.check(
+      "(aa) RECALL lands a saved line that lacks the now-compulsory choice — on the order, not dropped",
+      st.length === 1 && st[0].dishId === finDishDef.dishId && (st[0].options || []).length === 0,
+      JSON.stringify(st.map((l) => [l.name, l.qty, (l.options || []).length])),
+    );
+    report.check(
+      "(aa) …and the recall says so in words (not \"left out\"), naming the dish and the group",
+      /Needs a choice/.test(rc.status) && new RegExp(`${REQ_DISH}.*choose ${REQ_GROUP}`).test(rc.status) && rc.skipped.length === 0,
+      JSON.stringify({ status: rc.status, skipped: rc.skipped }),
+    );
+    await openSheet();
+    fin = await driver.evalPage(sheetFin);
+    report.check(
+      "(aa) …and the sheet flags that recalled line, ready to finish",
+      fin.lines[0]?.unfinished === true && /Needs a choice: Sauce/.test(fin.lines[0]?.warn || ""),
+      JSON.stringify(fin.lines),
+    );
+    await driver.evalPage(`localStorage.removeItem(${JSON.stringify(SAVED_KEY)}); localStorage.removeItem("faves.order.v1"); true`);
+
+    }
 
     return report.summary(SITE) ? 0 : 1;
   } finally {

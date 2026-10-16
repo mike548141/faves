@@ -1,5 +1,4 @@
-- [~] **An unfinished dish on the order sheet: warn, and finish it there**
-  (claimed 2026-10-16-0714, faves-11, wt: faves-200-130)
+- [x] **An unfinished dish on the order sheet: warn, and finish it there**
   `[M][js]` — **owner-ruled 2026-10-03:**
 
   > *"If a dish has a mandatory addon and the user has not made a selection
@@ -43,3 +42,26 @@
   missing; it must not silently price the dish at its base. `addon_check` or a
   sheet check should stage a pre-flag line and assert the warning appears and
   clears.
+
+✅ **Done 2026-10-16 (faves-11 worker).** Landed per the owner's ruling (i):
+Add still waits on the menu; the sheet flags and finishes. ADR 0158.
+- `order-finish.js` (pure verdict, price, answers, summary), `order-finish-ui.js`
+  (the control), `cart.js` `finishItems`/`order.finish` (re-key + merge),
+  `cart-ui.js` (warning, reduce-only stepper, "+" on line/subtotal/total and the
+  sentence under the total, record fetch or hand-over), `saved-recall.js`
+  (lands the line, returns `unfinished`), `saved-orders-ui.js` (status says so).
+  The picker's warning sentences moved to `addon-warning.js` unchanged so both
+  surfaces call one `configurationWarning`.
+- Shared orders: no new code. The receiving sheet judges every line against the
+  live record, so an unfinished line in a link lands flagged. Sending is not
+  blocked (the warning sits above Send).
+- Not done: the order button does not signal an unfinished line before the sheet
+  opens (would fetch every order venue on every page load).
+- Verified after a crash recovery, from scratch: `node --test` 1864 pass, 0 fail;
+  `boot_check` 38/0; `addon_check` 146/0 (block (aa), 20 new assertions);
+  `note_check` 19/0; `check_precache` green; `check_decisions` clean. Three
+  break-probes each fail the check: no merge (unit 2 + browser 2), a total silent
+  about the missing choice (browser 1), the finish control composing without the
+  choice (browser 1). `device_check` could not complete: HARNESS ERROR (Runtime.evaluate
+  timeout) at the settings-focus loop, and it does the same on the untouched base
+  commit 9fc0b119 on this loaded machine, so it is not evidence either way.

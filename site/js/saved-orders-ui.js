@@ -139,7 +139,7 @@ export function savedOrdersPanel(record) {
   );
 
   function recall(saved) {
-    const { lines, skipped } = planRecall(saved, record);
+    const { lines, skipped, unfinished } = planRecall(saved, record);
     if (lines.length) order.merge(lines);
     const added = lines.reduce((n, l) => n + l.qty, 0);
     const bits = [];
@@ -149,6 +149,18 @@ export function savedOrdersPanel(record) {
         : `Nothing from “${saved.name}” could be added.`
     );
     status.replaceChildren(el("p", { className: "saved-status-line", textContent: bits.join(" ") }));
+    if (unfinished.length) {
+      // Landed on the sheet and flagged there (ADR 0158) — say so here too, in
+      // words, so the reader is not first told when they open the order.
+      status.append(
+        el("p", { className: "saved-status-line saved-unfinished-head", textContent: "Needs a choice — finish it in your order:" }),
+        el(
+          "ul",
+          { className: "saved-unfinished" },
+          unfinished.map((u) => el("li", { textContent: `${u.qty}× ${u.name} — choose ${u.groups.join(" and ")}` }))
+        )
+      );
+    }
     if (skipped.length) {
       status.append(
         el("p", { className: "saved-status-line saved-skipped-head", textContent: "Left out because this menu has changed:" }),

@@ -52,7 +52,7 @@ import {
 import { slug } from "./slug.js";
 import { wireDialog } from "./dialog.js";
 import { dishId, findDish } from "./dish-id.js";
-import { dishStepper, initOrderUI } from "./cart-ui.js";
+import { dishStepper, initOrderUI, noteVenueRecord } from "./cart-ui.js";
 import { savedOrdersPanel } from "./saved-orders-ui.js";
 import { savedOrders, SAVED_ORDERS_KEY } from "./saved-orders.js";
 import { dishAddOns } from "./addons-ui.js";
@@ -2390,6 +2390,9 @@ if (!id) {
       // can re-apply against it. Set BEFORE render so any change racing in during
       // this same microtask still repaints the right restaurant.
       current = r;
+      // The order sheet judges "does this line still owe a compulsory choice?"
+      // against a live record; this page already holds one (roadmap 200/130).
+      noteVenueRecord(r);
       // A heart or a rating stored under a dish id this record has retired
       // moves onto the dish whose `formerIds` claims it, BEFORE the rows are
       // built — or the row reads dark, the rating empty, and the "favourites"

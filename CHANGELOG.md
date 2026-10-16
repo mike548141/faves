@@ -9,6 +9,7 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A dish that still needs a choice is flagged on your order, and you can finish it there.** If a dish is missing a compulsory choice (a sauce, say) because it was added before the choice became compulsory, or came from a saved or shared order, it now shows on the order sheet with "Needs a choice", the total says it is short by what the choice costs, and you pick the choice in place. A saved order that needs a choice is added and flagged instead of left out.
 - **A choice the menu makes compulsory is now compulsory.** Where a dish comes
   "with choice of" sauce, filling, side or heat, the picker no longer offers
   "None": Add waits, says why, and takes you to the question (33 choices at 19

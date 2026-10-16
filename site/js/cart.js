@@ -185,6 +185,39 @@ export function mergeItems(base, incoming) {
 }
 
 /**
+ * Give an UNFINISHED line its missing choices (roadmap 200/130, ADR 0158) — pure.
+ *
+ * The selection is part of the line's identity (`lineKey`), so finishing is a
+ * MOVE, exactly as `setNote` is: the line changes key. If a line with the new key
+ * already exists (the reader had also made this dish the finished way) the two
+ * become ONE line of the summed quantity, and that one keeps the existing line's
+ * price. Without the merge there would be two lines sharing a key, which every
+ * lookup here resolves to whichever came first.
+ *
+ * `target` is the key of the line to finish; `next` is `{ options, price }`.
+ * Returns `{ items, key }` — a new array (inputs untouched) and the key the
+ * finished line now answers to, or `null` when no line has `target`.
+ * Ticked-off-ness survives a merge only if both halves had it, as in `setNote`.
+ */
+export function finishItems(items, target, next) {
+  const at = items.findIndex((i) => lineKey(i) === target);
+  if (at < 0) return null;
+  const src = items[at];
+  const moved = { ...src, options: next.options, price: next.price };
+  const key = lineKey(moved);
+  const twin = items.findIndex((i, idx) => idx !== at && lineKey(i) === key);
+  const out = items.map((i) => ({ ...i }));
+  if (twin >= 0) {
+    out[twin].qty += src.qty;
+    out[twin].collected = !!(out[twin].collected && src.collected);
+    out.splice(at, 1);
+  } else {
+    out[at] = moved;
+  }
+  return { items: out, key };
+}
+
+/**
  * Create an order store over a storage backend (injectable for tests).
  * Subscribers are notified on every mutation and on cross-tab changes.
  *
@@ -333,6 +366,19 @@ export function createOrder(storage, key = KEY) {
         delete src.note; // back to the exact shape an un-noted line has always had
       }
       commit();
+    },
+
+    /**
+     * Finish an unfinished line in place (see `finishItems`). The call names the
+     * line by its CURRENT key parts, like `setNote`; returns the key it now has
+     * (so a caller can put focus back on it, merged or not), or null.
+     */
+    finish(venueId, id, sel, note, next) {
+      const done = finishItems(items, `${venueId}\n${id}\n${sel}\n${normaliseNote(note)}`, next);
+      if (!done) return null;
+      items = done.items;
+      commit();
+      return done.key;
     },
 
     /** Fold a decoded shared order (group ordering, Theme 1b) into this one,
