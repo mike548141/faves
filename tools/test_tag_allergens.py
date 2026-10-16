@@ -2524,6 +2524,10 @@ def main() -> int:
         work.mkdir(parents=True)
         shutil.copytree(ROOT / "tools", work / "tools")
         shutil.copytree(ROOT / "site" / "data", work / "site" / "data")
+        # The repo-only default cues (ADR 0157): without them validate.py fails
+        # the unmutated corpus on Spices Indian's three Full defaults, and the
+        # stale-entry probe's control reads that as a validator that refuses all.
+        shutil.copytree(ROOT / "data" / "defaults", work / "data" / "defaults")
         # validate.py reads four tables out of the shipped JS (see test_validate.py).
         (work / "site" / "js").mkdir(parents=True, exist_ok=True)
         for mod in ("renames.js", "addons.js", "vibes.js", "dietary.js"):

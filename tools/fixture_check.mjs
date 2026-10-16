@@ -140,6 +140,9 @@ async function sandbox() {
   const work = await mkdtemp(join(tmpdir(), "faves-fixture-check-"));
   await cp(join(ROOT, "tools"), join(work, "tools"), { recursive: true });
   await cp(join(SITE, "data"), join(work, "site", "data"), { recursive: true });
+  // The repo-only default cues (ADR 0157): validate.py needs them to pass the
+  // real corpus, whose Spices Indian ladders default to the dearer Full.
+  await cp(join(ROOT, "data", "defaults"), join(work, "data", "defaults"), { recursive: true });
   for (const mod of ["renames.js", "addons.js", "vibes.js", "dietary.js"]) {
     await cp(join(SITE, "js", mod), join(work, "site", "js", mod), { recursive: true });
   }
