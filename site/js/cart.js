@@ -218,6 +218,58 @@ export function finishItems(items, target, next) {
 }
 
 /**
+ * Move ONE unit of a line to a new configuration (roadmap 200/120, ADR 0159) — pure.
+ *
+ * The picker that opens when Add is pressed UPDATES the dish just added: the
+ * reader pressed Add on the default (Full), the picker opened, they chose Half,
+ * and the order should hold one Half, not a Full and a Half. The selection is part
+ * of the line's identity, so this is a MOVE like `finishItems` and `setNote`, with
+ * two differences that matter:
+ *
+ *  - It moves ONE unit, never the line. The line just added may share its key with
+ *    copies the reader ordered before (qty 3), and updating "the one I just added"
+ *    must not rewrite the other two. The source keeps `qty - 1`, and is removed
+ *    only when that reaches 0.
+ *  - The destination may already exist (the reader had Half too): the unit joins
+ *    it, keeping THAT line's price, and ticked-off-ness survives only if both
+ *    halves had it, as everywhere else a merge happens.
+ *
+ * `target` is the source line's key; `next` is `{ options, price }`. Returns
+ * `{ items, key }` (a new array, inputs untouched; `key` is the line the unit now
+ * lives on) or `null` when no line has `target` or the configuration is unchanged.
+ * The dish's total quantity is conserved by construction, which is what the
+ * picker uses to notice that something else has touched the order since.
+ */
+export function moveOneItem(items, target, next) {
+  const at = items.findIndex((i) => lineKey(i) === target);
+  if (at < 0) return null;
+  const src = items[at];
+  const moved = { ...src, qty: 1, options: next.options, price: next.price };
+  const key = lineKey(moved);
+  if (key === target) return null;
+  const out = items.map((i) => ({ ...i }));
+  const twin = out.findIndex((i, idx) => idx !== at && lineKey(i) === key);
+  const keepsSource = src.qty > 1;
+  if (keepsSource) out[at].qty -= 1;
+  if (twin >= 0) {
+    out[twin].qty += 1;
+    out[twin].collected = !!(out[twin].collected && src.collected);
+    if (!keepsSource) out.splice(at, 1);
+  } else if (keepsSource) {
+    moved.collected = !!src.collected;
+    out.splice(at + 1, 0, moved);
+  } else {
+    out[at] = moved;
+  }
+  return { items: out, key };
+}
+
+/** Total quantity of one dish across every configuration of it — what a move conserves. */
+export function dishQtyTotal(items, venueId, id) {
+  return items.reduce((n, i) => (i.venueId === venueId && dishId(i) === id ? n + i.qty : n), 0);
+}
+
+/**
  * Create an order store over a storage backend (injectable for tests).
  * Subscribers are notified on every mutation and on cross-tab changes.
  *
@@ -380,6 +432,22 @@ export function createOrder(storage, key = KEY) {
       commit();
       return done.key;
     },
+
+    /**
+     * Move one unit of a line to another configuration (see `moveOneItem`).
+     * Named by the source line's current key parts, like `finish`; returns the
+     * key the unit now lives on, or null when there was nothing to move.
+     */
+    moveOne(venueId, id, sel, note, next) {
+      const done = moveOneItem(items, `${venueId}\n${id}\n${sel}\n${normaliseNote(note)}`, next);
+      if (!done) return null;
+      items = done.items;
+      commit();
+      return done.key;
+    },
+
+    /** Total quantity of a dish across all its configurations. */
+    dishQty: (venueId, id) => dishQtyTotal(items, venueId, id),
 
     /** Fold a decoded shared order (group ordering, Theme 1b) into this one,
      *  summing matching lines. `incoming` is share-codec's decoded item list. */

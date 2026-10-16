@@ -222,6 +222,10 @@ excluded from both stores, always.
       "required": true,              //   OPTIONAL, true only: the menu makes this
                                      //   choice compulsory ("choice of…"). pick-one
                                      //   "adds" groups only (ADR 0156)
+      "mustSee": true,               //   OPTIONAL, true only: pressing Add on the dish
+                                     //   OPENS this picker (ADR 0159). Not on a
+                                     //   "selects" group (always must-see) or a
+                                     //   "required" one (Add already waits)
       "max": 3,                      //   optional cap, "many" only, <= option count
       "price": 0,                    //   optional group default for its options
       "options": [                   //   1..n. tags is REQUIRED on every option and
@@ -839,6 +843,21 @@ section is written once.
   optional); it is an error on a `selects` group and on a pick-many group.
   It never changes tags or warnings. Set it only where the wording is
   compulsory; when unsure leave the group optional.
+- **`mustSee: true`** (ADR 0159) makes pressing the row's ＋ Add open the
+  picker, so a choice the reader would otherwise never look at is shown to
+  them. The dish is still added. **Every `selects` group is must-see by rule**
+  (owner-ruled 2026-10-03) and needs no flag; a purely optional group has none
+  and stays closed on Add. Only `true` is valid (absent = not must-see), and it
+  is an **error** on a `selects` group (redundant: it is by rule) and on a
+  `required` group (redundant: Add already waits for it, 0156), for the same
+  reason `required` is an error on a `selects` group: a field that does
+  nothing is one a transcriber believes is doing something. It opens the
+  picker once per Add (not on ＋), never moves focus, and changes no tag,
+  warning or price. A change made in the picker it opened **moves the one unit
+  just added** to the new configuration instead of making a second line, until
+  the reader presses ＋ or − or closes it (`cart.js` `moveOneItem`). Set it
+  only where a silent default changes the dish or the bill; which groups is a
+  per-group content call, not a rule.
 - **A price must be resolvable** — the option's `price`, or its group's as
   a default. Absent at both levels is an **error**, not a zero: a
   forgotten price would otherwise become a silently free add-on and an
