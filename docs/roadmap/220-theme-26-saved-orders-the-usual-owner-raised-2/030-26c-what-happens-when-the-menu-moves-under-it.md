@@ -20,7 +20,9 @@
   snapshot, a different currency, a skipped line, or an unfinished line (its live
   price lacks the compulsory choice not yet made) produce no claim. A dish that
   has since lost its price is said too ("no price listed now"). Compared in whole
-  cents. Verified: `node --test` (see PR), 7 new unit tests in
+  cents. Verified: `node --test` 1871/1871, `boot_check` 38/38, `addon_check` (read-only
+  run; it drives recall) 146/146, `check_versions --range` / `check_precache` /
+  `check_decisions` clean; 7 new unit tests in
   `tests/saved-orders.test.js` incl. pre-snapshot and a price decrease, two
   break-probes (a missing snapshot read as 0; unfinished lines compared) each
   fail exactly the test written for them. A browser run of the real recall on
