@@ -87,6 +87,7 @@
       "id": "milk-options",
       "name": "Milks",
       "select": "one",
+      "mustSee": true,
       "price": 1,
       "options": [
         {

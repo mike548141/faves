@@ -2135,6 +2135,78 @@ async function run(opts) {
       JSON.stringify(sv),
     );
 
+    // --- (ab) B, owner-ruled 2026-10-16: a change made in the picker that opened on
+    // Add UPDATES the line just added. The state here: Regular added, picker open.
+    // What the ORDER holds is asserted, not what the picker shows, because the
+    // defect B removes (Full left ordered beside Half) lives only in the order.
+    const sizeLines = async () =>
+      (await driver.evalPage(storedExpr)).map((l) => `${l.options?.[0]?.id ?? "default"}×${l.qty}@${l.price}`).sort().join(" | ");
+    const pickSize = (label) => driver.click(`${sizeDish} .addon-group-variant .addon-option`, label);
+    await pickSize(LARGE_LABEL);
+    let bl = await sizeLines();
+    sv = await driver.evalPage(seeExpr(SIZE_DISH));
+    report.check(
+      "(ab) B: choosing Large after Add leaves ONE line, at Large's price — Regular is not left ordered beside it",
+      bl === "large×1@19.5",
+      bl,
+    );
+    report.check(
+      "(ab) B: …and the order changing under a radio tap is SAID, on the page and in the status region",
+      sv.noteVisible && /Updated in your order: Eggs on Toast, Large\./.test(sv.noteText || "") && sv.live === sv.noteText,
+      JSON.stringify({ note: sv.noteText, live: sv.live }),
+    );
+    await pickSize(REGULAR_LABEL);
+    bl = await sizeLines();
+    report.check("(ab) B: choosing back to the default is still ONE line, the plain dish", bl === "default×1@13", bl);
+    await pickSize(THIRD_LABEL);
+    bl = await sizeLines();
+    report.check("(ab) B: …and a third rung is still ONE line, at its price", bl === "size-3×1@24", bl);
+
+    // Confirming a quantity ends it: ＋ on the row is a decision, not a draft.
+    await driver.click(`${sizeDish} .dish-actions .stepper button`, "＋");
+    await pickSize(LARGE_LABEL);
+    bl = await sizeLines();
+    report.check(
+      "(ab) B: after ＋ the quantity is confirmed — choosing Large no longer moves anything (the old rule)",
+      bl === "size-3×2@24",
+      bl,
+    );
+    await driver.click(`${sizeDish} .addon-stepper .stepper-add`);
+    bl = await sizeLines();
+    report.check("(ab) …and the picker's own Add then makes the second line, as it always did", bl === "large×1@19.5 | size-3×2@24", bl);
+
+    // The unit just added may share a line with ones ordered before: it MOVES ALONE,
+    // and it may land on a line that already exists.
+    await pickSize(REGULAR_LABEL);
+    await driver.click(`${sizeDish} .dish-addons-summary`); // close
+    await driver.click(`${sizeDish} .dish-actions .stepper-add`); // Regular, picker opens
+    sv = await driver.evalPage(seeExpr(SIZE_DISH));
+    const reopened = sv.open === true;
+    await pickSize(LARGE_LABEL);
+    bl = await sizeLines();
+    report.check(
+      "(ab) B: the unit just added JOINS an existing Large line (1 + 1 = 2), and no Regular remains",
+      reopened && bl === "large×2@19.5 | size-3×2@24",
+      `reopened=${reopened} ${bl}`,
+    );
+    await pickSize(REGULAR_LABEL);
+    bl = await sizeLines();
+    report.check(
+      "(ab) B: moving it back takes ONE unit off the line of two — the other Large is not rewritten (split)",
+      bl === "default×1@13 | large×1@19.5 | size-3×2@24",
+      bl,
+    );
+    // Closing the picker accepts what is in the order.
+    await driver.click(`${sizeDish} .dish-addons-summary`);
+    await driver.click(`${sizeDish} .dish-addons-summary`);
+    await pickSize(LARGE_LABEL);
+    bl = await sizeLines();
+    report.check(
+      "(ab) B: after the picker is closed and reopened by hand, a change no longer touches the order",
+      bl === "default×1@13 | large×1@19.5 | size-3×2@24",
+      bl,
+    );
+
     // A REQUIRED group is gated, not must-see: after it was answered and the
     // picker closed, Add does not open it again. (The decision ADR 0159 records.)
     await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);

@@ -1889,13 +1889,15 @@ deliberation those compact docs omit.
   a line flagged instead of dropping it.
 - [0159](0159-a-must-see-choice-opens-when-you-press-add.md) —
   **A must-see choice opens when you press Add** (`200/120`, owner-ruled
-  2026-10-03). The row's ＋ Add (none to one) opens the picker, which is a
+  2026-10-03 and 2026-10-16). The row's ＋ Add (none to one) opens the picker, a
   closed `<details>` today, for every `selects` ladder by rule and any `adds`
-  group flagged `"mustSee": true`; the dish is still added. Words on the page and
-  in a status region, no focus move (and the stepper now keeps focus across its
-  own re-render). `required` is not must-see, and `mustSee` on a `selects` or
-  `required` group is an error. A change made in the revealed picker makes a
-  second line: options A/B/C are with the owner.
+  group flagged `"mustSee": true` (four are: Gong Cha size, two coffee-milk
+  groups, Abrakebabra combo); the dish is still added. A change made in the
+  revealed picker **updates the one unit just added** (a move of one unit, joining
+  an existing line or splitting a larger one) until the reader confirms a quantity
+  or closes it. Words on the page and in a status region, no focus move (the
+  stepper now keeps focus across its own re-render). `required` is not must-see;
+  `mustSee` on a `selects` or `required` group is an error.
 - [0160](0160-a-failed-launch-is-retried-and-a-refused-click-leaves-a-photo.md) —
   **A failed browser launch is retried, and a refused click leaves a photo**
   (`510/420`). `launchChrome` retries once, loudly, when Chrome never writes its

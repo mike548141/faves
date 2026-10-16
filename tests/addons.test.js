@@ -23,6 +23,8 @@ import {
   isMustSee,
   mustSeeGroups,
   mustSeeNote,
+  freshAction,
+  movedNote,
   CONTRADICTS,
 } from "../site/js/addons.js";
 import { readFileSync, readdirSync } from "node:fs";
@@ -588,4 +590,37 @@ test("mustSeeNote names the groups in words, and says nothing when there are non
   assert.match(mustSeeNote([MILK, SIZE_LADDER]), /Check “Milk” and “Size” below/);
   assert.match(mustSeeNote([MILK, SIZE_LADDER, { ...MILK, name: "Syrup" }]), /Check “Milk”, “Size” and “Syrup” below/);
   assert.equal(mustSeeNote([{ ...MILK, name: "  " }]), "", "an unnamed group cannot be spoken, so no sentence");
+});
+
+// --- ADR 0159, B: a change in the picker that opened on Add updates that unit ---
+
+const FRESH = { sel: "full", total: 1 };
+const NOW = { sel: "full", total: 1, hasLine: true, gated: false };
+
+test("freshAction: nothing fresh, or no change of configuration, does nothing", () => {
+  assert.equal(freshAction(null, { ...NOW, sel: "half" }), "none");
+  assert.equal(freshAction(FRESH, NOW), "none");
+});
+
+test("freshAction: a changed configuration moves the unit", () => {
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half" }), "move");
+});
+
+test("freshAction: a changed quantity ends it — the reader pressed ＋ or − and has confirmed a count", () => {
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half", total: 2 }), "end");
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half", total: 0 }), "end");
+});
+
+test("freshAction: a vanished line (removed, or its key moved by a note) ends it", () => {
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half", hasLine: false }), "end");
+});
+
+test("freshAction: never moves a unit onto a configuration with a required choice open", () => {
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half", gated: true }), "end");
+});
+
+test("movedNote says the order changed, in words, and what it now holds", () => {
+  assert.equal(movedNote("Garlic Tikka", [{ name: "Full" }]), "Updated in your order: Garlic Tikka, Full.");
+  assert.equal(movedNote("Garlic Tikka", [{ name: "Full" }, { name: "Aioli" }]), "Updated in your order: Garlic Tikka, Full, Aioli.");
+  assert.equal(movedNote("Garlic Tikka", []), "Updated in your order: Garlic Tikka, as listed.");
 });

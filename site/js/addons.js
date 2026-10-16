@@ -192,6 +192,40 @@ export function mustSeeNote(groups) {
 }
 
 /**
+ * What a change made in the picker that just opened does to the unit the reader
+ * just added (ADR 0159, owner-ruled 2026-10-16: it UPDATES that unit rather than
+ * leaving the default ordered beside the choice). Pure, so the cases are unit-
+ * tested; the picker supplies the facts and carries out the answer.
+ *
+ * `fresh` is `{ sel, total }`: the selection key the added unit sits on, and the
+ * dish's total quantity when it was added. `now` is `{ sel, total, hasLine, gated }`:
+ * the key of the picker's configuration now, the dish's total quantity now,
+ * whether a line with `fresh.sel` still exists, and whether a required choice is
+ * unanswered. Answers:
+ *  - `"none"`: nothing to do (no fresh unit, or the configuration did not change);
+ *  - `"move"`: move that one unit to `now.sel`;
+ *  - `"end"`: the unit is no longer "just added" and must not be touched.
+ *
+ * It ends when the dish's total quantity differs from what the Add left (the
+ * reader pressed ＋ or − anywhere, or the sheet changed it: they have confirmed a
+ * quantity), when the line is gone or has gained a note (its key moved), and
+ * while a required choice is unanswered (a moved unit must never be unfinished,
+ * ADR 0158; in practice a radio cannot be un-set, so this is the backstop).
+ * A move conserves the total, which is why it does not end itself.
+ */
+export function freshAction(fresh, now) {
+  if (!fresh) return "none";
+  if (now.gated || !now.hasLine || now.total !== fresh.total) return "end";
+  return now.sel === fresh.sel ? "none" : "move";
+}
+
+/** The sentence that says the order line was updated, in words. */
+export function movedNote(name, options) {
+  const what = selectionSummary(options || []);
+  return what ? `Updated in your order: ${name}, ${what}.` : `Updated in your order: ${name}, as listed.`;
+}
+
+/**
  * The option a `selects` group starts on: the one marked `default`. validate.py
  * requires exactly one; the first option is a fallback for a record that got
  * past it, so the control can never render with nothing chosen.

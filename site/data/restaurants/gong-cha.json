@@ -193,6 +193,7 @@
       "id": "size",
       "name": "Size",
       "select": "one",
+      "mustSee": true,
       "options": [
         {
           "name": "Regular",

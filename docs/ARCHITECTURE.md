@@ -853,8 +853,11 @@ section is written once.
   reason `required` is an error on a `selects` group: a field that does
   nothing is one a transcriber believes is doing something. It opens the
   picker once per Add (not on ＋), never moves focus, and changes no tag,
-  warning or price. Set it only where a silent default changes the dish or the
-  bill; which groups is a per-group content call, not a rule.
+  warning or price. A change made in the picker it opened **moves the one unit
+  just added** to the new configuration instead of making a second line, until
+  the reader presses ＋ or − or closes it (`cart.js` `moveOneItem`). Set it
+  only where a silent default changes the dish or the bill; which groups is a
+  per-group content call, not a rule.
 - **A price must be resolvable** — the option's `price`, or its group's as
   a default. Absent at both levels is an **error**, not a zero: a
   forgotten price would otherwise become a silently free add-on and an

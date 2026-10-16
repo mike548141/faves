@@ -1,5 +1,4 @@
-- [~] **A "must-see" choice opens when you press Add** `[M][schema][js]` —
-  (claimed 2026-10-16-1034, faves-11, wt: faves-200-120)
+- [x] **A "must-see" choice opens when you press Add** `[M][schema][js]` —
   **owner-ruled 2026-10-03:**
 
   > *"We need a way to mandate a user at least seeing the options, so that they
@@ -71,3 +70,43 @@
     Cha's size group, and Abrakebabra's combo. (Gong Cha's size may instead
     become a `selects` ladder per ADR 0130, which is must-see by rule; either
     way it ends must-see.)
+
+✅ **Done 2026-10-16 (faves-11 worker), reworked to B the same day.** ADR 0159
+(PR #108, branch `w/200-120`), `SHELL_VERSION` `2026-10-16.6`.
+
+**What landed.** The row's ＋ Add (none to one) opens the closed `<details>`
+picker for every `selects` ladder (by rule) and any `adds` group with
+`"mustSee": true`; the dish is still added. A sentence in words (page and status
+region), no focus move, no animation. `required` is not must-see; `mustSee` on a
+`selects` or `required` group, or `false`, is a `validate.py` error. The stepper
+also keeps keyboard focus across its own re-render (focus fell to `<body>` on
+every first ＋ Add before; measured).
+
+**B, as ruled.** A change made in that picker **moves the one unit just added**
+(`cart.js` `moveOneItem` / `order.moveOne`): Full to Half leaves one Half. It
+moves one unit only (a line of two splits), joins an existing destination line,
+carries a note with the unit, and ends when the dish's total quantity changes
+(any ＋/−), the line is gone or re-keyed by a note, the picker is closed, or a
+required choice is open (so a moved unit is never an ADR 0158 unfinished line).
+Announced as "Updated in your order: …". Only a reveal that actually opened the
+picker starts it.
+
+**Data (owner-ruled): `mustSee: true` on four groups** (Gong Cha `size`, 77
+dishes; Groundup `milks`, 10; the Victoria `milk-options`, 5; Abrakebabra
+`combo`, 61). `gen_summaries.mjs` re-run (3 outputs committed). **Gong Cha's size
+was flagged, not converted** to a `selects` ladder: it is shared by 77 dishes at
+19 prices (a ladder's `dishPrice` is absolute, so one group per price and tag
+set), and every stored order line or saved order holding `size/large` would be
+stranded. Not mechanical, not safe. Same behaviour either way.
+
+**Volume.** 130 dish rows in 8 venues open on Add by rule (Southern Cross 36,
+Victoria 31, Borough 27, Bristol 19, Khandallah 9, BurgerFuel 3, Spices Indian 3,
+Baylands 2), plus the four flagged groups' dishes.
+
+**Verified.** See the PR for the run-by-run counts; `addon_check` 174 passed, 0
+failed (27 new `(ab)` assertions across the reveal and B). B break-probed: with
+the move disabled (back to A) the B assertions fail ("choosing Large after Add
+leaves ONE line", "…is SAID", "a third rung is still ONE line", the confirm-by-＋
+pair), and the run then stops on a missing element. Earlier probes (unflagged
+optional made must-see; `required` made must-see; focus restore removed) each
+failed their named assertion.

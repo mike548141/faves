@@ -51,6 +51,7 @@
 import { el } from "./dom.js";
 import { dishId } from "./dish-id.js";
 import { dishStepper } from "./cart-ui.js";
+import { order } from "./cart.js";
 import { settings } from "./settings.js";
 import { effectiveAvoid } from "./dietary.js";
 import {
@@ -63,6 +64,9 @@ import {
   missingRequired,
   mustSeeGroups,
   mustSeeNote,
+  freshAction,
+  movedNote,
+  selectionKey,
   defaultVariant,
   variantLabel,
   configuredPrice,
@@ -190,6 +194,13 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   // The first radio of each required group, so a blocked tap can take the
   // reader to the question rather than leave them to hunt for it.
   const firstInput = new Map();
+  // The unit the reader just added by pressing Add, while the picker it opened is
+  // still theirs to change (ADR 0159): `{ sel, total }`, or null. A change made in
+  // the picker MOVES that one unit instead of making a second line.
+  let fresh = null;
+  // What the row's own ＋ Add last recorded (refresh() keeps it): the plate and any
+  // required choice, which is exactly what a press of that Add put in the order.
+  let rowCarry = { options: [] };
   const requiredIds = new Set(groups.filter(isRequired).map((g) => g.id));
   // In the DOM only while a choice is open — a hidden span would still be part
   // of the summary's textContent.
@@ -221,6 +232,34 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
     };
   }
 
+  /**
+   * Carry a change made in the picker over to the unit the reader just added
+   * (ADR 0159). Runs first in refresh(), before the steppers are rebuilt, so they
+   * read the order as the move leaves it. `freshAction` decides; this only does it.
+   */
+  function followFresh() {
+    if (!fresh) return;
+    const next = { options: lineOptions(selection), price: configuredPrice(base, selection) };
+    const act = freshAction(fresh, {
+      sel: selectionKey(next.options),
+      total: order.dishQty(record.id, id),
+      hasLine: order.qtyOf(record.id, id, fresh.sel, "") > 0,
+      gated: missingRequired(groups, selection).length > 0,
+    });
+    if (act === "end") fresh = null;
+    if (act !== "move") return;
+    const key = order.moveOne(record.id, id, fresh.sel, "", next);
+    if (key == null) {
+      fresh = null;
+      return;
+    }
+    fresh.sel = selectionKey(next.options);
+    // Said, because the order changed under a tap that only touched a radio.
+    const said = movedNote(item.name, next.options);
+    seenNote.textContent = said;
+    live.textContent = said;
+  }
+
   /** What the row shows and its own ＋ Add records for the chosen variant. */
   function variantState() {
     const v = selection.filter((s) => typeof s.dishPrice === "number");
@@ -234,6 +273,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   // with Satay still ticked. The cap message is added to the warning, never
   // put in its place.
   function refresh(notice) {
+    followFresh();
     // The reader's flags plus what Halal/Kosher imply (ADR 0140) — the same
     // dietary.js function the menu row reads, so the row accent and this line
     // cannot disagree about a pork topping.
@@ -269,7 +309,8 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
     // choice already made. Without the second, answering the question here
     // would lift the gate and let the row order the dish with no sauce on it.
     const rowSel = selection.filter((x) => typeof x.dishPrice === "number" || requiredIds.has(x.group));
-    onGate?.(gate, { price: configuredPrice(base, rowSel), options: lineOptions(rowSel) });
+    rowCarry = { price: configuredPrice(base, rowSel), options: lineOptions(rowSel) };
+    onGate?.(gate, rowCarry);
     const v = variantState();
     if (v) onVariant?.(v);
   }
@@ -473,6 +514,8 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
 
   details.addEventListener("toggle", () => {
     if (!details.open) {
+      // Closing it is accepting what is in the order.
+      fresh = null;
       seenNote.hidden = true;
       seenNote.textContent = "";
       // Emptied too, so the NEXT reveal is a change a screen reader will speak.
@@ -494,6 +537,13 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   function reveal() {
     if (mustSee.length === 0 || details.open) return false;
     details.open = true;
+    // The Add that opened this put one unit on the row's configuration. A change
+    // made here from now on updates THAT unit (B, owner-ruled 2026-10-16) until the
+    // reader confirms a quantity or closes the picker. Only a reveal that actually
+    // opened it starts this: a picker the reader already had open is one they were
+    // already choosing in, and keeps the one-Add-one-line behaviour it always had.
+    const sel = selectionKey(rowCarry.options);
+    fresh = order.qtyOf(record.id, id, sel, "") > 0 ? { sel, total: order.dishQty(record.id, id) } : null;
     const note = mustSeeNote(groups);
     seenNote.textContent = note;
     seenNote.hidden = false;

@@ -83,28 +83,58 @@ and was not built.
    would need storage keyed on a group and a venue's menu version, to save a
    closed disclosure being re-opened; the reader who closed it can close it.
 
-## Not decided here: what a choice made after the reveal does 🎯
+## 9. A change made in the picker updates the unit just added (B)
 
-The Add has already ordered the default (Half). If the reader now picks Full in
-the revealed picker, the row's stepper and the picker's stepper move to the Full
-configuration, at none; **the Half line is still in the order.** They must tap
-Add again for the Full and remove the Half from the sheet. This is the same
-behaviour a manually opened picker has always had, and the reveal makes it
-reachable on every ladder dish, so it is the wart most likely to be met. It is
-14g's state 2/3 question (edit the line or add another), which `200/030` holds
-as designed but not approved, so it was left alone. Options for the owner:
+**Owner-ruled 2026-10-16**, on the fork this record first left open. Add has
+ordered the default; the picker opens; choosing Half must leave **one Half**, not
+a Full and a Half. The unit the Add put in the order is "fresh" until the reader
+confirms it, and while it is fresh a change made in the picker **moves that one
+unit** to the picker's new configuration (`cart.js` `moveOneItem`, `order.moveOne`).
+The design, because each point is a way to get it wrong:
 
-| | Add press | A change in the revealed picker | Cost |
-|---|---|---|---|
-| **A** (shipped) | orders the default and opens the picker | makes a second line | none; the wart above |
-| **B** | as A | while nothing else has touched the order, **moves the line just added** (the re-key `order-finish` already does) | medium: a "fresh line" notion in the picker and one `cart.js` move |
-| **C** | **does not order**: it opens the picker, and the picker's Add orders | n/a | small, but it makes every ladder dish two taps, contradicting "when the user adds the dish" |
+- **One unit, never the line.** The line just added can share its key with copies
+  ordered before (a Large already at 2). Moving "the one I just added" must not
+  rewrite them, so the source keeps `qty - 1` and goes only when that is 0.
+  Choosing Large and back to Regular on a Large line of two leaves Large 1 and
+  Regular 1 (asserted in the browser, and in `tests/order-move.test.js`).
+- **The destination may exist.** The unit joins it and the line keeps its own
+  price; ticked-off survives only if both halves had it (as `setNote` and
+  `finishItems` already do).
+- **What is fresh.** Only a reveal that actually opened the picker starts it. A
+  picker the reader already had open is one they were already choosing in, and
+  keeps the one-Add-one-line behaviour it always had. It records the selection key
+  the Add landed on and the dish's **total quantity across every configuration**
+  at that moment.
+- **When it ends** (`freshAction`, pure, unit-tested): the dish's total quantity
+  is no longer what the Add left, which catches a ＋ or − on any line of the
+  dish, the row's, the picker's or the sheet's (the reader has confirmed a count,
+  so "a second Add press after a change" is the old rule again, not a second
+  move); the line is gone or its key moved (a **note** added on the sheet changes
+  the key, so a noted line is never moved from under the reader, and the note
+  rides with a unit that does move); the picker is closed (that accepts what is
+  in the order); or a required choice is unanswered. A move conserves the total,
+  which is why a move does not end itself and a run of changes keeps following
+  the unit.
+- **ADR 0158's unfinished line.** A moved unit can never be unfinished: Add is
+  gated until a required group is answered, a radio cannot be un-set, and
+  `freshAction` ends the move while one is open as a backstop. The destination of a
+  move has the picker's full selection, so it cannot be an unfinished line either.
+- **Said, not silent.** The order changes under a tap that only touched a radio,
+  so the page sentence and the status region both become "Updated in your order:
+  Eggs on Toast, Large." (`movedNote`).
+- **It follows the picker's whole selection**, extras included: ticking an optional
+  extra after the reveal updates the unit to carry it. The row's own stepper counts
+  only the plate and any required choice, as before.
 
-Recommendation: **B.** It keeps the owner's one-tap Add and his "expands to show
-them", and removes the wart; C reverses half of his sentence.
+This amends 0159 as first drafted, which shipped A (a change made a second line)
+and offered A/B/C; it is in this file rather than a new record because 0159 had not
+merged.
 
 ## Rejected
 
+- **A (a change makes a second line)** and **C (Add only opens the picker, so every
+  ladder dish takes two taps)**: the owner chose B. A leaves the default ordered
+  beside the choice; C contradicts "when the user adds the dish".
 - **Open every picker on Add** (`200/030`'s state 1). Ruling 4: optional pickers
   are right as they are. The check asserts a real unflagged picker stays closed.
 - **`required` implies must-see** (see 4).
@@ -114,9 +144,13 @@ them", and removes the wart; C reverses half of his sentence.
   That is a refusal, and it puts the reader where they must act. This is a
   successful Add, and a repeat-tapper is mid-tap on the button they pressed.
 - **A remembered "seen" flag** (see 8).
-- **Which `adds` groups carry `mustSee`.** Not decided and not set: it is a
-  per-group content call. No record in `site/data/` carries the flag. The
-  candidates are listed in `200/120`.
+- **Converting Gong Cha's size to a `selects` ladder** (0130 suggests it; it would
+  make it must-see by rule). Not mechanical and not safe: the group is shared by
+  77 dishes at 19 different prices, a ladder's `dishPrice` is absolute so it would
+  need a group per price (and per tag set, since a variant must restate its dish's
+  claims exactly), and every order line and saved order already holding `size/large`
+  would be stranded by the new group ids. It is flagged `mustSee` instead, which
+  ends in the same behaviour with no data migration.
 
 ## Consequences
 
@@ -135,6 +169,8 @@ them", and removes the wart; C reverses half of his sentence.
   nothing ticked but None; focus stays on the row's stepper, not in the picker
   and not on `<body>`; ＋ does not re-open it and Add-from-none does; a size
   ladder opens with no flag; an answered required group is not re-opened.
-- A flag that is never set in `site/data/` is a field no shipped record uses
-  (0047/0137): it is admitted because the owner ruled the behaviour, the code
-  reads it, and the fixture shows it working; the payload does not change.
+- **`mustSee: true` is set on four groups** (owner-ruled 2026-10-16): Gong Cha's
+  size (77 dishes), Groundup's milks (10), the Victoria's milk-options (5) and
+  Abrakebabra's combo (61). Every other optional group is untouched. `gen_summaries`
+  was re-run; the flag is in the venue files the screen reads (ADR 0047: the
+  picker is the screen that renders it).
