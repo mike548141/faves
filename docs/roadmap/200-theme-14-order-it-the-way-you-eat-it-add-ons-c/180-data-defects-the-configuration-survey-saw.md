@@ -1,4 +1,5 @@
-- [ ] **Data defects the configuration survey saw in passing** `[S][data]` —
+- [~] **Data defects the configuration survey saw in passing** `[S][data]` —
+  (claimed 2026-10-16-0723, faves-11, wt: faves-200-180)
   found by `200/100`'s survey and listed in full in
   [its review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)
   § *Defects seen in passing*.
