@@ -16,8 +16,13 @@ THE ALLOW-LIST IS 340/310'S, UNCHANGED, and it is an allow-list on purpose:
 
   * the three evidence trees  menus/  recipes/  ingredients/raw_food_photos/
   * images and PDFs only      (check_provenance.PHOTO_SUFFIXES + .pdf)
+  * plus the Markdown recipe notes in recipes/ ONLY (owner-ruled 2026-10-16,
+    roadmap 500/080: Apple Notes exports, not health data). An .md anywhere
+    else is still refused, because ingredients/ holds health transcripts.
   * plus the fetched web page(s) a committed fingerprint names -- the
-    `snapshot` path in data/intake/recipe-sources.json, and nothing else .html
+    `snapshot` path in data/intake/recipe-sources.json, or (since 2026-10-16,
+    500/080) a menus/ evidence row in data/intake/menu-sources.json, which is
+    how a fetched menu page or PDF is cited -- and nothing else .html
 
 Nothing else is ever opened, hashed, or copied. In particular it is NOT "every
 image": `intake/ingredients/` also holds a saved health transcript's own page
@@ -120,6 +125,8 @@ def classify(rel, snapshots=frozenset(), is_link=False):
         return False, "outside"   # everything not in an allowed tree
     if rel in snapshots:
         return True, "snapshot"   # the fingerprinted web page, by exact path
+    if tree == "recipes" and Path(rel).suffix.lower() == ".md":
+        return True, "recipe-note"  # 500/080: recipes/ only, never another tree
     if Path(rel).suffix.lower() not in SUFFIXES:
         return False, "type"      # inside a tree, but not evidence
     return True, "ok"
@@ -305,7 +312,7 @@ def mask(path):
 def report(res, intake, dest, dry, say=print):
     say(f"scope    intake {intake}  ->  {mask(dest)}")
     say("         allow-list: menus/ recipes/ ingredients/raw_food_photos/, "
-        "images + PDFs, plus the fingerprinted web snapshot(s)")
+        "images + PDFs, the .md notes in recipes/, plus the fingerprinted web snapshot(s)")
     say(f"         {'DRY RUN, writes nothing' if dry else 'copy new, verify, count upload'}"
         "; never deletes; health transcripts and food logs are never opened")
     r = res.refused
@@ -387,6 +394,10 @@ def _build(base):
         "recipes/web/page.html": b"<html>fetched page</html>",
         "recipes/web/other.html": b"<html>some other page</html>",
         "recipes/notes.md": b"a note",
+        "menus/notes.md": b"a stray note in another tree",
+        "menus/Cafe A/web/menu.html": b"<html>a fetched menu page, fingerprinted</html>",
+        "menus/Cafe A/web/other.html": b"<html>a fetched page nobody cited</html>",
+        "ingredients/raw_food_photos/1/n.md": b"a note beside the food photos",
         "ingredients/raw_food_photos/1/p1.jpeg": b"raw food photo",
         "ingredients/Transcript_files/t1.jpeg": b"HEALTH transcript asset one",
         "ingredients/Transcript_files/t2.png": b"HEALTH transcript asset two",
@@ -400,11 +411,14 @@ def _build(base):
         p.write_bytes(data)
     os.symlink(intake / "ingredients/Transcript_files/t1.jpeg", intake / "menus/link.jpeg")
     allowed = {"menus/Cafe A/a1.jpeg", "menus/Cafe A/menu.pdf", "menus/b.JPG",
-               "recipes/r1.heic", "recipes/web/page.html",
+               "recipes/r1.heic", "recipes/web/page.html", "recipes/notes.md",
+               "menus/Cafe A/web/menu.html",
                "ingredients/raw_food_photos/1/p1.jpeg"}
     fps = {"menus/Cafe A/a1.jpeg": _sha(files["menus/Cafe A/a1.jpeg"]),
            "recipes/web/page.html": _sha(files["recipes/web/page.html"])}
-    snaps = {"recipes/web/page.html": fps["recipes/web/page.html"]}
+    fps["menus/Cafe A/web/menu.html"] = _sha(files["menus/Cafe A/web/menu.html"])
+    snaps = {"recipes/web/page.html": fps["recipes/web/page.html"],
+             "menus/Cafe A/web/menu.html": fps["menus/Cafe A/web/menu.html"]}
     return intake, allowed, fps, snaps
 
 
@@ -435,7 +449,10 @@ def _scenario(ops):
         out["classify: a food-log export is refused"] = not cls("ingredients/food-log-export.csv")
         out["classify: a chat export is refused"] = not cls("ingredients/chat-export.json")
         out["classify: an unlisted web page is refused"] = not cls("recipes/web/other.html")
-        out["classify: a recipe note (not evidence) is refused"] = not cls("recipes/notes.md")
+        out["classify: a recipe note in recipes/ is accepted (500/080)"] = cls("recipes/notes.md")
+        out["classify: a note outside recipes/ is refused"] = not (
+            cls("menus/x.md") or cls("ingredients/raw_food_photos/1/n.md")
+            or cls("ingredients/Transcript.md"))
         out["classify: a hidden file is refused"] = not cls("menus/.DS_Store")
         out["classify: a symlink is refused"] = not cls("menus/link.jpeg", link=True)
         out["classify: a path escaping the tree is refused"] = not cls("menus/../ingredients/x.jpeg")
@@ -451,10 +468,14 @@ def _scenario(ops):
         out["run: no food-log or chat export is copied"] = not any(
             g.endswith((".csv", ".json")) for g in got)
         out["run: a symlink into a refused tree is not followed"] = "menus/link.jpeg" not in got
-        out["run: an unlisted page and a note are not copied"] = not (
-            got & {"recipes/web/other.html", "recipes/notes.md"})
+        out["run: an unlisted page and a stray note are not copied"] = not (
+            got & {"recipes/web/other.html", "menus/notes.md",
+                   "ingredients/raw_food_photos/1/n.md"})
+        out["run: a recipe note is copied (500/080)"] = "recipes/notes.md" in got
+        out["run: a fingerprinted menu page is copied, an uncited one is not"] = (
+            "menus/Cafe A/web/menu.html" in got and "menus/Cafe A/web/other.html" not in got)
         out["run: refusals are counted, not named"] = (
-            sum(r1.refused.values()) == 8 and r1.refused["outside"] == 4)
+            sum(r1.refused.values()) == 10 and r1.refused["outside"] == 4)
 
         # -- a second run ----------------------------------------------------
         r2 = run(intake, dest, fps, snaps, ops)
@@ -546,7 +567,7 @@ def _breakers():
         "classify: a food-log export is refused",
         "classify: a chat export is refused",
         "classify: an unlisted web page is refused",
-        "classify: a recipe note (not evidence) is refused",
+        "classify: a note outside recipes/ is refused",
         "classify: a hidden file is refused",
         "classify: a symlink is refused",
         "classify: a path escaping the tree is refused",
@@ -554,7 +575,8 @@ def _breakers():
         "run: no health-transcript image is copied",
         "run: no food-log or chat export is copied",
         "run: a symlink into a refused tree is not followed",
-        "run: an unlisted page and a note are not copied",
+        "run: an unlisted page and a stray note are not copied",
+        "run: a fingerprinted menu page is copied, an uncited one is not",
     }
     return [
         ("allow-list disabled (everything selected)",
@@ -674,8 +696,13 @@ def main():
     except ValueError:
         pass
 
-    snaps = snapshot_paths(_json(RECIPE_RECORD))
-    fps = fingerprints(load_record(), snaps)
+    # A menus/ file is evidence whatever its suffix once menu-sources.json
+    # fingerprints it: that is how a fetched menu page is cited (500/080). Still
+    # tree-bounded, because classify() checks the tree before the snapshot set.
+    menu_doc = load_record()
+    snaps = {**snapshot_paths(_json(RECIPE_RECORD)),
+             **{r: h for r, h in fingerprints(menu_doc, {}).items() if r.startswith("menus/")}}
+    fps = fingerprints(menu_doc, snaps)
     res = run(intake, dest, fps, snaps, default_ops(), dry=args.dry_run,
               accept_changed=args.accept_changed, wait=args.wait, deep=args.deep)
     bad = report(res, intake, dest, args.dry_run)
