@@ -1268,7 +1268,10 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   add-on option ids (plus a name/price snapshot), never a name or position as an
   identity; recall re-prices from today's menu and skips-and-names any line that
   no longer resolves (except a line missing a now-compulsory choice, which is
-  landed and flagged, ADR 0158). Deliberately outside `SCOPED_BASE_KEYS` (so it
+  landed and flagged, ADR 0158). A line that resolves at a different unit price is
+  landed at today's and reported in `changed` (Theme 26c) — up or down, said in
+  words — judged against the saved snapshot; no snapshot, no claim.
+  Deliberately outside `SCOPED_BASE_KEYS` (so it
   never syncs or migrates, like the cook ticks) but inside the profile-delete purge; the
   backup file carries it as a named per-person `savedOrders` field, only when
   `collectPersonalData(…, { localOnly: true })` — which sync never passes.

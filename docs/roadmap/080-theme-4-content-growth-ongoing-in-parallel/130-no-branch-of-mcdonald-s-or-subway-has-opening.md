@@ -1,4 +1,5 @@
-- [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
+- [~] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
+  (claimed 2026-10-16-1034, faves-11, wt: primary (inline, Chrome))
       — ~~**10 of the corpus's 22 branches**, measured 2026-08-16~~ →
       **10 of the corpus's 47 branches**, re-measured 2026-09-09. This is now
       load-bearing rather than cosmetic: [ADR 0054](../../decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
@@ -147,3 +148,9 @@
     street number and phone from ours. The worker's "different street
     number" was that, not a stale address.
   Subway's two street-number mismatches are untouched (no closure claimed).
+
+  ✅ **Owner ruled 2026-10-16 (asked by `faves-11`): yes, a session may use
+  his signed-in Chrome (Claude in Chrome), READ-ONLY,** to read each branch's
+  full week of hours from its Google Maps listing: open the listing, expand
+  "see more hours", read, nothing posted or changed. The provenance value and
+  the ADR this item names are still owed.

@@ -1,4 +1,5 @@
-- [ ] **Data defects the configuration survey saw in passing** `[S][data]` —
+- [~] **Data defects the configuration survey saw in passing** `[S][data]` —
+  (claimed 2026-10-16-1034, faves-11, wt: faves-200-180)
   found by `200/100`'s survey and listed in full in
   [its review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)
   § *Defects seen in passing*.
@@ -66,3 +67,10 @@
   way to close them is to have the owner direct a re-read of those venues, so
   the reading is a dated one that either confirms the record or appends a
   change. File that as the next step rather than guessing from today's pages.
+
+  ✅ **Owner ruled 2026-10-16 (asked by `faves-11`): yes, a dated re-read
+  from the venues' own sites** — The Catch, Satay Kingdom, Abrakebabra, Dirty
+  Little Secret, The Victoria, and Wellington Kebab Grill's extras. That makes
+  the fetch owner-directed: what it shows either confirms our record or is a
+  venue change, appended the proper way (history kept). Store what is read so
+  it can be cited. Sprig & Fern Tawa's GF toast still needs a photo.

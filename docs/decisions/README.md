@@ -1896,3 +1896,9 @@ deliberation those compact docs omit.
   own re-render). `required` is not must-see, and `mustSee` on a `selects` or
   `required` group is an error. A change made in the revealed picker makes a
   second line: options A/B/C are with the owner.
+- [0160](0160-a-failed-launch-is-retried-and-a-refused-click-leaves-a-photo.md) —
+  **A failed browser launch is retried, and a refused click leaves a photo**
+  (`510/420`). `launchChrome` retries once, loudly, when Chrome never writes its
+  DevTools port file (CI hit it three times); a per-call retry stays forbidden
+  because a launch with no page re-issues nothing. An unreachable or unstable
+  click now saves a screenshot and a page-state line.

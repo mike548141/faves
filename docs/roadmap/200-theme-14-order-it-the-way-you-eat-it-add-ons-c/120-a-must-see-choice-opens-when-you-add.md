@@ -1,4 +1,5 @@
-- [x] **A "must-see" choice opens when you press Add** `[M][schema][js]` —
+- [~] **A "must-see" choice opens when you press Add** `[M][schema][js]` —
+  (claimed 2026-10-16-1034, faves-11, wt: faves-200-120)
   **owner-ruled 2026-10-03:**
 
   > *"We need a way to mandate a user at least seeing the options, so that they
@@ -41,59 +42,32 @@
   must-see group opening on Add **and** an unflagged optional group staying
   closed, because the absence is the half that rots.
 
-✅ **Done 2026-10-16 (faves-11 worker).** Landed as ADR 0159 (branch `w/200-120`).
+  ⏳ **Built, held for an owner ruling — 2026-10-16 (`faves-11`).** The
+  build is PR #108 (branch `w/200-120`, ADR 0159, `SHELL_VERSION`
+  `2026-10-16.3`), verified (`addon_check` 160, `node --test` 1867,
+  `test_validate` 279) and **not merged**, because it surfaced a fork that
+  changes what the feature does:
+  - 🎯 **A change made in the picker that opens on Add makes a second order
+    line.** Add has already ordered the default, so choosing Half after the
+    picker opens leaves the Full ordered as well. A (as built): a second
+    line. B (the builder's recommendation): the change moves the line just
+    added. C: Add only opens the picker, so every ladder dish takes two
+    taps. This is `14g`'s edit-or-add-another question, met first here.
+  - 🎯 **Which `adds` groups get `mustSee: true`:** none is set. The
+    candidates are Gong Cha's size (77 dishes; ADR 0130 says it should become
+    a `selects` ladder, which would make it must-see by rule), the two
+    coffee-milk groups (15), Abrakebabra's combo (61), and the Victoria's
+    margarita flavour (more a `required` question).
+  - The PR also fixes a bug found on the way: focus fell to `<body>` on every
+    ＋ Add, because the pressed button is replaced. That fix waits with it.
+  - Rebase note: PR #110 has since added assertions in `addon_check.mjs`
+    section (w); #108's own block is separate.
 
-**What the picker was.** Read from the code, not from 14g: a `<details>` with no
-`open`, **closed** on every dish, with the row's ＋ Add outside it. `200/030`'s
-"renders open on every dish" does not describe the code, so "expands on Add" is
-closed to open and 14g's state machine was not needed and not built.
-
-**What landed.** The row's ＋ Add taking a dish from none to one calls the
-picker's `reveal()`. It opens the picker for every `selects` ladder (by rule) and
-any `adds` group with `"mustSee": true`; the dish is still added. It shows
-"Added as listed. Check “Size” below…" on the page and through a `role=status`
-region beside the picker, scrolls the first group in only if off-screen, animates
-nothing, and never moves focus. ＋ and − do not trigger it. `required` is **not**
-must-see (Add already waits for it), and `mustSee` on a `selects` or `required`
-group is a `validate.py` error (redundant; same reasoning as 0156's `required` on
-`selects`), as is `false`. `ARCHITECTURE.md`'s group schema carries the flag.
-
-**A defect found underneath and fixed.** Pressing ＋ Add replaced the button, and
-focus fell to `<body>` (measured by the break-probe: `tag: BODY`). `dishStepper`
-now puts focus on the control that took its place. That is every stepper.
-
-**Verified (real counts).** `node --test` 1867 pass; `validate.py` 57 files
-valid; `test_validate.py` 279 mutations behaved (6 new); `addon_check` 160 passed,
-0 failed (13 new `(ab)` assertions; the first run had 1 failure, my own wrong
-selector, fixed). Break-probes, each reintroducing a bug and watching the named
-assertion fail: (1) an unflagged optional group made must-see: the CONTROL
-assertion failed; (2) `required` made must-see: "a required group … is NOT
-re-opened" failed; (3) stepper focus restore removed: "focus did NOT move into the
-picker… not <body>" failed (and two sibling focus assertions). (1) and (2) were
-done in one run with (3), so the three failures are attributed by assertion name,
-not by separate runs; a cruder first probe (every group must-see) stopped the
-run at an earlier block. `device_check` was not run (hangs on main, `340/320`).
-
-**🎯 For the owner: which `adds` groups get `"mustSee": true`.** Not set on any
-(a content call). Measured candidates, silent default changes the dish or bill:
-- `gong-cha/size` (Regular +$0 / Large +$1, an `adds` group, 77 dishes): the
-  biggest, and 0130 says it should become a `selects` ladder, which would make it
-  must-see by rule without a flag;
-- `groundup-cafe/milks` (10 dishes) and `the-victoria-tavern/milk-options` (5):
-  alternative milks, +$1 each;
-- `abrakebabra/combo` (61 dishes, +$7): changes the bill;
-- `spices-indian/naan-upgrade` (1), `sprig-and-fern-thorndon/nga-base` (5, one
-  option, +$3.50), `sprig-and-fern-berhampore/kids-drink` (3, +$3.50);
-- `the-victoria-tavern/margarita-flavour` (1): three $0 flavours with no None; a
-  `required` question more than a must-see one.
-Already covered by rule, no flag needed: BurgerFuel Single/Double, Spices
-Indian Half/Full and the unnamed `size-1` pours are all `selects`.
-
-**🎯 Volume the rule has: 130 dish rows in 8 venues open on Add** (Southern Cross
-36, Victoria Tavern 31, Borough Tawa 27, Hotel Bristol 19, Khandallah 9,
-BurgerFuel 3, Spices Indian 3, Baylands 2). Mostly pub drinks with a pour size.
-
-**🎯 Not decided: a change made in the revealed picker makes a SECOND line**
-(Half stays ordered; Full is a new Add). Options A (shipped), B (the change moves
-the line just added), C (Add only opens) are in ADR 0159. B recommended; it is
-14g's state 2/3 question and `200/030` is still not approved to build.
+  ✅ **Owner ruled 2026-10-16 (asked by `faves-11`, via AskUserQuestion):**
+  - **B: a change made in the picker that opens on Add UPDATES the line just
+    added** (Full → Half leaves one Half, not a Full and a Half). #108 is
+    reworked to this before it merges.
+  - **`mustSee: true` on three groups:** the two coffee-milk groups, Gong
+    Cha's size group, and Abrakebabra's combo. (Gong Cha's size may instead
+    become a `selects` ladder per ADR 0130, which is must-see by rule; either
+    way it ends must-see.)

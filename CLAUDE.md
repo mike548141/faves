@@ -1,7 +1,7 @@
 # Faves — instructions for AI builders
 
 <!-- stamp:begin source=docs/method/PROPAGATION.md region=floor -->
-## Doctrine — inherited from atelier (pinned `atelier@fd63df8`)
+## Doctrine — inherited from atelier (pinned `atelier@04e6f22`)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -80,7 +80,7 @@ in atelier and is read on demand — never wholesale.
   (`PROPAGATION.md` § *Pointing up*.)
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
   session start run `git -C "../atelier" fetch -q` then `git -C
-  "../atelier" log --oneline fd63df8..origin/main` — the parent's published
+  "../atelier" log --oneline 04e6f22..origin/main` — the parent's published
   mainline, never whatever branch its checkout is parked on; any output means
   the house doctrine moved — read it, then bump the pin above deliberately.
 - **Estate resources — point up, don't re-derive:** providers & account plans,
@@ -884,11 +884,13 @@ node tools/rename_check.mjs   # a stored heart SURVIVES its dish being renamed
                               # light (measured 2026-09-28), and asserting the
                               # behaviour of the day would have enforced the defect
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
-                              # Reaches its end: "OK — 22 passed, 0 failed". Check the
-                              # summary line is there AND that N is still 22 — a
+                              # Reaches its end: "OK — 40 passed, 0 failed". Check the
+                              # summary line is there AND that N is still 40 — a
                               # shrunken N is the tell. (It read 16 until 2026-09-28,
                               # six short since e95bbac added ADR 0118's assertions
-                              # on 2026-09-20 — measured 22 at b6b9bc9.) A harness abort exits 2 and
+                              # on 2026-09-20 — measured 22 at b6b9bc9; then six
+                              # commits grew it, 510/050 to 510/430, and it was
+                              # measured 40 at bef4e6f4 on 2026-10-16.) A harness abort exits 2 and
                               # prints no "FAIL" line, so it does not look like a
                               # failure; if it aborts, the message now names which
                               # Settings navigation step broke — fix the NAV block in
@@ -1008,6 +1010,17 @@ timeouts only (above; ADR 0101). The reasoning is untouched, because a fresh
 process on a fresh profile re-issues nothing — and a transport death is still
 **never** retried, so this paragraph's exit-2 `HARNESS ERROR` means what it
 always did.
+
+**A `↻ LAUNCH RETRY` line means Chrome never started and was started again**
+(ADR 0160, roadmap `510/420`): `launchChrome` waits 20 s
+(`FAVES_LAUNCH_TIMEOUT_MS`) for Chrome's DevTools port file and, if it never
+appears, stops that Chrome, empties the profile and tries once more. It is not a
+per-call retry (no page exists yet, so nothing is re-issued) and it is never
+silent; on GitHub Actions it also raises a `::warning::`. If it keeps
+appearing the runner or Chrome is the finding. And when a click fails
+`UNREACHABLE ELEMENT` or `UNSTABLE ELEMENT`, the FAIL now carries a `page
+state:` line and a screenshot path (`$FAVES_SHOT_DIR`, else the OS temp dir;
+never the repo): open the PNG before theorising.
 
 **The harness reaps its own Chrome and profile directory** on `SIGINT`,
 `SIGTERM` and uncaught exceptions, and sweeps unheld `faves-*-check-*` profiles

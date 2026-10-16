@@ -14,6 +14,7 @@ content freshness separately from this file.
   orders the dish as listed, and the choices open underneath with a line saying
   which one to check, so a size picked for you is not one you missed. Keyboard
   focus stays on the button you pressed (the + and - buttons used to lose it). Dishes with only optional extras open exactly as before.
+- **A saved order tells you when prices have moved.** Adding a saved order now puts each dish in at today's price and says, in words, which ones have changed since you saved it: "now $16.50, was $14.50 when you saved it (up $2)". A price that went down is said too. Nothing is changed for you: the dish is on your order and you decide whether to keep it. An order saved before prices were recorded says nothing rather than guess.
 - **A dish that still needs a choice is flagged on your order, and you can finish it there.** If a dish is missing a compulsory choice (a sauce, say) because it was added before the choice became compulsory, or came from a saved or shared order, it now shows on the order sheet with "Needs a choice", the total says it is short by what the choice costs, and you pick the choice in place. A saved order that needs a choice is added and flagged instead of left out.
 - **A choice the menu makes compulsory is now compulsory.** Where a dish comes
   "with choice of" sauce, filling, side or heat, the picker no longer offers
