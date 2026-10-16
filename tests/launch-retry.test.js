@@ -64,7 +64,11 @@ function run(hangFirst) {
       env: {
         ...process.env,
         FAVES_CHROME: chrome,
-        FAVES_LAUNCH_TIMEOUT_MS: "1500",
+        // 5 s, not 1.5: a fake that WRITES its port file must beat this even on a
+        // loaded machine (child node + sh startup missed 1.5 s at load ~158 on
+        // 2026-10-16, failing the cases that should succeed), and a fake that
+        // HANGS never writes at all, so the wait costs only time, never a verdict.
+        FAVES_LAUNCH_TIMEOUT_MS: "5000",
         FAVES_NO_SWEEP: "1",
         GITHUB_ACTIONS: "",
         FAKE_STATE: state,
