@@ -1,5 +1,4 @@
-- [~] **A "must-see" choice opens when you press Add** `[M][schema][js]` —
-  (claimed 2026-10-16-0912, faves-11, wt: faves-200-120)
+- [ ] **A "must-see" choice opens when you press Add** `[M][schema][js]` —
   **owner-ruled 2026-10-03:**
 
   > *"We need a way to mandate a user at least seeing the options, so that they
@@ -41,3 +40,25 @@
   `addons-ui.js`/`cart-ui.js`, and `addon_check.mjs`. That check must show a
   must-see group opening on Add **and** an unflagged optional group staying
   closed, because the absence is the half that rots.
+
+  ⏳ **Built, held for an owner ruling — 2026-10-16 (`faves-11`).** The
+  build is PR #108 (branch `w/200-120`, ADR 0159, `SHELL_VERSION`
+  `2026-10-16.3`), verified (`addon_check` 160, `node --test` 1867,
+  `test_validate` 279) and **not merged**, because it surfaced a fork that
+  changes what the feature does:
+  - 🎯 **A change made in the picker that opens on Add makes a second order
+    line.** Add has already ordered the default, so choosing Half after the
+    picker opens leaves the Full ordered as well. A (as built): a second
+    line. B (the builder's recommendation): the change moves the line just
+    added. C: Add only opens the picker, so every ladder dish takes two
+    taps. This is `14g`'s edit-or-add-another question, met first here.
+  - 🎯 **Which `adds` groups get `mustSee: true`:** none is set. The
+    candidates are Gong Cha's size (77 dishes; ADR 0130 says it should become
+    a `selects` ladder, which would make it must-see by rule), the two
+    coffee-milk groups (15), Abrakebabra's combo (61), and the Victoria's
+    margarita flavour (more a `required` question).
+  - The PR also fixes a bug found on the way: focus fell to `<body>` on every
+    ＋ Add, because the pressed button is replaced. That fix waits with it.
+  - Rebase note: PR #110 has since added assertions in `addon_check.mjs`
+    section (w); #108's own block is separate.
+
