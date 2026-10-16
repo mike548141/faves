@@ -79,3 +79,22 @@ Three things the tool deliberately does **not** do:
    sticker that could be two different numbers is reported to you and
    left out — a missing price is recoverable, a wrong one isn't.
 8. `python3 tools/validate.py` gates it; you eyeball; we commit.
+9. **Back up what you dropped in, at the end of every intake session.**
+   `intake/` is gitignored and lives on one laptop, so a new photo is one
+   copy until this runs. From the primary checkout (the only one holding
+   `intake/`):
+
+   ```sh
+   python3 tools/backup_intake.py --dry-run   # what would be copied
+   python3 tools/backup_intake.py             # copy, re-hash, count upload
+   ```
+
+   It copies only what is new, by an allow-list of the three evidence trees
+   (never "every image" — the health transcript's assets and the food-log
+   exports are never opened), verifies each copy against its source and the
+   committed fingerprint, and counts upload by Drive's own stamp. Exit 3
+   means "copied and verified, not all uploaded yet" — run it again later.
+   Run `python3 tools/check_provenance.py --rebuild` first if you added
+   menu photos, so they carry a fingerprint to be checked against.
+   It is an authoring tool, not a gate: the material it reads exists nowhere
+   CI runs (roadmap 500/070).
