@@ -154,7 +154,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [A required choice still offers "None"](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/090-a-required-choice-still-offers-none.md)
 - ✅ 🔎 [Survey: every way a dish is configured, across the whole corpus](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/100-survey-every-way-a-dish-is-configured.md)
 - ✅ [A size ladder's default is the menu's; failing that, the cheapest](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/110-a-size-ladders-default-is-the-menus.md)
-- [ ] [A "must-see" choice opens when you press Add](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/120-a-must-see-choice-opens-when-you-add.md)
+- [~] [A "must-see" choice opens when you press Add](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/120-a-must-see-choice-opens-when-you-add.md)
 - ✅ [An unfinished dish on the order sheet: warn, and finish it there](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/130-an-unfinished-dish-on-the-order-sheet.md)
 - [ ] [How many you may pick, and what the extras beyond that cost](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/140-how-many-you-may-pick-and-what-extras-cost.md)
 - [ ] [A fee that is not a dish: takeaway containers and cups](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/150-a-fee-that-is-not-a-dish.md)
@@ -310,6 +310,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🔎 [A gate that is on the verify list but not in CI went red on main,](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/290-a-gate-not-in-ci-went-red-on-main-and-nobody-saw-it.md)
 - ✅ [The browser checks beep through the owner's speakers](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/300-browser-checks-beep-through-the-owners-speakers.md)
 - ✅ 🔥 [Evidence by fingerprint, originals backed up privately — OWNER](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/310-evidence-by-fingerprint-originals-backed-up-privately.md)
+- [ ] 🔎 [device_check hangs at the same step every run, so 11 of its 81](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/320-device-check-hangs-and-eleven-assertions-go-unrun.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 

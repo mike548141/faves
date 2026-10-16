@@ -1,4 +1,5 @@
-- [ ] **A "must-see" choice opens when you press Add** `[M][schema][js]` —
+- [~] **A "must-see" choice opens when you press Add** `[M][schema][js]` —
+  (claimed 2026-10-16-0912, faves-11, wt: faves-200-120)
   **owner-ruled 2026-10-03:**
 
   > *"We need a way to mandate a user at least seeing the options, so that they
