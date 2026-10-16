@@ -1887,3 +1887,9 @@ deliberation those compact docs omit.
   choice is made in place with the picker's own question and allergen sentence.
   Finishing re-keys the line and merges into an identical one. Recall lands such
   a line flagged instead of dropping it.
+- [0160](0160-a-failed-launch-is-retried-and-a-refused-click-leaves-a-photo.md) —
+  **A failed browser launch is retried, and a refused click leaves a photo**
+  (`510/420`). `launchChrome` retries once, loudly, when Chrome never writes its
+  DevTools port file (CI hit it three times); a per-call retry stays forbidden
+  because a launch with no page re-issues nothing. An unreachable or unstable
+  click now saves a screenshot and a page-state line.

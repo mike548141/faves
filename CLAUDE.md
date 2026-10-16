@@ -1011,6 +1011,17 @@ process on a fresh profile re-issues nothing — and a transport death is still
 **never** retried, so this paragraph's exit-2 `HARNESS ERROR` means what it
 always did.
 
+**A `↻ LAUNCH RETRY` line means Chrome never started and was started again**
+(ADR 0160, roadmap `510/420`): `launchChrome` waits 20 s
+(`FAVES_LAUNCH_TIMEOUT_MS`) for Chrome's DevTools port file and, if it never
+appears, stops that Chrome, empties the profile and tries once more. It is not a
+per-call retry (no page exists yet, so nothing is re-issued) and it is never
+silent; on GitHub Actions it also raises a `::warning::`. If it keeps
+appearing the runner or Chrome is the finding. And when a click fails
+`UNREACHABLE ELEMENT` or `UNSTABLE ELEMENT`, the FAIL now carries a `page
+state:` line and a screenshot path (`$FAVES_SHOT_DIR`, else the OS temp dir;
+never the repo): open the PNG before theorising.
+
 **The harness reaps its own Chrome and profile directory** on `SIGINT`,
 `SIGTERM` and uncaught exceptions, and sweeps unheld `faves-*-check-*` profiles
 from `$TMPDIR` on first launch (`FAVES_NO_SWEEP=1` opts out). 🛑 **`SIGKILL`

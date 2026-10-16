@@ -44,7 +44,7 @@
 import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createServer } from "node:http";
-import { readFile, readdir, rm, stat } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, extname, join, normalize } from "node:path";
@@ -499,7 +499,7 @@ export class Cdp {
     for (const fn of this.#handlers.get(msg.method) ?? []) fn(msg.params, msg.sessionId);
   }
 
-  send(method, params = {}, sessionId) {
+  send(method, params = {}, sessionId, { timeoutMs = CDP_TIMEOUT_MS, soft = false } = {}) {
     const id = this.#next++;
     const payload = { id, method, params };
     if (sessionId) payload.sessionId = sessionId;
@@ -517,10 +517,19 @@ export class Cdp {
       // can alter the measurement is one short step from re-running until green,
       // which is the behaviour this repo keeps writing ADRs about. Give a slow
       // machine more rope with FAVES_CDP_TIMEOUT_MS instead.
+      //
+      // `soft` is for evidence-gathering AFTER a verdict has already been
+      // reached (the failure screenshot): its timeout is an ordinary Error, so a
+      // hung screenshot cannot latch `transportBroken` and turn the real
+      // "FAIL UNREACHABLE ELEMENT" into a generic "browser stopped answering".
       const timer = setTimeout(() => {
         this.#pending.delete(id);
-        reject(new HarnessError(`${method} timed out after ${CDP_TIMEOUT_MS / 1000}s`));
-      }, CDP_TIMEOUT_MS);
+        reject(
+          soft
+            ? new Error(`${method} timed out after ${timeoutMs / 1000}s`)
+            : new HarnessError(`${method} timed out after ${timeoutMs / 1000}s`)
+        );
+      }, timeoutMs);
       this.#pending.set(id, { resolve, reject, timer, method });
       this.#ws.send(JSON.stringify(payload));
     });
@@ -867,6 +876,67 @@ export async function sweepOrphanProfiles({ announce = true, minAgeMs = SWEEP_MI
 
 // --- Chrome ------------------------------------------------------------
 
+/** How long a freshly spawned Chrome may take to write its DevTools port file.
+ *  A property of the machine (a cold CI runner, a loaded laptop), so an env var,
+ *  with the same warning as FAVES_CDP_TIMEOUT_MS: never lower it to make a run
+ *  finish. The test for the launch retry shortens it, which is what it is for. */
+export const LAUNCH_TIMEOUT_MS = Number(process.env.FAVES_LAUNCH_TIMEOUT_MS) || 20_000;
+
+/** Two goes: the first, and one more. See {@link launchChrome} for why not more. */
+const LAUNCH_ATTEMPTS = 2;
+
+// --- Launching a browser, once or twice ------------------------------------
+// 🛑 THIS IS A RETRY AND IT IS ALLOWED, AND THE REASON IS THE LINE BETWEEN IT AND
+// THE ONE ADR 0101 FORBIDS. A per-call CDP retry is wrong because a CDP call
+// is not idempotent: re-issuing `Input.dispatchMouseEvent` taps twice, and the
+// page has already seen the first. A launch retry has no such coupling —
+// when Chrome never wrote its port file, no page exists, nothing has been
+// navigated, and no connection was ever made, so there is nothing a second
+// attempt could re-issue. The attempt after it is the same state as the first.
+//
+// Measured need (roadmap 510/420): CI's `every screen boots` exited 2 with
+// "timed out waiting for Chrome's DevToolsActivePort" THREE times — twice on
+// 2026-10-02 and once on 2026-10-16 (62b9c1cf). Each time the runner printed no
+// Chrome stderr at all, the 20 s budget simply ran out, and the re-run was
+// green. That is a browser that never came up, which no assertion can say
+// anything about.
+//
+// WHY IN THE LIBRARY AND NOT IN THE CI JOB. (1) Every browser check calls
+// launchChrome, so a laptop sweep gets the same protection the runner does and
+// the code path is the one that is tested locally; a `|| node …` in the YAML
+// would protect boot_check on the runner only. (2) The YAML form cannot tell
+// this failure from the others: exit 2 is also an unclassified harness error
+// and a transport death, so it would re-run those too — the "re-run until
+// green" shape this repo keeps writing ADRs against. Here the retry keys on
+// exactly one condition, the port file never appearing. (3) The whole-check
+// re-run of ADR 0101 would work but is the heavier tool: it restarts the
+// process and the server for a failure that happens before either has done
+// anything.
+//
+// IT IS LOUD, BECAUSE A RETRY NOBODY CAN SEE IS A DECORATIVE GUARD (ADR 0072).
+// It announces itself before the second go, says whether the second go worked,
+// and on a GitHub runner also raises a `::warning::` annotation so it shows on
+// the run's summary page instead of only inside a log nobody opens. A launch
+// that needs its retry every week is a finding, not a pass.
+//
+// ONE retry and not three: a browser that fails to start twice in a row, 20 s
+// apart, is a broken machine or a broken Chrome, and exit 2 is the right word
+// for that.
+
+/** Empty a profile directory without removing it: the caller made it and will
+ *  remove it. A Chrome that died half way through starting can leave a
+ *  `SingletonLock` and a half-written profile behind, and a second Chrome
+ *  started on top of those is a different experiment from the first. */
+async function emptyDir(dir) {
+  let names = [];
+  try {
+    names = await readdir(dir);
+  } catch {
+    return;
+  }
+  await Promise.all(names.map((n) => rm(join(dir, n), { recursive: true, force: true }).catch(() => {})));
+}
+
 export async function launchChrome({ profileDir, headed, width = 390, height = 844 }) {
   if (!existsSync(CHROME)) {
     throw new Error(`Google Chrome not found at ${CHROME} (set FAVES_CHROME)`);
@@ -881,6 +951,45 @@ export async function launchChrome({ profileDir, headed, width = 390, height = 8
     sweptThisProcess = true;
     await sweepOrphanProfiles();
   }
+  let firstFailure = null;
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const launched = await launchChromeOnce({ profileDir, headed, width, height });
+      if (firstFailure) {
+        const note =
+          `↻ THE LAUNCH RETRY WORKED — attempt 1 failed (${firstFailure}) and attempt 2 started` +
+          ` Chrome on a clean profile. Nothing the page sees was re-issued; this is a pass WITH A` +
+          ` FLAKE RECORDED, not a clean run.`;
+        console.log(`\n${note}\n`);
+        if (process.env.GITHUB_ACTIONS) console.log(`::warning title=Chrome launch retried::${note}`);
+      }
+      return launched;
+    } catch (err) {
+      if (!err?.launchTimeout) throw err;
+      if (attempt >= LAUNCH_ATTEMPTS) {
+        if (firstFailure) {
+          console.log(
+            `\n↻ THE LAUNCH RETRY FAILED TOO — Chrome did not write its port file on either of` +
+              ` ${LAUNCH_ATTEMPTS} attempts, ${LAUNCH_TIMEOUT_MS / 1000}s each. That is the browser or the` +
+              ` machine, not the site.\n`
+          );
+        }
+        throw err;
+      }
+      firstFailure = err.message;
+      const note =
+        `↻ LAUNCH RETRY — ${err.message} after ${LAUNCH_TIMEOUT_MS / 1000}s${err.chromeStderr ? `; Chrome said: ${err.chromeStderr}` : "; Chrome printed nothing"}.` +
+        ` No page exists yet, so nothing is re-issued: stopping that Chrome, emptying its profile and` +
+        ` starting once more (ADR 0160; roadmap 510/420). Not a per-call retry.`;
+      console.log(`\n${note}\n`);
+      if (process.env.GITHUB_ACTIONS) console.log(`::warning title=Chrome launch retry::${note}`);
+      if (err.launchedProc) await stopChrome(err.launchedProc, { keepProfile: true });
+      await emptyDir(profileDir);
+    }
+  }
+}
+
+async function launchChromeOnce({ profileDir, headed, width, height }) {
   const args = [
     // Port 0 → Chrome picks a free one and writes it to DevToolsActivePort, so
     // two runs (or a stray browser) can never collide on a fixed port.
@@ -920,17 +1029,27 @@ export async function launchChrome({ profileDir, headed, width = 390, height = 8
   const portFile = join(profileDir, "DevToolsActivePort");
   // untilStable: a browser that never writes its port file is a broken BROWSER,
   // which is the one thing exit 2 exists to say.
-  const contents = await untilStable(
-    async () => {
-      try {
-        const text = await readFile(portFile, "utf8");
-        return text.includes("\n") ? text : null;
-      } catch {
-        return null;
-      }
-    },
-    { label: "Chrome's DevToolsActivePort", timeout: 20_000 }
-  );
+  let contents;
+  try {
+    contents = await untilStable(
+      async () => {
+        try {
+          const text = await readFile(portFile, "utf8");
+          return text.includes("\n") ? text : null;
+        } catch {
+          return null;
+        }
+      },
+      { label: "Chrome's DevToolsActivePort", timeout: LAUNCH_TIMEOUT_MS }
+    );
+  } catch (err) {
+    // Tagged so launchChrome retries THIS and nothing else, and carrying the
+    // process so the retry can stop exactly the Chrome that failed.
+    err.launchTimeout = true;
+    err.launchedProc = proc;
+    err.chromeStderr = stderr.trim().slice(-300);
+    throw err;
+  }
   const [port, path] = contents.trim().split("\n");
   return { proc, wsUrl: `ws://127.0.0.1:${port}${path}` };
 }
@@ -1337,6 +1456,71 @@ export function createDriver(cdp, sessionId, log = () => {}) {
     return r.result.value;
   };
 
+  // 🔎 WHAT WAS ON SCREEN WHEN A CLICK OR SCROLL REFUSED TO PROCEED (roadmap
+  // 510/420). `device_check` failed twice on 2026-10-02 — "#overflow-btn covered
+  // by #geo-dialog" and "#favourites-toggle has no clickable box (0x0)" — each
+  // once, neither reproduced, and the message said what was measured but not
+  // what the page looked like, so the cause stayed a guess. Called only on the
+  // way to throwing UnreachableElementError / UnstableElementError, and returns
+  // text to append to that message:
+  //   · the page's state, from a plain evaluate (it answers on a hidden page,
+  //     where requestAnimationFrame never fires): visibility, focus, which
+  //     dialogs are open, what has focus;
+  //   · a PNG, written to $FAVES_SHOT_DIR or the OS temp directory — never the
+  //     repo, never site/ — with its path printed. NOT inside the profile
+  //     directory, which the harness deletes on exit.
+  // A hidden page is NOT screenshotted: captureScreenshot waits for a frame, so
+  // on a hidden page it would hang. The state line says "hidden" instead, which
+  // is itself the finding (see KEY_TEXT).
+  // Every step is soft and bounded: this is evidence for a verdict already
+  // reached, so it must never replace that verdict with its own failure.
+  const evidence = async () => {
+    const soft = (method, params) => cdp.send(method, params, sessionId, { timeoutMs: 8000, soft: true });
+    const lines = [];
+    try {
+      const r = await soft("Runtime.evaluate", {
+        returnByValue: true,
+        expression: `(() => {
+          const id = (e) => !e ? "nothing" : e.tagName.toLowerCase() + (e.id ? "#" + e.id : "");
+          return {
+            visibility: document.visibilityState,
+            focused: document.hasFocus(),
+            dialogs: [...document.querySelectorAll("dialog[open]")].map(id),
+            active: id(document.activeElement),
+            where: location.pathname + location.search,
+            viewport: innerWidth + "x" + innerHeight,
+          };
+        })()`,
+      });
+      const st = r.result?.value;
+      if (st) {
+        lines.push(
+          `page state: ${st.visibility}${st.focused ? "" : ", not focused"} · open dialogs: ` +
+            `${st.dialogs.length ? st.dialogs.join(", ") : "none"} · focus on ${st.active} · ` +
+            `${st.where} at ${st.viewport}`
+        );
+        if (st.visibility !== "visible") {
+          lines.push(`no screenshot: the page is "${st.visibility}", and a hidden page cannot paint one`);
+          return lines.map((l) => `\n        ${l}`).join("");
+        }
+      }
+    } catch (e) {
+      lines.push(`page state unavailable: ${e.message}`);
+    }
+    try {
+      const shot = await soft("Page.captureScreenshot", { format: "png" });
+      const dir = process.env.FAVES_SHOT_DIR || tmpdir();
+      await mkdir(dir, { recursive: true });
+      const check = basename(process.argv[1] || "check", ".mjs");
+      const file = join(dir, `faves-failure-${check}-${new Date().toISOString().replace(/[:.]/g, "-")}.png`);
+      await writeFile(file, Buffer.from(shot.data, "base64"));
+      lines.push(`screenshot at the moment of failure: ${file}`);
+    } catch (e) {
+      lines.push(`no screenshot: ${e.message}`);
+    }
+    return lines.map((l) => `\n        ${l}`).join("");
+  };
+
   // Two frames, so a render triggered by the click has painted before we look.
   const settle = () =>
     evalPage("new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))");
@@ -1469,7 +1653,7 @@ export function createDriver(cdp, sessionId, log = () => {}) {
     }
     if (box.reach === "covered" || box.reach === "offscreen") {
       throw new UnreachableElementError(
-        box.reach === "covered"
+        (box.reach === "covered"
           ? `${UNREACHABLE_TAG} ${what} is covered at its own centre: it settled to a` +
             ` ${box.w.toFixed(1)}x${box.h.toFixed(1)} box, but a click at (${box.x.toFixed(1)},` +
             ` ${box.y.toFixed(1)}) would land on ${box.cover} instead. Something is painted` +
@@ -1477,19 +1661,21 @@ export function createDriver(cdp, sessionId, log = () => {}) {
           : `${UNREACHABLE_TAG} ${what} could not be brought into the viewport: after` +
             ` ${box.scrolls} scrolls at it its centre is (${box.x.toFixed(1)},` +
             ` ${box.y.toFixed(1)}) in a ${box.vw}x${box.vh} viewport (scrollY ${box.sy}).` +
-            ` A control that will not scroll into view is one a person cannot reach.`
+            ` A control that will not scroll into view is one a person cannot reach.`) +
+          (await evidence())
       );
     }
     if (!box.stable) {
       const still = box.animating?.length ? `; still running: ${box.animating.join(", ")}` : "";
       throw new UnstableElementError(
-        box.w < 1 || box.h < 1
+        (box.w < 1 || box.h < 1
           ? `${UNSTABLE_TAG} ${what} has no clickable box: ${box.settleMs}ms and` +
             ` ${box.frames} frames after the page was asked for it, it still measures` +
             ` ${box.w.toFixed(1)}x${box.h.toFixed(1)}${still}`
           : `${UNSTABLE_TAG} ${what} never came to rest: after ${box.settleMs}ms and` +
             ` ${box.frames} frames its box was still moving (last frame dx ${box.step.dx},` +
-            ` dy ${box.step.dy})${still}`
+            ` dy ${box.step.dy})${still}`) +
+          (await evidence())
       );
     }
     const base = { x: box.x, y: box.y, button: "left", clickCount: 1 };
@@ -1564,7 +1750,8 @@ export function createDriver(cdp, sessionId, log = () => {}) {
       throw new UnstableElementError(
         `${UNSTABLE_TAG} the page was sent to y=${wanted} and stopped at y=${at.y}.` +
           ` A scroll that does not arrive makes every measurement after it a` +
-          ` measurement of somewhere else.`
+          ` measurement of somewhere else.` +
+          (await evidence())
       );
     }
     await settle();
