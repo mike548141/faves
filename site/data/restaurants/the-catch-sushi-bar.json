@@ -1039,26 +1039,22 @@
       "sectionId": "donburi",
       "items": [
         {
-          "name": "Teriyaki Chicken",
-          "dishId": "teriyaki-chicken-donburi",
+          "name": "Teriyaki",
+          "dishId": "teriyaki-donburi",
+          "formerIds": [
+            "teriyaki-chicken-donburi",
+            "teriyaki-beef"
+          ],
           "desc": null,
           "price": 23.0,
           "tags": [
             "contains-soy",
             "contains-gluten"
           ],
-          "tagNotes": {"contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
-        },
-        {
-          "name": "Teriyaki Beef",
-          "dishId": "teriyaki-beef",
-          "desc": null,
-          "price": 23.0,
-          "tags": [
-            "contains-soy",
-            "contains-gluten"
-          ],
-          "tagNotes": {"contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."}
+          "tagNotes": {"contains-soy": "The menu says “Teriyaki” — the sauce is soy-based.", "contains-gluten": "The menu says “Teriyaki” — soy sauce is brewed with wheat."},
+          "addOns": [
+            "protein-23-23"
+          ]
         },
         {
           "name": "Teriyaki Salmon",
@@ -1145,6 +1141,32 @@
           "desc": null,
           "price": 4.0,
           "tags": []
+        }
+      ]
+    }
+  ],
+  "addOnGroups": [
+    {
+      "id": "protein-23-23",
+      "name": "Protein",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Chicken",
+          "id": "chicken",
+          "dishPrice": 23.0,
+          "default": true,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Beef",
+          "id": "beef",
+          "dishPrice": 23.0,
+          "tags": [
+            "has-meat"
+          ]
         }
       ]
     }

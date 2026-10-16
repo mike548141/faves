@@ -261,7 +261,7 @@ function dishGroups(record) {
       if (Array.isArray(item.formerIds) && item.formerIds.length) {
         out.formerIds = item.formerIds;
       }
-      out.hay = dishHay(item, record);
+      out.hay = dishHay(item, record, section);
       return out;
     }),
   }));

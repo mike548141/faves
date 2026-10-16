@@ -483,22 +483,18 @@
       "note": "From the “Take Away” panel of the coffee board.",
       "items": [
         {
-          "name": "Takeaway — Small",
-          "dishId": "takeaway-small",
+          "name": "Takeaway Cup",
+          "dishId": "takeaway-cup",
+          "formerIds": [
+            "takeaway-small",
+            "takeaway-medium",
+            "takeaway-large"
+          ],
           "price": 5.5,
-          "tags": []
-        },
-        {
-          "name": "Takeaway — Medium",
-          "dishId": "takeaway-medium",
-          "price": 6.5,
-          "tags": []
-        },
-        {
-          "name": "Takeaway — Large",
-          "dishId": "takeaway-large",
-          "price": 7.5,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "size-5p5-6p5-7p5"
+          ]
         },
         {
           "name": "Fluffy",
@@ -1462,6 +1458,32 @@
           "name": "Extra Filling",
           "id": "extra-filling",
           "price": 1.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-5p5-6p5-7p5",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 5.5,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Medium",
+          "id": "medium",
+          "dishPrice": 6.5,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 7.5,
           "tags": []
         }
       ]

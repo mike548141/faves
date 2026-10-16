@@ -195,12 +195,23 @@ def check_ingredient_commas_are_not_options(found, out):
 
 
 def check_on_request_is_14c(found, out):
-    """46 pizzas print "Gluten free (on request)". None of them is an add-on."""
+    """Every pizza prints "Gluten free (on request)". None of them is an add-on.
+
+    The expected count is READ from the venue, not written here: it said 40
+    (of 46 rows) until 28o merged each Small/Large pair into one dish on
+    2026-10-16, which halved the rows and failed this check while the finder
+    was right. A floor of 20 keeps an emptied venue from passing silently."""
     bad = [f["where"] for f in found if f["cls"] in CONVERTIBLE]
     if bad:
         return f"{len(bad)} 'on request' row(s) routed to 14b: {bad[:4]}"
-    if counts(found).get("customisation", 0) < 40:
-        return "the customisation class did not pick them up either"
+    rec = json.loads((ROOT / "site/data/restaurants/pizza-pomodoro.json").read_text())
+    want = sum(1 for s in rec["menu"] for i in s.get("items", [])
+               if "on request" in (i.get("desc") or "").lower())
+    if want < 20:
+        return f"only {want} pizza(s) print 'on request': the fixture no longer exercises this"
+    if counts(found).get("customisation", 0) < want:
+        return (f"the customisation class did not pick them up either "
+                f"({counts(found).get('customisation', 0)} of {want})")
     return None
 
 

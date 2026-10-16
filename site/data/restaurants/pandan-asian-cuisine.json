@@ -385,11 +385,19 @@
       "sectionId": "indian-dishes",
       "items": [
         {
-          "name": "Chicken varuval",
-          "dishId": "chicken-varuval",
+          "name": "Varuval",
+          "dishId": "varuval",
+          "formerIds": [
+            "chicken-varuval",
+            "beef-varuval",
+            "lamb-varuval"
+          ],
           "desc": "A dry style curry with bold spices, stir fried until fragrant and packed with deep roasted flavour.",
           "price": 24,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "protein-24-24-26"
+          ]
         },
         {
           "name": "Lamb jalfrezi",
@@ -458,13 +466,6 @@
           "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-dairy": "The menu says “korma” — the sauce is cream- or butter-based."}
         },
         {
-          "name": "Beef varuval",
-          "dishId": "beef-varuval",
-          "desc": "A dry style curry with bold spices, stir fried until fragrant and packed with deep roasted flavour.",
-          "price": 24,
-          "tags": []
-        },
-        {
           "name": "Beef vindaloo",
           "dishId": "beef-vindaloo",
           "desc": "Beef cooked in a fiery hot chilli based gravy.",
@@ -478,13 +479,6 @@
           "dishId": "chicken-jalfrezi",
           "desc": "Marinated chicken cooked with seasonal vegetables, finished in a semi-dry gravy.",
           "price": 24,
-          "tags": []
-        },
-        {
-          "name": "Lamb varuval",
-          "dishId": "lamb-varuval",
-          "desc": "A dry style curry with bold spices, stir fried until fragrant and packed with deep roasted flavour.",
-          "price": 26,
           "tags": []
         }
       ]
@@ -1097,6 +1091,40 @@
           "tags": [
             "v",
             "vg"
+          ]
+        }
+      ]
+    }
+  ],
+  "addOnGroups": [
+    {
+      "id": "protein-24-24-26",
+      "name": "Protein",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Chicken",
+          "id": "chicken",
+          "dishPrice": 24,
+          "default": true,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Beef",
+          "id": "beef",
+          "dishPrice": 24,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Lamb",
+          "id": "lamb",
+          "dishPrice": 26,
+          "tags": [
+            "has-meat"
           ]
         }
       ]

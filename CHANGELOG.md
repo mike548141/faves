@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Sizes and fillings that were separate rows are now one dish with a choice.**
+  Pizza Pomodoro's 26 pizzas (Small and Large), Wellington Kebab's mixed kebabs
+  and gyrus, Groundup's takeaway cups, Pandan's varuval, KK Malaysian's nasi
+  lemak, Regal's ginger and spring onion and The Catch's donburi teriyaki each
+  show once, priced at the cheapest option, with the rest one tap away. A heart
+  or rating on an old row moves to the merged dish.
 - **McDonald's Johnsonville and Subway's Johnsonville, Tawa and Karori now show their opening hours.** They come from each shop's Google Maps listing, read on 16 October 2026, and the ⓘ beside the venue name says so: "Opening hours at Tawa read from its Google Maps listing on 16 Oct 2026." It speaks for the hours only, never the phone or address. A shop that is open all day every day reads "Open 24 hours". The other McDonald's and Subway branches still show no hours, because their listings could not be matched to the address we hold. <!-- datescan:allow: quoted on-screen copy -->
 - **McDonald's Bunny Street and Kenepuru Drive, and Subway's Courtenay Place and Mulgrave Street, now show their opening hours too,** from the same Google Maps readings and credited the same way in the ⓘ. Bunny Street is open from 7am until midnight on a Friday and then all day Saturday (Google printed Friday as closing at noon; the shop's own window sign says otherwise, and the owner ruled midnight). McDonald's Porirua is now two branches: North City Plaza, on Titahi Bay Road, and Kenepuru Drive, which is open 24 hours and now holds the phone number that used to sit on the wrong one. Subway's Courtenay Place and Mulgrave Street addresses now follow Google's street numbers, each one off the number we held. McDonald's Courtenay Place, North City Plaza and Lambton Quay still show no hours.
 - **A size choice now opens when you press Add.** On a dish with a size to pick

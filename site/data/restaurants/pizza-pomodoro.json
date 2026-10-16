@@ -122,8 +122,12 @@
       "sectionId": "pizze-rosse",
       "items": [
         {
-          "name": "Siciliana - Small",
-          "dishId": "siciliana-small",
+          "name": "Siciliana",
+          "dishId": "siciliana",
+          "formerIds": [
+            "siciliana-small",
+            "siciliana-large"
+          ],
           "desc": "Tomato sauce, mozzarella, eggplants, salami, chillis and ricotta. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -132,24 +136,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."},
+          "addOns": [
+            "size-14p5-29-gf-option"
+          ]
         },
         {
-          "name": "Siciliana - Large",
-          "dishId": "siciliana-large",
-          "desc": "Tomato sauce, mozzarella, eggplants, salami, chillis and ricotta. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Capricciosa",
+          "dishId": "capricciosa",
+          "formerIds": [
+            "capricciosa-small",
+            "capricciosa-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."}
-        },
-        {
-          "name": "Capricciosa - Small",
-          "dishId": "capricciosa-small",
           "desc": "Tomato sauce, mozzarella, olives, ham, mushrooms and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -158,24 +156,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."},
+          "addOns": [
+            "size-14p5-29-gf-option"
+          ]
         },
         {
-          "name": "Capricciosa - Large",
-          "dishId": "capricciosa-large",
-          "desc": "Tomato sauce, mozzarella, olives, ham, mushrooms and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Bambina",
+          "dishId": "bambina",
+          "formerIds": [
+            "bambina-small",
+            "bambina-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
-        },
-        {
-          "name": "Bambina - Small",
-          "dishId": "bambina-small",
           "desc": "Tomato sauce, mozzarella, ham. Gluten free (on request)",
           "price": 12.0,
           "tags": [
@@ -184,24 +176,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."},
+          "addOns": [
+            "size-12-24"
+          ]
         },
         {
-          "name": "Bambina - Large",
-          "dishId": "bambina-large",
-          "desc": "Tomato sauce, mozzarella, ham. Gluten free (on request)",
-          "price": 24.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Carne",
+          "dishId": "carne",
+          "formerIds": [
+            "carne-small",
+            "carne-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
-        },
-        {
-          "name": "Carne - Small",
-          "dishId": "carne-small",
           "desc": "Tomato sauce, mozzarella, salami, ham, and sausage (contain cheese). Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -210,24 +196,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."},
+          "addOns": [
+            "size-14p5-29-gf-option"
+          ]
         },
         {
-          "name": "Carne - Large",
-          "dishId": "carne-large",
-          "desc": "Tomato sauce, mozzarella, salami, ham, and sausage (contain cheese). Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Romana",
+          "dishId": "romana",
+          "formerIds": [
+            "romana-small",
+            "romana-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “ham”."}
-        },
-        {
-          "name": "Romana - Small",
-          "dishId": "romana-small",
           "desc": "Tomato sauce, mozzarella, anchovies, olives, capers and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -236,24 +216,18 @@
             "gf-option",
             "contains-fish"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”."},
+          "addOns": [
+            "size-14p5-29-gf-option"
+          ]
         },
         {
-          "name": "Romana - Large",
-          "dishId": "romana-large",
-          "desc": "Tomato sauce, mozzarella, anchovies, olives, capers and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-fish"
+          "name": "Cardinale",
+          "dishId": "cardinale",
+          "formerIds": [
+            "cardinale-small",
+            "cardinale-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”."}
-        },
-        {
-          "name": "Cardinale - Small",
-          "dishId": "cardinale-small",
           "desc": "Tomato sauce, mozzarella, cherry tomatoes, salami, basil and olives. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -262,24 +236,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."},
+          "addOns": [
+            "size-14p5-29-gf-option"
+          ]
         },
         {
-          "name": "Cardinale - Large",
-          "dishId": "cardinale-large",
-          "desc": "Tomato sauce, mozzarella, cherry tomatoes, salami, basil and olives. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Parma",
+          "dishId": "parma",
+          "formerIds": [
+            "parma-small",
+            "parma-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “salami” — is usually pork in NZ unless the menu names another meat."}
-        },
-        {
-          "name": "Parma - Small",
-          "dishId": "parma-small",
           "desc": "Tomato sauce, mozzarella, rocket, prosciutto, grana extra virgin olive oil, and balsamic glaze. (When rocket is unavailable, we will use mesclun salad as substitute) Gluten free (on request)",
           "price": 16.5,
           "tags": [
@@ -288,24 +256,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."},
+          "addOns": [
+            "size-16p5-32p5-gf-option"
+          ]
         },
         {
-          "name": "Parma - Large",
-          "dishId": "parma-large",
-          "desc": "Tomato sauce, mozzarella, rocket, prosciutto, grana extra virgin olive oil, and balsamic glaze. (When rocket is unavailable, we will use mesclun salad as substitute) Gluten free (on request)",
-          "price": 32.5,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Inferno",
+          "dishId": "inferno",
+          "formerIds": [
+            "inferno-small",
+            "inferno-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."}
-        },
-        {
-          "name": "Inferno - Small",
-          "dishId": "inferno-small",
           "desc": "Tomato sauce, mozzarella, chillis, sausage (contain cheese), olives, anchovies and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -315,25 +277,18 @@
             "contains-fish",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."},
+          "addOns": [
+            "size-14p5-29-gf-option"
+          ]
         },
         {
-          "name": "Inferno - Large",
-          "dishId": "inferno-large",
-          "desc": "Tomato sauce, mozzarella, chillis, sausage (contain cheese), olives, anchovies and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-fish",
-            "contains-pork"
+          "name": "Pomodorina",
+          "dishId": "pomodorina",
+          "formerIds": [
+            "pomodorina-small",
+            "pomodorina-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-fish": "The menu says “anchovies”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."}
-        },
-        {
-          "name": "Pomodorina - Small",
-          "dishId": "pomodorina-small",
           "desc": "Touch of tomato sauce, garlic, olives, buffalo mozzarella, fresh basil, and topped with cherry tomatoes, grana and baby rocket (When rocket is unavailable, we will use mesclun salad as substitute) Gluten free (on request)",
           "price": 16.5,
           "tags": [
@@ -342,24 +297,18 @@
             "contains-dairy",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."},
+          "addOns": [
+            "size-16p5-32p5-v-gf-option"
+          ]
         },
         {
-          "name": "Pomodorina - Large",
-          "dishId": "pomodorina-large",
-          "desc": "Touch of tomato sauce, garlic, olives, buffalo mozzarella, fresh basil, and topped with cherry tomatoes, grana and baby rocket (When rocket is unavailable, we will use mesclun salad as substitute) Gluten free (on request)",
-          "price": 32.5,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option"
+          "name": "Bufalina",
+          "dishId": "bufalina",
+          "formerIds": [
+            "bufalina-small",
+            "bufalina-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
-        },
-        {
-          "name": "Bufalina - Small",
-          "dishId": "bufalina-small",
           "desc": "Tomato sauce, buffalo mozzarella, fresh basil, and extra virgin olive oil. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -368,24 +317,18 @@
             "contains-dairy",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."},
+          "addOns": [
+            "size-14p5-29-v-gf-option"
+          ]
         },
         {
-          "name": "Bufalina - Large",
-          "dishId": "bufalina-large",
-          "desc": "Tomato sauce, buffalo mozzarella, fresh basil, and extra virgin olive oil. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option"
+          "name": "Mediterranea",
+          "dishId": "mediterranea",
+          "formerIds": [
+            "mediterranea-small",
+            "mediterranea-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
-        },
-        {
-          "name": "Mediterranea - Small",
-          "dishId": "mediterranea-small",
           "desc": "Tomato sauce, spinach, olives, basil pesto (contain nuts), parmesan and mozzarella. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -395,25 +338,18 @@
             "contains-nuts",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."},
+          "addOns": [
+            "size-14p5-29-v-gf-option"
+          ]
         },
         {
-          "name": "Mediterranea - Large",
-          "dishId": "mediterranea-large",
-          "desc": "Tomato sauce, spinach, olives, basil pesto (contain nuts), parmesan and mozzarella. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy",
-            "contains-nuts",
-            "gf-option"
+          "name": "Boschetta",
+          "dishId": "boschetta",
+          "formerIds": [
+            "boschetta-small",
+            "boschetta-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
-        },
-        {
-          "name": "Boschetta - Small",
-          "dishId": "boschetta-small",
           "desc": "Mushrooms, capsicum, capers, rocket, sundried tomatoes and E.V.O.O. (When rocket is unavailable, we will use mesclun salad as substitute). Gluten free (on request)",
           "price": 16.0,
           "tags": [
@@ -422,24 +358,18 @@
             "df",
             "contains-gluten",
             "gf-option"
+          ],
+          "addOns": [
+            "size-16-32"
           ]
         },
         {
-          "name": "Boschetta - Large",
-          "dishId": "boschetta-large",
-          "desc": "Mushrooms, capsicum, capers, rocket, sundried tomatoes and E.V.O.O. (When rocket is unavailable, we will use mesclun salad as substitute). Gluten free (on request)",
-          "price": 32.0,
-          "tags": [
-            "vg",
-            "v",
-            "df",
-            "contains-gluten",
-            "gf-option"
-          ]
-        },
-        {
-          "name": "Cinque Formaggi - Small",
-          "dishId": "cinque-formaggi-small",
+          "name": "Cinque Formaggi",
+          "dishId": "cinque-formaggi",
+          "formerIds": [
+            "cinque-formaggi-small",
+            "cinque-formaggi-large"
+          ],
           "desc": "Tomato sauce, mozzarella, parmigano, swiss cheese, provolone and gorgonzola. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -448,24 +378,18 @@
             "contains-dairy",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."},
+          "addOns": [
+            "size-14p5-29-v-gf-option"
+          ]
         },
         {
-          "name": "Cinque Formaggi - Large",
-          "dishId": "cinque-formaggi-large",
-          "desc": "Tomato sauce, mozzarella, parmigano, swiss cheese, provolone and gorgonzola. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option"
+          "name": "Ortolana",
+          "dishId": "ortolana",
+          "formerIds": [
+            "ortolana-small",
+            "ortolana-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
-        },
-        {
-          "name": "Ortolana - Small",
-          "dishId": "ortolana-small",
           "desc": "Tomato sauce, mozzarella, zucchini, capsicum and eggplants. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -474,24 +398,18 @@
             "contains-dairy",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."},
+          "addOns": [
+            "size-14p5-29-v-gf-option"
+          ]
         },
         {
-          "name": "Ortolana - Large",
-          "dishId": "ortolana-large",
-          "desc": "Tomato sauce, mozzarella, zucchini, capsicum and eggplants. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option"
+          "name": "Margherita",
+          "dishId": "margherita",
+          "formerIds": [
+            "margherita-small",
+            "margherita-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
-        },
-        {
-          "name": "Margherita - Small",
-          "dishId": "margherita-small",
           "desc": "Tomato sauce, mozzarella, basil, parmesan, and extra virgin olive oil. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -500,24 +418,18 @@
             "contains-dairy",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."},
+          "addOns": [
+            "size-14p5-29-v-gf-option"
+          ]
         },
         {
-          "name": "Margherita - Large",
-          "dishId": "margherita-large",
-          "desc": "Tomato sauce, mozzarella, basil, parmesan, and extra virgin olive oil. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option"
+          "name": "Marinara",
+          "dishId": "marinara",
+          "formerIds": [
+            "marinara-small",
+            "marinara-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
-        },
-        {
-          "name": "Marinara - Small",
-          "dishId": "marinara-small",
           "desc": "Tomato sauce, garlic, oregano, basil, extra virgin olive oil. (No cheese). Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -526,24 +438,18 @@
             "df",
             "contains-gluten",
             "gf-option"
+          ],
+          "addOns": [
+            "size-14p5-29-vg-v-df-gf-option"
           ]
         },
         {
-          "name": "Marinara - Large",
-          "dishId": "marinara-large",
-          "desc": "Tomato sauce, garlic, oregano, basil, extra virgin olive oil. (No cheese). Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "vg",
-            "v",
-            "df",
-            "contains-gluten",
-            "gf-option"
-          ]
-        },
-        {
-          "name": "Cacciatore - Small",
-          "dishId": "cacciatore-small",
+          "name": "Cacciatore",
+          "dishId": "cacciatore",
+          "formerIds": [
+            "cacciatore-small",
+            "cacciatore-large"
+          ],
           "desc": "Tomato sauce, smoked chicken, roasted capsicum, olives, rosemary, chillis and mozzarella. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -551,23 +457,18 @@
             "contains-dairy",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."},
+          "addOns": [
+            "size-14p5-29-gf-option"
+          ]
         },
         {
-          "name": "Cacciatore - Large",
-          "dishId": "cacciatore-large",
-          "desc": "Tomato sauce, smoked chicken, roasted capsicum, olives, rosemary, chillis and mozzarella. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option"
+          "name": "Pepperoni",
+          "dishId": "pepperoni",
+          "formerIds": [
+            "pepperoni-small",
+            "pepperoni-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
-        },
-        {
-          "name": "Pepperoni - Small",
-          "dishId": "pepperoni-small",
           "desc": "Spicy selezione Italian salame, tomato sauce, and mozzarella.",
           "price": 13.0,
           "tags": [
@@ -576,24 +477,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."},
+          "addOns": [
+            "size-13-26"
+          ]
         },
         {
-          "name": "Pepperoni - Large",
-          "dishId": "pepperoni-large",
-          "desc": "Spicy selezione Italian salame, tomato sauce, and mozzarella.",
-          "price": 26.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Rustico Bosco",
+          "dishId": "rustico-bosco",
+          "formerIds": [
+            "rustico-bosco-small",
+            "rustico-bosco-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “Pepperoni” — is usually pork in NZ unless the menu names another meat."}
-        },
-        {
-          "name": "Rustico Bosco - Small",
-          "dishId": "rustico-bosco-small",
           "desc": "San Marzano tomato sauce, shaved italian prosciutto, mixed forest (misto bosco) mushrooms, smoked provolone, Rellow cherry tomatoes, mozzarella",
           "price": 15.0,
           "tags": [
@@ -602,20 +497,10 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “provolone”.", "contains-pork": "The menu says “prosciutto”."}
-        },
-        {
-          "name": "Rustico Bosco - Large",
-          "dishId": "rustico-bosco-large",
-          "desc": "San Marzano tomato sauce, shaved italian prosciutto, mixed forest (misto bosco) mushrooms, smoked provolone, Rellow cherry tomatoes, mozzarella",
-          "price": 30.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
-          ],
-          "tagNotes": {"contains-dairy": "The menu says “provolone”.", "contains-pork": "The menu says “prosciutto”."}
+          "tagNotes": {"contains-dairy": "The menu says “provolone”.", "contains-pork": "The menu says “prosciutto”."},
+          "addOns": [
+            "size-15-30-gf-option"
+          ]
         }
       ]
     },
@@ -624,8 +509,12 @@
       "sectionId": "pizze-bianche",
       "items": [
         {
-          "name": "Salsiccia - Small",
-          "dishId": "salsiccia-small",
+          "name": "Salsiccia",
+          "dishId": "salsiccia",
+          "formerIds": [
+            "salsiccia-small",
+            "salsiccia-large"
+          ],
           "desc": "Garlic olive oil, buffalo mozzarella, parmigiano, Italian sausage meat and spinach. Gluten free (on request)",
           "price": 16.5,
           "tags": [
@@ -634,24 +523,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."},
+          "addOns": [
+            "size-16p5-32"
+          ]
         },
         {
-          "name": "Salsiccia - Large",
-          "dishId": "salsiccia-large",
-          "desc": "Garlic olive oil, buffalo mozzarella, parmigiano, Italian sausage meat and spinach. Gluten free (on request)",
-          "price": 32.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Tartufo",
+          "dishId": "tartufo",
+          "formerIds": [
+            "tartufo-small",
+            "tartufo-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “sausage” — is usually pork in NZ unless the menu names another meat."}
-        },
-        {
-          "name": "Tartufo - Small",
-          "dishId": "tartufo-small",
           "desc": "Porcini and mixed mushrooms, garlic, and mozzarella. Topped w prosciutto, shaved grana cheese, and truffle oil. Gluten free (on request)",
           "price": 16.5,
           "tags": [
@@ -660,24 +543,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."},
+          "addOns": [
+            "size-16p5-32p5-gf-option"
+          ]
         },
         {
-          "name": "Tartufo - Large",
-          "dishId": "tartufo-large",
-          "desc": "Porcini and mixed mushrooms, garlic, and mozzarella. Topped w prosciutto, shaved grana cheese, and truffle oil. Gluten free (on request)",
-          "price": 32.5,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Funghi Bianca",
+          "dishId": "funghi-bianca",
+          "formerIds": [
+            "funghi-bianca-small",
+            "funghi-bianca-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “prosciutto”."}
-        },
-        {
-          "name": "Funghi Bianca - Small",
-          "dishId": "funghi-bianca-small",
           "desc": "Garlic infused olive oil, mushrooms, Parmigiano, oregano and mozzarella. Gluten free (on request)",
           "price": 12.5,
           "tags": [
@@ -686,24 +563,18 @@
             "contains-dairy",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."},
+          "addOns": [
+            "size-12p5-25"
+          ]
         },
         {
-          "name": "Funghi Bianca - Large",
-          "dishId": "funghi-bianca-large",
-          "desc": "Garlic infused olive oil, mushrooms, Parmigiano, oregano and mozzarella. Gluten free (on request)",
-          "price": 25.0,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option"
+          "name": "Paesana",
+          "dishId": "paesana",
+          "formerIds": [
+            "paesana-small",
+            "paesana-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”."}
-        },
-        {
-          "name": "Paesana - Small",
-          "dishId": "paesana-small",
           "desc": "Garlic infused olive oil, roasted potatoes with rosemary, pancetta (italian bacon) and mozzarella. Gluten free (on request)",
           "price": 14.5,
           "tags": [
@@ -712,24 +583,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “pancetta”."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “pancetta”."},
+          "addOns": [
+            "size-14p5-29-gf-option"
+          ]
         },
         {
-          "name": "Paesana - Large",
-          "dishId": "paesana-large",
-          "desc": "Garlic infused olive oil, roasted potatoes with rosemary, pancetta (italian bacon) and mozzarella. Gluten free (on request)",
-          "price": 29.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Pizza Bread",
+          "dishId": "pizza-bread",
+          "formerIds": [
+            "pizza-bread-small",
+            "pizza-bread-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-pork": "The menu says “pancetta”."}
-        },
-        {
-          "name": "Pizza Bread - Small",
-          "dishId": "pizza-bread-small",
           "desc": "Garlic infused olive oil, parmesan, oregano.",
           "price": 12.0,
           "tags": [
@@ -737,23 +602,18 @@
             "contains-gluten",
             "contains-dairy"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-dairy": "The menu says “parmesan”."}
+          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-dairy": "The menu says “parmesan”."},
+          "addOns": [
+            "size-12-18"
+          ]
         },
         {
-          "name": "Pizza Bread - Large",
-          "dishId": "pizza-bread-large",
-          "desc": "Garlic infused olive oil, parmesan, oregano.",
-          "price": 18.0,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy"
+          "name": "Bomba",
+          "dishId": "bomba",
+          "formerIds": [
+            "bomba-small",
+            "bomba-large"
           ],
-          "tagNotes": {"contains-gluten": "The menu says “Bread”.", "contains-dairy": "The menu says “parmesan”."}
-        },
-        {
-          "name": "Bomba - Small",
-          "dishId": "bomba-small",
           "desc": "Roasted potatoes, garlic, salame, nduja (spicy spreadable sausage), parmesan and mozzarella. Gluten free (on request).",
           "price": 15.0,
           "tags": [
@@ -762,24 +622,18 @@
             "gf-option",
             "contains-pork"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-pork": "The menu says “nduja”."}
+          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-pork": "The menu says “nduja”."},
+          "addOns": [
+            "size-15-30-gf-option"
+          ]
         },
         {
-          "name": "Bomba - Large",
-          "dishId": "bomba-large",
-          "desc": "Roasted potatoes, garlic, salame, nduja (spicy spreadable sausage), parmesan and mozzarella. Gluten free (on request).",
-          "price": 30.0,
-          "tags": [
-            "contains-gluten",
-            "contains-dairy",
-            "gf-option",
-            "contains-pork"
+          "name": "Giardinella",
+          "dishId": "giardinella",
+          "formerIds": [
+            "giardinella-small",
+            "giardinella-large"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “parmesan”.", "contains-pork": "The menu says “nduja”."}
-        },
-        {
-          "name": "Giardinella - Small",
-          "dishId": "giardinella-small",
           "desc": "Basil pesto (contain nuts), mozzarella, roasted capsicum, parmesan, mushrooms and sundried tomatoes. Gluten free (on request)",
           "price": 15.0,
           "tags": [
@@ -789,21 +643,10 @@
             "contains-nuts",
             "gf-option"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
-        },
-        {
-          "name": "Giardinella - Large",
-          "dishId": "giardinella-large",
-          "desc": "Basil pesto (contain nuts), mozzarella, roasted capsicum, parmesan, mushrooms and sundried tomatoes. Gluten free (on request)",
-          "price": 30.0,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy",
-            "contains-nuts",
-            "gf-option"
-          ],
-          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."}
+          "tagNotes": {"contains-dairy": "The menu says “mozzarella”.", "contains-nuts": "The menu says “pesto” — pesto is made with pine nuts."},
+          "addOns": [
+            "size-15-30-v-gf-option"
+          ]
         }
       ]
     },
@@ -1032,5 +875,339 @@
   ],
   "detailsVerified": "2026-08-16",
   "detailsVerifiedBy": "official-site",
-  "verifiedBy": "official-site"
+  "verifiedBy": "official-site",
+  "addOnGroups": [
+    {
+      "id": "size-12-18",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 12.0,
+          "default": true,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 18.0,
+          "tags": [
+            "v"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-12-24",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 12.0,
+          "default": true,
+          "tags": [
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 24.0,
+          "tags": [
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-12p5-25",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 12.5,
+          "default": true,
+          "tags": [
+            "v",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 25.0,
+          "tags": [
+            "v",
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-13-26",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 13.0,
+          "default": true,
+          "tags": [
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 26.0,
+          "tags": [
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-14p5-29-gf-option",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 14.5,
+          "default": true,
+          "tags": [
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 29.0,
+          "tags": [
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-14p5-29-v-gf-option",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 14.5,
+          "default": true,
+          "tags": [
+            "v",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 29.0,
+          "tags": [
+            "v",
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-14p5-29-vg-v-df-gf-option",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 14.5,
+          "default": true,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 29.0,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-15-30-gf-option",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 15.0,
+          "default": true,
+          "tags": [
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 30.0,
+          "tags": [
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-15-30-v-gf-option",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 15.0,
+          "default": true,
+          "tags": [
+            "v",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 30.0,
+          "tags": [
+            "v",
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-16-32",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 16.0,
+          "default": true,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 32.0,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-16p5-32",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 16.5,
+          "default": true,
+          "tags": [
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 32.0,
+          "tags": [
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-16p5-32p5-gf-option",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 16.5,
+          "default": true,
+          "tags": [
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 32.5,
+          "tags": [
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-16p5-32p5-v-gf-option",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Small",
+          "id": "small",
+          "dishPrice": 16.5,
+          "default": true,
+          "tags": [
+            "v",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Large",
+          "id": "large",
+          "dishPrice": 32.5,
+          "tags": [
+            "v",
+            "gf-option"
+          ]
+        }
+      ]
+    }
+  ]
 }

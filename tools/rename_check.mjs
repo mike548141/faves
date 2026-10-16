@@ -36,6 +36,15 @@
 //      heart (or matched by something looser than the id) would pass (1) and
 //      (2) — and (2) is the one most at risk, because "absorb" done wrong is
 //      exactly a looser match.
+//   4. A REAL MERGE, UNTOUCHED — the corpus record as shipped, served with no
+//      transform.
+//      Roadmap 28o retired real ids (Pizza Pomodoro's "Margherita - Large" is
+//      now a Large on "Margherita"), and scenarios 1-3 prove the MECHANISM on a
+//      dish that was never merged. This one proves the DATA: a heart, a rating
+//      and the favourites query seeded under a retired id reach the dish that
+//      claims it. Its break-probe is built in, every run: the same record with
+//      that dish's `formerIds` stripped must NOT light, so a file that lost the
+//      claim (or an absorb that matched on something looser) cannot pass.
 //
 // WHAT A GREEN RUN CANNOT TELL YOU:
 //   1. Anything about sync, import or a share link carrying the old name or
@@ -81,6 +90,17 @@ const NEW_NAME = "Eggs on Sourdough Toast";
 const MOVED_ID = "eggs-on-sourdough-toast";
 const RATING = 4;
 
+// 28o part 1's real merge: Pizza Pomodoro's two Margherita rows became one dish
+// with a Small/Large choice and a fresh id. Named, not derived, like the subject
+// above; the pre-flight in run() refuses to measure if the claim has moved.
+const MERGED = {
+  venueId: "pizza-pomodoro",
+  liveId: "margherita",
+  liveName: "Margherita",
+  retiredId: "margherita-large",
+  retiredName: "Margherita - Large",
+};
+
 /** The menu row for one dish id: what its heart and rating say, and whether the
  *  "favourites" query leaves it on screen. Read off the live DOM. */
 const rowExpr = (id) => `(() => {
@@ -97,18 +117,38 @@ const rowExpr = (id) => `(() => {
 
 /** What a reader stored BEFORE the rename: a heart entry carrying the old name
  *  and the id, and a rating keyed on the id — the two shapes ADR 0051 writes. */
-const seedExpr = (venueName) => {
-  const fav = [{ type: "dish", venueId: VENUE, venueName, name: OLD_NAME, dishId: DISH_ID, isRecipe: false }];
-  const ratings = { [`d:${VENUE} ${DISH_ID}`]: RATING };
+const seedExpr = (venueName, subject) => {
+  const fav = [{ type: "dish", venueId: subject.venueId, venueName, name: subject.oldName, dishId: subject.seedId, isRecipe: false }];
+  const ratings = { [`d:${subject.venueId} ${subject.seedId}`]: RATING };
   return `localStorage.setItem("faves.p.default.favourites.v1", ${JSON.stringify(JSON.stringify(fav))});
     localStorage.setItem("faves.p.default.ratings.v1", ${JSON.stringify(JSON.stringify(ratings))}); true`;
 };
 
-async function scenario(report, opts, venue, label, transform) {
+/** Scenarios 1-3: the first dish of a named venue, transformed in an overlay. */
+const RENAMED = (venue) => ({
+  venueId: VENUE,
+  oldName: OLD_NAME,
+  seedId: DISH_ID,
+  locate: (record) => record.menu[0].items[0],
+  venue,
+});
+
+/** Scenario 4: the merged dish, found by its live id, in the record as shipped. */
+const merged = (venue) => ({
+  venueId: MERGED.venueId,
+  oldName: MERGED.retiredName,
+  seedId: MERGED.retiredId,
+  locate: (record) => record.menu.flatMap((s) => s.items).find((i) => i.dishId === MERGED.liveId),
+  venue,
+});
+
+async function scenario(report, opts, subject, label, transform) {
+  const venue = subject.venue;
   const record = structuredClone(venue);
-  const dish = record.menu[0].items[0];
+  const dish = subject.locate(record);
+  if (!dish) throw new Error(`${label}: the dish to measure is not in ${subject.venueId}`);
   transform(dish);
-  const overlay = new Map([[`/data/restaurants/${VENUE}.json`, JSON.stringify(record)]]);
+  const overlay = new Map([[`/data/restaurants/${subject.venueId}.json`, JSON.stringify(record)]]);
   const { server, port } = await startServer(0, SITE, overlay);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-rename-check-"));
   let chrome = null;
@@ -126,14 +166,14 @@ async function scenario(report, opts, venue, label, transform) {
       sessionId
     );
     const d = createDriver(cdp, sessionId, (m) => report.step(m));
-    const url = `http://127.0.0.1:${port}/restaurant.html?id=${VENUE}`;
+    const url = `http://127.0.0.1:${port}/restaurant.html?id=${subject.venueId}`;
     const menuReady = async () => (await d.evalPage(`document.querySelectorAll("li.dish").length`)) > 0;
 
     // Seed on the real origin, then load the page fresh so every module boots
     // reading the stored state — the way a returning reader arrives.
     await cdp.send("Page.navigate", { url }, sessionId);
     await untilPresent(menuReady, { label: `${label}: first load` });
-    await d.evalPage(seedExpr(venue.name));
+    await d.evalPage(seedExpr(venue.name, subject));
     await cdp.send("Page.navigate", { url }, sessionId);
     await untilPresent(menuReady, { label: `${label}: reload with the seeded heart` });
     await d.settle();
@@ -176,7 +216,7 @@ async function run(opts) {
   console.log(`  dish     "${OLD_NAME}" → "${NEW_NAME}", id ${DISH_ID}\n`);
 
   // 1. Renamed, id pinned — the ADR 0051 promise.
-  const kept = await scenario(report, opts, venue, "renamed", (dish) => {
+  const kept = await scenario(report, opts, RENAMED(venue), "renamed", (dish) => {
     dish.name = NEW_NAME;
   });
   report.check(
@@ -197,7 +237,7 @@ async function run(opts) {
 
   // 2. Retired and claimed — the id MOVED and the dish's formerIds holds the
   //    old one (roadmap 28l). Everything (1) asserts must hold here too.
-  const claimed = await scenario(report, opts, venue, "id retired into formerIds", (dish) => {
+  const claimed = await scenario(report, opts, RENAMED(venue), "id retired into formerIds", (dish) => {
     dish.name = NEW_NAME;
     dish.dishId = MOVED_ID;
     dish.formerIds = [DISH_ID];
@@ -219,7 +259,7 @@ async function run(opts) {
   );
 
   // 3. The control — the id MOVED and nothing claims the old one.
-  const moved = await scenario(report, opts, venue, "id moved", (dish) => {
+  const moved = await scenario(report, opts, RENAMED(venue), "id moved", (dish) => {
     dish.name = NEW_NAME;
     dish.dishId = MOVED_ID;
   });
@@ -232,6 +272,49 @@ async function run(opts) {
     'CONTROL: …and the "favourites" query does not find it either',
     moved.filtered.hidden === true,
     `row hidden=${moved.filtered.hidden}`
+  );
+
+  // 4. A real merge, untouched (roadmap 28o part 1). Pre-flight: the shipped
+  //    record must still claim the retired id, or this is measuring nothing.
+  const pizza = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${MERGED.venueId}.json`), "utf8"));
+  const liveDish = pizza.menu.flatMap((s) => s.items).find((i) => i.dishId === MERGED.liveId);
+  if (!liveDish || liveDish.name !== MERGED.liveName || !(liveDish.formerIds || []).includes(MERGED.retiredId)) {
+    throw new Error(
+      `${MERGED.venueId}: "${MERGED.liveId}" no longer claims "${MERGED.retiredId}" in formerIds ` +
+        `(${JSON.stringify(liveDish && { name: liveDish.name, formerIds: liveDish.formerIds })}) — ` +
+        "update MERGED rather than let the subject move silently"
+    );
+  }
+  console.log(`\n  real merge   ${MERGED.venueId}: "${MERGED.retiredName}" (${MERGED.retiredId}) → "${MERGED.liveName}" (${MERGED.liveId}), shipped data\n`);
+  const real = await scenario(report, opts, merged(pizza), "real merge", () => {});
+  report.check(
+    `REAL DATA: a heart stored under the retired id "${MERGED.retiredId}" lights "${MERGED.liveName}" as shipped`,
+    real.row.heart === "true",
+    `heart aria-pressed=${real.row.heart}`
+  );
+  report.check(
+    "REAL DATA: …and so does its rating, re-keyed onto the live id",
+    real.row.rating === String(RATING),
+    `rating aria-valuenow=${real.row.rating}`
+  );
+  report.check(
+    'REAL DATA: the menu\'s "favourites" query finds the merged dish, and only it',
+    real.filtered.hidden === false && real.filtered.shown === 1,
+    `row hidden=${real.filtered.hidden}, ${real.filtered.shown} row(s) shown`
+  );
+  // Built-in break-probe: the same shipped record with the claim removed.
+  const unclaimed = await scenario(report, opts, merged(pizza), "real merge, claim stripped", (dish) => {
+    dish.formerIds = (dish.formerIds || []).filter((x) => x !== MERGED.retiredId);
+  });
+  report.check(
+    "BREAK-PROBE: with the retired id struck from formerIds, the same heart does NOT light the dish",
+    unclaimed.row.heart === "false" && unclaimed.row.rating !== String(RATING),
+    `heart aria-pressed=${unclaimed.row.heart}, rating=${unclaimed.row.rating} — if this lit, the REAL DATA assertions above prove nothing`
+  );
+  report.check(
+    'BREAK-PROBE: …and the "favourites" query does not find it either',
+    unclaimed.filtered.hidden === true,
+    `row hidden=${unclaimed.filtered.hidden}`
   );
 
   return report.summary(SITE);

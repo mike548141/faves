@@ -1,6 +1,4 @@
-- [~] **28o — Merge the 63 ladders that differ only by name and price**
-  (claimed 2026-10-16-1117, faves-11, wt: faves-310-120)
-  PART 1 only: the mechanical groups at venues with no price-history joins.
+- [ ] **28o — Merge the 63 ladders that differ only by name and price**
       `[L][data]` — population B of `28h`, the mechanical half. **This is the
       first item in the whole decomposition that retires a `dishId`, and it
       must not start before `28l`'s gate exists.**
@@ -60,3 +58,66 @@
   closed 2026-10-02). Hearts, ratings and the favourites filter resolve
   through it, and `rename_check` asserts it (8 assertions). So every merged
   sibling's id goes into the fresh id's `formerIds`.
+
+  ✅ **Part 1 done 2026-10-17 (faves-11 worker); part 2 and the skipped groups
+  remain, so the item stays open.** Scope was the groups
+  `find_variants.py` classifies `mechanical` at venues with no price-history
+  join: of 44 mechanical groups today, **35 merged** (76 rows → 35 dishes, 41
+  fewer; mechanical 44 → 9). Each base dish has a **fresh id**, a `selects`
+  group, its price at the default (cheapest, a tie takes the first listed, so
+  no cue row in `data/defaults/` was needed) and every merged id in
+  `formerIds` (the owner's 2026-10-16 ruling). One commit per venue:
+
+  | venue | merged | rows → dishes |
+  |---|---|---|
+  | Pizza Pomodoro | 26 pizzas (Small / Large) | 52 → 26 |
+  | Wellington Kebab | Meat & falafel, Meat & muciver, Meat & halloumi, Gyrus | 12 → 4 |
+  | Groundup Cafe | Takeaway Cup (Small / Medium / Large) | 3 → 1 |
+  | Pandan | Varuval (Chicken / Beef / Lamb) | 3 → 1 |
+  | KK Malaysian | Nasi Lemak (Chicken / Beef) | 2 → 1 |
+  | Regal | Ginger & Spring Onion (Beef / Chicken) | 2 → 1 |
+  | The Catch | Teriyaki, Donburi (Chicken / Beef) | 2 → 1 |
+
+  **How it was proven.** `split_data.py --check`: `368 of 368 history row(s)
+  joined on dishId · 0 still joined on the name alone` after every venue (368,
+  not this item's old 227: the figure has grown since it was written);
+  `validate.py --against <base>`: `76 id(s) … 76 claimed in formerIds, 0
+  departed, 0 withdrawn, 0 answered for by nothing`; no new `validate.py`
+  warning (one disappeared, see below); `find_variants.py` no longer lists the
+  35 groups. `rename_check.mjs` gained scenario 4 (13 assertions now, was 8): a heart
+  and a rating stored under the retired `margherita-large` reach the shipped
+  `Margherita`, with a built-in break-probe that strips the claim and a
+  pre-flight that refuses to run if the claim is gone. Also green:
+  `addon_check` 174, `boot_check` 38, `focus_check` 50, `test_validate` 279,
+  `node --test` 1892.
+
+  **Skipped, and why (each is a mechanical group the tool lists that could not
+  be merged without losing or inventing something).**
+  - **McDonald's fries** (3): `price: null` on all three and the rows carry
+    different photographs. A `dishPrice` is never null (ADR 0130 §2), and a
+    merge would drop two images.
+  - **KK Malaysian satay** (2): both rows carry `prices.delivery`, which ADR
+    0130 §4 refuses beside a ladder (the validator errors). Open for the owner.
+  - **Regal stir-fried with seasonal vegetables** (2): the `tagNotes` differ
+    ("Seafood" is an unnamed mix, "Squid" is not), and a merged dish has one
+    note per tag.
+  - **RS Satay tom yum noodles soup** (2): `tagNotes` differ (one row has
+    none, the other explains `contains-shellfish`). **RS Satay rendang** (2): the
+    order `code` differs (R11 / R12), and `code` is rendered on the row.
+  - **The Catch Mains teriyaki** (3): `tagNotes` differ (Tofu is the soy
+    source on one row) and Teriyaki Salmon is in the same family but outside
+    the group.
+  - **Takeaway @ Churton** (3: steamed rice, bacon & avo, toasted sandwich
+    filling): part 2, all 57 history joins live there.
+  Groups that need the enumerator to learn something are left for 28p:
+  Regal's Venison with Ginger & Spring Onion ($58) and Groundup's 6oz cup are
+  rungs the tool did not group, so each stays its own dish beside the merged
+  one.
+
+  🎯 **For the owner (not decided here).** The search index does not read an
+  option's name (ADR 0130 §5 left it open), so typing "lamb" no longer finds
+  the lamb row of a merged protein ladder (Varuval, the Meat & ... kebabs,
+  Gyrus) or "chicken" the chicken Nasi Lemak; sizes are unaffected in practice.
+  🔎 The Donburi teriyaki sesame question (Mains carries `contains-sesame`,
+  Donburi does not) stays open; the `validate.py` warning about it went quiet
+  only because the Donburi row's name changed.

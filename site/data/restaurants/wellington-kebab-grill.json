@@ -285,6 +285,96 @@
           ]
         }
       ]
+    },
+    {
+      "id": "protein-18p5-18p5-18p5-chicken-lamb-mix",
+      "name": "Protein",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Chicken",
+          "id": "chicken",
+          "dishPrice": 18.5,
+          "default": true,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Lamb",
+          "id": "lamb",
+          "dishPrice": 18.5,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Mix",
+          "id": "mix",
+          "dishPrice": 18.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "protein-18p5-18p5-18p5-chicken-lamb-mixed",
+      "name": "Protein",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Chicken",
+          "id": "chicken",
+          "dishPrice": 18.5,
+          "default": true,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Lamb",
+          "id": "lamb",
+          "dishPrice": 18.5,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Mixed",
+          "id": "mixed",
+          "dishPrice": 18.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "protein-19p5-19p5-19p5",
+      "name": "Protein",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Chicken",
+          "id": "chicken",
+          "dishPrice": 19.5,
+          "default": true,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Lamb",
+          "id": "lamb",
+          "dishPrice": 19.5,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Mixed",
+          "id": "mixed",
+          "dishPrice": 19.5,
+          "tags": []
+        }
+      ]
     }
   ],
   "menu": [
@@ -425,127 +515,77 @@
       ],
       "items": [
         {
-          "name": "Chicken & falafel kebab",
-          "dishId": "chicken-falafel-kebab",
+          "name": "Meat & falafel kebab",
+          "dishId": "meat-falafel-kebab",
+          "formerIds": [
+            "chicken-falafel-kebab",
+            "lamb-falafel-kebab",
+            "mixed-falafel-kebab"
+          ],
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
             "contains-sesame"
           ],
-          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."},
+          "addOns": [
+            "protein-18p5-18p5-18p5-chicken-lamb-mixed"
+          ]
         },
         {
-          "name": "Lamb & falafel kebab",
-          "dishId": "lamb-falafel-kebab",
-          "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
-          "price": 18.5,
-          "tags": [
-            "contains-sesame"
+          "name": "Meat & muciver kebab",
+          "dishId": "meat-muciver-kebab",
+          "formerIds": [
+            "chicken-muciver-kebab",
+            "lamb-muciver-kebab",
+            "mixed-muciver-kebab"
           ],
-          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
-        },
-        {
-          "name": "Mixed & falafel kebab",
-          "dishId": "mixed-falafel-kebab",
-          "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
-          "price": 18.5,
-          "tags": [
-            "contains-sesame"
-          ],
-          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
-        },
-        {
-          "name": "Chicken & muciver kebab",
-          "dishId": "chicken-muciver-kebab",
           "desc": "With zucchini fritter, lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
             "contains-sesame"
           ],
-          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."},
+          "addOns": [
+            "protein-18p5-18p5-18p5-chicken-lamb-mixed"
+          ]
         },
         {
-          "name": "Lamb & muciver kebab",
-          "dishId": "lamb-muciver-kebab",
-          "desc": "With zucchini fritter, lettuce, carrots, onions, hummus, tabuli and sauce.",
-          "price": 18.5,
-          "tags": [
-            "contains-sesame"
+          "name": "Meat & halloumi kebab",
+          "dishId": "meat-halloumi-kebab",
+          "formerIds": [
+            "chicken-halloumi-kebab",
+            "lamb-halloumi-kebab",
+            "mixed-halloumi-kebab"
           ],
-          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
-        },
-        {
-          "name": "Mixed & muciver kebab",
-          "dishId": "mixed-muciver-kebab",
-          "desc": "With zucchini fritter, lettuce, carrots, onions, hummus, tabuli and sauce.",
-          "price": 18.5,
-          "tags": [
-            "contains-sesame"
-          ],
-          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
-        },
-        {
-          "name": "Chicken & halloumi kebab",
-          "dishId": "chicken-halloumi-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 19.5,
           "tags": [
             "contains-dairy",
             "contains-sesame"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
+          "tagNotes": {"contains-dairy": "The menu says “halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."},
+          "addOns": [
+            "protein-19p5-19p5-19p5"
+          ]
         },
         {
-          "name": "Lamb & halloumi kebab",
-          "dishId": "lamb-halloumi-kebab",
-          "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
-          "price": 19.5,
-          "tags": [
-            "contains-dairy",
-            "contains-sesame"
+          "name": "Gyrus",
+          "dishId": "gyrus",
+          "formerIds": [
+            "chicken-gyrus",
+            "lamb-gyrus",
+            "mix-gyrus"
           ],
-          "tagNotes": {"contains-dairy": "The menu says “halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
-        },
-        {
-          "name": "Mixed & halloumi kebab",
-          "dishId": "mixed-halloumi-kebab",
-          "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
-          "price": 19.5,
-          "tags": [
-            "contains-dairy",
-            "contains-sesame"
-          ],
-          "tagNotes": {"contains-dairy": "The menu says “halloumi”.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
-        },
-        {
-          "name": "Chicken gyrus",
-          "dishId": "chicken-gyrus",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
             "contains-sesame"
           ],
-          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
-        },
-        {
-          "name": "Lamb gyrus",
-          "dishId": "lamb-gyrus",
-          "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
-          "price": 18.5,
-          "tags": [
-            "contains-sesame"
-          ],
-          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
-        },
-        {
-          "name": "Mix gyrus",
-          "dishId": "mix-gyrus",
-          "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
-          "price": 18.5,
-          "tags": [
-            "contains-sesame"
-          ],
-          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."},
+          "addOns": [
+            "protein-18p5-18p5-18p5-chicken-lamb-mix"
+          ]
         }
       ]
     },
