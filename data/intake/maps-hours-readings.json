@@ -1,0 +1,125 @@
+{
+  "what": "Every Google Maps listing read for McDonald's and Subway opening hours (roadmap 080/130, ADR 0161), matched or not, with what Google printed. Repo-only: site/data/ carries the four matched branches' hours and their provenance pair, and nothing from this file. The rows that were NOT written are here so that 'we looked and could not match it' and 'nobody looked' are not the same record.",
+  "written by": "by hand, one row per listing read",
+  "checked by": "nothing yet. The hours written to site/data/restaurants/{mcdonalds,subway}.json are the `written` rows below; compare by eye or with a one-off script. validate.py fences where the provenance value may appear (ADR 0161) but does not read this file",
+  "directedBy": "owner, 2026-10-03 (Google Maps for hours and closures on these two chains, via AskUserQuestion) and 2026-10-16 (a read-only session in his signed-in Chrome)",
+  "read": "2026-10-16, about 11:15 to 11:30 UTC (00:15 to 00:30 NZDT on 17 Oct). The date written to the venue files is the UTC date, 2026-10-16.",
+  "how": "The place panel's weekly hours table (the store's own table, not the 'Pick-up' one), after expanding 'see more hours'. Strings are Google's own text, copied verbatim; a string that looks wrong is recorded as printed.",
+  "phones": "McDonald's rows give the listing's phone because the match is by phone as well as address and those numbers are already in our records. Subway's records hold no phone, so Subway is matched by address alone, and the listings' phones are deliberately not recorded: Maps is ruled a source for hours and closures only.",
+  "readings": {
+    "mcdonalds/bunny-street": {
+      "ourAddress": "9 Bunny Street, Pipitea",
+      "listing": "McDonald's Bunny St, 9 Bunny Street, Pipitea, Wellington 6011",
+      "matchedBy": "address and phone",
+      "printed": {
+        "fri": "7 am–12 pm",
+        "sat": "Open 24 hours",
+        "sun": "12 am–10 pm",
+        "mon": "7 am–10 pm",
+        "tue": "7 am–10 pm",
+        "wed": "7 am–11 pm",
+        "thu": "7 am–11 pm"
+      },
+      "written": false,
+      "why": "Friday's '7 am–12 pm' read literally closes at NOON, which contradicts the store's own window signage in the listing's photo ('Friday & Saturday open 24 hours') and the continuous Saturday 'Open 24 hours' and Sunday '12 am–10 pm'. Google most likely means midnight. Not corrected and not written: an owner question."
+    },
+    "mcdonalds/johnsonville": {
+      "ourAddress": "2 Johnsonville Road, Johnsonville",
+      "listing": "McDonald's Johnsonville, same address",
+      "matchedBy": "address and phone",
+      "printed": {
+        "every day": "Open 24 hours"
+      },
+      "written": true,
+      "as": "[\"00:00\", null] on each of the seven days (ADR 0161)"
+    },
+    "mcdonalds/lambton-quay": {
+      "ourAddress": "276 Lambton Quay",
+      "listing": "McDonald's Lambton Quay, Hallenstein House 1st Floor",
+      "matchedBy": "phone (Hallenstein House is 276 to 278 Lambton Quay)",
+      "printed": {
+        "status": "Temporarily closed",
+        "hours": "none shown"
+      },
+      "written": false,
+      "why": "No hours to write. The branch already carries a closed-temporarily event dated 2026-10-03 from the earlier read; unchanged."
+    },
+    "mcdonalds/courtenay-place": {
+      "ourAddress": "200 Courtenay Place",
+      "listing": "none at our address or phone. Nearby, a different store: McDonald's Courtenay Place, 102 Courtenay Place, Permanently closed",
+      "matchedBy": "nothing",
+      "written": false,
+      "why": "No matching listing. The permanently closed one is inside the Courtenay Central mall with a different number; not ours. An owner question."
+    },
+    "mcdonalds/porirua": {
+      "ourAddress": "2 Titahi Bay Road",
+      "listing": "CONFLICT. Our phone belongs to 'McDonald's Porirua', 1 Kenepuru Drive, 'Open 24 hours'. Our address is 'McDonald's Porirua Plaza' (North City Shopping Centre, Shop 150), no phone, no hours ('Add hours')",
+      "matchedBy": "address and phone name two different stores",
+      "written": false,
+      "why": "We cannot say which store our record means, so no hours are attributed to it. An owner question."
+    },
+    "subway/johnsonville": {
+      "ourAddress": "24 Johnsonville Road, Johnsonville",
+      "listing": "Subway, 24 Johnsonville Road, Johnsonville 6037",
+      "matchedBy": "address",
+      "printed": {
+        "fri": "7 am–9 pm",
+        "sat": "9 am–9 pm",
+        "sun": "9 am–9 pm",
+        "mon–thu": "7 am–9 pm"
+      },
+      "written": true
+    },
+    "subway/tawa": {
+      "ourAddress": "195 Main Road, Tawa",
+      "listing": "Subway Tawa, 195 Main Road, Tawa 5028",
+      "matchedBy": "address",
+      "printed": {
+        "fri": "6:30 am–10 pm",
+        "sat": "7:30 am–9 pm",
+        "sun": "7:30 am–9 pm",
+        "mon–wed": "6:30 am–9 pm",
+        "thu": "6:30 am–10 pm"
+      },
+      "written": true
+    },
+    "subway/karori": {
+      "ourAddress": "234 Karori Road",
+      "listing": "Subway, 234 Karori Road, Karori 6012",
+      "matchedBy": "address",
+      "printed": {
+        "fri": "8 am–9 pm",
+        "sat": "9 am–8 pm",
+        "sun": "10 am–8 pm",
+        "mon–thu": "8 am–8 pm"
+      },
+      "written": true
+    },
+    "subway/courtenay-place": {
+      "ourAddress": "23 Courtenay Place",
+      "listing": "Subway, 15 Courtenay Place, Te Aro 6011",
+      "matchedBy": "nothing: street number differs",
+      "printed": {
+        "fri": "8 am–3 am",
+        "sat": "9 am–3 am",
+        "sun": "9 am–11 pm",
+        "mon–thu": "8 am–11 pm"
+      },
+      "written": false,
+      "why": "Street number 15 against our 23. Could be our address being wrong or a different store; not ours to decide. An owner question."
+    },
+    "subway/mulgrave-street": {
+      "ourAddress": "18 Mulgrave Street",
+      "listing": "Subway, 19 Mulgrave Street, Thorndon 6011",
+      "matchedBy": "nothing: street number differs",
+      "printed": {
+        "fri": "7 am–7 pm",
+        "sat": "10 am–5 pm",
+        "sun": "10 am–3 pm",
+        "mon–thu": "7 am–7 pm"
+      },
+      "written": false,
+      "why": "Street number 19 against our 18. An owner question."
+    }
+  }
+}

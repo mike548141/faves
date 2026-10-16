@@ -52,7 +52,53 @@
       "address": "2 Johnsonville Road, Johnsonville, Wellington 6037",
       "lat": -41.22193,
       "lng": 174.80719,
-      "phone": "+64 4 461 7138"
+      "phone": "+64 4 461 7138",
+      "hours": {
+        "mon": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "tue": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "wed": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "thu": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "fri": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "sat": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "sun": [
+          [
+            "00:00",
+            null
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-16",
+      "detailsVerifiedBy": "google-maps"
     },
     {
       "label": "Porirua",
