@@ -44,7 +44,53 @@
       "address": "9 Bunny Street, Pipitea, Wellington 6011",
       "lat": -41.28012,
       "lng": 174.77971,
-      "phone": "+64 4 473 5490"
+      "phone": "+64 4 473 5490",
+      "hours": {
+        "mon": [
+          [
+            "07:00",
+            "22:00"
+          ]
+        ],
+        "tue": [
+          [
+            "07:00",
+            "22:00"
+          ]
+        ],
+        "wed": [
+          [
+            "07:00",
+            "23:00"
+          ]
+        ],
+        "thu": [
+          [
+            "07:00",
+            "23:00"
+          ]
+        ],
+        "fri": [
+          [
+            "07:00",
+            "00:00"
+          ]
+        ],
+        "sat": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "sun": [
+          [
+            "00:00",
+            "22:00"
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-16",
+      "detailsVerifiedBy": "google-maps"
     },
     {
       "label": "Johnsonville",
@@ -101,12 +147,63 @@
       "detailsVerifiedBy": "google-maps"
     },
     {
-      "label": "Porirua",
+      "label": "North City Plaza",
       "id": "porirua",
       "address": "2 Titahi Bay Road, Porirua 5022",
       "lat": -41.13653,
-      "lng": 174.83886,
-      "phone": "+64 4 237 4157"
+      "lng": 174.83886
+    },
+    {
+      "label": "Kenepuru Drive",
+      "id": "kenepuru-drive",
+      "address": "1 Kenepuru Drive, Kenepuru, Porirua",
+      "phone": "+64 4 237 4157",
+      "hours": {
+        "mon": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "tue": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "wed": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "thu": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "fri": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "sat": [
+          [
+            "00:00",
+            null
+          ]
+        ],
+        "sun": [
+          [
+            "00:00",
+            null
+          ]
+        ]
+      },
+      "detailsVerified": "2026-10-16",
+      "detailsVerifiedBy": "google-maps"
     }
   ],
   "vibe": [],

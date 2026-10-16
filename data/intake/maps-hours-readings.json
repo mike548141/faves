@@ -1,8 +1,8 @@
 {
-  "what": "Every Google Maps listing read for McDonald's and Subway opening hours (roadmap 080/130, ADR 0161), matched or not, with what Google printed. Repo-only: site/data/ carries the four matched branches' hours and their provenance pair, and nothing from this file. The rows that were NOT written are here so that 'we looked and could not match it' and 'nobody looked' are not the same record.",
+  "what": "Every Google Maps listing read for McDonald's and Subway opening hours (roadmap 080/130, ADR 0161), matched or not, with what Google printed. Repo-only: site/data/ carries the written branches' hours and their provenance pair, and nothing from this file. The rows that were NOT written are here so that 'we looked and could not match it' and 'nobody looked' are not the same record. Rows marked `ownerRuled` were written on the owner's 2026-10-17 ruling, which is recorded beside what Google printed.",
   "written by": "by hand, one row per listing read",
   "checked by": "nothing yet. The hours written to site/data/restaurants/{mcdonalds,subway}.json are the `written` rows below; compare by eye or with a one-off script. validate.py fences where the provenance value may appear (ADR 0161) but does not read this file",
-  "directedBy": "owner, 2026-10-03 (Google Maps for hours and closures on these two chains, via AskUserQuestion) and 2026-10-16 (a read-only session in his signed-in Chrome)",
+  "directedBy": "owner, 2026-10-03 (Google Maps for hours and closures on these two chains, via AskUserQuestion), 2026-10-16 (a read-only session in his signed-in Chrome) and 2026-10-17 (rulings on the open rows: Bunny Street, Porirua, Subway Courtenay Place and Mulgrave Street)",
   "read": "2026-10-16, about 11:15 to 11:30 UTC (00:15 to 00:30 NZDT on 17 Oct). The date written to the venue files is the UTC date, 2026-10-16.",
   "how": "The place panel's weekly hours table (the store's own table, not the 'Pick-up' one), after expanding 'see more hours'. Strings are Google's own text, copied verbatim; a string that looks wrong is recorded as printed.",
   "phones": "McDonald's rows give the listing's phone because the match is by phone as well as address and those numbers are already in our records. Subway's records hold no phone, so Subway is matched by address alone, and the listings' phones are deliberately not recorded: Maps is ruled a source for hours and closures only.",
@@ -20,8 +20,10 @@
         "wed": "7 am–11 pm",
         "thu": "7 am–11 pm"
       },
-      "written": false,
-      "why": "Friday's '7 am–12 pm' read literally closes at NOON, which contradicts the store's own window signage in the listing's photo ('Friday & Saturday open 24 hours') and the continuous Saturday 'Open 24 hours' and Sunday '12 am–10 pm'. Google most likely means midnight. Not corrected and not written: an owner question."
+      "written": true,
+      "why": "Google printed Friday as '7 am–12 pm', which read literally closes at NOON. The owner ruled midnight on 2026-10-17, on the strength of the store's own window sign in the same listing's photo ('Friday & Saturday open 24 hours') and the continuous Saturday 'Open 24 hours' and Sunday '12 am–10 pm'. So the hours written for Friday are NOT what Google printed; the sign and the ruling are the basis for that one day, and `detailsVerifiedBy: google-maps` on the branch covers the other six days as printed.",
+      "ownerRuled": "2026-10-17",
+      "as": "Mon and Tue 07:00-22:00, Wed and Thu 07:00-23:00, Fri [\"07:00\",\"00:00\"] (open until midnight, running into Saturday), Sat [\"00:00\", null] (open 24 hours), Sun 00:00-22:00"
     },
     "mcdonalds/johnsonville": {
       "ourAddress": "2 Johnsonville Road, Johnsonville",
@@ -49,14 +51,17 @@
       "listing": "none at our address or phone. Nearby, a different store: McDonald's Courtenay Place, 102 Courtenay Place, Permanently closed",
       "matchedBy": "nothing",
       "written": false,
-      "why": "No matching listing. The permanently closed one is inside the Courtenay Central mall with a different number; not ours. An owner question."
+      "why": "No matching listing. The permanently closed one is inside the Courtenay Central mall with a different number; not ours. An owner question.",
+      "ownerRuled": "2026-10-17: left as it is. A missing listing proves nothing about a closure, so the record is neither changed nor closed."
     },
     "mcdonalds/porirua": {
       "ourAddress": "2 Titahi Bay Road",
       "listing": "CONFLICT. Our phone belongs to 'McDonald's Porirua', 1 Kenepuru Drive, 'Open 24 hours'. Our address is 'McDonald's Porirua Plaza' (North City Shopping Centre, Shop 150), no phone, no hours ('Add hours')",
       "matchedBy": "address and phone name two different stores",
-      "written": false,
-      "why": "We cannot say which store our record means, so no hours are attributed to it. An owner question."
+      "written": true,
+      "why": "The phone in our old record (04 237 4157) is 'McDonald's Porirua' at 1 Kenepuru Drive, 'Open 24 hours'; the address in our old record (2 Titahi Bay Road) is 'McDonald's Porirua Plaza', Shop 150 in the North City Shopping Centre, with no phone and no hours. Owner ruled on 2026-10-17 that both are real stores and the record should hold both.",
+      "ownerRuled": "2026-10-17",
+      "as": "TWO branches. 'North City Plaza' (branch id `porirua` kept; 2 Titahi Bay Road, Porirua City Centre) with the phone removed because it belonged to the other store, and no hours because Maps lists none. A new branch 'Kenepuru Drive' (id `kenepuru-drive`; 1 Kenepuru Drive) carrying the phone from our old record and 24-hour hours as [\"00:00\", null] each day."
     },
     "subway/johnsonville": {
       "ourAddress": "24 Johnsonville Road, Johnsonville",
@@ -105,8 +110,10 @@
         "sun": "9 am–11 pm",
         "mon–thu": "8 am–11 pm"
       },
-      "written": false,
-      "why": "Street number 15 against our 23. Could be our address being wrong or a different store; not ours to decide. An owner question."
+      "written": true,
+      "why": "Street number 15 against our 23. Owner ruled on 2026-10-17 to take Google's number.",
+      "ownerRuled": "2026-10-17",
+      "as": "Address number changed from 23 to 15 to follow Google, then Mon–Thu 08:00-23:00, Fri 08:00-03:00 and Sat 09:00-03:00 (closes after midnight, ADR 0094), Sun 09:00-23:00. No phone recorded (Maps is a source for hours and closures only)."
     },
     "subway/mulgrave-street": {
       "ourAddress": "18 Mulgrave Street",
@@ -118,8 +125,10 @@
         "sun": "10 am–3 pm",
         "mon–thu": "7 am–7 pm"
       },
-      "written": false,
-      "why": "Street number 19 against our 18. An owner question."
+      "written": true,
+      "why": "Street number 19 against our 18. Owner ruled on 2026-10-17 to take Google's number.",
+      "ownerRuled": "2026-10-17",
+      "as": "Address number changed from 18 to 19 to follow Google, then Mon–Fri 07:00-19:00, Sat 10:00-17:00, Sun 10:00-15:00. No phone recorded (Maps is a source for hours and closures only)."
     }
   }
 }

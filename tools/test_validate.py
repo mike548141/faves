@@ -1600,18 +1600,21 @@ SOURCE_CASES = {
             lambda s: s.replace('  "verifiedBy": "official-site"', '  "verifiedBy": "google-maps"', 1),
             "error", r"verifiedBy 'google-maps' not in .*opening hours only \(ADR 0161\)",
         ),
-        "a Maps reading on a branch that has no hours to vouch for": (
-            lambda s: s.replace('      "id": "courtenay-place",',
-                                '      "id": "courtenay-place",\n'
-                                '      "detailsVerified": "2026-10-16",\n'
-                                '      "detailsVerifiedBy": "google-maps",', 1),
-            "error", r"locations\[3\]: detailsVerifiedBy 'google-maps' speaks for opening hours, and this branch has none",
-        ),
     },
     "site/data/restaurants/mcdonalds.json": {
         "a Maps reading on a McDonald's branch is accepted too": (
             lambda s: s.replace('"detailsVerified": "2026-10-16"', '"detailsVerified": "2026-10-15"', 1),
             "clean", None,
+        ),
+        # Moved here from Subway on 2026-10-17: every Subway branch now has hours
+        # (080/130), and McDonald's Courtenay Place is the branch the owner left as
+        # it is, so this is the record that still has a branch with none to refuse.
+        "a Maps reading on a branch that has no hours to vouch for": (
+            lambda s: s.replace('      "id": "courtenay-place",',
+                                '      "id": "courtenay-place",\n'
+                                '      "detailsVerified": "2026-10-16",\n'
+                                '      "detailsVerifiedBy": "google-maps",', 1),
+            "error", r"locations\[0\]: detailsVerifiedBy 'google-maps' speaks for opening hours, and this branch has none",
         ),
     },
     # Per-branch provenance. Pandan is the only record that carries it and the
