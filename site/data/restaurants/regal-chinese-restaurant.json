@@ -1392,11 +1392,18 @@
           "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based."}
         },
         {
-          "name": "Beef with Ginger & Spring Onion",
-          "dishId": "beef-with-ginger-spring-onion",
+          "name": "Ginger & Spring Onion",
+          "dishId": "ginger-spring-onion",
+          "formerIds": [
+            "beef-with-ginger-spring-onion",
+            "chicken-with-ginger-spring-onion"
+          ],
           "desc": null,
           "price": 34.0,
-          "tags": []
+          "tags": [],
+          "addOns": [
+            "protein-34-34"
+          ]
         },
         {
           "name": "Pork in Satay Sauce",
@@ -1409,13 +1416,6 @@
             "contains-pork"
           ],
           "tagNotes": {"contains-peanuts": "The menu says “Satay” — satay sauce is peanut sauce.", "contains-soy": "The menu says “Satay” — the sauce is soy-based.", "contains-pork": "The menu says “Pork”."}
-        },
-        {
-          "name": "Chicken with Ginger & Spring Onion",
-          "dishId": "chicken-with-ginger-spring-onion",
-          "desc": null,
-          "price": 34.0,
-          "tags": []
         },
         {
           "name": "Chicken in Satay Sauce",
@@ -3162,5 +3162,31 @@
       ]
     }
   ],
-  "verifiedBy": "paper-menu"
+  "verifiedBy": "paper-menu",
+  "addOnGroups": [
+    {
+      "id": "protein-34-34",
+      "name": "Protein",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Beef",
+          "id": "beef",
+          "dishPrice": 34.0,
+          "default": true,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Chicken",
+          "id": "chicken",
+          "dishPrice": 34.0,
+          "tags": [
+            "has-meat"
+          ]
+        }
+      ]
+    }
+  ]
 }
