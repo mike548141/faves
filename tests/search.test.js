@@ -850,3 +850,71 @@ test('search: "our recipes" finds nothing, without throwing, until a recipe is s
   const shared = { ...idx, dishes: [...idx.dishes, { name: "Nan's pie", hay: "", owner: "ours" }] };
   assert.equal(search(shared, "our recipes").dishes.total, 1, "the owner kind is all it takes");
 });
+
+// ---- a merged ladder's variant names (roadmap 28o) ------------------------
+// Merging Chicken / Beef / Lamb varuval into one dish moved "lamb" out of any
+// dish NAME. The variant names join the haystack so it is still found, but as a
+// text hit: a dish named for the word still outranks it, and the row never
+// highlights text it does not show.
+const LADDER = [
+  {
+    id: "pandan",
+    name: "Pandan",
+    area: "Newtown",
+    cuisine: ["Asian"],
+    addOnGroups: [
+      {
+        id: "protein",
+        name: "Protein",
+        kind: "selects",
+        options: [
+          { name: "Chicken", id: "chicken", dishPrice: 24, default: true, tags: [] },
+          { name: "Beef", id: "beef", dishPrice: 24, tags: [] },
+          { name: "Lamb", id: "lamb", dishPrice: 26, tags: [] },
+        ],
+      },
+      { id: "size-24-30", name: "Size", kind: "selects", options: [{ id: "size-1", dishPrice: 24, default: true, tags: [] }, { id: "size-2", dishPrice: 30, tags: [] }] },
+      { id: "extras", name: "Extras", select: "many", options: [{ name: "Extra bacon", id: "bacon", price: 3, tags: [] }] },
+    ],
+    menu: [
+      {
+        section: "Indian dishes",
+        addOns: ["extras"],
+        items: [
+          { name: "Varuval", dishId: "varuval", desc: "A dry style curry.", price: 24, addOns: ["protein"] },
+          { name: "Lamb Rogan Josh", dishId: "lamb-rogan-josh", desc: "Slow cooked.", price: 26 },
+          { name: "Sized Soup", dishId: "sized-soup", price: 24, addOns: ["size-24-30"] },
+        ],
+      },
+    ],
+  },
+];
+
+test("search: a variant's name finds its merged dish, as a text hit that is never a name match", () => {
+  const idx = buildIndex(LADDER);
+  const r = search(idx, "lamb").dishes;
+  const names = r.items.map((d) => d.name);
+  assert.ok(names.includes("Varuval"), `"lamb" must find the merged Varuval, got ${names}`);
+  const varuval = r.items.find((d) => d.name === "Varuval");
+  assert.equal(varuval.matchField, "details", "the row does not show the variant, so no name highlight");
+  assert.equal(varuval.matchText, null);
+  // Ranked below the dish NAMED for the word, whatever the alphabet says.
+  assert.ok(names.indexOf("Lamb Rogan Josh") < names.indexOf("Varuval"), `got ${names}`);
+  assert.equal(search(idx, "lamb").dishes.items[0].matchField, "name");
+});
+
+test("search: variant names are `selects` only — an `adds` option is still not in the haystack", () => {
+  const idx = buildIndex(LADDER);
+  assert.equal(search(idx, "bacon").dishes.total, 0, "ADR 0130 §5: adds option names were never searched, and this change leaves that alone");
+  // An unlabelled variant has no name and must not put 'undefined' in the haystack.
+  const soup = idx.dishes.find((d) => d.name === "Sized Soup");
+  assert.ok(!soup.hay.includes("undefined"));
+});
+
+test("search: a section-level selects group reaches every dish in the section", () => {
+  const rec = structuredClone(LADDER);
+  rec[0].menu[0].addOns = ["protein"];
+  rec[0].menu[0].items[0].addOns = [];
+  const idx = buildIndex(rec);
+  assert.ok(search(idx, "beef").dishes.items.some((d) => d.name === "Varuval"));
+});

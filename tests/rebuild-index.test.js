@@ -70,7 +70,7 @@ function compactFrom(restaurants) {
         items: (s.items || []).map((item) => {
           const out = { dishId: dishId(item), name: item.name };
           if (Array.isArray(item.formerIds) && item.formerIds.length) out.formerIds = item.formerIds;
-          out.hay = dishHay(item, r);
+          out.hay = dishHay(item, r, s);
           return out;
         }),
       })),

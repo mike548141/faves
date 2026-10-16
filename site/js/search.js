@@ -7,6 +7,7 @@
 //
 // Pure, so it's unit-tested directly (tests/search.test.js).
 
+import { groupsFor, isSelects } from "./addons.js";
 import { dishId } from "./dish-id.js";
 import { composeRecipe, ingredientKeys } from "./ingredients.js";
 import { MY_RECIPES } from "./recipe-record.js";
@@ -198,7 +199,7 @@ export function placeEntry(r) {
  * built from, which is what keeps the summary thin. This is the one place
  * that text is assembled; the generator calls it, never re-derives it.
  */
-export function dishHay(item, record) {
+export function dishHay(item, record, section = null) {
   const venueLang = venueLanguage(record);
   // Ingredients join the haystack so "lemon" finds the pasta — mirrors
   // the menu screen's own dish search.
@@ -210,6 +211,7 @@ export function dishHay(item, record) {
   // just the canonical one: someone hunting "ต้มยำ" and someone hunting "tom
   // yam" want the same dish, and only one of them can type the other (ADR
   // 0044). "vegan" finds the dish the data tags `vg`.
+  const variants = variantNames(item, record, section);
   return norm(
     [
       ...searchableText(item, "name", venueLang),
@@ -217,8 +219,32 @@ export function dishHay(item, record) {
       ingredients,
       item.code,
       dietLabels(item.tags),
+      // Spread only when non-empty: an empty string here would append a space
+      // to every dish's haystack, ~5 KB of precached bytes saying nothing.
+      ...(variants ? [variants] : []),
     ].join(" ")
   );
+}
+
+/**
+ * The names of the variants a dish offers, so "lamb" still finds a "Varuval"
+ * whose Chicken / Beef / Lamb rows were merged into one dish (roadmap 28o).
+ * Only a `selects` group: its options ARE the dish ("which plate"), where an
+ * `adds` option is something put on it and was never searched (ADR 0130 §5
+ * left the question open; owner's answer pending). Haystack only — the dish's
+ * own name is untouched, so `score()` ranks this a text hit (1) below any dish
+ * NAMED for the word, and `dishMatchField` reports "details", never a name
+ * highlight on text the row does not show. An unlabelled variant has no name
+ * to search. Group resolution is addons.js's `groupsFor`, the one place a
+ * dish's groups are worked out (section-level and item-level alike).
+ */
+function variantNames(item, record, section) {
+  if (!record) return "";
+  return groupsFor(record, section, item)
+    .filter(isSelects)
+    .flatMap((g) => (g.options || []).map((o) => o.name))
+    .filter((n) => typeof n === "string" && n)
+    .join(" ");
 }
 
 /**
@@ -258,7 +284,7 @@ export function buildIndex(restaurants) {
           href: itemPage
             ? `${itemPage}?id=${r.id}&dish=${dishId(item)}`
             : `restaurant.html?id=${r.id}#dish-${dishId(item)}`,
-          hay: dishHay(item, r),
+          hay: dishHay(item, r, section),
         });
       }
     }
