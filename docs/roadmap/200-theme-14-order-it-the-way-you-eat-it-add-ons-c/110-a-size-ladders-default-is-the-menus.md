@@ -1,5 +1,4 @@
-- [~] **A size ladder's default is the menu's; failing that, the cheapest**
-  (claimed 2026-10-16-0714, faves-11, wt: faves-200-110)
+- [x] **A size ladder's default is the menu's; failing that, the cheapest**
   `[S][data][schema]` — **owner-ruled 2026-10-03**, raised on Spices Indian's
   Garlic Tikka (Half $12 / Full $20, Full pre-selected and the row priced $20):
 
@@ -77,3 +76,20 @@
   Lands in: an ADR (amending 0130's default rule), `ARCHITECTURE.md`'s
   `selects` paragraph, `validate.py`, the 3 Spices Indian records if the ruling
   moves them, and `28r`'s intake rule, so new ladders are written to it.
+
+✅ **Done 2026-10-16 (faves-11 worker).** Rule landed as ADR 0157. The cue is
+recorded in the repo-only store `data/defaults/<venue>.json` (group, option,
+`from`: `wording` | `headline`, quoted `evidence`), not in the venue file, so
+nothing new ships (ADR 0047/0137). `validate.py` (`check_default_cues`) errors
+on a `selects` default dearer than its cheapest sibling with no row, and on a
+stale, duplicate, malformed or orphan row. Measured at `9fc0b119`: 57 `selects`
+groups in 8 venues, 3 non-cheapest defaults, all Spices Indian's Full (portion
+groups `portion-13-21`, `portion-12-20`, `portion-13-23`), now recorded as
+`headline`. No venue file changed, so `gen_summaries` had nothing to regenerate
+(`--check` clean). 12 new `STORE_CASES` in `tools/test_validate.py`. The `adds`
+side needs no rule: an `adds` option has no `default`, an optional group opens
+on None (the dish's price) and a `required` group opens on nothing (ADR 0156);
+none of the 74 pick-one `adds` groups has a negative-priced option. 28r should
+say: *default to the cheapest option; make another the default only if the menu
+names it by wording or a printed headline price, and record that in
+`data/defaults/<venue>.json` with the printed text.*
