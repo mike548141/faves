@@ -1,5 +1,4 @@
-- [~] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
-  (claimed 2026-10-16-1034, faves-11, wt: primary (inline, Chrome))
+- [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
       — ~~**10 of the corpus's 22 branches**, measured 2026-08-16~~ →
       **10 of the corpus's 47 branches**, re-measured 2026-09-09. This is now
       load-bearing rather than cosmetic: [ADR 0054](../../decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
@@ -154,3 +153,46 @@
   full week of hours from its Google Maps listing: open the listing, expand
   "see more hours", read, nothing posted or changed. The provenance value and
   the ADR this item names are still owed.
+
+🟡 **Partly landed 2026-10-16 (faves-11 worker, ADR 0161); the item stays open
+on five owner questions.** Google Maps weekly tables were read in the owner's
+signed-in Chrome on 2026-10-16 (about 11:15 to 11:30 UTC; 17 Oct NZDT), every
+listing matched to our branch by address and, for McDonald's, by phone as well.
+Every listing, matched or not, is in `data/intake/maps-hours-readings.json`.
+
+**Written (4 of 10 branches), each with `detailsVerifiedBy: "google-maps"`
+dated 2026-10-16:**
+- McDonald's Johnsonville: open 24 hours all week, as `["00:00", null]` a day.
+- Subway Johnsonville, Tawa and Karori: Google's per-day hours, verbatim.
+
+**Not written (6): five are owner questions, and the sixth has nothing to write:**
+1. 🎯 **McDonald's Bunny Street.** Google prints Friday as "7 am–12 pm", which
+   read literally closes at noon. The listing's own photo of the store's window
+   says "Friday & Saturday open 24 hours", and Saturday is "Open 24 hours" and
+   Sunday "12 am–10 pm". Google most likely means midnight. Not corrected and
+   not written: do we record it as printed, record 24 hours, or wait for a
+   second source?
+2. 🎯 **McDonald's Porirua.** Our phone belongs to one Porirua store (open 24
+   hours) and our address to another (no phone, no hours). Which store does our
+   record mean?
+3. 🎯 **McDonald's Courtenay Place.** No listing at our address or with our
+   phone. The nearby listing is a different, permanently closed store. Is our
+   record's store real?
+4. 🎯 **Subway Courtenay Place.** Google's street number differs from ours.
+5. 🎯 **Subway Mulgrave Street.** Google's street number differs from ours.
+6. **McDonald's Lambton Quay** still reads "Temporarily closed" on Google and
+   shows no hours, so there is nothing to write; our `closed-temporarily` event
+   of 2026-10-03 is unchanged. Not a question unless it reopens.
+
+The street numbers and listing names are in
+`data/intake/maps-hours-readings.json`. Questions 4 and 5 may be our addresses
+being wrong rather than Google's; the fix is the owner's or a second source's.
+
+**What shipped with it:** `google-maps` as a branch's `detailsVerifiedBy`, legal
+only on McDonald's and Subway branches that have hours (six mutation cases in
+`tools/test_validate.py`, one on Pandan to prove the fence); the menu's ⓘ now
+says "Opening hours at Tawa read from its Google Maps listing on 16 Oct 2026." <!-- datescan:allow: quoted on-screen copy -->
+(never phone or address), added BESIDE McDonald's amber "menu needs a refresh"
+caution, which is unchanged; and a 24-hour day reads "Open 24 hours" in the week
+table rather than "12am–late". `tools/branch_check.mjs` asserts all of it in a
+browser. Phones were not added to any record.

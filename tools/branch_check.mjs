@@ -86,7 +86,8 @@ const SITE = join(ROOT, "site");
 
 // Three shapes, all real, chosen because they fail differently.
 //   tj-katsu   7 branches, ALL with hours → exercises the openness rule.
-//   mcdonalds  5 branches, NONE with hours → exercises the honesty rule, and is
+//   mcdonalds  5 branches, ONE with hours (Johnsonville, from Google Maps, ADR 0161)
+//              → exercises the honesty rule on the other four, and is
 //              the venue in the screenshot that prompted the redesign.
 //   hell-pizza 14 branches, all with hours → the corpus's largest chain since
 //              the 2026-08-16 Wellington sweep, and the reason this line is no
@@ -234,6 +235,7 @@ light and dark mode.
 Options:
   --id <venue-id>   Check only this venue (default: ${VENUES.join(", ")}
                     plus ${FIXTURES.map((f) => f.id).join(", ")}).
+  --provenance      Run only the Google Maps hours-provenance assertions (ADR 0161).
   --port <n>        Port for the local static server (default: an unused one).
   --headed          Show the browser window.
   --keep-profile    Leave the temporary Chrome profile behind, and say where.
@@ -244,11 +246,12 @@ Exit status: 0 all assertions passed; 1 an assertion failed; 2 the harness
 itself could not run (no Chrome, port in use, page never rendered).`;
 
 function parseArgs(argv) {
-  const opts = { ids: null, port: 0, headed: false, keepProfile: false, verbose: false };
+  const opts = { ids: null, provenanceOnly: false, port: 0, headed: false, keepProfile: false, verbose: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "-h" || a === "--help") return { help: true };
     else if (a === "--id") (opts.ids ||= []).push(argv[++i]);
+    else if (a === "--provenance") opts.provenanceOnly = true;
     else if (a === "--port") opts.port = Number(argv[++i]);
     else if (a === "--headed") opts.headed = true;
     else if (a === "--keep-profile") opts.keepProfile = true;
@@ -727,6 +730,87 @@ async function checkVenue(driver, report, id, url, venue, spec = null) {
   }
 }
 
+// (f) A GOOGLE MAPS HOURS READING SAYS WHAT IT IS (ADR 0161). Opening hours on
+// McDonald's and Subway come from Google Maps listings, and the only thing
+// that keeps that from reading as the shop's own word is the sentence in the
+// menu's ⓘ. Three ways it goes wrong that no unit test can see, because the
+// sentence is assembled in menu.js from two functions and a DOM:
+//   - the method is unknown to the screen, so it falls back to "checked" and
+//     the sentence is the first-party one (this is exactly what validating the
+//     value without teaching menu.js would have shipped);
+//   - it keeps the old subject "Phone, address and opening hours", vouching for
+//     a phone Subway does not have and an address Google did not confirm;
+//   - it is borrowed by a branch nobody read, because the card describes the
+//     NEAREST branch and a venue-level fallback is easy to get wrong.
+// And on McDonald's, which has no menu reading, the sentence must stand BESIDE
+// the amber caution, not replace it.
+const PROVENANCE = [
+  {
+    id: "subway", branch: "tawa", amber: false,
+    want: /Opening hours at Tawa read from its Google Maps listing on 16 Oct 2026\./,
+  },
+  { id: "subway", branch: "courtenay-place", amber: false, want: null },
+  {
+    id: "mcdonalds", branch: "johnsonville", amber: true,
+    want: /Opening hours at Johnsonville read from its Google Maps listing on 16 Oct 2026\./,
+  },
+  { id: "mcdonalds", branch: "bunny-street", amber: true, want: null },
+];
+
+async function checkMapsProvenance(driver, report, port) {
+  console.log("\n  Google Maps hours provenance (ADR 0161)");
+  for (const p of PROVENANCE) {
+    const venue = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${p.id}.json`), "utf8"));
+    const b = venue.locations.find((x) => x.id === p.branch);
+    const url = `http://127.0.0.1:${port}/restaurant.html?id=${encodeURIComponent(p.id)}`;
+    const tag = `${p.id}/${p.branch}`;
+    await driver.cdpNavigate(url);
+    await untilPresent(async () => await driver.evalPage("!!document.body"), { label: `${tag}'s document to exist` });
+    // The note describes the NEAREST branch, so put the viewer on the one under test.
+    await driver.evalPage(
+      `sessionStorage.setItem("faves.origin.v1", ${JSON.stringify(JSON.stringify({ lat: b.lat, lng: b.lng }))}); true`,
+    );
+    await driver.cdpNavigate(url);
+    await untilPresent(async () => await driver.evalPage(`!!document.getElementById("menu-caveat-${p.id}")`), {
+      label: `${tag}'s confidence note to render`,
+    });
+    await driver.click(`.caveat-btn[aria-controls="menu-caveat-${p.id}"]`);
+    const note = await driver.evalPage(`(() => {
+      const n = document.getElementById("menu-caveat-${p.id}");
+      const r = n.getBoundingClientRect();
+      return { text: n.textContent, shown: r.width > 0 && r.height > 0 && getComputedStyle(n).visibility !== "hidden",
+               info: n.classList.contains("is-info") };
+    })()`);
+    report.check(`${tag}: the note opens on one tap`, note.shown, `shown=${note.shown}`);
+    report.check(
+      `${tag}: the note is ${p.amber ? "amber (the menu was never read)" : "blue (the menu was read)"}`,
+      note.info === !p.amber,
+      `is-info=${note.info}`,
+    );
+    if (p.want) {
+      report.check(`${tag}: the hours are credited to Google Maps, in those words`, p.want.test(note.text), JSON.stringify(note.text));
+      report.check(
+        `${tag}: …and the sentence never speaks for a phone or an address`,
+        !/phone|address/i.test(note.text),
+        JSON.stringify(note.text),
+      );
+    } else {
+      report.check(
+        `${tag}: a branch nobody read borrows no Maps credit`,
+        !/Google Maps|Opening hours/.test(note.text),
+        JSON.stringify(note.text),
+      );
+    }
+    if (p.amber) {
+      report.check(
+        `${tag}: the "menu needs a refresh" caution is still there, in its own words`,
+        /Menu items and prices need a refresh — confirm with the place when you order\./.test(note.text),
+        JSON.stringify(note.text),
+      );
+    }
+  }
+}
+
 /** The real record for a venue id, or the injected-closure fixture for one of
  *  the `<id>-closed-fixture` ids. Keyed by the path the page will actually GET,
  *  so the overlay and the assertions cannot disagree about which bytes ran. */
@@ -765,7 +849,7 @@ async function buildRecords(ids) {
 
 async function run(opts) {
   const report = new Report(opts.verbose);
-  const ids = opts.ids || [...VENUES, ...FIXTURES.map((f) => f.id)];
+  const ids = opts.provenanceOnly ? [] : opts.ids || [...VENUES, ...FIXTURES.map((f) => f.id)];
   const { records, specs, overlay } = await buildRecords(ids);
   const { server, port } = await startServer(opts.port, SITE, overlay);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-branch-check-"));
@@ -806,6 +890,10 @@ async function run(opts) {
       const url = `http://127.0.0.1:${port}/restaurant.html?id=${encodeURIComponent(id)}`;
       await checkVenue(driver, report, id, url, records.get(id), specs.get(id));
     }
+
+    // Whole-corpus runs only: `--id` narrows to venues under test, and these
+    // two are reached through their own ids above.
+    if (!opts.ids || opts.provenanceOnly) await checkMapsProvenance(driver, report, port);
 
     return report.summary(SITE) ? 0 : 1;
   } finally {

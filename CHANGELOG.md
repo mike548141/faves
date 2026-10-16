@@ -9,6 +9,7 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **McDonald's Johnsonville and Subway's Johnsonville, Tawa and Karori now show their opening hours.** They come from each shop's Google Maps listing, read on 16 October 2026, and the ⓘ beside the venue name says so: "Opening hours at Tawa read from its Google Maps listing on 16 Oct 2026." It speaks for the hours only, never the phone or address. A shop that is open all day every day reads "Open 24 hours". The other McDonald's and Subway branches still show no hours, because their listings could not be matched to the address we hold. <!-- datescan:allow: quoted on-screen copy -->
 - **A size choice now opens when you press Add.** On a dish with a size to pick
   (a half or full portion, a pour size, single or double) the Add button still
   orders the dish as listed, and the choices open underneath with a line saying

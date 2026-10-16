@@ -131,6 +131,25 @@ test("formatDay: split, simple, closed, late", () => {
   assert.equal(formatDay([["11:30", null]]), "11:30am–late");
 });
 
+test("a round-the-clock week is [00:00, null] a day: always Open, no countdown, read as 24 hours (ADR 0161)", () => {
+  const ROUND = Object.fromEntries(Object.keys(DAILY).map((d) => [d, [["00:00", null]]]));
+  // 03:00 is the instant a "closes at midnight" reading would get wrong, and the
+  // two week edges are where a per-day segment could leave a seam.
+  for (const [dow, h, m] of [[2, 3, 0], [0, 23, 59], [1, 0, 0], [6, 12, 0]]) {
+    const s = openStatus(ROUND, at(dow, h, m));
+    assert.equal(s.state, "open", `dow ${dow} ${h}:${m}`);
+    assert.equal(s.label, "Open");
+    assert.equal(s.detail, "", "no 'until' and no countdown: it never closes");
+    assert.equal(s.minutes, null);
+  }
+  assert.equal(formatDay([["00:00", null]]), "Open 24 hours");
+  assert.deepEqual(groupWeek(ROUND), [
+    { days: "Mon–Sun", text: "Open 24 hours", dows: [1, 2, 3, 4, 5, 6, 0] },
+  ]);
+  // The special case is for a day that STARTS at midnight; a late close elsewhere is unchanged.
+  assert.equal(formatDay([["17:00", null]]), "5pm–late");
+});
+
 test("groupWeek merges identical consecutive days into ranges (with dows)", () => {
   assert.deepEqual(groupWeek(DAILY), [
     { days: "Mon–Sun", text: "11am–10pm", dows: [1, 2, 3, 4, 5, 6, 0] },
