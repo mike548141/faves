@@ -62,3 +62,11 @@
   - Rebase note: PR #110 has since added assertions in `addon_check.mjs`
     section (w); #108's own block is separate.
 
+  ✅ **Owner ruled 2026-10-16 (asked by `faves-11`, via AskUserQuestion):**
+  - **B: a change made in the picker that opens on Add UPDATES the line just
+    added** (Full → Half leaves one Half, not a Full and a Half). #108 is
+    reworked to this before it merges.
+  - **`mustSee: true` on three groups:** the two coffee-milk groups, Gong
+    Cha's size group, and Abrakebabra's combo. (Gong Cha's size may instead
+    become a `selects` ladder per ADR 0130, which is must-see by rule; either
+    way it ends must-see.)

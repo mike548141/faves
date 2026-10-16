@@ -47,3 +47,14 @@
   the merge was right or wrong. What proves it is the joins, above.
 
   **Depends on:** `28i`, `28k`, `28l`, `28m`. **Blocks:** `28p`.
+
+  ✅ **Owner ruled 2026-10-16 (asked by `faves-11`): MINT A FRESH ID** for
+  each merged base dish, which settles the contradiction above (the
+  "keep one sibling's dishId — do not mint" sentence in *What each merge does*
+  is superseded). His words: *"I am ok with minting fresh ID's in this
+  instance. But we need a mechanism to handle this … something like alias
+  identifiers or previously known as identifiers that can be associated to a
+  freshly minted ID."* That mechanism exists: `formerIds` (ADR 0153, `28l`,
+  closed 2026-10-02). Hearts, ratings and the favourites filter resolve
+  through it, and `rename_check` asserts it (8 assertions). So every merged
+  sibling's id goes into the fresh id's `formerIds`.

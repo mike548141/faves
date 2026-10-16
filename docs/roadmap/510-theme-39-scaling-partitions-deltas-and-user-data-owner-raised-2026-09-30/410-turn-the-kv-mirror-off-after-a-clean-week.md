@@ -20,3 +20,7 @@
   lifts is two orders of magnitude away, while the flip ends lossless
   rollback. Put to the owner at the 2026-10-16 queue run's close rather than
   done unattended.
+
+  ✅ **Owner ruled 2026-10-16 (asked by `faves-11`): HOLD until needed.**
+  Keep the mirror on, and with it lossless rollback; revisit when write volume
+  approaches KV's ceiling or rollback stops mattering.

@@ -147,3 +147,9 @@
     street number and phone from ours. The worker's "different street
     number" was that, not a stale address.
   Subway's two street-number mismatches are untouched (no closure claimed).
+
+  ✅ **Owner ruled 2026-10-16 (asked by `faves-11`): yes, a session may use
+  his signed-in Chrome (Claude in Chrome), READ-ONLY,** to read each branch's
+  full week of hours from its Google Maps listing: open the listing, expand
+  "see more hours", read, nothing posted or changed. The provenance value and
+  the ADR this item names are still owed.
