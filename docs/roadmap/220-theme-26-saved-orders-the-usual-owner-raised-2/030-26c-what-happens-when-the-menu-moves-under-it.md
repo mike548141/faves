@@ -1,4 +1,5 @@
-- [ ] **26c — What happens when the menu moves under it** `[M]` 🚩 **the real
+- [~] **26c — What happens when the menu moves under it** `[M]` 🚩 **the real
+  (claimed 2026-10-16-0928, faves-11, wt: faves-220-030)
   design problem.** A saved order references dishes and prices that a refresh
   can change, rename or remove — and `renames.js` already exists precisely
   because ids move. So recall has to answer honestly: *this dish is $2 dearer
