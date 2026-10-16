@@ -1,5 +1,4 @@
-- [~] 🔎 **`device_check` hangs at the same step every run, so 11 of its 81
-  (claimed 2026-10-16-0913, faves-11, wt: faves-340-320)
+- [x] 🔎 **`device_check` hangs at the same step every run, so 11 of its 81
       assertions go unrun** `[S][tests]` — found 2026-10-16 (`faves-11`)
       while verifying `200/130`.
 
@@ -28,3 +27,56 @@
   step", so the harness cannot say which call.
   **The work:** find the call that never returns, fix the check or the site
   (whichever is wrong), and restore 81 assertions with a break-probe.
+
+  ✅ **Done 2026-10-16 (faves-11 worker).** Cause found and fixed in the
+  harness; the site was not wrong and `site/` is untouched.
+  **The call that never returned** was the `settle()` (two
+  `requestAnimationFrame`s) inside `press("Escape")`, not the Escape itself.
+  Traced with a log line per CDP call: the Escape key events were sent, then
+  `Runtime.evaluate {new Promise(r => requestAnimationFrame(...))}` never came
+  back. A plain evaluate beside it answered, and showed
+  `document.visibilityState` had gone from `"visible"` to `"hidden"` between
+  the key event and the next call. A hidden page never fires rAF, so the
+  promise cannot settle until the 60 s CDP timeout.
+  **Why it went hidden.** `Target.getTargets` after the key showed a new
+  `chrome://settings/help` page that was not there before it: **a CDP key
+  event with no `text` opened "About Google Chrome" in a foreground tab.**
+  (Reading, not measured: Chrome on macOS hands a key the page did not swallow
+  to the application menu, and an event with empty characters matches the first
+  menu item that has no key equivalent. What was measured is the rest.)
+  Reproduced with no site code at all: a blank page, a plain `<dialog>`, and
+  `index.html` all went hidden on a bare `Input.dispatchKeyEvent`, for Escape,
+  Enter, `a`, ArrowDown, ArrowUp, Home and ArrowRight (Tab did not). No key sent
+  ⇒ the page stayed visible for 5 s of polling; a mouse click did not hide it.
+  **The Chrome lead is refuted, not confirmed.** Chrome for Testing
+  **131.0.6778.204** (puppeteer's cache) hides the page on the same bare
+  Escape, so it is not a 155.0.8059.82 → .85 change. I did not test .82 itself.
+  Not explained, and said plainly: why this passed on 2026-10-02 and not on 2026-10-16.
+  The screen is locked on this machine (`CGSSessionScreenIsLocked` true,
+  display wrangler asleep; `caffeinate -u` woke the display and changed
+  nothing), so a session-state difference is possible, but I have no run from
+  an unlocked session to show it. The fix does not depend on the answer.
+  **Fixed in `tools/lib/browser.mjs`.** `press()` now sends `text` with every
+  key (`KEY_TEXT`: `\u001b` for Escape, the NSEvent function-key code points
+  for the arrows, Home and End, `\r` as a `keyDown` for Enter). Measured: with
+  `text` alone the page stays visible, no About tab opens, Escape still closes
+  a `<dialog>` and the page still sees `key: "ArrowDown"`. Two variants that do
+  not work, so nobody tries them again: adding `unmodifiedText` as well (hides
+  the page, and `event.key` arrives empty), and `text: "\0"` (hides it).
+  Giving the real macOS `nativeVirtualKeyCode` instead did not help either.
+  `Emulation.setFocusEmulationEnabled` keeps the page visible but still opens
+  the About tab on every key, so it was rejected.
+  `device_check`'s local `key()` helper, which had the same hole for ArrowDown,
+  was replaced by the shared `press()`.
+  **The guard.** `press()` now asks `document.visibilityState` (a plain
+  evaluate, which answers on a hidden page) before it settles, and raises a
+  `HarnessError` that names this cause. Break-probe: with `KEY_TEXT` bypassed,
+  `device_check` stops at the first Escape with `the page became "hidden"
+  after pressing Escape: a key event reached Chrome's menu…` and exit 2, in
+  seconds instead of a 60 s timeout; restored afterwards.
+  **Verified.** `device_check` ran to its summary twice in a row, **81 passed,
+  0 failed** both times (the 11 that were unrun now run: tree
+  `faves-340-320/site`). Other users of `press()`: `cook_check` 85 passed,
+  `sync_check` 40 passed (CLAUDE.md still says 22 — stale, not touched here),
+  `boot_check` 38 passed, `node --test` 1864 passed. `SHELL_VERSION` not bumped
+  (nothing under `site/` changed).

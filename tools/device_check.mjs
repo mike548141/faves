@@ -1188,12 +1188,6 @@ async function run(opts) {
     const settingsOpen = `!!document.querySelector("dialog.settings-sheet[open]")`;
     const focusNow = `(() => { const a = document.activeElement;
       return a === document.body ? "<body>" : (a.id ? "#" + a.id : a.tagName.toLowerCase()); })()`;
-    const key = async (k, code, text) => {
-      const base = { key: k, code: k, windowsVirtualKeyCode: code, nativeVirtualKeyCode: code };
-      await cdp.send("Input.dispatchKeyEvent", { ...base, type: text ? "keyDown" : "rawKeyDown", text }, sessionId);
-      await cdp.send("Input.dispatchKeyEvent", { ...base, type: "keyUp" }, sessionId);
-      await settle();
-    };
     for (const [page, pageUrl] of Object.entries(focusUrl)) {
       for (const how of ["mouse", "keyboard"]) {
         for (const closer of how === "mouse" ? ["close button", "Escape", "backdrop"] : ["Escape"]) {
@@ -1208,10 +1202,10 @@ async function run(opts) {
             await click("#settings-btn");
           } else {
             await evalPage(`document.getElementById("overflow-btn").focus()`);
-            await key("Enter", 13, "\r");
+            await press("Enter");
             const ids = await evalPage(`[...document.querySelectorAll('#overflow-menu [role=menuitem]:not([hidden])')].map((e) => e.id)`);
-            for (let i = 0; i < ids.indexOf("settings-btn"); i++) await key("ArrowDown", 40);
-            await key("Enter", 13, "\r");
+            for (let i = 0; i < ids.indexOf("settings-btn"); i++) await press("ArrowDown");
+            await press("Enter");
           }
           await untilPresent(() => evalPage(settingsOpen), { label: "Settings to open" });
           if (closer === "close button") {
