@@ -1,4 +1,4 @@
-- [ ] 🚩 **CI runs NONE of the browser checks** `[M][docs]` — found 2026-08-16
+- [x] 🚩 **CI runs NONE of the browser checks** `[M][docs]` — found 2026-08-16
       while closing the item above, and it is the reason that one could sit dead
       through a whole settings refactor. `.github/workflows/ci.yml` runs
       `node --test` and the Python gates. It does **not** run `sync_check`,
@@ -41,3 +41,7 @@
       ⚠️ **This does not close the item.** Seven guards remain on the honour
       system, so *"CI is green"* still is not evidence about most browser
       behaviour. Keep the 🛑 note in CLAUDE.md's verify list saying so.
+
+      ✅ **Closed 2026-10-16 (`faves-11`, queue-run triage):** the ruled
+      subset shipped 2026-08-17 (`344adfb`) and the claim was discharged then;
+      the box was never flipped. Nothing further is owed here.
