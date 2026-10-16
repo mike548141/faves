@@ -12841,3 +12841,39 @@ workers on Sonnet. Session id `6716bbef-2a69-4b21-9692-68034652b2ef`.
   - He then said he had asked only for the items to be filed, not worked.
 - ⏳ **atelier has moved past the `94d5cc6` pin** (seen at session start, not
   read, not bumped). Owed to a session that takes it on.
+
+## 2026-10-16 — orchestrated queue run, interrupted by a crash and recovered (session `faves-11`)
+
+*Interim entry, written mid-run so a second interruption cannot erase it; the
+close extends it.*
+
+- **Landed on `main`, each verified and green on CI:**
+  - atelier pin `94d5cc6` → `fd63df8`, floor re-stamped verbatim (hand
+    stamp check: no drift). The new canonical text names
+    `method/TOOLBOX.md`, which `pathscan` cannot resolve in a child and a
+    child cannot allow-mark without drifting; handed up as atelier
+    `320/530` (atelier PR #103). <!-- pathscan:allow: quoting the floor's own text -->
+  - `010/040` — the `services` → `orderMode` bridge removed, on its due
+    date; `SHELL_VERSION` `2026-10-16.1`.
+  - `500/070` — `tools/backup_intake.py` (PR #103 here). Dry run: 294
+    selected, 0 to copy, 294 of 294 stamped as uploaded by Drive.
+  - Closed as already done or superseded: `340/020`, `28b`.
+  - `510/410` measured, **not** flipped: 36 Worker invocations, 0 errors
+    since the cutover; put to the owner, because the flip ends lossless
+    rollback and buys headroom nothing is near.
+- 🛑 **The crash.** At 07:35 UTC every VS Code window's renderer got SIGTERM
+  inside four seconds (`main.log`: `renderer process gone (reason: killed,
+  code: 15)`), killing this session and its four workers (`200/110`,
+  `200/130`, `080/220`, `200/180`). Cause not established: no jetsam entry
+  was found. The 15-minute load average still read 45 half an hour later,
+  with several repos' orchestrated runs live, so load is the leading
+  hypothesis, not a finding.
+- **Recovery, done before resuming:** `main` re-verified from scratch
+  (`node --test` 1845/1845, the Python gates, the board, and `boot_check`
+  38, `fetch_check` 17, `filter_row_check` 25, `distance_check` 28). The
+  one red CI run of the session, on `62b9c1cf`, is the harness's own
+  `DevToolsActivePort` launch timeout (exit 2), which is the flake `510/420`
+  tracks, not a regression. No worker had committed or pushed. Their
+  uncommitted trees were saved as patches outside the repo, and each worker
+  was resumed with orders to distrust its pre-crash work and re-verify it
+  all, with concurrency cut to two at a time.
