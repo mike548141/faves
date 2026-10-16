@@ -5611,6 +5611,11 @@ body.faves-view .to-top {
   margin-top: var(--space-1);
   font-weight: 600;
 }
+/* A hours reading that came from a listing, beside the caution (ADR 0161). */
+.caveat-details {
+  display: block;
+  margin-top: var(--space-1);
+}
 @media (prefers-color-scheme: dark) {
   .caveat-note.is-info {
     color: var(--info-ink);

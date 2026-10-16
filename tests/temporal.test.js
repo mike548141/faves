@@ -27,6 +27,7 @@ import {
   verification,
   verificationText,
   detailsVerification,
+  detailsClaim,
   refreshCaveat,
 } from "../site/js/temporal.js";
 
@@ -503,6 +504,30 @@ test("verification: every method in the closed set has a phrase", () => {
 
 // ---------- details provenance: venue-level, branch-level (ADR NNNN) ----------
 
+test("detailsVerification: a Google Maps reading is a method of its own, never first-party (ADR 0161)", () => {
+  // The whole point of the value: it must not collapse to "Verified" (an
+  // unknown method) or to a trusted one, because either would read as the
+  // shop's own word on a screen.
+  const v = detailsVerification(
+    { detailsVerified: null },
+    { detailsVerified: "2026-10-16", detailsVerifiedBy: "google-maps" }
+  );
+  assert.equal(v.method, "google-maps");
+  assert.equal(v.label, "Read from a Google Maps listing");
+  assert.equal(v.scope, "branch");
+  assert.ok(!TRUSTED_VERIFY_METHODS.includes("google-maps"));
+});
+
+test("detailsClaim: a Maps reading speaks for opening hours only, every other method for the whole card", () => {
+  const maps = detailsClaim("google-maps");
+  assert.equal(maps, "Opening hours");
+  assert.ok(!/phone|address/i.test(maps), "Maps is a source for hours alone (ADR 0161)");
+  for (const m of VERIFY_METHODS.filter((x) => x !== "google-maps")) {
+    assert.equal(detailsClaim(m), "Phone, address and opening hours", m);
+  }
+  assert.equal(detailsClaim(null), "Phone, address and opening hours", "an unknown method keeps the old sentence");
+});
+
 test("detailsVerification: a record with no branch reads exactly as it always did", () => {
   // BACKWARD COMPATIBILITY. Every record in the corpus but one carries the pair
   // at the venue level only, and nothing about them may change.
@@ -650,7 +675,7 @@ test("refreshCaveat: the owner's split — the shop's own word counts, a middlem
     assert.equal(on(m).show, false, `${m} is a check`);
     assert.equal(on(m).reason, null);
   }
-  for (const m of ["delivery-app", "third-party"]) {
+  for (const m of ["delivery-app", "third-party", "google-maps"]) {
     assert.equal(on(m).show, true, `${m} is not a check`);
     assert.equal(on(m).reason, "untrusted");
     assert.equal(on(m).method, m, "the UI needs to name the source it distrusts");

@@ -579,6 +579,15 @@ to tell apart: *"Phone, address and opening hours at Melling checked against the
 place's own site on 15 Aug 2026."* <!-- datescan:allow: quoted on-screen copy — niceDate's reader-facing format, not a stamp -->
 
 
+**`detailsVerifiedBy: "google-maps"` (ADR 0161)** is the one method that speaks
+for a single fact: a business's Google Maps listing is a source for a branch's
+**opening hours** and nothing else. `validate.py` accepts it only on a branch,
+only of `mcdonalds` or `subway`, only where that branch has hours, and never as
+a menu, price-revision or price-channel method. `temporal.js` `detailsClaim()`
+gives the ⓘ sentence its subject ("Opening hours", not "Phone, address and
+opening hours"), and it is deliberately not a trusted method. A round-the-clock
+day is `["00:00", null]`, which `formatDay` reads as "Open 24 hours".
+
 Ageing this field per *kind* — one decay limit for hours, another for phone and
 address — is a separate owner-ruled change whose numbers do not exist yet. It is
 not built.

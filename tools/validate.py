@@ -117,7 +117,16 @@ LIFECYCLE_EVENTS = {"closed-temporarily", "reopened", "closed-permanently"}
 VERIFY_METHODS = {
     "in-store", "paper-menu", "official-site",
     "phone", "delivery-app", "third-party",
+    "google-maps",
 }
+# ADR 0161: a Google Maps listing is a source for OPENING HOURS and nothing
+# else, on two named chains, on a branch. The closed set above is shared by the
+# menu's reading, a price channel and a price revision, so a value legal in it
+# is legal in all of them unless it is fenced here — and an unfenced `google-maps`
+# on a menu would read as a menu source the owner never ruled on.
+HOURS_ONLY_METHODS = {"google-maps"}
+HOURS_ONLY_VENUES = {"mcdonalds", "subway"}
+MENU_METHODS = VERIFY_METHODS - HOURS_ONLY_METHODS
 SEASONS = {"summer", "autumn", "winter", "spring"}
 # How many of a group's options you may take (ADR 0048). Kept in step with
 # site/js/addons.js `selectionAllowed`, which enforces the same two words.
@@ -819,8 +828,8 @@ def check_temporal(rid, obj, field, where, scalar_check=None):
             err(rid, f"{at}: note must be a string")
         # A reading that came from somewhere other than the venue's own
         # `verifiedBy` states its own method; otherwise it inherits (ADR 0031).
-        if "method" in e and e["method"] is not None and e["method"] not in VERIFY_METHODS:
-            err(rid, f"{at}: method {e['method']!r} not in {sorted(VERIFY_METHODS)}")
+        if "method" in e and e["method"] is not None and e["method"] not in MENU_METHODS:
+            err(rid, f"{at}: method {e['method']!r} not in {sorted(MENU_METHODS)}")
         for k in e:
             if k not in ("value", "from", "recorded", "note", "method"):
                 err(rid, f"{at}: unknown key {k!r}")
@@ -1265,8 +1274,8 @@ def check_price_channels(rid, data):
         # The method is what makes the second price as accountable as the first.
         # A channel reading is a reading: it says how it was obtained or it is
         # an assertion (ADR 0031).
-        if meta.get("method") not in VERIFY_METHODS:
-            err(rid, f"priceChannels.{key}: method must be one of {sorted(VERIFY_METHODS)}")
+        if meta.get("method") not in MENU_METHODS:
+            err(rid, f"priceChannels.{key}: method must be one of {sorted(MENU_METHODS)}")
         if not DATE_RE.match(str(meta.get("recorded", ""))):
             err(rid, f"priceChannels.{key}: recorded must be a YYYY-MM-DD date")
         declared.add(key)
@@ -1976,8 +1985,9 @@ def check_verification(rid, data, status):
 
     if verified is not None and not has_date:
         err(rid, f"verified must be null or an ISO date (YYYY-MM-DD), got {verified!r}")
-    if by is not None and by not in VERIFY_METHODS:
-        err(rid, f"verifiedBy {by!r} not in {sorted(VERIFY_METHODS)}")
+    if by is not None and by not in MENU_METHODS:
+        err(rid, f"verifiedBy {by!r} not in {sorted(MENU_METHODS)} — "
+                 "a Google Maps listing is a source for opening hours only (ADR 0161)")
     # A method with no date establishes nothing — §9 wants both halves or neither.
     if by is not None and verified is None:
         err(rid, "verifiedBy is set but verified is null — a method with no date is not a derivation")
@@ -1996,7 +2006,7 @@ def check_verification(rid, data, status):
     check_details_verification(rid, data, "card")
 
 
-def check_details_verification(rid, obj, where):
+def check_details_verification(rid, obj, where, branch=False):
     """`detailsVerified` + `detailsVerifiedBy` on one object — the venue record
     or one branch of it.
 
@@ -2019,6 +2029,17 @@ def check_details_verification(rid, obj, where):
         err(rid, f"{where}: detailsVerified must be null or an ISO date (YYYY-MM-DD), got {d_verified!r}")
     if d_by is not None and d_by not in VERIFY_METHODS:
         err(rid, f"{where}: detailsVerifiedBy {d_by!r} not in {sorted(VERIFY_METHODS)}")
+    # ADR 0161's bounds. The exception is for the hours of a BRANCH of one of two
+    # chains: a listing is read per place, so a venue-level value (which every
+    # branch without its own would inherit) would vouch for places nobody read.
+    if d_by in HOURS_ONLY_METHODS:
+        if not branch:
+            err(rid, f"{where}: detailsVerifiedBy {d_by!r} is for a branch's opening hours, "
+                     "not the venue's — a listing is read per place (ADR 0161)")
+        elif rid not in HOURS_ONLY_VENUES:
+            err(rid, f"{where}: detailsVerifiedBy {d_by!r} is ruled for {sorted(HOURS_ONLY_VENUES)} only (ADR 0161)")
+        elif not obj.get("hours"):
+            err(rid, f"{where}: detailsVerifiedBy {d_by!r} speaks for opening hours, and this branch has none")
     if d_by is not None and d_verified is None:
         err(rid, f"{where}: detailsVerifiedBy is set but detailsVerified is null — a method with no date is not a derivation")
     # Unlike `verified`, this one is an ERROR without its method. There is no
@@ -2385,7 +2406,7 @@ def check_restaurant(path):
             # Provenance is per-branch (see check_details_verification). Checked
             # inside this loop rather than beside the venue's, because a branch
             # is where the address, phone and hours actually live.
-            check_details_verification(rid, b, where)
+            check_details_verification(rid, b, where, branch=True)
     else:
         if not check_coords(rid, data, "card") and not is_recipes:
             warn(rid, "no coordinates (lat/lng) set — maps opens by address only")
