@@ -74,6 +74,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [Hell Pizza's "Half Buffalo Half Beast" carries no dairy tag](roadmap/080-theme-4-content-growth-ongoing-in-parallel/260-half-buffalo-half-beast-carries-no-dairy.md)
 - ✅ [Groundup Cafe: menu and cabinet food from the owner's photos](roadmap/080-theme-4-content-growth-ongoing-in-parallel/270-groundup-cafe-from-the-owner-s-photos.md)
 - ✅ 🔎 [A section note that points elsewhere tags every dish under it](roadmap/080-theme-4-content-growth-ongoing-in-parallel/280-a-section-note-that-points-elsewhere-tags-every-dish-under-it.md)
+- [~] [Add Hei, on Cuba Street, Wellington](roadmap/080-theme-4-content-growth-ongoing-in-parallel/290-add-hei-on-cuba-street.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
