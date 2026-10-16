@@ -1301,6 +1301,84 @@ CASES = {
 }
 
 
+# --- ADR 0157: a size ladder's default is the menu's, else the cheapest ------
+# A cue lives in the repo-only store data/defaults/<venue>.json, not in the
+# record, so a case here changes the record AND that file. name -> (mutate or
+# None, (venue stem, doc) or None, expect, want). Every case writes into the
+# sandbox only, and the file is removed again before the next one runs.
+SUBJECT_STEM = SUBJECT.rsplit("/", 1)[-1].removesuffix(".json")
+
+
+def _make_regular_dearer(g, d):
+    """Large becomes the default and the row follows it to $18.50 — the shape
+    Spices Indian's Full was before its cue was written down."""
+    g["options"][0].pop("default")
+    g["options"][1]["default"] = True
+    _first_item(d)["price"] = 18.5
+
+
+def _cue(**over):
+    row = {"group": "size", "option": "large", "from": "headline",
+           "evidence": "Printed 'Regular $14.00 / Large $18.50'; the headline price is $18.50."}
+    row.update(over)
+    return (SUBJECT_STEM, {"venue": SUBJECT_STEM, "rows": [row]})
+
+
+STORE_CASES = {
+    "a non-cheapest default with no recorded cue": (
+        _ladder(_make_regular_dearer), None,
+        "error", r"add-on group 'size': the default 'Large' \(\$18\.50\) is not the cheapest option \('Regular', \$14\.00\) and data/defaults/gold-lining-cafe\.json records no cue",
+    ),
+    "a non-cheapest default with a headline cue is legal": (
+        _ladder(_make_regular_dearer), _cue(), "clean", None,
+    ),
+    "a non-cheapest default with a wording cue is legal": (
+        _ladder(_make_regular_dearer),
+        _cue(**{"from": "wording", "evidence": "The menu calls the large 'standard'."}),
+        "clean", None,
+    ),
+    "a default tied for cheapest needs no cue": (
+        _ladder(lambda g, d: (_make_regular_dearer(g, d), g["options"][1].update(dishPrice=14.0),
+                              _first_item(d).update(price=14.0))),
+        None, "clean", None,
+    ),
+    "a cue for a default that is already the cheapest": (
+        _ladder(lambda g, d: None),
+        _cue(option="regular"),
+        "error", r"a cue for group 'size', whose default 'Regular' is already the cheapest",
+    ),
+    "a cue naming an option that is not the default": (
+        _ladder(_make_regular_dearer), _cue(option="regular"),
+        "error", r"the cue for group 'size' names option 'regular', but the default is 'large'",
+    ),
+    "a cue whose `from` is off the closed set": (
+        _ladder(_make_regular_dearer), _cue(**{"from": "guess"}),
+        "error", r"rows\[0\]: `from` must be one of \['headline', 'wording'\], got 'guess'",
+    ),
+    "a cue with no evidence": (
+        _ladder(_make_regular_dearer), _cue(evidence="  "),
+        "error", r"rows\[0\]: `evidence` must quote what the menu printed",
+    ),
+    "a cue for a group the venue does not have": (
+        _ladder(_make_regular_dearer), _cue(group="portion"),
+        "error", r"rows\[0\]: no selects group 'portion' in this venue's addOnGroups",
+    ),
+    "a second cue for one group": (
+        _ladder(_make_regular_dearer),
+        (SUBJECT_STEM, {"venue": SUBJECT_STEM, "rows": [_cue()[1]["rows"][0], _cue()[1]["rows"][0]]}),
+        "error", r"rows\[1\]: a second cue for group 'size'",
+    ),
+    "a cue file for a venue that is not in the corpus": (
+        None, ("no-such-venue", {"venue": "no-such-venue", "rows": []}),
+        "error", r"data/defaults/no-such-venue\.json: no venue 'no-such-venue'",
+    ),
+    "a cue file naming another venue": (
+        None, (SUBJECT_STEM, {"venue": "someone-else", "rows": []}),
+        "error", r"`venue` must be 'gold-lining-cafe', got 'someone-else'",
+    ),
+}
+
+
 # Mutations to a SOURCE file rather than to a record. The gates that hold two
 # hand-maintained tables in step live in the code, so no amount of breaking a
 # menu could ever exercise them — and a drift gate that cannot fire is the
@@ -1686,6 +1764,10 @@ def main() -> int:
         work.mkdir(parents=True)
         shutil.copytree(ROOT / "tools", work / "tools")
         shutil.copytree(ROOT / "site" / "data", work / "site" / "data")
+        # The repo-only store of default cues (ADR 0157): the unmutated corpus
+        # needs it, because Spices Indian's three Full defaults are dearer than
+        # their Half and only their rows there make them legal.
+        shutil.copytree(ROOT / "data" / "defaults", work / "data" / "defaults")
         # validate.py reads four tables out of the shipped JS so they can't
         # drift from their Python counterparts (see _load_renames,
         # _load_contradicts, _load_vibes and _load_diet_filters there), so the
@@ -1788,6 +1870,35 @@ def main() -> int:
                 if not ok:
                     failures.append(name)
 
+        # ADR 0157 cases: a record mutation plus (optionally) a cue file in the
+        # repo-only store. Same verdict function as every other case.
+        defaults_dir = work / "data" / "defaults"
+        for name, (mutate, cue, expect, want) in STORE_CASES.items():
+            d = copy.deepcopy(base)
+            if mutate is not None:
+                mutate(d)
+                if d == base:
+                    print(f"  ❌ {name:38} MUTATION CHANGED NOTHING in the record")
+                    failures.append(name)
+                    continue
+            defaults_dir.mkdir(parents=True, exist_ok=True)
+            cue_file = defaults_dir / f"{cue[0]}.json" if cue else None
+            if cue_file:
+                cue_file.write_text(json.dumps(cue[1], indent=2), encoding="utf-8")
+            subject.write_text(json.dumps(d, indent=2), encoding="utf-8")
+            rc, out = run_validate(work)
+            subject.write_text(original, encoding="utf-8")
+            if cue_file:
+                cue_file.unlink()
+
+            ok, got = verdict(name, expect, want, rc, said(out, baseline))
+            print(f"  {'✅' if ok else '❌'} {name:38} {got}")
+            if args.verbose:
+                for line in out.splitlines():
+                    print(f"       | {line}")
+            if not ok:
+                failures.append(name)
+
     drift = check_need_kinds_agree()
     if drift:
         print(f"  ❌ {'needs vocabulary agrees across files':38} {drift}")
@@ -1804,7 +1915,7 @@ def main() -> int:
         )
         return 1
 
-    total = len(CASES) + sum(len(c) for c in SOURCE_CASES.values())
+    total = len(CASES) + sum(len(c) for c in SOURCE_CASES.values()) + len(STORE_CASES)
     print(f"\nAll {total} mutations behaved as specified.")
     return 0
 

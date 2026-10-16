@@ -1483,6 +1483,109 @@ def check_selects_on_dish(rid, section, item, defs):
                              "variant of a dish making that claim cannot be one (ADR 0130)")
 
 
+DEFAULT_CUES = ROOT / "data" / "defaults"
+DEFAULT_CUE_KINDS = {"wording", "headline"}
+
+
+def _option_label(o):
+    return o.get("name") or o.get("id")
+
+
+def check_default_cues(rid, defs):
+    """Which option of a size ladder is the default, and why (ADR 0157).
+
+    The owner's rule (2026-10-03, roadmap 200/110): the default is the option
+    the MENU names — by its wording ("regular") or by a printed headline price
+    — and otherwise the CHEAPEST, with the dish priced there. The validator
+    cannot read a menu, so it enforces the second half and makes the first half
+    admissible only by being written down: a default dearer than the cheapest
+    option must have a row in `data/defaults/<venue>.json` saying which cue it
+    came from and quoting it.
+
+    That store is repo-only on purpose. A `defaultFrom` field in the venue file
+    would ship to every phone and no screen renders it (ADR 0047/0137).
+
+    The check also runs the other way: a row whose default is already the
+    cheapest, or that names an option which is no longer the default, is an
+    error. A cue nothing needs is a claim a later reader would trust, and a
+    stale one is how the exception outlives the menu that earned it."""
+    ladders = {gid: g for gid, g in defs.items() if is_selects(g)}
+    path = DEFAULT_CUES / f"{rid}.json"
+    rows, where = [], f"data/defaults/{rid}.json"
+    if path.is_file():
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"), parse_constant=_no_constants)
+        except (ValueError, OSError) as e:
+            err(rid, f"{where}: cannot be read ({e})")
+            doc = None
+        if doc is not None:
+            if not isinstance(doc, dict) or not isinstance(doc.get("rows"), list):
+                err(rid, f"{where}: must be an object with a `rows` list")
+            else:
+                if doc.get("venue") != rid:
+                    err(rid, f"{where}: `venue` must be {rid!r}, got {doc.get('venue')!r}")
+                rows = doc["rows"]
+
+    cued = {}
+    for i, row in enumerate(rows):
+        at = f"{where} rows[{i}]"
+        if not isinstance(row, dict):
+            err(rid, f"{at} must be an object")
+            continue
+        gid = row.get("group")
+        if gid in cued:
+            err(rid, f"{at}: a second cue for group {gid!r} — one default, one cue")
+            continue
+        cued[gid] = row
+        if row.get("from") not in DEFAULT_CUE_KINDS:
+            err(rid, f"{at}: `from` must be one of {sorted(DEFAULT_CUE_KINDS)}, got "
+                     f"{row.get('from')!r}")
+        ev = row.get("evidence")
+        if not (isinstance(ev, str) and ev.strip()):
+            err(rid, f"{at}: `evidence` must quote what the menu printed — converting a "
+                     "choice deletes its wording from the dish, so this is the only "
+                     "place a later session can check the cue against")
+        if gid not in ladders:
+            err(rid, f"{at}: no selects group {gid!r} in this venue's addOnGroups")
+
+    for gid, g in ladders.items():
+        opts = [o for o in (g.get("options") or []) if isinstance(o, dict)]
+        defaults = [o for o in opts if o.get("default") is True]
+        prices = [o.get("dishPrice") for o in opts]
+        if len(defaults) != 1 or not all(
+            isinstance(p, (int, float)) and not isinstance(p, bool) for p in prices
+        ):
+            continue  # check_selects_group / check_selects_option already said so
+        d = defaults[0]
+        cheapest = min(prices)
+        row = cued.get(gid)
+        if d["dishPrice"] > cheapest:
+            if row is None:
+                cheap = next(o for o in opts if o["dishPrice"] == cheapest)
+                err(rid, f"add-on group {gid!r}: the default {_option_label(d)!r} "
+                         f"(${d['dishPrice']:.2f}) is not the cheapest option "
+                         f"({_option_label(cheap)!r}, ${cheapest:.2f}) and {where} records no "
+                         "cue for it — the default is the one the menu names, by wording or "
+                         "a headline price, otherwise the cheapest, with the dish priced "
+                         "there (ADR 0157). Record the cue, or move the default.")
+            elif row.get("option") != d.get("id"):
+                err(rid, f"{where}: the cue for group {gid!r} names option "
+                         f"{row.get('option')!r}, but the default is {d.get('id')!r}")
+        elif row is not None:
+            err(rid, f"{where}: a cue for group {gid!r}, whose default "
+                     f"{_option_label(d)!r} is already the cheapest — remove the row; a cue "
+                     "nothing needs is a claim a later reader would trust (ADR 0157)")
+
+
+def check_orphan_default_cues(venue_ids):
+    """A `data/defaults/` file for a venue that is not in the corpus."""
+    if not DEFAULT_CUES.is_dir():
+        return
+    for f in sorted(DEFAULT_CUES.glob("*.json")):
+        if f.stem not in venue_ids:
+            err("defaults", f"data/defaults/{f.name}: no venue {f.stem!r} in site/data/restaurants/")
+
+
 def check_add_on_groups(rid, data):
     """`record.addOnGroups`: the venue's priced extras, defined once and named
     by id from a section or a dish (ADR 0048). Returns {id: group} so the caller
@@ -2444,6 +2547,7 @@ def check_restaurant(path):
     # or a dish (ADR 0048). The definitions are checked first; the references
     # are collected as the menu is read and resolved once it has been.
     add_on_defs = check_add_on_groups(rid, data)
+    check_default_cues(rid, add_on_defs)
     add_on_refs = []
 
     # The doors this venue sells through, declared once for the whole record.
@@ -3390,6 +3494,7 @@ def main(argv=None):
 
     for path in files:
         check_restaurant(path)
+    check_orphan_default_cues(file_ids)
 
     check_version_bump()
     check_allergen_tags()

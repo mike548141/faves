@@ -1871,3 +1871,11 @@ deliberation those compact docs omit.
   pre-selected, and both Adds (picker and row) go `aria-disabled` with the
   reason in words until it is answered. Refused on `selects` and pick-many
   groups. Never changes an allergen warning.
+- [0157](0157-a-size-ladders-default-is-the-menus-else-the-cheapest.md) —
+  **A size ladder's default is the menu's, else the cheapest** (`200/110`,
+  owner-ruled 2026-10-03). A `selects` default dearer than its cheapest sibling
+  is a `validate.py` error unless `data/defaults/<venue>.json` records the cue
+  (`wording` or `headline`) with the printed text. Repo-only, because a shipped
+  `defaultFrom` would be a field no screen renders (0047/0137). Rows are checked
+  both ways, so a stale cue errors. Spices Indian's three Full defaults stay as
+  `headline`. The `adds` side needs no rule: it has no default.

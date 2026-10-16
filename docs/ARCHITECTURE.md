@@ -869,6 +869,14 @@ group a size or protein ladder — which plate, not what goes on it. Absent
   options may share one;
 - may leave an option **unlabelled** (the venue printed two prices and named
   neither); its `id` is then written by hand.
+- has as its default **the option the menu names** (by wording such as
+  "regular", or by a printed headline price) and otherwise **the cheapest**,
+  with the dish priced there (ADR 0157, owner-ruled 2026-10-03). A default
+  dearer than the cheapest option is an error unless
+  `data/defaults/<venue>.json` holds a row for the group saying which cue it
+  came from (`wording` or `headline`) and quoting the printed text. That store
+  is repo-only: a shipped field nothing renders is what ADR 0047 refuses. A
+  row for a default that is already cheapest is an error too.
 
 Per dish, `validate.py` also requires: the dish's `price` equals its default's
 `dishPrice`; at most one `selects` group on the dish (size × protein is **not

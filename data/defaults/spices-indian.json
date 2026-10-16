@@ -1,0 +1,23 @@
+{
+  "venue": "spices-indian",
+  "rows": [
+    {
+      "group": "portion-13-21",
+      "option": "full",
+      "from": "headline",
+      "evidence": "Seekh Kabab was printed 'Half $13.00 / full $21.00.' and the record's headline price was the full one, $21. Owner ruled 2026-10-03 (roadmap 200/110) that a printed headline price counts as the menu naming the default."
+    },
+    {
+      "group": "portion-12-20",
+      "option": "full",
+      "from": "headline",
+      "evidence": "Garlic Tikka was printed 'Half $12.00 / full $20.00.' and the record's headline price was the full one, $20. Owner ruled 2026-10-03 (roadmap 200/110) that a printed headline price counts as the menu naming the default."
+    },
+    {
+      "group": "portion-13-23",
+      "option": "full",
+      "from": "headline",
+      "evidence": "Tandoori Chicken was printed 'Half $13.00 / full $23.00.' and the record's headline price was the full one, $23. Owner ruled 2026-10-03 (roadmap 200/110) that a printed headline price counts as the menu naming the default."
+    }
+  ]
+}
