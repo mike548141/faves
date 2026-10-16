@@ -6500,6 +6500,61 @@ mark.search-match {
   text-align: left;
 }
 
+/* ---------- An unfinished dish on the order sheet (roadmap 200/130, ADR 0158) ----------
+   A line missing a compulsory choice says so in WORDS ("Needs a choice: Sauce"),
+   with a dashed outline and the ⚠️ as second and third cues — never colour alone
+   (WCAG 1.4.1) — in the same dashed-not-dimmed idiom as the menu's blocked Add
+   (.stepper-add.is-blocked): dimmed text would fail AA contrast. The finish
+   control reuses the picker's own fieldset/radio classes (.addon-*), so it reads
+   as the same question. Every target is >= 44 px. No transition or transform, so
+   there is no motion for prefers-reduced-motion to reduce. */
+.order-line.is-unfinished {
+  padding: var(--space-2);
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius);
+}
+.order-line-unfinished {
+  display: block;
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+}
+.order-finish {
+  flex: 1 0 100%;
+}
+.order-finish-open {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  cursor: pointer;
+}
+.order-finish-form {
+  display: grid;
+  gap: var(--space-2);
+}
+.order-finish-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+.order-finish-done.is-blocked {
+  border-style: dashed;
+  background: transparent;
+  color: var(--ink);
+}
+.order-unfinished-note {
+  margin: var(--space-1) 0 0;
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+}
+
 /* ---------- Saved orders (Theme 26a) ---------- */
 /* Two surfaces, one vocabulary. In the ORDER SHEET: a save control under a
    venue's lines, built from the note control's own parts (.order-note-save /

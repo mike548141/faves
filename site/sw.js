@@ -11,7 +11,7 @@
 //     0145 as revised by ADR 0146). There is no DATA_VERSION any more: a menu
 //     edit changes no byte of this file, and the phone learns of it from
 //     data/catalogue.json instead — see "The data store" below.
-const SHELL_VERSION = "2026-10-16.1";
+const SHELL_VERSION = "2026-10-16.2";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
 const DATA_STORE = "faves-data";
@@ -57,6 +57,7 @@ const SHELL = [
   "js/data.js",
   "js/defaults.js",
   "js/dialog.js",
+  "js/addon-warning.js",
   "js/addons-ui.js",
   "js/addons.js",
   "js/dietary.js",
@@ -105,6 +106,8 @@ const SHELL = [
   "js/report-ui.js",
   "js/reo.js",
   "js/results-view.js",
+  "js/order-finish.js",
+  "js/order-finish-ui.js",
   "js/overflow-ui.js",
   "js/saved-orders.js",
   "js/saved-orders-ui.js",

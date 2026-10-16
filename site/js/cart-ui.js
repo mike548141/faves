@@ -14,6 +14,9 @@ import { selectionKey, selectionSummary } from "./addons.js";
 import { dishId } from "./dish-id.js";
 import { displayPrice, formatMoney } from "./place.js";
 import { saveRow } from "./saved-orders-ui.js";
+import { loadRestaurant } from "./data.js";
+import { unfinishedOf, summariseUnfinished } from "./order-finish.js";
+import { finishControl, pruneDrafts } from "./order-finish-ui.js";
 
 // A line, subtotal or total always carries the currency it is in — an order
 // can span venues in different countries, and an unlabelled number then lies.
@@ -43,6 +46,39 @@ let noteFieldSeq = 0;
 // rebuild so focus can land back on the control the person was just using —
 // including when the save merged their line into an existing one.
 let focusNoteKey = null;
+
+// Each venue's LIVE record, by id (or null once a load failed). An order line
+// stores the options chosen, never the group definitions, so whether a line still
+// owes a compulsory choice (ADR 0156) can only be answered against the menu as it
+// is now (ADR 0158). A menu page hands over the record it already loaded; any
+// other page fetches the few venues in the order when the sheet opens — a request
+// the service worker answers from its store, so it works offline for a venue the
+// phone has.
+const venueRecords = new Map();
+const loading = new Set();
+
+/** A menu page offers the record it has already loaded, so the sheet need not fetch it. */
+export function noteVenueRecord(record) {
+  if (record?.id) venueRecords.set(record.id, record);
+}
+
+/**
+ * The −/count pair WITHOUT the ＋, for an unfinished line: it may be lowered or
+ * removed but not grown (ADR 0156 §4 — an incomplete line cannot grow). Growing
+ * it would add one more of a dish the kitchen cannot make; the reader finishes it
+ * (or lowers it and adds the others from the menu, where the choice is asked).
+ */
+function reduceStepper(item) {
+  const wrap = el("div", { className: "stepper" });
+  const said = `${item.name}${normaliseNote(item.note) ? `, noted “${normaliseNote(item.note)}”` : ""}`;
+  const dec = el("button", { type: "button", className: "stepper-btn", textContent: "−" });
+  dec.setAttribute("aria-label", `One fewer ${said}`);
+  dec.addEventListener("click", () =>
+    order.setQty(item.venueId, dishId(item), item.qty - 1, selectionKey(item.options), item.note),
+  );
+  wrap.append(dec, el("span", { className: "stepper-count", textContent: String(item.qty) }));
+  return wrap;
+}
 
 /**
  * The + / − / count control for one dish. Bound to the shared order store
@@ -217,15 +253,23 @@ function noteRow(item) {
   return row;
 }
 
-function lineRow(item, collectMode) {
+function lineRow(item, collectMode, info, record) {
+  // An unfinished line's stored price is the dish WITHOUT its compulsory choice.
+  // Where the choice can cost something the number is a floor, and says so with
+  // the same "+" the subtotal uses for an unpriced line — plus words for a screen
+  // reader, since a bare "+" is not a sentence (roadmap 200/130).
+  const floor = !!info && info.extra.max > 0;
   const price = el("span", {
     className: "order-line-price",
     // The line's OWN currency, not the page's. The subtotal below already reads
     // it (`g.currency`), so a line that formatted without one printed "$8.95"
     // above a "£17.90" subtotal — the one place in the sheet where the two
     // could disagree.
-    textContent: item.price == null ? "—" : money(item.price * item.qty, item.currency),
+    textContent:
+      item.price == null ? "—" : money(item.price * item.qty, item.currency) + (floor ? "+" : ""),
   });
+  if (floor) price.append(el("span", { className: "sr-only", textContent: " before the choice still to make" }));
+  const owed = info ? joinOwed(info) : "";
 
   // What was asked for, read out the way you would say it at the counter —
   // "2× Iskender with Mild chilli, Garlic yogurt". Collect mode is someone
@@ -249,7 +293,9 @@ function lineRow(item, collectMode) {
       // cannot be a caption the reader has to notice separately.
       el("span", {
         className: "order-line-name",
-        textContent: `${item.qty}× ${spoken}${note ? ` — ${note}` : ""}`,
+        // …and so does an unmade choice: collect mode is read aloud, and "Stir
+        // fry, no sauce" is what the kitchen would hear if this stayed silent.
+        textContent: `${item.qty}× ${spoken}${note ? ` — ${note}` : ""}${owed ? ` — choice not made: ${owed}` : ""}`,
       }),
     ]);
     const li = el("li", { className: "order-line" }, [label, price]);
@@ -257,11 +303,19 @@ function lineRow(item, collectMode) {
     return li;
   }
 
-  return el("li", { className: "order-line has-note-row" }, [
-    dishStepper(item),
+  const li = el("li", { className: info ? "order-line has-note-row is-unfinished" : "order-line has-note-row" }, [
+    info ? reduceStepper(item) : dishStepper(item),
     el("span", { className: "order-line-name" }, [
       item.name,
       config ? el("span", { className: "order-line-config", textContent: config }) : null,
+      // The warning is WORDS first: the icon is decoration and the border a
+      // second cue, never the only one (WCAG 1.4.1).
+      info
+        ? el("span", { className: "order-line-unfinished" }, [
+            el("span", { "aria-hidden": "true", textContent: "⚠️ " }),
+            el("span", { textContent: `Needs a choice: ${owed}` }),
+          ])
+        : null,
       // Under the dish name, where the configuration already sits. `textContent`
       // (via el) and never innerHTML: this string can arrive off a shared link
       // that anyone could craft.
@@ -274,8 +328,25 @@ function lineRow(item, collectMode) {
         : null,
     ]),
     price,
+    info
+      ? finishControl(item, info, record, {
+          // The finish rebuilds the sheet; focus then lands on the finished
+          // line's note button (merged or not), via the note control's own
+          // carrier, rather than on <body>.
+          beforeFinish: (newKey) => {
+            focusNoteKey = newKey;
+          },
+        })
+      : null,
     noteRow(item),
   ]);
+  return li;
+}
+
+/** "Sauce" or "Sauce and Size" — the groups a line still owes, in words. */
+function joinOwed(info) {
+  const names = info.groups.map((g) => g.name);
+  return names.length < 2 ? names[0] || "" : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
 
 export function initOrderUI() {
@@ -296,6 +367,13 @@ export function initOrderUI() {
   ]);
   collectBtn.setAttribute("aria-pressed", "false");
   const clearBtn = el("button", { type: "button", className: "order-clear", textContent: "Clear" });
+  // What the sheet is missing, in words, directly under the total it qualifies
+  // (roadmap 200/130). Hidden while every line is complete.
+  const unfinishedEl = el("p", { className: "order-unfinished-note", hidden: true });
+  // Said when a venue's menu could not be loaded to check its lines. Honest about
+  // not knowing, rather than silent: a line we could not check is not a line we
+  // checked and found complete.
+  const uncheckedEl = el("p", { className: "order-caption order-unchecked-note", hidden: true });
   const sendBtn = el("button", { type: "button", className: "order-send" }, [
     el("span", { "aria-hidden": "true", textContent: "📤 " }),
     "Send to the orderer",
@@ -318,10 +396,12 @@ export function initOrderUI() {
           el("span", { textContent: "Total" }),
           totalEl,
         ]),
+        unfinishedEl,
         el("p", {
           className: "order-caption",
           textContent: "Estimated from our menu — confirm at the till.",
         }),
+        uncheckedEl,
         sendBtn,
         el("div", { className: "order-actions" }, [collectBtn, clearBtn]),
       ]),
@@ -351,6 +431,30 @@ export function initOrderUI() {
   let collectMode = false;
   let confirmingClear = false;
 
+  // Does this line still owe a compulsory choice? Null when complete, or when we
+  // hold no record to judge it against (loading, failed, or the dish has left).
+  const verdictOf = (line) => unfinishedOf(venueRecords.get(line.venueId), line);
+
+  // Fetch the live record of every venue in the order that we do not hold, then
+  // repaint if the sheet is open. One in flight per venue; a failure is recorded
+  // as null so it is not retried on every repaint (the next opening clears it).
+  function ensureRecords() {
+    for (const id of new Set(order.items().map((i) => i.venueId))) {
+      if (venueRecords.has(id) || loading.has(id)) continue;
+      loading.add(id);
+      loadRestaurant(id)
+        .then((r) => venueRecords.set(id, r))
+        .catch(() => venueRecords.set(id, null))
+        .finally(() => {
+          loading.delete(id);
+          if (dialog.open) {
+            renderBody();
+            renderTotal();
+          }
+        });
+    }
+  }
+
   function renderBody() {
     const groups = order.groups();
     body.replaceChildren();
@@ -379,12 +483,21 @@ export function initOrderUI() {
             })()
           : null,
       ]);
-      const lines = el("ul", { className: "order-lines" }, g.items.map((i) => lineRow(i, collectMode)));
+      const rec = venueRecords.get(g.venueId);
+      const verdicts = g.items.map((i) => ({ line: i, info: verdictOf(i) }));
+      const lines = el(
+        "ul",
+        { className: "order-lines" },
+        verdicts.map(({ line, info }) => lineRow(line, collectMode, info, rec)),
+      );
+      // A subtotal that leaves out a choice which can cost money is a floor,
+      // exactly as one holding an unpriced line is.
+      const short = summariseUnfinished(verdicts).shortBy;
       const subtotal = el("div", { className: "order-subtotal" }, [
         el("span", { textContent: plural(g.count, "item") }),
         el("span", {
           className: "order-subtotal-amount",
-          textContent: money(g.subtotal, g.currency) + (g.hasUnpriced ? "+" : ""),
+          textContent: money(g.subtotal, g.currency) + (g.hasUnpriced || short ? "+" : ""),
         }),
       ]);
       // Saving is offered where the lines are, not in collect mode (that is
@@ -394,6 +507,8 @@ export function initOrderUI() {
         el("section", { className: "order-group" }, [head, lines, subtotal, collectMode ? null : saveRow(g)])
       );
     }
+
+    pruneDrafts(new Set(order.items().map(lineKey)));
 
     // Saving a note rebuilds this whole body, so keyboard focus would otherwise
     // be dumped on <body> mid-task. Matched on the line key rather than a CSS
@@ -426,7 +541,24 @@ export function initOrderUI() {
               shown[0].currency
             )
           : shown.map((s) => formatMoney(s.amount, s.currency)).join(" + ");
-    totalEl.textContent = text + (anyUnpriced ? "+" : "");
+    // A dish still missing a compulsory choice is priced at its base, and the
+    // choice can add to that. Say so — in the total's "+" and in words under it —
+    // rather than total the order as if it were complete (roadmap 200/130).
+    const mine = summariseUnfinished(order.items().map((line) => ({ line, info: verdictOf(line) })));
+    totalEl.textContent = text + (anyUnpriced || mine.shortBy ? "+" : "");
+    unfinishedEl.hidden = mine.count === 0;
+    unfinishedEl.textContent =
+      mine.count === 0
+        ? ""
+        : `${plural(mine.count, "dish", "dishes")} still ${mine.count === 1 ? "needs" : "need"} a choice` +
+          (mine.shortBy
+          ? ", so this total is short by what the choice costs."
+          : `. Finish ${mine.count === 1 ? "it" : "them"} above.`);
+    const unchecked = [...new Set(order.items().map((i) => i.venueId))].filter((id) => venueRecords.get(id) === null);
+    uncheckedEl.hidden = unchecked.length === 0;
+    uncheckedEl.textContent = unchecked.length
+      ? "Couldn't load every menu to check for dishes still needing a choice."
+      : "";
   }
 
   function renderFab() {
@@ -446,6 +578,7 @@ export function initOrderUI() {
     renderFab();
     sendBtn.hidden = order.count() === 0; // nothing to send from an empty order
     if (dialog.open) {
+      ensureRecords(); // a line merged in from a share may name a venue we have not loaded
       renderBody();
       renderTotal();
     }
@@ -455,6 +588,9 @@ export function initOrderUI() {
     collectMode = false;
     collectBtn.setAttribute("aria-pressed", "false");
     resetClear();
+    // A failed load is retried each time the sheet is opened, not on every repaint.
+    for (const [id, r] of venueRecords) if (r === null) venueRecords.delete(id);
+    ensureRecords();
     renderBody();
     renderTotal();
     dialog.showModal();
@@ -596,6 +732,7 @@ export function initOrderUI() {
         // Show the merged result straight away.
         collectMode = false;
         collectBtn.setAttribute("aria-pressed", "false");
+        ensureRecords();
         renderBody();
         renderTotal();
         dialog.showModal();

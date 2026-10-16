@@ -222,6 +222,11 @@ const OPTION_ONLY = pythonInlineSet(validatePy, "OPTION_ONLY_TAGS", "tools/valid
 const menuJs = read("site/js/menu.js");
 const recipeJs = read("site/js/recipe.js");
 const addonsUiJs = read("site/js/addons-ui.js");
+// The picker's SENTENCES (the three tables below) moved to addon-warning.js in
+// roadmap 200/130, so the order sheet's finish control says the same words from
+// the same code; the heat chips stayed in addons-ui.js. Both are the picker's
+// surface, so both are read — and a table that moved BACK would fail loudly here.
+const addonWarningJs = read("site/js/addon-warning.js");
 const tagsJs = read("site/js/tags.js");
 
 // The menu row and the recipe page draw their chips from ONE module since
@@ -235,9 +240,9 @@ const chip = {
   keys: [...Object.keys(TAG_DIETARY), ...Object.keys(TAG_ALLERGEN)],
 };
 
-const addonAllergen = jsTable(addonsUiJs, "ALLERGEN_LABEL", "site/js/addons-ui.js");
-const addonClaim = jsTable(addonsUiJs, "CLAIM_LABEL", "site/js/addons-ui.js");
-const addonCarries = jsTable(addonsUiJs, "CARRIES", "site/js/addons-ui.js");
+const addonAllergen = jsTable(addonWarningJs, "ALLERGEN_LABEL", "site/js/addon-warning.js");
+const addonClaim = jsTable(addonWarningJs, "CLAIM_LABEL", "site/js/addon-warning.js");
+const addonCarries = jsTable(addonWarningJs, "CARRIES", "site/js/addon-warning.js");
 // 🛑 THIS LINE REPLACES AN EXEMPTION (roadmap 200/080, owner-ruled 2026-09-21).
 // Until now the picker's surface exempted `spicy-1/2/3` with the reason "heat is
 // not part of the picker — no add-on contradiction and no allergy/diet
@@ -284,7 +289,7 @@ const SURFACES = [
     exempt: Object.fromEntries(OPTION_ONLY.map((t) => [t, OPTION_ONLY_REASON])),
   },
   {
-    file: "site/js/addons-ui.js",
+    file: "site/js/addon-warning.js",
     what: "the add-on picker's words (ALLERGEN_LABEL + CLAIM_LABEL + CARRIES + heat.js)",
     labelled: new Set([...addonAllergen.keys(), ...addonClaim.keys(), ...addonCarries.keys(), ...addonHeat]),
     tableKeys: [...addonAllergen.keys(), ...addonClaim.keys(), ...addonCarries.keys()],
