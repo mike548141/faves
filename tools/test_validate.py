@@ -912,6 +912,33 @@ CASES = {
         _ladder(lambda g, d: g.update(required=True)),
         "error", r"add-on group 'size': required does not apply to a selects group",
     ),
+    # --- ADR 0159: a MUST-SEE group (roadmap 200/120) ---------------------
+    # The legal shapes first (a validator that refused every `mustSee` would pass
+    # all the refusals below), then each way it is redundant or mistyped.
+    "a must-see pick-many group is legal": (
+        _breaks(lambda g, d: g.update(mustSee=True)),
+        "clean", None,
+    ),
+    "a must-see pick-one group is legal": (
+        _breaks(lambda g, d: (g.update(select="one", mustSee=True), g.pop("max"))),
+        "clean", None,
+    ),
+    "mustSee written as false": (
+        _breaks(lambda g, d: g.update(mustSee=False)),
+        "error", r"add-on group 'sauces': mustSee must be true or absent, got False",
+    ),
+    "mustSee written as a string": (
+        _breaks(lambda g, d: g.update(mustSee="yes")),
+        "error", r"add-on group 'sauces': mustSee must be true or absent, got 'yes'",
+    ),
+    "mustSee on a selects group": (
+        _ladder(lambda g, d: g.update(mustSee=True)),
+        "error", r"add-on group 'size': mustSee does not apply to a selects group",
+    ),
+    "mustSee on a required group": (
+        _breaks(lambda g, d: (g.update(select="one", required=True, mustSee=True), g.pop("max"))),
+        "error", r"add-on group 'sauces': mustSee does not apply to a required group",
+    ),
     # --- ADR 0130: a group that SELECTS a variant (roadmap 28k) -----------
     # The positive cases first, because the field arrives on a corpus of 50
     # groups that must not notice: absent `kind` is `adds`, and so is the word.

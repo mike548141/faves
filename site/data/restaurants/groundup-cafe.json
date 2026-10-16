@@ -1402,6 +1402,7 @@
       "id": "milks",
       "name": "Milks",
       "select": "one",
+      "mustSee": true,
       "options": [
         {
           "name": "Soy",

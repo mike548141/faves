@@ -74,7 +74,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [Hell Pizza's "Half Buffalo Half Beast" carries no dairy tag](roadmap/080-theme-4-content-growth-ongoing-in-parallel/260-half-buffalo-half-beast-carries-no-dairy.md)
 - ✅ [Groundup Cafe: menu and cabinet food from the owner's photos](roadmap/080-theme-4-content-growth-ongoing-in-parallel/270-groundup-cafe-from-the-owner-s-photos.md)
 - ✅ 🔎 [A section note that points elsewhere tags every dish under it](roadmap/080-theme-4-content-growth-ongoing-in-parallel/280-a-section-note-that-points-elsewhere-tags-every-dish-under-it.md)
-- [~] [Add Hei, on Cuba Street, Wellington](roadmap/080-theme-4-content-growth-ongoing-in-parallel/290-add-hei-on-cuba-street.md)
+- ✅ [Add Hei, on Cuba Street, Wellington](roadmap/080-theme-4-content-growth-ongoing-in-parallel/290-add-hei-on-cuba-street.md)
 - [ ] 🔎 ["Vegan mayo" is tagged contains-egg, on a dish the venue calls](roadmap/080-theme-4-content-growth-ongoing-in-parallel/300-vegan-mayo-is-tagged-egg.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
@@ -156,7 +156,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [A required choice still offers "None"](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/090-a-required-choice-still-offers-none.md)
 - ✅ 🔎 [Survey: every way a dish is configured, across the whole corpus](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/100-survey-every-way-a-dish-is-configured.md)
 - ✅ [A size ladder's default is the menu's; failing that, the cheapest](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/110-a-size-ladders-default-is-the-menus.md)
-- [~] [A "must-see" choice opens when you press Add](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/120-a-must-see-choice-opens-when-you-add.md)
+- ✅ [A "must-see" choice opens when you press Add](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/120-a-must-see-choice-opens-when-you-add.md)
 - ✅ [An unfinished dish on the order sheet: warn, and finish it there](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/130-an-unfinished-dish-on-the-order-sheet.md)
 - [ ] [How many you may pick, and what the extras beyond that cost](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/140-how-many-you-may-pick-and-what-extras-cost.md)
 - [ ] [A fee that is not a dish: takeaway containers and cups](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/150-a-fee-that-is-not-a-dish.md)
@@ -259,7 +259,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [28l — The absorption mechanics, and the gate that must exist BEFORE a](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/090-28l-the-absorption-mechanics-and-the-gate-that.md)
 - ✅ [28m — Render a selects group, and put its choice on the order line](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/100-28m-render-a-selects-group-and-put-its-choice.md)
 - ✅ [28n — Convert the prose size ladders: additive, and no id moves](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/110-28n-convert-the-prose-size-ladders-additive-no.md)
-- [ ] [28o — Merge the 63 ladders that differ only by name and price](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/120-28o-merge-the-63-ladders-that-differ-only-by-n.md)
+- [~] [28o — Merge the 63 ladders that differ only by name and price](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/120-28o-merge-the-63-ladders-that-differ-only-by-n.md)
 - [ ] [28p — The 70 ladders a human must rule on, one at a time](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/130-28p-the-70-ladders-a-human-must-rule-on-one-at.md)
 - ✅ [28q — An add-on option has no id, and this migration is what makes](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/140-28q-an-add-on-option-has-no-id-and-this-migrat.md)
 - [ ] [28r — The intake rule: when is a choice a group, and when is it two](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/150-28r-the-intake-rule-when-is-a-choice-a-group-a.md)
@@ -430,7 +430,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🔎 [A complete menu carries no verified date, and three older menu](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/050-a-menu-with-92-prices-carries-no-verified-date.md)
 - ✅ 🎯 [ADR 0090's "No location, ever" is wider than the reason it gives, and](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/060-the-no-location-rule-is-wider-than-its-reason.md)
 - ✅ 🔎 [Intake added after 2026-10-02 is backed up by nothing](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/070-new-intake-photos-are-not-backed-up.md)
-- [~] [Back up intake/recipes/'s Markdown notes too](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/080-back-up-the-recipe-notes-too.md)
+- ✅ [Back up intake/recipes/'s Markdown notes too](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/080-back-up-the-recipe-notes-too.md)
 
 ## Theme 39 — scaling: partitions, deltas and user data (owner-raised 2026-09-30)
 

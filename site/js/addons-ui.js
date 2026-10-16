@@ -51,6 +51,7 @@
 import { el } from "./dom.js";
 import { dishId } from "./dish-id.js";
 import { dishStepper } from "./cart-ui.js";
+import { order } from "./cart.js";
 import { settings } from "./settings.js";
 import { effectiveAvoid } from "./dietary.js";
 import {
@@ -61,6 +62,11 @@ import {
   isSelects,
   isRequired,
   missingRequired,
+  mustSeeGroups,
+  mustSeeNote,
+  freshAction,
+  movedNote,
+  selectionKey,
   defaultVariant,
   variantLabel,
   configuredPrice,
@@ -130,6 +136,15 @@ const heatChips = (option) =>
  * a REQUIRED group (ADR 0156) is unanswered, and the second argument is what
  * the row's own ＋ Add should record — the variant plus any required choice —
  * so the row cannot order the dish without the choice the picker insists on.
+ *
+ * It also returns `reveal()` and `live` (ADR 0159). The row calls `reveal()`
+ * after its own ＋ Add takes the dish from none to one: when the dish has a
+ * must-see group (every `selects` ladder; any group flagged `mustSee`) and the
+ * picker is closed, it opens, says in words why, and scrolls the first question
+ * into view if it is off-screen. It never moves focus — the person is mid-tap
+ * on the Add they just pressed. `live` is the polite status region that
+ * announces it; it sits beside the picker, not inside, because a live region in
+ * a closed <details> is not reliably spoken.
  */
 export function dishAddOns(record, section, item, onCompose, onVariant, onGate) {
   // WHICH plate before WHAT is on it: a variant group is offered first,
@@ -179,6 +194,13 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   // The first radio of each required group, so a blocked tap can take the
   // reader to the question rather than leave them to hunt for it.
   const firstInput = new Map();
+  // The unit the reader just added by pressing Add, while the picker it opened is
+  // still theirs to change (ADR 0159): `{ sel, total }`, or null. A change made in
+  // the picker MOVES that one unit instead of making a second line.
+  let fresh = null;
+  // What the row's own ＋ Add last recorded (refresh() keeps it): the plate and any
+  // required choice, which is exactly what a press of that Add put in the order.
+  let rowCarry = { options: [] };
   const requiredIds = new Set(groups.filter(isRequired).map((g) => g.id));
   // In the DOM only while a choice is open — a hidden span would still be part
   // of the summary's textContent.
@@ -210,6 +232,34 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
     };
   }
 
+  /**
+   * Carry a change made in the picker over to the unit the reader just added
+   * (ADR 0159). Runs first in refresh(), before the steppers are rebuilt, so they
+   * read the order as the move leaves it. `freshAction` decides; this only does it.
+   */
+  function followFresh() {
+    if (!fresh) return;
+    const next = { options: lineOptions(selection), price: configuredPrice(base, selection) };
+    const act = freshAction(fresh, {
+      sel: selectionKey(next.options),
+      total: order.dishQty(record.id, id),
+      hasLine: order.qtyOf(record.id, id, fresh.sel, "") > 0,
+      gated: missingRequired(groups, selection).length > 0,
+    });
+    if (act === "end") fresh = null;
+    if (act !== "move") return;
+    const key = order.moveOne(record.id, id, fresh.sel, "", next);
+    if (key == null) {
+      fresh = null;
+      return;
+    }
+    fresh.sel = selectionKey(next.options);
+    // Said, because the order changed under a tap that only touched a radio.
+    const said = movedNote(item.name, next.options);
+    seenNote.textContent = said;
+    live.textContent = said;
+  }
+
   /** What the row shows and its own ＋ Add records for the chosen variant. */
   function variantState() {
     const v = selection.filter((s) => typeof s.dishPrice === "number");
@@ -223,6 +273,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   // with Satay still ticked. The cap message is added to the warning, never
   // put in its place.
   function refresh(notice) {
+    followFresh();
     // The reader's flags plus what Halal/Kosher imply (ADR 0140) — the same
     // dietary.js function the menu row reads, so the row accent and this line
     // cannot disagree about a pork topping.
@@ -258,7 +309,8 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
     // choice already made. Without the second, answering the question here
     // would lift the gate and let the row order the dish with no sauce on it.
     const rowSel = selection.filter((x) => typeof x.dishPrice === "number" || requiredIds.has(x.group));
-    onGate?.(gate, { price: configuredPrice(base, rowSel), options: lineOptions(rowSel) });
+    rowCarry = { price: configuredPrice(base, rowSel), options: lineOptions(rowSel) };
+    onGate?.(gate, rowCarry);
     const v = variantState();
     if (v) onVariant?.(v);
   }
@@ -315,6 +367,13 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   }
 
   const body = el("div", { className: "addon-groups" });
+  // WHY the picker opened, said as text on the page for a sighted reader and as
+  // a status for a screen reader — the same sentence, so neither has to infer it.
+  // Present only after a reveal; cleared when the reader closes the picker.
+  const seenNote = el("p", { className: "addon-seen", hidden: true });
+  const live = el("p", { className: "sr-only" });
+  live.setAttribute("role", "status");
+  const mustSee = mustSeeGroups(groups);
 
   for (const group of groups) {
     if (isSelects(group)) {
@@ -446,12 +505,54 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   summary.firstChild.textContent = summaryText;
   const details = el("details", { className: "dish-addons" }, [
     summary,
+    seenNote,
     body,
     warn,
     need,
     stepperSlot,
   ]);
 
+  details.addEventListener("toggle", () => {
+    if (!details.open) {
+      // Closing it is accepting what is in the order.
+      fresh = null;
+      seenNote.hidden = true;
+      seenNote.textContent = "";
+      // Emptied too, so the NEXT reveal is a change a screen reader will speak.
+      live.textContent = "";
+    }
+  });
+
+  /**
+   * Open the picker because the reader pressed Add on a dish with a must-see
+   * choice (ADR 0159). Returns whether it opened. A no-op when the dish has no
+   * must-see group (a purely optional picker stays exactly as it was) and when
+   * the picker is already open (nothing to show).
+   *
+   * NEVER focuses anything: focus is on the Add they just pressed (a repeat-
+   * tapper must not be yanked mid-tap — the same reasoning as 14g). The scroll
+   * is `nearest` on the first question, so it moves the page only when that
+   * question would be off-screen, and instantly under prefers-reduced-motion.
+   */
+  function reveal() {
+    if (mustSee.length === 0 || details.open) return false;
+    details.open = true;
+    // The Add that opened this put one unit on the row's configuration. A change
+    // made here from now on updates THAT unit (B, owner-ruled 2026-10-16) until the
+    // reader confirms a quantity or closes the picker. Only a reveal that actually
+    // opened it starts this: a picker the reader already had open is one they were
+    // already choosing in, and keeps the one-Add-one-line behaviour it always had.
+    const sel = selectionKey(rowCarry.options);
+    fresh = order.qtyOf(record.id, id, sel, "") > 0 ? { sel, total: order.dishQty(record.id, id) } : null;
+    const note = mustSeeNote(groups);
+    seenNote.textContent = note;
+    seenNote.hidden = false;
+    live.textContent = note;
+    const reduce = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
+    (body.firstElementChild || details).scrollIntoView?.({ block: "nearest", behavior: reduce ? "instant" : "auto" });
+    return true;
+  }
+
   refresh();
-  return { node: details, stepper: stepperSlot };
+  return { node: details, stepper: stepperSlot, reveal, live };
 }

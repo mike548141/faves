@@ -20,6 +20,11 @@ import {
   optionId,
   isRequired,
   missingRequired,
+  isMustSee,
+  mustSeeGroups,
+  mustSeeNote,
+  freshAction,
+  movedNote,
   CONTRADICTS,
 } from "../site/js/addons.js";
 import { readFileSync, readdirSync } from "node:fs";
@@ -555,4 +560,67 @@ test("missingRequired: names the required groups with no entry, in offered order
   assert.deepEqual(missingRequired([SIDE], []), [], "an optional group never blocks");
   assert.deepEqual(missingRequired([SIZE], []), []);
   assert.deepEqual(missingRequired(undefined, undefined), []);
+});
+
+// --- ADR 0159: a must-see group opens when Add is pressed -----------------
+
+const MILK = { id: "milk", name: "Milk", kind: "adds", select: "one", mustSee: true, options: [] };
+const SIZE_LADDER = { id: "size", name: "Size", kind: "selects", options: [] };
+
+test("isMustSee: every selects group by rule, an adds group only by flag, a required one never", () => {
+  assert.equal(isMustSee(SIZE_LADDER), true, "a ladder is must-see with no flag at all");
+  assert.equal(isMustSee(MILK), true);
+  assert.equal(isMustSee(SIDE), false, "a purely optional group is left exactly as it was");
+  assert.equal(isMustSee(SAUCE), false, "a required group is gated, so it needs no reveal");
+  assert.equal(isMustSee({ ...SAUCE, mustSee: true }), false, "…and the flag on it is redundant, not additive");
+  assert.equal(isMustSee({ ...SIDE, mustSee: false }), false);
+  assert.equal(isMustSee({ ...SIDE, mustSee: "yes" }), false, "a truthy string is not the flag");
+  assert.equal(isMustSee(undefined), false);
+});
+
+test("mustSeeGroups keeps offered order and drops everything else", () => {
+  assert.deepEqual(mustSeeGroups([SIDE, MILK, SAUCE, SIZE_LADDER]).map((g) => g.id), ["milk", "size"]);
+  assert.deepEqual(mustSeeGroups([SIDE, SAUCE]), []);
+  assert.deepEqual(mustSeeGroups(undefined), []);
+});
+
+test("mustSeeNote names the groups in words, and says nothing when there are none", () => {
+  assert.equal(mustSeeNote([SIDE]), "");
+  assert.equal(mustSeeNote([SIZE_LADDER]), "Added as listed. Check “Size” below — change it if you want something different.");
+  assert.match(mustSeeNote([MILK, SIZE_LADDER]), /Check “Milk” and “Size” below/);
+  assert.match(mustSeeNote([MILK, SIZE_LADDER, { ...MILK, name: "Syrup" }]), /Check “Milk”, “Size” and “Syrup” below/);
+  assert.equal(mustSeeNote([{ ...MILK, name: "  " }]), "", "an unnamed group cannot be spoken, so no sentence");
+});
+
+// --- ADR 0159, B: a change in the picker that opened on Add updates that unit ---
+
+const FRESH = { sel: "full", total: 1 };
+const NOW = { sel: "full", total: 1, hasLine: true, gated: false };
+
+test("freshAction: nothing fresh, or no change of configuration, does nothing", () => {
+  assert.equal(freshAction(null, { ...NOW, sel: "half" }), "none");
+  assert.equal(freshAction(FRESH, NOW), "none");
+});
+
+test("freshAction: a changed configuration moves the unit", () => {
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half" }), "move");
+});
+
+test("freshAction: a changed quantity ends it — the reader pressed ＋ or − and has confirmed a count", () => {
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half", total: 2 }), "end");
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half", total: 0 }), "end");
+});
+
+test("freshAction: a vanished line (removed, or its key moved by a note) ends it", () => {
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half", hasLine: false }), "end");
+});
+
+test("freshAction: never moves a unit onto a configuration with a required choice open", () => {
+  assert.equal(freshAction(FRESH, { ...NOW, sel: "half", gated: true }), "end");
+});
+
+test("movedNote says the order changed, in words, and what it now holds", () => {
+  assert.equal(movedNote("Garlic Tikka", [{ name: "Full" }]), "Updated in your order: Garlic Tikka, Full.");
+  assert.equal(movedNote("Garlic Tikka", [{ name: "Full" }, { name: "Aioli" }]), "Updated in your order: Garlic Tikka, Full, Aioli.");
+  assert.equal(movedNote("Garlic Tikka", []), "Updated in your order: Garlic Tikka, as listed.");
 });

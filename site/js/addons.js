@@ -151,6 +151,81 @@ export function missingRequired(groups, selection) {
 }
 
 /**
+ * Must the reader be SHOWN this group when they press Add? (ADR 0159, roadmap
+ * 200/120, owner-ruled 2026-10-03)
+ *
+ * Two ways in, and one way out:
+ *  - every `selects` group is must-see BY RULE: Add has silently chosen the
+ *    default plate (Half, Regular, the cheapest size) and the reader should
+ *    know a choice was made for them;
+ *  - any other group opts in with `mustSee: true` in the data;
+ *  - a REQUIRED group is never must-see, because it cannot need to be: Add is
+ *    blocked until it is answered (ADR 0156), so the reader has seen it by the
+ *    time Add works. Treating it as must-see too would re-open a picker they had
+ *    just answered and closed.
+ *
+ * A purely optional group is neither, and stays exactly as it was ("what we
+ * have today is perfect for those").
+ */
+export const isMustSee = (group) =>
+  isSelects(group) || (group?.mustSee === true && !isRequired(group));
+
+/** The groups of one dish that must be shown on Add, in offered order. */
+export const mustSeeGroups = (groups) => (groups || []).filter(isMustSee);
+
+/**
+ * The sentence that says WHY the picker opened, in words (never colour alone):
+ * "Added as listed. Check “Size” below — change it if you want something
+ * different." Names the groups so the reader knows which choices were made for
+ * them; quoted because a group's name is the venue's own phrase and may read as
+ * a sentence ("Add a sauce swirl (if you want)").
+ */
+export function mustSeeNote(groups) {
+  const names = mustSeeGroups(groups)
+    .map((g) => (typeof g?.name === "string" ? g.name.trim() : ""))
+    .filter(Boolean)
+    .map((n) => `“${n}”`);
+  if (names.length === 0) return "";
+  const list =
+    names.length === 1 ? names[0] : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+  return `Added as listed. Check ${list} below — change it if you want something different.`;
+}
+
+/**
+ * What a change made in the picker that just opened does to the unit the reader
+ * just added (ADR 0159, owner-ruled 2026-10-16: it UPDATES that unit rather than
+ * leaving the default ordered beside the choice). Pure, so the cases are unit-
+ * tested; the picker supplies the facts and carries out the answer.
+ *
+ * `fresh` is `{ sel, total }`: the selection key the added unit sits on, and the
+ * dish's total quantity when it was added. `now` is `{ sel, total, hasLine, gated }`:
+ * the key of the picker's configuration now, the dish's total quantity now,
+ * whether a line with `fresh.sel` still exists, and whether a required choice is
+ * unanswered. Answers:
+ *  - `"none"`: nothing to do (no fresh unit, or the configuration did not change);
+ *  - `"move"`: move that one unit to `now.sel`;
+ *  - `"end"`: the unit is no longer "just added" and must not be touched.
+ *
+ * It ends when the dish's total quantity differs from what the Add left (the
+ * reader pressed ＋ or − anywhere, or the sheet changed it: they have confirmed a
+ * quantity), when the line is gone or has gained a note (its key moved), and
+ * while a required choice is unanswered (a moved unit must never be unfinished,
+ * ADR 0158; in practice a radio cannot be un-set, so this is the backstop).
+ * A move conserves the total, which is why it does not end itself.
+ */
+export function freshAction(fresh, now) {
+  if (!fresh) return "none";
+  if (now.gated || !now.hasLine || now.total !== fresh.total) return "end";
+  return now.sel === fresh.sel ? "none" : "move";
+}
+
+/** The sentence that says the order line was updated, in words. */
+export function movedNote(name, options) {
+  const what = selectionSummary(options || []);
+  return what ? `Updated in your order: ${name}, ${what}.` : `Updated in your order: ${name}, as listed.`;
+}
+
+/**
  * The option a `selects` group starts on: the one marked `default`. validate.py
  * requires exactly one; the first option is a fallback for a record that got
  * past it, so the control can never render with nothing chosen.

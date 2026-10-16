@@ -138,7 +138,7 @@ ADD_ON_SELECT = {"one", "many"}
 # is the default, and each option states the dish's whole price for that
 # variant (`dishPrice`), never a surcharge.
 ADD_ON_KINDS = {"adds", "selects"}
-ADD_ON_GROUP_KEYS = {"id", "name", "kind", "select", "required", "max", "price", "options"}
+ADD_ON_GROUP_KEYS = {"id", "name", "kind", "select", "required", "mustSee", "max", "price", "options"}
 ADD_ON_OPTION_KEYS = {"name", "id", "price", "dishPrice", "default", "tags"}
 # The tags that make a dietary CLAIM, `-option` forms included — the Python
 # mirror of DIET_FILTERS' `satisfies` lists in site/js/dietary.js, which is what
@@ -1676,6 +1676,27 @@ def check_add_on_groups(rid, data):
             elif g.get("select") != "one":
                 err(rid, f"{where}: required only applies to a pick-one group — a pick-many "
                          "group has no minimum to state (ADR 0156)")
+
+        # `mustSee` (ADR 0159): pressing Add on the dish opens the picker so the
+        # reader is SHOWN this group. Only `true` is meaningful, and it is a
+        # per-group opt-in for a group that is neither of the two cases the
+        # picker already covers, so it is refused where it would be redundant —
+        # a flag that does nothing is a flag a transcriber believes is doing
+        # something, and "required does not apply to a selects group" (above)
+        # is the same refusal for the same reason:
+        #  - `false` is a second spelling of absent;
+        #  - a `selects` group is must-see BY RULE (owner-ruled 2026-10-03);
+        #  - a `required` group already blocks Add until it is answered (0156).
+        if "mustSee" in g:
+            if g["mustSee"] is not True:
+                err(rid, f"{where}: mustSee must be true or absent, got {g['mustSee']!r} "
+                         "— absent already means not must-see (ADR 0159)")
+            elif selects:
+                err(rid, f"{where}: mustSee does not apply to a selects group — every "
+                         "variant group is must-see by rule (ADR 0159)")
+            elif g.get("required") is True:
+                err(rid, f"{where}: mustSee does not apply to a required group — Add already "
+                         "waits for it (ADR 0156, ADR 0159)")
 
         # "Choose up to 3" is a rule the venue set, so it lives in the data — but
         # only a pick-many group can have one, and a cap above the options is a

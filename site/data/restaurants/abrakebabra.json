@@ -37,6 +37,7 @@
       "id": "combo",
       "name": "Make it a combo — two of a small drink, small salad, garlic bread or small fries",
       "select": "one",
+      "mustSee": true,
       "options": [
         {
           "name": "Combo",

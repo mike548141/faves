@@ -1450,6 +1450,11 @@ function renderDish(
   let plainVariant = null;
   let plainGate = null;
   let plainCarry = null;
+  // Set once the picker exists (it is built after this row's stepper). Pressing
+  // the row's ＋ Add opens a must-see picker (ADR 0159) — every size ladder and
+  // any group flagged `mustSee` — so a choice made for the reader is not missed.
+  let revealPicker = null;
+  const openMustSee = () => revealPicker?.();
   const restepPlain = () => {
     if (!plainStepper || !plainStepperMeta) return;
     // Rebuilt only when something moved: a stepper subscribes to the order
@@ -1461,7 +1466,11 @@ function renderDish(
     const key = JSON.stringify([st?.price ?? item.price ?? null, st?.options ?? [], plainGate?.reason ?? false]);
     if (key === plainStepperKey) return;
     plainStepperKey = key;
-    const next = dishStepper(st ? { ...plainStepperMeta, price: st.price, options: st.options } : plainStepperMeta, plainGate);
+    const next = dishStepper(
+      st ? { ...plainStepperMeta, price: st.price, options: st.options } : plainStepperMeta,
+      plainGate,
+      openMustSee,
+    );
     plainStepper.replaceWith(next);
     plainStepper = next;
   };
@@ -1492,7 +1501,7 @@ function renderDish(
         // "$8.95" beside a Wellington one and the two look addable.
         currency: venueCurrency(r),
       };
-      plainStepper = dishStepper(plainStepperMeta);
+      plainStepper = dishStepper(plainStepperMeta, null, openMustSee);
       actions.append(plainStepper);
     }
     children.push(actions);
@@ -1570,7 +1579,10 @@ function renderDish(
       plainCarry = carry;
       restepPlain();
     });
-    if (picker) li.append(picker.node);
+    if (picker) {
+      li.append(picker.node, picker.live);
+      revealPicker = picker.reveal;
+    }
   }
   return li;
 }

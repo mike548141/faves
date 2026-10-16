@@ -10,6 +10,19 @@ content freshness separately from this file.
 
 ### Added
 - **McDonald's Johnsonville and Subway's Johnsonville, Tawa and Karori now show their opening hours.** They come from each shop's Google Maps listing, read on 16 October 2026, and the ⓘ beside the venue name says so: "Opening hours at Tawa read from its Google Maps listing on 16 Oct 2026." It speaks for the hours only, never the phone or address. A shop that is open all day every day reads "Open 24 hours". The other McDonald's and Subway branches still show no hours, because their listings could not be matched to the address we hold. <!-- datescan:allow: quoted on-screen copy -->
+- **A size choice now opens when you press Add.** On a dish with a size to pick
+  (a half or full portion, a pour size, single or double) the Add button still
+  orders the dish as listed, and the choices open underneath with a line saying
+  which one to check. Pick a different size there and the dish you just added
+  changes to it, rather than leaving the first size ordered as well. The same
+  now happens for Gong Cha's size, a coffee's milk and Abrakebabra's combo.
+  Keyboard focus stays on the button you pressed (the + and - buttons used to
+  lose it). Dishes with only optional extras open exactly as before.
+- **Hei, on Cuba Street, joins the list.** Its lunch, dinner and drinks
+  menus as the restaurant publishes them on its own site (130 dishes and
+  drinks, allergen-tagged, with the venue's own vegan, vegetarian and
+  gluten-free marks kept as printed), plus its address, phone and opening
+  hours.
 - **A saved order tells you when prices have moved.** Adding a saved order now puts each dish in at today's price and says, in words, which ones have changed since you saved it: "now $16.50, was $14.50 when you saved it (up $2)". A price that went down is said too. Nothing is changed for you: the dish is on your order and you decide whether to keep it. An order saved before prices were recorded says nothing rather than guess.
 - **A dish that still needs a choice is flagged on your order, and you can finish it there.** If a dish is missing a compulsory choice (a sauce, say) because it was added before the choice became compulsory, or came from a saved or shared order, it now shows on the order sheet with "Needs a choice", the total says it is short by what the choice costs, and you pick the choice in place. A saved order that needs a choice is added and flagged instead of left out.
 - **A choice the menu makes compulsory is now compulsory.** Where a dish comes

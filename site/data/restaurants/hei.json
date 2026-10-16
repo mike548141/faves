@@ -1,0 +1,1681 @@
+{
+  "id": "hei",
+  "name": "Hei",
+  "cuisine": [
+    "Chinese",
+    "Asian"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "126A Cuba Street, Te Aro, Wellington",
+  "lat": -41.29306,
+  "lng": 174.77569,
+  "phone": "+64 4 595 5588",
+  "lifecycle": {
+    "added": "2026-10-16"
+  },
+  "website": "https://hei.co.nz/",
+  "ordering": [],
+  "orderMode": [
+    "dine-in"
+  ],
+  "hours": {
+    "mon": [
+      [
+        "11:30",
+        "14:30"
+      ],
+      [
+        "17:00",
+        null
+      ]
+    ],
+    "tue": [
+      [
+        "11:30",
+        "14:30"
+      ],
+      [
+        "17:00",
+        null
+      ]
+    ],
+    "wed": [
+      [
+        "11:30",
+        "14:30"
+      ],
+      [
+        "17:00",
+        null
+      ]
+    ],
+    "thu": [
+      [
+        "11:30",
+        "14:30"
+      ],
+      [
+        "17:00",
+        null
+      ]
+    ],
+    "fri": [
+      [
+        "11:30",
+        "14:30"
+      ],
+      [
+        "17:00",
+        null
+      ]
+    ],
+    "sat": [
+      [
+        "11:30",
+        "14:30"
+      ],
+      [
+        "17:00",
+        null
+      ]
+    ],
+    "sun": []
+  },
+  "vibe": [
+    "sit-down",
+    "licensed"
+  ],
+  "picks": [],
+  "verified": "2026-10-16",
+  "verifiedBy": "official-site",
+  "detailsVerified": "2026-10-16",
+  "detailsVerifiedBy": "official-site",
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "milk",
+      "name": "Milk",
+      "select": "one",
+      "price": 1,
+      "options": [
+        {
+          "name": "Soy milk",
+          "id": "soy-milk",
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Oat milk",
+          "id": "oat-milk",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "matcha-sweetener",
+      "name": "Matcha sweetener",
+      "select": "one",
+      "price": 1,
+      "options": [
+        {
+          "name": "Agave",
+          "id": "agave",
+          "tags": []
+        },
+        {
+          "name": "Sweetened condensed milk",
+          "id": "sweetened-condensed-milk",
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "size-17-85",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 17.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 85.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-14-72",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 14.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 72.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-13-65",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 13.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 65.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-14-70",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 14.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 70.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-15-75",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 15.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 75.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-18-90",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 18.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 90.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "size-17-90",
+      "name": "Size",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Glass",
+          "id": "glass",
+          "dishPrice": 17.0,
+          "default": true,
+          "tags": []
+        },
+        {
+          "name": "Bottle",
+          "id": "bottle",
+          "dishPrice": 90.0,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "To share",
+      "sectionId": "to-share",
+      "note": "From the dinner menu.",
+      "items": [
+        {
+          "name": "Squid",
+          "dishId": "squid",
+          "desc": "Crispy fried, served with tartare sauce",
+          "price": 20,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”.", "contains-egg": "The menu says “tartare sauce” — an egg emulsion."}
+        },
+        {
+          "name": "Prawn Bites",
+          "dishId": "prawn-bites",
+          "desc": "Crispy prawn balls, chili oil velouté, and fresh bird’s eye chili",
+          "price": 18,
+          "tags": [
+            "spicy-1",
+            "contains-shellfish"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."}
+        },
+        {
+          "name": "Sichuan Spicy Won Tons",
+          "dishId": "sichuan-spicy-won-tons",
+          "desc": "Pork & prawn wontons in hot chilli oil, black vinegar, spring onions and garlic soy sauce",
+          "price": 17,
+          "tags": [
+            "spicy-1",
+            "contains-shellfish",
+            "contains-pork",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-pork": "The menu says “Pork”.", "contains-gluten": "The menu says “wontons” — a wheat-flour wrapper.", "contains-soy": "The menu says “soy”."}
+        },
+        {
+          "name": "Dumplings",
+          "dishId": "dumplings",
+          "desc": "Pork, beef or vegan, pan fried",
+          "price": 17,
+          "tags": [
+            "contains-pork",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+        },
+        {
+          "name": "Foo’s Chargrilled Chicken",
+          "dishId": "foo-s-chargrilled-chicken",
+          "desc": "Chargrilled boneless free-range chicken thighs, cucumber, and Thai dipping sauce",
+          "price": 18,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Typhoon Pork Ribs",
+          "dishId": "typhoon-pork-ribs",
+          "desc": "Pork ribs stir fried with garlic, chili & black beans",
+          "price": 18,
+          "tags": [
+            "gf",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
+        },
+        {
+          "name": "Silken Vegetable Dumplings",
+          "dishId": "silken-vegetable-dumplings",
+          "desc": "Steamed, with a zucchini, carrots, corn & pumpkin filling, served with house made chili oil & black vinegar",
+          "price": 17,
+          "tags": [
+            "vg",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+        },
+        {
+          "name": "Mala Chicken",
+          "dishId": "mala-chicken",
+          "desc": "Fried chicken with Sichuan peppercorn, peanuts and dried chilli",
+          "price": 18.5,
+          "tags": [
+            "gf",
+            "spicy-1",
+            "contains-peanuts"
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”."}
+        },
+        {
+          "name": "Glutinous Rice Dumplings",
+          "dishId": "glutinous-rice-dumplings",
+          "desc": "Deep fried with tofu, mushrooms & vegetables",
+          "price": 17,
+          "tags": [
+            "vg",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-soy": "The menu says “tofu”."}
+        },
+        {
+          "name": "Char Siu",
+          "dishId": "char-siu",
+          "desc": "Cantonese style char-grilled pork with five spice sweet & salty soy beans",
+          "price": 18,
+          "tags": [
+            "contains-pork",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Char Siu”.", "contains-soy": "The menu says “soy”."}
+        },
+        {
+          "name": "Caramelised Eggplant",
+          "dishId": "caramelised-eggplant",
+          "desc": "Fried eggplant in a caramelised glaze",
+          "price": 17,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Cauli Crunch",
+          "dishId": "cauli-crunch",
+          "desc": "Golden fried cauliflower topped with furikake, with ponzu mayo",
+          "price": 17,
+          "tags": [
+            "v",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."}
+        },
+        {
+          "name": "Assam Fish",
+          "dishId": "assam-fish",
+          "desc": "Market fish with eggplants, okra, in a sour & spicy Southeast Asian tamarind sauce",
+          "price": 28,
+          "tags": [
+            "gf",
+            "spicy-1",
+            "contains-fish"
+          ],
+          "tagNotes": {"contains-fish": "The menu says “Fish”."}
+        },
+        {
+          "name": "Galbi Beef Short Ribs",
+          "dishId": "galbi-beef-short-ribs",
+          "desc": "12 hour slow cooked beef short ribs, finished on the grill",
+          "price": 27,
+          "tags": []
+        },
+        {
+          "name": "XO Eggplant",
+          "dishId": "xo-eggplant",
+          "desc": "Chargrilled eggplant, shrimp, pork mince in XO sauce",
+          "price": 24,
+          "tags": [
+            "contains-shellfish",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-pork": "The menu says “pork”."}
+        },
+        {
+          "name": "King Prawns",
+          "dishId": "king-prawns",
+          "desc": "With cherry tomatoes, in a creamy, spicy & sour lemongrass sauce, served with crispy vermicelli",
+          "price": 29,
+          "tags": [
+            "gf",
+            "spicy-1",
+            "contains-shellfish"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”."}
+        },
+        {
+          "name": "Umami Greens",
+          "dishId": "umami-greens",
+          "desc": "Stir-fried eggplant, green beans in a fermented bean curd sauce",
+          "price": 25,
+          "tags": [
+            "gf",
+            "vg"
+          ]
+        },
+        {
+          "name": "Kung Pao Tofu",
+          "dishId": "kung-pao-tofu",
+          "desc": "Wok-tossed tofu, broccoli, cauliflower, carrots, onion, and peanuts",
+          "price": 25,
+          "tags": [
+            "gf",
+            "vg",
+            "contains-peanuts",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-soy": "The menu says “Tofu”."}
+        },
+        {
+          "name": "Yuxiang Beef",
+          "dishId": "yuxiang-beef",
+          "desc": "Stir-fried sirloin, onion, celery, zucchini, mushroom with spicy & tangy Yuxiang sauce",
+          "price": 29,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Orange Chicken",
+          "dishId": "orange-chicken",
+          "desc": "Boneless fried free-range chicken, garlic, dried chili",
+          "price": 27,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Golden Glazed Pork",
+          "dishId": "golden-glazed-pork",
+          "desc": "Sweet and sour pork, with seasonal fruits, cucumber ribbons, and dehydrated jackfruit",
+          "price": 27,
+          "tags": [
+            "gf",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
+        },
+        {
+          "name": "Cumin Lamb",
+          "dishId": "cumin-lamb",
+          "desc": "Wok-tossed crispy lamb ribs with a spicy cumin rub & radish pickle",
+          "price": 28,
+          "tags": [
+            "gf",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Shanghai Noodles",
+          "dishId": "shanghai-noodles",
+          "desc": "Stir fried noodles, bok choy, char siu, & duck in a soy & oyster sauce",
+          "price": 24,
+          "tags": [
+            "vg-option",
+            "contains-shellfish",
+            "contains-pork",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “oyster”.", "contains-pork": "The menu says “char siu”.", "contains-soy": "The menu says “soy”."}
+        },
+        {
+          "name": "Peking Duck",
+          "dishId": "peking-duck",
+          "desc": "With Chinese pancakes, fresh cucumber, red onions, spring onions and Peking hoisin",
+          "price": 38,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pancakes” — a wheat bakery item.", "contains-soy": "The menu says “hoisin” — the sauce is soy-based."}
+        }
+      ]
+    },
+    {
+      "section": "Baos",
+      "sectionId": "baos",
+      "note": "From the dinner menu.",
+      "items": [
+        {
+          "name": "Signature Bao",
+          "dishId": "signature-bao",
+          "desc": "12 hours slow cooked pork belly with sesame mayo, hoisin ketchup, pickles and salad",
+          "price": 15,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy",
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”.", "contains-gluten": "The menu says “hoisin” — soy sauce is brewed with wheat.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “hoisin” — the sauce is soy-based.", "contains-sesame": "The menu says “sesame”."}
+        },
+        {
+          "name": "HeiHei",
+          "dishId": "heihei",
+          "desc": "Fried Chicken with black vinegar glaze, pickles, sesame mayo and salad",
+          "price": 13,
+          "tags": [
+            "contains-egg",
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “sesame”."}
+        },
+        {
+          "name": "Fresh Catch",
+          "dishId": "fresh-catch",
+          "desc": "Fresh fried market fish, crispy seaweed, pickles, sesame mayo, tartare sauce and salad",
+          "price": 14,
+          "tags": [
+            "contains-fish",
+            "contains-egg",
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “sesame”."}
+        },
+        {
+          "name": "Vegan",
+          "dishId": "vegan",
+          "desc": "Eggplant & tofu, pickles with vegan mayo and salad on a pumpkin bao",
+          "price": 13,
+          "tags": [
+            "contains-egg",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “tofu”."}
+        }
+      ]
+    },
+    {
+      "section": "Salads",
+      "sectionId": "salads",
+      "note": "From the dinner menu.",
+      "items": [
+        {
+          "name": "Prawn Salad",
+          "dishId": "prawn-salad",
+          "desc": "Seasonal fruit, fresh Asian herbs, sambal, red onions, tomato, bean sprouts, peanuts and Thai dressing",
+          "price": 26,
+          "tags": [
+            "gf-option",
+            "contains-peanuts",
+            "contains-shellfish"
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-shellfish": "The menu says “Prawn”."}
+        },
+        {
+          "name": "Duck Salad",
+          "dishId": "duck-salad",
+          "desc": "Seasonal fruit, fennel, spring onion, coriander, radish pickles, bean sprouts, garnished with golden wonton crisps with a plum sauce dressing",
+          "price": 27,
+          "tags": [
+            "vg-option",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “wonton” — a wheat-flour wrapper."}
+        },
+        {
+          "name": "Grilled Pork and Mango",
+          "dishId": "grilled-pork-and-mango",
+          "desc": "Grilled pork neck, mango, apple, fresh Asian herbs, red onion, cherry tomatoes, radish pickles, bean sprouts, served with krupuk",
+          "price": 27,
+          "tags": [
+            "gf",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."}
+        }
+      ]
+    },
+    {
+      "section": "A sweet finish",
+      "sectionId": "a-sweet-finish",
+      "note": "From the dinner menu.",
+      "items": [
+        {
+          "name": "Coconut & Caramel",
+          "dishId": "coconut-caramel",
+          "desc": "Coconut vanilla ice cream, caramel sauce, and caramelised toasted walnuts",
+          "price": 13,
+          "tags": [
+            "vg",
+            "contains-nuts"
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “walnuts”."}
+        },
+        {
+          "name": "White Chocolate Panna Cotta",
+          "dishId": "white-chocolate-panna-cotta",
+          "desc": "With fresh berries, berry compote & almond crumble",
+          "price": 14,
+          "tags": [
+            "contains-nuts",
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “almond”.", "contains-dairy": "The menu says “Panna Cotta” — the sauce is cream- or butter-based."}
+        },
+        {
+          "name": "Coconut Mousse",
+          "dishId": "coconut-mousse",
+          "desc": "With passionfruit pulp & pineapple compote",
+          "price": 14,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Sides",
+      "sectionId": "sides",
+      "note": "From the dinner menu.",
+      "items": [
+        {
+          "name": "Jasmine Rice",
+          "dishId": "jasmine-rice",
+          "price": 4,
+          "tags": []
+        },
+        {
+          "name": "Scallion Pancake",
+          "dishId": "scallion-pancake",
+          "desc": "Served with a cashew & golden syrup hummus",
+          "price": 10,
+          "tags": [
+            "vg",
+            "contains-nuts",
+            "contains-gluten",
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “cashew”.", "contains-gluten": "The menu says “Pancake” — a wheat bakery item.", "contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
+        },
+        {
+          "name": "Asian Greens",
+          "dishId": "asian-greens",
+          "price": 4,
+          "tags": [
+            "vg-option"
+          ]
+        },
+        {
+          "name": "Mala Fries",
+          "dishId": "mala-fries",
+          "desc": "With ponzu mayo",
+          "price": 4,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Fried Mantou (Buns)",
+          "dishId": "fried-mantou-buns",
+          "desc": "Served with balsamic vinegar & chilli oil",
+          "price": 5,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Buns” — a wheat bakery item."}
+        }
+      ]
+    },
+    {
+      "section": "Lunch set",
+      "sectionId": "lunch-set",
+      "note": "From the lunch menu. The special lunch set changes weekly: these are the four on the menu as read.",
+      "items": [
+        {
+          "name": "Weekly Special A",
+          "dishId": "weekly-special-a",
+          "desc": "With a choice of dumplings (pork, beef or vegan) & rice",
+          "price": 20,
+          "tags": [
+            "contains-pork",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”.", "contains-gluten": "The menu says “dumplings” — a wheat-flour wrapper."}
+        },
+        {
+          "name": "Weekly Special B",
+          "dishId": "weekly-special-b",
+          "desc": "With scallion pancakes & caramelised eggplant",
+          "price": 20,
+          "tags": [
+            "vg-option",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “pancakes” — a wheat bakery item."}
+        },
+        {
+          "name": "Weekly Special C",
+          "dishId": "weekly-special-c",
+          "desc": "With cauli crunch and Sichuan spicy won tons",
+          "price": 20,
+          "tags": []
+        },
+        {
+          "name": "Weekly Special D",
+          "dishId": "weekly-special-d",
+          "desc": "With spring roll & won ton soup",
+          "price": 20,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “spring roll” — a wheat-flour wrapper."}
+        }
+      ]
+    },
+    {
+      "section": "Chef’s favourite lunches",
+      "sectionId": "chefs-favourite-lunches",
+      "note": "From the lunch menu.",
+      "items": [
+        {
+          "name": "Beef Chow Fun",
+          "dishId": "beef-chow-fun",
+          "desc": "Wok-tossed flat rice noodles, sliced beef, bean sprouts & soy sauce",
+          "price": 19.5,
+          "tags": [
+            "vg-option",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Chow Fun” — a wheat noodle.", "contains-soy": "The menu says “soy”."}
+        },
+        {
+          "name": "Shanghai Noodles",
+          "desc": "Stir fried noodles, bok choy, char siu, & duck in a soy & oyster sauce",
+          "price": 19.5,
+          "tags": [
+            "vg-option",
+            "contains-shellfish",
+            "contains-pork",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “oyster”.", "contains-pork": "The menu says “char siu”.", "contains-soy": "The menu says “soy”."},
+          "dishId": "shanghai-noodles-lunch"
+        },
+        {
+          "name": "Char Siu Won Ton Noodles",
+          "dishId": "char-siu-won-ton-noodles",
+          "desc": "Char siu, won tons, dry tossed noodles, with soy & oyster sauce",
+          "price": 19.5,
+          "tags": [
+            "contains-shellfish",
+            "contains-pork",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “oyster”.", "contains-pork": "The menu says “Char Siu”.", "contains-soy": "The menu says “soy”."}
+        },
+        {
+          "name": "Singapore Fried Noodles",
+          "dishId": "singapore-fried-noodles",
+          "desc": "Stir fried rice vermicelli with shrimp, char siu, curry powder egg and bean sprouts",
+          "price": 19.5,
+          "tags": [
+            "contains-shellfish",
+            "contains-pork",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-pork": "The menu says “char siu”.", "contains-egg": "The menu says “egg”."}
+        },
+        {
+          "name": "Pad Thai",
+          "dishId": "pad-thai",
+          "desc": "Stir fried rice noodles, shrimp, egg, chicken, bean sprouts, fish sauce, and peanuts. Sweet, sour and savoury",
+          "price": 19.5,
+          "tags": [
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-fish",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-shellfish": "The menu says “shrimp”.", "contains-fish": "The menu says “fish”.", "contains-egg": "The menu says “egg”."}
+        },
+        {
+          "name": "Yangzhou Fried Rice",
+          "dishId": "yangzhou-fried-rice",
+          "desc": "Fried rice with shrimp, char siu, eggs, asian greens & spring onion",
+          "price": 19.5,
+          "tags": [
+            "gf-option",
+            "vg-option",
+            "contains-shellfish",
+            "contains-pork",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “shrimp”.", "contains-pork": "The menu says “char siu”.", "contains-egg": "The menu says “eggs”."}
+        },
+        {
+          "name": "Char Siu Rice",
+          "dishId": "char-siu-rice",
+          "desc": "Char siu BBQ pork over steamed rice, topped with a fried egg and house made sweet soy sauce",
+          "price": 19.5,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Char Siu”.", "contains-gluten": "The menu says “soy sauce” — soy sauce is brewed with wheat.", "contains-egg": "The menu says “egg”.", "contains-soy": "The menu says “soy”."}
+        },
+        {
+          "name": "Hainanese Chicken",
+          "dishId": "hainanese-chicken",
+          "desc": "Poached chicken served with fragrant rice, ginger scallion oil, Hainan chilli and chicken broth",
+          "price": 19.5,
+          "tags": [
+            "gf-option"
+          ]
+        },
+        {
+          "name": "XO Eggplant",
+          "desc": "Wok fried eggplant, pork and XO sauce, served with rice",
+          "price": 19.5,
+          "tags": [
+            "contains-shellfish",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “XO sauce” — XO sauce is made with dried scallop and shrimp.", "contains-pork": "The menu says “pork”."},
+          "dishId": "xo-eggplant-lunch"
+        },
+        {
+          "name": "Fried Chicken",
+          "dishId": "fried-chicken",
+          "desc": "Crispy chicken, coconut rice, peanuts, fried egg and cucumber served with fried anchovies and sambal",
+          "price": 19.5,
+          "tags": [
+            "contains-peanuts",
+            "contains-fish",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”.", "contains-fish": "The menu says “anchovies”.", "contains-egg": "The menu says “egg”."}
+        },
+        {
+          "name": "Duck Salad",
+          "desc": "Seasonal fruit, fennel, spring onion, coriander, radish pickles, bean sprouts, garnished with golden wonton crisps with a plum sauce dressing",
+          "price": 19.5,
+          "tags": [
+            "vg-option",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “wonton” — a wheat-flour wrapper."},
+          "dishId": "duck-salad-lunch"
+        }
+      ]
+    },
+    {
+      "section": "Share a snack",
+      "sectionId": "share-a-snack",
+      "note": "From the lunch menu.",
+      "items": [
+        {
+          "name": "Squid",
+          "desc": "Crispy fried, served with tartare sauce",
+          "price": 19,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Squid”.", "contains-egg": "The menu says “tartare sauce” — an egg emulsion."},
+          "dishId": "squid-lunch"
+        },
+        {
+          "name": "Dumplings",
+          "desc": "Pork, beef or vegan, pan fried",
+          "price": 17,
+          "tags": [
+            "contains-pork",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."},
+          "dishId": "dumplings-lunch"
+        },
+        {
+          "name": "Silken Vegetable Dumplings",
+          "desc": "Steamed, with a zucchini, carrots, corn & pumpkin filling, served with house made chili oil & black vinegar",
+          "price": 16,
+          "tags": [
+            "vg",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."},
+          "dishId": "silken-vegetable-dumplings-lunch"
+        },
+        {
+          "name": "Mala Chicken",
+          "desc": "Fried chicken with Sichuan peppercorn, peanuts and dried chilli",
+          "price": 17.5,
+          "tags": [
+            "gf",
+            "spicy-1",
+            "contains-peanuts"
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”."},
+          "dishId": "mala-chicken-lunch"
+        },
+        {
+          "name": "Caramelised Eggplant",
+          "desc": "Fried eggplant in a caramelised glaze",
+          "price": 15.5,
+          "tags": [
+            "vg"
+          ],
+          "dishId": "caramelised-eggplant-lunch"
+        },
+        {
+          "name": "Cauli Crunch",
+          "desc": "Golden fried cauliflower topped with furikake, with ponzu mayo",
+          "price": 15,
+          "tags": [
+            "v",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion."},
+          "dishId": "cauli-crunch-lunch"
+        },
+        {
+          "name": "Glutinous Rice Dumplings",
+          "desc": "Deep fried with tofu, mushrooms & vegetables",
+          "price": 15,
+          "tags": [
+            "vg",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper.", "contains-soy": "The menu says “tofu”."},
+          "dishId": "glutinous-rice-dumplings-lunch"
+        },
+        {
+          "name": "Sichuan Spicy Won Tons",
+          "desc": "Pork & prawn wontons in hot chilli oil, black vinegar, spring onions and garlic soy sauce",
+          "price": 16,
+          "tags": [
+            "spicy-1",
+            "contains-shellfish",
+            "contains-pork",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “prawn”.", "contains-pork": "The menu says “Pork”.", "contains-gluten": "The menu says “wontons” — a wheat-flour wrapper.", "contains-soy": "The menu says “soy”."},
+          "dishId": "sichuan-spicy-won-tons-lunch"
+        },
+        {
+          "name": "Typhoon Pork Ribs",
+          "desc": "Pork ribs stir fried with garlic, chili & black beans",
+          "price": 17,
+          "tags": [
+            "gf",
+            "contains-pork"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “Pork”."},
+          "dishId": "typhoon-pork-ribs-lunch"
+        },
+        {
+          "name": "Prawn Bites",
+          "desc": "Crispy prawn balls, chili oil velouté, and fresh bird’s eye chili",
+          "price": 17,
+          "tags": [
+            "spicy-1",
+            "contains-shellfish"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”."},
+          "dishId": "prawn-bites-lunch"
+        },
+        {
+          "name": "Mala Fries",
+          "desc": "With ponzu mayo",
+          "price": 10,
+          "tags": [
+            "vg",
+            "spicy-1"
+          ],
+          "dishId": "mala-fries-lunch"
+        }
+      ]
+    },
+    {
+      "section": "Lunch baos",
+      "sectionId": "lunch-baos",
+      "note": "From the lunch menu.",
+      "items": [
+        {
+          "name": "Signature Bao",
+          "desc": "12 hours slow cooked pork belly with sesame mayo, hoisin ketchup, pickles and salad",
+          "price": 12,
+          "tags": [
+            "contains-pork",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy",
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-pork": "The menu says “pork”.", "contains-gluten": "The menu says “hoisin” — soy sauce is brewed with wheat.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “hoisin” — the sauce is soy-based.", "contains-sesame": "The menu says “sesame”."},
+          "dishId": "signature-bao-lunch"
+        },
+        {
+          "name": "HeiHei",
+          "desc": "Fried Chicken with black vinegar glaze, pickles, sesame mayo and salad",
+          "price": 12,
+          "tags": [
+            "contains-egg",
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “sesame”."},
+          "dishId": "heihei-lunch"
+        },
+        {
+          "name": "Fresh Catch",
+          "desc": "Fresh fried market fish, crispy seaweed, pickles, sesame mayo, tartare sauce and salad",
+          "price": 12,
+          "tags": [
+            "contains-fish",
+            "contains-egg",
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-fish": "The menu says “fish”.", "contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-sesame": "The menu says “sesame”."},
+          "dishId": "fresh-catch-lunch"
+        },
+        {
+          "name": "Vegan",
+          "desc": "Eggplant & tofu, pickles with vegan mayo and salad on a pumpkin bao",
+          "price": 12,
+          "tags": [
+            "contains-egg",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “tofu”."},
+          "dishId": "vegan-lunch"
+        }
+      ]
+    },
+    {
+      "section": "Lunch sweet finish",
+      "sectionId": "lunch-sweet-finish",
+      "note": "From the lunch menu.",
+      "items": [
+        {
+          "name": "Coconut & Caramel",
+          "desc": "Coconut vanilla ice cream, caramel sauce, and caramelised toasted walnuts",
+          "price": 12,
+          "tags": [
+            "vg",
+            "contains-nuts"
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “walnuts”."},
+          "dishId": "coconut-caramel-lunch"
+        },
+        {
+          "name": "White Chocolate Panna Cotta",
+          "desc": "With fresh berries, berry compote & almond crumble",
+          "price": 13,
+          "tags": [
+            "contains-nuts",
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “almond”.", "contains-dairy": "The menu says “Panna Cotta” — the sauce is cream- or butter-based."},
+          "dishId": "white-chocolate-panna-cotta-lunch"
+        },
+        {
+          "name": "Coconut Mousse",
+          "desc": "With passionfruit pulp & pineapple compote",
+          "price": 13,
+          "tags": [],
+          "dishId": "coconut-mousse-lunch"
+        }
+      ]
+    },
+    {
+      "section": "Beer on tap",
+      "sectionId": "beer-on-tap",
+      "items": [
+        {
+          "name": "Sapporo Lager",
+          "dishId": "sapporo-lager",
+          "desc": "5%, 425ml",
+          "price": 12,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
+        },
+        {
+          "name": "Thatcher’s Cider",
+          "dishId": "thatcher-s-cider",
+          "desc": "4.8%, 425ml",
+          "price": 12,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Bubbles",
+      "sectionId": "bubbles",
+      "items": [
+        {
+          "name": "Huia Blanc de Blanc",
+          "dishId": "huia-blanc-de-blanc",
+          "desc": "Marlborough, 2019.",
+          "price": 17.0,
+          "tags": [],
+          "addOns": [
+            "size-17-85"
+          ]
+        },
+        {
+          "name": "Vallformosa Classic Brut Cava",
+          "dishId": "vallformosa-classic-brut-cava",
+          "desc": "NV. Bottle only.",
+          "price": 61.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Rosé and orange",
+      "sectionId": "ros-and-orange",
+      "items": [
+        {
+          "name": "Bryterlater “Brambles” Orange Pinot Gris",
+          "dishId": "bryterlater-brambles-orange-pinot-gris",
+          "desc": "Central Otago. Only a glass price is printed.",
+          "price": 15.0,
+          "tags": []
+        },
+        {
+          "name": "Fromm Rosé",
+          "dishId": "fromm-ros",
+          "desc": "Marlborough, 2022.",
+          "price": 14.0,
+          "tags": [],
+          "addOns": [
+            "size-14-72"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "White wine",
+      "sectionId": "white-wine",
+      "items": [
+        {
+          "name": "Seresin Chardonnay",
+          "dishId": "seresin-chardonnay",
+          "desc": "Marlborough, 2023.",
+          "price": 13.0,
+          "tags": [],
+          "addOns": [
+            "size-13-65"
+          ]
+        },
+        {
+          "name": "Urlar Pinot Gris",
+          "dishId": "urlar-pinot-gris",
+          "desc": "Gladstone, 2024.",
+          "price": 14.0,
+          "tags": [],
+          "addOns": [
+            "size-14-70"
+          ]
+        },
+        {
+          "name": "Decibel Giunta Albarino",
+          "dishId": "decibel-giunta-albarino",
+          "desc": "Hawke’s Bay, 2024.",
+          "price": 13.0,
+          "tags": [],
+          "addOns": [
+            "size-13-65"
+          ]
+        },
+        {
+          "name": "Mount Edward Gruner Veltliner",
+          "dishId": "mount-edward-gruner-veltliner",
+          "desc": "Central Otago, 2018.",
+          "price": 15.0,
+          "tags": [],
+          "addOns": [
+            "size-15-75"
+          ]
+        },
+        {
+          "name": "Bryterlater “Svelte” Riesling",
+          "dishId": "bryterlater-svelte-riesling",
+          "desc": "North Canterbury, 2025.",
+          "price": 15.0,
+          "tags": [],
+          "addOns": [
+            "size-15-75"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Red wine",
+      "sectionId": "red-wine",
+      "items": [
+        {
+          "name": "TED by Mount Edward Pinot Noir",
+          "dishId": "ted-by-mount-edward-pinot-noir",
+          "desc": "Central Otago, 2022.",
+          "price": 18.0,
+          "tags": [],
+          "addOns": [
+            "size-18-90"
+          ]
+        },
+        {
+          "name": "Zonin Montepulciano d’Abruzzo",
+          "dishId": "zonin-montepulciano-d-abruzzo",
+          "desc": "Gambellara, Italy, 2024.",
+          "price": 14.0,
+          "tags": [],
+          "addOns": [
+            "size-14-72"
+          ]
+        },
+        {
+          "name": "Frankland Estate Shiraz",
+          "dishId": "frankland-estate-shiraz",
+          "desc": "Western Australia, 2022.",
+          "price": 17.0,
+          "tags": [],
+          "addOns": [
+            "size-17-90"
+          ]
+        },
+        {
+          "name": "Decibel Giunta Malbec Nouveau",
+          "dishId": "decibel-giunta-malbec-nouveau",
+          "desc": "Hawke’s Bay. Served chilled. Only a glass price is printed.",
+          "price": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Beer (330ml)",
+      "sectionId": "beer-330ml",
+      "note": "330ml.",
+      "items": [
+        {
+          "name": "Gisborne Gold Lager",
+          "dishId": "gisborne-gold-lager",
+          "desc": "3.8%",
+          "price": 9,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
+        },
+        {
+          "name": "Gisborne Green Pilsner",
+          "dishId": "gisborne-green-pilsner",
+          "desc": "4.8%",
+          "price": 10,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Pilsner” — beer is a barley product."}
+        },
+        {
+          "name": "Kirin Ichiban Lager",
+          "dishId": "kirin-ichiban-lager",
+          "desc": "5%",
+          "price": 12,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
+        },
+        {
+          "name": "Parrotdog Birdseye Hazy IPA",
+          "dishId": "parrotdog-birdseye-hazy-ipa",
+          "desc": "5.8%",
+          "price": 12,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
+        },
+        {
+          "name": "Parrotdog Greyhound Low Carb Hazy IPA",
+          "dishId": "parrotdog-greyhound-low-carb-hazy-ipa",
+          "desc": "4.3%",
+          "price": 12,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
+        },
+        {
+          "name": "Garage Project Cereal Milk Stout",
+          "dishId": "garage-project-cereal-milk-stout",
+          "desc": "Nitro stout, 4.7%",
+          "price": 12,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Stout” — beer is a barley product.", "contains-dairy": "The menu says “Milk”."}
+        },
+        {
+          "name": "Garage Project Fugazi Hoppy Session Ale",
+          "dishId": "garage-project-fugazi-hoppy-session-ale",
+          "desc": "2.2%",
+          "price": 12,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Ale” — beer is a barley product."}
+        },
+        {
+          "name": "Kirin Hyoketsu, Peach Vodka Soda",
+          "dishId": "kirin-hyoketsu-peach-vodka-soda",
+          "desc": "6%",
+          "price": 10,
+          "tags": []
+        },
+        {
+          "name": "Tiny 0% Hazy IPA",
+          "dishId": "tiny-0-hazy-ipa",
+          "price": 9,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “IPA” — beer is a barley product."}
+        },
+        {
+          "name": "0% Lager",
+          "dishId": "0-lager",
+          "price": 9,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Lager” — beer is a barley product."}
+        }
+      ]
+    },
+    {
+      "section": "Cocktails",
+      "sectionId": "cocktails",
+      "items": [
+        {
+          "name": "Hei Lychee Martini",
+          "dishId": "hei-lychee-martini",
+          "desc": "Gin, Manzanilla, Lychee, Peyschauds",
+          "price": 20,
+          "tags": []
+        },
+        {
+          "name": "Martini Sounds Good",
+          "dishId": "martini-sounds-good",
+          "desc": "Gin, Noilly Prat, Olive Brine, MSG, Shaoxing, Scallion",
+          "price": 19,
+          "tags": []
+        },
+        {
+          "name": "Stormy Trader",
+          "dishId": "stormy-trader",
+          "desc": "5 Spice Gosling’s, ginger, lime, honey, soda",
+          "price": 20,
+          "tags": []
+        },
+        {
+          "name": "Suanye Sipper",
+          "dishId": "suanye-sipper",
+          "desc": "Vodka, coconut, apricot",
+          "price": 18,
+          "tags": []
+        },
+        {
+          "name": "Global Colada",
+          "dishId": "global-colada",
+          "desc": "Cynar, Chinola Passionfruit, lime, curry leaf, coconut milk",
+          "price": 18,
+          "tags": []
+        },
+        {
+          "name": "Smacked Eastside",
+          "dishId": "smacked-eastside",
+          "desc": "Peddler’s Gin, coriander, cucumber, sesame",
+          "price": 21,
+          "tags": [
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “sesame”."}
+        },
+        {
+          "name": "Pink Lantern",
+          "dishId": "pink-lantern",
+          "desc": "Nakano Ume Spirit, coconut water, hibiscus, soda",
+          "price": 19,
+          "tags": []
+        },
+        {
+          "name": "Smoking Dragon",
+          "dishId": "smoking-dragon",
+          "desc": "Mezcal, Tequila, lime, dragonfruit, chilli",
+          "price": 22,
+          "tags": []
+        },
+        {
+          "name": "Tiki-Toki",
+          "dishId": "tiki-toki",
+          "desc": "Toki Whisky, lime, pineapple, walnut, sour plum",
+          "price": 22,
+          "tags": [
+            "contains-nuts"
+          ],
+          "tagNotes": {"contains-nuts": "The menu says “walnut”."}
+        },
+        {
+          "name": "Martini-Cha",
+          "dishId": "martini-cha",
+          "desc": "Jasmine vodka, Yuzu Umeshu, Sparkling wine",
+          "price": 21,
+          "tags": []
+        },
+        {
+          "name": "Annam Coffee",
+          "dishId": "annam-coffee",
+          "desc": "Cognac, espresso, sweetened condensed milk, sesame",
+          "price": 22,
+          "tags": [
+            "contains-dairy",
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “milk”.", "contains-sesame": "The menu says “sesame”."}
+        },
+        {
+          "name": "Thank You Very Matcha",
+          "dishId": "thank-you-very-matcha",
+          "desc": "Pisco, Passionfruit, Matcha, Egg white",
+          "price": 20,
+          "tags": [
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-egg": "The menu says “Egg”."}
+        }
+      ]
+    },
+    {
+      "section": "Mocktails",
+      "sectionId": "mocktails",
+      "items": [
+        {
+          "name": "Lychee Fizz",
+          "dishId": "lychee-fizz",
+          "desc": "Lychee, Yuzu, Mandarin, Soda",
+          "price": 14,
+          "tags": []
+        },
+        {
+          "name": "Soy Milk Coffee",
+          "dishId": "soy-milk-coffee",
+          "desc": "Espresso, Soy Milk, Sweetened Condensed Milk",
+          "price": 14,
+          "tags": [
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-soy": "The menu says “Soy”."}
+        },
+        {
+          "name": "Spicy Dragonfruit Margarita",
+          "dishId": "spicy-dragonfruit-margarita",
+          "desc": "Coconut, Dragonfruit, Lime, Chilli",
+          "price": 14,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Non-alcoholic",
+      "sectionId": "non-alcoholic",
+      "note": "Juices: orange, apple, pineapple. Sodas: Coke, lemonade, ginger beer.",
+      "items": [
+        {
+          "name": "Antipodes Sparkling Mineral Water 500ml",
+          "dishId": "antipodes-sparkling-mineral-water-500ml",
+          "price": 8,
+          "tags": []
+        },
+        {
+          "name": "Antipodes Sparkling Mineral Water 1L",
+          "dishId": "antipodes-sparkling-mineral-water-1l",
+          "price": 12,
+          "tags": []
+        },
+        {
+          "name": "Orange Juice",
+          "dishId": "orange-juice",
+          "price": 6,
+          "tags": []
+        },
+        {
+          "name": "Apple Juice",
+          "dishId": "apple-juice",
+          "price": 6,
+          "tags": []
+        },
+        {
+          "name": "Pineapple Juice",
+          "dishId": "pineapple-juice",
+          "price": 6,
+          "tags": []
+        },
+        {
+          "name": "Coke",
+          "dishId": "coke",
+          "price": 6,
+          "tags": []
+        },
+        {
+          "name": "Lemonade",
+          "dishId": "lemonade",
+          "price": 6,
+          "tags": []
+        },
+        {
+          "name": "Ginger Beer",
+          "dishId": "ginger-beer",
+          "price": 6,
+          "tags": []
+        },
+        {
+          "name": "Karma Drinks Kombucha, Ginger Lemon",
+          "dishId": "karma-drinks-kombucha-ginger-lemon",
+          "price": 8,
+          "tags": []
+        },
+        {
+          "name": "Karma Drinks Kombucha, Mango & Passionfruit",
+          "dishId": "karma-drinks-kombucha-mango-passionfruit",
+          "price": 8,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Tea and coffee",
+      "sectionId": "tea-and-coffee",
+      "note": "Soy or oat milk, extra $1. Matcha with agave or sweetened condensed milk, extra $1.",
+      "items": [
+        {
+          "name": "Tea",
+          "dishId": "tea",
+          "price": 5,
+          "tags": []
+        },
+        {
+          "name": "Long Black",
+          "dishId": "long-black",
+          "price": 5,
+          "tags": []
+        },
+        {
+          "name": "Americano",
+          "dishId": "americano",
+          "price": 5,
+          "tags": []
+        },
+        {
+          "name": "Short Black",
+          "dishId": "short-black",
+          "price": 5,
+          "tags": []
+        },
+        {
+          "name": "Flat White/Latte/Cappuccino",
+          "dishId": "flat-white-latte-cappuccino",
+          "price": 6,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Flat White” — an espresso milk drink."},
+          "addOns": [
+            "milk"
+          ]
+        },
+        {
+          "name": "Mochaccino",
+          "dishId": "mochaccino",
+          "price": 6,
+          "tags": [],
+          "addOns": [
+            "milk"
+          ]
+        },
+        {
+          "name": "Hot Chocolate",
+          "dishId": "hot-chocolate",
+          "price": 6,
+          "tags": [],
+          "addOns": [
+            "milk"
+          ]
+        },
+        {
+          "name": "Matcha (hot or iced)",
+          "dishId": "matcha-hot-or-iced",
+          "price": 7,
+          "tags": [],
+          "addOns": [
+            "milk",
+            "matcha-sweetener"
+          ]
+        }
+      ]
+    }
+  ]
+}
