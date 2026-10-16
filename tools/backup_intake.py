@@ -21,8 +21,9 @@ THE ALLOW-LIST IS 340/310'S, UNCHANGED, and it is an allow-list on purpose:
     else is still refused, because ingredients/ holds health transcripts.
   * plus the fetched web page(s) a committed fingerprint names -- the
     `snapshot` path in data/intake/recipe-sources.json, or (since 2026-10-16,
-    500/080) a menus/ evidence row in data/intake/menu-sources.json, which is
-    how a fetched menu page or PDF is cited -- and nothing else .html
+    500/080) a menus/ row in data/intake/menu-sources.json or
+    data/intake/menu-web-sources.json, which is how a fetched menu page or
+    document is cited -- and nothing else .html
 
 Nothing else is ever opened, hashed, or copied. In particular it is NOT "every
 image": `intake/ingredients/` also holds a saved health transcript's own page
@@ -94,6 +95,9 @@ from check_provenance import (  # noqa: E402  (same directory, stdlib-only)
 
 ROOT = Path(__file__).resolve().parent.parent
 RECIPE_RECORD = ROOT / "data" / "intake" / "recipe-sources.json"
+# Fetched menu pages and documents (200/180, 2026-10-16): kept apart from
+# menu-sources.json because its --rebuild regenerates from photos and PDFs.
+WEB_RECORD = ROOT / "data" / "intake" / "menu-web-sources.json"
 
 # 340/310's three trees, as paths under intake/. A tuple, not a pattern: adding
 # a tree is a reviewed edit to this line, never a side effect of a new folder.
@@ -132,7 +136,7 @@ def classify(rel, snapshots=frozenset(), is_link=False):
     return True, "ok"
 
 
-def snapshot_paths(doc):
+def snapshot_paths(doc, key="recipes"):
     """{rel path under intake/: sha256} for the fetched pages the record names.
 
     The record's `snapshot` is prose that begins with the path ("intake/… (…)"),
@@ -141,8 +145,11 @@ def snapshot_paths(doc):
     allow-list of its own.
     """
     out = {}
-    for row in (doc.get("recipes") or {}).values():
-        m = re.match(r"intake/(\S+)", row.get("snapshot", ""))
+    for row in (doc.get(key) or {}).values():
+        # The path runs to the " (" that opens the prose note, not to the first
+        # space: venue folders have spaces ("The Catch Sushi Bar"), and a \S+
+        # parse silently missed every snapshot under one (found 2026-10-16).
+        m = re.match(r"intake/(.+?)(?:\s+\(|$)", row.get("snapshot", "").strip())
         if m and row.get("sha256"):
             out[m.group(1)] = row["sha256"]
     return out
@@ -444,6 +451,9 @@ def _scenario(ops):
         out["classify: a recipe HEIC is accepted"] = cls("recipes/Archive/x.heic")
         out["classify: a raw food photo is accepted"] = cls("ingredients/raw_food_photos/1/x.jpeg")
         out["classify: the fingerprinted web snapshot is accepted"] = cls("recipes/web/page.html")
+        out["record: menu-web-sources' readings name their snapshots"] = snapshot_paths(
+            {"readings": {"k": {"snapshot": "intake/menus/Cafe A/web/menu.html (gitignored)",
+                                "sha256": "ab"}}}, "readings") == {"menus/Cafe A/web/menu.html": "ab"}
         out["classify: a health-transcript image is refused"] = not cls("ingredients/Transcript_files/t.jpeg")
         out["classify: a health-transcript image is refused even as a PNG"] = not cls("ingredients/Transcript_files/t.png")
         out["classify: a food-log export is refused"] = not cls("ingredients/food-log-export.csv")
@@ -700,8 +710,10 @@ def main():
     # fingerprints it: that is how a fetched menu page is cited (500/080). Still
     # tree-bounded, because classify() checks the tree before the snapshot set.
     menu_doc = load_record()
+    web = snapshot_paths(_json(WEB_RECORD), "readings") if WEB_RECORD.is_file() else {}
     snaps = {**snapshot_paths(_json(RECIPE_RECORD)),
-             **{r: h for r, h in fingerprints(menu_doc, {}).items() if r.startswith("menus/")}}
+             **{r: h for r, h in fingerprints(menu_doc, {}).items() if r.startswith("menus/")},
+             **{r: h for r, h in web.items() if r.startswith("menus/")}}
     fps = fingerprints(menu_doc, snaps)
     res = run(intake, dest, fps, snaps, default_ops(), dry=args.dry_run,
               accept_changed=args.accept_changed, wait=args.wait, deep=args.deep)
