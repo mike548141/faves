@@ -1,4 +1,5 @@
-- [ ] 🔎 **`device_check` hangs at the same step every run, so 11 of its 81
+- [~] 🔎 **`device_check` hangs at the same step every run, so 11 of its 81
+  (claimed 2026-10-16-0913, faves-11, wt: faves-340-320)
       assertions go unrun** `[S][tests]` — found 2026-10-16 (`faves-11`)
       while verifying `200/130`.
 
