@@ -1,4 +1,5 @@
-- [ ] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
+- [~] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
+  (claimed 2026-10-16-0946, faves-11, wt: faves-510-420)
       `[S] [tests]` — filed by session `faves-4f` from its workers' sweeps
       (load averages of 120 to 800 while several sweeps overlapped).
 
