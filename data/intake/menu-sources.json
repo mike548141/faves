@@ -226,6 +226,64 @@
         }
       ]
     },
+    "hei": {
+      "folder": "intake/menus/Hei/web",
+      "evidence": [
+        {
+          "file": "hei-menu-page.html",
+          "kind": "web",
+          "captured": "2026-10-16",
+          "capturedAt": null,
+          "device": null,
+          "gps": "absent",
+          "url": "https://hei.co.nz/menu/",
+          "sha256": "b267fda762ee59181fc4595b0f4f09dbed23b5067051da89ccb7ad0ec98c3ba5"
+        },
+        {
+          "file": "hei-contact-page.html",
+          "kind": "web",
+          "captured": "2026-10-16",
+          "capturedAt": null,
+          "device": null,
+          "gps": "absent",
+          "url": "https://hei.co.nz/contact/",
+          "sha256": "4953d7261c10c6596c1bde3862cfdae954e55c483874c6fabcbb45bffd94cdaf"
+        },
+        {
+          "file": "Hei-Dinner-Menu-09.11.2025.pdf",
+          "kind": "web",
+          "captured": "2026-10-16",
+          "capturedAt": null,
+          "device": null,
+          "gps": "absent",
+          "url": "https://hei.co.nz/wp-content/uploads/2025/11/Hei-Dinner-Menu-09.11.2025.pdf",
+          "lastModified": "2025-11-10T15:11:23Z",
+          "sha256": "18ff5c23148625a751dbf2957c02e694a5a92c3dd87a349866ee3cdbcf5214d9"
+        },
+        {
+          "file": "Hei-Drinks-List-21.03.2026.pdf",
+          "kind": "web",
+          "captured": "2026-10-16",
+          "capturedAt": null,
+          "device": null,
+          "gps": "absent",
+          "url": "https://hei.co.nz/wp-content/uploads/2026/05/Hei-Drinks-List-21.03.2026.pdf",
+          "lastModified": "2026-05-03T20:53:08Z",
+          "sha256": "ebf53b55aac47ae2e251ff73a0c120fdb52532928431cda4065c4d5f027bee92"
+        },
+        {
+          "file": "Hei-Lunch-Menu-26_03_2026.docx",
+          "kind": "web",
+          "captured": "2026-10-16",
+          "capturedAt": null,
+          "device": null,
+          "gps": "absent",
+          "url": "https://hei.co.nz/wp-content/uploads/2026/05/Hei-Lunch-Menu-26_03_2026.docx",
+          "lastModified": "2026-05-03T20:53:10Z",
+          "sha256": "f907afeb55c8d40d4a58a384668653acad085422d211b131fdce62cc259eee11"
+        }
+      ]
+    },
     "kc-cafe": {
       "folder": "intake/menus/KC cafe",
       "evidence": [

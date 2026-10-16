@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Hei, on Cuba Street, joins the list.** Its lunch, dinner and drinks
+  menus as the restaurant publishes them on its own site (130 dishes and
+  drinks, allergen-tagged, with the venue's own vegan, vegetarian and
+  gluten-free marks kept as printed), plus its address, phone and opening
+  hours.
 - **A saved order tells you when prices have moved.** Adding a saved order now puts each dish in at today's price and says, in words, which ones have changed since you saved it: "now $16.50, was $14.50 when you saved it (up $2)". A price that went down is said too. Nothing is changed for you: the dish is on your order and you decide whether to keep it. An order saved before prices were recorded says nothing rather than guess.
 - **A dish that still needs a choice is flagged on your order, and you can finish it there.** If a dish is missing a compulsory choice (a sauce, say) because it was added before the choice became compulsory, or came from a saved or shared order, it now shows on the order sheet with "Needs a choice", the total says it is short by what the choice costs, and you pick the choice in place. A saved order that needs a choice is added and flagged instead of left out.
 - **A choice the menu makes compulsory is now compulsory.** Where a dish comes
