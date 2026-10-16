@@ -1,4 +1,5 @@
-- [ ] **A size ladder's default is the menu's; failing that, the cheapest**
+- [~] **A size ladder's default is the menu's; failing that, the cheapest**
+  (claimed 2026-10-16-0714, faves-11, wt: faves-200-110)
   `[S][data][schema]` — **owner-ruled 2026-10-03**, raised on Spices Indian's
   Garlic Tikka (Half $12 / Full $20, Full pre-selected and the row priced $20):
 

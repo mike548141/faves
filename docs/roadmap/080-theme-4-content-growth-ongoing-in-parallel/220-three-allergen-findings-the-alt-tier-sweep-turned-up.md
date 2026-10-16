@@ -1,4 +1,5 @@
-- [ ] 🚩 **Three allergen findings the caption sweep turned up, none of them
+- [~] 🚩 **Three allergen findings the caption sweep turned up, none of them
+  (claimed 2026-10-16-0714, faves-11, wt: faves-080-220)
       this item's to fix** `[S][data]` — raised 2026-09-09 by the session
       delivering `210` (ADR 0114). All three were measured on the real corpus,
       and each is left alone deliberately: two are rule-set decisions with

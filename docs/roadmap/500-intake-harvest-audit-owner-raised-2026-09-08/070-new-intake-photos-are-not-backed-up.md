@@ -1,4 +1,5 @@
-- [ ] 🔎 **Intake added after 2026-10-02 is backed up by nothing** `[S][tools]`
+- [~] 🔎 **Intake added after 2026-10-02 is backed up by nothing** `[S][tools]`
+  (claimed 2026-10-16-0714, faves-11, wt: faves-500-070)
   — found 2026-10-02 (`faves-77`) closing `340/310`; filed 2026-10-03.
 
   `340/310` copied the 294 evidence originals in `intake/` (menus, recipes,

@@ -1,4 +1,5 @@
-- [ ] **An unfinished dish on the order sheet: warn, and finish it there**
+- [~] **An unfinished dish on the order sheet: warn, and finish it there**
+  (claimed 2026-10-16-0714, faves-11, wt: faves-200-130)
   `[M][js]` — **owner-ruled 2026-10-03:**
 
   > *"If a dish has a mandatory addon and the user has not made a selection
