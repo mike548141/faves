@@ -237,14 +237,6 @@ export function summarise(record) {
   for (const field of Object.keys(SUMMARY_FIELDS)) {
     if (record[field] !== undefined) out[field] = record[field];
   }
-  // #!# BRIDGE, remove with data.js's `readOrderMode` (any release after
-  // 2026-10-16): a phone still on the PRE-2026-10-02 shell reads `services` from
-  // this file, and that shell can be served this summary (the new worker's
-  // install syncs data while the old shell is still the one running). Mirrored
-  // here only — no shell reads the field from a venue file, and the search
-  // index never carried it — so the cost is one duplicated array per venue in
-  // this one file (ADR 0047).
-  if (out.orderMode !== undefined) out.services = out.orderMode;
   if (Array.isArray(record.locations)) out.locations = record.locations.map(thinBranch);
   if (record.closure !== undefined) out.closure = record.closure;
   const price = priceBand(record); // BEFORE the menu is dropped — needs real prices

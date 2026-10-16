@@ -261,8 +261,8 @@ export function activeFilters(state) {
 export function applyFilters(restaurants, state, clock = null) {
   return restaurants.filter((r) => {
     // The state key and the record field are both `orderMode` (the field was
-    // `services` until 2026-10-02, roadmap 010). A record still carrying the
-    // old name never reaches here: data.js's loadRestaurants() bridges it.
+    // `services` until 2026-10-02, roadmap 010). The one-release bridge that
+    // read the old name went on 2026-10-16; validate.py refuses it in a venue file.
     if (state.orderMode !== "all" && !(r.orderMode || []).includes(state.orderMode)) {
       return false;
     }
