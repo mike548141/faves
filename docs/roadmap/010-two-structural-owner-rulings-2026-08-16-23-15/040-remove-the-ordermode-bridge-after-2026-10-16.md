@@ -1,4 +1,5 @@
-- [ ] ⏳ **Remove the `services` → `orderMode` bridge, on or after 2026-10-16**
+- [~] ⏳ **Remove the `services` → `orderMode` bridge, on or after 2026-10-16**
+  (claimed 2026-10-16-0706, faves-11, wt: faves-bridge-removal)
   `[XS][js][tools]` — filed 2026-10-02 (`faves-77`), from `010`.
 
   `010`'s rename shipped a two-sided, one-release bridge so a phone caught
