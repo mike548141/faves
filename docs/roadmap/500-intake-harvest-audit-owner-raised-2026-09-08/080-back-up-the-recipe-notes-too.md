@@ -1,4 +1,5 @@
-- [ ] **Back up `intake/recipes/`'s Markdown notes too** `[XS][tools]` —
+- [~] **Back up `intake/recipes/`'s Markdown notes too** `[XS][tools]` —
+  (claimed 2026-10-16-1034, faves-11, wt: primary (inline))
       owner-ruled 2026-10-16 (asked by `faves-11`), following `500/070`.
 
   `tools/backup_intake.py` copies only images and PDFs, per `340/310`'s

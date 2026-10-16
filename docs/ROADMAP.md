@@ -58,7 +58,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🎯 [Owner calls the menu fetch left owing](roadmap/080-theme-4-content-growth-ongoing-in-parallel/100-owner-calls-the-menu-fetch-left-owing.md)
 - ✅ [Restore The Victoria Tavern's dropped spirits](roadmap/080-theme-4-content-growth-ongoing-in-parallel/110-restore-the-victoria-tavern-s-dropped-spirits.md)
 - [ ] [🚩 Every chain we hold should carry all its Wellington-region](roadmap/080-theme-4-content-growth-ongoing-in-parallel/120-every-chain-we-hold-should-carry-all-its-welli.md)
-- [ ] [No branch of McDonald's or Subway has opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/130-no-branch-of-mcdonald-s-or-subway-has-opening.md)
+- [~] [No branch of McDonald's or Subway has opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/130-no-branch-of-mcdonald-s-or-subway-has-opening.md)
 - [ ] [picks are empty on most venues](roadmap/080-theme-4-content-growth-ongoing-in-parallel/140-picks-are-empty-on-most-venues.md)
 - [ ] [Venues still stub](roadmap/080-theme-4-content-growth-ongoing-in-parallel/150-venues-still-stub.md)
 - [ ] [The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
@@ -154,13 +154,13 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [A required choice still offers "None"](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/090-a-required-choice-still-offers-none.md)
 - ✅ 🔎 [Survey: every way a dish is configured, across the whole corpus](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/100-survey-every-way-a-dish-is-configured.md)
 - ✅ [A size ladder's default is the menu's; failing that, the cheapest](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/110-a-size-ladders-default-is-the-menus.md)
-- [ ] [A "must-see" choice opens when you press Add](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/120-a-must-see-choice-opens-when-you-add.md)
+- [~] [A "must-see" choice opens when you press Add](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/120-a-must-see-choice-opens-when-you-add.md)
 - ✅ [An unfinished dish on the order sheet: warn, and finish it there](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/130-an-unfinished-dish-on-the-order-sheet.md)
 - [ ] [How many you may pick, and what the extras beyond that cost](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/140-how-many-you-may-pick-and-what-extras-cost.md)
 - [ ] [A fee that is not a dish: takeaway containers and cups](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/150-a-fee-that-is-not-a-dish.md)
 - [ ] [A swap is not an extra: name what it replaces](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/160-a-swap-is-not-an-extra.md)
 - [ ] [Priced per piece, per 100 g or per person, with a minimum order](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/170-per-unit-per-person-and-minimum-orders.md)
-- [ ] [Data defects the configuration survey saw in passing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/180-data-defects-the-configuration-survey-saw.md)
+- [~] [Data defects the configuration survey saw in passing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/180-data-defects-the-configuration-survey-saw.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
 
@@ -428,7 +428,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🔎 [A complete menu carries no verified date, and three older menu](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/050-a-menu-with-92-prices-carries-no-verified-date.md)
 - ✅ 🎯 [ADR 0090's "No location, ever" is wider than the reason it gives, and](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/060-the-no-location-rule-is-wider-than-its-reason.md)
 - ✅ 🔎 [Intake added after 2026-10-02 is backed up by nothing](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/070-new-intake-photos-are-not-backed-up.md)
-- [ ] [Back up intake/recipes/'s Markdown notes too](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/080-back-up-the-recipe-notes-too.md)
+- [~] [Back up intake/recipes/'s Markdown notes too](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/080-back-up-the-recipe-notes-too.md)
 
 ## Theme 39 — scaling: partitions, deltas and user data (owner-raised 2026-09-30)
 

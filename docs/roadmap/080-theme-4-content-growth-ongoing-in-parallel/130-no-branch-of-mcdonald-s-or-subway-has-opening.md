@@ -1,4 +1,5 @@
-- [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
+- [~] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
+  (claimed 2026-10-16-1034, faves-11, wt: primary (inline, Chrome))
       — ~~**10 of the corpus's 22 branches**, measured 2026-08-16~~ →
       **10 of the corpus's 47 branches**, re-measured 2026-09-09. This is now
       load-bearing rather than cosmetic: [ADR 0054](../../decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
