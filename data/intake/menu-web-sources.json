@@ -2,10 +2,10 @@
   "what": "Provenance of venue-menu rows re-read from a venue's OWN web page, on the owner's direction. menu-sources.json cannot hold these (its rebuild regenerates it from the photos and PDFs in intake/menus/, so a web row there would be deleted), and recipe-sources.json is recipes only. Same shape as recipe-sources.json: URL, fetch time, SHA-256 of the bytes as fetched. Not the pages: those are in each venue's folder under the primary checkout's gitignored intake/menus/<venue>/web/ (so the intake backup's menus/ tree covers them) and are not committed.",
   "written by": "by hand, one row per page read",
   "checked by": "nothing yet. A snapshot is backed up only if backup_intake.py's selection rule reads this file's sha256 rows as well as menu-sources.json's. They are deliberately NOT in menu-sources.json: check_provenance.py --rebuild regenerates that file from the photos and PDFs and would delete a web row",
-  "directedBy": "owner, 2026-10-16: 'Yes, from their own sites' (roadmap 200/180)",
+  "directedBy": "owner, 2026-10-16: 'Yes, from their own sites' (roadmap 200/180) And for Hei (roadmap 080/290): owner, 2026-10-16, 'I also want you to add the restaurant Hei on Cuba St in Wellington to Faves. The menu is here https://hei.co.nz/menu/'.",
   "fetchedWindow": "2026-10-16T10:37:08Z, the batch's start; every page was fetched within the following minute",
   "tls": "verification on for every fetch (curl, no -k); every certificate verified OK",
-  "verifiedNotBumped": "No venue's `verified` or `verifiedBy` changed: only the listed rows were read, not the whole menu, and a whole-menu date would overstate the reading.",
+  "verifiedNotBumped": "No venue's `verified` or `verifiedBy` changed: only the listed rows were read, not the whole menu, and a whole-menu date would overstate the reading. The exception is Hei, a NEW venue (080/290) whose whole menu was read from these pages: its `verified` is 2026-10-16, official-site.",
   "readings": {
     "the-catch-sushi-bar-menu": {
       "venue": "the-catch-sushi-bar",
@@ -197,6 +197,94 @@
         "Links the food-menu PDF and a Me&u ordering menu."
       ],
       "result": "Carries the link only."
+    },
+    "hei-menu": {
+      "venue": "hei",
+      "kind": "web",
+      "url": "https://hei.co.nz/menu/",
+      "publisher": "The venue's own site.",
+      "fetched": "2026-10-16T10:38:25Z",
+      "http": {
+        "status": 200,
+        "bytes": 80633
+      },
+      "sha256": "b267fda762ee59181fc4595b0f4f09dbed23b5067051da89ccb7ad0ec98c3ba5",
+      "snapshot": "intake/menus/Hei/web/hei-menu-page.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "Links to three menus (Dinner PDF, Drinks PDF, Lunch DOCX), and the venue's address, phone and Monday to Saturday lunch and dinner hours, as now in the venue record."
+      ],
+      "result": "Transcribed into the new venue record site/data/restaurants/hei.json."
+    },
+    "hei-contact": {
+      "venue": "hei",
+      "kind": "web",
+      "url": "https://hei.co.nz/contact/",
+      "publisher": "The venue's own site.",
+      "fetched": "2026-10-16 (after 10:38:39Z; the time was not recorded)",
+      "http": {
+        "status": 200,
+        "bytes": 84280
+      },
+      "sha256": "4953d7261c10c6596c1bde3862cfdae954e55c483874c6fabcbb45bffd94cdaf",
+      "snapshot": "intake/menus/Hei/web/hei-contact-page.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "The same contact details and hours as the menu page; a 15% public-holiday surcharge; wheelchair accessible; can cater to dietary requirements."
+      ],
+      "result": "Transcribed into the new venue record site/data/restaurants/hei.json."
+    },
+    "hei-dinner-menu": {
+      "venue": "hei",
+      "kind": "web",
+      "url": "https://hei.co.nz/wp-content/uploads/2025/11/Hei-Dinner-Menu-09.11.2025.pdf",
+      "publisher": "The venue's own site.",
+      "fetched": "2026-10-16T10:38Z (to the minute; the batch ran 10:38:25Z to 10:38:39Z)",
+      "http": {
+        "status": 200,
+        "bytes": 153295
+      },
+      "sha256": "18ff5c23148625a751dbf2957c02e694a5a92c3dd87a349866ee3cdbcf5214d9",
+      "snapshot": "intake/menus/Hei/web/Hei-Dinner-Menu-09.11.2025.pdf (gitignored, primary checkout; raw bytes as fetched)",
+      "lastModified": "2025-11-10T15:11:23Z",
+      "saw": [
+        "Dinner menu, 2 pages: To share (24), Baos (4), Salads (3), A sweet finish (3), Sides (5)."
+      ],
+      "result": "Transcribed into the new venue record site/data/restaurants/hei.json."
+    },
+    "hei-drinks-list": {
+      "venue": "hei",
+      "kind": "web",
+      "url": "https://hei.co.nz/wp-content/uploads/2026/05/Hei-Drinks-List-21.03.2026.pdf",
+      "publisher": "The venue's own site.",
+      "fetched": "2026-10-16T10:38Z (to the minute; the batch ran 10:38:25Z to 10:38:39Z)",
+      "http": {
+        "status": 200,
+        "bytes": 87183
+      },
+      "sha256": "ebf53b55aac47ae2e251ff73a0c120fdb52532928431cda4065c4d5f027bee92",
+      "snapshot": "intake/menus/Hei/web/Hei-Drinks-List-21.03.2026.pdf (gitignored, primary checkout; raw bytes as fetched)",
+      "lastModified": "2026-05-03T20:53:08Z",
+      "saw": [
+        "Drinks list, 2 pages: beer, wine by the glass and bottle, cocktails, mocktails, non-alcoholic, tea and coffee."
+      ],
+      "result": "Transcribed into the new venue record site/data/restaurants/hei.json."
+    },
+    "hei-lunch-menu": {
+      "venue": "hei",
+      "kind": "web",
+      "url": "https://hei.co.nz/wp-content/uploads/2026/05/Hei-Lunch-Menu-26_03_2026.docx",
+      "publisher": "The venue's own site.",
+      "fetched": "2026-10-16T10:38Z (to the minute; the batch ran 10:38:25Z to 10:38:39Z)",
+      "http": {
+        "status": 200,
+        "bytes": 280357
+      },
+      "sha256": "f907afeb55c8d40d4a58a384668653acad085422d211b131fdce62cc259eee11",
+      "snapshot": "intake/menus/Hei/web/Hei-Lunch-Menu-26_03_2026.docx (gitignored, primary checkout; raw bytes as fetched)",
+      "lastModified": "2026-05-03T20:53:10Z",
+      "saw": [
+        "Lunch menu: weekly special lunch set (4), chef's favourite lunches (11), share a snack (11), baos (4), a sweet finish (3)."
+      ],
+      "result": "Transcribed into the new venue record site/data/restaurants/hei.json."
     }
   }
 }
