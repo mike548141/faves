@@ -1,7 +1,7 @@
 # Faves — instructions for AI builders
 
 <!-- stamp:begin source=docs/method/PROPAGATION.md region=floor -->
-## Doctrine — inherited from atelier (pinned `atelier@94d5cc6`)
+## Doctrine — inherited from atelier (pinned `atelier@fd63df8`)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -80,16 +80,18 @@ in atelier and is read on demand — never wholesale.
   (`PROPAGATION.md` § *Pointing up*.)
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
   session start run `git -C "../atelier" fetch -q` then `git -C
-  "../atelier" log --oneline 94d5cc6..origin/main` — the parent's published
+  "../atelier" log --oneline fd63df8..origin/main` — the parent's published
   mainline, never whatever branch its checkout is parked on; any output means
   the house doctrine moved — read it, then bump the pin above deliberately.
 - **Estate resources — point up, don't re-derive:** providers & account plans,
-  financial constraints & plan entitlements, licences, credentials, shared
-  estate tooling, and the estate inventory live in the operator's **private
-  estate-root repo** (atelier's private counterpart). Reference it for these;
-  never re-derive them locally or copy its contents down. If **this** repo is
-  public, reference the root by local-path convention, never by name — a public
-  repo naming the estate's credential/inventory root is reconnaissance.
+  financial constraints & plan entitlements, licences, credentials and the
+  estate inventory live in the operator's **private estate-root repo**
+  (atelier's private counterpart). Reference it for these; never re-derive
+  them locally or copy its contents down. The **expected toolbox** (which
+  tools to expect, and how to find them) is atelier's: `method/TOOLBOX.md`.
+  If **this** repo is public, reference the root by local-path convention,
+  never by name — a public repo naming the estate's credential/inventory root
+  is reconnaissance.
 - **This repo's visibility:** **PUBLIC** since 2026-08-09 (`a207a15`, Theme
   8) — a push *is* publication, to the world, immediately and irreversibly;
   git history is public too, so a secret committed and then removed is still
