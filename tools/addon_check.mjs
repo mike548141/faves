@@ -149,6 +149,16 @@
 //   r) a line stored before the dish had a ladder — the plain dish, no options
 //      — is the SAME line as the default, so it still merges; Large is not.
 //
+// AND SINCE 2026-10-16 (roadmap 200/120, ADR 0159), A MUST-SEE CHOICE OPENS WHEN
+// YOU PRESS ADD — block (ab). The owner's ruling: a choice the reader must at
+// least SEE (every size ladder by rule, any other group by a `mustSee` flag)
+// expands the picker when the row's ＋ Add is pressed, so a default that was
+// chosen for them is not missed. The absence is the half that rots, so the block
+// asserts both: the same optional picker on the REAL record stays CLOSED on Add,
+// and a required group, which is gated rather than must-see, is not re-opened
+// after it was answered. Focus is asserted to stay on the stepper the person just
+// pressed, never to move into the picker.
+//
 // WHAT A GREEN RUN HERE STILL CANNOT TELL YOU. It never proves the tagging is
 // right — that the sauce called "Garlic yogurt" really does contain dairy. That
 // is a claim about food, made by whoever transcribed the menu, and no browser
@@ -499,6 +509,17 @@ const FIN_ID = `${REQ_VENUE}-finish-fixture`;
 const FIN_SAUCE_COST = 2;
 const OPT_DISH = "Mini Pizza + Fries";
 
+// --- 200/120 (ADR 0159): a MUST-SEE group ------------------------------------
+// The optional record above, served back with `mustSee: true` on ONE of the dish's
+// three optional groups (site/data carries the flag nowhere: which groups deserve
+// it is the owner's call). The real record, untouched, is the control that the
+// same picker stays closed on Add. Flagging a group other than the first, and
+// leaving the other two unflagged, is what stops "any group on the dish" and
+// "the first group" passing as "the flagged group".
+const MUST_ID = `${OPT_VENUE}-mustsee-fixture`;
+const MUST_GROUP = "kids-sauce-swirl";
+const MUST_GROUP_NAME = "Add a sauce swirl (if you want)";
+
 const sizeExpr = `(() => {
   const dish = ${need(dishSel(SIZE_DISH))};
   const box = ${need(".dish-addons", "dish")};
@@ -552,6 +573,34 @@ const requiredExpr = (name) => `(() => {
 })()`;
 
 const storedExpr = `JSON.parse(localStorage.getItem("faves.order.v1") || "[]")`;
+
+// --- 200/120: what a must-see reveal looks like to the reader -------------------
+// Whether the picker is open, the sentence that says why (on the page AND in the
+// status region a screen reader hears), and where keyboard focus is — which must
+// still be on the row's stepper, never inside the picker it just opened.
+const seeExpr = (name) => `(() => {
+  const dish = ${need(dishSel(name))};
+  const box = ${need(".dish-addons", "dish")};
+  const note = box.querySelector(".addon-seen");
+  const live = dish.querySelector(":scope > .sr-only[role=status]");
+  const a = document.activeElement;
+  const stepper = dish.querySelector(".dish-actions .stepper");
+  return {
+    open: box.open,
+    noteVisible: !!note && !note.hidden && note.getBoundingClientRect().height > 0,
+    noteText: note ? note.textContent : null,
+    live: live ? live.textContent : null,
+    focus: a ? {
+      tag: a.tagName, text: (a.textContent || "").trim(),
+      inRowStepper: !!stepper && stepper.contains(a),
+      inPicker: box.contains(a),
+      isBody: a === document.body,
+    } : null,
+    rowQty: stepper ? stepper.dataset.qty : null,
+    checkedRadios: [...box.querySelectorAll("input[type=radio]:checked")].map((r) => r.value),
+    variantChecked: [...box.querySelectorAll(".addon-group-variant input[type=radio]:checked")].map((r) => r.value),
+  };
+})()`;
 
 /** What the first picker's OWN stepper counts: `order.qtyOf` for exactly the
  *  dish, selection and note the picker currently holds. A count of 1 before
@@ -667,6 +716,20 @@ async function run(opts) {
         ...x,
         items: x.items.map((i) => (i.name === REQ_DISH ? { ...i, tags: ["v"], tagNotes: undefined } : i)),
       })),
+    }),
+  );
+  // 200/120: the optional record with ONE group flagged must-see.
+  const optVenue = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${OPT_VENUE}.json`), "utf8"));
+  const mustDef = optVenue.addOnGroups.find((g) => g.id === MUST_GROUP);
+  if (!mustDef || mustDef.name !== MUST_GROUP_NAME || mustDef.required || mustDef.mustSee) {
+    throw new Error(`${OPT_VENUE} no longer has an optional, unflagged "${MUST_GROUP_NAME}" group — the 200/120 block needs one`);
+  }
+  overlay.set(
+    `/data/restaurants/${MUST_ID}.json`,
+    JSON.stringify({
+      ...optVenue,
+      id: MUST_ID,
+      addOnGroups: optVenue.addOnGroups.map((g) => (g.id === MUST_GROUP ? { ...g, mustSee: true } : g)),
     }),
   );
   const { server, port } = await startServer(opts.port, SITE, overlay);
@@ -1917,6 +1980,117 @@ async function run(opts) {
       "(z) …so the row's Add orders the plain dish in one tap",
       rs.length === 1 && rs[0].qty === 1 && (rs[0].options || []).length === 0,
       JSON.stringify(rs.map((l) => [l.name, l.qty, (l.options || []).length])),
+    );
+
+    // --- (ab) 200/120, ADR 0159: a must-see choice opens when you press Add ----
+    // Pressing Add is the moment a default is chosen FOR the reader, so that is
+    // the moment the picker opens. Three things must hold and each fails alone:
+    // it opens (a build that never wired the callback), it stays closed where the
+    // group is purely optional (a build that opens every picker), and it does not
+    // take focus off the button just pressed (a build that focuses the first
+    // radio, as the blocked Add of block z rightly does).
+    //
+    // CONTROL FIRST, on the real record: the same picker, three optional groups,
+    // no flag. Row Add orders the dish and the picker is still closed.
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await openAt(optUrl, optDish, `${OPT_VENUE} for the optional-stays-closed control`);
+    let sv = await driver.evalPage(seeExpr(OPT_DISH));
+    report.check("(ab) CONTROL: before Add, the optional picker is closed and says nothing", sv.open === false && !sv.noteVisible, JSON.stringify(sv));
+    await driver.click(`${optDish} .dish-actions .stepper-add`);
+    sv = await driver.evalPage(seeExpr(OPT_DISH));
+    report.check(
+      "(ab) CONTROL: pressing Add on a purely optional picker orders the dish and leaves it CLOSED, with no note",
+      (await driver.evalPage(storedExpr)).length === 1 && sv.open === false && !sv.noteVisible && !sv.live,
+      JSON.stringify(sv),
+    );
+
+    // The flagged group: the same dish, one group opted in.
+    const mustUrl = `http://127.0.0.1:${port}/restaurant.html?id=${MUST_ID}`;
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await openAt(mustUrl, optDish, `${MUST_ID} to render the must-see fixture`);
+    sv = await driver.evalPage(seeExpr(OPT_DISH));
+    report.check("(ab) before Add, even a flagged picker is closed — a menu of dishes is not a menu of forms", sv.open === false, JSON.stringify(sv));
+    await driver.click(`${optDish} .dish-actions .stepper-add`);
+    sv = await driver.evalPage(seeExpr(OPT_DISH));
+    const mustStored = await driver.evalPage(storedExpr);
+    report.check(
+      "(ab) pressing Add on a dish with a must-see group ORDERS it AND opens the picker",
+      mustStored.length === 1 && mustStored[0].qty === 1 && (mustStored[0].options || []).length === 0 && sv.open === true,
+      JSON.stringify({ lines: mustStored.map((l) => [l.name, l.qty]), open: sv.open }),
+    );
+    report.check(
+      "(ab) …and says why in WORDS, on the page and in the status region, naming the group",
+      sv.noteVisible && sv.noteText.includes(`Check “${MUST_GROUP_NAME}” below`) &&
+        sv.live === sv.noteText,
+      JSON.stringify({ note: sv.noteText, visible: sv.noteVisible, live: sv.live }),
+    );
+    report.check(
+      "(ab) …shows the choice that was made for the reader — nothing in the group is ticked but None",
+      sv.checkedRadios.length >= 1 && sv.checkedRadios.every((v) => v === ""),
+      JSON.stringify(sv.checkedRadios),
+    );
+    report.check(
+      "(ab) …and focus did NOT move into the picker: it is still on the row's stepper (the ＋ that replaced Add), not <body>",
+      sv.focus?.inRowStepper === true && sv.focus.inPicker === false && sv.focus.isBody === false && sv.focus.text === "＋",
+      JSON.stringify(sv.focus),
+    );
+    // A repeat-tapper: ＋ is not Add. Close the picker, press ＋, it stays closed.
+    await driver.click(`${optDish} .dish-addons-summary`);
+    sv = await driver.evalPage(seeExpr(OPT_DISH));
+    report.check(
+      "(ab) closing the picker clears the sentence from the page and from the status region",
+      sv.open === false && !sv.noteVisible && !sv.noteText && !sv.live,
+      JSON.stringify(sv),
+    );
+    await driver.click(`${optDish} .dish-actions .stepper button`, "＋");
+    sv = await driver.evalPage(seeExpr(OPT_DISH));
+    report.check(
+      "(ab) a second tap on ＋ adds another and does NOT re-open the picker — a repeat-tapper is not interrupted",
+      sv.rowQty === "2" && sv.open === false && !sv.noteVisible,
+      JSON.stringify({ qty: sv.rowQty, open: sv.open, note: sv.noteVisible }),
+    );
+    // Back to none and Add again: that IS an Add press, so it opens.
+    await driver.click(`${optDish} .dish-actions .stepper button`, "−");
+    await driver.click(`${optDish} .dish-actions .stepper button`, "−");
+    sv = await driver.evalPage(seeExpr(OPT_DISH));
+    report.check(
+      "(ab) removing the dish and pressing Add again is an Add press — it opens again (focus on the Add that came back)",
+      sv.rowQty === "0" && sv.open === false && sv.focus?.inRowStepper === true && /Add/.test(sv.focus.text),
+      JSON.stringify(sv),
+    );
+    await driver.click(`${optDish} .dish-actions .stepper-add`);
+    sv = await driver.evalPage(seeExpr(OPT_DISH));
+    report.check("(ab) …and it does", sv.open === true && sv.noteVisible, JSON.stringify(sv));
+
+    // By rule: a size ladder needs NO flag. The synthetic ladder of block n–r.
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await openSize(`${SIZE_ID} for the ladder-is-must-see-by-rule case`);
+    sv = await driver.evalPage(seeExpr(SIZE_DISH));
+    report.check("(ab) a size ladder is closed before Add", sv.open === false, JSON.stringify(sv));
+    await driver.click(`${sizeDish} .dish-actions .stepper-add`);
+    sv = await driver.evalPage(seeExpr(SIZE_DISH));
+    report.check(
+      "(ab) pressing Add on a dish with a size ladder opens it with NO flag in the data, naming Size, default still chosen",
+      sv.open === true && /Check “Size” below/.test(sv.noteText || "") && sv.variantChecked.join() === REGULAR_LABEL &&
+        sv.focus?.inRowStepper === true && sv.focus.inPicker === false,
+      JSON.stringify(sv),
+    );
+
+    // A REQUIRED group is gated, not must-see: after it was answered and the
+    // picker closed, Add does not open it again. (The decision ADR 0159 records.)
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await openAt(reqUrl, reqDish, `${REQ_VENUE} for the required-is-not-must-see case`);
+    await driver.click(`${reqDish} .dish-actions .stepper-add`); // blocked: opens + focuses the first sauce
+    await driver.click(`${reqDish} .addon-option`, REQ_OPTION);
+    await driver.click(`${reqDish} .dish-addons-summary`); // close it again
+    sv = await driver.evalPage(seeExpr(REQ_DISH));
+    const reqClosed = sv.open === false;
+    await driver.click(`${reqDish} .dish-actions .stepper-add`);
+    sv = await driver.evalPage(seeExpr(REQ_DISH));
+    report.check(
+      "(ab) a required group the reader has answered is NOT re-opened by Add — the gate already made them see it",
+      reqClosed && (await driver.evalPage(storedExpr)).length === 1 && sv.open === false && !sv.noteVisible,
+      JSON.stringify({ closedFirst: reqClosed, ...sv }),
     );
 
     {

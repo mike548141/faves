@@ -1887,3 +1887,12 @@ deliberation those compact docs omit.
   choice is made in place with the picker's own question and allergen sentence.
   Finishing re-keys the line and merges into an identical one. Recall lands such
   a line flagged instead of dropping it.
+- [0159](0159-a-must-see-choice-opens-when-you-press-add.md) —
+  **A must-see choice opens when you press Add** (`200/120`, owner-ruled
+  2026-10-03). The row's ＋ Add (none to one) opens the picker, which is a
+  closed `<details>` today, for every `selects` ladder by rule and any `adds`
+  group flagged `"mustSee": true`; the dish is still added. Words on the page and
+  in a status region, no focus move (and the stepper now keeps focus across its
+  own re-render). `required` is not must-see, and `mustSee` on a `selects` or
+  `required` group is an error. A change made in the revealed picker makes a
+  second line: options A/B/C are with the owner.

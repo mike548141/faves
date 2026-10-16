@@ -61,6 +61,8 @@ import {
   isSelects,
   isRequired,
   missingRequired,
+  mustSeeGroups,
+  mustSeeNote,
   defaultVariant,
   variantLabel,
   configuredPrice,
@@ -130,6 +132,15 @@ const heatChips = (option) =>
  * a REQUIRED group (ADR 0156) is unanswered, and the second argument is what
  * the row's own ＋ Add should record — the variant plus any required choice —
  * so the row cannot order the dish without the choice the picker insists on.
+ *
+ * It also returns `reveal()` and `live` (ADR 0159). The row calls `reveal()`
+ * after its own ＋ Add takes the dish from none to one: when the dish has a
+ * must-see group (every `selects` ladder; any group flagged `mustSee`) and the
+ * picker is closed, it opens, says in words why, and scrolls the first question
+ * into view if it is off-screen. It never moves focus — the person is mid-tap
+ * on the Add they just pressed. `live` is the polite status region that
+ * announces it; it sits beside the picker, not inside, because a live region in
+ * a closed <details> is not reliably spoken.
  */
 export function dishAddOns(record, section, item, onCompose, onVariant, onGate) {
   // WHICH plate before WHAT is on it: a variant group is offered first,
@@ -315,6 +326,13 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   }
 
   const body = el("div", { className: "addon-groups" });
+  // WHY the picker opened, said as text on the page for a sighted reader and as
+  // a status for a screen reader — the same sentence, so neither has to infer it.
+  // Present only after a reveal; cleared when the reader closes the picker.
+  const seenNote = el("p", { className: "addon-seen", hidden: true });
+  const live = el("p", { className: "sr-only" });
+  live.setAttribute("role", "status");
+  const mustSee = mustSeeGroups(groups);
 
   for (const group of groups) {
     if (isSelects(group)) {
@@ -446,12 +464,45 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   summary.firstChild.textContent = summaryText;
   const details = el("details", { className: "dish-addons" }, [
     summary,
+    seenNote,
     body,
     warn,
     need,
     stepperSlot,
   ]);
 
+  details.addEventListener("toggle", () => {
+    if (!details.open) {
+      seenNote.hidden = true;
+      seenNote.textContent = "";
+      // Emptied too, so the NEXT reveal is a change a screen reader will speak.
+      live.textContent = "";
+    }
+  });
+
+  /**
+   * Open the picker because the reader pressed Add on a dish with a must-see
+   * choice (ADR 0159). Returns whether it opened. A no-op when the dish has no
+   * must-see group (a purely optional picker stays exactly as it was) and when
+   * the picker is already open (nothing to show).
+   *
+   * NEVER focuses anything: focus is on the Add they just pressed (a repeat-
+   * tapper must not be yanked mid-tap — the same reasoning as 14g). The scroll
+   * is `nearest` on the first question, so it moves the page only when that
+   * question would be off-screen, and instantly under prefers-reduced-motion.
+   */
+  function reveal() {
+    if (mustSee.length === 0 || details.open) return false;
+    details.open = true;
+    const note = mustSeeNote(groups);
+    seenNote.textContent = note;
+    seenNote.hidden = false;
+    live.textContent = note;
+    const reduce = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
+    (body.firstElementChild || details).scrollIntoView?.({ block: "nearest", behavior: reduce ? "instant" : "auto" });
+    return true;
+  }
+
   refresh();
-  return { node: details, stepper: stepperSlot };
+  return { node: details, stepper: stepperSlot, reveal, live };
 }

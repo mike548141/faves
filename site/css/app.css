@@ -6249,6 +6249,16 @@ body:not(.menu-page):has(> .order-fab:not([hidden])) > main {
   font-size: var(--step-sub);
   font-weight: 700;
 }
+/* Why the picker opened on its own (ADR 0159): the reader pressed Add on a dish
+   with a choice that was made for them (a size, a flagged group). Plain text in
+   the ink colour, not a banner: it explains, it does not alarm. No animation
+   anywhere in the reveal, so there is nothing for reduced-motion to strip. */
+.addon-seen {
+  margin: var(--space-1) 0;
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+}
 .addon-summary-need {
   margin-left: var(--space-1);
   padding: 0.1em 0.6em;

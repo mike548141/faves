@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A size choice now opens when you press Add.** On a dish with a size to pick
+  (a half or full portion, a pour size, single or double) the Add button still
+  orders the dish as listed, and the choices open underneath with a line saying
+  which one to check, so a size picked for you is not one you missed. Keyboard
+  focus stays on the button you pressed (the + and - buttons used to lose it). Dishes with only optional extras open exactly as before.
 - **A dish that still needs a choice is flagged on your order, and you can finish it there.** If a dish is missing a compulsory choice (a sauce, say) because it was added before the choice became compulsory, or came from a saved or shared order, it now shows on the order sheet with "Needs a choice", the total says it is short by what the choice costs, and you pick the choice in place. A saved order that needs a choice is added and flagged instead of left out.
 - **A choice the menu makes compulsory is now compulsory.** Where a dish comes
   "with choice of" sauce, filling, side or heat, the picker no longer offers

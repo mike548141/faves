@@ -88,8 +88,13 @@ function reduceStepper(item) {
  * `gate` = { reason, onBlocked } when the dish cannot be added yet because a
  * required add-on choice is unanswered (ADR 0156): the ＋ Add is then drawn
  * aria-disabled, says why, and a tap calls `onBlocked` instead of ordering.
+ *
+ * `onAdded` is called after the ＋ Add press that takes this configuration from
+ * none to one, and ONLY then — not on ＋ / − and not when a gated Add is
+ * blocked. The menu row uses it to open a must-see picker (ADR 0159); a
+ * repeat-tapper on ＋ is never interrupted by it.
  */
-export function dishStepper(meta, gate = null) {
+export function dishStepper(meta, gate = null, onAdded = null) {
   const wrap = el("div", { className: "stepper" });
   // The configuration this stepper counts (ADR 0048 §4). "Eggs on toast with
   // bacon" is a different line from "eggs on toast", so the stepper has to ask
@@ -116,6 +121,16 @@ export function dishStepper(meta, gate = null) {
   function render() {
     const q = order.qtyOf(meta.venueId, id(), sel(), note());
     wrap.dataset.qty = q;
+    // The control the person is pressing is replaced by the next state's one
+    // (＋ Add becomes − 1 ＋), and a removed element hands focus to <body>: a
+    // keyboard or switch user would be thrown to the top of the page by every
+    // tap, and a picker opening elsewhere on the row (ADR 0159) would then look
+    // like the thing that moved them. So focus follows the tap onto the control
+    // that now stands where their finger was: the same − or ＋, or the ＋ Add
+    // when the count has gone back to none.
+    const held = document.activeElement;
+    const heldMinus = wrap.contains(held) && held.classList.contains("stepper-btn") && held.textContent === "−";
+    const keepFocus = wrap.contains(held);
     if (gate) {
       // The dish is not yet a dish a kitchen can make (ADR 0156): a required
       // choice is unanswered. aria-disabled, never `disabled` — the button stays
@@ -133,6 +148,7 @@ export function dishStepper(meta, gate = null) {
       add.setAttribute("aria-label", `Add ${said()} to your order — ${gate.reason}`);
       add.addEventListener("click", () => gate.onBlocked?.());
       wrap.replaceChildren(add);
+      if (keepFocus) add.focus({ preventScroll: true });
       return;
     }
     if (q === 0) {
@@ -142,8 +158,12 @@ export function dishStepper(meta, gate = null) {
         textContent: "＋ Add",
       });
       add.setAttribute("aria-label", `Add ${said()} to your order`);
-      add.addEventListener("click", () => order.add(meta));
+      add.addEventListener("click", () => {
+        order.add(meta);
+        onAdded?.();
+      });
       wrap.replaceChildren(add);
+      if (keepFocus) add.focus({ preventScroll: true });
     } else {
       const dec = el("button", { type: "button", className: "stepper-btn", textContent: "−" });
       dec.setAttribute("aria-label", `One fewer ${said()}`);
@@ -153,6 +173,7 @@ export function dishStepper(meta, gate = null) {
       inc.setAttribute("aria-label", `One more ${said()}`);
       inc.addEventListener("click", () => order.add(meta));
       wrap.replaceChildren(dec, count, inc);
+      if (keepFocus) (heldMinus ? dec : inc).focus({ preventScroll: true });
     }
   }
   render();
