@@ -12930,3 +12930,38 @@ close extends it.*
   tested; a recovered worker's 12 tool uses were the cue to check its artefact
   (and the merge gate then found the red); cap concurrency after a load
   crash.
+- **After the owner's rulings at the close (2026-10-16/17, same session).**
+  Seven answers came back, then four more, and the run kept going:
+  - `200/120` (#108): reworked to **B**, so a change in the picker that
+    opens on Add updates that line, with `mustSee` on Gong Cha size, the two
+    coffee-milk groups and Abrakebabra's combo.
+  - `080/290` (#113, owner-raised mid-run): **Hei, Cuba Street**, 130 dishes
+    and drinks from the three menu documents its page links, with hours from
+    its own contact page. The evidence lives in `menu-web-sources.json`.
+    Filed from it: `080/300` (vegan mayo is tagged egg).
+  - `200/180` (#112): the directed re-read. Five rows agree with the record;
+    two need photos.
+  - `500/080`: the backup takes `recipes/*.md` and any fingerprinted menu
+    page. Its new case caught a parser that stopped at a space, so every
+    snapshot under a spaced venue folder had been silently skipped. **334 of
+    334 verified and stamped.**
+  - `080/130` (#115, #116, ADR 0161): **all ten McDonald's/Subway branches
+    settled.** I read them in the owner's signed-in Chrome, and the screen
+    now says "read from its Google Maps listing". Owner rulings: Bunny St
+    till midnight Friday, Porirua as two branches, Subway's street numbers.
+  - `28o` part 1 (#114): 76 rows become 35 dishes with fresh ids and
+    `formerIds`. Option names join the search text (owner-ruled), ranked
+    below a name match. Part 2 (Takeaway @ Churton) and 6 skipped groups
+    remain.
+  - Fixes of our own: `launch-retry.test.js` timed out under load (5 s now),
+    and two fixtures had to be read from the data, not a constant.
+  - 🛑 **Near-miss:** I began merging #114 on a "nothing pending" tally of
+    2 of 7 checks; the CI had not started, because a PR that conflicts with
+    its base runs no `pull_request` workflow. Caught, aborted, nothing
+    pushed; recorded in memory.
+- **Final evidence on `main` (`08408cc6`):** all 21 browser checks green,
+  0 retries (addon 174, boot 38, branch 177, chatty 45, cook 85, device 81,
+  distance 28, fetch 17, filter_row 25, fixture 24, focus 50, geo 22,
+  midnight 89, note 19, picks 20, precache 20, recipe 72, rename 13,
+  served 55, sync 40, to_top 142); `node --test` 1900/1900 on the 28o tree.
+  No open PRs, worktrees or stashes of this session's; 0 `[~]` claims.
