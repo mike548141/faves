@@ -1,0 +1,202 @@
+{
+  "what": "Provenance of venue-menu rows re-read from a venue's OWN web page, on the owner's direction. menu-sources.json cannot hold these (its rebuild regenerates it from the photos and PDFs in intake/menus/, so a web row there would be deleted), and recipe-sources.json is recipes only. Same shape as recipe-sources.json: URL, fetch time, SHA-256 of the bytes as fetched. Not the pages: those are in each venue's folder under the primary checkout's gitignored intake/menus/<venue>/web/ (so the intake backup's menus/ tree covers them) and are not committed.",
+  "written by": "by hand, one row per page read",
+  "checked by": "nothing yet. A snapshot is backed up only if backup_intake.py's selection rule reads this file's sha256 rows as well as menu-sources.json's. They are deliberately NOT in menu-sources.json: check_provenance.py --rebuild regenerates that file from the photos and PDFs and would delete a web row",
+  "directedBy": "owner, 2026-10-16: 'Yes, from their own sites' (roadmap 200/180)",
+  "fetchedWindow": "2026-10-16T10:37:08Z, the batch's start; every page was fetched within the following minute",
+  "tls": "verification on for every fetch (curl, no -k); every certificate verified OK",
+  "verifiedNotBumped": "No venue's `verified` or `verifiedBy` changed: only the listed rows were read, not the whole menu, and a whole-menu date would overstate the reading.",
+  "readings": {
+    "the-catch-sushi-bar-menu": {
+      "venue": "the-catch-sushi-bar",
+      "kind": "web",
+      "url": "https://www.thecatchsushibar.co.nz/menu",
+      "publisher": "The venue's own ordering page.",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 256003
+      },
+      "sha256": "1a547a47ad2808c93948a72dd0765a93610b5b9c5f8d42e13f8e72db95ec0115",
+      "snapshot": "intake/menus/The Catch Sushi Bar/web/the-catch-sushi-bar-menu.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "Normal Tempura Udon Noodle Soup $25.30 (alongside Normal Tempura Soba $23.00 and Veg Tempura Udon $23.00)."
+      ],
+      "result": "AGREES with the record ($25.3). The venue prints the odd pair itself; not our transcription error. No change."
+    },
+    "satay-kingdom-cafe-menu": {
+      "venue": "satay-kingdom-cafe",
+      "kind": "web",
+      "url": "https://www.sataykingdomcafe.co.nz/menu",
+      "publisher": "The venue's own ordering page.",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 202455
+      },
+      "sha256": "12c8180dfe3607c547b04cca72ceeee3165cb71e985f705b27c4e444625cec3e",
+      "snapshot": "intake/menus/Satay Kingdom Cafe/web/satay-kingdom-cafe-menu.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "#13 Chicken Nasi Lemak: 'Traditional Malaysian dish offers beef rendang, coconut rice, steam vegetables, peanuts and half boiled egg.' $23.00",
+        "#41 Black Pepper: 'Rice noodles with chicken, seafood and vegetables in thai satyle tom yam soup.' $25.20"
+      ],
+      "result": "AGREES word for word with the record, typos included. The venue's own wording; not our transcription error. No change."
+    },
+    "abrakebabra-our-menu": {
+      "venue": "abrakebabra",
+      "kind": "web",
+      "url": "https://kebabcentral.co.nz/our-menu/",
+      "publisher": "The venue's own site (the menu page).",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 104804
+      },
+      "sha256": "53bcba18b57d0c254ffa4213f434bdbf8f3904425e815a35e3393eaf284bff3f",
+      "snapshot": "intake/menus/Abrakebabra/web/abrakebabra-our-menu.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "Burger table: VEGETARIAN (V) 13.50 / 14.",
+        "Separate VEGETARIAN list: BURGER 12.50 / 14 (its other seven rows equal the main tables).",
+        "No mention of combos on this page."
+      ],
+      "result": "AGREES with the record (13.5, large 14.00), which follows the burger table. The venue's own page contradicts itself on this one row (13.50 in the table, 12.50 in its VEGETARIAN list); which is right is unknown. Not our transcription error. No change."
+    },
+    "abrakebabra-home": {
+      "venue": "abrakebabra",
+      "kind": "web",
+      "url": "https://kebabcentral.co.nz/",
+      "publisher": "The venue's own site (the home page).",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 128935
+      },
+      "sha256": "d6ab7f13044803f03222b9bc96de3686f4218e4b3fd1f73dcc7026cc94f63745",
+      "snapshot": "intake/menus/Abrakebabra/web/abrakebabra-home.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "'You can upgrade any of our meal from our menu into a combo for only $7.00'; the marketing text also names 'your chosen kebab or burger' and an Iskender fan."
+      ],
+      "result": "Does not say which dishes the combo applies to beyond 'any of our meal'. Silent, so the `combo` attachment is left as it is."
+    },
+    "dirty-little-secret-food-menu": {
+      "venue": "dirty-little-secret",
+      "kind": "web",
+      "url": "https://dirtylittlesecret.co.nz/wp-content/uploads/2026/05/Style-2.1-P1-Double-Sided-A4-Portrait.pdf",
+      "publisher": "The venue's own food-menu PDF, linked from its own /eat-drink/ page.",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 97622
+      },
+      "sha256": "45da54a378b638e205deafc21bd8b4f4988d64a39c4888d7d2f016739fb39d97",
+      "snapshot": "intake/menus/Dirty Little Secret/web/dirty-little-secret-food-menu.pdf.fetched (gitignored, primary checkout; raw bytes as fetched; suffix .fetched keeps the PDF out of check_provenance's walk)",
+      "saw": [
+        "One UPGRADES box under Burgers & Sandwiches: Cheese +4, Bacon +6, Fried squid +8, Beef patty +7, Grilled chicken +8, Fried chicken +9."
+      ],
+      "result": "Prices AGREE with the record's `upgrades` group. The box is not tied to particular burgers, so the page is silent on 'Beef patty' for the beef burger. Attachment left as it is."
+    },
+    "the-victoria-tavern-drinks-list-oct-2024": {
+      "venue": "the-victoria-tavern",
+      "kind": "web",
+      "url": "https://thevictoriatavern.co.nz/assets/Menus/The-Victoria-Tavern-drinks-list-Oct-2024.pdf",
+      "publisher": "The venue's own drinks-list PDF, linked from its own /menus/drinks-november-2024 page.",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 73034
+      },
+      "sha256": "2bef496f734e746f9a2d78fe0ea56dcd3be11c7ce17b15460eb1cc399e86c243",
+      "snapshot": "intake/menus/The Victoria Tavern/web/the-victoria-tavern-drinks-list-oct-2024.pdf.fetched (gitignored, primary checkout; raw bytes as fetched; suffix .fetched keeps the PDF out of check_provenance's walk)",
+      "saw": [
+        "Under the heading ROSÉ: Saddleback PINOT NOIR Central Otago 55; Palliser Estate PINOT NOIR Martinborough 55; Mt Difficulty PINOT NOIR Central Otago 14 / 22 / 65.",
+        "Mt Difficulty PINOT NOIR also appears under RED at 18 / 26 / 75."
+      ],
+      "result": "AGREES with the record. The venue itself files three Pinot Noir under its rosé heading; not our filing error. No change. TLS verified OK (the self-signed certificate that blocked the 2026-08-17 reading is gone)."
+    },
+    "wellington-kebab-grill-home": {
+      "venue": "wellington-kebab-grill",
+      "kind": "web",
+      "url": "https://wellingtonkebabgrill.co.nz/",
+      "publisher": "The venue's own site (the home page).",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 66212
+      },
+      "sha256": "ec6144b91daacbf474676556df1539a499ea1c2742e78b394557845da7e95a9e",
+      "snapshot": "intake/menus/Wellington Kebab Grill/web/wellington-kebab-grill-home.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "No menu on the page. 'Order Now' and 'Order Online' lead to https://easyeats.kiwi/store/wellingtonkebabgrill."
+      ],
+      "result": "Carries no menu, so says nothing about which dishes the extras and sauces apply to."
+    },
+    "wellington-kebab-grill-easyeats-shell": {
+      "venue": "wellington-kebab-grill",
+      "kind": "web",
+      "url": "https://easyeats.kiwi/store/wellingtonkebabgrill",
+      "publisher": "The venue's ordering page on the Easy Eats platform, linked from its own site (and already in the record's `ordering`).",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 7669
+      },
+      "sha256": "8580a3ddd1fbfa0efbc77ab7d78771f92082cbfa39413bec0fed8a2f63bf8565",
+      "snapshot": "intake/menus/Wellington Kebab Grill/web/wellington-kebab-grill-easyeats-shell.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "Served as an empty JavaScript application shell ('Please enable JavaScript'); the menu is loaded by script and was not read."
+      ],
+      "result": "NOT READ: there is no menu in the fetched page. The question stays with the owner (the in-store card says nothing about which dishes). No change."
+    },
+    "the-victoria-tavern-drinks-page": {
+      "venue": "the-victoria-tavern",
+      "kind": "web",
+      "url": "https://thevictoriatavern.co.nz/menus/drinks-november-2024",
+      "publisher": "The venue's own page that links the drinks PDF.",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 6905
+      },
+      "sha256": "81f26f22fa8fb1d2f90890e167f4b8d56bafc353b92e97e66018c2e843ea0df9",
+      "snapshot": "intake/menus/The Victoria Tavern/web/the-victoria-tavern-drinks-page.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "Links the Oct 2024 drinks-list PDF (read separately above)."
+      ],
+      "result": "Carries the link only."
+    },
+    "the-victoria-tavern-home": {
+      "venue": "the-victoria-tavern",
+      "kind": "web",
+      "url": "https://thevictoriatavern.co.nz/",
+      "publisher": "The venue's own home page.",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 9115
+      },
+      "sha256": "9a380929a1bb3da5de0702daaad4bd2c01f13006e0e586b34db3fab6f1b536d5",
+      "snapshot": "intake/menus/The Victoria Tavern/web/the-victoria-tavern-home.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "Links its /menus pages."
+      ],
+      "result": "Carries links only."
+    },
+    "dirty-little-secret-eat-drink": {
+      "venue": "dirty-little-secret",
+      "kind": "web",
+      "url": "https://dirtylittlesecret.co.nz/eat-drink/",
+      "publisher": "The venue's own Eat & Drink page.",
+      "fetched": "2026-10-16T10:37:08Z",
+      "http": {
+        "status": 200,
+        "bytes": 95595
+      },
+      "sha256": "37451e1c65930aebc944abc0e99ec4ae6fff9e1745b4cd6d6a198cf7f1607fb9",
+      "snapshot": "intake/menus/Dirty Little Secret/web/dirty-little-secret-eat-drink.html (gitignored, primary checkout; raw bytes as fetched)",
+      "saw": [
+        "Links the food-menu PDF and a Me&u ordering menu."
+      ],
+      "result": "Carries the link only."
+    }
+  }
+}
