@@ -151,6 +151,47 @@ export function missingRequired(groups, selection) {
 }
 
 /**
+ * Must the reader be SHOWN this group when they press Add? (ADR 0159, roadmap
+ * 200/120, owner-ruled 2026-10-03)
+ *
+ * Two ways in, and one way out:
+ *  - every `selects` group is must-see BY RULE: Add has silently chosen the
+ *    default plate (Half, Regular, the cheapest size) and the reader should
+ *    know a choice was made for them;
+ *  - any other group opts in with `mustSee: true` in the data;
+ *  - a REQUIRED group is never must-see, because it cannot need to be: Add is
+ *    blocked until it is answered (ADR 0156), so the reader has seen it by the
+ *    time Add works. Treating it as must-see too would re-open a picker they had
+ *    just answered and closed.
+ *
+ * A purely optional group is neither, and stays exactly as it was ("what we
+ * have today is perfect for those").
+ */
+export const isMustSee = (group) =>
+  isSelects(group) || (group?.mustSee === true && !isRequired(group));
+
+/** The groups of one dish that must be shown on Add, in offered order. */
+export const mustSeeGroups = (groups) => (groups || []).filter(isMustSee);
+
+/**
+ * The sentence that says WHY the picker opened, in words (never colour alone):
+ * "Added as listed. Check “Size” below — change it if you want something
+ * different." Names the groups so the reader knows which choices were made for
+ * them; quoted because a group's name is the venue's own phrase and may read as
+ * a sentence ("Add a sauce swirl (if you want)").
+ */
+export function mustSeeNote(groups) {
+  const names = mustSeeGroups(groups)
+    .map((g) => (typeof g?.name === "string" ? g.name.trim() : ""))
+    .filter(Boolean)
+    .map((n) => `“${n}”`);
+  if (names.length === 0) return "";
+  const list =
+    names.length === 1 ? names[0] : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+  return `Added as listed. Check ${list} below — change it if you want something different.`;
+}
+
+/**
  * The option a `selects` group starts on: the one marked `default`. validate.py
  * requires exactly one; the first option is a fallback for a record that got
  * past it, so the control can never render with nothing chosen.

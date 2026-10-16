@@ -20,6 +20,9 @@ import {
   optionId,
   isRequired,
   missingRequired,
+  isMustSee,
+  mustSeeGroups,
+  mustSeeNote,
   CONTRADICTS,
 } from "../site/js/addons.js";
 import { readFileSync, readdirSync } from "node:fs";
@@ -555,4 +558,34 @@ test("missingRequired: names the required groups with no entry, in offered order
   assert.deepEqual(missingRequired([SIDE], []), [], "an optional group never blocks");
   assert.deepEqual(missingRequired([SIZE], []), []);
   assert.deepEqual(missingRequired(undefined, undefined), []);
+});
+
+// --- ADR 0159: a must-see group opens when Add is pressed -----------------
+
+const MILK = { id: "milk", name: "Milk", kind: "adds", select: "one", mustSee: true, options: [] };
+const SIZE_LADDER = { id: "size", name: "Size", kind: "selects", options: [] };
+
+test("isMustSee: every selects group by rule, an adds group only by flag, a required one never", () => {
+  assert.equal(isMustSee(SIZE_LADDER), true, "a ladder is must-see with no flag at all");
+  assert.equal(isMustSee(MILK), true);
+  assert.equal(isMustSee(SIDE), false, "a purely optional group is left exactly as it was");
+  assert.equal(isMustSee(SAUCE), false, "a required group is gated, so it needs no reveal");
+  assert.equal(isMustSee({ ...SAUCE, mustSee: true }), false, "…and the flag on it is redundant, not additive");
+  assert.equal(isMustSee({ ...SIDE, mustSee: false }), false);
+  assert.equal(isMustSee({ ...SIDE, mustSee: "yes" }), false, "a truthy string is not the flag");
+  assert.equal(isMustSee(undefined), false);
+});
+
+test("mustSeeGroups keeps offered order and drops everything else", () => {
+  assert.deepEqual(mustSeeGroups([SIDE, MILK, SAUCE, SIZE_LADDER]).map((g) => g.id), ["milk", "size"]);
+  assert.deepEqual(mustSeeGroups([SIDE, SAUCE]), []);
+  assert.deepEqual(mustSeeGroups(undefined), []);
+});
+
+test("mustSeeNote names the groups in words, and says nothing when there are none", () => {
+  assert.equal(mustSeeNote([SIDE]), "");
+  assert.equal(mustSeeNote([SIZE_LADDER]), "Added as listed. Check “Size” below — change it if you want something different.");
+  assert.match(mustSeeNote([MILK, SIZE_LADDER]), /Check “Milk” and “Size” below/);
+  assert.match(mustSeeNote([MILK, SIZE_LADDER, { ...MILK, name: "Syrup" }]), /Check “Milk”, “Size” and “Syrup” below/);
+  assert.equal(mustSeeNote([{ ...MILK, name: "  " }]), "", "an unnamed group cannot be spoken, so no sentence");
 });
