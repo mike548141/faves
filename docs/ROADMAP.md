@@ -155,7 +155,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [Survey: every way a dish is configured, across the whole corpus](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/100-survey-every-way-a-dish-is-configured.md)
 - ✅ [A size ladder's default is the menu's; failing that, the cheapest](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/110-a-size-ladders-default-is-the-menus.md)
 - [ ] [A "must-see" choice opens when you press Add](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/120-a-must-see-choice-opens-when-you-add.md)
-- [~] [An unfinished dish on the order sheet: warn, and finish it there](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/130-an-unfinished-dish-on-the-order-sheet.md)
+- ✅ [An unfinished dish on the order sheet: warn, and finish it there](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/130-an-unfinished-dish-on-the-order-sheet.md)
 - [ ] [How many you may pick, and what the extras beyond that cost](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/140-how-many-you-may-pick-and-what-extras-cost.md)
 - [ ] [A fee that is not a dish: takeaway containers and cups](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/150-a-fee-that-is-not-a-dish.md)
 - [ ] [A swap is not an extra: name what it replaces](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/160-a-swap-is-not-an-extra.md)

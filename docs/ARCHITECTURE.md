@@ -1236,6 +1236,14 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   no payment, no account, no backend — it hands off to phone/website
   (STRATEGY non-goal). Prices are an *estimate* (menu data flagged for an
   in-store refresh), captioned as such.
+  **Unfinished lines** (ADR 0158): `order-finish.js` (pure) judges a line against
+  the venue's *live* record (the line stores options, never group definitions);
+  a line missing a `required` choice (ADR 0156) shows on the sheet with a
+  words-first warning, a floor price and a total that says it is short, and
+  `order-finish-ui.js` finishes it in place using the picker's own composer
+  (`addon-warning.js` `configurationWarning`). `cart.js` `finishItems` re-keys
+  the line and merges into an identical one. Menu pages hand their loaded record
+  to the sheet (`noteVenueRecord`); other pages fetch it when the sheet opens.
 - **Saved orders** (`faves.savedorders.v1`, Theme 26a, ADR 0154): `saved-orders.js`
   (store + sanitiser), `saved-recall.js` (pure: resolve a saved order against a
   venue's live record), `saved-orders-ui.js` (the save control in the order
@@ -1243,8 +1251,9 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   one venue, **per person**, on this device only. A line stores dish id and
   add-on option ids (plus a name/price snapshot), never a name or position as an
   identity; recall re-prices from today's menu and skips-and-names any line that
-  no longer resolves. Deliberately outside `SCOPED_BASE_KEYS` (so it never syncs
-  or migrates, like the cook ticks) but inside the profile-delete purge; the
+  no longer resolves (except a line missing a now-compulsory choice, which is
+  landed and flagged, ADR 0158). Deliberately outside `SCOPED_BASE_KEYS` (so it
+  never syncs or migrates, like the cook ticks) but inside the profile-delete purge; the
   backup file carries it as a named per-person `savedOrders` field, only when
   `collectPersonalData(…, { localOnly: true })` — which sync never passes.
 - **Favourites** (`faves.favourites.v1`): `favourites.js` — a set of

@@ -1879,3 +1879,11 @@ deliberation those compact docs omit.
   `defaultFrom` would be a field no screen renders (0047/0137). Rows are checked
   both ways, so a stale cue errors. Spices Indian's three Full defaults stay as
   `headline`. The `adds` side needs no rule: it has no default.
+- [0158](0158-an-unfinished-dish-is-flagged-on-the-sheet-and-finished-there.md) —
+  **An unfinished dish is flagged on the order sheet and finished there**
+  (`200/130`, owner-ruled 2026-10-03). Add still waits on the menu (0156); any
+  line missing a compulsory choice, however it arrived, shows on the sheet with
+  a words-first warning, a floor price and a total that says it is short, and the
+  choice is made in place with the picker's own question and allergen sentence.
+  Finishing re-keys the line and merges into an identical one. Recall lands such
+  a line flagged instead of dropping it.
