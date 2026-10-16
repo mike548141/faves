@@ -100,6 +100,12 @@ export const VERIFY_METHODS = [
   "phone",
   "delivery-app",
   "third-party",
+  // A business's Google Maps listing (ADR 0161). Legal ONLY as a branch's
+  // `detailsVerifiedBy` on McDonald's and Subway, and it speaks for OPENING
+  // HOURS alone — validate.py refuses it anywhere else. Deliberately absent
+  // from TRUSTED_VERIFY_METHODS below: a listing is somebody's transcription of
+  // the shop, not the shop.
+  "google-maps",
 ];
 
 // How each method reads on the menu screen — what we did, in plain words, so
@@ -111,6 +117,7 @@ const METHOD_PHRASE = {
   phone: "Confirmed by phone",
   "delivery-app": "Read from a delivery app",
   "third-party": "Read from a third-party listing",
+  "google-maps": "Read from a Google Maps listing",
 };
 
 /**
@@ -157,6 +164,18 @@ export function detailsVerification(record, branch = null) {
     ? reading(branch.detailsVerified, branch.detailsVerifiedBy)
     : reading(record?.detailsVerified, record?.detailsVerifiedBy);
   return r && { ...r, scope: ownsIt ? "branch" : "venue" };
+}
+
+/**
+ * What a details reading CLAIMS to have checked, by method, as the subject of
+ * the sentence that reports it. Every method but one speaks for the whole card
+ * — phone, address and hours. A Google Maps listing is ruled a source for
+ * OPENING HOURS alone (ADR 0161), so its sentence must not borrow the other
+ * two: Subway holds no phone at all, and a branch matched to a listing by
+ * address has not had its address vouched for by Google.
+ */
+export function detailsClaim(method) {
+  return method === "google-maps" ? "Opening hours" : "Phone, address and opening hours";
 }
 
 /** The shared shape behind both readings above. */

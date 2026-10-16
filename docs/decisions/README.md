@@ -1904,3 +1904,9 @@ deliberation those compact docs omit.
   DevTools port file (CI hit it three times); a per-call retry stays forbidden
   because a launch with no page re-issues nothing. An unreachable or unstable
   click now saves a screenshot and a page-state line.
+- [0161](0161-google-maps-is-a-source-for-opening-hours-on-two-chains.md) —
+  **Google Maps is a source for opening hours on two chains** (`080/130`,
+  owner-ruled 2026-10-03). `google-maps` is a `detailsVerifiedBy` value, legal
+  only on a branch of McDonald's or Subway that has hours, and never as a menu
+  source. It renders as "Opening hours … read from its Google Maps listing", never
+  in the first-party voice. A 24-hour day is `["00:00", null]`.

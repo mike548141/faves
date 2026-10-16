@@ -1581,6 +1581,42 @@ SOURCE_CASES = {
             "error", r"locations\[0\]: address must be a non-empty string",
         ),
     },
+    # ADR 0161 — a Google Maps listing is a source for a BRANCH's OPENING HOURS on
+    # McDonald's and Subway, and nowhere else. The value is legal in the shared
+    # closed set, so every fence is a separate gate, and each is mutated here:
+    # one that stopped firing would not change any record that is valid today.
+    "site/data/restaurants/subway.json": {
+        "a Maps reading on a Subway branch is still accepted (the positive case)": (
+            lambda s: s.replace('"detailsVerified": "2026-10-16"', '"detailsVerified": "2026-10-15"', 1),
+            "clean", None,
+        ),
+        "a Maps reading as the VENUE's details — every branch would inherit it": (
+            lambda s: s.replace('  "verified": "2026-08-16",',
+                                '  "verified": "2026-08-16",\n  "detailsVerified": "2026-10-16",\n'
+                                '  "detailsVerifiedBy": "google-maps",', 1),
+            "error", r"card: detailsVerifiedBy 'google-maps' is for a branch's opening hours",
+        ),
+        "a Maps reading as the MENU's source": (
+            lambda s: s.replace('  "verifiedBy": "official-site"', '  "verifiedBy": "google-maps"', 1),
+            "error", r"verifiedBy 'google-maps' not in .*opening hours only \(ADR 0161\)",
+        ),
+    },
+    "site/data/restaurants/mcdonalds.json": {
+        "a Maps reading on a McDonald's branch is accepted too": (
+            lambda s: s.replace('"detailsVerified": "2026-10-16"', '"detailsVerified": "2026-10-15"', 1),
+            "clean", None,
+        ),
+        # Moved here from Subway on 2026-10-17: every Subway branch now has hours
+        # (080/130), and McDonald's Courtenay Place is the branch the owner left as
+        # it is, so this is the record that still has a branch with none to refuse.
+        "a Maps reading on a branch that has no hours to vouch for": (
+            lambda s: s.replace('      "id": "courtenay-place",',
+                                '      "id": "courtenay-place",\n'
+                                '      "detailsVerified": "2026-10-16",\n'
+                                '      "detailsVerifiedBy": "google-maps",', 1),
+            "error", r"locations\[0\]: detailsVerifiedBy 'google-maps' speaks for opening hours, and this branch has none",
+        ),
+    },
     # Per-branch provenance. Pandan is the only record that carries it and the
     # record that forced it — Melling first-party, Press Hall's hours its
     # landlord's. The venue-level pair was already gated; the branch-level one
@@ -1602,6 +1638,10 @@ SOURCE_CASES = {
         "a branch date with no method — an ERROR here, unlike `verified`": (
             lambda s: s.replace('      "detailsVerified": "2026-08-15",\n      "detailsVerifiedBy": "official-site"', '      "detailsVerified": "2026-08-15"', 1),
             "error", 'locations\\[0\\]: detailsVerified 2026-08-15 carries no detailsVerifiedBy',
+        ),
+        "a Maps reading on any venue but the two ruled chains (ADR 0161)": (
+            lambda s: s.replace('"detailsVerifiedBy": "official-site"', '"detailsVerifiedBy": "google-maps"', 1),
+            "error", r"locations\[0\]: detailsVerifiedBy 'google-maps' is ruled for \['mcdonalds', 'subway'\] only",
         ),
         "a branch method outside the closed set": (
             lambda s: s.replace('"detailsVerifiedBy": "official-site"', '"detailsVerifiedBy": "a mate reckons"', 1),

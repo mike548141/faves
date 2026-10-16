@@ -1,5 +1,4 @@
-- [~] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
-  (claimed 2026-10-16-1034, faves-11, wt: primary (inline, Chrome))
+- [x] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
       — ~~**10 of the corpus's 22 branches**, measured 2026-08-16~~ →
       **10 of the corpus's 47 branches**, re-measured 2026-09-09. This is now
       load-bearing rather than cosmetic: [ADR 0054](../../decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
@@ -154,3 +153,117 @@
   full week of hours from its Google Maps listing: open the listing, expand
   "see more hours", read, nothing posted or changed. The provenance value and
   the ADR this item names are still owed.
+
+🟡 **Partly landed 2026-10-16 (faves-11 worker, ADR 0161); the item stays open
+on five owner questions.** Google Maps weekly tables were read in the owner's
+signed-in Chrome on 2026-10-16 (about 11:15 to 11:30 UTC; 17 Oct NZDT), every
+listing matched to our branch by address and, for McDonald's, by phone as well.
+Every listing, matched or not, is in `data/intake/maps-hours-readings.json`.
+
+**Written (4 of 10 branches), each with `detailsVerifiedBy: "google-maps"`
+dated 2026-10-16:**
+- McDonald's Johnsonville: open 24 hours all week, as `["00:00", null]` a day.
+- Subway Johnsonville, Tawa and Karori: Google's per-day hours, verbatim.
+
+**Not written (6): five are owner questions, and the sixth has nothing to write:**
+1. 🎯 **McDonald's Bunny Street.** Google prints Friday as "7 am–12 pm", which
+   read literally closes at noon. The listing's own photo of the store's window
+   says "Friday & Saturday open 24 hours", and Saturday is "Open 24 hours" and
+   Sunday "12 am–10 pm". Google most likely means midnight. Not corrected and
+   not written: do we record it as printed, record 24 hours, or wait for a
+   second source?
+2. 🎯 **McDonald's Porirua.** Our phone belongs to one Porirua store (open 24
+   hours) and our address to another (no phone, no hours). Which store does our
+   record mean?
+3. 🎯 **McDonald's Courtenay Place.** No listing at our address or with our
+   phone. The nearby listing is a different, permanently closed store. Is our
+   record's store real?
+4. 🎯 **Subway Courtenay Place.** Google's street number differs from ours.
+5. 🎯 **Subway Mulgrave Street.** Google's street number differs from ours.
+6. **McDonald's Lambton Quay** still reads "Temporarily closed" on Google and
+   shows no hours, so there is nothing to write; our `closed-temporarily` event
+   of 2026-10-03 is unchanged. Not a question unless it reopens.
+
+The street numbers and listing names are in
+`data/intake/maps-hours-readings.json`. Questions 4 and 5 may be our addresses
+being wrong rather than Google's; the fix is the owner's or a second source's.
+
+**What shipped with it:** `google-maps` as a branch's `detailsVerifiedBy`, legal
+only on McDonald's and Subway branches that have hours (six mutation cases in
+`tools/test_validate.py`, one on Pandan to prove the fence); the menu's ⓘ now
+says "Opening hours at Tawa read from its Google Maps listing on 16 Oct 2026." <!-- datescan:allow: quoted on-screen copy -->
+(never phone or address), added BESIDE McDonald's amber "menu needs a refresh"
+caution, which is unchanged; and a 24-hour day reads "Open 24 hours" in the week
+table rather than "12am–late". `tools/branch_check.mjs` asserts all of it in a
+browser. Phones were not added to any record.
+
+  ✅ **Owner ruled 2026-10-17 (asked by `faves-11`, via AskUserQuestion), on
+  the Maps reading's open rows:**
+  - **Bunny St: Friday is open from 7 am until midnight**, running on into
+    Saturday's 24 hours. Google printed "7 am–12 pm" (noon), but the store's
+    own window sign in the same listing reads "Friday & Saturday open 24
+    hours". Record the printed text and the sign beside the reading.
+  - **Porirua: two branches.** North City Plaza, on Titahi Bay Road (Maps
+    lists no phone and no hours, so neither is recorded), and Porirua on
+    Kenepuru Drive, which the phone in our record belongs to, with 24-hour
+    hours. The phone moves off the North City branch. Exact addresses and
+    the number: `data/intake/maps-hours-readings.json`.
+  - **Subway: take Google's street numbers** for Courtenay Place and
+    Mulgrave Street (each one number off ours; see the readings record), with
+    their Maps hours.
+  - McDonald's Courtenay Place was not asked and stays as it is: a
+    missing listing proves nothing about a closure.
+
+
+✅ **Done 2026-10-17 (faves-11 worker).** The owner's four rulings of 2026-10-17
+are applied, data only (no `site/js` change, no `SHELL_VERSION` bump). Final
+state of every branch, all hours `detailsVerifiedBy: "google-maps"` dated
+2026-10-16 except where stated:
+- **McDonald's Johnsonville** 24 hours (unchanged from the first landing).
+- **McDonald's Bunny Street** Mon-Tue 7am-10pm, Wed-Thu 7am-11pm, **Fri 7am to
+  midnight** (`["07:00","00:00"]`, ADR 0094's wrap, running into Saturday),
+  **Sat open 24 hours** (`["00:00", null]`), Sun 12am-10pm. Friday is the owner's
+  ruling on the store's window sign, not what Google printed ("7 am-12 pm");
+  both are recorded beside the reading in `data/intake/maps-hours-readings.json`.
+- **McDonald's Porirua is now two branches.** *North City Plaza* keeps branch id
+  `porirua` (an id never moves, ADR 0103; only its `label` changed), address
+  unchanged, **phone removed** (it belonged to the other store), no hours (Maps
+  lists none). *Kenepuru Drive* is new (id `kenepuru-drive`, seeded by
+  `tools/seed_branch_ids.py`, which reproduced the same id byte for byte), with
+  the phone from our old record and 24-hour hours. Its address is written
+  without a postcode: none of our sources
+  states one (Nominatim answers 5240 where our other Porirua address says 5022).
+  **No pin:** OSM resolves its street number only to street level, and two
+  different unit records of that street, about 130 m apart, so the pin is left
+  empty on the Pandan precedent (a consequence: it can never be "the nearest
+  branch" the confidence note describes, so `branch_check` cannot put it under
+  test).
+- **McDonald's Courtenay Place** untouched (ruling 4).
+- **McDonald's Lambton Quay** untouched: still `closed-temporarily` from
+  2026-10-03, no hours to write.
+- **Subway Johnsonville, Tawa, Karori** unchanged from the first landing.
+- **Subway Courtenay Place** address 23 to **15**; Mon-Thu 8am-11pm, Fri 8am-3am,
+  Sat 9am-3am (both close the next morning, ADR 0094), Sun 9am-11pm. **Pin
+  moved:** the old pin geocoded "23"; a house-level OSM geocode of "15" sits
+  31.6 m from it, over the audit's 30 m "review" line, so it was replaced with
+  the house-level answer.
+- **Subway Mulgrave Street** address 18 to **19**; Mon-Fri 7am-7pm, Sat
+  10am-5pm, Sun 10am-3pm. It had no pin; a house-level OSM geocode of "19"
+  exists, so it was **filled**.
+No phones were added to any Subway record. Of the corpus's branches, none of
+Subway's five now lacks hours; McDonald's holds three branches with hours of six.
+
+**Verified:** `validate.py` (58 files valid; the only new warnings are the ADR
+0094 "17h span closing after midnight" transposition checks on Bunny Street's
+Friday and Subway Courtenay's Fri and Sat, each correct against the source);
+`seed_branch_ids.py --check` (71 branches); `test_validate.py` 285 of 285
+mutations behaved (the "Maps reading on a branch with no hours" case moved from
+Subway, which has none left, to McDonald's Courtenay Place); `gen_summaries.mjs
+--check`; `check_fallback.py`; `split_data.py --check`; `node --test` 1895
+passed, 0 failed (includes the new `tests/maps-hours-night.test.js`, which reads
+the shipped records at the midnight edges); `branch_check` 177 passed, 0 failed
+and `--provenance` 26 passed, 0 failed; `midnight_check` 89 passed; `boot_check`
+38 passed. `tools/branch_check.mjs` was edited: Bunny Street and Subway's
+Courtenay Place and Mulgrave Street now assert the Maps sentence, and the
+"branch nobody read" probe moved to North City Plaza. The new test was not
+break-probed.

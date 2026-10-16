@@ -38,7 +38,7 @@ import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 // fed was removed 2026-08-16 as a duplicate of the ⓘ note. It stays exported
 // and tested in temporal.js because it is the canonical phrasing of "how we
 // know", and the ⓘ would need it back if the date ever left that note.
-import { todayIn, isBranchTrading, branchClosure, refreshCaveat, detailsVerification } from "./temporal.js";
+import { todayIn, isBranchTrading, branchClosure, refreshCaveat, detailsVerification, detailsClaim } from "./temporal.js";
 import {
   branchTimezone,
   displayCurrency,
@@ -870,7 +870,7 @@ function caveatDisclosure(id, caveat, record, branch) {
   const [btn, note] = disclosure({
     noteId: `menu-caveat-${id}`,
     label: warn ? "Why this menu needs a refresh" : "When we last checked this menu",
-    text: warn ? cautionNote(caveat, record) : confidenceNote(caveat, record, branch),
+    text: warn ? cautionNote(caveat, record, branch) : confidenceNote(caveat, record, branch),
     // Shape first, colour second — see disclosure.js.
     glyph: warn ? "⚠" : "ⓘ",
   });
@@ -896,6 +896,9 @@ const CHECKED_PHRASE = {
   // the bare "checked" fallback and sounding first-party.
   "delivery-app": "taken from a delivery app",
   "third-party": "taken from a directory listing",
+  // Says WHAT it is — a listing — so it cannot sound like the shop's own word
+  // (ADR 0161). Only ever reaches the screen through `detailsVerified`.
+  "google-maps": "read from its Google Maps listing",
 };
 
 /**
@@ -922,7 +925,10 @@ function confidenceNote(caveat, record, branch) {
   // adds a distinction the reader doesn't have to make.
   const named =
     details?.scope === "branch" && isMultiLocation(record) && branch?.label ? branch.label : null;
-  const whose = named ? `Phone, address and opening hours at ${named}` : "Phone, address and opening hours";
+  // What the reading speaks for depends on its source: a Maps listing speaks
+  // for opening hours only (ADR 0161), so it never says phone or address.
+  const claim = detailsClaim(details?.method);
+  const whose = named ? `${claim} at ${named}` : claim;
 
   let lead = `Menu and prices ${how} on ${when}.`;
   if (details) {
@@ -931,7 +937,7 @@ function confidenceNote(caveat, record, branch) {
     // when the reading is one branch's, though: the merged sentence claims the
     // venue's details entire, which is exactly what per-branch provenance is
     // for not saying.
-    if (!named && details.date === caveat.date && details.method === caveat.method) {
+    if (!named && details.date === caveat.date && details.method === caveat.method && details.method !== "google-maps") {
       lead = `Menu, prices and the venue’s details — phone, address and opening hours — ${how} on ${when}.`;
     } else {
       const dHow = CHECKED_PHRASE[details.method] || "checked";
@@ -995,11 +1001,33 @@ function caveatText(caveat) {
  * two sentences apart in the accessibility tree where the block collapses it.
  * The caution's own wording is untouched (ADR 0036: one sentence per reason).
  */
-function cautionNote(caveat, record) {
+function cautionNote(caveat, record, branch) {
   return el("span", {}, [
     caveatText(caveat),
     el("span", { className: "caveat-currency", textContent: currencyLine(record) }),
+    mapsHoursLine(record, branch),
   ]);
+}
+
+/**
+ * A Google Maps hours reading, as its own line BESIDE the amber caution (ADR
+ * 0161) — never in place of it. The caution is about the MENU ("never read");
+ * the hours on the card beside it came from somewhere else, and McDonald's has
+ * no menu reading at all, so without this line its hours would carry no source
+ * on any screen. Only that one method is added here on purpose: every other
+ * details reading already renders on the blue path, and widening this to them
+ * would change the amber note on venues nobody asked about.
+ */
+function mapsHoursLine(record, branch) {
+  const d = detailsVerification(record, branch);
+  if (d?.method !== "google-maps") return null;
+  const where =
+    d.scope === "branch" && isMultiLocation(record) && branch?.label ? ` at ${branch.label}` : "";
+  return el("span", {
+    className: "caveat-details",
+    // Leading space for the accessibility tree, as `currencyLine`'s has.
+    textContent: ` ${detailsClaim(d.method)}${where} ${CHECKED_PHRASE[d.method]} on ${niceDate(d.date)}.`,
+  });
 }
 
 // A pick is a reference to a dish on this same menu, written as a name today

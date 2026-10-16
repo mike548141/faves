@@ -495,6 +495,11 @@ export function formatDay(intervals) {
     .map(([o, c]) => {
       if (o == null && c == null) return "all day"; // no bound either end
       if (o == null) return `till ${formatTime(toMinutes(c))}`;
+      // From midnight with no close is how a round-the-clock day is written
+      // (ADR 0161: `["00:00","00:00"]` is refused as ambiguous, and a null close
+      // is the one spelling that leaves no minute shut). Read as a range it
+      // would say "12am–late", which is a different claim from the one made.
+      if (o === "00:00" && c == null) return "Open 24 hours";
       return `${formatTime(toMinutes(o))}–${formatTime(toMinutes(c))}`;
     })
     .join(", ");
