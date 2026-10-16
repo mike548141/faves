@@ -1,5 +1,4 @@
-- [~] **Data defects the configuration survey saw in passing** `[S][data]` —
-  (claimed 2026-10-16-1034, faves-11, wt: faves-200-180)
+- [ ] **Data defects the configuration survey saw in passing** `[S][data]` —
   found by `200/100`'s survey and listed in full in
   [its review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)
   § *Defects seen in passing*.
@@ -74,3 +73,33 @@
   the fetch owner-directed: what it shows either confirms our record or is a
   venue change, appended the proper way (history kept). Store what is read so
   it can be cited. Sprig & Fern Tawa's GF toast still needs a photo.
+
+  📌 **Re-read 2026-10-16 (faves-11 worker), on the owner's direction: five of
+  the seven settled, two still owed. No site data changed.** Pages were
+  fetched from each venue's own site with TLS verification on (every
+  certificate verified; The Victoria's old self-signed certificate is gone).
+  What was read is fingerprinted in `data/intake/menu-web-sources.json`
+  (URL, UTC fetch time, SHA-256, what the page said); the raw pages are in the
+  primary checkout's gitignored `intake/menus/<venue>/web/`. `verified` is NOT bumped
+  on any venue: only the listed rows were read, not whole menus.
+
+  | Row | Today's page | Verdict | Change |
+  |---|---|---|---|
+  | The Catch, Normal Tempura Udon | `thecatchsushibar.co.nz/menu`: $25.30 beside Soba $23.00 | agrees; the venue prints the odd pair itself | none |
+  | Satay Kingdom, Chicken Nasi Lemak and Black Pepper descriptions | `sataykingdomcafe.co.nz/menu`: both word for word, typos included | agrees; the venue's own wording | none |
+  | Abrakebabra, Vegetarian Burger large | `kebabcentral.co.nz/our-menu/`: 13.50 / 14 in the burger table | agrees with the record. 🚩 The same page's separate VEGETARIAN list prints burger 12.50 / 14 (its other seven rows equal the main tables), so the venue contradicts itself; which is right is unknown | none |
+  | Abrakebabra `combo` on Nachos, Shish, Turkish Pizza | home page: "upgrade any of our meal … into a combo for only $7.00"; the menu page says nothing | silent on which dishes beyond "any of our meal" | left as is |
+  | Dirty Little Secret `upgrades` / Beef patty | own food-menu PDF: one UPGRADES box under Burgers & Sandwiches, prices equal the record | agrees; the box is not tied to particular burgers | left as is |
+  | The Victoria, Rosé section | own drinks PDF: three Pinot Noir under ROSÉ, prices equal the record | agrees; the venue files them so | none |
+  | Wellington Kebab Grill `extras` / `sauces` | own site has no menu; its ordering page (`easyeats.kiwi/store/wellingtonkebabgrill`) is an empty JavaScript shell | 🎯 NOT READ. Still the owner's: the in-store card (earlier note) is generic | none |
+  | Sprig & Fern Tawa GF toast +$2 vs $6 | not in this direction (no source recorded) | 🎯 still needs a photo | none |
+
+  ⏳ **Left, and why this stays `[ ]`:** (1) Wellington Kebab Grill's
+  extras and sauces: the menu is loaded by script from a third-party
+  ordering platform, so reading it needs a browser or a photo of the
+  QR-menu; (2) Sprig & Fern Tawa's GF toast: a photo. Also a gap found on
+  the way: the eleven pages sit under each venue's `intake/menus/<venue>/web/`
+  (the backup's tree), but their fingerprints are in
+  `menu-web-sources.json`, not `menu-sources.json` (whose `--rebuild` would
+  delete a web row), so `backup_intake.py` must read that file's `sha256`
+  rows too before they are backed up.
