@@ -1284,6 +1284,34 @@ const KEYS = {
   Tab: 9,
 };
 
+// 🛑 THE `text` OF A KEY IS NOT OPTIONAL, AND ITS ABSENCE HID THE PAGE
+// (roadmap 340/320, measured 2026-10-16). Chrome on macOS hands any key the page
+// did not swallow to the application menu, and a CDP key event with no `text`
+// has empty `characters`, which matches the first menu item that has no key
+// equivalent at all — "About Google Chrome". It opened chrome://settings/help
+// in a new FOREGROUND tab, which made the page under test `visibilityState:
+// "hidden"`, and a hidden page never fires requestAnimationFrame — so the next
+// `settle()` waited on a promise that could not settle until the 60 s CDP
+// timeout, "an unguarded step", exit 2. The same on a blank page with no site
+// code (Escape, Enter, a, ArrowDown, Home all did it; Chrome for Testing 131
+// too), so it is the delivery, not the site and not one Chrome build.
+// Giving every key the text a real keypress carries (the NSEvent function-key
+// code points for the arrows, Home and End) stops the menu matching it.
+// `text` ALONE: adding `unmodifiedText` as well blanks `event.key` on the
+// page, and `text: "\0"` does not help.
+const KEY_TEXT = {
+  Escape: "\u001b",
+  ArrowUp: "\uF700",
+  ArrowDown: "\uF701",
+  ArrowLeft: "\uF702",
+  ArrowRight: "\uF703",
+  Home: "\uF729",
+  End: "\uF72B",
+  // Enter needs the keyDown form: a button is activated by the keypress that
+  // only a keyDown carrying text produces, which rawKeyDown never does.
+  Enter: "\r",
+};
+
 /**
  * The handful of page operations every check needs, bound to one attached page
  * session. `log` receives a line per action when the caller wants tracing.
@@ -1481,11 +1509,33 @@ export function createDriver(cdp, sessionId, log = () => {}) {
   const press = async (key) => {
     const code = KEYS[key];
     if (code == null) throw new Error(`no virtual key code for ${key}`);
+    const text = KEY_TEXT[key];
     const base = { key, code: key, windowsVirtualKeyCode: code, nativeVirtualKeyCode: code };
-    await cdp.send("Input.dispatchKeyEvent", { ...base, type: "rawKeyDown" }, sessionId);
+    await cdp.send(
+      "Input.dispatchKeyEvent",
+      { ...base, type: key === "Enter" ? "keyDown" : "rawKeyDown", ...(text ? { text } : {}) },
+      sessionId
+    );
     await cdp.send("Input.dispatchKeyEvent", { ...base, type: "keyUp" }, sessionId);
     log(`pressed ${key}`);
+    await assertStillVisible(key);
     await settle();
+  };
+
+  /** The guard for the KEY_TEXT finding above. A page that stopped being
+   *  `visible` after a key never paints again, so the very next `settle()`
+   *  would hang for the whole CDP timeout and report "an unguarded step". Ask
+   *  with a plain evaluate (no rAF, so it answers on a hidden page) and name the
+   *  cause instead. A HarnessError: it says nothing about the site. */
+  const assertStillVisible = async (key) => {
+    const state = await evalPage("document.visibilityState");
+    if (state !== "visible") {
+      throw new HarnessError(
+        `the page became "${state}" after pressing ${key}: a key event reached Chrome's menu and ` +
+          `opened a foreground tab (see KEY_TEXT in lib/browser.mjs). A hidden page never ` +
+          `paints, so the next frame wait would hang.`
+      );
+    }
   };
 
   /**
