@@ -17,9 +17,9 @@
   and nothing beyond them. Address, phone and hours from hei.co.nz's own
   contact page (`detailsVerifiedBy: official-site`); pin is a house-number-level
   Nominatim geocode of its street address. Evidence (the menu page, contact page
-  and the three documents, with sha256) is recorded under `hei` in
-  `data/intake/menu-sources.json`; the files themselves are in the primary
-  checkout's gitignored `intake/menus/Hei/web/`.
+  and the three documents, with sha256) is recorded as five `hei-*`
+  readings in `data/intake/menu-web-sources.json`; the files themselves are in
+  the primary checkout's gitignored `intake/menus/Hei/web/`.
   Left out or open: the venue's 15% public-holiday surcharge (no field holds
   it); the lunch set is "weekly special", so A to D are the four on the menu as
   read; the lunch and dinner menus price some dishes differently, so each is its
@@ -28,7 +28,5 @@
   tag_allergens --explain --check, test_tag_notes, gen_summaries --check,
   check_fallback, check_provenance, check_precache,
   split_data --check, boot_check --id hei (38 passed, 0 failed).
-  🚩 `check_provenance.py --intake <primary>/intake` reports DRIFT for the Hei
-  folder (5 rows recorded, 2 scanned) because its scan reads only photo and
-  PDF suffixes; fingerprints all verify, and the default (no intake) run is
-  clean.
+  The web rows first went in menu-sources.json and showed as DRIFT against live
+  intake; they now sit in menu-web-sources.json and the drift is gone.
