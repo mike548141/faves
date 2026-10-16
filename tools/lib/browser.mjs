@@ -44,7 +44,7 @@
 import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createServer } from "node:http";
-import { readFile, readdir, rm, stat } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, extname, join, normalize } from "node:path";
@@ -499,7 +499,7 @@ export class Cdp {
     for (const fn of this.#handlers.get(msg.method) ?? []) fn(msg.params, msg.sessionId);
   }
 
-  send(method, params = {}, sessionId) {
+  send(method, params = {}, sessionId, { timeoutMs = CDP_TIMEOUT_MS, soft = false } = {}) {
     const id = this.#next++;
     const payload = { id, method, params };
     if (sessionId) payload.sessionId = sessionId;
@@ -517,10 +517,19 @@ export class Cdp {
       // can alter the measurement is one short step from re-running until green,
       // which is the behaviour this repo keeps writing ADRs about. Give a slow
       // machine more rope with FAVES_CDP_TIMEOUT_MS instead.
+      //
+      // `soft` is for evidence-gathering AFTER a verdict has already been
+      // reached (the failure screenshot): its timeout is an ordinary Error, so a
+      // hung screenshot cannot latch `transportBroken` and turn the real
+      // "FAIL UNREACHABLE ELEMENT" into a generic "browser stopped answering".
       const timer = setTimeout(() => {
         this.#pending.delete(id);
-        reject(new HarnessError(`${method} timed out after ${CDP_TIMEOUT_MS / 1000}s`));
-      }, CDP_TIMEOUT_MS);
+        reject(
+          soft
+            ? new Error(`${method} timed out after ${timeoutMs / 1000}s`)
+            : new HarnessError(`${method} timed out after ${timeoutMs / 1000}s`)
+        );
+      }, timeoutMs);
       this.#pending.set(id, { resolve, reject, timer, method });
       this.#ws.send(JSON.stringify(payload));
     });
@@ -1447,6 +1456,71 @@ export function createDriver(cdp, sessionId, log = () => {}) {
     return r.result.value;
   };
 
+  // 🔎 WHAT WAS ON SCREEN WHEN A CLICK OR SCROLL REFUSED TO PROCEED (roadmap
+  // 510/420). `device_check` failed twice on 2026-10-02 — "#overflow-btn covered
+  // by #geo-dialog" and "#favourites-toggle has no clickable box (0x0)" — each
+  // once, neither reproduced, and the message said what was measured but not
+  // what the page looked like, so the cause stayed a guess. Called only on the
+  // way to throwing UnreachableElementError / UnstableElementError, and returns
+  // text to append to that message:
+  //   · the page's state, from a plain evaluate (it answers on a hidden page,
+  //     where requestAnimationFrame never fires): visibility, focus, which
+  //     dialogs are open, what has focus;
+  //   · a PNG, written to $FAVES_SHOT_DIR or the OS temp directory — never the
+  //     repo, never site/ — with its path printed. NOT inside the profile
+  //     directory, which the harness deletes on exit.
+  // A hidden page is NOT screenshotted: captureScreenshot waits for a frame, so
+  // on a hidden page it would hang. The state line says "hidden" instead, which
+  // is itself the finding (see KEY_TEXT).
+  // Every step is soft and bounded: this is evidence for a verdict already
+  // reached, so it must never replace that verdict with its own failure.
+  const evidence = async () => {
+    const soft = (method, params) => cdp.send(method, params, sessionId, { timeoutMs: 8000, soft: true });
+    const lines = [];
+    try {
+      const r = await soft("Runtime.evaluate", {
+        returnByValue: true,
+        expression: `(() => {
+          const id = (e) => !e ? "nothing" : e.tagName.toLowerCase() + (e.id ? "#" + e.id : "");
+          return {
+            visibility: document.visibilityState,
+            focused: document.hasFocus(),
+            dialogs: [...document.querySelectorAll("dialog[open]")].map(id),
+            active: id(document.activeElement),
+            where: location.pathname + location.search,
+            viewport: innerWidth + "x" + innerHeight,
+          };
+        })()`,
+      });
+      const st = r.result?.value;
+      if (st) {
+        lines.push(
+          `page state: ${st.visibility}${st.focused ? "" : ", not focused"} · open dialogs: ` +
+            `${st.dialogs.length ? st.dialogs.join(", ") : "none"} · focus on ${st.active} · ` +
+            `${st.where} at ${st.viewport}`
+        );
+        if (st.visibility !== "visible") {
+          lines.push(`no screenshot: the page is "${st.visibility}", and a hidden page cannot paint one`);
+          return lines.map((l) => `\n        ${l}`).join("");
+        }
+      }
+    } catch (e) {
+      lines.push(`page state unavailable: ${e.message}`);
+    }
+    try {
+      const shot = await soft("Page.captureScreenshot", { format: "png" });
+      const dir = process.env.FAVES_SHOT_DIR || tmpdir();
+      await mkdir(dir, { recursive: true });
+      const check = basename(process.argv[1] || "check", ".mjs");
+      const file = join(dir, `faves-failure-${check}-${new Date().toISOString().replace(/[:.]/g, "-")}.png`);
+      await writeFile(file, Buffer.from(shot.data, "base64"));
+      lines.push(`screenshot at the moment of failure: ${file}`);
+    } catch (e) {
+      lines.push(`no screenshot: ${e.message}`);
+    }
+    return lines.map((l) => `\n        ${l}`).join("");
+  };
+
   // Two frames, so a render triggered by the click has painted before we look.
   const settle = () =>
     evalPage("new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))");
@@ -1579,7 +1653,7 @@ export function createDriver(cdp, sessionId, log = () => {}) {
     }
     if (box.reach === "covered" || box.reach === "offscreen") {
       throw new UnreachableElementError(
-        box.reach === "covered"
+        (box.reach === "covered"
           ? `${UNREACHABLE_TAG} ${what} is covered at its own centre: it settled to a` +
             ` ${box.w.toFixed(1)}x${box.h.toFixed(1)} box, but a click at (${box.x.toFixed(1)},` +
             ` ${box.y.toFixed(1)}) would land on ${box.cover} instead. Something is painted` +
@@ -1587,19 +1661,21 @@ export function createDriver(cdp, sessionId, log = () => {}) {
           : `${UNREACHABLE_TAG} ${what} could not be brought into the viewport: after` +
             ` ${box.scrolls} scrolls at it its centre is (${box.x.toFixed(1)},` +
             ` ${box.y.toFixed(1)}) in a ${box.vw}x${box.vh} viewport (scrollY ${box.sy}).` +
-            ` A control that will not scroll into view is one a person cannot reach.`
+            ` A control that will not scroll into view is one a person cannot reach.`) +
+          (await evidence())
       );
     }
     if (!box.stable) {
       const still = box.animating?.length ? `; still running: ${box.animating.join(", ")}` : "";
       throw new UnstableElementError(
-        box.w < 1 || box.h < 1
+        (box.w < 1 || box.h < 1
           ? `${UNSTABLE_TAG} ${what} has no clickable box: ${box.settleMs}ms and` +
             ` ${box.frames} frames after the page was asked for it, it still measures` +
             ` ${box.w.toFixed(1)}x${box.h.toFixed(1)}${still}`
           : `${UNSTABLE_TAG} ${what} never came to rest: after ${box.settleMs}ms and` +
             ` ${box.frames} frames its box was still moving (last frame dx ${box.step.dx},` +
-            ` dy ${box.step.dy})${still}`
+            ` dy ${box.step.dy})${still}`) +
+          (await evidence())
       );
     }
     const base = { x: box.x, y: box.y, button: "left", clickCount: 1 };
@@ -1674,7 +1750,8 @@ export function createDriver(cdp, sessionId, log = () => {}) {
       throw new UnstableElementError(
         `${UNSTABLE_TAG} the page was sent to y=${wanted} and stopped at y=${at.y}.` +
           ` A scroll that does not arrive makes every measurement after it a` +
-          ` measurement of somewhere else.`
+          ` measurement of somewhere else.` +
+          (await evidence())
       );
     }
     await settle();
