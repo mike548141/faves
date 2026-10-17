@@ -277,7 +277,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - [ ] [A venue could carry the other names people know it by](roadmap/330-theme-21-from-the-owner-s-airbnb-guidebook-202/010-a-venue-could-carry-the-other-names-people-kno.md)
 - [ ] [COSMIC Vape & Coffee has no pin](roadmap/330-theme-21-from-the-owner-s-airbnb-guidebook-202/020-cosmic-vape-coffee-has-no-pin.md)
-- [ ] [The seven new stubs have no hours, phone or menu](roadmap/330-theme-21-from-the-owner-s-airbnb-guidebook-202/030-the-seven-new-stubs-have-no-hours-phone-or-men.md)
+- [~] [The seven new stubs have no hours, phone or menu](roadmap/330-theme-21-from-the-owner-s-airbnb-guidebook-202/030-the-seven-new-stubs-have-no-hours-phone-or-men.md)
 
 ## Theme 20 — Places from anywhere (owner-raised 2026-08-16)
 
