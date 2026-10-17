@@ -45,3 +45,20 @@
   `addon_check`.
 
   (claimed 2026-10-17-2122, faves-b4, wt: faves-200-140)
+
+  **Done 2026-10-18 (worker `w/200-140`, ADR [0163]).** Three optional fields on a
+  pick-many group: `min` (exactly N is `min == max`), and `included` with
+  `extraPrice` (a fee for each pick beyond an allowance, on free options only).
+  A minimum is an obligation through the same `owed()` / `missingRequired`
+  mechanism as `required`, so the picker gate, the row's Add, recall and the
+  order sheet's finish control (checkboxes, "choose 1 more") share one question.
+  The fee rides in the line's price via `configuredPrice(base, selection, groups)`.
+  Data: only Charley Noble `cheese-two` gains `min: 2` (its name is the venue's
+  "Choose two", on the dish "Cheese Selection (Two)"). Left out, and said so in
+  the ADR: the grill sauce and Hell's dips fit the shape but are not structured
+  groups yet (content-sweep work, no option lists to apply it to); Hell's
+  per-category build counts need a group of groups and were seen once; Gong Cha's
+  per-drink caps and two price tiers are already expressible (one group per cap,
+  option prices). `addon_check` block (ac) drives it at 390 px.
+
+[0163]: ../../decisions/0163-a-pick-many-group-can-ask-for-n-picks-and-charge-for-extras.md

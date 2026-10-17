@@ -1917,3 +1917,13 @@ deliberation those compact docs omit.
   follow through the key), says "about" under an estimated base, and keeps focus
   and announces itself across the page's rebuild. `yield` ships on the four stated
   ones and renders as a "Makes" cell, shown as written at any scale but 1×.
+- [0163](0163-a-pick-many-group-can-ask-for-n-picks-and-charge-for-extras.md) —
+  **A pick-many group can ask for N picks and charge for extras** (`200/140`,
+  owner-ruled 2026-10-03). Three optional fields: `min` (the reader must pick at
+  least N; exactly N is `min == max`) is an obligation through the same `owed`
+  mechanism as `required` (picker gate, row Add, sheet finish, recall); `included`
+  + `extraPrice` charge a fee per pick beyond an allowance, carried in the line's
+  price, on free options only. Leaving all three out changes nothing. Charley
+  Noble's "Choose two" is the one data change; the grill sauce and Hell's dips
+  fit the shape but are not structured groups yet; per-category counts inside a
+  build are left out on purpose.

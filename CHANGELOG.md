@@ -10,6 +10,13 @@ content freshness separately from this file.
 
 ### Added
 - **A recipe says what it makes as well as who it serves, and you can pick how many people to cook for.** Hotcakes, Liège waffles, queen cakes and the Turkish flatbread now show "Makes 12 waffles" beside "Serves", labelled apart, because the two are different numbers. Above the ingredients, "Serve – 4 +" rescales the whole recipe to that many people, and cook mode and the shopping list follow it. Where the recipe's own serving count is our estimate it says "Written for about 4 people". The ½×/1×/2×/3× buttons stay.
+- **A dish can now ask you to pick a set number, and charge for extras beyond a
+  few included.** Charley Noble's Cheese Selection (Two) now says "Required -
+  choose 2", and Add waits until you have picked two cheeses (one is not enough,
+  three is not allowed). The order sheet flags and finishes a saved or older line
+  that is short of its number. Menus that charge for picks beyond an allowance
+  ("1 included, then $4 each") can now say so, and the picker and the line show
+  the extra. Every other dish and choice works exactly as before.
 - **Sizes and fillings that were separate rows are now one dish with a choice.**
   Pizza Pomodoro's 26 pizzas (Small and Large), Wellington Kebab's mixed kebabs
   and gyrus, Groundup's takeaway cups, Pandan's varuval, KK Malaysian's nasi
