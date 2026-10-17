@@ -595,7 +595,7 @@
             "contains-egg",
             "contains-soy"
           ],
-          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “tofu”."}
+          "tagNotes": {"contains-soy": "The menu says “tofu”."}
         }
       ]
     },
@@ -1094,7 +1094,7 @@
             "contains-egg",
             "contains-soy"
           ],
-          "tagNotes": {"contains-egg": "The menu says “mayo” — an egg emulsion.", "contains-soy": "The menu says “tofu”."},
+          "tagNotes": {"contains-soy": "The menu says “tofu”."},
           "dishId": "vegan-lunch"
         }
       ]
