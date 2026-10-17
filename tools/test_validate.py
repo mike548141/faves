@@ -343,6 +343,33 @@ CASES = {
             tags=["kosher", "contains-shellfish"])),
         "warn", r"claims kosher and is tagged contains-shellfish",
     ),
+    # A vegan dish beside an animal-product allergen (roadmap 080/300). The
+    # warning is the pre-existing check_self_contradicting_claims, which reads
+    # CONTRADICTS out of addons.js; these four pin that `vg` is covered for each
+    # of the pairs the item named, so the next "Vegan bao tagged contains-egg"
+    # is said by a gate and not noticed by a reader. Each pair is its own case
+    # because the table is one row per claim and a dropped entry would otherwise
+    # hide behind the others.
+    "a vegan dish is tagged contains-egg": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["vg", "contains-egg"])),
+        "warn", r"claims vg and is tagged contains-egg",
+    ),
+    "a vegan dish is tagged contains-dairy": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["vg", "contains-dairy"])),
+        "warn", r"claims vg and is tagged contains-dairy",
+    ),
+    "a vegan dish is tagged contains-fish": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["vg", "contains-fish"])),
+        "warn", r"claims vg and is tagged contains-fish",
+    ),
+    "a vegan dish is tagged contains-shellfish": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["vg", "contains-shellfish"])),
+        "warn", r"claims vg and is tagged contains-shellfish",
+    ),
     # Halal is a CLAIM, never an allergen word: it may not be "traced".
     "halal as a trace": (
         lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
