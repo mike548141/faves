@@ -1,4 +1,4 @@
-- [ ] **33a — book it: link out, don't build it** `[S][schema]`
+- [~] **33a — book it: link out, don't build it** `[S][schema]`
 
 🔗 **Shares Theme 31's shape.**
 
@@ -19,3 +19,5 @@ are trying to commit. Worth the association/liveness re-check Theme 31 floated
 
 For venues with no platform, the honest affordance is the phone number we
 already have, labelled "Call to book" rather than dressed up as a booking flow.
+
+  (claimed 2026-10-17-2153, faves-b4, wt: faves-400-010)
