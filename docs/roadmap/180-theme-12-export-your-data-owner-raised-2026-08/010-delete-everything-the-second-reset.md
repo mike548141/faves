@@ -11,7 +11,7 @@
   always"*, and the confirmation names the scope — *every device signed in
   with this sync code* — with no device count (same README).
   **What it must also take:** every store the personal layer now keeps — the
-  activity log (ADR 0164 §, `activity.clear()` is tested but only empties the
+  activity log (ADR 0164; `activity.clear()` is tested but only empties the
   active person), saved orders (ADR 0154), notes, cook ticks, the shopping
   list. Walk every whitelist, as ADR 0164 did, because a store added later is
   the one a wipe forgets.
