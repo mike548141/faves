@@ -733,6 +733,76 @@ gone while the venue trades. Guarded by `tools/branch_check.mjs` and the
 `one-branch-shut` / `one-branch-refit` fixture states — nothing in the corpus
 is closed.
 
+#### Intake — a choice on one dish, or two dishes? (roadmap 28r)
+
+**This restates rules already made; it makes none.** Each line names its source.
+A case none of them answers is not yours to decide: leave the rows as the menu
+prints them, and note it for the owner.
+
+1. **The test** (28a's argument, which 28p uses as its rubric). Ask whether the
+   variant needs its own `desc`, `tags`, `section`, availability and `addOns`.
+   **All five ⇒ two dishes. None ⇒ one dish** with a `"kind": "selects"` group,
+   the choice made at order time (owner-ruled 2026-09-09, `490/050`; ADR 0130).
+   Somewhere between is a judgement, and 28p makes it one group at a time with
+   the outcome written down — never merge on a hunch.
+   - A second price for the same plate is a `selects` group, **not a sentence
+     in `desc`** (28n converted every ladder the rules allow;
+     `tools/find_addons.py` lists what is left).
+   - Run `python3 tools/find_variants.py --only <venue>` after transcribing. It
+     reports and exits 0. A group it calls *mechanical* differs only in name
+     and price (28o's); *needs-human* names the field that disagrees (28p's).
+     Its protein and size word lists are a judgement, so eyeball its output.
+
+2. **Dietary claims decide first — this is a safety rule.** A variant carries
+   exactly its dish's dietary claims (`v`, `vg`, `gf`, `df`); `validate.py`
+   refuses anything else (ADR 0130 §3; owner-ruled 2026-09-09, 28i option 3).
+   So a protein ladder whose rows disagree on a claim (Falafel `v`, Chicken not)
+   **stays separate dishes**, and you do not strip or add a claim to make it
+   merge: intersection (ADR 0048 §3) can only remove one, and a variant cannot
+   restore one. Allergens differ freely: a variant may add a `contains-*`, and
+   it unions on (ADR 0130 §3).
+
+3. **Ids.** The merged base dish gets a **fresh** `dishId` seeded from its own
+   name (ADR 0051; owner-ruled 2026-10-16, 28o), never a surviving sibling's.
+   **Every** merged sibling's id goes in its `formerIds`, so hearts, ratings and
+   the favourites filter follow (ADR 0153; `tools/rename_check.mjs`). Leave
+   price-history rows where they are (ADR 0153 rejected re-keying them) and run
+   `python3 tools/split_data.py --check`. `validate.py --against <ref>` fails
+   any id nothing answers for. A plain rename still keeps the id (step 4 above).
+
+4. **Not ladders — do not merge these** (refusing one is a result: 28p).
+   - An alcohol-free drink beside the same beer (Heineken 0.0) — Theme 28
+     README, 28p.
+   - Numbered platters — nine compositions at $70–$90 (Sushi Bi's 1–9), or
+     two at one price with different contents (Hell's Splatter Platter 1, 2) —
+     Theme 28 README, 28p.
+   - A Kids row that is a different *composition* rather than a smaller
+     portion (`490/050` option (a): the Kids cheeseburger stays its own dish).
+   - Add-on rows ("Extra falafel") and combo bundles ("Double Value Deal") —
+     `tools/find_variants.py` excludes both (28h).
+   - Toppings are not fillings: Ham, Cheese and Egg burgers are different
+     recipes (`tools/find_variants.py` header), unlike Chicken / Fish /
+     Vegetarian.
+   - Two dishes printed on one line, a happy-hour "$1 off", a combo's "without
+     drink" price, a section note ("All pizzas $24") — 28n found none a ladder.
+
+5. **Not expressible yet — leave as separate dishes or prose; do not work
+   round it.** Two `selects` groups on one dish (size × protein), and a
+   per-channel `prices` beside a ladder: both are `validate.py` errors, open
+   (ADR 0130 §4). A `dishPrice` is never `null` (ADR 0130 §2). 28o's part 1 also
+   left siblings that differ in `tagNotes`, in order `code` or in photograph
+   unmerged, for losing something a merged dish has one slot for.
+
+6. **Unlabelled stays unlabelled; unstated stays unstated** (28b's refusals).
+   - The menu prints a second price and never names the size: an option with no
+     `name`, its `id` written by hand, shown as "$24 size" (ADR 0130 §2,
+     ADR 0133; owner-ruled 2026-10-02, 28n). Do not invent a name.
+   - The menu states no price for a size: no option, no invented price; it stays
+     in the prose (ADR 0130 §2). Two volumes printed at one price may share a
+     `dishPrice` (ADR 0130 §2); never make up a second.
+   - The default is the option the menu names ("regular") or headlines, else
+     the cheapest (ADR 0157, owner-ruled 2026-10-03).
+
 #### What we still owe a dish — `needs` (ADR 0041)
 
 A dish may carry `needs`, a list of `{what, note?, since?}` naming the facts we

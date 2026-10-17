@@ -30,3 +30,38 @@
 
   **Depends on:** `28i`, `28k`, `28o`. Small, and worth doing the day those
   land rather than at the end — its whole value is stopping new prose arriving.
+
+  ✅ **Done 2026-10-18 (worker `w/310-150`; PR pending the orchestrator's
+  merge).** The rule is in `docs/ARCHITECTURE.md` as "Intake — a choice on one
+  dish, or two dishes?", directly after "Refreshing a menu" and its
+  resolution/closure notes. Six numbered points: the five-field test and the
+  `find_variants.py` pointer; dietary claims decide first (28i option 3, ADR
+  0130 §3); fresh id plus `formerIds` (28o, ADR 0153); the refusals that are
+  not ladders; what is not expressible yet; unlabelled and unstated stay so
+  (28b, ADR 0130, 0133, 0157). Every line cites its source inline. It makes no
+  new rule.
+
+  🎯 **Findings for the owner — cases writing it surfaced that no source
+  answers, listed here and not decided.**
+  1. **The middle band of the five-field test.** "All five ⇒ two dishes, none
+     ⇒ one dish" says nothing for a variant that needs some of the five. 28p
+     rules the existing groups one at a time; no source says what a
+     transcriber does with a *new* menu in that band. The text says "judgement,
+     never merge on a hunch" and stops there.
+  2. **Two volumes at one price (Hell's 13 drinks).** ADR 0130 §2 lets two
+     options share a `dishPrice`, and six groups in the corpus do. But 28n
+     lists "two volumes at one price" among the refusals that "still bind", and
+     Hell's rows are still prose. The rule says a shared price is allowed and
+     a second is never invented; whether intake should convert Hell's-shaped
+     rows is unanswered.
+  3. **Siblings that differ in `tagNotes`, order `code` or photograph.** 28o
+     part 1 left such groups unmerged because a merged dish has one slot for
+     each. That is an observation in a worker's report, not a ruling, and
+     point 5 of the rule only repeats it.
+  4. **A fresh id that equals a sibling's own id.** If the base dish's name
+     slugs to an id one of the siblings already holds (a bare "Kebab" beside
+     "Kebab Large"), "fresh, never a sibling's" has no spelling. ADR 0051 says a
+     live id beats another dish's former one, which does not cover this.
+  5. **Stale sentence in 28o.** Its *What each merge does* says to "re-key that
+     venue's price-history rows onto the survivor"; ADR 0153 rejected exactly
+     that. The rule follows 0153. 28o's text was left alone (not this item's).
