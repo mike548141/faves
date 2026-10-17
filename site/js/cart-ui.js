@@ -17,6 +17,7 @@ import { saveRow } from "./saved-orders-ui.js";
 import { loadRestaurant } from "./data.js";
 import { unfinishedOf, summariseUnfinished } from "./order-finish.js";
 import { finishControl, pruneDrafts } from "./order-finish-ui.js";
+import { joinRules, minQtyOf, minWords, shortBy, UNITS } from "./dish-rules.js";
 
 // A line, subtotal or total always carries the currency it is in — an order
 // can span venues in different countries, and an unlabelled number then lies.
@@ -89,6 +90,11 @@ function reduceStepper(item) {
  * required add-on choice is unanswered (ADR 0156): the ＋ Add is then drawn
  * aria-disabled, says why, and a tap calls `onBlocked` instead of ordering.
  *
+ * `meta.minQty` is the dish's minimum order (roadmap 200/170, ADR 0163). Add
+ * puts that many on the sheet, ＋ on a line short of it jumps to it, and − at the
+ * minimum takes the line OFF (✕, worded "Remove … minimum N") rather than step
+ * below what the venue will take. Without a minimum nothing here changes.
+ *
  * `onAdded` is called after the ＋ Add press that takes this configuration from
  * none to one, and ONLY then — not on ＋ / − and not when a gated Add is
  * blocked. The menu row uses it to open a must-see picker (ADR 0159); a
@@ -129,7 +135,7 @@ export function dishStepper(meta, gate = null, onAdded = null) {
     // that now stands where their finger was: the same − or ＋, or the ＋ Add
     // when the count has gone back to none.
     const held = document.activeElement;
-    const heldMinus = wrap.contains(held) && held.classList.contains("stepper-btn") && held.textContent === "−";
+    const heldMinus = wrap.contains(held) && held.classList.contains("stepper-btn") && held.dataset.role === "dec";
     const keepFocus = wrap.contains(held);
     if (gate) {
       // The dish is not yet a dish a kitchen can make (ADR 0156): a required
@@ -165,13 +171,28 @@ export function dishStepper(meta, gate = null, onAdded = null) {
       wrap.replaceChildren(add);
       if (keepFocus) add.focus({ preventScroll: true });
     } else {
-      const dec = el("button", { type: "button", className: "stepper-btn", textContent: "−" });
-      dec.setAttribute("aria-label", `One fewer ${said()}`);
-      dec.addEventListener("click", () => order.setQty(meta.venueId, id(), q - 1, sel(), note()));
+      // At the dish's minimum, − would go below what the venue takes, so it takes
+      // the line off instead and says so (✕ and words), never a silent jump from
+      // 3 to 0 under a "−" that reads as "one fewer".
+      const min = minQtyOf(meta);
+      const atFloor = min > 1 && q <= min;
+      const dec = el("button", { type: "button", className: "stepper-btn", textContent: atFloor ? "✕" : "−" });
+      dec.dataset.role = "dec";
+      dec.setAttribute(
+        "aria-label",
+        atFloor ? `Remove ${said()} from your order — the minimum is ${min}` : `One fewer ${said()}`,
+      );
+      dec.addEventListener("click", () => order.setQty(meta.venueId, id(), atFloor ? 0 : q - 1, sel(), note()));
       const count = el("span", { className: "stepper-count", textContent: String(q) });
       const inc = el("button", { type: "button", className: "stepper-btn", textContent: "＋" });
-      inc.setAttribute("aria-label", `One more ${said()}`);
-      inc.addEventListener("click", () => order.add(meta));
+      inc.dataset.role = "inc";
+      inc.setAttribute("aria-label", q < min ? `Raise ${said()} to the minimum of ${min}` : `One more ${said()}`);
+      // A line already short of the minimum (it arrived in a link, or predates the
+      // rule) is raised TO it in one press, not nudged one at a time through
+      // numbers the venue will not take.
+      inc.addEventListener("click", () =>
+        q < min ? order.setQty(meta.venueId, id(), min, sel(), note()) : order.add(meta),
+      );
       wrap.replaceChildren(dec, count, inc);
       if (keepFocus) (heldMinus ? dec : inc).focus({ preventScroll: true });
     }
@@ -299,6 +320,7 @@ function lineRow(item, collectMode, info, record) {
   const config = selectionSummary(item.options);
   const spoken = config ? `${item.name} with ${config}` : item.name;
   const note = normaliseNote(item.note);
+  const rules = item.rules || null;
 
   if (collectMode) {
     const box = el("input", { type: "checkbox", className: "order-check", checked: item.collected });
@@ -329,6 +351,12 @@ function lineRow(item, collectMode, info, record) {
     el("span", { className: "order-line-name" }, [
       item.name,
       config ? el("span", { className: "order-line-config", textContent: config }) : null,
+      // What the price is for, and any minimum (roadmap 200/170, ADR 0163). The
+      // unit price is written out here because the right-hand figure is the LINE
+      // total ("3 × $7 = $21") or, for a dish sold by weight, a dash: "$26 per
+      // 100 g" times a count is not a price, so that line is left out of the total
+      // and says so in words.
+      ...ruleLines(item, rules),
       // The warning is WORDS first: the icon is decoration and the border a
       // second cue, never the only one (WCAG 1.4.1).
       info
@@ -364,6 +392,44 @@ function lineRow(item, collectMode, info, record) {
   return li;
 }
 
+/**
+ * The unit-price and minimum-order lines under a dish's name on the sheet. Words
+ * first, as the unfinished warning is: ⚠️ is decoration and the dashed outline is
+ * not used here, so the sentence carries it (WCAG 1.4.1).
+ */
+function ruleLines(item, rules) {
+  if (!rules) return [];
+  const out = [];
+  if (rules.unit && typeof item.unitPrice === "number") {
+    out.push(
+      el("span", {
+        className: "order-line-unit",
+        textContent:
+          `${money(item.unitPrice, item.currency)} ${UNITS[rules.unit].say}` +
+          (rules.weighed ? " — priced by weight, so not in the total" : ""),
+      }),
+    );
+  } else if (rules.weighed) {
+    out.push(el("span", { className: "order-line-unit", textContent: "Priced by weight — not in the total" }));
+  }
+  if (rules.minQty > 1) {
+    const short = shortBy(item.qty, rules);
+    const words = minWords(rules);
+    out.push(
+      short
+        ? el("span", { className: "order-line-min is-short" }, [
+            el("span", { "aria-hidden": "true", textContent: "⚠️ " }),
+            el("span", { textContent: `${words} — ${short} short. Press ＋ to raise it.` }),
+          ])
+        : el("span", { className: "order-line-min", textContent: words }),
+    );
+  }
+  return out;
+}
+
+/** An order line joined to its venue's live rules (dish-rules.js `joinRules`). */
+const withRules = (line) => joinRules(venueRecords.get(line.venueId), line);
+
 /** "Sauce" or "Sauce and Size" — the groups a line still owes, in words. */
 function joinOwed(info) {
   const names = info.groups.map((g) => g.name);
@@ -391,6 +457,10 @@ export function initOrderUI() {
   // What the sheet is missing, in words, directly under the total it qualifies
   // (roadmap 200/130). Hidden while every line is complete.
   const unfinishedEl = el("p", { className: "order-unfinished-note", hidden: true });
+  // What the dishes' own terms do to the total (roadmap 200/170): a dish sold by
+  // weight is left out of it, and one below its minimum order is not an order the
+  // venue will take. Said in words under the total, like the unfinished note.
+  const rulesEl = el("p", { className: "order-rules-note", hidden: true });
   // Said when a venue's menu could not be loaded to check its lines. Honest about
   // not knowing, rather than silent: a line we could not check is not a line we
   // checked and found complete.
@@ -418,6 +488,7 @@ export function initOrderUI() {
           totalEl,
         ]),
         unfinishedEl,
+        rulesEl,
         el("p", {
           className: "order-caption",
           textContent: "Estimated from our menu — confirm at the till.",
@@ -477,7 +548,7 @@ export function initOrderUI() {
   }
 
   function renderBody() {
-    const groups = order.groups();
+    const groups = groupByVenue(order.items().map(withRules));
     body.replaceChildren();
 
     if (groups.length === 0) {
@@ -543,14 +614,15 @@ export function initOrderUI() {
   }
 
   function renderTotal() {
-    const anyUnpriced = order.groups().some((g) => g.hasUnpriced);
+    const lines = order.items().map(withRules);
+    const anyUnpriced = groupByVenue(lines).some((g) => g.hasUnpriced);
     // An order spanning two countries used to read "$42.50 + £18", because the
     // two were not addable. With rates they usually are: convert each currency's
     // subtotal into whatever the reader is seeing and, when they all land in the
     // same money, add them into ONE number — which is what someone splitting a
     // bill actually wants. Where a rate is missing the old joined form survives,
     // because a wrong single total would be worse than an awkward true one.
-    const totals = orderTotals(order.items());
+    const totals = orderTotals(lines);
     const shown = totals.map((x) => displayPrice(x.total, { currency: x.currency }));
     const currencies = new Set(shown.map((s) => s.currency));
     const text =
@@ -575,10 +647,25 @@ export function initOrderUI() {
           (mine.shortBy
           ? ", so this total is short by what the choice costs."
           : `. Finish ${mine.count === 1 ? "it" : "them"} above.`);
+    const weighed = lines.filter((l) => l.rules?.weighed).length;
+    const below = lines.filter((l) => l.rules && shortBy(l.qty, l.rules)).length;
+    const said = [];
+    if (weighed) {
+      said.push(
+        `${plural(weighed, "dish", "dishes")} priced by weight ${weighed === 1 ? "isn't" : "aren't"} in this total — ask the venue what ${weighed === 1 ? "it comes" : "they come"} to.`,
+      );
+    }
+    if (below) {
+      said.push(
+        `${plural(below, "dish", "dishes")} ${below === 1 ? "is" : "are"} below the minimum order. Raise ${below === 1 ? "it" : "them"} above.`,
+      );
+    }
+    rulesEl.hidden = said.length === 0;
+    rulesEl.textContent = said.join(" ");
     const unchecked = [...new Set(order.items().map((i) => i.venueId))].filter((id) => venueRecords.get(id) === null);
     uncheckedEl.hidden = unchecked.length === 0;
     uncheckedEl.textContent = unchecked.length
-      ? "Couldn't load every menu to check for dishes still needing a choice."
+      ? "Couldn't load every menu to check for dishes needing a choice, a minimum order or a price by weight."
       : "";
   }
 

@@ -139,7 +139,7 @@ export function savedOrdersPanel(record) {
   );
 
   function recall(saved) {
-    const { lines, skipped, unfinished, changed } = planRecall(saved, record);
+    const { lines, skipped, unfinished, changed, raised } = planRecall(saved, record);
     if (lines.length) order.merge(lines);
     const added = lines.reduce((n, l) => n + l.qty, 0);
     const bits = [];
@@ -158,6 +158,18 @@ export function savedOrdersPanel(record) {
           "ul",
           { className: "saved-unfinished" },
           unfinished.map((u) => el("li", { textContent: `${u.qty}× ${u.name} — choose ${u.groups.join(" and ")}` }))
+        )
+      );
+    }
+    if (raised.length) {
+      // Brought up to the dish's minimum order and said in words (ADR 0163): the
+      // quantity on the sheet is not the one they saved, and they should know why.
+      status.append(
+        el("p", { className: "saved-status-line saved-raised-head", textContent: "Raised to the minimum order:" }),
+        el(
+          "ul",
+          { className: "saved-raised" },
+          raised.map((x) => el("li", { textContent: x.text }))
         )
       );
     }

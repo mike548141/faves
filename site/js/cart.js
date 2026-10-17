@@ -14,6 +14,7 @@ import { safeStorage } from "./store.js";
 import { migrateEntries } from "./renames.js";
 import { selectionKey } from "./addons.js";
 import { dishId } from "./dish-id.js";
+import { minQtyOf } from "./dish-rules.js";
 
 const KEY = "faves.order.v1";
 
@@ -328,7 +329,10 @@ export function createOrder(storage, key = KEY) {
      *  { venueId, venueName, phone?, name, dishId?, price?, options?, note? }.
      *  `price` is the CONFIGURED unit price and `options` the chosen add-ons
      *  (ADR 0048); `dishId` is what separates two identically-named rows
-     *  (ADR 0051); `note` is the free-text customisation (Theme 14c). */
+     *  (ADR 0051); `note` is the free-text customisation (Theme 14c).
+     *  `minQty` is the dish's minimum order (ADR 0163): a NEW line starts at it, so
+     *  "minimum order 3" puts three on the sheet, not one. It is read, never stored
+     *  on the line; an existing line still grows by one. */
     add(meta) {
       const options = meta.options || [];
       const note = normaliseNote(meta.note);
@@ -343,7 +347,7 @@ export function createOrder(storage, key = KEY) {
           name: meta.name,
           price: meta.price ?? null,
           options,
-          qty: 1,
+          qty: minQtyOf(meta),
           collected: false,
         };
         // Recorded on the line so it survives storage, export and sharing; a

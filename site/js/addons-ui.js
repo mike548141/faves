@@ -78,6 +78,7 @@ import {
 } from "./addons.js";
 import { formatMoney, venueCurrency } from "./place.js";
 import { isSpicy, heatLabel } from "./heat.js";
+import { minQtyOf } from "./dish-rules.js";
 
 // The sentences live in addon-warning.js (shared with the order sheet's finish control);
 // re-exported so this module stays the name tests and the picker know them by.
@@ -225,6 +226,9 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
       // an unpriced dish with a paid extra is still a dish we cannot total, and
       // guessing would be worse than the honest "—".
       price: configuredPrice(base, selection, groups),
+      // The dish's minimum order (ADR 0163), for the stepper only. A configured
+      // dish is its own line, and it starts at the minimum like the plain one.
+      ...(minQtyOf(item) > 1 ? { minQty: minQtyOf(item) } : {}),
       // Same reason as the plain row's stepper (menu.js): the line carries the
       // currency it was priced in, or it silently becomes NZD.
       currency: venueCurrency(record),

@@ -120,6 +120,7 @@ import { startSync } from "./sync-start.js";
 import { startPersistence } from "./storage-persist.js";
 import { mountNotFound } from "./cache-refresh.js";
 import { totalTime } from "./recipe-stats.js";
+import { minQtyOf, minWords, unitWords } from "./dish-rules.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -1282,6 +1283,19 @@ function renderDish(
         textContent:
           item.price != null ? money(item.price) : priceUnknown(item) ? "?" : "—",
       });
+  // What the price is FOR ("each", "per person", "per 100 g"; roadmap 200/170, ADR
+  // 0163), after a number only: "$7 each" reads as such, and a dash with "each"
+  // after it would claim a price we do not have. Words, in the price's own span so
+  // a screen reader hears "seven dollars each" as one thing.
+  const unit = item.price != null ? unitWords(item) : "";
+  const paintPrice = (amount) => {
+    if (!aside || !aside.classList.contains("dish-price")) return;
+    aside.replaceChildren(
+      money(amount),
+      ...(unit ? [el("span", { className: "dish-unit", textContent: ` ${unit}` })] : []),
+    );
+  };
+  if (unit) paintPrice(item.price);
 
   // Some venues take orders by number; render that code as a distinct badge
   // rather than run into the title (it's kept out of `name` in the data).
@@ -1380,6 +1394,11 @@ function renderDish(
     const d = preferred(item, "desc", venueLang) ?? { text: item.desc, lang: venueLang };
     children.push(el("p", { className: "dish-desc", lang: d.lang, textContent: d.text }));
   }
+  // The venue's minimum order, in words, where the reader decides to add (roadmap
+  // 200/170, ADR 0163): "Minimum 3" — or "Minimum 2 people" where the quantity is
+  // a head-count. The rule is also enforced by the stepper; the words are why.
+  const minSaid = kind.hasPrices ? minWords(item) : "";
+  if (minSaid) children.push(el("p", { className: "dish-min", textContent: minSaid }));
   // Above the tags, below the description: it qualifies what we just told you
   // about this dish, so it reads as a footnote to the description rather than
   // as another property of the food.
@@ -1495,6 +1514,10 @@ function renderDish(
         // and what gets read down the phone, so both travel.
         dishId: dishId(item),
         price: item.price ?? null,
+        // The least the venue takes (ADR 0163). Read by the stepper to start a
+        // new line there; never stored on the line itself. Omitted when there is
+        // none, so a plain dish's meta is the shape it has always been.
+        ...(minQtyOf(item) > 1 ? { minQty: minQtyOf(item) } : {}),
         // The venue's own currency, stored on the line. An order can span
         // venues in different countries, and a line that does not say what
         // its number is in defaults to NZD — so a London price renders as
@@ -1569,7 +1592,7 @@ function renderDish(
       // it — so choosing Large changes the number the reader is looking at.
       // The row's own ＋ Add follows, so it orders the plate whose price is
       // printed beside it; for the default that is the plain dish, unchanged.
-      if (aside && aside.classList.contains("dish-price")) aside.textContent = money(variant.price);
+      paintPrice(variant.price);
       plainVariant = variant;
       restepPlain();
     }, (gate, carry) => {
