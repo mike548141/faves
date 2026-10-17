@@ -1927,3 +1927,13 @@ deliberation those compact docs omit.
   Noble's "Choose two" is the one data change; the grill sauce and Hell's dips
   fit the shape but are not structured groups yet; per-category counts inside a
   build are left out on purpose.
+- [0165](0165-a-dish-states-its-minimum-order-and-what-its-price-is-for.md) —
+  **A dish states its minimum order and what its price is for** (`200/170`). Optional
+  `minQty` (integer >= 2) and `unit` (`each` / `per person` / `per 100 g`), only
+  where the menu prints them. A new line starts at the minimum, ＋ jumps a short
+  line to it, − at the minimum becomes ✕ and removes the line. The rule is read
+  from the live record when the sheet draws (never stored on a line), so old and
+  shared lines are judged too; a short line is flagged in words and the total says
+  so. A per-100 g line shows its unit price and is left out of the total, which
+  says so. Recall raises a short quantity and says it. Party-size scaling, per-head
+  platters and multi-buy stay in prose.

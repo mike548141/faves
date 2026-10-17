@@ -10,6 +10,16 @@ content freshness separately from this file.
 
 ### Added
 - **Opening hours for three more places, from their own sites.** Abrakebabra (its published week, with Wednesday left as "not published" because its site gives no Wednesday line), Golding's Free Dive (midday to 11pm daily) and Wellington Sourdough (7:30am to 2:30pm daily) now show when they are open, and the last two link to their own site. Hotel Bristol was re-read and left alone: its page contradicts itself.
+- **A dish with a minimum order now starts there, and a dish priced by weight is
+  no longer multiplied.** Charley Noble's oysters ("minimum order 3") and its
+  arancini and croquettes ("Minimum order of 2") add at the minimum, the row says
+  "Minimum 3", and the order sheet will not step below it: the − at the minimum
+  becomes a ✕ that removes the dish. A dish already on the sheet under its
+  minimum is flagged in words and one press of ＋ raises it, and a saved order
+  recalled under it is raised and says so. Prices now say what they are for
+  ("$7 each", "$12 per person", "$26 per 100 g"), and the two Wagyu steaks priced
+  per 100 g are shown at their unit price and left out of the total, which says
+  so, rather than totalled as a count.
 - **A recipe says what it makes as well as who it serves, and you can pick how many people to cook for.** Hotcakes, Liège waffles, queen cakes and the Turkish flatbread now show "Makes 12 waffles" beside "Serves", labelled apart, because the two are different numbers. Above the ingredients, "Serve – 4 +" rescales the whole recipe to that many people, and cook mode and the shopping list follow it. Where the recipe's own serving count is our estimate it says "Written for about 4 people". The ½×/1×/2×/3× buttons stay.
 - **A dish can now ask you to pick a set number, and charge for extras beyond a
   few included.** Charley Noble's Cheese Selection (Two) now says "Required -
