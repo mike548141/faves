@@ -1,4 +1,4 @@
-- [ ] **How many you may pick, and what the extras beyond that cost**
+- [~] **How many you may pick, and what the extras beyond that cost**
   `[M][schema][data]` — **owner-ruled 2026-10-03:**
 
   > *"Some addons might have a list of things and the user may be forced to
@@ -43,3 +43,5 @@
   `addons.js` (`selectionAllowed`, `configuredPrice`), the picker's words
   ("2 included, then $1 each"), the recall cap check (`saved-recall.js`), and
   `addon_check`.
+
+  (claimed 2026-10-17-2122, faves-b4, wt: faves-200-140)
