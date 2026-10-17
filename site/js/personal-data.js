@@ -1133,3 +1133,77 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
 
   return report;
 }
+
+// --- "Delete everything" (roadmap 180/010, ADR 0167) -------------------------
+
+/**
+ * The only keys a Delete-everything leaves, each a fact about this DEVICE or
+ * BROWSER rather than anything a person put in:
+ *   • the sync pairing — the code is how the deletion REACHES the other devices
+ *     and what keeps this one in step afterwards; turning sync off is its own
+ *     control, and deleting data must not silently sign a device out;
+ *   • the storage-layout stamp — wiping it would make the next load read an
+ *     empty store as the oldest layout and run the upgrade chain over nothing;
+ *   • the "already asked to keep the data" flag and the location-ask promise,
+ *     both answers this BROWSER gave (personal-data.js EXCLUDED explains each).
+ * Everything else under `faves.` is deleted — including any key a later build
+ * adds and nobody classified. That is the direction this list fails in on
+ * purpose: a store forgotten here is deleted, never kept, and
+ * tests/erase.test.js fails until the new store is named and its fate decided.
+ * (The replace import's `spare` list is NOT this one: it spares the sync log,
+ * the upgrade snapshot and the Near-me origin as well, which a deletion must
+ * not — the log names hearts, the snapshot is a whole second copy of the data.)
+ */
+export const ERASE_KEEPS = Object.freeze(["faves.sync.v1", SCHEMA_KEY, PERSIST_ASKED_KEY, CONSENT_KEY]);
+
+/** A literal, as EXCLUDED does, for the one key whose module imports this one. */
+const SHOPPING_STORE_KEY = "faves.shopping.v1"; // shopping.js SHOPPING_KEY; tests/erase.test.js pins it
+
+/**
+ * Delete every personal store on this device, every person's, and the profiles
+ * themselves (the device goes back to a single empty "Me"). Returns
+ * `{ ok, removed }`; never throws. Refused whole, before the first removal, in
+ * a tab whose build is behind storage — the same refusal an import gives.
+ *
+ * Enumerates real storage rather than walking the registry, so a person
+ * already gone from the registry (and any key an older build left) goes too.
+ * Where storage cannot enumerate (the in-memory shim) it removes what it can
+ * name — the same best-effort `applyPersonalData` documents for a replace.
+ *
+ * The sync pairing stays, scrubbed of the one thing in it that is data: an
+ * open "add these hearts?" question carries heart NAMES. sync.js records the
+ * deletion itself (`sync.eraseEverywhere`) — this function is storage only.
+ */
+export function eraseEverything(storage) {
+  if (storageAhead(storage)) {
+    return { ok: false, error: "Faves was updated in another tab. Reload this page, then try again." };
+  }
+  const keeps = new Set(ERASE_KEEPS);
+  const listed = listStoredKeys(storage);
+  const doomed = listed.length
+    ? listed.filter((k) => !keeps.has(k))
+    : [
+        // Every excluded store but the ones a deletion keeps (the sync log, the
+        // sync base, cook ticks and timers, the upgrade snapshot…), then the
+        // stores the backup carries by name.
+        ...Object.keys(EXCLUDED).filter((k) => !keeps.has(k)),
+        PROFILES_KEY,
+        ORDER_KEY,
+        SHOPPING_STORE_KEY,
+        RECIPES_KEY,
+        ...readRegistry(storage).profiles.flatMap((p) =>
+          [...SCOPED_BASE_KEYS, CHECKLIST_KEY, SAVED_ORDERS_KEY, ACTIVITY_KEY].map((b) => scopeKey(p.id, b))
+        ),
+      ];
+  for (const k of doomed) removeKey(storage, k);
+  try {
+    const cfg = JSON.parse(storage.getItem("faves.sync.v1") || "null");
+    if (cfg && typeof cfg === "object" && "ask" in cfg) {
+      const { ask: _ask, ...rest } = cfg;
+      storage.setItem("faves.sync.v1", JSON.stringify(rest));
+    }
+  } catch {
+    /* an unreadable config holds no question to scrub */
+  }
+  return { ok: true, removed: doomed.length };
+}

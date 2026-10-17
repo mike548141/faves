@@ -303,6 +303,15 @@ test("510/320: the sync base is removed only by turning sync on, joining and tur
   // rests on this list: every other way the base could go is a write that the
   // enumeration in the review read and ruled out. A new remover is a new way
   // into 320's union, and should be read with that in mind.
+  //
+  // ONE REMOVER THIS SCAN CANNOT SEE, and is named here so it is not read as
+  // absent: Delete everything (roadmap 180/010, ADR 0167) removes the base along
+  // with every other `faves.` key but a short keep-list, by enumerating storage
+  // rather than naming the key. That is a base-less device with its reason on
+  // record: the base is a full second copy of the data being deleted, and the
+  // cycle after a deletion does not read one (`resolveWipe` voids whichever side
+  // the deletion outranks, then merges against nothing). tests/erase.test.js
+  // holds the removal itself; tests/sync-wipe.test.js holds the cycles after.
   const dir = new URL("../site/js/", import.meta.url);
   const hits = [];
   for (const f of readdirSync(dir).filter((n) => n.endsWith(".js"))) {

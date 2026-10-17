@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Settings has a second, separate Delete everything beside Reset preferences.**
+  Reset preferences (the old "Reset to defaults") still clears only the person
+  you are browsing as, behind "I agree". Delete everything erases every person's
+  favourites, ratings, notes, recipes, saved orders, activity history, order,
+  shopping list, cooking ticks and food preferences (flagged allergens included),
+  and the profiles themselves, behind its own typed phrase, "delete everything".
+  When sync is on it reaches every device signed in with the same sync code, not
+  just this one, and a heart another device made in the meantime does not bring
+  anything back. The confirmation says so and shows no device count.
 - **Opening hours for three more places, from their own sites.** Abrakebabra (its published week, with Wednesday left as "not published" because its site gives no Wednesday line), Golding's Free Dive (midday to 11pm daily) and Wellington Sourdough (7:30am to 2:30pm daily) now show when they are open, and the last two link to their own site. Hotel Bristol was re-read and left alone: its page contradicts itself.
 - **A dish with a minimum order now starts there, and a dish priced by weight is
   no longer multiplied.** Charley Noble's oysters ("minimum order 3") and its

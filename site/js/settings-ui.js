@@ -53,7 +53,9 @@ import {
   LOCAL,
   futureAllergens,
 } from "./settings.js";
-import { recallOrigin } from "./geo.js";
+import { recallOrigin, rememberOrigin } from "./geo.js";
+import { sync } from "./sync.js";
+import { reloadAllLiveStores } from "./live-stores.js";
 import { OPEN_SYNC_QUESTION } from "./sync-banner.js";
 import { UNIT_OPTIONS, unitsLabel, dialSpec, dialValue, dialKm, formatDial } from "./units.js";
 import { fxAsOf, fxCurrencies } from "./fx.js";
@@ -665,7 +667,7 @@ function refreshResetSection() {
   });
   syncPicks();
 
-  const resetHead = el("p", { className: "settings-sub", textContent: "Start over" });
+  const resetHead = el("p", { className: "settings-sub", textContent: "Reset preferences" });
   // Two sentences, in the order the reader needs them: what goes, then what
   // stays. The old copy opened with a five-item list of setting names — the
   // reader has to hold all five to work out whether this is the button they
@@ -679,9 +681,10 @@ function refreshResetSection() {
       "flagged allergens — along with your distance, units, language and maps " +
       "app, and puts them back to how they arrived. " +
       "It only affects the person browsing: your favourites, your ratings and " +
-      "everyone else’s settings stay exactly as they are.",
+      "everyone else’s settings stay exactly as they are. " +
+      "To erase the lot, use Delete everything below.",
   });
-  const resetBtn = el("button", { type: "button", className: "settings-reset", textContent: "Reset to defaults" });
+  const resetBtn = el("button", { type: "button", className: "settings-reset", textContent: "Reset preferences" });
   const resetConfirmText = el("p", { className: "profile-confirm-text" });
   const resetGo = el("button", { type: "button", className: "profile-btn profile-btn-danger", textContent: "Reset" });
   const resetCancel = el("button", { type: "button", className: "profile-btn", textContent: "Cancel", "data-i18n": "generic.cancel" });
@@ -690,6 +693,77 @@ function refreshResetSection() {
   ]);
   resetConfirm.setAttribute("aria-label", "Confirm reset");
   const resetStatus = el("p", { className: "settings-note settings-data-status", role: "status", "aria-live": "polite" });
+
+  // THE TYPED GATE, one mechanism for both destructive controls. Owner,
+  // 2026-08-16: *"I want a disruptive/unusal UX … that jars people and they
+  // won't keep tapping on by mistake."* Two taps is still two taps, and a
+  // Reset button that appears exactly where your thumb already is gets hit by
+  // momentum. Typing cannot be done by momentum — it is the one confirmation
+  // that requires you to have read the sentence, which is why every tool that
+  // destroys something you cannot get back uses it.
+  //
+  // The gate is deliberately strict-but-forgiving: case and surrounding spaces
+  // are ignored (a phone keyboard capitalises the first letter for you either
+  // way), the words are not. Enter submits, so the flow ends where the hands
+  // already are.
+  //
+  // The two controls get DIFFERENT phrases (owner, 2026-08-16: "different
+  // wording, so the two can never be confused at the moment of tapping"): what
+  // you have typed for one opens nothing on the other, and a person who reaches
+  // for the habitual "I agree" on Delete everything finds it does not arm.
+  function typedGate({ id, phrase, goButton }) {
+    const label = el("label", { className: "reset-type-label", htmlFor: id });
+    const input = el("input", {
+      type: "text",
+      id,
+      className: "reset-type-input",
+      autocomplete: "off",
+      autocapitalize: "off",
+      autocorrect: "off",
+      spellcheck: false,
+      placeholder: phrase,
+    });
+    input.setAttribute("aria-describedby", `${id}-help`);
+    const help = el("p", { className: "reset-type-help", id: `${id}-help` });
+    const armed = () => input.value.trim().toLowerCase() === phrase;
+    function sync() {
+      const ok = armed();
+      goButton.disabled = !ok;
+      // The field itself answers, the moment the words match — red while it is
+      // a barrier, green once it is not. The buttons deliberately do NOT change
+      // colour (owner): the destructive one should look destructive
+      // throughout, and the reassurance belongs on the thing the reader is
+      // actually typing into. `aria-invalid` carries the same state to a
+      // screen reader, which a border colour never could.
+      input.classList.toggle("is-armed", ok);
+      input.setAttribute("aria-invalid", ok ? "false" : "true");
+    }
+    input.addEventListener("input", sync);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && armed()) {
+        e.preventDefault();
+        goButton.click();
+      }
+    });
+    const row = el("div", { className: "reset-type" }, [label, input, help]);
+    return {
+      row,
+      label,
+      input,
+      help,
+      armed,
+      sync,
+      clear() {
+        input.value = "";
+        sync();
+      },
+    };
+  }
+
+  const PHRASE = "i agree";
+  const resetGate = typedGate({ id: "reset-type", phrase: PHRASE, goButton: resetGo });
+  // Between the sentence and the buttons — the order you read it in.
+  resetConfirmText.after(resetGate.row);
 
   resetBtn.addEventListener("click", () => {
     const who = profiles.active().name;
@@ -700,8 +774,7 @@ function refreshResetSection() {
     // ratings, the order tally and other profiles alone. Saying otherwise would
     // make the scariest sentence in the app the least accurate one, and a
     // warning that overstates gets discounted the first time someone notices.
-    // Widening what Reset destroys is the owner's call, not a side effect of
-    // rewording its warning (ROADMAP).
+    // The control that destroys all of it is Delete everything, below.
     // The possessive of a profile name reads badly — "Me's saved preferences"
     // (owner, 2026-08-16) — and the name was carrying a question the sentence
     // never answered: one profile or all of them? Reset is per-profile
@@ -717,80 +790,135 @@ function refreshResetSection() {
       : `This wipes your saved preferences on this device — dietary needs and ` +
         `flagged allergens included — and cannot be undone. Your favourites and ` +
         `ratings are not touched.`;
-    typeLabel.textContent = "Type I agree to confirm";
-    typeHelp.textContent =
+    resetGate.label.textContent = "Type I agree to confirm";
+    resetGate.help.textContent =
       "Typed, not tapped: this one destroys settings you may rely on to eat safely.";
-    typeInput.value = "";
-    syncArmed();
+    resetGate.clear();
     resetConfirm.hidden = false;
-    typeInput.focus();
+    resetGate.input.focus();
   });
   resetCancel.addEventListener("click", () => {
     resetConfirm.hidden = true;
-    typeInput.value = "";
-    syncArmed();
+    resetGate.clear();
     resetBtn.focus();
   });
-  // THIRD STEP: type it out. Owner, 2026-08-16: *"I want a disruptive/unusal UX
-  // … that jars people and they won't keep tapping on by mistake."* Two taps is
-  // still two taps, and a Reset button that appears exactly where your thumb
-  // already is gets hit by momentum. Typing cannot be done by momentum — it is
-  // the one confirmation that requires you to have read the sentence, which is
-  // why every tool that destroys something you cannot get back uses it.
-  //
-  // The gate is deliberately strict-but-forgiving: case and surrounding spaces
-  // are ignored (a phone keyboard capitalises the "I" for you either way), the
-  // words are not. Enter submits, so the flow ends where the hands already are.
-  const PHRASE = "i agree";
-  const typeLabel = el("label", { className: "reset-type-label", htmlFor: "reset-type" });
-  const typeInput = el("input", {
-    type: "text",
-    id: "reset-type",
-    className: "reset-type-input",
-    autocomplete: "off",
-    autocapitalize: "off",
-    autocorrect: "off",
-    spellcheck: false,
-    placeholder: "I agree",
-  });
-  typeInput.setAttribute("aria-describedby", "reset-type-help");
-  const typeHelp = el("p", { className: "reset-type-help", id: "reset-type-help" });
-  const armed = () => typeInput.value.trim().toLowerCase() === PHRASE;
-  function syncArmed() {
-    const ok = armed();
-    resetGo.disabled = !ok;
-    // The field itself answers, the moment the words match — red while it is a
-    // barrier, green once it is not. The buttons deliberately do NOT change
-    // colour (owner): the destructive one should look destructive throughout,
-    // and the reassurance belongs on the thing the reader is actually typing
-    // into. `aria-invalid` carries the same state to a screen reader, which a
-    // border colour never could.
-    typeInput.classList.toggle("is-armed", ok);
-    typeInput.setAttribute("aria-invalid", ok ? "false" : "true");
-  }
-  typeInput.addEventListener("input", syncArmed);
-  typeInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && armed()) {
-      e.preventDefault();
-      resetGo.click();
-    }
-  });
-  const typeRow = el("div", { className: "reset-type" }, [typeLabel, typeInput, typeHelp]);
-  // Between the sentence and the buttons — the order you read it in.
-  resetConfirmText.after(typeRow);
-
   resetGo.addEventListener("click", () => {
     // Belt and braces: the button is disabled until the phrase matches, but a
     // disabled button is a UI state, not a guarantee — this is the check that
     // actually stands between a stray tap and someone's data.
-    if (!armed()) {
-      typeInput.focus();
+    if (!resetGate.armed()) {
+      resetGate.input.focus();
       return;
     }
     settings.reset();
     resetConfirm.hidden = true;
     resetStatus.textContent = "Settings reset to defaults.";
     resetBtn.focus();
+  });
+
+  // --- Delete everything (roadmap 180/010, ADR 0167) -------------------------
+  // The second control of the pair the owner ruled on 2026-08-16 (roadmap 430):
+  // everything, for everybody on this device, behind its own typed phrase —
+  // and, once sync is on, on every device signed in with the same code
+  // (*"everywhere, always"*). The confirmation names that SCOPE and never a
+  // number of devices: an end-to-end blob cannot count them (ADR 0060's last
+  // consequence), and the owner chose "always true, never a wrong number".
+  const eraseHead = el("p", { className: "settings-sub", textContent: "Delete everything" });
+  const eraseNote = el("p", {
+    className: "settings-hint",
+    textContent:
+      "Erases all of it, for everyone who uses Faves on this device: every profile, favourites, ratings, " +
+      "notes, your own recipes, saved orders, the activity history, the order tally, the shopping list and " +
+      "every food preference, flagged allergens included. Faves goes back to how it was the first time you opened it.",
+  });
+  const eraseBtn = el("button", {
+    type: "button",
+    className: "settings-reset settings-erase",
+    textContent: "Delete everything…",
+  });
+  const eraseConfirmText = el("p", { className: "profile-confirm-text" });
+  const eraseGo = el("button", { type: "button", className: "profile-btn profile-btn-danger", textContent: "Delete everything" });
+  const eraseCancel = el("button", { type: "button", className: "profile-btn", textContent: "Cancel", "data-i18n": "generic.cancel" });
+  const eraseConfirm = el("div", { className: "profile-confirm profile-confirm-danger", role: "group", hidden: true }, [
+    eraseConfirmText, el("div", { className: "profile-form-actions" }, [eraseGo, eraseCancel]),
+  ]);
+  eraseConfirm.setAttribute("aria-label", "Confirm delete everything");
+  const eraseStatus = el("p", {
+    className: "settings-note settings-data-status",
+    role: "status",
+    "aria-live": "polite",
+    tabIndex: -1,
+  });
+  const eraseGate = typedGate({ id: "erase-type", phrase: "delete everything", goButton: eraseGo });
+  eraseConfirmText.after(eraseGate.row);
+
+  eraseBtn.addEventListener("click", () => {
+    const names = profiles.list().map((p) => p.name);
+    const paired = sync.isOn();
+    // Every store is NAMED, because a confirmation that says "your data" lets
+    // the reader assume the part they care about is spared (ADR 0164 asked
+    // for the activity log by name; saved orders likewise).
+    eraseConfirmText.textContent =
+      `This deletes everything Faves holds for ${names.length > 1 ? `all ${names.length} profiles (${names.join(", ")})` : `${names[0]}`}` +
+      ` — favourites, ratings, notes, your own recipes, saved orders, the activity history, the order tally, ` +
+      `the shopping list, cooking ticks and every food preference, flagged allergens included — and the profiles themselves. ` +
+      (paired
+        ? `Faves is signed in to sync, so it also erases all of this on every device signed in with this sync code. `
+        : `Nothing is sent anywhere, so there is no other copy. `) +
+      `It cannot be undone — save a copy first with Download my data if you want one.`;
+    eraseGate.label.textContent = "Type delete everything to confirm";
+    eraseGate.help.textContent = paired
+      ? "Typed, not tapped: this reaches every device signed in with this sync code."
+      : "Typed, not tapped: this cannot be undone.";
+    eraseGate.clear();
+    eraseStatus.textContent = "";
+    eraseConfirm.hidden = false;
+    eraseGate.input.focus();
+  });
+  eraseCancel.addEventListener("click", () => {
+    eraseConfirm.hidden = true;
+    eraseGate.clear();
+    eraseBtn.focus();
+  });
+  eraseGo.addEventListener("click", async () => {
+    // As for Reset: the disabled button is a UI state, this is the guarantee.
+    if (!eraseGate.armed()) {
+      eraseGate.input.focus();
+      return;
+    }
+    eraseGo.disabled = true;
+    eraseConfirm.hidden = true;
+    eraseStatus.textContent = "Deleting…";
+    const SENT_WITHIN_MS = 12_000;
+    const done = sync.eraseEverywhere({
+      // Between the erase and the network: the stores are re-pointed before
+      // anything else can read storage, or the first tap would write their old
+      // contents straight back. The Near-me origin is session storage, outside
+      // everything the erase can enumerate, and is a place someone was.
+      afterErase: () => {
+        rememberOrigin(null);
+        reloadAllLiveStores();
+      },
+    });
+    const res = await Promise.race([
+      done,
+      new Promise((resolve) => setTimeout(() => resolve({ ok: true, paired: true, reached: false }), SENT_WITHIN_MS)),
+    ]);
+    eraseGate.clear();
+    if (!res.ok) {
+      eraseStatus.textContent = `Nothing was deleted. ${res.error || "Faves couldn’t clear its storage."}`;
+    } else if (!res.paired) {
+      eraseStatus.textContent = "Everything is deleted from this device.";
+    } else if (res.reached) {
+      eraseStatus.textContent =
+        "Everything is deleted from this device, and the deletion has been sent. Every other device signed in " +
+        "with this sync code empties itself the next time it syncs.";
+    } else {
+      eraseStatus.textContent =
+        "Everything is deleted from this device. Faves couldn’t reach sync just now, so it will send the deletion " +
+        "as soon as it can; your other devices empty themselves the next time they sync after that.";
+    }
+    eraseStatus.focus();
   });
 
   // Evidence, then news, then what the button does, then the button — the
@@ -802,6 +930,7 @@ function refreshResetSection() {
     refreshNote, refreshBtn, refreshConfirm, refreshStatus,
     picksHead, picksNote, picksBtn, picksStatus,
     resetHead, resetNote, resetBtn, resetConfirm, resetStatus,
+    eraseHead, eraseNote, eraseBtn, eraseConfirm, eraseStatus,
   ]);
   return {
     panel,
@@ -813,6 +942,7 @@ function refreshResetSection() {
     },
     close: () => {
       resetConfirm.hidden = true;
+      eraseConfirm.hidden = true;
       refreshConfirm.hidden = true;
     },
   };

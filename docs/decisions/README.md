@@ -1953,3 +1953,12 @@ deliberation those compact docs omit.
   has a provenance row in `data/bookings/` that `validate.py` checks both ways.
   Six venues ship; Now Book It links are withheld (its pages cannot show a venue
   today, and answer 200 to any id).
+- [0167](0167-delete-everything-is-an-epoch-the-whole-group-honours.md) —
+  **"Delete everything" is an epoch the whole sync group honours** (`180/010`,
+  owner-ruled 2026-08-16). A second typed control (`delete everything`, not
+  Reset's `I agree`) that erases every `faves.` key but a four-key keep-list
+  (sync pairing, storage stamp, two browser answers). A three-way merge cannot
+  carry it (what another device added since the base merges back; four stores
+  never sync), so it travels as a marker in the snapshot: the side whose
+  deletion is newer voids the other, and the later of two simultaneous
+  deletions wins on both ends. No device count in the wording.

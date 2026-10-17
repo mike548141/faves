@@ -104,7 +104,14 @@ function relTime(iso) {
 
 function statusLine(st) {
   if (st.state === SYNCING) return "Syncing…";
-  return st.lastSyncedAt ? `Last synced ${relTime(st.lastSyncedAt)}.` : "Not synced yet.";
+  const line = st.lastSyncedAt ? `Last synced ${relTime(st.lastSyncedAt)}.` : "Not synced yet.";
+  // "Delete everything" (ADR 0167). Said once and only about THIS device: what
+  // the other devices have done is not something this one can see.
+  if (st.wipePending) return `${line} Everything you deleted here is waiting to reach your other devices.`;
+  if (st.wiped?.by === "other") {
+    return `${line} Everything on this device was deleted ${relTime(st.wiped.at)}, from another device signed in with this code.`;
+  }
+  return line;
 }
 
 /** The Settings index row's subtitle (ADR 0025) — the answer to "is sync on,
