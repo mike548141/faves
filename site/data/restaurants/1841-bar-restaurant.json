@@ -991,6 +991,7 @@
           "name": "Aioli / Garlic Butter / Hollandaise / Fried Egg (1)",
           "dishId": "aioli-garlic-butter-hollandaise-fried-egg-1",
           "desc": "Each.",
+          "unit": "each",
           "price": [
             {
               "value": 2.0,
@@ -1007,6 +1008,7 @@
           "name": "House-made Salsa / Toast / GF Bread / Extra Sauce",
           "dishId": "house-made-salsa-toast-gf-bread-extra-sauce",
           "desc": "Each.",
+          "unit": "each",
           "price": [
             {
               "value": 3.0,
@@ -1022,6 +1024,7 @@
           "name": "1841 Slaw / Garden Salad / Mash / Onions / Tomatoes / Mushrooms",
           "dishId": "1841-slaw-garden-salad-mash-onions-tomatoes-mushrooms",
           "desc": "Each.",
+          "unit": "each",
           "price": [
             {
               "value": 5.0,
@@ -1034,6 +1037,7 @@
           "name": "Pork Sausage (1) / Bacon (2)",
           "dishId": "pork-sausage-1-bacon-2",
           "desc": "Brunch add-on, each.",
+          "unit": "each",
           "price": [
             {
               "value": 6.0,

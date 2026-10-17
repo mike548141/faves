@@ -777,6 +777,7 @@
           "name": "Jasmine Tea",
           "dishId": "jasmine-tea",
           "desc": "Per person.",
+          "unit": "per person",
           "price": 3.0,
           "tags": [
             "vg"
@@ -786,6 +787,7 @@
           "name": "Green Tea",
           "dishId": "green-tea",
           "desc": "Per person.",
+          "unit": "per person",
           "price": 3.0,
           "tags": [
             "vg"
