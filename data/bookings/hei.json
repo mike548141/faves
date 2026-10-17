@@ -1,0 +1,20 @@
+{
+  "venue": "hei",
+  "rows": [
+    {
+      "url": "https://booking.resdiary.com/widget/Standard/HeiRestaurant/10550",
+      "platform": "ResDiary",
+      "publishedOn": "https://hei.co.nz/book/",
+      "publisher": "The venue's own website.",
+      "via": "embed",
+      "fetched": "2026-10-17T22:01Z",
+      "sha256": "b79ebf76b35f594b63b096a8233d47575feb1a764382cc1de38335cf876d852a",
+      "saw": "The venue's own Book page (linked \"Book\" in its menu and \"BOOK WITH US\" on its home page) embeds exactly this ResDiary widget in an iframe. The venue's URL ends in a bare `?`, dropped.",
+      "http": {
+        "status": 200,
+        "finalUrl": "https://booking.resdiary.com/widget/Standard/HeiRestaurant/10550"
+      },
+      "rendered": "ResDiary widget \"Hei Restaurant\": party size, date and time pickers. Read in headless Chrome on 2026-10-18."
+    }
+  ]
+}

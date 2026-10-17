@@ -1537,6 +1537,60 @@ STORE_CASES = {
 # menu could ever exercise them — and a drift gate that cannot fire is the
 # decorative guard this repo keeps finding. path -> {name: (mutate_text, expect)}.
 SOURCE_CASES = {
+    # A venue's own booking link (roadmap 33a, ADR 0165). Mutated on the REAL
+    # record and the REAL provenance row, because the gate is two files
+    # agreeing and a fixture of either could be wrong in ways the corpus never
+    # is. Every case here fails with its OWN message: the baseline carries a
+    # clean booking link, so a gate that stopped checking would still print the
+    # baseline and say nothing new.
+    "site/data/restaurants/hei.json": {
+        "a booking kind nobody reads": (
+            lambda s: s.replace('"kind": "booking"', '"kind": "bookin"', 1),
+            "error", r"ordering entry kind 'bookin' not in \['booking'\]",
+        ),
+        "a typo'd key that would ship a booking as an order link": (
+            lambda s: s.replace('"kind": "booking"', '"knd": "booking"', 1),
+            "error", r"ordering entry carries unknown key\(s\) \['knd'\]",
+        ),
+        "a booking link over plain http": (
+            lambda s: s.replace('"url": "https://booking.resdiary.com', '"url": "http://booking.resdiary.com', 1),
+            "error", r"booking link must be an https URL: 'http://booking\.resdiary\.com",
+        ),
+        "a booking link with no provenance row": (
+            lambda s: s.replace("HeiRestaurant/10550", "HeiRestaurant/10551", 1),
+            "error", r"booking link 'https://booking\.resdiary\.com/widget/Standard/HeiRestaurant/10551' has no row in data/bookings/hei\.json",
+        ),
+        "a booking link with no platform name": (
+            lambda s: s.replace('"platform": "ResDiary"', '"platform": " "', 1),
+            "error", r"booking link needs a platform name",
+        ),
+    },
+    "data/bookings/hei.json": {
+        "a booking link that did not answer 200": (
+            lambda s: s.replace('"status": 200', '"status": 404', 1),
+            "error", r"http\.status is 404, not 200",
+        ),
+        "a booking link read off somebody else's website": (
+            lambda s: s.replace('"publishedOn": "https://hei.co.nz/book/"', '"publishedOn": "https://www.example-listings.co.nz/hei"', 1),
+            "error", r"`publishedOn` host 'example-listings\.co\.nz' is not the venue's own website host 'hei\.co\.nz'",
+        ),
+        "a booking page that is not https": (
+            lambda s: s.replace('"publishedOn": "https://hei.co.nz/book/"', '"publishedOn": "hei.co.nz/book"', 1),
+            "error", r"`publishedOn` must be the https page of the venue's own site",
+        ),
+        "a provenance row whose link left the record": (
+            lambda s: s.replace("HeiRestaurant/10550", "HeiRestaurant/9999", 1),
+            "error", r"no booking link 'https://booking\.resdiary\.com/widget/Standard/HeiRestaurant/9999' in the record",
+        ),
+        "a provenance row with no page hash": (
+            lambda s: s.replace('"sha256": "', '"sha_256": "', 1),
+            "error", r"missing `sha256`",
+        ),
+        "a provenance file for another venue": (
+            lambda s: s.replace('"venue": "hei"', '"venue": "hell-pizza"', 1),
+            "error", r"data/bookings/hei\.json: `venue` must be 'hei', got 'hell-pizza'",
+        ),
+    },
     # `1e400` is spec-legal JSON that BOTH Python and JSON.parse silently widen
     # to infinity, so the NaN/Infinity token gate never sees it and it would
     # render as "$Infinity". It can only be written as raw source: json.dumps
@@ -1961,6 +2015,9 @@ def main() -> int:
         # needs it, because Spices Indian's three Full defaults are dearer than
         # their Half and only their rows there make them legal.
         shutil.copytree(ROOT / "data" / "defaults", work / "data" / "defaults")
+        # The booking-link provenance (ADR 0165): a booking link without its row
+        # is an error, so the unmutated corpus needs the rows.
+        shutil.copytree(ROOT / "data" / "bookings", work / "data" / "bookings")
         # validate.py reads four tables out of the shipped JS so they can't
         # drift from their Python counterparts (see _load_renames,
         # _load_contradicts, _load_vibes and _load_diet_filters there), so the
@@ -2092,6 +2149,20 @@ def main() -> int:
             if not ok:
                 failures.append(name)
 
+        # ADR 0165: a provenance file for a venue that is not in the corpus. The
+        # case needs a NEW file, which neither CASES nor SOURCE_CASES can write.
+        ghost = work / "data" / "bookings" / "no-such-venue.json"
+        ghost.write_text(json.dumps({"venue": "no-such-venue", "rows": []}), encoding="utf-8")
+        rc, out = run_validate(work)
+        ghost.unlink()
+        name = "a booking provenance file for a venue that does not exist"
+        ok, got = verdict(name, "error", r"data/bookings/no-such-venue\.json: no venue 'no-such-venue'",
+                          rc, said(out, baseline))
+        print(f"  {'✅' if ok else '❌'} {name:38} {got}")
+        if not ok:
+            failures.append(name)
+        ORPHAN_CASES = 1
+
     drift = check_need_kinds_agree()
     if drift:
         print(f"  ❌ {'needs vocabulary agrees across files':38} {drift}")
@@ -2108,7 +2179,7 @@ def main() -> int:
         )
         return 1
 
-    total = len(CASES) + sum(len(c) for c in SOURCE_CASES.values()) + len(STORE_CASES)
+    total = len(CASES) + sum(len(c) for c in SOURCE_CASES.values()) + len(STORE_CASES) + ORPHAN_CASES
     print(f"\nAll {total} mutations behaved as specified.")
     return 0
 

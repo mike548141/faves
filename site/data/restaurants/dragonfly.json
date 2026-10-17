@@ -20,6 +20,11 @@
     {
       "platform": "Order on our site",
       "url": "https://dragonfly.mobi2go.com"
+    },
+    {
+      "platform": "ResDiary",
+      "url": "https://booking.resdiary.com/widget/Standard/DRAGONFLY1/9657",
+      "kind": "booking"
     }
   ],
   "hours": {

@@ -1,0 +1,20 @@
+{
+  "venue": "southern-cross",
+  "rows": [
+    {
+      "url": "https://booking.resdiary.com/widget/Standard/thecross/5879",
+      "platform": "ResDiary",
+      "publishedOn": "https://stargroup.nz/venue-bookings/southerncross",
+      "publisher": "The venue's own website.",
+      "via": "embed",
+      "fetched": "2026-10-17T22:01Z",
+      "sha256": "967ca70b8879116be66fdc1e0326f7d5e52a25016b9833db721fb237d018a48a",
+      "saw": "The venue's own \"Reservations at Southern Cross\" page (its \"Book\" button) embeds exactly this ResDiary widget. The venue's URL ends in a bare `?`, dropped.",
+      "http": {
+        "status": 200,
+        "finalUrl": "https://booking.resdiary.com/widget/Standard/thecross/5879"
+      },
+      "rendered": "ResDiary widget for \"The Cross\" (the Southern Cross's trading name on the platform): party size, date and time pickers. Read in headless Chrome on 2026-10-18."
+    }
+  ]
+}
