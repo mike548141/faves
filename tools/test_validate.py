@@ -404,6 +404,10 @@ CASES = {
     # does not carry would mark nothing and let the real estimate show unmarked.
     "prepMinutes is prose": (lambda d: _first_item(d).update(prepMinutes="20 min"), "error", r"prepMinutes for .* must be a whole number of minutes"),
     "difficulty off the scale": (lambda d: _first_item(d).update(difficulty="fiendish"), "error", r"difficulty 'fiendish' on .* is not one of"),
+    # --- what a recipe makes (17a) ----------------------------------------
+    "yield is a number, not words": (lambda d: _first_item(d).update(**{"yield": 12}), "error", r"yield for .* must be a non-empty string"),
+    "yield is blank": (lambda d: _first_item(d).update(**{"yield": "  "}), "error", r"yield for .* must be a non-empty string"),
+    "yield is a paragraph": (lambda d: _first_item(d).update(**{"yield": "x" * 81}), "error", r"yield for .* must be a non-empty string"),
     "estimated names an absent field": (lambda d: _first_item(d).update(estimated=["cookMinutes"]), "error", r"estimated on .* names 'cookMinutes', which the dish does not carry"),
     "estimated names a field that cannot be estimated": (lambda d: _first_item(d).update(price=5, estimated=["price"]), "error", r"estimated on .* names 'price', which is not one of"),
     # --- values, not just types (the class the first run found a hole in) --
