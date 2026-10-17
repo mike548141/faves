@@ -19,14 +19,52 @@
   "phone": "04 473 3311",
   "website": "https://kebabcentral.co.nz",
   "ordering": [],
-  "hours": null,
+  "hours": {
+    "mon": [
+      [
+        "10:00",
+        "21:30"
+      ]
+    ],
+    "tue": [
+      [
+        "10:00",
+        "21:30"
+      ]
+    ],
+    "wed": null,
+    "thu": [
+      [
+        "10:00",
+        "00:30"
+      ]
+    ],
+    "fri": [
+      [
+        "10:00",
+        "02:30"
+      ]
+    ],
+    "sat": [
+      [
+        "10:00",
+        "02:30"
+      ]
+    ],
+    "sun": [
+      [
+        "10:00",
+        "21:30"
+      ]
+    ]
+  },
   "vibe": [
     "counter-order",
     "cheap-and-cheerful"
   ],
   "verified": "2026-09-07",
   "verifiedBy": "official-site",
-  "detailsVerified": "2026-09-07",
+  "detailsVerified": "2026-10-18",
   "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"

@@ -9,6 +9,7 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Opening hours for three more places, from their own sites.** Abrakebabra (its published week, with Wednesday left as "not published" because its site gives no Wednesday line), Golding's Free Dive (midday to 11pm daily) and Wellington Sourdough (7:30am to 2:30pm daily) now show when they are open, and the last two link to their own site. Hotel Bristol was re-read and left alone: its page contradicts itself.
 - **A recipe says what it makes as well as who it serves, and you can pick how many people to cook for.** Hotcakes, Liège waffles, queen cakes and the Turkish flatbread now show "Makes 12 waffles" beside "Serves", labelled apart, because the two are different numbers. Above the ingredients, "Serve – 4 +" rescales the whole recipe to that many people, and cook mode and the shopping list follow it. Where the recipe's own serving count is our estimate it says "Written for about 4 people". The ½×/1×/2×/3× buttons stay.
 - **Sizes and fillings that were separate rows are now one dish with a choice.**
   Pizza Pomodoro's 26 pizzas (Small and Large), Wellington Kebab's mixed kebabs
