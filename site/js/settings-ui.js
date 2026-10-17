@@ -406,6 +406,7 @@ function dataSection(syncCtl) {
       if (s.notes) bits.push(`${s.notes} ${s.notes === 1 ? "note" : "notes"}`);
       if (s.recipes) bits.push(`${s.recipes} ${s.recipes === 1 ? "recipe" : "recipes"}`);
       if (s.savedOrders) bits.push(`${s.savedOrders} saved ${s.savedOrders === 1 ? "order" : "orders"}`);
+      if (s.activity) bits.push(`${s.activity} activity ${s.activity === 1 ? "entry" : "entries"}`);
       if (s.orderItems) bits.push(`${s.orderItems} order ${s.orderItems === 1 ? "item" : "items"}`);
       status.textContent = `Saved ${name} — ${bits.join(", ")}.`;
     } catch {

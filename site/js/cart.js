@@ -14,6 +14,7 @@ import { safeStorage } from "./store.js";
 import { migrateEntries } from "./renames.js";
 import { selectionKey } from "./addons.js";
 import { dishId } from "./dish-id.js";
+import { activity, subjectOf } from "./activity.js";
 
 const KEY = "faves.order.v1";
 
@@ -279,8 +280,19 @@ export function dishQtyTotal(items, venueId, id) {
  * one storage backend never see each other: each reads and writes only its own
  * key, and `commit()` notifies only its own subscribers.
  */
-export function createOrder(storage, key = KEY) {
+export function createOrder(storage, key = KEY, { record = null } = {}) {
   const subs = new Set();
+  // `record(kind, subject, from, to)` is told, AFTER the tally has been written,
+  // what the person just did (activity.js, Theme 32a); from/to are the line's
+  // quantity before and after. Only the order tally's singleton passes it — the
+  // shopping list shares this code and is not the person's activity.
+  const log = (kind, line, from, to) => {
+    try {
+      record?.(kind, line ? subjectOf(line, { line: true }) : {}, from, to);
+    } catch {
+      /* the log must never stop an order saving */
+    }
+  };
 
   function read() {
     try {
@@ -333,6 +345,7 @@ export function createOrder(storage, key = KEY) {
       const options = meta.options || [];
       const note = normaliseNote(meta.note);
       const ex = find(meta.venueId, dishId(meta), selectionKey(options), note);
+      const was = ex ? ex.qty : 0;
       if (ex) ex.qty += 1;
       else {
         const line = {
@@ -357,21 +370,30 @@ export function createOrder(storage, key = KEY) {
         items.push(line);
       }
       commit();
+      log("order.add", meta, was, was + 1);
     },
 
     /** Set an exact quantity; 0 (or less) removes the line. */
     setQty(venueId, id, qty, sel = "", note = "") {
       const ex = find(venueId, id, sel, note);
       if (!ex) return;
+      const was = ex.qty;
       if (qty <= 0) items = items.filter((i) => i !== ex);
       else ex.qty = qty;
       commit();
+      // Up is an add, down (or to nothing) is a remove: the vocabulary has no
+      // "change quantity", and the from/to say how far.
+      const now = Math.max(qty, 0);
+      if (now > was) log("order.add", ex, was, now);
+      else if (now < was) log("order.remove", ex, was, now);
     },
 
     remove(venueId, id, sel = "", note = "") {
       const target = `${venueId}\n${id}\n${sel}\n${normaliseNote(note)}`;
+      const gone = items.find((i) => lineKey(i) === target);
       items = items.filter((i) => lineKey(i) !== target);
       commit();
+      if (gone) log("order.remove", gone, gone.qty, 0);
     },
 
     /** Collect mode: tick an item off as it's handed over. */
@@ -452,13 +474,21 @@ export function createOrder(storage, key = KEY) {
     /** Fold a decoded shared order (group ordering, Theme 1b) into this one,
      *  summing matching lines. `incoming` is share-codec's decoded item list. */
     merge(incoming) {
+      const had = new Map(items.map((i) => [lineKey(i), i.qty]));
       items = mergeItems(items, incoming);
       commit();
+      // A received order or a recalled usual adds lines the same way a tap does.
+      for (const i of items) {
+        const was = had.get(lineKey(i)) || 0;
+        if (i.qty > was) log("order.add", i, was, i.qty);
+      }
     },
 
     clear() {
+      const was = orderCount(items);
       items = [];
       commit();
+      if (was > 0) log("order.clear", null, was, 0);
     },
 
     /** Re-read from storage (e.g. after a cross-tab `storage` event). */
@@ -475,4 +505,4 @@ export function createOrder(storage, key = KEY) {
 }
 
 // The shared singleton every screen uses.
-export const order = createOrder(safeStorage());
+export const order = createOrder(safeStorage(), KEY, { record: activity.record });

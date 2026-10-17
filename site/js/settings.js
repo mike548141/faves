@@ -31,6 +31,7 @@ import { profileScopedStorage } from "./profiles.js";
 import { FAR_KM, FAV_BOOST_KM } from "./defaults.js";
 import { UNITS, DEFAULT_UNITS, unitUsage } from "./units.js";
 import { localLanguage, localUnits } from "./locale.js";
+import { activity, changedDials } from "./activity.js";
 
 const KEY = "faves.settings.v1";
 
@@ -408,8 +409,23 @@ function resolveLocals(state) {
   };
 }
 
-export function createSettings(storage) {
+/**
+ * `record(kind, subject)` is told, AFTER a change has been written, WHICH dial
+ * moved — never what it moved to (activity.js, Theme 32a). A flagged allergen
+ * is a health fact about a named person, the one class this repo never stores,
+ * so the only thing handed over is a dial's name; activity.js refuses anything
+ * else for this kind. Only the singleton passes it: an import, which sets many
+ * dials through `set`, records nothing.
+ */
+export function createSettings(storage, { record = null } = {}) {
   const subs = new Set();
+  const log = (kind, label) => {
+    try {
+      record?.(kind, { label });
+    } catch {
+      /* the log must never stop a setting saving */
+    }
+  };
 
   function read() {
     try {
@@ -439,12 +455,15 @@ export function createSettings(storage) {
     raw: () => state,
     /** Merge a partial change ({favBoostKm} and/or {farKm}); values clamped. */
     set(patch) {
+      const before = state;
       state = sanitise({ ...state, ...patch });
       commit();
+      for (const dial of changedDials(before, state)) log("settings.change", dial);
     },
     reset() {
       state = sanitise({}); // fresh defaults (never alias DEFAULTS' arrays)
       commit();
+      log("reset.performed", "settings");
     },
     reload() {
       state = read();
@@ -460,4 +479,4 @@ export function createSettings(storage) {
 // Per-profile: dietary/allergen prefs are safety-critical and differ per
 // person, so the whole settings store is namespaced by the active profile (see
 // ADR 0012 for why the reo language rides along per-profile too).
-export const settings = createSettings(profileScopedStorage());
+export const settings = createSettings(profileScopedStorage(), { record: activity.record });

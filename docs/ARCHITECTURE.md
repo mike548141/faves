@@ -1396,6 +1396,18 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   never syncs or migrates, like the cook ticks) but inside the profile-delete purge; the
   backup file carries it as a named per-person `savedOrders` field, only when
   `collectPersonalData(…, { localOnly: true })` — which sync never passes.
+- **Activity log** (`faves.activity.v1`, Theme 32a/32d, ADR 0164): `activity.js` —
+  an append-only ring buffer of `{ at, kind, subject: { venue?, dish?, label? },
+  from, to }`, the newest `ACTIVITY_CAP` (500) kept, the label snapshotted at write
+  time. **Per person and on this device only**: outside `SCOPED_BASE_KEYS` and the
+  sync snapshot (a test fails if `sync.js` names it), inside the profile-delete
+  purge and a replace import; the backup file carries it as a named per-person
+  `activity` field (`localOnly`, merged by union). Honest by the owner's ruling: no
+  per-entry delete, entries frozen, `clear()` the only deletion. Recorded by the
+  singletons only, after their own write, never throwing: favourites, ratings, the
+  order tally, profile switch, settings. **`settings.change` names the dial, never
+  the value** — enforced in `makeEntry` (a closed list of eight dials; from/to
+  discarded), so no allergen or diet value can reach it. No screen yet (32b).
 - **Favourites** (`faves.favourites.v1`): `favourites.js` — a set of
   hearted venues + dishes (denormalised so the view renders from storage
   alone; the deep-link href is derived from the shared `slug`).
