@@ -180,6 +180,32 @@ function newWindowWarning() {
   return el("span", { className: "sr-only", "data-i18n": "menu.opensNewWindow", textContent: " (opens in a new window)" });
 }
 
+// A venue's own booking link (roadmap 33a, ADR 0165). An ordinary https link
+// that opens the platform the venue itself uses — in a new window, because that
+// is the one thing target="_blank" guarantees — and never an in-app flow: Faves
+// cannot see, hold or change a booking, so it must not look like it does. The
+// label is the same for every venue; the platform is the value line, so the
+// reader sees where the tap goes before they make it. There is deliberately no
+// "Call to book" counterpart: the Call row already says what it does, and a
+// label claiming a venue takes bookings by phone needs a source we do not hold.
+function bookingRows(r) {
+  const out = [];
+  for (const o of r.ordering || []) {
+    if (o.kind !== "booking") continue;
+    out.push(
+      el("a", { className: "contact-row contact-book", href: o.url, rel: "noopener", target: "_blank" }, [
+        el("span", { className: "contact-ico", textContent: "📅", "aria-hidden": "true" }),
+        el("span", { className: "contact-text" }, [
+          el("span", { className: "contact-label", "data-i18n": "menu.bookTable", textContent: "Book a table" }),
+          el("span", { className: "contact-value", textContent: o.platform }),
+          newWindowWarning(),
+        ]),
+      ])
+    );
+  }
+  return out;
+}
+
 // Pickup address — hand off to the maps app to show the venue *on a map* (a pin
 // at its street address; see geo.js / ADR 0016). `place` is a {name,address,lat,
 // lng} — for a multi-location venue it's the chosen branch, so the pin targets
@@ -415,6 +441,7 @@ function contactCard(r) {
     // hint, which is exactly what we want when Near-me hasn't captured a location.
     return el("div", { className: "contact-card" }, [
       ...branchRows(r, orderedBranches(r, recallOrigin())[0], clock),
+      ...bookingRows(r),
       venueReportRow(r),
     ]);
   }
@@ -469,7 +496,7 @@ function contactCard(r) {
       ".",
     ]));
   }
-  card.append(venueReportRow(r));
+  card.append(...bookingRows(r), venueReportRow(r));
   return card;
 }
 
@@ -478,7 +505,9 @@ function orderCard(r) {
   if (r.website) {
     links.push({ platform: "Website", url: r.website });
   }
-  for (const o of r.ordering || []) links.push(o);
+  // A booking link belongs on the contact card (bookingRows), not under "Order
+  // online": booking a table is not ordering food, and the heading would lie.
+  for (const o of r.ordering || []) if (o.kind !== "booking") links.push(o);
   if (!links.length) return null;
 
   const btns = el("div", { className: "order-links" });
