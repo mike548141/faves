@@ -1,4 +1,4 @@
-- [ ] **"Delete everything": the second Reset the owner ruled, never built**
+- [~] **"Delete everything": the second Reset the owner ruled, never built**
       `[M][js][safety]` — filed 2026-10-18 by `faves-b4`. Found while closing
       32d: the ruling is in [roadmap 430](../430-owner-rulings-2026-08-16-end-of-the-branch-pic/README.md)
       and no item carried it, so nothing was going to build it.
@@ -19,3 +19,5 @@
   profiles, deletes everything, and asserts each is empty; plus `sync_check`
   coverage of the propagation, since a wipe that a second device re-uploads
   is not a wipe.
+
+  (claimed 2026-10-17-2254, faves-b4, wt: faves-180-010)

@@ -132,7 +132,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/180-theme-12-export-your-data-owner-raised-2026-08/README.md)*
 
-- [ ] ["Delete everything": the second Reset the owner ruled, never built](roadmap/180-theme-12-export-your-data-owner-raised-2026-08/010-delete-everything-the-second-reset.md)
+- [~] ["Delete everything": the second Reset the owner ruled, never built](roadmap/180-theme-12-export-your-data-owner-raised-2026-08/010-delete-everything-the-second-reset.md)
 
 ## Theme 13 — What the time dimension unlocks (owner-raised 2026-08-08)
 
