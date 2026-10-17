@@ -251,3 +251,23 @@
   carrying neither `contains-gluten` nor `gf`, because **neither tool reads a
   section's name**. Re-measured independently by the orchestrator before
   filing: 230 items in those sections, 162 tagged, **68 not**, across 5 venues.
+
+  ✅ **SAUSAGE VETOES CONVERTED 2026-10-18 (worker `w/470-030`, tools only).**
+  The sausage class's `exclude` is gone: sausage roll, chorizo, salami,
+  pepperoni, kransky, lap cheong and Chinese sausage now narrow the `sausages?`
+  token itself — a lookbehind per preceding word (`_NOT_RUSK_SAUSAGE`, one per
+  separator because a lookbehind is fixed-width; `italian` joined the same
+  list) and a lookahead for a following `roll(s)`. A line naming both an
+  excluded sausage and a plain one now keeps the plain one watched. Class
+  membership: **30 → 32 rows**, and the only two to move are
+  `daily-bakery/sausage-roll` and `pizza-pomodoro/carne` — the item counted
+  three because Carne's size variants (`carne-small`, `carne-large`) are
+  `formerIds` of the one dish. 🔑 **The report is byte-identical before and
+  after (1 split, 1 row, still `abrakebabra/pizza-slice`)**, because all of them
+  already carry `contains-gluten`: this is a mechanism fix with no visible
+  effect today, protecting the next menu that prints "salami, ham, and sausage"
+  on a row without the tag. `test_allergen_disagreements.py` 14 → 20 cases
+  (incl. the `'Caramel slice, with slices of ham'` control) and 6 → 11 breakers;
+  with the original tool put back the three positive R4 cases fail, and
+  `b7`/`b8` (veto rebuilt) are each caught by exactly their own two cases.
+  `abrakebabra/pizza-slice` and `--strict` are untouched and remain the owner's.

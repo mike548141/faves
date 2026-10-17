@@ -62,6 +62,18 @@ from tag_allergens import CONTRADICTED_BY, ingredient_lines, section_clauses  # 
 
 DATA = pathlib.Path("site/data/restaurants")
 
+# The sausages that are not an NZ rusk sausage when they PRECEDE the word
+# "sausage" ("chorizo sausage", "Chinese sausages"). One lookbehind per word and
+# per separator because a lookbehind must be fixed-width. See the `sausage`
+# class for why this is a lookbehind and not an `exclude`.
+_NOT_RUSK_SAUSAGE = ("italian", "chorizo", "salami", "pepperoni", "kransky",
+                     "lap cheong", "lapcheong", "chinese")
+_SAUSAGE_TOKEN = (
+    "".join(f"(?<!{w}{sep})" for w in _NOT_RUSK_SAUSAGE for sep in (" ", "-"))
+    # …and "sausage roll(s)" is pastry: neutralise the word it is part of.
+    + r"sausages?(?!\s?rolls?\b)"
+)
+
 # (name, why this is one food, match, exclude, watch)
 #
 # `watch` is the point of the row: the allergens this class is ABOUT. It is
@@ -75,42 +87,39 @@ CLASSES = [
         "an NZ sausage is bound with wheat rusk unless the butcher says otherwise",
         # AN ITALIAN SAUSAGE IS A CONTINENTAL SAUSAGE (owner-ruled 2026-09-21).
         # Salsiccia is coarse-ground pork, salt and fennel in a natural casing —
-        # no wheat rusk — so it belongs beside the chorizo and salami in the
-        # exclude below, and the two Bambina rows carrying no gluten tag are not
-        # a gap. Nothing is tagged or untagged by this: the class is what the
-        # REPORT groups by, and this tool never writes.
-        # 🛑 It is a LOOKBEHIND on the `sausages?` alternative and NOT a new
-        # entry in `exclude`, and the difference is the one this repo has paid
-        # for twice (the water chestnut beside the almonds in
-        # `tag_allergens.py`, and the cabinet slice in this item's own sweep).
-        # `exclude` vetoes the row's membership of the whole class, so a big
-        # breakfast reading "pork sausages, italian sausage, eggs" would stop
-        # being watched for the rusk in its PORK sausages — an over-warning
-        # traded for a miss, the one direction a safety report may not move. The
-        # lookbehind neutralises only the alternative an "italian " precedes and
-        # leaves every other sausage word on the line matching. Two fixed-width
-        # forms because each lookbehind must be one.
-        r"\b((?<!italian )(?<!italian-)sausages?|snarlers?|cheerios?|saveloys?|"
-        r"savs?|bangers?|frankfurters?|hot\s?dogs?|hotdogs?)\b",
+        # no wheat rusk — so it sits beside the chorizo and salami below, and the
+        # two Bambina rows carrying no gluten tag are not a gap. Nothing is
+        # tagged or untagged by this: the class is what the REPORT groups by,
+        # and this tool never writes.
+        # 🛑 EVERY ONE OF THEM IS NARROWED ON THE `sausages?` TOKEN (a lookbehind
+        # for the word before it, a lookahead for "roll" after it) AND NONE IS AN
+        # `exclude` ENTRY, and the difference is the one this repo has paid for
+        # three times (the water chestnut beside the almonds in
+        # `tag_allergens.py`, the cabinet slice in this item's own sweep, and the
+        # sausage vetoes below). `exclude` vetoes the row's membership of the
+        # whole class, so a big breakfast reading "pork sausages, italian
+        # sausage, eggs" would stop being watched for the rusk in its PORK
+        # sausages — an over-warning traded for a miss, the one direction a
+        # safety report may not move. The narrowing neutralises only the
+        # `sausages?` an excluded word belongs to and leaves every other sausage
+        # word on the line matching.
+        # The vetoes this replaced (2026-10-18, roadmap 470/030) were live, not
+        # hypothetical: of the 11 rows they caught, THREE named a sausage that
+        # was no part of the excluded phrase — daily-bakery/sausage-roll
+        # ("pastry filled with savoury sausage") and pizza-pomodoro's Carne small
+        # and large ("salami, ham, and sausage") — and were silenced. All three
+        # already carry contains-gluten, so the REPORT READS THE SAME EITHER WAY;
+        # that is why nobody saw it, and why test_allergen_disagreements.py
+        # asserts it on synthetic lines instead.
         # A sausage ROLL is pastry — its gluten is obvious and its class is
         # different. Cured continental sausages are a different food entirely:
-        # chorizo, salami, pepperoni and lap cheong carry no rusk, and lumping
-        # them in is exactly the false positive that makes a report ignorable.
-        # ⚠️ These are vetoes of the shape the paragraph above declines, they
-        # carry the same fault, AND THE FAULT IS LIVE — measured 2026-09-24, of
-        # the 11 rows this veto catches, THREE also name a sausage that is no
-        # part of the excluded phrase, so a true rusk claim is silenced:
-        # daily-bakery/sausage-roll ("pastry filled with savoury sausage",
-        # vetoed by `sausage roll`) and pizza-pomodoro's Carne small and large
-        # ("salami, ham, and sausage", vetoed by `salami`). All three already
-        # carry contains-gluten, so THE REPORT READS THE SAME EITHER WAY, which
-        # is why it went unnoticed — and the first measurement of it counted the
-        # vetoed rows without asking that second question and concluded
-        # "nothing is wrong today". Reported rather than changed: converting
-        # these to lookbehinds is a separate finding, not part of the
-        # 2026-09-21 rulings, and it wants its own break-probe.
-        r"\bsausage\s?rolls?\b|\b(chorizo|salami|pepperoni|kransky|lap\s?cheong|"
-        r"chinese\s+sausages?)\b",
+        # chorizo, salami, pepperoni, kransky and lap cheong carry no rusk, and
+        # lumping them in is exactly the false positive that makes a report
+        # ignorable. Lookbehinds must be fixed-width, so each word is spelled
+        # once per separator (space, hyphen) by `_NOT_RUSK_SAUSAGE`.
+        r"\b(" + _SAUSAGE_TOKEN + r"|snarlers?|cheerios?|saveloys?|"
+        r"savs?|bangers?|frankfurters?|hot\s?dogs?|hotdogs?)\b",
+        None,
         ["contains-gluten"],
     ),
     (

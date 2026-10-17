@@ -16,6 +16,13 @@ each narrowing is the kind that is right today and quietly wrong tomorrow:
     ruled it will never infer;
   • an Italian sausage leaves the wheat-rusk class.
 
+A fourth block (`R4`, roadmap `470/030`, 2026-10-18) pins the conversion of the
+REMAINING sausage vetoes — sausage roll, chorizo, salami, pepperoni, kransky,
+lap cheong, Chinese sausage — from row-level `exclude` entries to narrowing on
+the `sausages?` token, so a line naming both a salami and a plain sausage keeps
+the plain one watched. `b7`/`b8` rebuild them as the veto; `b9`–`b11` widen the
+class instead.
+
 METHOD. Two halves, and the second is the one that matters.
 
   1. CASES assert what the table does — against the real corpus for the rows
@@ -194,8 +201,60 @@ CASES = {
     out = report()
     assert "## sausage" not in out, out[out.index("## sausage"):][:400]
 ''',
+
+    # --- roadmap 470/030, 2026-10-18: the OTHER sausage vetoes, narrowed ----
+    # (sausage roll, chorizo, salami, pepperoni, kransky, lap cheong, Chinese
+    # sausage). Ruling 3 declined the veto shape for one phrase; these six
+    # cases pin that the rest follow it. 🔑 THE REPORT READS THE SAME EITHER
+    # WAY — all three rows the veto silenced already carry contains-gluten —
+    # so the corpus case below proves membership and only the synthetic lines
+    # can prove the MECHANISM.
+    "R4 the sausage roll and the Carne pizza are watched again": '''
+    for i in ("daily-bakery/sausage-roll", "pizza-pomodoro/carne"):
+        assert i in ids("sausage"), i + " is still silenced by a veto"
+    assert len(G["sausage"]) >= 32, len(G["sausage"])
+''',
+    "R4 a salami on the line does not silence the plain sausage": '''
+    c = synthetic("Carne  Pizza with salami, ham, and sausage.")
+    assert c["sausage"], \\
+        "the plain sausage left the wheat-rusk class because a salami shared " \\
+        "its line — a continental word vetoed the row instead of narrowing"
+''',
+    "R4 a sausage roll's own filling stays watched": '''
+    c = synthetic("Sausage Roll  Flaky pastry filled with savoury sausage.")
+    assert c["sausage"], \\
+        "the 'savoury sausage' in the filling left the class because the " \\
+        "dish is called a sausage roll — the veto, not the narrowing"
+''',
+    "R4 a sausage roll alone is not a rusk sausage": '''
+    # (a hyphenated "sausage-roll" was never read by the old veto either, so it
+    # is deliberately not asserted here: no behaviour changed on that edge)
+    for t in ("Sausage Roll", "Sausage rolls with tomato sauce", "Mini sausage rolls"):
+        assert not synthetic(t)["sausage"], t + " joined the sausage class"
+''',
+    "R4 a continental sausage by name is not a rusk sausage": '''
+    for t in ("Spanish chorizo sausage", "Chinese sausages, steamed rice",
+              "Lap cheong sausage fried rice", "Salami sausage", "Kransky sausage",
+              "Pepperoni sausages", "Chorizo-sausage roll", "Salami and cheese",
+              "Pepperoni pizza", "Kransky with mustard"):
+        assert not synthetic(t)["sausage"], t + " joined the sausage class"
+''',
+    # The control: it fails if the class is WIDENED rather than narrowed.
+    "R4 a ham-slice line does not join the sausage class": '''
+    assert not synthetic("Caramel slice, with slices of ham")["sausage"]
+''',
 }
 
+# The sausage class's exclude slot and the lookbehind word list, as they read
+# in the tool today — the breakers below patch these exact spellings.
+SAUSAGE_NONE = (r'r"savs?|bangers?|frankfurters?|hot\s?dogs?|hotdogs?)\b",' + "\n        None,")
+CONTINENTAL = ('_NOT_RUSK_SAUSAGE = ("italian", "chorizo", "salami", "pepperoni", "kransky",\n'
+               '                     "lap cheong", "lapcheong", "chinese")')
+
+# On b9–b11 the R3 report case is a SECOND, outcome-level detector and is
+# listed as covered on purpose: those three widen the class, and the rows that
+# join (chorizo, sausage rolls, slices) carry no gluten tag, so the report
+# starts to fire. b7/b8 cannot do that — the rows they hide are tagged.
 # bug label -> ([(old, new), …], {cases that must fail — and only these})
 BREAKERS = {
     "b1 the Turkish pizzas fall back into the cheese class": (
@@ -209,16 +268,14 @@ BREAKERS = {
         {"R1 a Turkish pizza is still watched for gluten"},
     ),
     "b3 the Italian sausage is VETOED instead of narrowed": (
-        [(r'r"\b((?<!italian )(?<!italian-)sausages?|snarlers?|cheerios?|saveloys?|"',
-          r'r"\b(sausages?|snarlers?|cheerios?|saveloys?|"'),
-         (r'r"\bsausage\s?rolls?\b|\b(chorizo|salami|pepperoni|kransky|lap\s?cheong|"',
-          r'r"\bsausage\s?rolls?\b|\b(italian\s+sausages?|chorizo|salami|pepperoni|'
-          r'kransky|lap\s?cheong|"')],
+        [('_NOT_RUSK_SAUSAGE = ("italian", "chorizo",',
+          '_NOT_RUSK_SAUSAGE = ("chorizo",'),
+         (SAUSAGE_NONE, SAUSAGE_NONE.replace("None,", 'r"\\bitalian\\s+sausages?\\b",'))],
         {"R3 a plate naming BOTH sausages keeps the plain one watched"},
     ),
     "b4 an Italian sausage is an ordinary NZ sausage again": (
-        [(r'r"\b((?<!italian )(?<!italian-)sausages?|snarlers?|cheerios?|saveloys?|"',
-          r'r"\b(sausages?|snarlers?|cheerios?|saveloys?|"')],
+        [('_NOT_RUSK_SAUSAGE = ("italian", "chorizo",',
+          '_NOT_RUSK_SAUSAGE = ("chorizo",')],
         {"R3 an Italian sausage is out of the wheat-rusk class",
          "R3 no sausage row is reported for a missing gluten tag"},
     ),
@@ -236,6 +293,33 @@ BREAKERS = {
          (r'r"\bpizza\s+(sauce|spice|seasoning)\b"',
           r'r"\bpizza\s+(sauce|spice|seasoning)\b|\bturkish\s+pizzas?\b"')],
         {"R1 a line naming BOTH pizzas keeps the Italian one watched"},
+    ),
+    "b7 the sausage ROLL is VETOED instead of narrowed": (
+        [(SAUSAGE_NONE, SAUSAGE_NONE.replace("None,", 'r"\\bsausage\\s?rolls?\\b",'))],
+        {"R4 the sausage roll and the Carne pizza are watched again",
+         "R4 a sausage roll's own filling stays watched"},
+    ),
+    "b8 the continental sausages are VETOED instead of narrowed": (
+        [(CONTINENTAL, '_NOT_RUSK_SAUSAGE = ("italian",)'),
+         (SAUSAGE_NONE, SAUSAGE_NONE.replace("None,",
+          'r"\\b(chorizo|salami|pepperoni|kransky|lap\\s?cheong|chinese\\s+sausages?)\\b",'))],
+        {"R4 the sausage roll and the Carne pizza are watched again",
+         "R4 a salami on the line does not silence the plain sausage"},
+    ),
+    "b9 a continental sausage is an ordinary NZ sausage again": (
+        [(CONTINENTAL, '_NOT_RUSK_SAUSAGE = ("italian",)')],
+        {"R4 a continental sausage by name is not a rusk sausage",
+         "R3 no sausage row is reported for a missing gluten tag"},
+    ),
+    "b10 a sausage roll is an ordinary NZ sausage again": (
+        [('sausages?(?!\\s?rolls?\\b)"', 'sausages?"')],
+        {"R4 a sausage roll alone is not a rusk sausage",
+         "R3 no sausage row is reported for a missing gluten tag"},
+    ),
+    "b11 the sausage class is WIDENED to any slice": (
+        [('r"\\b(" + _SAUSAGE_TOKEN + r"|snarlers?', 'r"\\b(" + _SAUSAGE_TOKEN + r"|slices?|snarlers?')],
+        {"R4 a ham-slice line does not join the sausage class",
+         "R3 no sausage row is reported for a missing gluten tag"},
     ),
 }
 
