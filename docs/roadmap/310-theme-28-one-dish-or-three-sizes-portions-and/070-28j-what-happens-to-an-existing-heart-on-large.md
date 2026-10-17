@@ -1,4 +1,4 @@
-- [ ] 🎯 **28j — What happens to an existing heart on "Large Butter Chicken"**
+- [x] 🎯 **28j — What happens to an existing heart on "Large Butter Chicken"**
       `[S][design][js]` — small as an ask, `[M]`–`[L]` as whichever option is
       chosen (costed below). The second thing `490/050` says is **owed before
       build**:
@@ -112,3 +112,9 @@
   🔨 **2026-10-02 (`faves-4f`):** the ruled absorption is built under 28l
   (PR #86, ADR 0153), including the favourites-filter follow-on. Follow-on 3
   (a saved order line on a retired row) is an open fork recorded on 28l.
+  ✅ **Closed 2026-10-17 (faves-b4).** Nothing is left: the ruling is built
+  (PR #86, ADR 0153), and follow-on 3 was ruled on 28l the same day
+  (*"accept both recommendations"* — the saved-order edge case is accepted for
+  now). 28o part 1 then exercised it on 76 real ids, and `rename_check`
+  asserts a heart and a rating reach a merged dish through `formerIds`.
+

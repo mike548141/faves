@@ -254,7 +254,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [28e (original filing) — eligibility is unstated](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/040-28e-original-filing-eligibility-is-unstated.md)
 - ✅ [28h — The variant enumerator: nothing else here can be sized without](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/050-28h-the-variant-enumerator-nothing-can-be-plan.md)
 - [ ] 🎯 [28i — The ruling cannot be built for a protein ladder without one](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/060-28i-the-ruling-cannot-be-built-for-a-protein-l.md)
-- [ ] 🎯 [28j — What happens to an existing heart on "Large Butter Chicken"](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/070-28j-what-happens-to-an-existing-heart-on-large.md)
+- ✅ 🎯 [28j — What happens to an existing heart on "Large Butter Chicken"](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/070-28j-what-happens-to-an-existing-heart-on-large.md)
 - ✅ [28k — A group that SELECTS a variant: schema only, no data migrated](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/080-28k-a-group-that-selects-a-variant-schema-only.md)
 - ✅ [28l — The absorption mechanics, and the gate that must exist BEFORE a](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/090-28l-the-absorption-mechanics-and-the-gate-that.md)
 - ✅ [28m — Render a selects group, and put its choice on the order line](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/100-28m-render-a-selects-group-and-put-its-choice.md)
