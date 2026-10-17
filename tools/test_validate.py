@@ -435,6 +435,25 @@ CASES = {
     "yield is a number, not words": (lambda d: _first_item(d).update(**{"yield": 12}), "error", r"yield for .* must be a non-empty string"),
     "yield is blank": (lambda d: _first_item(d).update(**{"yield": "  "}), "error", r"yield for .* must be a non-empty string"),
     "yield is a paragraph": (lambda d: _first_item(d).update(**{"yield": "x" * 81}), "error", r"yield for .* must be a non-empty string"),
+    # --- how a dish is sold: minQty and unit (roadmap 200/170, ADR 0163) ---
+    # A minimum of 1 is the default, so a stored 1 is noise; a float or a string
+    # is the shape a transcriber types from "minimum order 3". Each of these is a
+    # form the stepper would otherwise have to guess at.
+    "minQty of 3 is accepted": (lambda d: _first_item(d).update(price=5, minQty=3), None, None),
+    "minQty of 1 is refused": (lambda d: _first_item(d).update(price=5, minQty=1), "error", r"minQty for .* must be a whole number of 2 or more"),
+    "minQty of 0 is refused": (lambda d: _first_item(d).update(price=5, minQty=0), "error", r"minQty for .* must be a whole number of 2 or more"),
+    "minQty is a string": (lambda d: _first_item(d).update(price=5, minQty="3"), "error", r"minQty for .* must be a whole number of 2 or more"),
+    "minQty is a float": (lambda d: _first_item(d).update(price=5, minQty=2.5), "error", r"minQty for .* must be a whole number of 2 or more"),
+    "minQty is a boolean": (lambda d: _first_item(d).update(price=5, minQty=True), "error", r"minQty for .* must be a whole number of 2 or more"),
+    "minQty on a dish with no price is accepted (oysters at market price)": (lambda d: _first_item(d).update(price=None, minQty=3), None, None),
+    "a known unit with a price is accepted": (lambda d: _first_item(d).update(price=5, unit="each"), None, None),
+    "unit outside the vocabulary": (lambda d: _first_item(d).update(price=5, unit="per kg"), "error", r"unit for .* must be one of"),
+    "unit in the wrong case": (lambda d: _first_item(d).update(price=5, unit="Each"), "error", r"unit for .* must be one of"),
+    "unit is not a string": (lambda d: _first_item(d).update(price=5, unit=1), "error", r"unit for .* must be one of"),
+    "unit on a dish with no price": (lambda d: _first_item(d).update(price=None, unit="each"), "error", r"unit 'each' on .*: the dish has no price"),
+    "weighed unit carrying a minimum": (lambda d: _first_item(d).update(price=26, unit="per 100 g", minQty=2), "error", r"is priced 'per 100 g' and also has a minQty"),
+    "per-person unit carrying a minimum is accepted": (lambda d: _first_item(d).update(price=12, unit="per person", minQty=2), None, None),
+    "minQty on a recipe": (lambda d: (d.update(kind="recipes"), _first_item(d).update(minQty=2)), "error", r"minQty on .*: a recipe is cooked, not ordered"),
     "estimated names an absent field": (lambda d: _first_item(d).update(estimated=["cookMinutes"]), "error", r"estimated on .* names 'cookMinutes', which the dish does not carry"),
     "estimated names a field that cannot be estimated": (lambda d: _first_item(d).update(price=5, estimated=["price"]), "error", r"estimated on .* names 'price', which is not one of"),
     # --- values, not just types (the class the first run found a hole in) --
