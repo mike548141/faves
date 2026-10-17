@@ -96,6 +96,30 @@
           ]
         }
       ]
+    },
+    {
+      "id": "protein-15p3-15p3",
+      "name": "Protein",
+      "kind": "selects",
+      "options": [
+        {
+          "name": "Chicken",
+          "id": "chicken",
+          "dishPrice": 15.3,
+          "default": true,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Beef",
+          "id": "beef",
+          "dishPrice": 15.3,
+          "tags": [
+            "has-meat"
+          ]
+        }
+      ]
     }
   ],
   "menu": [
@@ -2618,8 +2642,12 @@
           "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
         },
         {
-          "name": "Chicken Bacon & Avo",
-          "dishId": "chicken-bacon-avo",
+          "name": "Bacon & Avo",
+          "dishId": "bacon-avo",
+          "formerIds": [
+            "chicken-bacon-avo",
+            "beef-bacon-avo"
+          ],
           "desc": null,
           "price": [
             {
@@ -2631,23 +2659,10 @@
             "contains-gluten",
             "contains-pork"
           ],
-          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
-        },
-        {
-          "name": "Beef Bacon & Avo",
-          "dishId": "beef-bacon-avo",
-          "desc": null,
-          "price": [
-            {
-              "value": 15.3,
-              "recorded": "2026-08-08"
-            }
-          ],
-          "tags": [
-            "contains-gluten",
-            "contains-pork"
-          ],
-          "tagNotes": {"contains-pork": "The menu says “Bacon”."}
+          "tagNotes": {"contains-pork": "The menu says “Bacon”."},
+          "addOns": [
+            "protein-15p3-15p3"
+          ]
         },
         {
           "name": "Beef & Camembert",

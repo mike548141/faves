@@ -1,6 +1,4 @@
-- [~] **28o — Merge the 63 ladders that differ only by name and price**
-  (claimed 2026-10-17-2046, faves-b4, wt: faves-310-120b)
-  PART 2 only: the three Takeaway @ Churton groups, which hold the history joins.
+- [x] **28o — Merge the 63 ladders that differ only by name and price**
       `[L][data]` — population B of `28h`, the mechanical half. **This is the
       first item in the whole decomposition that retires a `dishId`, and it
       must not start before `28l`'s gate exists.**
@@ -123,3 +121,58 @@
   🔎 The Donburi teriyaki sesame question (Mains carries `contains-sesame`,
   Donburi does not) stays open; the `validate.py` warning about it went quiet
   only because the Donburi row's name changed.
+
+  ✅ **Part 2 (faves-b4 worker, 2026-10-18): Takeaway @ Churton, one of its
+  three groups merged; the other two skipped.** The venue holds all the
+  history joins that sit in a ladder, which is why it was left last.
+  - **Merged: Bacon & Avo** (Chicken / Beef, both $15.30). Fresh id `bacon-avo`,
+    `formerIds` `chicken-bacon-avo` and `beef-bacon-avo`, a `selects` group
+    `protein-15p3-15p3` defaulting to Chicken (tied cheapest, first listed;
+    ADR 0157). `desc`, `tags` and `tagNotes` were identical on both rows; the
+    two `has-meat` option tags came from `tag_addon_options.py --apply`.
+  - **Skipped: Steamed Rice (Small / Medium / Large).** The three rows carry
+    different order `code`s (19 / 20 / 21), printed on the leaflet beside each
+    size and rendered as a `#code` badge on the row. A merged dish has one
+    `code` and an option has none, so a merge drops two of three. Same reason
+    as part 1's RS Satay rendang; open for the owner (whether an option may
+    carry a code).
+  - **Skipped: Toasted Sandwiches "Single Filling" / "Double Filling"**
+    ($4.80 / $6.50). Same tags, no desc, so the rows do agree, and the
+    leaflet prints them as one heading with two lines. But the stem the tool
+    finds is "Filling", which is not a dish: the leaflet names nothing the
+    merged dish could be called, and it never says what the fillings are
+    (Bacon & Egg is a separate named sandwich on the same panel). Any name
+    would be mine, not the menu's, so it is left for a human to name.
+  - **History joins: nothing re-keyed, on purpose.** The two Bacon & Avo
+    price-history rows (10.80, 2026-07-06) keep their retired-id keys and now
+    reach the dish through `formerIds` (`split_data.resolve_tier` reports both as
+    the "former" pass). ADR 0153 decision 4 says `split_data.py` leaves the
+    history alone, and its Rejected list refuses re-keying ("the rows record
+    what each size cost"). The sentence in *What each merge does* above that
+    says to re-key is superseded by it; `data/` is byte-identical to
+    `origin/main`.
+  - **Proof.** `split_data.py --check`: `368 of 368 history row(s) joined on
+    dishId · 0 still joined on the name alone`, the same line before and
+    after. `validate.py --against origin/main`: `2 id(s) answered to there are
+    not live ids now — 2 claimed in formerIds, 0 departed, 0 withdrawn, 0
+    answered for by nothing`, and 65 warnings before and after.
+    `find_variants.py`: mechanical 9 → 8, Bacon & Avo gone, Steamed Rice and
+    Toasted Sandwiches still listed. `check_records`, `seed_dish_ids`,
+    `seed_option_ids`, `tag_allergens --explain --check`, `check_fallback`,
+    `check_precache`, `gen_summaries --check` clean; `node --test` 1900 pass; browser: `boot_check` 38, `rename_check` 13,
+    `addon_check` 174, `focus_check` 50, all 0 failed.
+
+  📌 **Closed 2026-10-18 (faves-b4), PR #118 merged.** The mechanical
+  population is done: 36 of 44 groups merged across parts 1 and 2. The 8 the
+  enumerator still calls mechanical each lose or invent something if merged,
+  so none is mechanical work any more. They wait on a ruling, not a session:
+  - order `code` per size (Churton steamed rice, RS Satay rendang), and
+    `tagNotes` that differ (Regal stir-fry, RS Satay tom yum, The Catch
+    teriyaki): 28t finding 3 (`310/170`);
+  - KK Malaysian satay's `prices.delivery` beside a ladder: ADR 0130 §4;
+  - McDonald's fries (null price, three photos): ADR 0130 §2;
+  - Churton's "Single / Double Filling": the menu names no dish to call it.
+  They join 28p's population. 🔎 The *What each merge does* sentence telling
+  a merge to re-key price history is superseded by ADR 0153 (Rejected), as
+  part 2 records; 28r's written rule follows 0153.
+

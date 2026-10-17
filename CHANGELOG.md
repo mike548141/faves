@@ -12,7 +12,8 @@ content freshness separately from this file.
 - **Sizes and fillings that were separate rows are now one dish with a choice.**
   Pizza Pomodoro's 26 pizzas (Small and Large), Wellington Kebab's mixed kebabs
   and gyrus, Groundup's takeaway cups, Pandan's varuval, KK Malaysian's nasi
-  lemak, Regal's ginger and spring onion and The Catch's donburi teriyaki each
+  lemak, Regal's ginger and spring onion, The Catch's donburi teriyaki and
+  Takeaway @ Churton's Bacon & Avo each
   show once, priced at the cheapest option, with the rest one tap away. A heart
   or rating on an old row moves to the merged dish.
 - **McDonald's Johnsonville and Subway's Johnsonville, Tawa and Karori now show their opening hours.** They come from each shop's Google Maps listing, read on 16 October 2026, and the ⓘ beside the venue name says so: "Opening hours at Tawa read from its Google Maps listing on 16 Oct 2026." It speaks for the hours only, never the phone or address. A shop that is open all day every day reads "Open 24 hours". The other McDonald's and Subway branches still show no hours, because their listings could not be matched to the address we hold. <!-- datescan:allow: quoted on-screen copy -->
