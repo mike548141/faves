@@ -174,7 +174,7 @@ import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Cdp, Report, createDriver, exitFromError, launchChrome, need, startServer, stopChrome, untilPresent } from "./lib/browser.mjs";
+import { Cdp, Report, createDriver, exitFromError, launchChrome, need, startServer, stopChrome, untilPresent, answerGeoAskBeforeLoad } from "./lib/browser.mjs";
 // The shipped heat vocabulary, imported rather than re-typed (roadmap 200/080).
 // heat.js is DOM-free, so this is the app's OWN words — which makes the heat
 // assertions below a claim that the picker renders the shared vocabulary, not a
@@ -757,6 +757,12 @@ async function run(opts) {
       sessionId,
     );
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
+    // Section (aa) opens the HOME page and clicks its order button; app.js opens
+    // the location dialog over that page ~900 ms after the list paints for a
+    // reader who has not answered it. This check is about the order sheet, not
+    // the ask, so it starts as a returning reader would (roadmap 510/420;
+    // geo_check owns the ask itself).
+    await answerGeoAskBeforeLoad(cdp, sessionId);
 
     await driver.evalPage(seedExpr).catch(() => {});
     await cdp.send("Page.navigate", { url }, sessionId);

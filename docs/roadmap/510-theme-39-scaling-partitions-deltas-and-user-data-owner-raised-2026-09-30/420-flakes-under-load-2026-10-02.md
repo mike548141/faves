@@ -1,4 +1,4 @@
-- [~] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
+- [ ] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
       `[S] [tests]` — filed by session `faves-4f` from its workers' sweeps
       (load averages of 120 to 800 while several sweeps overlapped).
 
@@ -139,6 +139,32 @@
     `$FAVES_SHOT_DIR` to an artefact upload is a CI change (a new action, so a
     trust-surface decision) and is not made.
 
-  (claimed 2026-10-17-2119, faves-b4, wt: faves-510-420) Scope: the geo race
-  fix in the home-page checks only. The load experiment waits for a quiet
-  machine; the CI screenshot upload is a trust-surface decision for the owner.
+  📌 *Claimed 2026-10-17-2119 by faves-b4 for bullet 1 only; released
+  2026-10-18 at PR #121's merge.* Still open: the load experiment for the
+  three unexplained flakes (`node --test` under load, `addon_check` 10–11
+  assertions in 1 of 6, `cook_check`'s two notification assertions), which
+  wants a quiet machine; and 🎯 the CI screenshot upload, a new action and so
+  a trust-surface decision that is the owner's.
+
+  **Done (bullet 1: the geo race, in the checks; worker `w/510-420`).** The
+  orchestrator's call was to seed, not dismiss or assert: a check that is not
+  about the ask starts with it answered, as a returning reader would. One opt-in
+  helper, `answerGeoAskBeforeLoad(cdp, sessionId)` in `tools/lib/browser.mjs`,
+  installs the app's own consent record (key imported from
+  `site/js/geo-consent.js`, so it cannot drift) before any page script runs.
+  `device_check` and `addon_check` (section aa clicks the home page's order
+  button) now use it; `picks_check`, `focus_check` and `to_top_check` already
+  carried a pasted copy of the same line and now call the helper (same source
+  string, no behaviour change). Left unseeded on purpose, each with its reason
+  in the code or here: `geo_check` (it is the ask; comment added),
+  `filter_row_check` (already seeds the flag itself and drives the banner by
+  unhiding it; untouched), `chatty_check` (counts localStorage writes, and the
+  first-time reader is its subject), `boot_check` (its clicks are programmatic,
+  which an inert page does not stop, and its job includes running the ask's
+  JavaScript), `distance_check` (grants the permission, so the app never asks),
+  and `cook_check`, `midnight_check`, `fetch_check`, `precache_check`,
+  `sync_check` (open the home page but never click it, so a dialog cannot
+  reach them). The menu-page-only checks never meet the ask.
+  *Proof:* with `device_check`'s first home-page click delayed 1.8 s after the
+  list paints, the unseeded run fails `UNREACHABLE ELEMENT — #overflow-btn …
+  would land on #geo-dialog` and the seeded run passes 81/0. `site/` untouched.

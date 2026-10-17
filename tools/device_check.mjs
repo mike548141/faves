@@ -47,6 +47,7 @@ import {
   startServer,
   stopChrome,
   untilPresent,
+  answerGeoAskBeforeLoad,
 } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
@@ -265,6 +266,12 @@ async function run(opts) {
       { width: 390, height: 844, deviceScaleFactor: 1, mobile: false },
       sessionId
     );
+    // The home-page steps (the ⋯ menu's focus loop, the home list's heart) click
+    // within a second or two of the list painting, which is exactly when
+    // app.js's location dialog opens on a reader who has not answered it. This
+    // check is about live safety, not the ask, so it starts as a returning
+    // reader would (roadmap 510/420; geo_check owns the ask itself).
+    await answerGeoAskBeforeLoad(cdp, sessionId);
     await cdp.send(
       "Page.addScriptToEvaluateOnNewDocument",
       { source: seedExpr(opts.id, venue.name, seedDish.name) },
