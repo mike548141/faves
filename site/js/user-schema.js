@@ -74,6 +74,13 @@ export const STORE_SCHEMA = Object.freeze({
   // import: a file whose saved orders are in a newer shape pauses an older build
   // rather than being misread.
   savedOrders: 1,
+  // The activity log (Theme 32a): a per-person, append-only list of dated
+  // events (activity.js). On-device and in the backup file only — never synced —
+  // so this number, like savedOrders', is read by `parse` on an import: a file
+  // whose log is in a newer shape pauses an older build rather than being
+  // misread (and rather than a build that cannot read a settings entry's rules
+  // keeping one it should have refused).
+  activity: 1,
 });
 
 /** The stores in `snapshot.stores` that this build KNOWS and that are numbered

@@ -1927,3 +1927,11 @@ deliberation those compact docs omit.
   Noble's "Choose two" is the one data change; the grill sauce and Hell's dips
   fit the shape but are not structured groups yet; per-category counts inside a
   build are left out on purpose.
+- [0164](0164-the-activity-log-is-per-person-device-local-and-honest.md) —
+  **The activity log is per person, device-local, capped at 500 and honest**
+  (`390/010`+`390/040`, owner-ruled 2026-08-16). `faves.activity.v1` rides
+  `profileScopedStorage()`, is outside `SCOPED_BASE_KEYS` and the sync snapshot,
+  and travels only in the backup file (named per-person field, merged by union).
+  No per-entry delete: removals appear as removals. `settings.change` records the
+  dial's name, never the value, enforced in the recorder. Stores record after
+  their own write and never throw.

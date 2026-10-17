@@ -41,6 +41,7 @@ const WRITERS = {
   "settings.js": "its own key: settings, including allergen flags",
   "cart.js": "its own key: the order tally (and, via createOrder, the shopping list)",
   "saved-orders.js": "its own key: saved orders, per person (Theme 26a) — on-device, never synced",
+  "activity.js": "its own key: the activity log, per person (Theme 32a) — on-device, never synced",
   "checklist.js": "its own key: cook-mode ticks",
   "cook.js": "its own key: running cook-mode timers",
   "geo-consent.js": "its own key: the location ask's “don't ask again”",
@@ -152,6 +153,7 @@ test("in a tab behind storage, every writer leaves storage exactly as it was", a
     const { shopping } = await import("../site/js/shopping.js");
     const { recipes } = await import("../site/js/recipes.js");
     const { savedOrders } = await import("../site/js/saved-orders.js");
+    const { activity } = await import("../site/js/activity.js");
     const { profiles, deviceStorage } = await import("../site/js/profiles.js");
     const { createTimerStore } = await import("../site/js/cook.js");
     const { writeConsent, suppressAsk } = await import("../site/js/geo-consent.js");
@@ -183,6 +185,7 @@ test("in a tab behind storage, every writer leaves storage exactly as it was", a
       "recipes.js": () => recipes.put({ dishId: "u:stale", name: "Stale loaf" }),
       "saved-orders.js": () =>
         savedOrders.save({ venueId: "stale", venueName: "Stale", name: "My Stale", lines: [{ dishId: "pie", name: "Pie", qty: 1 }] }),
+      "activity.js": () => activity.record("favourite.add", { venue: "stale", label: "Stale" }),
       "profiles.js": () => profiles.create("Sam"),
       "cook.js": () => createTimerStore(store.safeStorage()).start("stale dish", 0, Date.now() + 60_000),
       "geo-consent.js": () => {

@@ -74,13 +74,20 @@ export const CHECKLIST_BASE_KEY = "faves.checklist.v1";
 // carries it through its own named field (personal-data.js).
 export const SAVED_ORDERS_BASE_KEY = "faves.savedorders.v1";
 
+// The activity log's key (activity.js, Theme 32a), declared here for the same
+// reason and with the same standing: per-profile, device-local, and deliberately
+// NOT in SCOPED_BASE_KEYS — the log is a record of what one person did on this
+// device, and that list is what makes a store sync. The backup carries it
+// through its own named field (personal-data.js).
+export const ACTIVITY_BASE_KEY = "faves.activity.v1";
+
 // What DELETING a profile has to remove: everything stored under that profile's
 // namespace, travelling or not. A store excluded from the export is still that
 // person's data sitting on the device after they are gone — and "make this
 // device look like the file" already treats it that way on a replace-import
 // (personal-data.js). Nothing but `remove` may use this list: it is deliberately
 // wider than what migrate copies and what the export carries.
-export const PURGED_BASE_KEYS = [...SCOPED_BASE_KEYS, CHECKLIST_BASE_KEY, SAVED_ORDERS_BASE_KEY];
+export const PURGED_BASE_KEYS = [...SCOPED_BASE_KEYS, CHECKLIST_BASE_KEY, SAVED_ORDERS_BASE_KEY, ACTIVITY_BASE_KEY];
 
 // The first profile's id is deterministic ("default") so two tabs migrating at
 // once converge on the same key instead of minting two rival profiles.
@@ -177,6 +184,21 @@ export function migrate(storage) {
  */
 export function createProfiles(storage) {
   const subs = new Set();
+  // Told when the ACTIVE profile changes to another (create, setActive, or the
+  // active one being removed) — not on a rename and not on a cross-tab reload.
+  // A separate list from `subs` because the activity log (activity.js) imports
+  // this module, so this module cannot import it: the recorder registers here.
+  const switchSubs = new Set();
+  function emitSwitch() {
+    const a = reg.profiles.find((p) => p.id === reg.activeId) || reg.profiles[0];
+    for (const fn of switchSubs) {
+      try {
+        fn({ id: a.id, name: a.name });
+      } catch {
+        /* a listener that fails must not stop a switch */
+      }
+    }
+  }
 
   function readReg() {
     try {
@@ -216,6 +238,7 @@ export function createProfiles(storage) {
       const id = newId();
       reg = { ...reg, profiles: [...reg.profiles, { id, name: nm }], activeId: id };
       commit();
+      emitSwitch();
       return id;
     },
 
@@ -233,6 +256,7 @@ export function createProfiles(storage) {
     remove(id) {
       if (reg.profiles.length <= 1 || !has(id)) return false;
       const profiles = reg.profiles.filter((p) => p.id !== id);
+      const wasActive = reg.activeId;
       const activeId = reg.activeId === id ? profiles[0].id : reg.activeId;
       reg = { ...reg, profiles, activeId };
       for (const base of PURGED_BASE_KEYS) {
@@ -243,6 +267,7 @@ export function createProfiles(storage) {
         }
       }
       commit();
+      if (activeId !== wasActive) emitSwitch();
       return true;
     },
 
@@ -251,6 +276,7 @@ export function createProfiles(storage) {
       if (reg.activeId === id) return true;
       reg = { ...reg, activeId: id };
       commit();
+      emitSwitch();
       return true;
     },
 
@@ -267,6 +293,12 @@ export function createProfiles(storage) {
     subscribe(fn) {
       subs.add(fn);
       return () => subs.delete(fn);
+    },
+
+    /** Call `fn({ id, name })` whenever the active profile becomes another one. */
+    onSwitch(fn) {
+      switchSubs.add(fn);
+      return () => switchSubs.delete(fn);
     },
   };
 }
