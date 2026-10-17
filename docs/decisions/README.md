@@ -1927,3 +1927,11 @@ deliberation those compact docs omit.
   Noble's "Choose two" is the one data change; the grill sauce and Hell's dips
   fit the shape but are not structured groups yet; per-category counts inside a
   build are left out on purpose.
+- [0165](0165-a-booking-link-is-an-ordering-kind-the-venue-published.md) —
+  **A booking link is an `ordering[]` entry with `kind: "booking"`, and the venue
+  published it** (`400/010`, roadmap 33a). Renders as "Book a table" on the contact
+  card, never under "Order online", never an in-app flow, and no "Call to book".
+  Shipped only if the venue's own website published it and it answered 200; each
+  has a provenance row in `data/bookings/` that `validate.py` checks both ways.
+  Six venues ship; Now Book It links are withheld (its pages cannot show a venue
+  today, and answer 200 to any id).
