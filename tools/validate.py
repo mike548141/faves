@@ -207,7 +207,16 @@ ITEM_KEYS = {
     # above whether or not the record is a recipe collection.
     "steps", "ingredients", "serves", "time", "attribution", "attributionUrl",
     "prepMinutes", "cookMinutes", "difficulty", "estimated", "yield",
+    # How the dish is sold, only where the menu prints it (roadmap 200/170, ADR 0166).
+    "minQty", "unit",
 }
+# What a price is FOR - the closed vocabulary site/js/dish-rules.js UNITS reads.
+# Closed on purpose: a free-text unit is a string the page would print as the
+# venue's own words, and "per 100g" against "per 100 g" would then be two units.
+# `weighed` units cannot be totalled (quantity is not a count of what the price
+# is for), so they carry no minimum and always need a price to show.
+DISH_UNITS = {"each", "per person", "per 100 g"}
+WEIGHED_UNITS = {"per 100 g"}
 # The stats panel's difficulty scale (ADR 0125), easiest first.
 DIFFICULTY = {"very-easy", "easy", "medium", "challenging"}
 # The recipe fields that may be marked as our estimate rather than the recipe's.
@@ -847,6 +856,38 @@ def check_temporal(rid, obj, field, where, scalar_check=None):
     if len(val) == 1 and not (val[0].get("from") or val[0].get("recorded")):
         warn(rid, f"{where}: {field} is a one-entry series with no date — a plain value says the same thing")
     return values
+
+
+def check_dish_rules(rid, item, name, is_recipes):
+    """`minQty` and `unit` (roadmap 200/170, ADR 0166): how a dish is sold.
+
+    Both optional and both only where the venue's menu prints them - a unit the
+    menu never states is not ours to supply. `minQty` is the least the venue will
+    take: an integer of 2 or more (1 is the default and a stored 1 is noise, so it
+    is refused rather than ignored). `unit` is from a closed set. A unit describes
+    a PRICE, so it needs one; a weighed unit cannot also carry a minimum, because
+    a count of 100 g portions is a different claim from "minimum order 3".
+    Neither means anything on a recipe, which is cooked, not ordered.
+    """
+    where = repr(name)
+    minq = item.get("minQty")
+    unit = item.get("unit")
+    if minq is not None:
+        if isinstance(minq, bool) or not isinstance(minq, int) or minq < 2:
+            err(rid, f"minQty for {where} must be a whole number of 2 or more, or absent (got {minq!r})")
+        if is_recipes:
+            err(rid, f"minQty on {where}: a recipe is cooked, not ordered, so it has no minimum order")
+    if unit is not None:
+        if not isinstance(unit, str) or unit not in DISH_UNITS:
+            err(rid, f"unit for {where} must be one of {sorted(DISH_UNITS)} or absent (got {unit!r})")
+        else:
+            if is_recipes:
+                err(rid, f"unit on {where}: a recipe has no price for a unit to describe")
+            if item.get("price") is None:
+                err(rid, f"unit {unit!r} on {where}: the dish has no price for it to describe")
+            if unit in WEIGHED_UNITS and minq is not None:
+                err(rid, f"{where} is priced {unit!r} and also has a minQty: a minimum count of "
+                         "weighed portions is not a claim the menu makes")
 
 
 def check_available(rid, obj, where):
@@ -2867,6 +2908,7 @@ def check_restaurant(path):
                          "no menu in the corpus needs a per-dish window yet")
             check_revisions(rid, item, f"item {name!r}")
             check_needs(rid, item, f"item {name!r}")
+            check_dish_rules(rid, item, name, is_recipes)
             # code: optional venue order-number (a string, kept out of name).
             code = item.get("code")
             if code is not None and not (isinstance(code, str) and code.strip()):

@@ -890,6 +890,8 @@
           "name": "Regal Dim Sum Platter",
           "dishId": "regal-dim-sum-platter",
           "desc": "Minimum two people, price per person. Prawn Dumpling, Pork Dumpling, Crispy WonTon and Spring Roll.",
+          "minQty": 2,
+          "unit": "per person",
           "price": 12.0,
           "tags": [
             "contains-shellfish",
@@ -2598,6 +2600,8 @@
           "name": "Peking Duck Set Menu",
           "dishId": "peking-duck-set-menu",
           "desc": "Per person, minimum table of 6 (select 2 mains for a table of 6-7, select 3 for 8-9, select 4 for 10+; limited to one set menu per table). Entree: Prawn Won Tons, Spring Rolls, Spicy Salt Squid, Har Gow, Shu Mei. Peking Duck Two Courses: Crispy Duck Slices with Pancake Wraps, Shredded Duck Chow Mein. Mains selected from: BBQ Pork & Roast Pork, Prawns with Cashew Nuts & Vegetables in Basket, Black Pepper Beef Steak on Sizzling Plate, Sweet & Sour Pork, Lemon Fish Pieces, Crispy Chicken, Stirfried Vegetables with Garlic. Includes Yang Zhou Fried Rice, a daily-special dessert and Chinese tea.",
+          "minQty": 6,
+          "unit": "per person",
           "price": 48.0,
           "tags": [
             "contains-shellfish",
@@ -2614,6 +2618,8 @@
           "name": "Regal Set Menu",
           "dishId": "regal-set-menu",
           "desc": "Per person, minimum table of 6 (select 4 mains for a table of 6-7, select 5 for 8-9, select 6 for 10+; limited to one set menu per table). Entree: Prawn Won Tons, Spring Rolls, Har Gow, Shu Mei. Soup: Chicken Sweet Corn Soup. Mains selected from: Sweet & Sour Pork, Orange Beef, Lemon Fish Pieces, Crispy Chicken, Squid in Black Bean Sauce with Vegetables, BBQ Pork & Roast Pork, Stirfried Vegetables with Garlic (vegetarian option available), Spicy Salt Tofu (vegetarian option available). Rice/Noodle: select 1 for a table of 6-9, all for 10+, from Egg & Spring Onion Fried Rice (vegetarian option available) or Regal Sauce Noodle with Bean Sprouts (vegetarian option available). Includes Chinese tea.",
+          "minQty": 6,
+          "unit": "per person",
           "price": 39.0,
           "tags": [
             "contains-shellfish",

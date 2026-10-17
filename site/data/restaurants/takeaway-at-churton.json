@@ -2031,6 +2031,7 @@
           "name": "Chicken Nugget (each)",
           "dishId": "chicken-nugget-each",
           "desc": null,
+          "unit": "each",
           "price": [
             {
               "value": 1.8,
@@ -2046,6 +2047,7 @@
           "name": "Calamari Ring (each)",
           "dishId": "calamari-ring-each",
           "desc": null,
+          "unit": "each",
           "price": [
             {
               "value": 2.0,
@@ -2061,6 +2063,7 @@
           "name": "Battered Mussel (each)",
           "dishId": "battered-mussel-each",
           "desc": null,
+          "unit": "each",
           "price": [
             {
               "value": 2.2,
@@ -2077,6 +2080,7 @@
           "name": "Scallop (each)",
           "dishId": "scallop-each",
           "desc": null,
+          "unit": "each",
           "price": [
             {
               "value": 4.0,
@@ -2139,6 +2143,7 @@
           "name": "Dim Sim (each)",
           "dishId": "dim-sim-each",
           "desc": null,
+          "unit": "each",
           "price": [
             {
               "value": 2.9,
