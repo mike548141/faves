@@ -1,4 +1,4 @@
-- [ ] **32a — the recorder** `[M][js]`
+- [~] **32a — the recorder** `[M][js]`
 
 A small append-only ring buffer, `faves.activity.v1`, per profile. Fields kept
 deliberately few:
@@ -35,3 +35,5 @@ Two design points that are not obvious:
 `contains-peanuts` records a health fact about a named person, which is the one
 class this repo never stores. Log that *a preference changed* and which dial —
 never the value. The rest of the vocabulary is safe; this one is not.
+
+  (claimed 2026-10-17-2131, faves-b4, wt: faves-390-010 — 32a and 32d in one change)
