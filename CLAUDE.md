@@ -652,16 +652,19 @@ python3 tools/test_allergen_disagreements.py # …and the CLASS TABLE its read-o
                               # food, each a regex, and NOTHING tested any of
                               # them — a class narrowed to nothing just makes
                               # the report SHORTER, which reads as progress.
-                              # 14 cases + 6 break-probes, and the breakers
+                              # 20 cases + 11 break-probes (2026-10-18; it was
+                              # 14 + 6), and the breakers
                               # assert the covered cases fail AND THAT NO OTHER
-                              # ONE DOES. Two of the six are about the
+                              # ONE DOES. Four of the eleven are about the
                               # MECHANISM, not the outcome: this tool's
                               # `exclude` vetoes a row's membership of the whole
                               # class, so b3/b6 rebuild each 2026-09-21
                               # narrowing as that veto and require exactly one
                               # synthetic line to notice — "pork sausages,
                               # italian sausage" and "Turkish pizza, or a
-                              # Margherita pizza". On today's corpus the veto
+                              # Margherita pizza" — and b7/b8 do the same for
+                              # the sausage-roll and continental-sausage
+                              # narrowings (470/030). On today's corpus the veto
                               # and the lookbehind print an IDENTICAL report,
                               # so no outcome test can tell them apart
 python3 tools/test_tag_addon_options.py # …and the add-on option tagger still REFUSES
