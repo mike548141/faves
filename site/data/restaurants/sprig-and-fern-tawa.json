@@ -248,6 +248,7 @@
       "id": "gf-toast",
       "name": "Gluten free toast",
       "select": "one",
+      "replaces": "toasted sourdough",
       "options": [
         {
           "name": "Gluten free toast",

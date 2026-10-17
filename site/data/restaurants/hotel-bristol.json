@@ -79,6 +79,7 @@
       "id": "no-gluten-added-bun",
       "name": "No gluten added bun",
       "select": "one",
+      "replaces": "milk bun",
       "options": [
         {
           "name": "No gluten added bun",
