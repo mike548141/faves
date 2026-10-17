@@ -207,7 +207,7 @@ ITEM_KEYS = {
     # above whether or not the record is a recipe collection.
     "steps", "ingredients", "serves", "time", "attribution", "attributionUrl",
     "prepMinutes", "cookMinutes", "difficulty", "estimated", "yield",
-    # How the dish is sold, only where the menu prints it (roadmap 200/170, ADR 0164).
+    # How the dish is sold, only where the menu prints it (roadmap 200/170, ADR 0165).
     "minQty", "unit",
 }
 # What a price is FOR - the closed vocabulary site/js/dish-rules.js UNITS reads.
@@ -859,7 +859,7 @@ def check_temporal(rid, obj, field, where, scalar_check=None):
 
 
 def check_dish_rules(rid, item, name, is_recipes):
-    """`minQty` and `unit` (roadmap 200/170, ADR 0164): how a dish is sold.
+    """`minQty` and `unit` (roadmap 200/170, ADR 0165): how a dish is sold.
 
     Both optional and both only where the venue's menu prints them - a unit the
     menu never states is not ours to supply. `minQty` is the least the venue will

@@ -2564,7 +2564,7 @@ async function run(opts) {
     );
     await driver.evalPage(`localStorage.removeItem(${JSON.stringify(SAVED_KEY)}); localStorage.removeItem("faves.order.v1"); true`);
 
-    // --- (ac) 200/170, ADR 0164: a MINIMUM ORDER and what a price is FOR ------
+    // --- (ac) 200/170, ADR 0165: a MINIMUM ORDER and what a price is FOR ------
     // Charley Noble prints "minimum order 3" on its oysters, "Minimum order of 2"
     // on its arancini, and "Per 100g" on two steaks. Before this the stepper
     // started at 1, so the sheet took one oyster and totalled it as though the

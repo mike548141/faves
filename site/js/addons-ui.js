@@ -226,7 +226,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
       // an unpriced dish with a paid extra is still a dish we cannot total, and
       // guessing would be worse than the honest "—".
       price: configuredPrice(base, selection, groups),
-      // The dish's minimum order (ADR 0164), for the stepper only. A configured
+      // The dish's minimum order (ADR 0165), for the stepper only. A configured
       // dish is its own line, and it starts at the minimum like the plain one.
       ...(minQtyOf(item) > 1 ? { minQty: minQtyOf(item) } : {}),
       // Same reason as the plain row's stepper (menu.js): the line carries the
