@@ -152,7 +152,14 @@ Object.assign(BUDGETS, {
   // install on "reload": 268 req, 1,542 KB (5,747 KB raw); on "no-cache" (the
   // first install revalidates): 268 req, 1,072 KB (4,461 KB raw). The old
   // no-store instrument read 269 req, 1,547 KB, and could not see a 304 at all.
-  coldReq: 295, coldGz: 1179, // 268 req, 1,072 KB
+  // coldGz 1179 -> 1196 on 2026-10-18 (roadmap 180/010, Delete everything).
+  // Measured 1191 KB on the merge of that branch with main: about 7.2 KB gzip is
+  // the branch's own (sync.js, sync-merge.js, personal-data.js, settings-ui.js
+  // and the new live-stores.js, summed per file) and the rest (by subtraction —
+  // main was not re-measured on its own) is what main had gained since the 1179
+  // was set, which had no headroom. Budget = measured + 5 KB
+  // margin; it is NOT a claim that the feature earned all 17 KB.
+  coldReq: 295, coldGz: 1196, // 268 req, 1,072 KB
   // The UPDATE install (510/270, ADR 0150), measured 2026-10-01 on 510-270:
   // deploy B changes js/app.js and SHELL_VERSION, nothing else. On "no-cache":
   // 114 req, 107 of them 304, 225 KB raw, 66 KB gzip — sw.js, app.js, the
