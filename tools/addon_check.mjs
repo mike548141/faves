@@ -2564,7 +2564,7 @@ async function run(opts) {
     );
     await driver.evalPage(`localStorage.removeItem(${JSON.stringify(SAVED_KEY)}); localStorage.removeItem("faves.order.v1"); true`);
 
-    // --- (ac) 200/170, ADR 0165: a MINIMUM ORDER and what a price is FOR ------
+    // --- (ad) 200/170, ADR 0165: a MINIMUM ORDER and what a price is FOR ------
     // Charley Noble prints "minimum order 3" on its oysters, "Minimum order of 2"
     // on its arancini, and "Per 100g" on two steaks. Before this the stepper
     // started at 1, so the sheet took one oyster and totalled it as though the
@@ -2625,12 +2625,12 @@ async function run(opts) {
     const ar = await driver.evalPage(rowExpr(ARANCINI));
     const wg = await driver.evalPage(rowExpr(WAGYU));
     report.check(
-      "(ac) a dish with a minimum SAYS so on its row, in words: \"Minimum 3\" (oysters), \"Minimum 2\" (arancini)",
+      "(ad) a dish with a minimum SAYS so on its row, in words: \"Minimum 3\" (oysters), \"Minimum 2\" (arancini)",
       oy.min === "Minimum 3" && ar.min === "Minimum 2",
       JSON.stringify({ oy: oy.min, ar: ar.min }),
     );
     report.check(
-      "(ac) a per-weight dish reads \"$26 per 100 g\" beside its price, and a dish with no unit gets no words after its price",
+      "(ad) a per-weight dish reads \"$26 per 100 g\" beside its price, and a dish with no unit gets no words after its price",
       wg.price === `${money(26)} per 100 g` && ar.price === money(8.5),
       JSON.stringify({ wagyu: wg.price, arancini: ar.price }),
     );
@@ -2643,12 +2643,12 @@ async function run(opts) {
     oy = await driver.evalPage(rowExpr(OYSTER));
     st = await driver.evalPage(storedExpr);
     report.check(
-      "(ac) ＋ Add on \"minimum order 3\" puts THREE on the order, not one",
+      "(ad) ＋ Add on \"minimum order 3\" puts THREE on the order, not one",
       st.length === 1 && st[0].qty === 3 && seen[0] === 3,
       JSON.stringify(st.map((l) => [l.name, l.qty])),
     );
     report.check(
-      "(ac) …at the minimum the − becomes ✕ and SAYS it removes the line (the minimum is 3), never a silent \"one fewer\"",
+      "(ad) …at the minimum the − becomes ✕ and SAYS it removes the line (the minimum is 3), never a silent \"one fewer\"",
       oy.buttons[0][0] === "✕" && /^Remove .* from your order — the minimum is 3$/.test(oy.buttons[0][1]) && /^One more /.test(oy.buttons[1][1]),
       JSON.stringify(oy.buttons),
     );
@@ -2657,7 +2657,7 @@ async function run(opts) {
     await driver.click(`${rowOf(OYSTER)} .dish-actions .stepper-btn`, "−");
     seen.push(Number(await rowCount()));
     report.check(
-      "(ac) ＋ goes 3 → 4 and − comes back 4 → 3 (above the minimum it is an ordinary − again)",
+      "(ad) ＋ goes 3 → 4 and − comes back 4 → 3 (above the minimum it is an ordinary − again)",
       seen.join() === "3,4,3",
       seen.join(),
     );
@@ -2665,14 +2665,14 @@ async function run(opts) {
     st = await driver.evalPage(storedExpr);
     oy = await driver.evalPage(rowExpr(OYSTER));
     report.check(
-      "(ac) the ✕ at the minimum takes the line OFF (0, never 2 or 1), and the row is back to ＋ Add",
+      "(ad) the ✕ at the minimum takes the line OFF (0, never 2 or 1), and the row is back to ＋ Add",
       st.length === 0 && oy.buttons.length === 1 && oy.buttons[0][0] === "＋ Add",
       JSON.stringify({ stored: st.length, buttons: oy.buttons }),
     );
     await driver.click(`${rowOf(ARANCINI)} .dish-actions .stepper-add`);
     st = await driver.evalPage(storedExpr);
     report.check(
-      "(ac) the minimum is per dish: arancini start at 2, and carry their price (8.5) on the line",
+      "(ad) the minimum is per dish: arancini start at 2, and carry their price (8.5) on the line",
       st.length === 1 && st[0].qty === 2 && st[0].price === 8.5 && !("minQty" in st[0]),
       JSON.stringify(st.map((l) => [l.name, l.qty, l.price, "minQty" in l])),
     );
@@ -2686,17 +2686,17 @@ async function run(opts) {
     let sh = await driver.evalPage(sheetAc);
     const short = sh.lines.find((l) => /Oysters/.test(l.name || ""));
     report.check(
-      "(ac) a line BELOW its minimum is flagged on the sheet in words: \"Minimum 3 — 2 short\"",
+      "(ad) a line BELOW its minimum is flagged on the sheet in words: \"Minimum 3 — 2 short\"",
       !!short && short.short && /Minimum 3 — 2 short/.test(short.min || ""),
       JSON.stringify(short),
     );
     report.check(
-      "(ac) …and the sheet's total says one dish is below the minimum, rather than total it as though nothing were wrong",
+      "(ad) …and the sheet's total says one dish is below the minimum, rather than total it as though nothing were wrong",
       /1 dish is below the minimum order/.test(sh.rules || ""),
       JSON.stringify(sh.rules),
     );
     report.check(
-      "(ac) …a line AT its minimum carries \"Minimum 2\" quietly, and no warning",
+      "(ad) …a line AT its minimum carries \"Minimum 2\" quietly, and no warning",
       sh.lines.find((l) => l.name === "Arancini")?.min === "Minimum 2" && !sh.lines.find((l) => l.name === "Arancini").short,
       JSON.stringify(sh.lines.find((l) => l.name === "Arancini")),
     );
@@ -2704,7 +2704,7 @@ async function run(opts) {
     sh = await driver.evalPage(sheetAc);
     st = await driver.evalPage(storedExpr);
     report.check(
-      "(ac) one press of ＋ on the short line raises it TO the minimum (1 → 3, not 2), and the warning goes",
+      "(ad) one press of ＋ on the short line raises it TO the minimum (1 → 3, not 2), and the warning goes",
       st.find((l) => /Oysters/.test(l.name))?.qty === 3 && !sh.lines.some((l) => l.short) && sh.rules === null,
       JSON.stringify({ stored: st.map((l) => [l.name, l.qty]), rules: sh.rules }),
     );
@@ -2720,22 +2720,22 @@ async function run(opts) {
     sh = await driver.evalPage(sheetAc);
     const wgl = sh.lines.find((l) => /Wagyu/.test(l.name || ""));
     report.check(
-      "(ac) a per-weight line shows its UNIT price and says it is not in the total — it shows no total of its own",
+      "(ad) a per-weight line shows its UNIT price and says it is not in the total — it shows no total of its own",
       !!wgl && wgl.unit === `${money(26)} per 100 g — priced by weight, so not in the total` && wgl.price === "—",
       JSON.stringify(wgl),
     );
     report.check(
-      "(ac) the venue subtotal and the TOTAL leave it out (arancini 2 × 8.50 = 17.00) and carry the \"+\" — never 17 + 2 × 26",
+      "(ad) the venue subtotal and the TOTAL leave it out (arancini 2 × 8.50 = 17.00) and carry the \"+\" — never 17 + 2 × 26",
       sh.total === `${money(17)}+` && sh.subtotal === `${money(17)}+` && !sh.total.includes(money(69)),
       JSON.stringify({ total: sh.total, subtotal: sh.subtotal }),
     );
     report.check(
-      "(ac) …and a sentence under the total says one dish priced by weight is not in it",
+      "(ad) …and a sentence under the total says one dish priced by weight is not in it",
       /1 dish priced by weight isn't in this total/.test(sh.rules || ""),
       JSON.stringify(sh.rules),
     );
     report.check(
-      "(ac) …without the sheet scrolling sideways at 390 px",
+      "(ad) …without the sheet scrolling sideways at 390 px",
       !sh.hOverflow,
       String(sh.hOverflow),
     );
@@ -2756,12 +2756,12 @@ async function run(opts) {
     const rcAc = await driver.evalPage(panelExpr);
     st = await driver.evalPage(storedExpr);
     report.check(
-      "(ac) RECALL of a saved 1 oyster lands THREE (the minimum), not dropped and not left short",
+      "(ad) RECALL of a saved 1 oyster lands THREE (the minimum), not dropped and not left short",
       st.length === 1 && st[0].dishId === OYSTER && st[0].qty === 3,
       JSON.stringify(st.map((l) => [l.name, l.qty])),
     );
     report.check(
-      "(ac) …and the recall says so in words: \"Raised to the minimum order\", naming the dish and both numbers",
+      "(ad) …and the recall says so in words: \"Raised to the minimum order\", naming the dish and both numbers",
       /Raised to the minimum order/.test(rcAc.status) && /minimum order is 3, so 1 is now 3/.test(rcAc.status) && rcAc.skipped.length === 0,
       JSON.stringify({ status: rcAc.status, skipped: rcAc.skipped }),
     );

@@ -34,7 +34,7 @@
   A `per 100 g` line shows its unit price and is left out of the total (the sheet
   gives it `price: null`, so the existing "+" machinery does the rest). Recall
   raises a saved quantity under the minimum and names it. Browser assertions are
-  block (ac) of `tools/addon_check.mjs`; unit tests in `tests/dish-rules.test.js`.
+  block (ad) of `tools/addon_check.mjs`; unit tests in `tests/dish-rules.test.js`.
 
   Data applied (menu words in brackets): Charley Noble oysters natural and beer
   battered `minQty` 3 ("minimum order 3"); arancini and smoked fish croquette
