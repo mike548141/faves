@@ -1,4 +1,4 @@
-- [ ] **Priced per piece, per 100 g or per person, with a minimum order**
+- [~] **Priced per piece, per 100 g or per person, with a minimum order**
   `[M][schema]` — found by `200/100`'s survey
   ([the review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)).
   A dish's `price` assumes one dish = one price. These do not:
@@ -21,3 +21,5 @@
   oyster and one head of a set menu, and the total says nothing is wrong.
   The fix wants a `unit` and a `minQty` (or similar) on a dish. The
   party-size rule is a separate, harder shape and may stay in prose.
+
+  (claimed 2026-10-17-2134, faves-b4, wt: faves-200-170)
