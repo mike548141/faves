@@ -12965,3 +12965,56 @@ close extends it.*
   midnight 89, note 19, picks 20, precache 20, recipe 72, rename 13,
   served 55, sync 40, to_top 142); `node --test` 1900/1900 on the 28o tree.
   No open PRs, worktrees or stashes of this session's; 0 `[~]` claims.
+
+## 2026-10-18 — orchestrated queue run with the owner away: twelve items landed (session `faves-b4`)
+
+*Interim entry, written before the close so an interruption cannot erase it;
+the close extends it.*
+
+- **Open.** Tier stated, not asked: Opus 5.5 orchestrating, Sonnet workers.
+  atelier pin `04e6f22` → `b2c53da` (3 method files moved; floor unchanged,
+  hand stamp check clean). The delta's session-open prompt regresses the
+  2026-09-19 tier ruling; already on atelier's board as `320/670`, so
+  nothing was owed upstream. Two read-only triage agents classified all 87
+  open items (A agent-doable · B owner ruling · C idea-only · D waiting ·
+  E owner material · F stale).
+- **Landed on `main`, each through a PR whose CI was 8 of 8 green at its head:**
+  - `28r` (#117) — the intake rule for sizes and choices in ARCHITECTURE.md;
+    its four unanswered cases filed for the owner as `28t` (`310/170`).
+  - `28o` part 2 (#118) — Churton's Bacon & Avo merged; 28o **closed**: 36 of
+    44 mechanical groups merged, the 8 left each need a ruling.
+  - `37n` (#119) — the sausage vetoes narrow the match, not the row; the
+    report is byte-identical (all three rows already carried gluten).
+  - `17a` (#120, ADR 0162) — serves and yield shown labelled, and a
+    serve-N-people stepper; follow-ups filed as `250/060`.
+  - `510/420` bullet 1 (#121) — home-page checks start with the location ask
+    answered; break-probe: a 1.8 s late click fails unseeded, passes seeded.
+  - `080/300` (#122) — vegan mayo no longer read as egg; Hei's two rows keep
+    `contains-egg` pending the owner.
+  - `330/030` (#123) — hours from their own sites for three guidebook stubs.
+  - `200/140` (#124, ADR 0163) — a group can ask for N picks and charge for
+    extras.
+  - `32a` + `32d` (#125, ADR 0164) — the per-person activity log, in the
+    backup and the wipes, never synced.
+  - `33a` (#126, ADR 0165) — six venues' own booking links; withheld ones
+    filed as `33e` (`400/050`).
+  - `200/170` (#127, ADR 0166) — minimum orders and per-unit prices; 21
+    dishes; multi-buy filed as `200/190`.
+  - `180/010` (#128, ADR 0167) — "Delete everything", the second Reset the
+    owner ruled on 2026-08-16 and no item carried (found while closing 32d),
+    propagated by sync with a deletion marker.
+  - Board hygiene inline: `28j` closed (built and its last fork ruled);
+    `26b` found to be an owner call (ADR 0154 kept saved orders off sync on
+    purpose); the v2 sync item's self-contradiction reconciled (the passkey
+    path is all that is unbuilt).
+- 🔎 **Caught at the gates, not by the workers:** my 28o brief repeated the
+  item's stale "re-key the price history" sentence, which ADR 0153 rejects —
+  the 28r worker found it from sources and the 28o worker was corrected
+  before it acted; #126 failed CI because `test_tag_allergens`' partial-corpus
+  harness lacked the new `data/bookings/` store (fixed on the branch); #125
+  ran no CI at all while it conflicted with main; and a gate polled straight
+  after a push read the previous head's red.
+- 🚩 **Load.** The 1-minute load reached 209 with four workers plus other
+  repos' suites; peer `shed-d7` asked for at most two concurrent heavy runs
+  under `nice`. Workers were throttled (15-minute load under 40), dispatch
+  held, and the rule saved to memory.
