@@ -137,6 +137,10 @@ async function run(opts) {
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
+    // DELIBERATELY NOT answerGeoAskBeforeLoad (roadmap 510/420): the other home
+    // -page checks start with the ask answered so a late harness is not racing
+    // the dialog; this one IS the ask, and a seeded consent flag would make
+    // every assertion below measure a reader who was never asked.
     await cdp.send(
       "Emulation.setDeviceMetricsOverride",
       { width: 390, height: 844, deviceScaleFactor: 1, mobile: false },

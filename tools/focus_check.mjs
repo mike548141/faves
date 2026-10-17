@@ -85,6 +85,7 @@ import {
   stopChrome,
   untilPresent,
   sleep,
+  answerGeoAskBeforeLoad,
 } from "./lib/browser.mjs";
 import { buildFixtures, buildHomeOverlay, defaultId } from "./lib/fixtures.mjs";
 
@@ -221,14 +222,7 @@ async function run(opts) {
     await cdp.send("Runtime.enable", {}, sessionId);
     // Same isolation every menu-page check uses: ADR 0083's location dialog is a
     // real showModal() and would make every control here inert mid-run.
-    await cdp.send(
-      "Page.addScriptToEvaluateOnNewDocument",
-      {
-        source:
-          'try { localStorage.setItem("faves.geo.consent.v1", JSON.stringify({ suppressed: true, declined: true })); } catch {}',
-      },
-      sessionId
-    );
+    await answerGeoAskBeforeLoad(cdp, sessionId);
     await cdp.send(
       "Emulation.setDeviceMetricsOverride",
       { width: 390, height: 844, deviceScaleFactor: 1, mobile: false },

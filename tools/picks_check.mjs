@@ -52,6 +52,7 @@ import {
   startServer,
   stopChrome,
   untilPresent,
+  answerGeoAskBeforeLoad,
 } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
@@ -165,14 +166,7 @@ async function run(opts) {
     // real showModal() that pulls focus, and this check asserts where focus
     // lands. Seeding the consent flag is the supported "don't ask again" state,
     // not a hack.
-    await cdp.send(
-      "Page.addScriptToEvaluateOnNewDocument",
-      {
-        source:
-          'try { localStorage.setItem("faves.geo.consent.v1", JSON.stringify({ suppressed: true, declined: true })); } catch {}',
-      },
-      sessionId
-    );
+    await answerGeoAskBeforeLoad(cdp, sessionId);
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
 
     // 390 px is the design width, and it is where the two-column grid is OFF —
