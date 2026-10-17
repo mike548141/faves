@@ -1,4 +1,4 @@
-- [ ] **A swap is not an extra: name what it replaces** `[M][schema][safety]` —
+- [~] **A swap is not an extra: name what it replaces** `[M][schema][safety]` —
   the Theme 14 README's consequence *"A substitution is not an addition"*
   (2026-08-17) never became an item. `200/100`'s survey measured how much it
   matters ([the review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)).
@@ -21,3 +21,8 @@
   That is safe, but it is wrong. A swap modelled as removal plus addition can
   under-warn if the removal is trusted when it shouldn't be. Whoever builds
   this needs an ADR and break-probes for both directions.
+
+  (claimed 2026-10-17-2325, faves-b4, wt: faves-200-160)
+  Scope: part 1 only — a swap names what it replaces, on the picker and the
+  order line, with allergens still unioned in (over-warn kept). Trusting the
+  removal to drop an allergen is left for the owner.
