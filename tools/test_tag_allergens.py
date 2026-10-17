@@ -1264,6 +1264,43 @@ PROBES = {
         ("150g brisket patty, American cheese, milk bun, fries. No gluten added "
          "bun or lettuce bun available", {"contains-gluten", "contains-dairy"}, set()),
     ],
+    # (f2) 🛑 VEGAN MAYO IS NOT AN EGG EMULSION (2026-10-18, roadmap 080/300).
+    # Hei's "Vegan" bao is made with vegan mayo and was tagged egg because
+    # `mayo` matched. The first block is the real row and the spellings the
+    # lookbehind covers; the second is THE HALF THAT MATTERS and it is the
+    # water-chestnut control again: a qualifier cancels the ONE word it stands
+    # directly in front of, never the dish. An item-level `exclude` on
+    # "vegan" passes every absence line in the first block and silently loses
+    # the real mayo, the egg and the aioli in the second.
+    "vegan mayo is not an egg emulsion": [
+        ("Eggplant & tofu, pickles with vegan mayo and salad on a pumpkin bao",
+         {"contains-soy"}, {"contains-egg"}),
+        ("Vegan mayonnaise", set(), {"contains-egg"}),
+        ("Vegan aioli", set(), {"contains-egg"}),
+        ("Vegan-mayo slaw", set(), {"contains-egg"}),
+        ("Eggless mayonnaise", set(), {"contains-egg"}),
+    ],
+    "a real egg beside a vegan mayo is still egg": [
+        # Real mayo and vegan mayo in one string, either order.
+        ("Chicken burger with mayo, or vegan mayo on request", {"contains-egg"}, set()),
+        ("Vegan mayo or mayonnaise", {"contains-egg"}, set()),
+        # Vegan mayo plus a separate egg ingredient: `\beggs?\b` is its own rule.
+        ("Tofu scramble with vegan mayo and a fried egg", {"contains-egg"}, set()),
+        # Vegan mayo plus a different egg emulsion or a bare aioli.
+        ("Fries with vegan mayo, aioli", {"contains-egg"}, set()),
+        ("Eggless mayo with hollandaise", {"contains-egg"}, set()),
+        # A qualifier that does not DIRECTLY precede the word cancels nothing
+        # (over-warning is the safe direction; a fixed-width lookbehind cannot
+        # span the extra word).
+        ("Vegan garlic aioli", {"contains-egg"}, set()),
+        # "egg free" is NOT cancelled: the bare word `egg` is its own STATED
+        # rule and nothing hedges it (no venue writes it; HEDGE comment). Pinned
+        # so the day a hedge is added this line is changed on purpose.
+        ("Egg-free mayo", {"contains-egg"}, set()),
+        # Controls: the rule still reads the unqualified words at all.
+        ("Chicken with mayo", {"contains-egg"}, set()),
+        ("Garlic aioli", {"contains-egg"}, set()),
+    ],
     # (g) 🛑 A SLICE OF SOMETHING IS NOT A SLICE (2026-09-20, roadmap 470/030).
     # `slices?` sat in the wheat-bakery rule reading BOTH senses of the word:
     # the NZ cabinet slice (caramel, ginger, custard) and the ordinary English
@@ -1789,6 +1826,24 @@ BREAKERS = {
         [(r'pine\s?nuts?|brazil\s?nuts?|(?<!water )(?<!water-)chestnuts?)\b',
           r'pine\s?nuts?|brazil\s?nuts?|chestnuts?)\b')],
         ["water chestnut is not a tree nut, and the almonds beside it survive"]),
+    # Vegan mayo (roadmap 080/300). Take the lookbehinds back out and `vegan
+    # mayo` is an egg emulsion again — the absence group must notice.
+    "the vegan-mayo lookbehinds removed": (
+        [(r'r"\b((?<!vegan )(?<!vegan-)(?<!eggless )"' "\n"
+          r'     r"(?:mayonnaise|mayo|aioli)|"',
+          r'r"\b(mayonnaise|mayo|aioli|"')],
+        ["vegan mayo is not an egg emulsion"]),
+    # 🛑 The water-chestnut shape: the same narrowing rebuilt as an item-level
+    # `exclude`. Every absence line still passes and the real mayo, the
+    # aioli and the emulsion beside a vegan one are LOST — an over-warning
+    # traded for a miss. Only the second group can see it.
+    "the vegan-mayo narrowing rebuilt as an item-level exclude": (
+        [(r'r"\b((?<!vegan )(?<!vegan-)(?<!eggless )"' "\n"
+          r'     r"(?:mayonnaise|mayo|aioli)|"',
+          r'r"\b(mayonnaise|mayo|aioli|"'),
+         (r'r"tartare\s?sauce|tartar\s?sauce)\b", None),',
+          r'r"tartare\s?sauce|tartar\s?sauce)\b", r"\b(vegan|egg[\s-]?free|eggless)\b"),')],
+        ["a real egg beside a vegan mayo is still egg"]),
 
     # --- contains-fish (2026-09-07) ---------------------------------------
     # The wrong-tag trap the owner named when he ruled the tag in: write the
