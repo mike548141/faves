@@ -117,3 +117,37 @@ Real work remains — it is just **build work, not a decision**:
 question for him. It is left in place unchanged.
 🚩 **Do not put `serves` to him.** If this item reaches a session sweeping the
 board for owner decisions, this note is the reason to skip it.
+
+## Done — 2026-10-18 (faves-b4's worker, branch `w/250-010`)
+
+Both owed halves are built; no owner question was asked or needed.
+- **Serves and yield, labelled.** `cook-at-home.json` already carried `serves` on
+  18 of 20 recipes (the ADR 0125 panel and the list row render it; the estimate's
+  working stays in `data/estimates/`, ADR 0047/0135). What was missing was the
+  yield: `yield` now ships on the four stated in prose (hotcakes, Liège waffles,
+  queen cakes, Turkish flatbread) and renders as a wide, labelled "Makes" cell in
+  the stats panel, kept "as written" at any scale but 1×. `recipe_estimates.py
+  --check` gates it against the record (it caught `1 flatbread` vs the record's
+  `1 large flatbread` on its first run). The lava cakes' "8 cakes" is `stated` in
+  the record from the publisher's data, not prose, and was left unshipped.
+- **"Serve N people".** A stepper over the existing scaler (ADR 0162): N from S is
+  N/S, presets keep their keys, any other fraction is the key `x3/2`, so cook mode
+  and the shopping list follow with no new path. Focus returns to the pressed
+  control after the page rebuilds, and the change is announced from a status
+  region on `<body>`. "Written for about 4 people" where the base is our estimate.
+  The panel's Serves reads "4–5" between two whole people (it used to fall back to
+  the unscaled figure).
+- **A defect the first screenshot found:** at a people count where no line can
+  scale (13 from 12) the controls vanished on the press that got there. Fixed by
+  asking "can this recipe scale" at a 2× reference, not the scale on screen.
+- **Evidence:** `recipe_check` 52 → 66 assertions at the counted point, 86 passed
+  in all; `node --test` 1904 pass; `test_validate` 288 mutations behave;
+  `boot_check` 38 and `cook_check` 85 pass. Break-probes (reintroduce, watch
+  fail): dropping the refocus fails the focus, Enter and 2×-round-trip
+  assertions; `disabled` for `aria-disabled` fails the floor one; dropping
+  "about" fails the basis one; removing custom-key resolution fails first-line,
+  keyboard, 2×, floor and Makes; reverting the "can scale" condition fails exactly
+  the new walk-back one. Not break-proven: the tick-survival and contrast
+  assertions.
+- **Still open, for the owner if he wants it:** te reo for Makes/Serve/people; the
+  lava cakes' yield; the three estimated yields stay in the record.
