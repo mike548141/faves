@@ -21,3 +21,19 @@
   is not a wipe.
 
   (claimed 2026-10-17-2254, faves-b4, wt: faves-180-010)
+
+  **Done (worker `w/180-010`, 2026-10-18; ADR 0167).** *Reset to defaults* is now
+  *Reset preferences* (scope unchanged, `I agree`); *Delete everything* sits
+  beside it behind its own typed phrase, `delete everything`, one `typedGate`
+  mechanism for both. It erases every `faves.` key but a four-key keep-list
+  (sync pairing, storage stamp, the "asked to keep data" flag, the location-ask
+  promise), the Near-me origin, and the profiles themselves. Sync carries it as
+  an epoch marker in the snapshot: the newer deletion voids the other side, so a
+  heart another device added since the last agreement does not come back and the
+  four never-synced stores are emptied on honouring. `tests/erase.test.js` fails
+  on any storage-key literal not classified wiped/kept and on a live store not
+  re-pointed; `tests/sync-wipe.test.js` runs 13 scenarios through the real
+  Worker; `device_check` section 12 and `sync_check` 5g (40 → 47) drive it in
+  real browsers. Open for the owner: nothing the ruling left unsettled; two
+  readings are recorded in the ADR (the profiles go too; a build from before
+  this change ignores the marker).
