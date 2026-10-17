@@ -491,6 +491,13 @@ const NAV = {
   logToggle: ".sync-log-wrap .profile-btn",
   noBaseHeading: "This device has favourites sync doesn’t",
   noBaseChoice: ".sync-body .import-choice",
+  // Delete everything (roadmap 180/010) lives under its own index row, beside
+  // Reset preferences — not in the Sync section, though it is what reaches it.
+  resetTopic: "Refresh & reset",
+  eraseOpen: ".settings-erase",
+  eraseConfirm: '[aria-label="Confirm delete everything"]',
+  eraseInput: "#erase-type",
+  eraseGo: '[aria-label="Confirm delete everything"] .profile-btn-danger',
 };
 
 /** Wrap one move of the Settings walk so a break names the STEP, not just a
@@ -1294,6 +1301,80 @@ async function run(opts) {
       "[A] once B answers \"add\", B's heart reaches A",
       (await dishState(A.d, DISH_Z)).heart === "true",
       `A sees ${DISH_Z}: heart=${(await dishState(A.d, DISH_Z)).heart}`
+    );
+
+    // --- 5g. DELETE EVERYTHING REACHES THE OTHER DEVICE AND STAYS DELETED ----
+    // (Roadmap 180/010, ADR 0167: "everywhere, always".) Two ways a deletion is
+    // undone that only two real browsers can show: the other device re-uploads
+    // what it holds (here a heart added on B that has NEVER been synced — against
+    // the base it is an addition, so a plain local wipe merges it straight back),
+    // and a store that never syncs (a saved order, planted in B's storage) is
+    // outside the merge entirely, so only the marker can empty it.
+    const SAVED_KEY = "faves.p.default.savedorders.v1";
+    await toggleHeart(B.d, DISH_Y); // never synced: B is about to be told to delete it
+    await B.d.evalPage(`localStorage.setItem(${JSON.stringify(SAVED_KEY)}, JSON.stringify([{ id: "o1", name: "Usual", venueId: "x", lines: [] }]))`);
+    const bBeforeErase = await B.d.evalPage(rawStoreExpr);
+    const aBeforeErase = await A.d.evalPage(rawStoreExpr);
+    report.check(
+      "[5g control] both devices hold favourites, and B holds an unsynced heart and a saved order, before the deletion",
+      aBeforeErase.favCount > 0 && bBeforeErase.favCount > 0 && (await dishState(B.d, DISH_Y)).heart === "true",
+      `A fav=${aBeforeErase.favCount}, B fav=${bBeforeErase.favCount}, B ${DISH_Y} heart=${(await dishState(B.d, DISH_Y)).heart}`
+    );
+    await openSettings(A.d);
+    await nav("open Refresh & reset", NAV.resetTopic, async () => {
+      await A.d.click(NAV.indexRow, NAV.resetTopic);
+    });
+    await A.d.click(NAV.eraseOpen);
+    const eraseText = await A.d.evalPage(`document.querySelector(${JSON.stringify(NAV.eraseConfirm)} + " .profile-confirm-text").textContent`);
+    report.check(
+      "[A] the confirmation names the sync scope and gives no device count",
+      /every device signed in with this sync code/.test(eraseText) && !/\b\d+\s+(other\s+)?(devices?|phones?)\b/i.test(eraseText),
+      eraseText.slice(0, 200)
+    );
+    // The phrase is entered by setting the field and firing `input`, which is
+    // what the gate listens to; device_check.mjs types it with real key input.
+    await A.d.evalPage(`(() => { const i = document.querySelector(${JSON.stringify(NAV.eraseInput)});
+      i.value = "delete everything"; i.dispatchEvent(new Event("input", { bubbles: true })); })()`);
+    await A.d.click(NAV.eraseGo);
+    await untilPresent(
+      () => A.d.evalPage(`[...document.querySelectorAll(".settings-data-status")].some((e) => /deleted from this device/.test(e.textContent))`),
+      { label: "A's deletion to report", timeout: 20_000 }
+    );
+    const eraseStatus = await A.d.evalPage(`[...document.querySelectorAll(".settings-data-status")].map((e) => e.textContent).find((t) => /deleted/.test(t))`);
+    report.check(
+      "[A] the deletion reports it was sent, and claims no more than that",
+      /has been sent/.test(eraseStatus) && /next time it syncs/.test(eraseStatus),
+      eraseStatus
+    );
+    await closeSettings(A.d);
+    const aAfterErase = await A.d.evalPage(rawStoreExpr);
+    report.check(
+      "[A] A is empty",
+      aAfterErase.favCount === 0 && aAfterErase.ratingKeys.length === 0,
+      `A fav=${aAfterErase.favCount}, ratings=${aAfterErase.ratingKeys.length}`
+    );
+    await syncNowAndWait(B.d);
+    const bAfterErase = await B.d.evalPage(rawStoreExpr);
+    const bSaved = await B.d.evalPage(`localStorage.getItem(${JSON.stringify(SAVED_KEY)})`);
+    report.check(
+      "[B] after its next sync B is empty too — its unsynced heart and its saved order included",
+      bAfterErase.favCount === 0 && bAfterErase.ratingKeys.length === 0 && bSaved === null,
+      `B fav=${bAfterErase.favCount}, ratings=${bAfterErase.ratingKeys.length}, saved orders=${bSaved === null ? "gone" : "still there"}`
+    );
+    report.check(
+      "[B] the screen follows: the hearts B showed are off",
+      (await dishState(B.d, DISH_Y)).heart === "false" && (await dishState(B.d, DISH_X)).heart === "false",
+      `B ${DISH_Y}: heart=${(await dishState(B.d, DISH_Y)).heart}`
+    );
+    await syncNowAndWait(A.d);
+    await syncNowAndWait(B.d);
+    await syncNowAndWait(A.d);
+    const aSettled = await A.d.evalPage(rawStoreExpr);
+    const bSettled = await B.d.evalPage(rawStoreExpr);
+    report.check(
+      "[A, B] more syncs in both directions resurrect nothing",
+      aSettled.favCount === 0 && bSettled.favCount === 0 && aSettled.ratingKeys.length === 0 && bSettled.ratingKeys.length === 0,
+      `A fav=${aSettled.favCount}, B fav=${bSettled.favCount}`
     );
 
     // --- 6. Turning sync off on B leaves B's own data intact -------------

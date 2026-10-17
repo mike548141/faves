@@ -1242,6 +1242,194 @@ async function run(opts) {
       }
     }
 
+    // --- 12. Reset preferences keeps your data; Delete everything takes it all ----
+    // (Roadmap 180/010, ADR 0167, owner-ruled 2026-08-16: "Reset becomes TWO
+    // gated controls".) Seeds EVERY personal store across two people through the
+    // real store modules in the page, works the real controls with the real
+    // typed phrases, and reads localStorage and sessionStorage back. Three claims
+    // no unit test can make:
+    //   a) Reset preferences clears the active person's preferences and leaves
+    //      favourites, notes, saved orders and the other person alone;
+    //   b) the two phrases cannot be confused — "I agree" does not arm Delete
+    //      everything, and the confirmation names its scope with no device count;
+    //   c) after Delete everything NOTHING of the seeded data is left in either
+    //      storage, a store tapped afterwards writes only the new tap (an
+    //      unreloaded store would write its old contents straight back), and
+    //      after a reload it is still gone.
+    // Every seeded text carries one marker, so "empty" is "the marker is in no
+    // stored value at all" — which also catches a store this check forgot.
+    const MARK = "zz-erase-marker";
+    const KEPT = ["faves.sync.v1", "faves.schema.v1", "faves.persist.asked.v1", "faves.geo.consent.v1"];
+    await cdp.send("Page.navigate", { url }, sessionId);
+    await untilPresent(async () => (await evalPage("document.querySelectorAll('li.dish').length")) > 0, {
+      label: "the menu to render for the Delete-everything check",
+    });
+    await settle();
+    const seedAll = (who) => `(async () => {
+      const m = ${JSON.stringify(MARK)};
+      const f = await import("/js/favourites.js"), r = await import("/js/ratings.js"), n = await import("/js/notes.js"),
+            st = await import("/js/settings.js"), rc = await import("/js/recipes.js"), so = await import("/js/saved-orders.js"),
+            cl = await import("/js/checklist.js");
+      f.favourites.toggle({ type: "venue", venueId: m + "-${who}", venueName: m + " ${who}" });
+      r.ratings.set({ type: "venue", venueId: m + "-${who}" }, 3);
+      n.notes.set(m + " dish ${who}", m + " half the sugar");
+      st.settings.set({ diet: { dietary: [], avoid: [${JSON.stringify(ALLERGEN.key)}] } });
+      rc.recipes.put({ dishId: "u:" + m + "-${who}", name: m + " loaf ${who}" });
+      so.savedOrders.save({ venueId: m, venueName: m, name: m + " usual ${who}", lines: [{ dishId: "pie", name: "Pie", qty: 1 }] });
+      cl.checklist.set(m + " dish ${who}", "i:flour", true);
+    })()`;
+    // Earlier sections left more than one person on the device, so the two
+    // seeded here are named by id rather than assumed to be the only two.
+    const idOne = await evalPage(`import("/js/profiles.js").then((p) => p.profiles.activeId())`);
+    await evalPage(seedAll("one"));
+    const idTwo = await evalPage(`import("/js/profiles.js").then((p) => p.profiles.create("Second"))`); // switches to it, as the real control does
+    await evalPage(seedAll("two"));
+    const people = await evalPage(`import("/js/profiles.js").then((p) => p.profiles.list().length)`);
+    await evalPage(`(async () => {
+      const m = ${JSON.stringify(MARK)};
+      const c = await import("/js/cart.js"), sh = await import("/js/shopping.js"), ck = await import("/js/cook.js"),
+            ss = await import("/js/store.js"), g = await import("/js/geo.js");
+      c.order.add({ venueId: m, venueName: m, name: m + " pie", price: 5 });
+      sh.shopping.add({ venueId: m, venueName: m, name: m + " flour" });
+      ck.createTimerStore(ss.safeStorage()).start(m + " dish", 0, Date.now() + 60000);
+      g.rememberOrigin({ lat: -41.2, lng: 174.7 });
+      localStorage.setItem("faves.sync.log.v1", JSON.stringify([{ at: "x", outcome: "synced", why: m }]));
+      localStorage.setItem("faves.upgrade.snapshot.v1", JSON.stringify({ copy: m }));
+    })()`);
+    const storedNow = `(() => {
+      const ks = []; for (let i = 0; i < localStorage.length; i++) ks.push(localStorage.key(i));
+      const faves = ks.filter((k) => k.startsWith("faves.")).sort();
+      const marked = faves.filter((k) => localStorage.getItem(k).includes(${JSON.stringify(MARK)}));
+      const sk = [...Array(sessionStorage.length).keys()].map((i) => sessionStorage.key(i)).filter((k) => k.startsWith("faves."));
+      return { faves, marked, session: sk };
+    })()`;
+    const seeded = await evalPage(storedNow);
+    report.check(
+      "every personal store holds the seed before anything is deleted (the control)",
+      seeded.marked.length >= 17 && seeded.session.length === 1,
+      `${seeded.marked.length} stored values carry the marker (${seeded.marked.map((k) => k.replace(/^faves\./, "")).join(", ")}); sessionStorage: ${seeded.session.join(", ")}`
+    );
+
+    await click("#overflow-btn");
+    await click("#settings-btn");
+    await untilPresent(async () => (await snap()).settingsOpen, { label: "Settings to open for the reset check" });
+    await click(".settings-row", "Refresh & reset");
+    const twoControls = await evalPage(`(() => {
+      const t = (s, x) => [...document.querySelectorAll(s)].find((e) => e.textContent.includes(x));
+      return { reset: !!t(".settings-reset", "Reset preferences"), erase: !!t(".settings-reset", "Delete everything"),
+               oldLabel: !!t(".settings-reset", "Reset to defaults") };
+    })()`);
+    report.check(
+      "Refresh & reset offers two separate controls: Reset preferences and Delete everything",
+      twoControls.reset && twoControls.erase && !twoControls.oldLabel,
+      JSON.stringify(twoControls)
+    );
+
+    // a) Reset preferences: one person's preferences, nothing else.
+    const peek = (ids) => `(() => {
+      const get = (id, base) => { try { return JSON.parse(localStorage.getItem("faves.p." + id + "." + base)); } catch { return null; } };
+      return ${JSON.stringify(ids)}.map((id) => ({
+        avoid: get(id, "settings.v1")?.diet?.avoid || [],
+        favs: (get(id, "favourites.v1") || []).length,
+        notes: Object.keys(get(id, "notes.v1") || {}).length,
+        saved: (get(id, "savedorders.v1") || []).length,
+      }));
+    })()`;
+    const before = await evalPage(peek([idOne, idTwo]));
+    await click(".settings-reset", "Reset preferences");
+    await click("#reset-type");
+    await cdp.send("Input.insertText", { text: "delete everything" }, sessionId);
+    const resetOnWrongPhrase = await evalPage(`document.querySelector('[aria-label="Confirm reset"] .profile-btn-danger').disabled`);
+    report.check(
+      "the Delete-everything phrase does not arm Reset preferences",
+      resetOnWrongPhrase === true,
+      `Reset button disabled=${resetOnWrongPhrase} after typing "delete everything"`
+    );
+    await evalPage(`(() => { const i = document.getElementById("reset-type"); i.value = ""; i.dispatchEvent(new Event("input", { bubbles: true })); })()`);
+    await cdp.send("Input.insertText", { text: "I agree" }, sessionId);
+    await click('[aria-label="Confirm reset"] .profile-btn-danger');
+    await settle();
+    const kept = await evalPage(peek([idOne, idTwo]));
+    report.check(
+      "Reset preferences clears the active person's allergen flags and leaves everything else alone",
+      before.every((b) => same(b.avoid, [ALLERGEN.key])) && kept[1].avoid.length === 0 && same(kept[0].avoid, [ALLERGEN.key]) &&
+        kept.every((k) => k.favs >= 1 && k.notes >= 1 && k.saved >= 1) &&
+        kept[0].favs === before[0].favs && kept[1].favs === before[1].favs &&
+        kept[0].notes === before[0].notes && kept[1].saved === before[1].saved,
+      JSON.stringify({ before, after: kept })
+    );
+
+    // b) Delete everything: its own phrase, its scope named, no device count.
+    await click(".settings-reset", "Delete everything");
+    const confirmText = await evalPage(`document.querySelector('[aria-label="Confirm delete everything"] .profile-confirm-text').textContent`);
+    report.check(
+      "the Delete-everything confirmation names every store and the scope, and no device count",
+      ["favourites", "ratings", "notes", "your own recipes", "saved orders", "activity history", "order tally", "shopping list", "flagged allergens", `all ${people} profiles`]
+        .every((w) => confirmText.includes(w)) &&
+        !/\b\d+\s+(other\s+)?(devices?|phones?)\b/i.test(confirmText) &&
+        /no other copy/.test(confirmText),
+      confirmText.slice(0, 160) + "…"
+    );
+    const goSel = '[aria-label="Confirm delete everything"] .profile-btn-danger';
+    const armedBefore = await evalPage(`!document.querySelector(${JSON.stringify(goSel)}).disabled`);
+    await click("#erase-type");
+    await cdp.send("Input.insertText", { text: "I agree" }, sessionId);
+    const armedByIAgree = await evalPage(`!document.querySelector(${JSON.stringify(goSel)}).disabled`);
+    report.check(
+      'Delete everything is disabled until "delete everything" is typed — "I agree" does not arm it',
+      armedBefore === false && armedByIAgree === false,
+      `armed at open=${armedBefore}; armed by "I agree"=${armedByIAgree}`
+    );
+    await evalPage(`(() => { const i = document.getElementById("erase-type"); i.value = ""; i.dispatchEvent(new Event("input", { bubbles: true })); })()`);
+    await cdp.send("Input.insertText", { text: "Delete Everything" }, sessionId);
+    const armedByPhrase = await evalPage(`!document.querySelector(${JSON.stringify(goSel)}).disabled`);
+    report.check('typing "Delete Everything" (any case) arms it', armedByPhrase === true, `armed=${armedByPhrase}`);
+    await click(goSel);
+    await untilPresent(
+      () => evalPage(`[...document.querySelectorAll(".settings-data-status")].some((e) => e.textContent.includes("Everything is deleted from this device"))`),
+      { label: "the deletion to report" }
+    );
+
+    // c) Nothing left; a tap afterwards writes only the tap; still nothing after a reload.
+    const gone = await evalPage(storedNow);
+    report.check(
+      "after Delete everything no stored value carries the seed, and only the device's own settings remain",
+      gone.marked.length === 0 && gone.faves.every((k) => KEPT.includes(k)) && gone.session.length === 0,
+      `left in localStorage: ${gone.faves.join(", ") || "nothing"}; marked: ${gone.marked.join(", ") || "none"}; sessionStorage: ${gone.session.join(", ") || "none"}`
+    );
+    const afterTap = await evalPage(`(async () => {
+      const m = ${JSON.stringify(MARK)};
+      const f = await import("/js/favourites.js"), c = await import("/js/cart.js"), p = await import("/js/profiles.js");
+      const who = p.profiles.list().map((x) => x.name);
+      f.favourites.toggle({ type: "venue", venueId: "after", venueName: "After" });
+      c.order.add({ venueId: "after", venueName: "After", name: "Tea", price: 3 });
+      const fav = JSON.parse(localStorage.getItem("faves.p." + p.profiles.activeId() + ".favourites.v1") || "[]");
+      const order = JSON.parse(localStorage.getItem("faves.order.v1") || "[]");
+      return { who, fav: fav.map((e) => e.venueId), order: order.map((l) => l.name),
+               anyMarker: Object.keys(localStorage).some((k) => localStorage.getItem(k).includes(m)) };
+    })()`);
+    report.check(
+      "the profiles are back to one empty Me, and a tap afterwards writes only that tap (no store resurrects its old contents)",
+      same(afterTap.who, ["Me"]) && same(afterTap.fav, ["after"]) && same(afterTap.order, ["Tea"]) && !afterTap.anyMarker,
+      JSON.stringify(afterTap)
+    );
+    await cdp.send("Page.navigate", { url }, sessionId);
+    await untilPresent(async () => (await evalPage("document.querySelectorAll('li.dish').length")) > 0, {
+      label: "the menu to render after the deletion",
+    });
+    const reloaded = await evalPage(storedNow);
+    report.check(
+      "and after a reload it is still gone",
+      reloaded.marked.length === 0 && reloaded.session.length === 0,
+      `marked after reload: ${reloaded.marked.join(", ") || "none"}`
+    );
+    // Put the page back as the rest of the run expects.
+    await evalPage(`(async () => {
+      const f = await import("/js/favourites.js"), c = await import("/js/cart.js");
+      f.favourites.removeKey("v:after");
+      c.order.clear();
+    })()`);
+
     // Leave the profile as it was found.
     await evalPage(`(async () => {
       const f = await import("/js/favourites.js"), r = await import("/js/recipes.js");
