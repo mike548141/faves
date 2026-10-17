@@ -435,7 +435,7 @@ CASES = {
     "yield is a number, not words": (lambda d: _first_item(d).update(**{"yield": 12}), "error", r"yield for .* must be a non-empty string"),
     "yield is blank": (lambda d: _first_item(d).update(**{"yield": "  "}), "error", r"yield for .* must be a non-empty string"),
     "yield is a paragraph": (lambda d: _first_item(d).update(**{"yield": "x" * 81}), "error", r"yield for .* must be a non-empty string"),
-    # --- how a dish is sold: minQty and unit (roadmap 200/170, ADR 0163) ---
+    # --- how a dish is sold: minQty and unit (roadmap 200/170, ADR 0164) ---
     # A minimum of 1 is the default, so a stored 1 is noise; a float or a string
     # is the shape a transcriber types from "minimum order 3". Each of these is a
     # form the stepper would otherwise have to guess at.

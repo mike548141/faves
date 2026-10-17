@@ -162,7 +162,7 @@ export function savedOrdersPanel(record) {
       );
     }
     if (raised.length) {
-      // Brought up to the dish's minimum order and said in words (ADR 0163): the
+      // Brought up to the dish's minimum order and said in words (ADR 0164): the
       // quantity on the sheet is not the one they saved, and they should know why.
       status.append(
         el("p", { className: "saved-status-line saved-raised-head", textContent: "Raised to the minimum order:" }),

@@ -1284,7 +1284,7 @@ function renderDish(
           item.price != null ? money(item.price) : priceUnknown(item) ? "?" : "—",
       });
   // What the price is FOR ("each", "per person", "per 100 g"; roadmap 200/170, ADR
-  // 0163), after a number only: "$7 each" reads as such, and a dash with "each"
+  // 0164), after a number only: "$7 each" reads as such, and a dash with "each"
   // after it would claim a price we do not have. Words, in the price's own span so
   // a screen reader hears "seven dollars each" as one thing.
   const unit = item.price != null ? unitWords(item) : "";
@@ -1395,7 +1395,7 @@ function renderDish(
     children.push(el("p", { className: "dish-desc", lang: d.lang, textContent: d.text }));
   }
   // The venue's minimum order, in words, where the reader decides to add (roadmap
-  // 200/170, ADR 0163): "Minimum 3" — or "Minimum 2 people" where the quantity is
+  // 200/170, ADR 0164): "Minimum 3" — or "Minimum 2 people" where the quantity is
   // a head-count. The rule is also enforced by the stepper; the words are why.
   const minSaid = kind.hasPrices ? minWords(item) : "";
   if (minSaid) children.push(el("p", { className: "dish-min", textContent: minSaid }));
@@ -1514,7 +1514,7 @@ function renderDish(
         // and what gets read down the phone, so both travel.
         dishId: dishId(item),
         price: item.price ?? null,
-        // The least the venue takes (ADR 0163). Read by the stepper to start a
+        // The least the venue takes (ADR 0164). Read by the stepper to start a
         // new line there; never stored on the line itself. Omitted when there is
         // none, so a plain dish's meta is the shape it has always been.
         ...(minQtyOf(item) > 1 ? { minQty: minQtyOf(item) } : {}),
