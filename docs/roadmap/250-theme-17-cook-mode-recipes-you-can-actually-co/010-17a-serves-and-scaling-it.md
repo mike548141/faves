@@ -1,4 +1,6 @@
-- [ ] **17a — Serves, and scaling it** `[M][schema][design]` — ⚠️ **CLAIM
+- [~] **17a — Serves, and scaling it** `[M][schema][design]` — ⚠️ **CLAIM
+  (claimed 2026-10-17-2049, faves-b4, wt: faves-250-010)
+  Scope: the render of serves and yield, labelled, and the target-serves picker.
   RELEASED 2026-08-16 22:59 UTC. The scaling half is SHIPPED (see the block
   above); what is left is the `serves` half and it is ~~OWNER-BLOCKED~~, not
   unclaimed work**

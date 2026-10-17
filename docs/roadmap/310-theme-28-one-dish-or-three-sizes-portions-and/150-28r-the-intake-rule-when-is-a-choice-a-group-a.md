@@ -1,4 +1,5 @@
-- [ ] **28r — The intake rule: when is a choice a group, and when is it two
+- [~] **28r — The intake rule: when is a choice a group, and when is it two
+  (claimed 2026-10-17-2049, faves-b4, wt: faves-310-150)
       dishes?** `[S][docs]` — the thing `490/050` option (a) said it *"needs"*
       and nothing has yet written down.
 

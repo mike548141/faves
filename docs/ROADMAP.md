@@ -204,7 +204,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/README.md)*
 
-- [ ] [17a — Serves, and scaling it](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/010-17a-serves-and-scaling-it.md)
+- [~] [17a — Serves, and scaling it](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/010-17a-serves-and-scaling-it.md)
 - ✅ [17b — Step timings and a tap-to-start timer](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/020-17b-step-timings-and-a-tap-to-start-timer.md)
 - [ ] [17c — Quantities inside the step](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/030-17c-quantities-inside-the-step.md)
 - [ ] [17e — The rest of what the research turned up](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/040-17e-the-rest-of-what-the-research-turned-up.md)
@@ -262,7 +262,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [~] [28o — Merge the 63 ladders that differ only by name and price](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/120-28o-merge-the-63-ladders-that-differ-only-by-n.md)
 - [ ] [28p — The 70 ladders a human must rule on, one at a time](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/130-28p-the-70-ladders-a-human-must-rule-on-one-at.md)
 - ✅ [28q — An add-on option has no id, and this migration is what makes](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/140-28q-an-add-on-option-has-no-id-and-this-migrat.md)
-- [ ] [28r — The intake rule: when is a choice a group, and when is it two](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/150-28r-the-intake-rule-when-is-a-choice-a-group-a.md)
+- [~] [28r — The intake rule: when is a choice a group, and when is it two](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/150-28r-the-intake-rule-when-is-a-choice-a-group-a.md)
 - ✅ [28s — The checks that would stay GREEN while being wrong](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/160-28s-the-checks-that-would-stay-green-while-bei.md)
 
 ## Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)
