@@ -1,4 +1,4 @@
-- [ ] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
+- [~] 🔎 **Two flakes seen under heavy load on 2026-10-02, neither named**
       `[S] [tests]` — filed by session `faves-4f` from its workers' sweeps
       (load averages of 120 to 800 while several sweeps overlapped).
 
@@ -138,3 +138,7 @@
   - CI discards the failure screenshot with the runner. Wiring
     `$FAVES_SHOT_DIR` to an artefact upload is a CI change (a new action, so a
     trust-surface decision) and is not made.
+
+  (claimed 2026-10-17-2119, faves-b4, wt: faves-510-420) Scope: the geo race
+  fix in the home-page checks only. The load experiment waits for a quiet
+  machine; the CI screenshot upload is a trust-surface decision for the owner.
