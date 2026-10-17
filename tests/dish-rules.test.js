@@ -1,4 +1,4 @@
-// Minimum orders and per-unit prices (roadmap 200/170, ADR 0165): the pure rules,
+// Minimum orders and per-unit prices (roadmap 200/170, ADR 0166): the pure rules,
 // the order store starting a NEW line at the minimum, and recall bringing a saved
 // quantity up to it. The stepper and the sheet are asserted in a real browser
 // (tools/addon_check.mjs, block ad); this file is what they stand on.

@@ -71,7 +71,7 @@ export const REASONS = {
  * null when the dish no longer carries a price; `text` is the sentence for the
  * reader, formatted in the venue's currency), and `raised` is `[{ name, was, now,
  * text }]` for the lines whose saved quantity is below the dish's minimum order
- * today (ADR 0165) and was brought up to it.
+ * today (ADR 0166) and was brought up to it.
  */
 export function planRecall(saved, record) {
   const lines = [];
@@ -139,7 +139,7 @@ export function planRecall(saved, record) {
 
     // A saved line below the dish's minimum order TODAY (the venue added the rule
     // since, or the saved order predates it) is brought up to it and SAID — never
-    // dropped, and never landed short as though the venue would take it (ADR 0165).
+    // dropped, and never landed short as though the venue would take it (ADR 0166).
     const up = raiseToMin(l.qty, item);
     if (up.raised) {
       raised.push({

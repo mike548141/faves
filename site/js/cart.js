@@ -342,7 +342,7 @@ export function createOrder(storage, key = KEY, { record = null } = {}) {
      *  `price` is the CONFIGURED unit price and `options` the chosen add-ons
      *  (ADR 0048); `dishId` is what separates two identically-named rows
      *  (ADR 0051); `note` is the free-text customisation (Theme 14c).
-     *  `minQty` is the dish's minimum order (ADR 0165): a NEW line starts at it, so
+     *  `minQty` is the dish's minimum order (ADR 0166): a NEW line starts at it, so
      *  "minimum order 3" puts three on the sheet, not one. It is read, never stored
      *  on the line; an existing line still grows by one. */
     add(meta) {

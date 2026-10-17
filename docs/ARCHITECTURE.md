@@ -325,7 +325,7 @@ excluded from both stores, always.
                                      //   take ("minimum order 3"). The sheet's stepper
                                      //   starts there and won't stop short of it; the
                                      //   row says "Minimum 3". Only where the menu
-                                     //   prints it; ADR 0165
+                                     //   prints it; ADR 0166
           "unit": "each",            // optional: what `price` is FOR, from a closed set:
                                      //   "each" | "per person" | "per 100 g". Shown
                                      //   beside the price. Never inferred; needs a
@@ -964,7 +964,7 @@ section is written once.
   a number > 0, and **the options must be free** (an allowance over priced
   options would not say which picks are the included ones). A group that states
   none of `min`, `included`, `extraPrice` behaves exactly as before.
-- **A dish's `minQty` and `unit`** (roadmap 200/170, ADR 0165) say how it is
+- **A dish's `minQty` and `unit`** (roadmap 200/170, ADR 0166) say how it is
   sold, and are read from the venue's live record when the sheet is drawn,
   never stored on an order line (so a line made before the rule, or one that
   arrived in a link, is judged by today's menu). `minQty` means the price is

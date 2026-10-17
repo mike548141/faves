@@ -24,7 +24,7 @@
 
   (claimed 2026-10-17-2134, faves-b4, wt: faves-200-170)
 
-  **Done in `w/200-170` (ADR 0165), minimum orders end to end; the board state
+  **Done in `w/200-170` (ADR 0166), minimum orders end to end; the board state
   is the orchestrator's.** Two optional dish fields, `minQty` (integer of 2 or
   more) and `unit` (`each`, `per person`, `per 100 g`), both only where the menu
   prints them. Add starts at the minimum; ＋ on a short line jumps to it; − at the

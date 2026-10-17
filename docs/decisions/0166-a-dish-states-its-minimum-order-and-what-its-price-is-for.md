@@ -1,4 +1,4 @@
-# 0165 — A dish states its minimum order and what its price is for
+# 0166 — A dish states its minimum order and what its price is for
 
 **Status:** accepted
 **Date:** 2026-10-18

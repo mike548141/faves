@@ -90,7 +90,7 @@ function reduceStepper(item) {
  * required add-on choice is unanswered (ADR 0156): the ＋ Add is then drawn
  * aria-disabled, says why, and a tap calls `onBlocked` instead of ordering.
  *
- * `meta.minQty` is the dish's minimum order (roadmap 200/170, ADR 0165). Add
+ * `meta.minQty` is the dish's minimum order (roadmap 200/170, ADR 0166). Add
  * puts that many on the sheet, ＋ on a line short of it jumps to it, and − at the
  * minimum takes the line OFF (✕, worded "Remove … minimum N") rather than step
  * below what the venue will take. Without a minimum nothing here changes.
@@ -351,7 +351,7 @@ function lineRow(item, collectMode, info, record) {
     el("span", { className: "order-line-name" }, [
       item.name,
       config ? el("span", { className: "order-line-config", textContent: config }) : null,
-      // What the price is for, and any minimum (roadmap 200/170, ADR 0165). The
+      // What the price is for, and any minimum (roadmap 200/170, ADR 0166). The
       // unit price is written out here because the right-hand figure is the LINE
       // total ("3 × $7 = $21") or, for a dish sold by weight, a dash: "$26 per
       // 100 g" times a count is not a price, so that line is left out of the total

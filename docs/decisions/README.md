@@ -1927,7 +1927,7 @@ deliberation those compact docs omit.
   Noble's "Choose two" is the one data change; the grill sauce and Hell's dips
   fit the shape but are not structured groups yet; per-category counts inside a
   build are left out on purpose.
-- [0165](0165-a-dish-states-its-minimum-order-and-what-its-price-is-for.md) —
+- [0166](0166-a-dish-states-its-minimum-order-and-what-its-price-is-for.md) —
   **A dish states its minimum order and what its price is for** (`200/170`). Optional
   `minQty` (integer >= 2) and `unit` (`each` / `per person` / `per 100 g`), only
   where the menu prints them. A new line starts at the minimum, ＋ jumps a short
