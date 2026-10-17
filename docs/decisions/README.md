@@ -1917,3 +1917,11 @@ deliberation those compact docs omit.
   follow through the key), says "about" under an estimated base, and keeps focus
   and announces itself across the page's rebuild. `yield` ships on the four stated
   ones and renders as a "Makes" cell, shown as written at any scale but 1×.
+- [0164](0164-the-activity-log-is-per-person-device-local-and-honest.md) —
+  **The activity log is per person, device-local, capped at 500 and honest**
+  (`390/010`+`390/040`, owner-ruled 2026-08-16). `faves.activity.v1` rides
+  `profileScopedStorage()`, is outside `SCOPED_BASE_KEYS` and the sync snapshot,
+  and travels only in the backup file (named per-person field, merged by union).
+  No per-entry delete: removals appear as removals. `settings.change` records the
+  dial's name, never the value, enforced in the recorder. Stores record after
+  their own write and never throw.

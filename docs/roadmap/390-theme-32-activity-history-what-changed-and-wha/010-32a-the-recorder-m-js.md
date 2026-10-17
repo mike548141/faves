@@ -37,3 +37,18 @@ class this repo never stores. Log that *a preference changed* and which dial —
 never the value. The rest of the vocabulary is safe; this one is not.
 
   (claimed 2026-10-17-2131, faves-b4, wt: faves-390-010 — 32a and 32d in one change)
+
+
+  ✅ **Done 2026-10-18 (worker `w/390-010`, built with 32d as one change).**
+  `site/js/activity.js` (new; ring buffer `faves.activity.v1`, `ACTIVITY_CAP`
+  500, label snapshotted, frozen entries, `record`/`clear`, no per-entry
+  delete) and the recorder wired through an optional `record` option on
+  `createFavourites`/`createRatings`/`createOrder`/`createSettings`, passed by
+  the singletons only; `profiles.js` gained `onSwitch`. Events live: `favourite.add/remove`,
+  `rating.set/clear`, `order.add/remove/clear`, `profile.switch`, `settings.change`,
+  and `reset.performed`. Not wired, left for later: `report.sent`, the three system
+  kinds (32c), the order line's note/finish/move edits. `settings.change` is the dial
+  only: `makeEntry` accepts a label from `SETTINGS_DIALS` and discards from/to/venue/dish,
+  with tests that walk every allergen, diet and food-preference key through the real
+  settings store and fail if one reaches the log. ADR 0164. Store-added whitelist walk
+  and measurements are in the PR.
