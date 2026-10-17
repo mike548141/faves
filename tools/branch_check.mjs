@@ -74,7 +74,7 @@
 // run, because a stale service worker will happily serve the last run's modules
 // and a hard reload does not bust it.
 
-import { mkdtemp, readFile } from "node:fs/promises";
+import { mkdtemp, readFile, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -101,6 +101,7 @@ const SITE = join(ROOT, "site");
 //              branches rather than one or two, so a mistake in the remainder
 //              arithmetic is visible here and nowhere else.
 const VENUES = ["tj-katsu", "mcdonalds", "hell-pizza"];
+const BOOKING_LINK = { platform: "ResDiary", url: "https://booking.resdiary.com/widget/Standard/Fixture/1", kind: "booking" };
 const NEAR_LIMIT = 4; // must match locations.NEAR_BRANCH_LIMIT
 
 // The closed-venue fixtures, and why these two of the three. tj-katsu has hours
@@ -237,6 +238,7 @@ Options:
   --id <venue-id>   Check only this venue (default: ${VENUES.join(", ")}
                     plus ${FIXTURES.map((f) => f.id).join(", ")}).
   --provenance      Run only the Google Maps hours-provenance assertions (ADR 0161).
+  --booking         Run only the booking-link assertions (roadmap 33a, ADR 0165).
   --port <n>        Port for the local static server (default: an unused one).
   --headed          Show the browser window.
   --keep-profile    Leave the temporary Chrome profile behind, and say where.
@@ -247,12 +249,13 @@ Exit status: 0 all assertions passed; 1 an assertion failed; 2 the harness
 itself could not run (no Chrome, port in use, page never rendered).`;
 
 function parseArgs(argv) {
-  const opts = { ids: null, provenanceOnly: false, port: 0, headed: false, keepProfile: false, verbose: false };
+  const opts = { ids: null, provenanceOnly: false, bookingOnly: false, port: 0, headed: false, keepProfile: false, verbose: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "-h" || a === "--help") return { help: true };
     else if (a === "--id") (opts.ids ||= []).push(argv[++i]);
     else if (a === "--provenance") opts.provenanceOnly = true;
+    else if (a === "--booking") opts.bookingOnly = true;
     else if (a === "--port") opts.port = Number(argv[++i]);
     else if (a === "--headed") opts.headed = true;
     else if (a === "--keep-profile") opts.keepProfile = true;
@@ -829,6 +832,96 @@ async function checkMapsProvenance(driver, report, port) {
   }
 }
 
+// (g) A VENUE'S OWN BOOKING LINK (roadmap 33a, ADR 0165). Three ways it goes
+// wrong that the unit tests and validate.py cannot see, because the row is built
+// in menu.js from the record and then placed on a page:
+//   - it renders nowhere, or only on the single-branch card (the multi-branch
+//     card is a different code path that ends differently);
+//   - it renders UNDER "Order online" as well, so a reader booking a table is
+//     offered the same address as a way to order food;
+//   - a venue with no booking link is given one anyway, or a "Call to book"
+//     label no source backs (the Call row says what it does; that is enough).
+// The positive list is read from the CORPUS, not typed here, and the check
+// REFUSES to run vacuous: with no booking link anywhere it would pass with the
+// feature deleted, which is the failure mode this repo has paid for before.
+const BOOKING_FIXTURE = "tj-katsu-booking-fixture"; // a seven-branch chain, one link injected
+const NO_BOOKING = ["gold-lining-cafe", "tj-katsu", "mcdonalds"]; // none, none (multi-branch, has phones), none (multi-branch)
+
+async function corpusBookings() {
+  const dir = join(SITE, "data", "restaurants");
+  const out = [];
+  for (const f of (await readdir(dir)).sort()) {
+    if (!f.endsWith(".json")) continue;
+    const v = JSON.parse(await readFile(join(dir, f), "utf8"));
+    const links = (v.ordering || []).filter((o) => o.kind === "booking");
+    if (links.length) out.push({ id: v.id, links, orders: (v.ordering || []).filter((o) => o.kind !== "booking") });
+  }
+  return out;
+}
+
+const bookingExpr = `(() => {
+  const card = document.querySelector(".contact-card");
+  const rows = card ? [...card.querySelectorAll("a.contact-book")] : [];
+  const order = document.querySelector(".order-block");
+  return {
+    card: !!card,
+    rows: rows.map((a) => ({
+      href: a.getAttribute("href"),
+      target: a.getAttribute("target"),
+      rel: a.getAttribute("rel"),
+      label: (a.querySelector(".contact-label") || {}).textContent || null,
+      value: (a.querySelector(".contact-value") || {}).textContent || null,
+      name: a.textContent,
+      height: Math.round(a.getBoundingClientRect().height),
+      visible: a.getBoundingClientRect().width > 0,
+    })),
+    cardText: card ? card.textContent : "",
+    orderHrefs: order ? [...order.querySelectorAll("a")].map((a) => a.getAttribute("href")) : [],
+    anywhereBook: [...document.querySelectorAll("a")].filter((a) => /book a table/i.test(a.textContent)).length,
+  };
+})()`;
+
+async function checkBookings(driver, report, port, venues) {
+  console.log("\n  A venue's own booking link (roadmap 33a, ADR 0165)");
+  report.check(
+    "the corpus holds at least one booking link, so the assertions below are not vacuous",
+    venues.length > 0,
+    `${venues.length} venue(s)`,
+  );
+  const open = async (id) => {
+    await driver.cdpNavigate(`http://127.0.0.1:${port}/restaurant.html?id=${encodeURIComponent(id)}`);
+    await untilPresent(async () => await driver.evalPage(`!!document.querySelector(".contact-card")`), {
+      label: `${id}'s contact card to render`,
+    });
+    return await driver.evalPage(bookingExpr);
+  };
+  for (const v of [...venues, { id: BOOKING_FIXTURE, links: [BOOKING_LINK], orders: [] }]) {
+    const s = await open(v.id);
+    const want = v.links[0];
+    report.check(`${v.id}: the contact card carries ${v.links.length} booking row(s)`, s.rows.length === v.links.length, `${s.rows.length} row(s)`);
+    const r = s.rows[0];
+    if (!r) continue;
+    report.check(`${v.id}: it is an ordinary https link to the venue's own platform`, r.href === want.url && r.href.startsWith("https://"), r.href);
+    report.check(`${v.id}: it opens a new window and says so to a screen reader`, r.target === "_blank" && /noopener/.test(r.rel || "") && /opens in a new window/.test(r.name), `target=${r.target} rel=${r.rel}`);
+    report.check(`${v.id}: it reads "Book a table" and names the platform`, r.label === "Book a table" && r.value === want.platform, `${r.label} / ${r.value}`);
+    report.check(`${v.id}: it is a ≥44 px target`, r.visible && r.height >= 44, `${r.height}px`);
+    report.check(
+      `${v.id}: it is not also offered under "Order online"`,
+      !s.orderHrefs.includes(want.url),
+      `order block links: ${JSON.stringify(s.orderHrefs)}`,
+    );
+    report.check(`${v.id}: no "Call to book" label stands in for a booking`, !/call to book/i.test(s.cardText), "");
+    for (const o of v.orders) {
+      report.check(`${v.id}: its order link is still under "Order online"`, s.orderHrefs.includes(o.url), o.url);
+    }
+  }
+  for (const id of NO_BOOKING) {
+    const s = await open(id);
+    report.check(`${id}: no booking link, so none is shown`, s.card && s.rows.length === 0 && s.anywhereBook === 0, `${s.rows.length} row(s), ${s.anywhereBook} link(s) saying Book a table`);
+    report.check(`${id}: and no "Call to book" is invented for its phone`, !/call to book/i.test(s.cardText), "");
+  }
+}
+
 /** The real record for a venue id, or the injected-closure fixture for one of
  *  the `<id>-closed-fixture` ids. Keyed by the path the page will actually GET,
  *  so the overlay and the assertions cannot disagree about which bytes ran. */
@@ -836,6 +929,13 @@ async function buildRecords(ids) {
   const records = new Map();
   const specs = new Map();
   const overlay = new Map();
+  // The multi-branch path of the booking row: a REAL seven-branch chain with one
+  // link injected under a fixture id, because no shipped chain has one.
+  {
+    const base = JSON.parse(await readFile(join(SITE, "data", "restaurants", "tj-katsu.json"), "utf8"));
+    const fx = { ...base, id: BOOKING_FIXTURE, ordering: [...(base.ordering || []), BOOKING_LINK] };
+    overlay.set(`/data/restaurants/${BOOKING_FIXTURE}.json`, JSON.stringify(fx));
+  }
   for (const id of ids) {
     const spec = FIXTURES.find((f) => f.id === id) || null;
     if (spec === null) {
@@ -867,7 +967,7 @@ async function buildRecords(ids) {
 
 async function run(opts) {
   const report = new Report(opts.verbose);
-  const ids = opts.provenanceOnly ? [] : opts.ids || [...VENUES, ...FIXTURES.map((f) => f.id)];
+  const ids = opts.provenanceOnly || opts.bookingOnly ? [] : opts.ids || [...VENUES, ...FIXTURES.map((f) => f.id)];
   const { records, specs, overlay } = await buildRecords(ids);
   const { server, port } = await startServer(opts.port, SITE, overlay);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-branch-check-"));
@@ -911,7 +1011,8 @@ async function run(opts) {
 
     // Whole-corpus runs only: `--id` narrows to venues under test, and these
     // two are reached through their own ids above.
-    if (!opts.ids || opts.provenanceOnly) await checkMapsProvenance(driver, report, port);
+    if ((!opts.ids && !opts.bookingOnly) || opts.provenanceOnly) await checkMapsProvenance(driver, report, port);
+    if ((!opts.ids && !opts.provenanceOnly) || opts.bookingOnly) await checkBookings(driver, report, port, await corpusBookings());
 
     return report.summary(SITE) ? 0 : 1;
   } finally {
