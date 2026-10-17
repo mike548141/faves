@@ -136,7 +136,8 @@ export const isSelects = (group) => group?.kind === "selects";
  * `required: true` is set only where the menu says "choice of" / "choose": the
  * dish is not complete until one option is picked. validate.py allows it on a
  * pick-one `adds` group alone — a `selects` group is already always chosen
- * (ADR 0130), and a pick-many group has no "how many at least" rule to state.
+ * (ADR 0130), and a pick-many group states its obligation as `min` instead
+ * (ADR 0163, see `minOf` and `owed`).
  */
 export const isRequired = (group) => group?.required === true && !isSelects(group);
 
