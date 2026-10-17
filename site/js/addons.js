@@ -381,6 +381,52 @@ export function configuredPrice(base, selection, groups) {
 }
 
 /**
+ * What a swap group REPLACES, in the menu's own words (ADR 0168): its `replaces`
+ * ("milk bun"), trimmed, or "" for a group that states none. A `selects` group
+ * is never a swap (it chooses WHICH plate, ADR 0130), so it reads as "" even if
+ * the data were wrong; validate.py refuses the field there.
+ *
+ * NAMING ONLY. This function feeds words to the picker and the order line and
+ * nothing else: `composeTags` never reads it, so a swap still UNIONS its
+ * allergens into the dish exactly as an add-on does and takes none out (ADR
+ * 0168 §2). Whether a swap may drop the replaced component's allergen is the
+ * owner's decision and is deliberately not made here.
+ */
+export function replacesOf(group) {
+  if (isSelects(group)) return "";
+  return typeof group?.replaces === "string" ? group.replaces.trim() : "";
+}
+
+/** `{ replaces }` to spread into a selection entry, or `{}` — so an entry for a group that replaces nothing named is byte-identical to what it always was. */
+export const swapField = (group) => {
+  const replaces = replacesOf(group);
+  return replaces ? { replaces } : {};
+};
+
+/** "instead of the milk bun", or "" for a group that replaces nothing named. */
+export function insteadText(replaces) {
+  const r = typeof replaces === "string" ? replaces.trim() : "";
+  return r ? `instead of the ${r}` : "";
+}
+
+/**
+ * What an option is CALLED on the order line: its name, and for a swap the thing
+ * it replaces — "No gluten added bun (instead of the milk bun)" — so the kitchen
+ * is not left to infer what the bun is a bun INSTEAD of (ADR 0168).
+ *
+ * The wording is written into the line's `name` rather than carried as a fifth
+ * field because `name` is the one field every table that carries a line already
+ * carries and renders: the share codec's option tuple, the backup whitelist,
+ * saved orders, collect mode. A new field would have to be added to each, and a
+ * whitelist that is missed sheds it silently. The line is KEYED on the option's
+ * id (selectionKey), never the name, so this cannot split a line.
+ */
+export function lineName(entry) {
+  const said = insteadText(entry?.replaces);
+  return said ? `${entry.name} (${said})` : entry?.name;
+}
+
+/**
  * The selection as the ORDER LINE records it (ADR 0133): `{ group, id, name,
  * price }` per option — the four fields every table that carries a line
  * already knows (cart.js, the backup whitelist in personal-data.js, the share
@@ -399,7 +445,7 @@ export function configuredPrice(base, selection, groups) {
 export function lineOptions(selection) {
   return (selection || [])
     .filter((s) => !s?.isDefault)
-    .map((s) => ({ group: s.group, id: s.id, name: s.name, price: s.price }));
+    .map((s) => ({ group: s.group, id: s.id, name: lineName(s), price: s.price }));
 }
 
 /**

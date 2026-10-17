@@ -47,6 +47,7 @@ import {
   selectionAllowed,
   configuredPrice,
   lineOptions,
+  swapField,
 } from "./addons.js";
 import { normaliseNote } from "./cart.js";
 import { formatMoney, venueCurrency } from "./place.js";
@@ -107,7 +108,7 @@ export function planRecall(saved, record) {
               dishPrice: opt.dishPrice,
               isDefault: opt.default === true,
             }
-          : { group: g.id, id: optionId(opt), name: opt.name, price: optionPrice(g, opt) }
+          : { group: g.id, id: optionId(opt), name: opt.name, price: optionPrice(g, opt), ...swapField(g) }
       );
     }
     if (bad) {

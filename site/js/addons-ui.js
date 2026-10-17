@@ -75,6 +75,9 @@ import {
   variantLabel,
   configuredPrice,
   lineOptions,
+  swapField,
+  replacesOf,
+  insteadText,
 } from "./addons.js";
 import { formatMoney, venueCurrency } from "./place.js";
 import { isSpicy, heatLabel } from "./heat.js";
@@ -418,6 +421,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
           : "";
     };
 
+    const swapText = insteadText(replacesOf(group));
     const fields = el("div", { className: "addon-options" });
     const legend = el("legend", { className: "addon-legend" }, [
       el("span", { className: "addon-group-name", textContent: group.name }),
@@ -491,7 +495,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
           const at = selection.findIndex((s) => s.group === group.id && s.id === optionId(option));
           if (at >= 0) selection.splice(at, 1);
         } else {
-          selection.push({ group: group.id, id: optionId(option), name: option.name, price: cost, tags: option.tags || [] });
+          selection.push({ group: group.id, id: optionId(option), name: option.name, price: cost, tags: option.tags || [], ...swapField(group) });
         }
         paintFee();
         refresh();
@@ -506,6 +510,18 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
         el("label", { className: "addon-option" }, [
           input,
           el("span", { className: "addon-option-name", textContent: option.name }),
+          // A swap says what it takes the place of (ADR 0168), as words in the
+          // label so it is part of the control's accessible name too. The
+          // leading comma is for the screen reader only; sighted, the phrase
+          // sits on its own line under the name.
+          ...(swapText
+            ? [
+                el("span", { className: "addon-option-replaces" }, [
+                  el("span", { className: "sr-only", textContent: ", " }),
+                  swapText,
+                ]),
+              ]
+            : []),
           ...heatChips(option),
           el("span", {
             className: "addon-option-price",
