@@ -29,7 +29,7 @@
 
 import { el } from "./dom.js";
 import { ingredientBlocks, ingredientKeys } from "./ingredients.js";
-import { DEFAULT_SCALE, SCALES, scaleFor, scaleLineStatus } from "./quantity.js";
+import { DEFAULT_SCALE, scaleFor, scaleLabel as labelFor, scaleLineStatus } from "./quantity.js";
 import { translate } from "./reo.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
@@ -149,7 +149,7 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
   // the tick hashes and the step matcher reads — is never touched.
   const scale = scaleFor(scaleKey);
   const scaled = scaleKey !== DEFAULT_SCALE;
-  const scaleLabel = SCALES.find((s) => s.key === scaleKey)?.label ?? "";
+  const scaleLabel = scaled ? labelFor(scaleKey) : "";
   const lineOf = new Map(
     ingredientBlocks(item.ingredients).flatMap((b) =>
       b.lines.map((l) => [l.key, { text: l.text, component: b.component }])

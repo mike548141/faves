@@ -10,7 +10,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   rational, readQuantity, formatRational, scaleLine, scaleLineStatus,
-  scaleServes, SCALES, scaleFor, DEFAULT_SCALE,
+  servesAt, scaleKeyFor, scaleLabel, scaleForPeople, peopleRange, SCALES, scaleFor, DEFAULT_SCALE,
 } from "../site/js/quantity.js";
 
 const HALF = rational(1, 2);
@@ -225,13 +225,46 @@ test("an unlisted word keeps the author's form rather than being guessed at", ()
 
 // --- serves ----------------------------------------------------------------
 
-test("serves restates only when it lands on whole people", () => {
-  assert.equal(scaleServes(6, TWO), 12);   // CORPUS — the pudding, Tiramisu
-  assert.equal(scaleServes(12, HALF), 6);  // CORPUS — Liège Waffles
-  assert.equal(scaleServes(6, HALF), 3);
-  assert.equal(scaleServes(3, HALF), null); // "serves 1½" is arithmetic, not hospitality
-  assert.equal(scaleServes(null, TWO), null);
-  assert.equal(scaleServes("6", TWO), 12);
+test("serves restates as whole people, or as the two whole numbers either side", () => {
+  const at = (n, sc) => servesAt(n, sc);
+  assert.deepEqual([at(6, TWO).text, at(6, TWO).whole], ["12", true]);   // CORPUS - the pudding, Tiramisu
+  assert.equal(at(12, HALF).text, "6");                                  // CORPUS - Liege Waffles
+  // 9 at half is 4 and a half people: never a false "4", never "4.5".
+  assert.deepEqual([at(9, HALF).text, at(9, HALF).whole], ["4\u20135", false]);
+  assert.equal(servesAt(null, TWO), null);
+  assert.equal(servesAt("6", TWO), null); // a string is not a count the picker can step
+  assert.equal(servesAt(0, TWO), null);
+});
+
+test("a scale chosen by people is a fraction with its own key, and round-trips", () => {
+  // 6 people from a recipe for 4 is 3/2: no preset, so the key spells it.
+  const r = scaleForPeople(4, 6);
+  assert.deepEqual(r, { n: 3, d: 2 });
+  assert.equal(scaleKeyFor(r), "x3/2");
+  assert.deepEqual(scaleFor("x3/2"), r);
+  assert.equal(scaleLabel("x3/2"), "1\u00BD\u00D7");
+  // Where the answer IS a preset the preset's key is used, so the multiplier
+  // buttons light up and nothing downstream sees a second spelling of 2x.
+  assert.equal(scaleKeyFor(scaleForPeople(4, 8)), "double");
+  assert.equal(scaleKeyFor(scaleForPeople(4, 4)), "one");
+  assert.equal(scaleLabel("double"), "2\u00D7");
+  // 5 from 4 is 5/4, which a kitchen does write: 1\u00BC.
+  assert.equal(scaleLabel("x5/4"), "1\u00BC\u00D7");
+});
+
+test("people are bounded to a quarter and four times the recipe", () => {
+  assert.deepEqual(peopleRange(4), { min: 1, max: 16 });
+  assert.deepEqual(peopleRange(12), { min: 3, max: 48 });
+  assert.equal(scaleForPeople(4, 0), null);
+  assert.equal(scaleForPeople(4, 17), null);
+  assert.equal(scaleForPeople(12, 2), null);
+  assert.equal(scaleForPeople(4, 2.5), null);
+  assert.equal(peopleRange("4"), null);
+  // A key read from anywhere cannot become a runaway or a zero.
+  assert.deepEqual(scaleFor("x999/1"), ONE);
+  assert.deepEqual(scaleFor("x0/3"), ONE);
+  assert.deepEqual(scaleFor("x3/0"), ONE);
+  assert.deepEqual(scaleFor("x3/2; drop"), ONE);
 });
 
 // --- the scale list --------------------------------------------------------

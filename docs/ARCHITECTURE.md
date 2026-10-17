@@ -401,6 +401,12 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
   - `steps`: list of strings (the method, rendered as an ordered list).
   - `prepMinutes`, `cookMinutes`: whole minutes; `difficulty`: `very-easy` ·
     `easy` · `medium` · `challenging`. The recipe page's stats panel (ADR 0125).
+  - `yield`: what the recipe makes, in its own words ("12 waffles"; optional,
+    string, ≤ 80 characters) — not `serves`. Only a yield the recipe STATES ships
+    (the page cannot label an estimate of it); `recipe_estimates.py --check`
+    holds it to `data/estimates/`. Shown as the panel's "Makes" cell and kept
+    "as written" at any scale but 1× (ADR 0162). The recipe page also offers
+    "Serve N people" wherever `serves` is a whole number (ADR 0162).
   - `estimated`: which of `serves`, `prepMinutes`, `cookMinutes` and
     `difficulty` are OUR estimate rather than the recipe's. The panel shows them
     unmarked (ADR 0135); the list says "Serves ~N" (ADR 0141). The number's working

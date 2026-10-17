@@ -1910,3 +1910,10 @@ deliberation those compact docs omit.
   only on a branch of McDonald's or Subway that has hours, and never as a menu
   source. It renders as "Opening hours … read from its Google Maps listing", never
   in the first-party voice. A 24-hour day is `["00:00", null]`.
+- [0162](0162-serve-n-people-and-makes-are-labelled-facts.md) —
+  **"Serve N people" is the scale chosen by another name, and "Makes" is its own
+  labelled fact** (`250/010`, owner-ruled 2026-08-16). A stepper moves the same
+  scale as ½×/1×/2×/3× (N people from S is N/S; cook mode and the shopping list
+  follow through the key), says "about" under an estimated base, and keeps focus
+  and announces itself across the page's rebuild. `yield` ships on the four stated
+  ones and renders as a "Makes" cell, shown as written at any scale but 1×.

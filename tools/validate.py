@@ -205,7 +205,7 @@ ITEM_KEYS = {
     # Recipe-only fields (kind: "recipes"), all optional and all validated
     # above whether or not the record is a recipe collection.
     "steps", "ingredients", "serves", "time", "attribution", "attributionUrl",
-    "prepMinutes", "cookMinutes", "difficulty", "estimated",
+    "prepMinutes", "cookMinutes", "difficulty", "estimated", "yield",
 }
 # The stats panel's difficulty scale (ADR 0125), easiest first.
 DIFFICULTY = {"very-easy", "easy", "medium", "challenging"}
@@ -2794,6 +2794,14 @@ def check_restaurant(path):
             time = item.get("time")
             if time is not None and not isinstance(time, str):
                 err(rid, f"time for {name!r} must be a string or absent")
+            # What the recipe MAKES, in the recipe's own words ("12 waffles") -
+            # not how many people it serves (17a, owner 2026-08-16: show both,
+            # labelled). Free text on purpose: a yield is a count and a thing.
+            yielded = item.get("yield")
+            if yielded is not None and (
+                not isinstance(yielded, str) or not yielded.strip() or len(yielded) > 80
+            ):
+                err(rid, f"yield for {name!r} must be a non-empty string of at most 80 characters or absent")
             # The recipe page's stats panel (ADR 0125). Minutes as integers so
             # the page formats them and nothing parses prose; difficulty from a
             # closed scale so four recipes cannot invent five words for "easy".

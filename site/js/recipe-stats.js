@@ -40,19 +40,37 @@ export function totalTime(item) {
 
 /**
  * The cells to draw, in order, each `{ key, label, value, estimated }`. A field
- * the recipe does not carry is left out rather than shown as "—": a panel of
+ * the recipe does not carry is left out rather than shown as "-": a panel of
  * blanks reads as broken, and "not stated" is already what absence means here.
- * `serves` is passed in already scaled, so the panel and the scaler agree.
+ * `serves` is passed in already scaled, so the panel and the scaler agree: a
+ * number, or text like "4-5" where the scale lands between two whole people.
+ *
+ * "Makes" is what the recipe yields in its own words ("12 waffles"), which is
+ * not how many people it serves (owner 2026-08-16: show both, labelled). It is
+ * the LAST cell and `wide`, so the panel's two-by-two and four-across grids keep
+ * their shape. `yieldScaled` says the page is not at 1x: a yield is prose
+ * ("10-15 hotcakes") the scaler cannot restate, so it is shown as written and
+ * says so in `note` - the same mark an unscalable ingredient line carries.
  */
-export function recipeStats(item, serves = item.serves) {
+export function recipeStats(item, serves = item.serves, { yieldScaled = false } = {}) {
   const est = new Set(Array.isArray(item.estimated) ? item.estimated : []);
   const cells = [];
   const prep = formatMinutes(item.prepMinutes);
   if (prep) cells.push({ key: "prepMinutes", label: "Prep", value: prep });
   const cook = formatMinutes(item.cookMinutes);
   if (cook) cells.push({ key: "cookMinutes", label: "Cook", value: cook });
-  if (Number.isInteger(serves)) cells.push({ key: "serves", label: "Serves", value: String(serves) });
+  if (Number.isInteger(serves) || (typeof serves === "string" && serves.trim())) {
+    cells.push({ key: "serves", label: "Serves", value: String(serves) });
+  }
   const diff = DIFFICULTY_LABEL[item.difficulty];
   if (diff) cells.push({ key: "difficulty", label: "Difficulty", value: diff });
-  return cells.map((c) => ({ ...c, estimated: est.has(c.key) }));
+  const made = typeof item.yield === "string" ? item.yield.trim() : "";
+  const out = cells.map((c) => ({ ...c, estimated: est.has(c.key) }));
+  if (made) {
+    out.push({
+      key: "yield", label: "Makes", value: made, estimated: false, wide: true,
+      note: yieldScaled ? "as written" : null,
+    });
+  }
+  return out;
 }

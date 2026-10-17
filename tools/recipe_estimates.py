@@ -268,6 +268,18 @@ def check_recipe(errs, dish_id, item, rec):
                 f"{dish_id}: yield {yielded!r} is marked stated, but {missing} appears nowhere in its text",
             ))
 
+    # A yield that ships (17a). `estimated` in the payload can only name the
+    # four ESTIMABLE fields, so the page has no way to label an estimated yield:
+    # only a STATED one may ship, and it must say what the record says. The
+    # other direction is deliberately not required - a stated yield the page
+    # does not yet show is a missing feature, not a wrong number.
+    shipped = item.get("yield")
+    if shipped is not None:
+        if shipped != yielded:
+            errs.append((False, f"{dish_id}: the recipe ships yield {shipped!r}, the record says {yielded!r}"))
+        elif ysource != "stated":
+            errs.append((False, f"{dish_id}: the recipe ships yield {shipped!r} but the record marks it {ysource!r}; only a stated yield may ship, because the page cannot label an estimate"))
+
     total, tsource = rec.get("timeTotal"), rec.get("timeTotalSource")
     said = stated_minutes(item.get("time")) if item.get("time") else None
     if total is None:
