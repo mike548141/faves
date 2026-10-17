@@ -235,6 +235,11 @@ excluded from both stores, always.
       "included": 1,                 //   OPTIONAL with extraPrice, "many" only: picks
       "extraPrice": 4,               //   covered before a fee; each pick beyond costs
                                      //   extraPrice. Options must be free (ADR 0163)
+      "replaces": "milk bun",        //   OPTIONAL, pick-one "adds" only: what this swap
+                                     //   takes the place of, in the MENU's words —
+                                     //   a noun phrase; the app says "instead of the
+                                     //   …". The dish (or its section note) must
+                                     //   state it. Naming only (ADR 0168)
       "price": 0,                    //   optional group default for its options
       "options": [                   //   1..n. tags is REQUIRED on every option and
         { "name": "Satay",           //   may be [] ("not stated"); a price must
@@ -954,6 +959,22 @@ section is written once.
   a number > 0, and **the options must be free** (an allowance over priced
   options would not say which picks are the included ones). A group that states
   none of `min`, `included`, `extraPrice` behaves exactly as before.
+- **`replaces`** (ADR 0168) turns a pick-one group into a **named swap**: the
+  picker says "No gluten added bun, instead of the milk bun" and the order line
+  reads "No gluten added bun (instead of the milk bun)", so the kitchen is not
+  left to infer what the bun is a bun *instead of*. A noun phrase in the menu's
+  own words, with no leading article or "instead" (the app supplies "instead of
+  the"). **Every dish that offers the group must say it** in its `desc` or its
+  section `note` (case-insensitive) — an error otherwise, because the wording
+  would be a claim about food nothing on the menu supports; where one group is
+  shared by dishes that say different things, leave it out. An error on a
+  `selects` group (a variant takes the place of nothing) and on a pick-many one.
+  **It is words only: `composeTags` never reads it, so a swap still unions its
+  allergens in and removes none** — whether a swap may drop the replaced
+  component's allergen is the owner's decision and has not been made. The words
+  are written into the line's option `name` (`lineName`), the one field every
+  line-carrying table already carries, so the share codec, backup, saved orders
+  and collect mode need no change; the line is still keyed on the option `id`.
 - **`mustSee: true`** (ADR 0159) makes pressing the row's ＋ Add open the
   picker, so a choice the reader would otherwise never look at is shown to
   them. The dish is still added. **Every `selects` group is must-see by rule**
