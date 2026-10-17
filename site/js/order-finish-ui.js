@@ -24,14 +24,14 @@
 import { el } from "./dom.js";
 import { order, lineKey } from "./cart.js";
 import { dishId } from "./dish-id.js";
-import { selectionKey, optionId, optionPrice } from "./addons.js";
+import { selectionKey, optionId, optionPrice, owedSentence, feeClause } from "./addons.js";
 import { finishChoice, answeredBy, selectionWithTags } from "./order-finish.js";
 import { configurationWarning } from "./addon-warning.js";
 import { settings } from "./settings.js";
 import { effectiveAvoid } from "./dietary.js";
 import { formatMoney, venueCurrency } from "./place.js";
 
-/** lineKey → { open, picks: { [groupId]: optionId } } */
+/** lineKey → { open, picks: { [groupId]: optionId, or [optionId, ...] for a pick-many group } } */
 const drafts = new Map();
 let seq = 0;
 
@@ -76,21 +76,39 @@ export function finishControl(item, info, record, hooks = {}) {
     done.setAttribute("aria-describedby", need.id);
     const cancel = el("button", { type: "button", className: "order-note-btn order-finish-cancel", textContent: "Not now" });
 
+    // A pick-many group (ADR 0163) owes `owed` more picks, may take `room` more
+    // before its cap, and is not offered the options the line already holds.
+    const many = (g) => g.select === "many";
+    const room = (g) => (typeof g.max === "number" ? g.max - (info.have?.[g.id] || 0) : Infinity);
+    const inputsOf = new Map();
     const fieldsets = info.groups.map((g) => {
       const fields = el("div", { className: "addon-options" });
-      for (const option of g.options || []) {
+      const held = new Set(info.held?.[g.id] || []);
+      inputsOf.set(g.id, []);
+      for (const option of (g.options || []).filter((o) => !held.has(optionId(o)))) {
         const cost = optionPrice(g, option);
         const input = el("input", {
-          type: "radio",
+          type: many(g) ? "checkbox" : "radio",
           className: "addon-input",
           // Unique per render, not per dish: two lines of one dish (one with a
           // note) would otherwise share a radio group and clear each other.
           name: `${sheetId}-${g.id}`,
           value: option.name,
-          checked: draft.picks[g.id] === optionId(option),
+          checked: many(g)
+            ? (draft.picks[g.id] || []).includes(optionId(option))
+            : draft.picks[g.id] === optionId(option),
         });
         if (!firstInput.has(g.id)) firstInput.set(g.id, input);
+        inputsOf.get(g.id).push([input, optionId(option)]);
         input.addEventListener("change", () => {
+          if (many(g)) {
+            const cur = new Set(draft.picks[g.id] || []);
+            if (input.checked) cur.add(optionId(option));
+            else cur.delete(optionId(option));
+            draft.picks[g.id] = [...cur];
+            paint();
+            return;
+          }
           if (!input.checked) return;
           draft.picks[g.id] = optionId(option);
           paint();
@@ -109,7 +127,12 @@ export function finishControl(item, info, record, hooks = {}) {
       return el("fieldset", { className: "addon-group" }, [
         el("legend", { className: "addon-legend" }, [
           el("span", { className: "addon-group-name", textContent: g.name }),
-          el("span", { className: "addon-rule", textContent: "Required — choose one" }),
+          el("span", {
+            className: "addon-rule",
+            textContent: many(g)
+              ? `Required — choose ${info.owed?.[g.id]}${(info.have?.[g.id] || 0) > 0 ? " more" : ""}${feeClause(g, (n) => formatMoney(n, currency))}`
+              : "Required — choose one",
+          }),
         ]),
         fields,
       ]);
@@ -132,11 +155,18 @@ export function finishControl(item, info, record, hooks = {}) {
         warn.hidden = true;
         warn.textContent = "";
       }
+      // A pick-many group at its cap takes no more: the unticked boxes are
+      // disabled, never silently ignored. (A radio cannot over-pick.)
+      for (const g of info.groups) {
+        if (!many(g)) continue;
+        const atCap = (draft.picks[g.id] || []).length >= room(g);
+        for (const [input, id] of inputsOf.get(g.id) || []) input.disabled = atCap && !(draft.picks[g.id] || []).includes(id);
+      }
       done.setAttribute("aria-disabled", String(stillMissing.length > 0));
       done.classList.toggle("is-blocked", stillMissing.length > 0);
       need.hidden = stillMissing.length === 0;
       need.textContent = stillMissing.length
-        ? `To finish this, choose one under ${joinNames(stillMissing.map((g) => `“${g.name}”`))}.`
+        ? `To finish this, ${owedSentence(stillMissing, item.options)}.`
         : "";
     }
 

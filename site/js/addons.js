@@ -136,18 +136,102 @@ export const isSelects = (group) => group?.kind === "selects";
  * `required: true` is set only where the menu says "choice of" / "choose": the
  * dish is not complete until one option is picked. validate.py allows it on a
  * pick-one `adds` group alone — a `selects` group is already always chosen
- * (ADR 0130), and a pick-many group has no "how many at least" rule to state.
+ * (ADR 0130), and a pick-many group states its obligation as `min` instead
+ * (ADR 0163, see `minOf` and `owed`).
  */
 export const isRequired = (group) => group?.required === true && !isSelects(group);
 
 /**
- * The required groups `selection` has not yet answered, in offered order.
- * Empty means the dish may be added. Pure so the picker, the row's own Add and
- * a recalled saved order all ask the same question (saved-recall.js).
+ * The fewest options a pick-many group asks for (ADR 0163): its `min`, or 0.
+ * Only a pick-many `adds` group can carry one; anywhere else the field means
+ * nothing here (validate.py refuses it there), so it reads as 0 rather than
+ * gating a dish on a rule the data should not have stated.
+ */
+export const minOf = (group) =>
+  group?.select === "many" && !isSelects(group) && Number.isInteger(group.min) && group.min > 0
+    ? group.min
+    : 0;
+
+/**
+ * How many more picks `group` still owes, given the whole `selection`: 1 for a
+ * required pick-one group nobody answered, `min - chosen` for a pick-many group
+ * short of its minimum, otherwise 0. ONE question for both kinds of obligation, so
+ * the picker, the order sheet and a recalled saved order cannot disagree (ADR 0163).
+ */
+export function owed(group, selection) {
+  const chosen = (selection || []).filter((s) => s.group === group?.id).length;
+  if (isRequired(group)) return chosen > 0 ? 0 : 1;
+  return Math.max(0, minOf(group) - chosen);
+}
+
+/**
+ * The groups `selection` has not yet answered, in offered order: a required
+ * pick-one group with no pick (ADR 0156), or a pick-many group short of its `min`
+ * (ADR 0163). Empty means the dish may be added. Pure so the picker, the row's own
+ * Add and a recalled saved order all ask the same question (saved-recall.js).
  */
 export function missingRequired(groups, selection) {
-  const chosen = new Set((selection || []).map((s) => s.group));
-  return (groups || []).filter((g) => isRequired(g) && !chosen.has(g.id));
+  return (groups || []).filter((g) => owed(g, selection) > 0);
+}
+
+/**
+ * What a group's extra picks cost over and above its options' own prices (ADR
+ * 0163): `included` picks are covered, and every pick beyond them adds
+ * `extraPrice`. Zero for a group that states neither field, which is every group
+ * written before this one existed. Rounded to the cent so 3 x 1.1 is 3.3.
+ */
+export function extraFee(group, count) {
+  const inc = group?.included;
+  const fee = group?.extraPrice;
+  if (!Number.isInteger(inc) || inc < 1 || typeof fee !== "number" || !(fee > 0)) return 0;
+  return Math.round(Math.max(0, count - inc) * fee * 100) / 100;
+}
+
+/** "Choose any" / "Choose up to 3" / "Required — choose 2" ... plus the fee clause: the words a group's legend shows. */
+export function ruleText(group, fmt = (n) => String(n)) {
+  if (group?.select === "one") return isRequired(group) ? "Required — choose one" : "Choose one";
+  const cap = group?.max;
+  const min = minOf(group);
+  let rule;
+  if (min > 0) {
+    rule =
+      typeof cap !== "number"
+        ? `Required — choose at least ${min}`
+        : cap === min
+          ? `Required — choose ${min}`
+          : `Required — choose ${min} to ${cap}`;
+  } else {
+    rule = typeof cap === "number" ? `Choose up to ${cap}` : "Choose any";
+  }
+  return rule + feeClause(group, fmt);
+}
+
+/** " · 1 included, then $4 each", or nothing for a group with no allowance. */
+export function feeClause(group, fmt = (n) => String(n)) {
+  return extraFee(group, group?.included + 1) > 0
+    ? ` · ${group.included} included, then ${fmt(group.extraPrice)} each`
+    : "";
+}
+
+/**
+ * The sentence that says what a blocked Add is waiting for: "choose one under
+ * “Sauce”" for required pick-one groups (ADR 0156, unchanged word for word), and
+ * "choose 2 under “Cheese”" / "choose 1 more under …" once a minimum is involved.
+ * `groups` are the missing ones; `selection` says how many each already has.
+ */
+export function owedSentence(groups, selection) {
+  const list = groups || [];
+  const quote = (g) => `“${g.name}”`;
+  const join = (xs) => (xs.length < 2 ? xs[0] || "" : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+  if (list.every((g) => g.select === "one")) return `choose one under ${list.map(quote).join(" and ")}`;
+  return `choose ${join(
+    list.map((g) => {
+      const n = owed(g, selection);
+      const have = (selection || []).filter((s) => s.group === g.id).length;
+      const count = g.select === "one" ? "one" : have > 0 ? `${n} more` : String(n);
+      return `${count} under ${quote(g)}`;
+    }),
+  )}`;
 }
 
 /**
@@ -159,7 +243,8 @@ export function missingRequired(groups, selection) {
  *    default plate (Half, Regular, the cheapest size) and the reader should
  *    know a choice was made for them;
  *  - any other group opts in with `mustSee: true` in the data;
- *  - a REQUIRED group is never must-see, because it cannot need to be: Add is
+ *  - a REQUIRED group (or a pick-many one with a `min`, ADR 0163) is never
+ *    must-see, because it cannot need to be: Add is
  *    blocked until it is answered (ADR 0156), so the reader has seen it by the
  *    time Add works. Treating it as must-see too would re-open a picker they had
  *    just answered and closed.
@@ -168,7 +253,7 @@ export function missingRequired(groups, selection) {
  * have today is perfect for those").
  */
 export const isMustSee = (group) =>
-  isSelects(group) || (group?.mustSee === true && !isRequired(group));
+  isSelects(group) || (group?.mustSee === true && !isRequired(group) && minOf(group) === 0);
 
 /** The groups of one dish that must be shown on Add, in offered order. */
 export const mustSeeGroups = (groups) => (groups || []).filter(isMustSee);
@@ -275,13 +360,24 @@ export function variantLabel(group, option, fmt = (n) => String(n)) {
  * `selection` entries for a variant carry `dishPrice` (and `price: 0`, so
  * `selectionPrice` sums only the add-ons). An unpriced dish with no variant
  * chosen stays null: a dish we cannot total is not totalled by guessing.
+ *
+ * The optional `groups` are the dish's add-on groups: a pick-many group that
+ * includes some picks and charges for the rest (ADR 0163) adds `extraPrice` per
+ * pick beyond `included`. The fee belongs to the GROUP, not to any one option,
+ * so it cannot be read off the selection alone; the line's `price` carries it.
  */
-export function configuredPrice(base, selection) {
+export function configuredPrice(base, selection, groups) {
   const chosen = selection || [];
   const variant = chosen.find((s) => typeof s?.dishPrice === "number");
   const plate = variant ? variant.dishPrice : base;
   if (typeof plate !== "number") return null;
-  return plate + selectionPrice(chosen);
+  // `groups` is optional: a caller that omits it prices exactly as before, and a
+  // group that states no `included`/`extraPrice` adds 0 (ADR 0163).
+  const fees = (groups || []).reduce(
+    (sum, g) => sum + extraFee(g, chosen.filter((s) => s.group === g.id).length),
+    0,
+  );
+  return plate + selectionPrice(chosen) + fees;
 }
 
 /**
@@ -332,6 +428,9 @@ export function selectionPrice(selection) {
  * must not cheerfully produce something the shop will refuse to make.
  */
 export function selectionAllowed(group, chosenCount) {
+  // The UPPER bound only. A minimum (ADR 0163) is a different question - "is the
+  // dish finished?" - answered by `owed`/`missingRequired`, because a selection
+  // under its minimum is legal to hold while the reader is still choosing.
   if (group.select === "one") return chosenCount <= 1;
   if (typeof group.max === "number") return chosenCount <= group.max;
   return true;

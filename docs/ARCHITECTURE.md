@@ -226,7 +226,13 @@ excluded from both stores, always.
                                      //   OPENS this picker (ADR 0159). Not on a
                                      //   "selects" group (always must-see) or a
                                      //   "required" one (Add already waits)
+      "min": 2,                      //   OPTIONAL, "many" only, integer >= 1: the fewest
+                                     //   picks the reader must make; exactly N is
+                                     //   min == max. Add waits (ADR 0163)
       "max": 3,                      //   optional cap, "many" only, <= option count
+      "included": 1,                 //   OPTIONAL with extraPrice, "many" only: picks
+      "extraPrice": 4,               //   covered before a fee; each pick beyond costs
+                                     //   extraPrice. Options must be free (ADR 0163)
       "price": 0,                    //   optional group default for its options
       "options": [                   //   1..n. tags is REQUIRED on every option and
         { "name": "Satay",           //   may be [] ("not stated"); a price must
@@ -928,13 +934,32 @@ section is written once.
   optional); it is an error on a `selects` group and on a pick-many group.
   It never changes tags or warnings. Set it only where the wording is
   compulsory; when unsure leave the group optional.
+- **`min`** (ADR 0163) is how many picks a **pick-many** group *requires*:
+  the picker says "Required — choose 2", Add (picker and row) waits with the
+  reason in words ("choose 2 under “Choose two”", then "1 more"), unticking back
+  under the minimum puts the gate back, and a stored or recalled line short of it
+  is flagged on the order sheet and finished there (ADR 0158) with checkboxes.
+  **Exactly N is `min == max`.** It is the same mechanism as `required` (one
+  question, `owed`, answers both); `required` stays a pick-one word. An integer
+  >= 1 only: `0` is a second spelling of absent and is an error, as is `min`
+  above `max` (or above the option count when uncapped), on a pick-one or
+  `selects` group, or beside `mustSee` (Add already waits).
+- **`included` + `extraPrice`** (ADR 0163) go together: the first `included`
+  picks are covered and each pick beyond costs `extraPrice` ("1 included, then
+  $4 each"). The fee belongs to the group, so it rides in the order line's
+  `price`, not on an option; the picker says it in words as it starts to apply.
+  `included` is an integer >= 1 below the group's cap (or option count), the fee
+  a number > 0, and **the options must be free** (an allowance over priced
+  options would not say which picks are the included ones). A group that states
+  none of `min`, `included`, `extraPrice` behaves exactly as before.
 - **`mustSee: true`** (ADR 0159) makes pressing the row's ＋ Add open the
   picker, so a choice the reader would otherwise never look at is shown to
   them. The dish is still added. **Every `selects` group is must-see by rule**
   (owner-ruled 2026-10-03) and needs no flag; a purely optional group has none
   and stays closed on Add. Only `true` is valid (absent = not must-see), and it
   is an **error** on a `selects` group (redundant: it is by rule) and on a
-  `required` group (redundant: Add already waits for it, 0156), for the same
+  `required` group or a group with a `min` (redundant: Add already waits for it,
+  0156, 0163), for the same
   reason `required` is an error on a `selects` group: a field that does
   nothing is one a transcriber believes is doing something. It opens the
   picker once per Add (not on ＋), never moves focus, and changes no tag,
