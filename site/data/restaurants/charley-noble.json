@@ -121,6 +121,7 @@
       "id": "cheese-two",
       "name": "Choose two",
       "select": "many",
+      "min": 2,
       "max": 2,
       "price": 0,
       "options": [

@@ -25,7 +25,7 @@
 //
 // ONE exception to "skipped and named", owner-ruled 2026-10-03 (roadmap 200/130,
 // ADR 0158): a line that is missing a choice the venue has since made COMPULSORY
-// (ADR 0156) is LANDED, unfinished, and reported in `unfinished`. Nothing about it
+// (ADR 0156), or is short of a group's minimum (ADR 0163), is LANDED, unfinished, and reported in `unfinished`. Nothing about it
 // is altered or guessed — the dish and every option it had are exactly what the
 // reader saved — and the order sheet flags it and lets them finish it there. The
 // ADR 0156 version of this file dropped it, on the reasoning that the picker would
@@ -116,6 +116,9 @@ export function planRecall(saved, record) {
     }
     // The venue's own cap ("choose up to 3") is theirs, not ours (ADR 0048 §1):
     // a selection the picker would refuse is not one to put on the sheet.
+    // Only the UPPER bound is a reason to skip. A selection UNDER a group's
+    // `min` (ADR 0163) is landed unfinished below, exactly as a missing
+    // required choice is: nothing about it is wrong, it is merely not done.
     const capped = groups.some((g) => !selectionAllowed(g, selection.filter((s) => s.group === g.id).length));
     if (capped) {
       miss(REASONS.cap);
@@ -137,7 +140,7 @@ export function planRecall(saved, record) {
       phone: record.phone,
       name: item.name,
       dishId: dishId(item),
-      price: configuredPrice(base, selection),
+      price: configuredPrice(base, selection, groups),
       currency,
       options: lineOptions(selection),
       qty: l.qty,

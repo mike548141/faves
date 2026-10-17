@@ -9,8 +9,16 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Opening hours for three more places, from their own sites.** Abrakebabra (its published week, with Wednesday left as "not published" because its site gives no Wednesday line), Golding's Free Dive (midday to 11pm daily) and Wellington Sourdough (7:30am to 2:30pm daily) now show when they are open, and the last two link to their own site. Hotel Bristol was re-read and left alone: its page contradicts itself.
 - **Faves now keeps a private history of the changes you make.** Hearts added and removed, ratings set and cleared, order lines added and removed, switching person, and which preference you changed (never what you changed it to) are recorded on this device, per person, the last 500. There is no screen for it yet, nothing before this release was recorded, it never syncs, and it is in your backup file and goes when you delete a person or restore over everything.
 - **A recipe says what it makes as well as who it serves, and you can pick how many people to cook for.** Hotcakes, Liège waffles, queen cakes and the Turkish flatbread now show "Makes 12 waffles" beside "Serves", labelled apart, because the two are different numbers. Above the ingredients, "Serve – 4 +" rescales the whole recipe to that many people, and cook mode and the shopping list follow it. Where the recipe's own serving count is our estimate it says "Written for about 4 people". The ½×/1×/2×/3× buttons stay.
+- **A dish can now ask you to pick a set number, and charge for extras beyond a
+  few included.** Charley Noble's Cheese Selection (Two) now says "Required -
+  choose 2", and Add waits until you have picked two cheeses (one is not enough,
+  three is not allowed). The order sheet flags and finishes a saved or older line
+  that is short of its number. Menus that charge for picks beyond an allowance
+  ("1 included, then $4 each") can now say so, and the picker and the line show
+  the extra. Every other dish and choice works exactly as before.
 - **Sizes and fillings that were separate rows are now one dish with a choice.**
   Pizza Pomodoro's 26 pizzas (Small and Large), Wellington Kebab's mixed kebabs
   and gyrus, Groundup's takeaway cups, Pandan's varuval, KK Malaysian's nasi
@@ -291,6 +299,13 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **The allergen sweep no longer reads "vegan mayo" or "eggless mayo" as egg.**
+  Hei's Vegan bao is made with vegan mayo and was tagged `contains-egg` for the
+  word "mayo" alone. Only the word the qualifier sits directly in front of is
+  cleared: a real mayo, an aioli or an egg beside a vegan mayo still warns. The
+  sweep never removes a tag, so Hei's two existing Vegan rows keep their egg
+  tag for now (only the stale reason line is dropped) until someone rules on
+  taking it off.
 - **Ice-cream wafers and cones now warn about gluten.** McDonald's Soft Serve
   Cone, Sprig & Fern Tawa's Kids Ice Cream Sundae and 1841 Bar & Restaurant's
   Ice Cream Sundae warned about dairy and said nothing about the wheat in the

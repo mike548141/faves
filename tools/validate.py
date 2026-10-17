@@ -138,7 +138,8 @@ ADD_ON_SELECT = {"one", "many"}
 # is the default, and each option states the dish's whole price for that
 # variant (`dishPrice`), never a surcharge.
 ADD_ON_KINDS = {"adds", "selects"}
-ADD_ON_GROUP_KEYS = {"id", "name", "kind", "select", "required", "mustSee", "max", "price", "options"}
+ADD_ON_GROUP_KEYS = {"id", "name", "kind", "select", "required", "mustSee", "min", "max",
+                     "included", "extraPrice", "price", "options"}
 ADD_ON_OPTION_KEYS = {"name", "id", "price", "dishPrice", "default", "tags"}
 # The tags that make a dietary CLAIM, `-option` forms included — the Python
 # mirror of DIET_FILTERS' `satisfies` lists in site/js/dietary.js, which is what
@@ -1306,6 +1307,73 @@ def check_item_prices(rid, item, where, declared):
             err(rid, f"{where}: prices.{key} must be a finite, non-negative number")
 
 
+def check_pick_counts(rid, g, where, options, selects):
+    """`min`, `included` and `extraPrice` on a pick-many group (ADR 0163).
+
+    All three are optional and leaving them out is every group written before
+    they existed. Each is refused where it would do nothing, because a field that
+    is silently ignored is a field a transcriber believes is doing something (the
+    reasoning of ADR 0156 and 0159, applied again):
+
+    - `min` is how many the reader MUST pick ("choose 2"); exactly N is
+      `min == max`. It is a pick-many field - a pick-one group says `required`.
+      `min: 0` is a second spelling of absent, so it is refused; `min` above `max`
+      or above the options is a rule nobody can meet; and `mustSee` beside it is
+      redundant, because Add already waits (as for `required`).
+    - `included` + `extraPrice` go together: the first N picks are covered and each
+      pick beyond costs `extraPrice`. One without the other says nothing. An
+      allowance that `max` (or the option count) already caps can never charge, and
+      an allowance over options that carry their own prices would not say WHICH
+      picks are the included ones, so the options must be free."""
+    keys = [k for k in ("min", "included", "extraPrice") if k in g]
+    if not keys:
+        return
+    if selects:
+        for k in keys:
+            err(rid, f"{where}: {k} does not apply to a selects group — exactly one "
+                     "variant is always chosen (ADR 0130, ADR 0163)")
+        return
+    if g.get("select") != "many":
+        for k in keys:
+            err(rid, f"{where}: {k} only applies to a pick-many group — a pick-one group "
+                     "says `required` (ADR 0156, ADR 0163)")
+        return
+    cap = g.get("max") if isinstance(g.get("max"), int) and not isinstance(g.get("max"), bool) else None
+    top = cap if cap is not None else len(options)
+    if "min" in g:
+        m = g["min"]
+        if isinstance(m, bool) or not isinstance(m, int) or m < 1:
+            err(rid, f"{where}: min must be an integer >= 1, got {m!r} — absent already "
+                     "means no minimum (ADR 0163)")
+        elif options and m > top:
+            err(rid, f"{where}: min {m} exceeds the {top} pick(s) the group allows "
+                     "— a minimum nobody can meet")
+        elif g.get("mustSee") is True:
+            err(rid, f"{where}: mustSee does not apply to a group with a min — Add "
+                     "already waits for it (ADR 0159, ADR 0163)")
+    if ("included" in g) != ("extraPrice" in g):
+        err(rid, f"{where}: included and extraPrice go together — an allowance with no fee, "
+                 "or a fee with no allowance, says nothing (ADR 0163)")
+        return
+    if "included" in g:
+        n, fee = g["included"], g["extraPrice"]
+        if isinstance(n, bool) or not isinstance(n, int) or n < 1:
+            err(rid, f"{where}: included must be an integer >= 1, got {n!r}")
+        elif options and n >= top:
+            err(rid, f"{where}: included {n} is not below the {top} pick(s) the group allows "
+                     "— no pick could ever be charged")
+        if isinstance(fee, bool) or not isinstance(fee, (int, float)) or not math.isfinite(fee) or fee <= 0:
+            err(rid, f"{where}: extraPrice must be a finite number > 0, got {fee!r} — an "
+                     "extra that is free is no rule at all")
+        paid = [o for o in options if isinstance(o, dict)
+                and isinstance(o.get("price", g.get("price")), (int, float))
+                and o.get("price", g.get("price")) > 0]
+        if paid:
+            err(rid, f"{where}: included/extraPrice need free options, but "
+                     f"{paid[0].get('name')!r} carries a price — the allowance would not say "
+                     "WHICH picks are the included ones (ADR 0163)")
+
+
 def check_selects_group(rid, g, where, options):
     """The group-level rules for `"kind": "selects"` (ADR 0130).
 
@@ -1662,10 +1730,9 @@ def check_add_on_groups(rid, data):
         #    and a second spelling of it is a field a transcriber believes is
         #    doing something.
         #  - a `selects` group is always chosen already (ADR 0130).
-        #  - a pick-many group would need a MINIMUM ("choose at least 2"), which
-        #    is a different rule nobody has asked for; refusing `required` there
-        #    leaves the door open to design it, rather than guessing now that it
-        #    means "at least one".
+        #  - a pick-many group states its obligation as `min` (ADR 0163, owner-ruled
+        #    2026-10-03), not as `required` meaning "at least one"; refusing
+        #    `required` there is what left that field free to be designed.
         if "required" in g:
             if g["required"] is not True:
                 err(rid, f"{where}: required must be true or absent, got {g['required']!r} "
@@ -1709,6 +1776,8 @@ def check_add_on_groups(rid, data):
                 err(rid, f"{where}: max only means anything when select is 'many' — a pick-one group already caps at 1")
             elif options and m > len(options):
                 err(rid, f"{where}: max {m} exceeds the {len(options)} option(s) in the group")
+
+        check_pick_counts(rid, g, where, options, selects)
 
         seen_names = set()
         seen_ids = {}

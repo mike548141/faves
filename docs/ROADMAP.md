@@ -75,7 +75,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [Groundup Cafe: menu and cabinet food from the owner's photos](roadmap/080-theme-4-content-growth-ongoing-in-parallel/270-groundup-cafe-from-the-owner-s-photos.md)
 - ✅ 🔎 [A section note that points elsewhere tags every dish under it](roadmap/080-theme-4-content-growth-ongoing-in-parallel/280-a-section-note-that-points-elsewhere-tags-every-dish-under-it.md)
 - ✅ [Add Hei, on Cuba Street, Wellington](roadmap/080-theme-4-content-growth-ongoing-in-parallel/290-add-hei-on-cuba-street.md)
-- [~] 🔎 ["Vegan mayo" is tagged contains-egg, on a dish the venue calls](roadmap/080-theme-4-content-growth-ongoing-in-parallel/300-vegan-mayo-is-tagged-egg.md)
+- [ ] 🎯 ["Vegan mayo" is tagged contains-egg, on a dish the venue calls](roadmap/080-theme-4-content-growth-ongoing-in-parallel/300-vegan-mayo-is-tagged-egg.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
@@ -158,10 +158,10 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [A size ladder's default is the menu's; failing that, the cheapest](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/110-a-size-ladders-default-is-the-menus.md)
 - ✅ [A "must-see" choice opens when you press Add](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/120-a-must-see-choice-opens-when-you-add.md)
 - ✅ [An unfinished dish on the order sheet: warn, and finish it there](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/130-an-unfinished-dish-on-the-order-sheet.md)
-- [~] [How many you may pick, and what the extras beyond that cost](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/140-how-many-you-may-pick-and-what-extras-cost.md)
+- ✅ [How many you may pick, and what the extras beyond that cost](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/140-how-many-you-may-pick-and-what-extras-cost.md)
 - [ ] [A fee that is not a dish: takeaway containers and cups](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/150-a-fee-that-is-not-a-dish.md)
 - [ ] [A swap is not an extra: name what it replaces](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/160-a-swap-is-not-an-extra.md)
-- [ ] [Priced per piece, per 100 g or per person, with a minimum order](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/170-per-unit-per-person-and-minimum-orders.md)
+- [~] [Priced per piece, per 100 g or per person, with a minimum order](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/170-per-unit-per-person-and-minimum-orders.md)
 - [ ] [Data defects the configuration survey saw in passing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/180-data-defects-the-configuration-survey-saw.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
@@ -353,7 +353,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/README.md)*
 
-- [ ] [33a — book it: link out, don't build it](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/010-33a-book-it-link-out-don-t-build-it-s-schema.md)
+- [~] [33a — book it: link out, don't build it](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/010-33a-book-it-link-out-don-t-build-it-s-schema.md)
 - [ ] [33b — the reservation note, which is the actual feature](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/020-33b-the-reservation-note-which-is-the-actual-f.md)
 - [ ] [33c — several at once](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/030-33c-several-at-once-s-design-depends-on-33b.md)
 - [ ] 🛑 [33d — a real integration](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/040-33d-a-real-integration-xl-owner-gated-and-agai.md)
@@ -479,5 +479,5 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [No silent merge without a base](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/390-no-silent-merge-without-a-base.md)
 - ✅ [A heart on a moved recipe follows it](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/400-hearts-follow-a-moved-recipe.md)
 - [ ] ⏳ [Turn the KV mirror off after a clean week](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/410-turn-the-kv-mirror-off-after-a-clean-week.md)
-- [~] 🔎 [Two flakes seen under heavy load on 2026-10-02, neither named](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/420-flakes-under-load-2026-10-02.md)
+- [ ] 🔎 [Two flakes seen under heavy load on 2026-10-02, neither named](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/420-flakes-under-load-2026-10-02.md)
 - ✅ [A banner outside Settings while sync waits for an answer](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/430-a-banner-when-sync-waits-for-an-answer.md)

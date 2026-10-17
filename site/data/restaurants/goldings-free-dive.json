@@ -14,9 +14,52 @@
     "dine-in"
   ],
   "phone": null,
-  "website": null,
+  "website": "https://www.goldingsfreedive.co.nz/",
   "ordering": [],
-  "hours": null,
+  "hours": {
+    "mon": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "tue": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "wed": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "thu": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "fri": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "sat": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "sun": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ]
+  },
   "detailsVerified": "2026-08-16",
   "detailsVerifiedBy": "third-party",
   "lifecycle": {

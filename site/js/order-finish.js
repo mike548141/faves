@@ -14,7 +14,7 @@
 // the allergen tags) are addons.js's. This file only joins a stored line to them.
 
 import { findDish, dishId } from "./dish-id.js";
-import { groupsFor, missingRequired, optionId, optionPrice, lineOptions } from "./addons.js";
+import { groupsFor, missingRequired, owed, extraFee, optionId, optionPrice, lineOptions } from "./addons.js";
 
 const cents = (n) => Math.round(n * 100) / 100;
 
@@ -25,8 +25,11 @@ const cents = (n) => Math.round(n * 100) / 100;
  *
  *   { item, groups, extra: { min, max } }
  *
- * `groups` are the live definitions of the required groups the line has not
- * answered, in offered order. `extra` is what answering them can add to the
+ * `groups` are the live definitions of the groups the line has not answered, in
+ * offered order: a required pick-one group with no pick (ADR 0156), or a pick-many
+ * group short of its `min` (ADR 0163). `owed` and `have` say, per group id, how
+ * many more picks it needs and how many the line already holds in it, and `held`
+ * the ids it holds (a pick-many group is not offered those again). `extra` is what answering them can add to the
  * line's price, as a range over the options on offer — `max > 0` means the
  * line's stored price is NOT what the dish will cost, and the sheet must say so
  * rather than total it as if it were.
@@ -40,14 +43,37 @@ export function unfinishedOf(record, line) {
   if (missing.length === 0) return null;
   let min = 0;
   let max = 0;
+  const need = {};
+  const have = {};
+  const held = {};
   for (const g of missing) {
-    const prices = (g.options || []).map((o) => optionPrice(g, o));
+    need[g.id] = owed(g, line.options);
+    held[g.id] = (line.options || []).filter((o) => o.group === g.id).map(optionId);
+    have[g.id] = held[g.id].length;
+    const prices = remainingOptions(g, line.options)
+      .map((o) => optionPrice(g, o))
+      .sort((a, b) => a - b);
     if (prices.length === 0) continue;
-    min += Math.min(...prices);
-    max += Math.max(...prices);
+    const n = Math.min(need[g.id], prices.length);
+    // The n cheapest to the n dearest: what answering what is OWED can cost. Picks
+    // beyond the minimum are optional and are not counted as owed.
+    min += prices.slice(0, n).reduce((x, y) => x + y, 0);
+    max += prices.slice(prices.length - n).reduce((x, y) => x + y, 0);
+    const fee = feeDelta(g, have[g.id], n);
+    min += fee;
+    max += fee;
   }
-  return { item: found.item, groups: missing, extra: { min: cents(min), max: cents(max) } };
+  return { item: found.item, groups: missing, owed: need, have, held, extra: { min: cents(min), max: cents(max) } };
 }
+
+/** The group's options the line does not already hold (a pick-many group's chosen ones are not offered twice). */
+function remainingOptions(g, lineOptions) {
+  const held = new Set((lineOptions || []).filter((o) => o.group === g.id).map(optionId));
+  return (g.options || []).filter((o) => !held.has(optionId(o)));
+}
+
+/** What `n` more picks add in fee to a group that already holds `have` (ADR 0163). */
+const feeDelta = (g, have, n) => extraFee(g, have + n) - extraFee(g, have);
 
 /**
  * The line's chosen options as the composer wants them: `{ group, id, name,
@@ -68,7 +94,9 @@ export function selectionWithTags(record, line) {
 }
 
 /**
- * Answer the missing groups. `picks` is `{ [groupId]: optionId }`.
+ * Answer the missing groups. `picks` is `{ [groupId]: optionId }` for a pick-one
+ * group and `{ [groupId]: [optionId, ...] }` for a pick-many one (ADR 0163), which
+ * is answered only by at least the number it OWES and no more than its `max` allows.
  *
  * Returns `{ ok: true, options, price, added }` — the line's new options and
  * unit price, plus the added options WITH their tags for the composer — or
@@ -86,7 +114,12 @@ export function finishChoice(record, line, picks) {
   if (!info) return { ok: false, missing: [] };
   const { added, missing } = answeredBy(info, picks);
   if (missing.length) return { ok: false, missing };
-  const extra = added.reduce((s, a) => s + a.price, 0);
+  const extra =
+    added.reduce((s, a) => s + a.price, 0) +
+    info.groups.reduce(
+      (s, g) => s + feeDelta(g, info.have[g.id] || 0, added.filter((a) => a.group === g.id).length),
+      0,
+    );
   return {
     ok: true,
     options: [...(line.options || []), ...lineOptions(added)],
@@ -106,6 +139,21 @@ export function answeredBy(info, picks) {
   const missing = [];
   for (const g of info.groups) {
     const want = picks?.[g.id];
+    if (g.select === "many") {
+      const open = new Map((g.options || []).filter((o) => !new Set(info.held?.[g.id] || []).has(optionId(o))).map((o) => [optionId(o), o]));
+      const ids = [...new Set(Array.isArray(want) ? want : [])].filter((id) => open.has(id));
+      const have = info.have?.[g.id] || 0;
+      const over = typeof g.max === "number" && have + ids.length > g.max;
+      if (ids.length < (info.owed?.[g.id] || 0) || over) {
+        missing.push(g);
+        continue;
+      }
+      for (const id of ids) {
+        const opt = open.get(id);
+        added.push({ group: g.id, id, name: opt.name, price: optionPrice(g, opt), tags: opt.tags || [] });
+      }
+      continue;
+    }
     const opt = want ? (g.options || []).find((o) => optionId(o) === want) : null;
     if (!opt) {
       missing.push(g);

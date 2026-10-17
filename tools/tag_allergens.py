@@ -582,7 +582,31 @@ RULES = [
      # "tartare sauce" is mayonnaise with capers and gherkin — an egg emulsion
      # by construction, and on a fish-and-chips menu it is everywhere. Added
      # 2026-08-16 alongside the cheddar gap.
-     r"\b(mayonnaise|mayo|aioli|hollandaise|meringue|custard|pavlova|"
+     #
+     # 🛑 `vegan mayo` / `eggless aioli` IS NOT AN EGG EMULSION (roadmap 080/300).
+     # Hei's "Vegan" bao is made with vegan mayo and was tagged egg because
+     # `mayo` matched. The qualifier is cancelled by a LOOKBEHIND on the two
+     # mayo-family words and nothing else — never an item-level veto, because
+     # this repo has been burned by one (the water chestnut: a whole-row veto
+     # deleted the almonds beside it). So "vegan mayo and egg" is still egg
+     # (the `\beggs?\b` rule above), "vegan mayo, aioli" is still egg (the
+     # bare aioli), and a real mayo beside a vegan one is still egg. Only the
+     # word the qualifier DIRECTLY precedes is cancelled; "vegan garlic aioli"
+     # keeps its warning, because over-warning is the safe direction and a
+     # fixed-width lookbehind cannot span the extra word. One lookbehind per
+     # spelling because `re` needs each to be fixed-width.
+     #
+     # `egg-free mayo` / `egg free aioli` are deliberately NOT lookbehinds
+     # here: the bare word `egg` in them is matched by the STATED rule above,
+     # so cancelling the mayo would change nothing. Reading "egg free" as an
+     # absence is a HEDGE (see HEDGE below), not a mayo rule, and no venue in
+     # the corpus writes it (swept 2026-10-18), so it is left as an
+     # over-warning rather than invented. `eggless` has no `\begg\b` match, so
+     # it is the one egg-free spelling that needs its lookbehind (`egg-less`
+     # is split by the hyphen and `egg` matches again).
+     r"\b((?<!vegan )(?<!vegan-)(?<!eggless )"
+     r"(?:mayonnaise|mayo|aioli)|"
+     r"hollandaise|meringue|custard|pavlova|"
      r"tartare\s?sauce|tartar\s?sauce)\b", None),
     ("contains-egg", "DERIVED", "egg is in the batter or base",
      r"\b(omelettes?|frittata|quiche|carbonara|tempura|tiramisu)\b", None),

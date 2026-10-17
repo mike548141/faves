@@ -343,6 +343,33 @@ CASES = {
             tags=["kosher", "contains-shellfish"])),
         "warn", r"claims kosher and is tagged contains-shellfish",
     ),
+    # A vegan dish beside an animal-product allergen (roadmap 080/300). The
+    # warning is the pre-existing check_self_contradicting_claims, which reads
+    # CONTRADICTS out of addons.js; these four pin that `vg` is covered for each
+    # of the pairs the item named, so the next "Vegan bao tagged contains-egg"
+    # is said by a gate and not noticed by a reader. Each pair is its own case
+    # because the table is one row per claim and a dropped entry would otherwise
+    # hide behind the others.
+    "a vegan dish is tagged contains-egg": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["vg", "contains-egg"])),
+        "warn", r"claims vg and is tagged contains-egg",
+    ),
+    "a vegan dish is tagged contains-dairy": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["vg", "contains-dairy"])),
+        "warn", r"claims vg and is tagged contains-dairy",
+    ),
+    "a vegan dish is tagged contains-fish": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["vg", "contains-fish"])),
+        "warn", r"claims vg and is tagged contains-fish",
+    ),
+    "a vegan dish is tagged contains-shellfish": (
+        lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
+            tags=["vg", "contains-shellfish"])),
+        "warn", r"claims vg and is tagged contains-shellfish",
+    ),
     # Halal is a CLAIM, never an allergen word: it may not be "traced".
     "halal as a trace": (
         lambda d: (_first_item(d).pop("tagNotes", None), _first_item(d).update(
@@ -942,6 +969,101 @@ CASES = {
     "mustSee on a required group": (
         _breaks(lambda g, d: (g.update(select="one", required=True, mustSee=True), g.pop("max"))),
         "error", r"add-on group 'sauces': mustSee does not apply to a required group",
+    ),
+    # --- ADR 0163: HOW MANY a group asks for, and what extras cost (200/140) --
+    # The fixture group is a pick-many "sauces" with max 2 over two options. The
+    # legal shapes first (a validator that refused every `min` or `included` would
+    # pass all the refusals below), then each way a field is mis-set or would do
+    # nothing - the 0156/0159 rule that a field which does nothing is one a
+    # transcriber believes is doing something.
+    "a minimum of 1 on a pick-many group is legal": (
+        _breaks(lambda g, d: g.update(min=1)),
+        "clean", None,
+    ),
+    "exactly 2 (min == max) is legal": (
+        _breaks(lambda g, d: g.update(min=2)),
+        "clean", None,
+    ),
+    "an allowance then a fee is legal": (
+        _breaks(lambda g, d: (g["options"].append({"name": "Mayo", "id": "mayo", "tags": []}),
+                              g.update(max=3, included=1, extraPrice=1.5))),
+        "clean", None,
+    ),
+    "an allowance then a fee with no cap is legal": (
+        _breaks(lambda g, d: (g["options"].append({"name": "Mayo", "id": "mayo", "tags": []}),
+                              g.pop("max"), g.update(included=2, extraPrice=4))),
+        "clean", None,
+    ),
+    "a minimum beside an allowance is legal": (
+        _breaks(lambda g, d: (g["options"].append({"name": "Mayo", "id": "mayo", "tags": []}),
+                              g.update(max=3, min=1, included=1, extraPrice=4))),
+        "clean", None,
+    ),
+    "min of zero": (
+        _breaks(lambda g, d: g.update(min=0)),
+        "error", r"add-on group 'sauces': min must be an integer >= 1, got 0",
+    ),
+    "min written as a string": (
+        _breaks(lambda g, d: g.update(min="2")),
+        "error", r"add-on group 'sauces': min must be an integer >= 1, got '2'",
+    ),
+    "min above max": (
+        _breaks(lambda g, d: g.update(min=3)),
+        "error", r"add-on group 'sauces': min 3 exceeds the 2 pick\(s\) the group allows",
+    ),
+    "min above the option count when uncapped": (
+        _breaks(lambda g, d: (g.pop("max"), g.update(min=3))),
+        "error", r"add-on group 'sauces': min 3 exceeds the 2 pick\(s\) the group allows",
+    ),
+    "min on a pick-one group": (
+        _breaks(lambda g, d: (g.update(select="one", min=1), g.pop("max"))),
+        "error", r"add-on group 'sauces': min only applies to a pick-many group",
+    ),
+    "min on a selects group": (
+        _ladder(lambda g, d: g.update(min=1)),
+        "error", r"add-on group 'size': min does not apply to a selects group",
+    ),
+    "mustSee on a group with a min": (
+        _breaks(lambda g, d: g.update(min=1, mustSee=True)),
+        "error", r"add-on group 'sauces': mustSee does not apply to a group with a min",
+    ),
+    "included without a fee": (
+        _breaks(lambda g, d: (g["options"].append({"name": "Mayo", "id": "mayo", "tags": []}),
+                              g.update(max=3, included=1))),
+        "error", r"add-on group 'sauces': included and extraPrice go together",
+    ),
+    "a fee without an allowance": (
+        _breaks(lambda g, d: g.update(extraPrice=1.5)),
+        "error", r"add-on group 'sauces': included and extraPrice go together",
+    ),
+    "an allowance the cap already reaches": (
+        _breaks(lambda g, d: g.update(included=2, extraPrice=1.5)),
+        "error", r"add-on group 'sauces': included 2 is not below the 2 pick\(s\) the group allows",
+    ),
+    "an allowance of zero": (
+        _breaks(lambda g, d: (g["options"].append({"name": "Mayo", "id": "mayo", "tags": []}),
+                              g.update(max=3, included=0, extraPrice=1.5))),
+        "error", r"add-on group 'sauces': included must be an integer >= 1, got 0",
+    ),
+    "a free extra is no rule": (
+        _breaks(lambda g, d: (g["options"].append({"name": "Mayo", "id": "mayo", "tags": []}),
+                              g.update(max=3, included=1, extraPrice=0))),
+        "error", r"add-on group 'sauces': extraPrice must be a finite number > 0, got 0",
+    ),
+    "a negative extra": (
+        _breaks(lambda g, d: (g["options"].append({"name": "Mayo", "id": "mayo", "tags": []}),
+                              g.update(max=3, included=1, extraPrice=-1))),
+        "error", r"add-on group 'sauces': extraPrice must be a finite number > 0, got -1",
+    ),
+    "an allowance over priced options": (
+        _breaks(lambda g, d: (g["options"].append({"name": "Mayo", "id": "mayo", "tags": []}),
+                              g["options"][0].update(price=2),
+                              g.update(max=3, included=1, extraPrice=1.5))),
+        "error", r"add-on group 'sauces': included/extraPrice need free options, but 'Satay' carries a price",
+    ),
+    "an allowance on a pick-one group": (
+        _breaks(lambda g, d: (g.update(select="one", included=1, extraPrice=1.5), g.pop("max"))),
+        "error", r"add-on group 'sauces': included only applies to a pick-many group",
     ),
     # --- ADR 0130: a group that SELECTS a variant (roadmap 28k) -----------
     # The positive cases first, because the field arrives on a corpus of 50

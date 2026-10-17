@@ -6317,6 +6317,14 @@ body:not(.menu-page):has(> .order-fab:not([hidden])) > main {
   font-size: var(--step-sub);
   font-weight: 700;
 }
+/* What a pick beyond the group's allowance costs, in words (ADR 0163). Same
+   plain ink as the sentence above it: it states a price, it does not alarm. */
+.addon-fee-note {
+  margin: var(--space-1) 0 0;
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+}
 .addon-summary-need {
   margin-left: var(--space-1);
   padding: 0.1em 0.6em;

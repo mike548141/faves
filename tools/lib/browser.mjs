@@ -48,6 +48,10 @@ import { mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises"
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, extname, join, normalize } from "node:path";
+// The key the app itself writes, imported rather than retyped: a copy of the
+// string in a harness is a seed that silently stops working the day the key is
+// versioned, and the symptom would be the flake this helper exists to remove.
+import { CONSENT_KEY as GEO_CONSENT_KEY } from "../../site/js/geo-consent.js";
 
 export const CHROME =
   process.env.FAVES_CHROME ||
@@ -1388,6 +1392,46 @@ export class Report {
 }
 
 // --- Driving one page ---------------------------------------------------
+
+/**
+ * Start the page with the location ask ALREADY ANSWERED, as a returning reader
+ * would have it (roadmap 510/420). OPT-IN, one check at a time, never a default.
+ *
+ * WHY. `site/js/app.js` opens `#geo-dialog` with `showModal()` about 900 ms after
+ * the home list paints unless the reader has already scrolled, pressed or typed
+ * (`engaged`). A harness that arrives late — a loaded machine — has its click
+ * covered by the dialog (`UNREACHABLE ELEMENT … #geo-dialog`) or lands it in the
+ * gap between hit-test and press, leaving the ⋯ menu shut (`UNSTABLE ELEMENT …
+ * 0.0x0.0`). Measured by reproduction, not by the original runs: delaying the
+ * first home-page click 1.8 s past the list reproduces the first message. The
+ * page is correct; a check that is not ABOUT the ask is racing a modal it never
+ * meant to meet, so it removes the variable, the way it removes a stale worker.
+ *
+ * WHAT IT WRITES. The state the dialog's own "don't ask again" tickbox leaves:
+ * `{ suppressed, declined }`, which `askSurface` reads as "none". It is a
+ * supported state, not a hack, and it is installed with
+ * Page.addScriptToEvaluateOnNewDocument so it is in place BEFORE any page script
+ * runs, on every navigation of this page. Call it once, before the first
+ * `Page.navigate`.
+ *
+ * WHO MUST NOT. `geo_check` (it IS the ask), `filter_row_check` (drives the
+ * ask's banner), `chatty_check` (counts localStorage writes, and its
+ * first-time reader is the subject), and any check that wants the first-visit
+ * reader's page for its own reasons. The helper is why that is a choice made in
+ * each file with a sentence beside it, not a launch default that would reach
+ * them silently.
+ */
+export function answerGeoAskBeforeLoad(cdp, sessionId) {
+  return cdp.send(
+    "Page.addScriptToEvaluateOnNewDocument",
+    {
+      source:
+        `try { localStorage.setItem(${JSON.stringify(GEO_CONSENT_KEY)}, ` +
+        `JSON.stringify({ suppressed: true, declined: true })); } catch {}`,
+    },
+    sessionId
+  );
+}
 
 // Keys cook mode and the dialogs actually use. Chrome wants the legacy virtual
 // key code as well as the name, or the page sees a keypress with no identity.
