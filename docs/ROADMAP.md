@@ -132,6 +132,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/180-theme-12-export-your-data-owner-raised-2026-08/README.md)*
 
+- [~] ["Delete everything": the second Reset the owner ruled, never built](roadmap/180-theme-12-export-your-data-owner-raised-2026-08/010-delete-everything-the-second-reset.md)
+
 ## Theme 13 — What the time dimension unlocks (owner-raised 2026-08-08)
 
 *[Narrative](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/README.md)*
@@ -343,10 +345,10 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/390-theme-32-activity-history-what-changed-and-wha/README.md)*
 
-- [~] [32a — the recorder](roadmap/390-theme-32-activity-history-what-changed-and-wha/010-32a-the-recorder-m-js.md)
+- ✅ [32a — the recorder](roadmap/390-theme-32-activity-history-what-changed-and-wha/010-32a-the-recorder-m-js.md)
 - [ ] [32b — the screen](roadmap/390-theme-32-activity-history-what-changed-and-wha/020-32b-the-screen-m-design.md)
 - [ ] [32c — system events, wired to what already computes them](roadmap/390-theme-32-activity-history-what-changed-and-wha/030-32c-system-events-wired-to-what-already-comput.md)
-- [~] [32d — export and wipe](roadmap/390-theme-32-activity-history-what-changed-and-wha/040-32d-export-and-wipe-s-js-depends-on-32a.md)
+- ✅ [32d — export and wipe](roadmap/390-theme-32-activity-history-what-changed-and-wha/040-32d-export-and-wipe-s-js-depends-on-32a.md)
 - ✅ [32e — undo, deliberately out of scope for now](roadmap/390-theme-32-activity-history-what-changed-and-wha/050-32e-undo-deliberately-out-of-scope-for-now-l-d.md)
 
 ## Theme 33 — reservations (owner-raised 2026-08-16)

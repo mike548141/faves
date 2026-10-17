@@ -20,6 +20,7 @@ content freshness separately from this file.
   ("$7 each", "$12 per person", "$26 per 100 g"), and the two Wagyu steaks priced
   per 100 g are shown at their unit price and left out of the total, which says
   so, rather than totalled as a count.
+- **Faves now keeps a private history of the changes you make.** Hearts added and removed, ratings set and cleared, order lines added and removed, switching person, and which preference you changed (never what you changed it to) are recorded on this device, per person, the last 500. There is no screen for it yet, nothing before this release was recorded, it never syncs, and it is in your backup file and goes when you delete a person or restore over everything.
 - **A recipe says what it makes as well as who it serves, and you can pick how many people to cook for.** Hotcakes, Liège waffles, queen cakes and the Turkish flatbread now show "Makes 12 waffles" beside "Serves", labelled apart, because the two are different numbers. Above the ingredients, "Serve – 4 +" rescales the whole recipe to that many people, and cook mode and the shopping list follow it. Where the recipe's own serving count is our estimate it says "Written for about 4 people". The ½×/1×/2×/3× buttons stay.
 - **A dish can now ask you to pick a set number, and charge for extras beyond a
   few included.** Charley Noble's Cheese Selection (Two) now says "Required -

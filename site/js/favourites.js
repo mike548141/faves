@@ -16,6 +16,7 @@ import { migrateEntries, canonicalVenueId } from "./renames.js";
 import { absorbFavourites, dishId, findDish, formerIdMoves } from "./dish-id.js";
 import { MY_RECIPES, RECIPES_KEY, isPersonalVenue } from "./recipe-record.js";
 import { followFavourites, movesOfStoredCookbook } from "./recipe-move.js";
+import { activity, subjectOf } from "./activity.js";
 
 const KEY = "faves.favourites.v1";
 
@@ -178,8 +179,23 @@ export function favHref(e) {
     : `restaurant.html?id=${e.venueId}#dish-${dishId(e)}`;
 }
 
-export function createFavourites(storage) {
+/**
+ * `record(kind, subject)` is told, AFTER the heart has been written, what the
+ * person just did (activity.js, Theme 32a). Optional on purpose: only the
+ * singleton below passes it, so an import, a sync write-back and every test
+ * that builds a store over its own storage record nothing. It must never
+ * throw — activity.js's `record` swallows everything — and is called inside no
+ * condition the heart's own write depends on.
+ */
+export function createFavourites(storage, { record = null } = {}) {
   const subs = new Set();
+  const log = (kind, entry) => {
+    try {
+      record?.(kind, subjectOf(entry));
+    } catch {
+      /* the log must never stop a heart saving */
+    }
+  };
   // The raw string this page last read or wrote (roadmap 510/320). Every write
   // REPLACES the whole list, so a page must never write from a copy older than
   // storage: a restaurant or recipe page holds its list from when it loaded,
@@ -271,15 +287,19 @@ export function createFavourites(storage) {
         if (moved) notify();
         return on;
       }
+      const gone = on ? null : items[idx];
       items = on ? [...items, entry] : items.filter((_, n) => n !== idx);
       commit();
+      log(on ? "favourite.add" : "favourite.remove", on ? entry : gone);
       return on;
     },
 
     removeKey(k) {
       fresh();
+      const gone = items.filter((i) => favKey(i) === k);
       items = items.filter((i) => favKey(i) !== k);
       commit();
+      for (const e of gone) log("favourite.remove", e);
     },
 
     /**
@@ -300,6 +320,7 @@ export function createFavourites(storage) {
       if (added.length) {
         items = [...items, ...added];
         commit();
+        for (const e of added) log("favourite.add", e);
       }
       return added.length;
     },
@@ -346,4 +367,4 @@ export function createFavourites(storage) {
 
 // Per-profile: hearts belong to whoever is browsing. profileScopedStorage
 // namespaces the key by the active profile, so a switch + reload() re-points it.
-export const favourites = createFavourites(profileScopedStorage());
+export const favourites = createFavourites(profileScopedStorage(), { record: activity.record });

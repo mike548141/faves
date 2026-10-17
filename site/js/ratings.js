@@ -36,6 +36,7 @@ import { migrateRatingKeys } from "./renames.js";
 import { absorbRatings, dishId, formerIdMoves, migrateDishKeys } from "./dish-id.js";
 import { RECIPES_KEY } from "./recipe-record.js";
 import { followRatings, movesOfStoredCookbook } from "./recipe-move.js";
+import { activity, subjectOf } from "./activity.js";
 
 const KEY = "faves.ratings.v1";
 
@@ -72,8 +73,18 @@ function sanitise(obj) {
   return out;
 }
 
-export function createRatings(storage) {
+/** `record(kind, subject, from, to)` is told, AFTER the rating has been written,
+ *  what the person just did (activity.js, Theme 32a); only the singleton passes
+ *  it. See favourites.js `createFavourites`. */
+export function createRatings(storage, { record = null } = {}) {
   const subs = new Set();
+  const log = (kind, entry, from, to) => {
+    try {
+      record?.(kind, subjectOf(entry), from, to);
+    } catch {
+      /* the log must never stop a rating saving */
+    }
+  };
 
   // The raw string this page last read or wrote: a change made in another
   // tab or page is caught up with before this one writes the whole map back
@@ -148,11 +159,15 @@ export function createRatings(storage) {
       const k = ratingKey(entry);
       const r = clampRating(value);
       fresh();
-      if (r === (map[k] || 0)) return r;
+      const was = map[k] || 0;
+      if (r === was) return r;
       map = { ...map };
       if (r) map[k] = r;
       else delete map[k];
       commit();
+      // A value that clamps to 0 IS a clear, and is recorded as one.
+      if (r) log("rating.set", entry, was || null, r);
+      else log("rating.clear", entry, was, null);
       return r;
     },
 
@@ -160,10 +175,12 @@ export function createRatings(storage) {
     clear(entry) {
       const k = ratingKey(entry);
       fresh();
-      if (!map[k]) return false;
+      const was = map[k];
+      if (!was) return false;
       map = { ...map };
       delete map[k];
       commit();
+      log("rating.clear", entry, was, null);
       return true;
     },
 
@@ -205,4 +222,4 @@ export function createRatings(storage) {
 // namespaces the key by the active profile, so a switch + reload() re-points it.
 // Its base key is registered in profiles.js SCOPED_BASE_KEYS so migration copies
 // it forward and deleting a profile purges it.
-export const ratings = createRatings(profileScopedStorage());
+export const ratings = createRatings(profileScopedStorage(), { record: activity.record });

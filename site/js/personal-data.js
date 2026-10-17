@@ -65,6 +65,7 @@ import { PERSIST_ASKED_KEY } from "./storage-persist.js";
 import { RECIPES_KEY, sanitiseRecipes, sortedRecipes } from "./recipe-record.js";
 import { followMovesInProfile } from "./recipe-move.js";
 import { SAVED_ORDERS_KEY, sanitiseSavedOrders } from "./saved-orders.js";
+import { ACTIVITY_KEY, sanitiseActivity, mergeActivity } from "./activity.js";
 
 // Every settings field EXCEPT diet, which is handled just below by its own
 // safety-critical choice logic (keep/incoming/combine) rather than a plain
@@ -96,7 +97,7 @@ export { listStoredKeys };
 export const ORDER_KEY = "faves.order.v1";
 
 const README =
-  "Your own Faves data — favourites, ratings, notes, settings, profiles, your own recipes, saved orders and the order tally. " +
+  "Your own Faves data — favourites, ratings, notes, settings, profiles, your own recipes, saved orders, the activity history and the order tally. " +
   "Faves keeps this in your browser only; this file is a copy you asked for, and " +
   "producing it sent nothing anywhere.";
 
@@ -289,6 +290,21 @@ function cleanSavedOrdersJson(v) {
   }
 }
 
+// The activity log (Theme 32a), the same shape of question as saved orders: a
+// raw copy of its key in a file's `other` bag would bypass the cleaning the named
+// `activity` field gets — and the log's cleaning is what keeps a settings entry
+// to a dial's name — so it is cleaned, never trusted raw.
+const isActivityKey = (k) =>
+  k === ACTIVITY_KEY || (k.startsWith("faves.p.") && k.endsWith(ACTIVITY_KEY.slice("faves".length)));
+
+function cleanActivityJson(v) {
+  try {
+    return JSON.stringify(sanitiseActivity(JSON.parse(v)));
+  } catch {
+    return "[]";
+  }
+}
+
 /** Is this storage key one the backup refuses to carry, for any profile? */
 const isExcludedKey = (key) => excludedEntry(key) !== null;
 
@@ -312,7 +328,7 @@ function parse(raw) {
  * and testable.
  *
  * `localOnly` adds what lives on this device and is NOT synced (saved orders,
- * Theme 26a): true only for the file the person asks for in Settings. Sync
+ * Theme 26a, and the activity log, Theme 32a): true only for the file the person asks for in Settings. Sync
  * collects through this same function and must never pass it — that default, not
  * a filter further down, is what keeps a saved order off the wire, and what an
  * older build's collect-and-merge cannot be talked into carrying.
@@ -343,6 +359,11 @@ export function collectPersonalData(storage, { exportedAt, localOnly = false } =
     const savedKey = scopeKey(p.id, SAVED_ORDERS_KEY);
     known.add(savedKey);
     if (localOnly) entry.savedOrders = sanitiseSavedOrders(parse(storage.getItem(savedKey)));
+    // The activity log (Theme 32a) is device-local in exactly the same way: a
+    // named per-person field for the file the person asks for, never for sync.
+    const activityKey = scopeKey(p.id, ACTIVITY_KEY);
+    known.add(activityKey);
+    if (localOnly) entry.activity = sanitiseActivity(parse(storage.getItem(activityKey)));
     // A heart, rating or note left on a recipe this person moved goes out on
     // the moved id (roadmap 510/400): what a backup holds and what sync sends
     // never carry the old key beside the new one, whatever put it in storage.
@@ -405,6 +426,7 @@ export function summarisePersonalData(data) {
     ),
     orderItems: count(data?.order),
     savedOrders: people.reduce((n, p) => n + count(p.savedOrders), 0),
+    activity: people.reduce((n, p) => n + count(p.activity), 0),
     recipes: people.reduce(
       (n, p) => n + (p.recipes && typeof p.recipes === "object" ? Object.keys(p.recipes).length : 0),
       0
@@ -605,6 +627,7 @@ function normaliseProfile(p) {
     notes: sanitiseNotes(p.notes),
     recipes: sanitiseRecipes(p.recipes),
     savedOrders: sanitiseSavedOrders(p.savedOrders),
+    activity: sanitiseActivity(p.activity),
     // Settings stay raw here; settings.js's own sanitiser is the single gate
     // they pass through on the way to storage, and `diet` has to survive
     // untouched until the comparison below can see whether it differs.
@@ -677,7 +700,7 @@ export function parsePersonalData(input) {
       // into a backup (its catch-all sweep names a store it has never heard of).
       // It is cleaned, never trusted raw — and kept, because dropping it would
       // lose the orders (the "other" bag exists so nothing you put in is lost).
-      other[k] = isSavedOrdersKey(k) ? cleanSavedOrdersJson(v) : v;
+      other[k] = isSavedOrdersKey(k) ? cleanSavedOrdersJson(v) : isActivityKey(k) ? cleanActivityJson(v) : v;
     }
   }
   return {
@@ -769,6 +792,7 @@ export function planImport(storage, data, { mode = "merge", decisions = {} } = {
       notes: Object.keys(p.notes).length,
       recipes: Object.keys(p.recipes).length,
       savedOrders: p.savedOrders.length,
+      activity: p.activity.length,
       hasSettings: !!p.settings,
       match: mode === "replace" ? null : idMatch ? "id" : nameMatch ? "name" : null,
       collides: ambiguous,
@@ -812,6 +836,7 @@ export function planImport(storage, data, { mode = "merge", decisions = {} } = {
       orderItems: clean.order.length,
       recipes: clean.profiles.reduce((n, p) => n + Object.keys(p.recipes).length, 0),
       savedOrders: clean.profiles.reduce((n, p) => n + p.savedOrders.length, 0),
+      activity: clean.profiles.reduce((n, p) => n + p.activity.length, 0),
       otherStores: Object.keys(clean.other).length,
     },
     entries,
@@ -873,6 +898,7 @@ function writeProfileStores(storage, id, p) {
   if (Object.keys(p.notes).length) writeKey(storage, scopeKey(id, "faves.notes.v1"), JSON.stringify(p.notes));
   if (Object.keys(p.recipes).length) writeKey(storage, scopeKey(id, RECIPES_KEY), JSON.stringify(sortedRecipes(p.recipes)));
   if (p.savedOrders.length) writeKey(storage, scopeKey(id, SAVED_ORDERS_KEY), JSON.stringify(p.savedOrders));
+  if (p.activity.length) writeKey(storage, scopeKey(id, ACTIVITY_KEY), JSON.stringify(p.activity));
   // Through the store, so the payload's settings pass settings.js's clamps.
   if (p.settings) createSettings(view).set(p.settings);
 }
@@ -920,6 +946,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     orderRestored: false,
     recipesAdded: 0,
     savedOrdersAdded: 0,
+    activityAdded: 0,
     otherRestored: 0,
   };
 
@@ -942,7 +969,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
           ORDER_KEY,
           RECIPES_KEY,
           ...readRegistry(storage).profiles.flatMap((p) =>
-            [...SCOPED_BASE_KEYS, CHECKLIST_KEY, SAVED_ORDERS_KEY].map((b) => scopeKey(p.id, b))
+            [...SCOPED_BASE_KEYS, CHECKLIST_KEY, SAVED_ORDERS_KEY, ACTIVITY_KEY].map((b) => scopeKey(p.id, b))
           ),
         ];
     for (const k of doomed) removeKey(storage, k);
@@ -964,6 +991,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
       report.notesAdded += Object.keys(p.notes).length;
       report.recipesAdded += Object.keys(p.recipes).length;
       report.savedOrdersAdded += p.savedOrders.length;
+      report.activityAdded += p.activity.length;
       if (p.settings) report.settingsUpdated += 1;
       return;
     }
@@ -1034,6 +1062,15 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     if (savedAdded) writeKey(storage, scopeKey(id, SAVED_ORDERS_KEY), JSON.stringify(sanitiseSavedOrders(mineSaved)));
     report.savedOrdersAdded += savedAdded;
     touched += savedAdded;
+
+    // The activity log (Theme 32a): the union, in time order, newest 500 kept.
+    // Nothing "wins" — an entry is a fact that happened, not a judgement — and
+    // an entry already here (a re-import of one's own file) is not added twice.
+    const mineActivity = sanitiseActivity(parse(view.getItem(ACTIVITY_KEY)));
+    const { merged: mergedActivity, added: activityAdded } = mergeActivity(mineActivity, p.activity);
+    if (activityAdded) writeKey(storage, scopeKey(id, ACTIVITY_KEY), JSON.stringify(mergedActivity));
+    report.activityAdded += activityAdded;
+    touched += activityAdded;
 
     if (isObj(p.settings)) {
       const patch = {};
