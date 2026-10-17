@@ -62,6 +62,10 @@ import {
   isSelects,
   isRequired,
   missingRequired,
+  minOf,
+  extraFee,
+  ruleText,
+  owedSentence,
   mustSeeGroups,
   mustSeeNote,
   freshAction,
@@ -201,7 +205,9 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   // What the row's own ＋ Add last recorded (refresh() keeps it): the plate and any
   // required choice, which is exactly what a press of that Add put in the order.
   let rowCarry = { options: [] };
-  const requiredIds = new Set(groups.filter(isRequired).map((g) => g.id));
+  // Groups the venue obliges the reader to answer: required pick-one (ADR 0156) and
+  // pick-many with a minimum (ADR 0163). One set, one mechanism.
+  const requiredIds = new Set(groups.filter((g) => isRequired(g) || minOf(g) > 0).map((g) => g.id));
   // In the DOM only while a choice is open — a hidden span would still be part
   // of the summary's textContent.
   const needChip = el("span", { className: "addon-summary-need", textContent: "Choice needed" });
@@ -218,7 +224,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
       // price in its place — plus what has been added to it. null stays null:
       // an unpriced dish with a paid extra is still a dish we cannot total, and
       // guessing would be worse than the honest "—".
-      price: configuredPrice(base, selection),
+      price: configuredPrice(base, selection, groups),
       // Same reason as the plain row's stepper (menu.js): the line carries the
       // currency it was priced in, or it silently becomes NZD.
       currency: venueCurrency(record),
@@ -239,7 +245,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
    */
   function followFresh() {
     if (!fresh) return;
-    const next = { options: lineOptions(selection), price: configuredPrice(base, selection) };
+    const next = { options: lineOptions(selection), price: configuredPrice(base, selection, groups) };
     const act = freshAction(fresh, {
       sel: selectionKey(next.options),
       total: order.dishQty(record.id, id),
@@ -264,7 +270,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
   function variantState() {
     const v = selection.filter((s) => typeof s.dishPrice === "number");
     if (v.length === 0) return null;
-    return { price: configuredPrice(base, v), options: lineOptions(v) };
+    return { price: configuredPrice(base, v, groups), options: lineOptions(v) };
   }
 
   // `notice` is a one-off line appended AFTER the allergen text — the refused
@@ -290,7 +296,11 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
     const missing = missingRequired(groups, selection);
     const gate = missing.length
       ? {
-          reason: `choose ${missing.map((g) => g.name).join(" and ")} first`,
+          // A required pick-one group keeps its old words ("choose Sauce first");
+          // a minimum says how many ("choose 2 under “Cheese” first", ADR 0163).
+          reason: missing.every((g) => g.select === "one")
+            ? `choose ${missing.map((g) => g.name).join(" and ")} first`
+            : `${owedSentence(missing, selection)} first`,
           onBlocked() {
             details.open = true;
             // Asked again NOW: the row's stepper outlives this closure, and
@@ -303,13 +313,13 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
     need.hidden = !gate;
     if (gate) summary.append(needChip);
     else needChip.remove();
-    need.textContent = gate ? `To add this, choose one under ${missing.map((g) => `“${g.name}”`).join(" and ")}.` : "";
+    need.textContent = gate ? `To add this, ${owedSentence(missing, selection)}.` : "";
     stepperSlot.replaceChildren(dishStepper(meta(), gate));
     // What the row's own ＋ Add must record: the plate (variant) AND any required
     // choice already made. Without the second, answering the question here
     // would lift the gate and let the row order the dish with no sauce on it.
     const rowSel = selection.filter((x) => typeof x.dishPrice === "number" || requiredIds.has(x.group));
-    rowCarry = { price: configuredPrice(base, rowSel), options: lineOptions(rowSel) };
+    rowCarry = { price: configuredPrice(base, rowSel, groups), options: lineOptions(rowSel) };
     onGate?.(gate, rowCarry);
     const v = variantState();
     if (v) onVariant?.(v);
@@ -384,14 +394,29 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
     const cap = single ? 1 : group.max;
     const required = isRequired(group);
     // "Required" is a word, not a colour: the venue made this choice
-    // compulsory, and the reader should see that before they reach Add.
-    const rule = single
-      ? required
-        ? "Required — choose one"
-        : "Choose one"
-      : typeof cap === "number"
-        ? `Choose up to ${cap}`
-        : "Choose any";
+    // compulsory, and the reader should see that before they reach Add. The
+    // words for a minimum ("Required — choose 2") and for an allowance with a
+    // fee ("1 included, then $4 each") come from the same function (ADR 0163).
+    const rule = ruleText(group, fmt);
+    // The refused tick names the cap alone, never the fee clause.
+    const capNotice = `${group.name}: choose up to ${cap}.`;
+    // Said in words as the fee starts to apply, so a reader who ticks a fourth
+    // sauce is told it costs, not left to find out on the order sheet.
+    const feeNote =
+      !single && Number.isInteger(group.included) && group.extraPrice > 0
+        ? el("p", { className: "addon-fee-note", hidden: true })
+        : null;
+    feeNote?.setAttribute("role", "status");
+    const paintFee = () => {
+      if (!feeNote) return;
+      const n = selection.filter((s) => s.group === group.id).length;
+      const fee = extraFee(group, n);
+      feeNote.hidden = fee <= 0;
+      feeNote.textContent =
+        fee > 0
+          ? `${n - group.included} extra at ${fmt(group.extraPrice)} each: +${fmt(fee)} on this dish.`
+          : "";
+    };
 
     const fields = el("div", { className: "addon-options" });
     const legend = el("legend", { className: "addon-legend" }, [
@@ -444,7 +469,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
         name: `addon-${record.id}-${id}-${group.id}`,
         value: option.name,
       });
-      if (required && !firstInput.has(group.id)) firstInput.set(group.id, input);
+      if (requiredIds.has(group.id) && !firstInput.has(group.id)) firstInput.set(group.id, input);
       input.addEventListener("change", () => {
         if (single) {
           // A radio group replaces rather than accumulates.
@@ -458,7 +483,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
             // the tick rather than silently letting the order sheet ask for
             // something the shop will not make.
             input.checked = false;
-            refresh(`${group.name}: ${rule.toLowerCase()}.`);
+            refresh(capNotice);
             return;
           }
         }
@@ -468,6 +493,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
         } else {
           selection.push({ group: group.id, id: optionId(option), name: option.name, price: cost, tags: option.tags || [] });
         }
+        paintFee();
         refresh();
       });
 
@@ -489,7 +515,7 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
       );
     }
 
-    body.append(el("fieldset", { className: "addon-group" }, [legend, fields]));
+    body.append(el("fieldset", { className: "addon-group" }, [legend, fields, ...(feeNote ? [feeNote] : [])]));
   }
 
   // The summary names what the disclosure holds. A lone group names itself, as
