@@ -1,4 +1,5 @@
-- [ ] 🔎 **"Vegan mayo" is tagged `contains-egg`, on a dish the venue calls
+- [~] 🔎 **"Vegan mayo" is tagged `contains-egg`, on a dish the venue calls
+  (claimed 2026-10-17-2046, faves-b4, wt: faves-080-300)
       vegan** `[S][tools]` — found 2026-10-16 by the worker adding Hei
       (`080/290`), filed by `faves-11`.
 

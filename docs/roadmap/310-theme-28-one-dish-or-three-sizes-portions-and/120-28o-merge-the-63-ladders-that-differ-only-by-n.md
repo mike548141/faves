@@ -1,4 +1,6 @@
-- [ ] **28o — Merge the 63 ladders that differ only by name and price**
+- [~] **28o — Merge the 63 ladders that differ only by name and price**
+  (claimed 2026-10-17-2046, faves-b4, wt: faves-310-120b)
+  PART 2 only: the three Takeaway @ Churton groups, which hold the history joins.
       `[L][data]` — population B of `28h`, the mechanical half. **This is the
       first item in the whole decomposition that retires a `dishId`, and it
       must not start before `28l`'s gate exists.**
