@@ -1,4 +1,6 @@
-- [ ] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+- [~] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+  (claimed 2026-10-17-2057, faves-b4, wt: faves-470-030)
+  Scope: the sausage-class vetoes become lookbehinds; pizza-slice stays the owner's.
       📌 **CLAIM RELEASED 2026-09-24 (session `3e87e0bf`) — the four owner
       rulings of 2026-09-21 are DELIVERED and merged** (`1afd916`, ADR 0122).
       The report stands at **1 split / 1 row**: `abrakebabra/pizza-slice`,
