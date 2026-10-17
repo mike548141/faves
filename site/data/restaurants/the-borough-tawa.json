@@ -15,7 +15,13 @@
     "added": "2026-08-15"
   },
   "website": "https://www.theboroughtawa.co.nz",
-  "ordering": [],
+  "ordering": [
+    {
+      "platform": "ResDiary",
+      "url": "https://booking.resdiary.com/widget/Standard/TheBorough1/3349",
+      "kind": "booking"
+    }
+  ],
   "orderMode": [
     "dine-in",
     "takeaway"

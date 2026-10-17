@@ -1,0 +1,20 @@
+{
+  "venue": "hotel-bristol",
+  "rows": [
+    {
+      "url": "https://booking.resdiary.com/widget/Standard/HotelBristol/3342",
+      "platform": "ResDiary",
+      "publishedOn": "https://stargroup.nz/venue-bookings/hotel-bristol",
+      "publisher": "The venue's own website.",
+      "via": "embed",
+      "fetched": "2026-10-17T22:01Z",
+      "sha256": "601bc41c30fdbe16b4074f5ee9fda16032e2b8a0b84dafe5a6d073ba03f7a309",
+      "saw": "The venue's own \"Reservations at Hotel Bristol\" page (its \"Book\" button) embeds exactly this ResDiary widget; its home page also links the same address from its What's On cards.",
+      "http": {
+        "status": 200,
+        "finalUrl": "https://booking.resdiary.com/widget/Standard/HotelBristol/3342"
+      },
+      "rendered": "ResDiary widget \"Hotel Bristol\": party size, date and time pickers. Read in headless Chrome on 2026-10-18."
+    }
+  ]
+}

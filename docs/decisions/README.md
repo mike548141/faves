@@ -1935,6 +1935,14 @@ deliberation those compact docs omit.
   No per-entry delete: removals appear as removals. `settings.change` records the
   dial's name, never the value, enforced in the recorder. Stores record after
   their own write and never throw.
+- [0165](0165-a-booking-link-is-an-ordering-kind-the-venue-published.md) —
+  **A booking link is an `ordering[]` entry with `kind: "booking"`, and the venue
+  published it** (`400/010`, roadmap 33a). Renders as "Book a table" on the contact
+  card, never under "Order online", never an in-app flow, and no "Call to book".
+  Shipped only if the venue's own website published it and it answered 200; each
+  has a provenance row in `data/bookings/` that `validate.py` checks both ways.
+  Six venues ship; Now Book It links are withheld (its pages cannot show a venue
+  today, and answer 200 to any id).
 - [0167](0167-delete-everything-is-an-epoch-the-whole-group-honours.md) —
   **"Delete everything" is an epoch the whole sync group honours** (`180/010`,
   owner-ruled 2026-08-16). A second typed control (`delete everything`, not

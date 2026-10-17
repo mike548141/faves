@@ -355,10 +355,11 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/README.md)*
 
-- [~] [33a — book it: link out, don't build it](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/010-33a-book-it-link-out-don-t-build-it-s-schema.md)
+- ✅ [33a — book it: link out, don't build it](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/010-33a-book-it-link-out-don-t-build-it-s-schema.md)
 - [ ] [33b — the reservation note, which is the actual feature](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/020-33b-the-reservation-note-which-is-the-actual-f.md)
 - [ ] [33c — several at once](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/030-33c-several-at-once-s-design-depends-on-33b.md)
 - [ ] 🛑 [33d — a real integration](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/040-33d-a-real-integration-xl-owner-gated-and-agai.md)
+- [ ] ⏳ [33e — booking links withheld at 33a, and why](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/050-33e-booking-links-withheld.md)
 
 ## Theme 34 — every section addressable by URL (owner-raised 2026-08-16)
 

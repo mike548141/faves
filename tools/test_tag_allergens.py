@@ -2666,6 +2666,9 @@ def main() -> int:
         # the unmutated corpus on Spices Indian's three Full defaults, and the
         # stale-entry probe's control reads that as a validator that refuses all.
         shutil.copytree(ROOT / "data" / "defaults", work / "data" / "defaults")
+        # …and the booking-link provenance rows (ADR 0165): validate.py checks
+        # every shipped booking link against one, in both directions.
+        shutil.copytree(ROOT / "data" / "bookings", work / "data" / "bookings")
         # validate.py reads four tables out of the shipped JS (see test_validate.py).
         (work / "site" / "js").mkdir(parents=True, exist_ok=True)
         for mod in ("renames.js", "addons.js", "vibes.js", "dietary.js"):

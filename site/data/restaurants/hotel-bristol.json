@@ -15,7 +15,13 @@
   ],
   "phone": null,
   "website": "https://stargroup.nz/venues/hotel-bristol",
-  "ordering": [],
+  "ordering": [
+    {
+      "platform": "ResDiary",
+      "url": "https://booking.resdiary.com/widget/Standard/HotelBristol/3342",
+      "kind": "booking"
+    }
+  ],
   "hours": {
     "mon": [],
     "tue": [

@@ -1,0 +1,20 @@
+{
+  "venue": "dragonfly",
+  "rows": [
+    {
+      "url": "https://booking.resdiary.com/widget/Standard/DRAGONFLY1/9657",
+      "platform": "ResDiary",
+      "publishedOn": "https://www.dragon-fly.co.nz/reservations-1-1",
+      "publisher": "The venue's own website.",
+      "via": "embed",
+      "fetched": "2026-10-17T22:01Z",
+      "sha256": "80acf3f494c303be8296162028ca3c31eca9271c8dd7fd8d37318815784faa7e",
+      "saw": "The venue's own Reservations page (linked \"Reservations\" in its menu) embeds exactly this ResDiary widget in an iframe.",
+      "http": {
+        "status": 200,
+        "finalUrl": "https://booking.resdiary.com/widget/Standard/DRAGONFLY1/9657"
+      },
+      "rendered": "ResDiary widget with party size, date and time pickers; privacy text names Dragonfly Hospitality Group. Read in headless Chrome on 2026-10-18."
+    }
+  ]
+}
