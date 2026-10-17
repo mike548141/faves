@@ -49,6 +49,7 @@ import {
   lineOptions,
 } from "./addons.js";
 import { normaliseNote } from "./cart.js";
+import { raiseToMin } from "./dish-rules.js";
 import { formatMoney, venueCurrency } from "./place.js";
 
 /** Why a line could not be recalled, in words for the reader. */
@@ -68,13 +69,16 @@ export const REASONS = {
  * compulsory choice, and `changed` is `[{ name, qty, was, now, text }]` for the
  * lines in `lines` whose unit price differs from the saved snapshot (`now` is
  * null when the dish no longer carries a price; `text` is the sentence for the
- * reader, formatted in the venue's currency).
+ * reader, formatted in the venue's currency), and `raised` is `[{ name, was, now,
+ * text }]` for the lines whose saved quantity is below the dish's minimum order
+ * today (ADR 0166) and was brought up to it.
  */
 export function planRecall(saved, record) {
   const lines = [];
   const skipped = [];
   const unfinished = [];
   const changed = [];
+  const raised = [];
   const currency = venueCurrency(record);
   const fmt = (n) => formatMoney(n, currency);
 
@@ -133,6 +137,19 @@ export function planRecall(saved, record) {
       unfinished.push({ name: item.name, qty: l.qty, groups: unanswered.map((g) => g.name) });
     }
 
+    // A saved line below the dish's minimum order TODAY (the venue added the rule
+    // since, or the saved order predates it) is brought up to it and SAID — never
+    // dropped, and never landed short as though the venue would take it (ADR 0166).
+    const up = raiseToMin(l.qty, item);
+    if (up.raised) {
+      raised.push({
+        name: item.name,
+        was: l.qty,
+        now: up.qty,
+        text: `${item.name} — the minimum order is ${up.qty}, so ${l.qty} is now ${up.qty}`,
+      });
+    }
+
     const base = typeof item.price === "number" ? item.price : null;
     const line = {
       venueId: record.id,
@@ -143,7 +160,7 @@ export function planRecall(saved, record) {
       price: configuredPrice(base, selection, groups),
       currency,
       options: lineOptions(selection),
-      qty: l.qty,
+      qty: up.qty,
     };
     const note = normaliseNote(l.note);
     if (note) line.note = note;
@@ -157,7 +174,7 @@ export function planRecall(saved, record) {
       if (c) changed.push(c);
     }
   }
-  return { lines, skipped, unfinished, changed };
+  return { lines, skipped, unfinished, changed, raised };
 }
 
 /**

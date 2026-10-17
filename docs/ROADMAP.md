@@ -162,9 +162,10 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [An unfinished dish on the order sheet: warn, and finish it there](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/130-an-unfinished-dish-on-the-order-sheet.md)
 - ✅ [How many you may pick, and what the extras beyond that cost](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/140-how-many-you-may-pick-and-what-extras-cost.md)
 - [ ] [A fee that is not a dish: takeaway containers and cups](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/150-a-fee-that-is-not-a-dish.md)
-- [ ] [A swap is not an extra: name what it replaces](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/160-a-swap-is-not-an-extra.md)
-- [~] [Priced per piece, per 100 g or per person, with a minimum order](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/170-per-unit-per-person-and-minimum-orders.md)
+- [~] [A swap is not an extra: name what it replaces](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/160-a-swap-is-not-an-extra.md)
+- ✅ [Priced per piece, per 100 g or per person, with a minimum order](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/170-per-unit-per-person-and-minimum-orders.md)
 - [ ] [Data defects the configuration survey saw in passing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/180-data-defects-the-configuration-survey-saw.md)
+- [ ] [Multi-buy: "Two for $10.00"](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/190-multi-buy-two-for-ten.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
 

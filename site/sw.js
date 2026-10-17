@@ -113,6 +113,7 @@ const SHELL = [
   "js/overflow-ui.js",
   "js/saved-orders.js",
   "js/saved-orders-ui.js",
+  "js/dish-rules.js",
   "js/saved-recall.js",
   "js/search.js",
   "js/search-clear.js",

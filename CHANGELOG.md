@@ -19,6 +19,16 @@ content freshness separately from this file.
   just this one, and a heart another device made in the meantime does not bring
   anything back. The confirmation says so and shows no device count.
 - **Opening hours for three more places, from their own sites.** Abrakebabra (its published week, with Wednesday left as "not published" because its site gives no Wednesday line), Golding's Free Dive (midday to 11pm daily) and Wellington Sourdough (7:30am to 2:30pm daily) now show when they are open, and the last two link to their own site. Hotel Bristol was re-read and left alone: its page contradicts itself.
+- **A dish with a minimum order now starts there, and a dish priced by weight is
+  no longer multiplied.** Charley Noble's oysters ("minimum order 3") and its
+  arancini and croquettes ("Minimum order of 2") add at the minimum, the row says
+  "Minimum 3", and the order sheet will not step below it: the − at the minimum
+  becomes a ✕ that removes the dish. A dish already on the sheet under its
+  minimum is flagged in words and one press of ＋ raises it, and a saved order
+  recalled under it is raised and says so. Prices now say what they are for
+  ("$7 each", "$12 per person", "$26 per 100 g"), and the two Wagyu steaks priced
+  per 100 g are shown at their unit price and left out of the total, which says
+  so, rather than totalled as a count.
 - **Faves now keeps a private history of the changes you make.** Hearts added and removed, ratings set and cleared, order lines added and removed, switching person, and which preference you changed (never what you changed it to) are recorded on this device, per person, the last 500. There is no screen for it yet, nothing before this release was recorded, it never syncs, and it is in your backup file and goes when you delete a person or restore over everything.
 - **Six places now have a "Book a table" link on their contact card.** Dirty Little Secret, Hei, Dragonfly, Hotel Bristol, Southern Cross and The Borough Tawa each publish a booking page on their own website, and the link goes straight to it (SevenRooms or ResDiary), in a new window. Faves never takes or tracks a booking; it only opens the venue's own page. We checked each link answered before adding it, and left out any venue whose booking page we could not confirm was working.
 - **A recipe says what it makes as well as who it serves, and you can pick how many people to cook for.** Hotcakes, Liège waffles, queen cakes and the Turkish flatbread now show "Makes 12 waffles" beside "Serves", labelled apart, because the two are different numbers. Above the ingredients, "Serve – 4 +" rescales the whole recipe to that many people, and cook mode and the shopping list follow it. Where the recipe's own serving count is our estimate it says "Written for about 4 people". The ½×/1×/2×/3× buttons stay.
