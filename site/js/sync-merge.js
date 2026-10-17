@@ -319,6 +319,9 @@ export const KNOWN_SNAPSHOT_FIELDS = Object.freeze([
   "recipes",
   "recipeBuckets",
   "recipeHashes",
+  // The deletion marker (roadmap 180/010, ADR 0167): decided by `resolveWipe`
+  // and stamped by the cycle, never carried or merged field-by-field.
+  "wipe",
 ]);
 
 // A value carried without being read must not be able to act on the object it
@@ -642,4 +645,73 @@ export function keepTheirsFor(mine, theirs, profileIds) {
       return { ...p, favourites: list(t.favourites), ratings: map(t.ratings), notes: map(t.notes) };
     }),
   };
+}
+
+// --- "Delete everything" travelling (roadmap 180/010, ADR 0167) ---------------
+
+/** The snapshot field that carries a deletion: `{ id, at }`. */
+export const WIPE_FIELD = "wipe";
+
+const wipeId = (m) => (typeof m?.id === "string" && m.id ? m.id : null);
+const wipeOf = (m) => (wipeId(m) ? { id: m.id, at: typeof m.at === "string" ? m.at : null } : null);
+
+/**
+ * A new deletion marker. The id leads with the time so two markers sort by
+ * when they were made, and carries a random tail so two made in one second
+ * still differ; ordering is only ever used to make both ends pick the SAME
+ * winner of two deletions, so clock skew costs nothing.
+ */
+export function newWipe(at, rand = () => Math.random().toString(36).slice(2, 10)) {
+  return { id: `${at}~${rand()}`, at };
+}
+
+/**
+ * Which side's DELETION stands, if either (ADR 0167).
+ *
+ * A three-way merge cannot carry "delete everything": an entry the other
+ * device added since the last agreement looks like an addition, and the stores
+ * that never travel (saved orders, the activity log, the shopping list, cook
+ * ticks) are not in the snapshot at all. So a deletion is an EPOCH. The device
+ * that deletes records a marker `{ id, at }` (in its sync config, until sent);
+ * the marker rides in the snapshot and the base. A device that reads a marker
+ * it has not yet honoured throws away everything it holds and takes the
+ * server's copy — wherever the marker is NEWER than the last agreement, which
+ * is what lets a later addition on the deleting device (made after it deleted)
+ * survive while the other device's earlier ones do not.
+ *
+ *   `base`        the last agreed snapshot (its marker is the last one honoured)
+ *   `mineMarker`  a deletion made here and not yet agreed, or null
+ *   `theirs`      the server's snapshot, or null
+ *
+ * Returns `{ winner: "mine" | "theirs" | null, marker }`:
+ *   • "mine"   — this device's deletion stands; what the server holds is void.
+ *   • "theirs" — the server carries a deletion this device has not honoured;
+ *                what this device holds is void.
+ *   • null     — no deletion in play (or both sides already agree on it): the
+ *                ordinary three-way merge runs, and `marker` is what to keep.
+ * Two deletions at once: the later id wins on BOTH ends, so they converge.
+ * No base means no history to be older than a deletion, so a marker is not
+ * honoured by a device that has none (joining a group is the case; it is
+ * asked, not wiped — roadmap 510/390) — but it is kept, so it is not read as
+ * new on the next cycle.
+ */
+export function resolveWipe(base, mineMarker, theirs) {
+  const baseId = base ? wipeId(base.wipe) : null;
+  const theirsId = wipeId(theirs?.wipe);
+  const mineId = wipeId(mineMarker);
+  const theirsNew = !!base && theirsId !== null && theirsId !== baseId;
+  if (mineId !== null && mineId !== theirsId) {
+    if (theirsNew && theirsId > mineId) return { winner: "theirs", marker: wipeOf(theirs.wipe) };
+    return { winner: "mine", marker: wipeOf(mineMarker) };
+  }
+  if (mineId === null && theirsNew) return { winner: "theirs", marker: wipeOf(theirs.wipe) };
+  return { winner: null, marker: wipeOf(theirs?.wipe) ?? wipeOf(base?.wipe) ?? wipeOf(mineMarker) };
+}
+
+/** A snapshot with its people taken out: the server's copy once THIS device's
+ *  deletion is the one that stands. Keeps only what says which shape it is in,
+ *  so the merge and the write stay the ordinary ones. */
+export function voidedSnapshot(snap) {
+  if (!snap || typeof snap !== "object") return snap ?? null;
+  return { format: snap.format, v: snap.v, ...(snap.stores ? { stores: snap.stores } : {}), profiles: [], order: [] };
 }
