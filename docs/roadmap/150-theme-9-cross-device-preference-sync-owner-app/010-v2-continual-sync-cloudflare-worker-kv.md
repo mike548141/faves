@@ -42,8 +42,10 @@
   pairing UI; and the base-snapshot store the merge needs~~ — that last is
   the only remaining piece of the *offline* half, and without it the merge
   silently degrades to the additive behaviour ADR 0060 exists to replace.
-  🚩 **The endpoint being live is not the feature being live**: nothing under
-  `site/` calls it yet, so sync does not work for a user today.
+  ~~🚩 **The endpoint being live is not the feature being live**: nothing under
+  `site/` calls it yet, so sync does not work for a user today.~~ (Stale: it
+  predates the *SYNC IS LIVE* paragraph above, which was inserted ahead of it.
+  See the 2026-10-17 note at the foot.)
   🚩 **Two gates before any of it
   ships:** the Reset-propagation wording (owner's ruling, Theme 32 — and ADR
   0060's last consequence shows that ruling cannot be met as stated, because an
@@ -85,3 +87,17 @@
   "part-done", which the house board does not define — `[~]` means
   *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
   § Claiming work). What is done is carried in the body above.
+
+  🔎 **Reconciled 2026-10-17 (faves-b4), because the body contradicted
+  itself.** Measured in the tree: `site/js/sync.js` is imported and running
+  (`sync_check` 40 assertions, two real browsers); the base snapshot exists
+  (`SYNC_BASE_KEY`, `sync.js:69`), so the *"only remaining piece of the
+  offline half"* above is built too. **What is genuinely unbuilt is the
+  passkey + WebAuthn PRF claim path** — `site/js` holds no passkey code; the
+  bearer sync-code is today's only way to pair. The About screen still says
+  *"No accounts"* (`about-ui.js:78`), which stays true until a passkey path
+  ships, so that gate only bites then. The Reset-propagation wording gate is
+  Theme 32's, not this item's. So this item's open remainder is the passkey
+  path alone, `[L]`, and it is a new way to hold the encryption key — a
+  session taking it should write the ADR first.
+
