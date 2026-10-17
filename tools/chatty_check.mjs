@@ -152,14 +152,18 @@ Object.assign(BUDGETS, {
   // install on "reload": 268 req, 1,542 KB (5,747 KB raw); on "no-cache" (the
   // first install revalidates): 268 req, 1,072 KB (4,461 KB raw). The old
   // no-store instrument read 269 req, 1,547 KB, and could not see a 304 at all.
-  // coldGz 1179 -> 1196 on 2026-10-18 (roadmap 180/010, Delete everything).
+  // coldGz 1179 -> 1200 on 2026-10-18 (roadmap 180/010, Delete everything).
   // Measured 1191 KB on the merge of that branch with main: about 7.2 KB gzip is
   // the branch's own (sync.js, sync-merge.js, personal-data.js, settings-ui.js
   // and the new live-stores.js, summed per file) and the rest (by subtraction —
   // main was not re-measured on its own) is what main had gained since the 1179
   // was set, which had no headroom. Budget = measured + 5 KB
-  // margin; it is NOT a claim that the feature earned all 17 KB.
-  coldReq: 295, coldGz: 1196, // 268 req, 1,072 KB
+  // margin; it is NOT a claim that the feature earned all 17 KB. After merging
+  // main again (200/170's shell code) it measured 1196, so 1196 -> 1200 (+4 KB).
+  // The request counts are this branch's own and exact: one new shell file
+  // (js/live-stores.js) is one more request on a cold install (295 -> 296) and on
+  // an update (126 -> 127), as the sw.js SHELL list says.
+  coldReq: 296, coldGz: 1200, // 268 req, 1,072 KB
   // The UPDATE install (510/270, ADR 0150), measured 2026-10-01 on 510-270:
   // deploy B changes js/app.js and SHELL_VERSION, nothing else. On "no-cache":
   // 114 req, 107 of them 304, 225 KB raw, 66 KB gzip — sw.js, app.js, the
@@ -170,7 +174,7 @@ Object.assign(BUDGETS, {
   // request; a 304 is what makes it cheap.
   // (The same day's HTML change to startPagesServer moved coldGz 1,072 → 1,085
   // KB: the install's index.html is now a 200, as on Pages.)
-  updReq: 126, updGz: 73, // 114 req, 66 KB
+  updReq: 127, updGz: 73, // 114 req, 66 KB
   // warm/menu tightened 2026-10-01 with 510/180 (the data check's window
   // persisted, ~3 min): measured on 510-sw, 3 runs agreed. Was 2 req (catalogue
   // + the sw.js update check) and 1. On the no-store instrument the one request
