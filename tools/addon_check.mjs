@@ -520,6 +520,20 @@ const MUST_ID = `${OPT_VENUE}-mustsee-fixture`;
 const MUST_GROUP = "kids-sauce-swirl";
 const MUST_GROUP_NAME = "Add a sauce swirl (if you want)";
 
+// --- 200/140 (ADR 0163): HOW MANY a group asks for, and what extras cost -------
+// Charley Noble's "Cheese Selection (Two)" carries the REAL minimum ("Choose
+// two": min 2, max 2), served from disk untouched. The allowance-then-fee shape
+// has no real record yet (no menu structures one), so the kebab record is served
+// back with its sauces group given `included: 1, extraPrice: 4` - the fee the
+// owner's grill example prints. The unmodified kebab record (the file's base
+// venue) is the control: a group with NONE of the new fields behaves as before.
+const MIN_VENUE = "charley-noble";
+const MIN_DISH = "Cheese Selection (Two)";
+const MIN_GROUP_NAME = "Choose two";
+const FEE_ID = `${VENUE}-allowance-fixture`;
+const FEE_INCLUDED = 1;
+const FEE_EACH = 4;
+
 const sizeExpr = `(() => {
   const dish = ${need(dishSel(SIZE_DISH))};
   const box = ${need(".dish-addons", "dish")};
@@ -730,6 +744,14 @@ async function run(opts) {
       ...optVenue,
       id: MUST_ID,
       addOnGroups: optVenue.addOnGroups.map((g) => (g.id === MUST_GROUP ? { ...g, mustSee: true } : g)),
+    }),
+  );
+  overlay.set(
+    `/data/restaurants/${FEE_ID}.json`,
+    JSON.stringify({
+      ...venue,
+      id: FEE_ID,
+      addOnGroups: venue.addOnGroups.map((g) => (g.id === SAUCES ? { ...g, included: FEE_INCLUDED, extraPrice: FEE_EACH } : g)),
     }),
   );
   const { server, port } = await startServer(opts.port, SITE, overlay);
@@ -2542,6 +2564,266 @@ async function run(opts) {
     );
     await driver.evalPage(`localStorage.removeItem(${JSON.stringify(SAVED_KEY)}); localStorage.removeItem("faves.order.v1"); true`);
 
+    }
+
+    {
+    // --- (ac) 200/140, ADR 0163: how many a group asks for, and what extras cost --
+    // Owner-ruled 2026-10-03: a pick-many group may FORCE a number of picks, and may
+    // allow more than an allowance at a fee. Three claims no unit test can see, each
+    // failing alone:
+    //   1. a group under its `min` blocks Add - on the picker AND on the row, in
+    //      words, exactly as a required pick-one group does (block z), and lifts
+    //      the moment the minimum is met - and goes BACK if the reader unticks;
+    //   2. the fee shows on the order line beyond the allowance and never within it,
+    //      and the picker says so in words as it starts to apply;
+    //   3. a group with NONE of the new fields is exactly what it was: the same
+    //      legend, no fee note, Add not gated, no fee on the line (the control).
+    const acMoney = (n) => formatMoney(n, "NZD");
+    const pickExpr = (liSel, groupName) => `(() => {
+      const dish = ${need(liSel)};
+      const box = ${need(".dish-addons", "dish")};
+      const f = [...box.querySelectorAll("fieldset.addon-group")]
+        .find((x) => x.querySelector(".addon-group-name")?.textContent === ${JSON.stringify(groupName)});
+      const pick = box.querySelector(".addon-stepper .stepper-add");
+      const row = dish.querySelector(".dish-actions .stepper-add");
+      const needEl = box.querySelector(".addon-need");
+      const fee = f ? f.querySelector(".addon-fee-note") : null;
+      const warn = box.querySelector(".addon-warning");
+      const a = document.activeElement;
+      return {
+        open: box.open,
+        found: !!f,
+        rule: f ? (f.querySelector(".addon-rule") || {}).textContent ?? null : null,
+        boxes: f ? f.querySelectorAll("input[type=checkbox]").length : 0,
+        radios: f ? f.querySelectorAll("input[type=radio]").length : 0,
+        checked: f ? [...f.querySelectorAll("input:checked")].map((i) => i.value) : [],
+        pickAdd: pick ? { disabled: pick.getAttribute("aria-disabled"), label: pick.getAttribute("aria-label") } : null,
+        rowAdd: row ? { disabled: row.getAttribute("aria-disabled"), label: row.getAttribute("aria-label") } : null,
+        needText: needEl && !needEl.hidden ? needEl.textContent : null,
+        feeNote: fee && !fee.hidden ? fee.textContent : null,
+        feeNoteCount: box.querySelectorAll(".addon-fee-note").length,
+        warnText: warn && !warn.hidden ? warn.textContent : "",
+        chip: !!box.querySelector(".addon-summary-need"),
+        focus: a && a.closest("li.dish") === dish ? { tag: a.tagName, type: a.type || null, value: a.value || null } : null,
+      };
+    })()`;
+    const clearOrder = () => driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+
+    // ---- 1. a REAL minimum: Charley Noble's "Choose two" -------------------
+    const minUrl = `http://127.0.0.1:${port}/restaurant.html?id=${MIN_VENUE}`;
+    const minDish = dishSel(MIN_DISH);
+    await clearOrder();
+    await openAt(minUrl, minDish, `${MIN_VENUE} to render ${MIN_DISH}`);
+    let pk = await driver.evalPage(pickExpr(minDish, MIN_GROUP_NAME));
+    report.check(
+      "(ac) a pick-many group with min 2 / max 2 says \"Required - choose 2\" in words, as 3 checkboxes (no radios, no None)",
+      pk.found && pk.rule === "Required — choose 2" && pk.boxes === 3 && pk.radios === 0 && pk.checked.length === 0,
+      JSON.stringify({ rule: pk.rule, boxes: pk.boxes, radios: pk.radios, checked: pk.checked }),
+    );
+    report.check(
+      "(ac) …and Add waits on the picker AND the row, each saying how many in its label (the 0156 mechanism, not a second one)",
+      pk.pickAdd?.disabled === "true" && pk.rowAdd?.disabled === "true" &&
+        /choose 2 under .Choose two. first/.test(pk.pickAdd?.label || "") && /choose 2 under .Choose two. first/.test(pk.rowAdd?.label || "") &&
+        pk.chip,
+      JSON.stringify({ picker: pk.pickAdd, row: pk.rowAdd, chip: pk.chip }),
+    );
+    await driver.click(`${minDish} .dish-actions .stepper-add`); // blocked: opens + focuses the first box
+    pk = await driver.evalPage(pickExpr(minDish, MIN_GROUP_NAME));
+    report.check(
+      "(ac) a tap on the blocked row Add orders NOTHING, opens the picker and puts focus on the first checkbox",
+      (await driver.evalPage(storedExpr)).length === 0 && pk.open && pk.focus?.type === "checkbox" && /choose 2 under/.test(pk.needText || ""),
+      JSON.stringify({ open: pk.open, focus: pk.focus, need: pk.needText }),
+    );
+    await driver.click(`${minDish} .addon-option`, "Brie de Moutere");
+    pk = await driver.evalPage(pickExpr(minDish, MIN_GROUP_NAME));
+    report.check(
+      "(ac) ONE of two is still blocked, and the words say 1 more",
+      pk.pickAdd?.disabled === "true" && pk.rowAdd?.disabled === "true" && /choose 1 more under/.test(pk.needText || ""),
+      JSON.stringify({ picker: pk.pickAdd?.disabled, row: pk.rowAdd?.disabled, need: pk.needText }),
+    );
+    await driver.click(`${minDish} .addon-option`, "Goat's Blue");
+    pk = await driver.evalPage(pickExpr(minDish, MIN_GROUP_NAME));
+    report.check(
+      "(ac) TWO lifts the gate on both Adds and clears the reason",
+      pk.pickAdd?.disabled !== "true" && pk.rowAdd?.disabled !== "true" && pk.needText === null && !pk.chip,
+      JSON.stringify({ picker: pk.pickAdd, row: pk.rowAdd, need: pk.needText, chip: pk.chip }),
+    );
+    await driver.click(`${minDish} .addon-option`, "Barry's Bay Extra Mature Cheddar");
+    pk = await driver.evalPage(pickExpr(minDish, MIN_GROUP_NAME));
+    report.check(
+      "(ac) a THIRD is refused by the cap (max 2): still exactly two ticked, and the refusal is in words",
+      pk.checked.length === 2 && !pk.checked.includes("Barry's Bay Extra Mature Cheddar") && /Choose two: choose up to 2\./.test(pk.warnText),
+      JSON.stringify({ checked: pk.checked, warn: pk.warnText }),
+    );
+    // Untick one: the gate must come BACK, or a dish could be added short.
+    await driver.click(`${minDish} .addon-option`, "Goat's Blue");
+    pk = await driver.evalPage(pickExpr(minDish, MIN_GROUP_NAME));
+    report.check(
+      "(ac) UNTICKING back under the minimum puts the gate back - the dish cannot be added short",
+      pk.pickAdd?.disabled === "true" && pk.rowAdd?.disabled === "true" && /choose 1 more under/.test(pk.needText || ""),
+      JSON.stringify({ picker: pk.pickAdd?.disabled, row: pk.rowAdd?.disabled, need: pk.needText }),
+    );
+    await driver.click(`${minDish} .addon-option`, "Goat's Blue");
+    await driver.click(`${minDish} .addon-stepper .stepper-add`);
+    let acSt = await driver.evalPage(storedExpr);
+    report.check(
+      "(ac) Add with the minimum met records the line WITH both cheeses, at the dish's own price (the cheeses are free)",
+      acSt.length === 1 && acSt[0].qty === 1 && (acSt[0].options || []).map((o) => o.name).sort().join("|") === "Brie de Moutere|Goat's Blue" &&
+        acSt[0].price === 24,
+      JSON.stringify(acSt.map((l) => [l.name, l.qty, l.price, (l.options || []).map((o) => o.name)])),
+    );
+
+    // ---- the sheet: a stored line short of the minimum is flagged and finished THERE
+    await clearOrder();
+    const briePick = { group: "cheese-two", id: "brie-de-moutere", name: "Brie de Moutere", price: 0 };
+    const minRec = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${MIN_VENUE}.json`), "utf8"));
+    const minDef = minRec.menu.flatMap((x) => x.items).find((i) => i.name === MIN_DISH);
+    await driver.evalPage(`localStorage.setItem("faves.order.v1", ${JSON.stringify(JSON.stringify([{
+      venueId: MIN_VENUE, venueName: minRec.name, currency: "NZD", phone: null, name: MIN_DISH, dishId: minDef.dishId,
+      price: minDef.price, options: [briePick], qty: 1, collected: false,
+    }]))}); true`);
+    await openAt(minUrl, minDish, `${MIN_VENUE} for the short-line sheet`);
+    await driver.click(".order-fab");
+    await untilPresent(async () => await driver.evalPage(`!!document.querySelector("dialog.order-sheet .order-line.is-unfinished")`), {
+      label: "a line holding one of two cheeses to be flagged on the sheet",
+    });
+    const shFlag = await driver.evalPage(`(() => {
+      const l = document.querySelector("dialog.order-sheet .order-line.is-unfinished");
+      const norm = (t) => (t || "").replace(/\\s+/g, " ").trim();
+      return { warn: norm(l.querySelector(".order-line-unfinished")?.textContent), buttons: [...l.querySelectorAll(".stepper button")].map((b) => b.textContent) };
+    })()`);
+    report.check(
+      "(ac) the SHEET flags a line holding one of two cheeses, in words, and it cannot grow",
+      /Needs a choice: Choose two/.test(shFlag.warn) && !shFlag.buttons.includes("＋"),
+      JSON.stringify(shFlag),
+    );
+    await driver.click("dialog.order-sheet .order-finish-open");
+    const shForm = await driver.evalPage(`(() => {
+      const f = document.querySelector("dialog.order-sheet .order-finish-form");
+      const g = f.querySelector("fieldset");
+      const done = f.querySelector(".order-finish-done");
+      return {
+        rule: g.querySelector(".addon-rule")?.textContent,
+        options: [...g.querySelectorAll(".addon-option-name")].map((n) => n.textContent),
+        boxes: g.querySelectorAll("input[type=checkbox]").length,
+        doneDisabled: done.getAttribute("aria-disabled"),
+        need: (f.querySelector(".addon-need") || {}).textContent || null,
+      };
+    })()`);
+    report.check(
+      "(ac) the finish control asks for the ONE more: checkboxes, the cheese already held is not offered twice, Finish waits",
+      shForm.rule === "Required — choose 1 more" && shForm.boxes === 2 && !shForm.options.includes("Brie de Moutere") &&
+        shForm.doneDisabled === "true" && /choose 1 more under/.test(shForm.need || ""),
+      JSON.stringify(shForm),
+    );
+    await driver.click("dialog.order-sheet .addon-option", "Goat's Blue");
+    await driver.click("dialog.order-sheet .order-finish-done");
+    acSt = await driver.evalPage(storedExpr);
+    report.check(
+      "(ac) FINISH: the stored line now holds BOTH cheeses (the one it had, plus the one chosen), same quantity, same price",
+      acSt.length === 1 && acSt[0].qty === 1 && (acSt[0].options || []).map((o) => o.name).sort().join("|") === "Brie de Moutere|Goat's Blue" &&
+        acSt[0].price === 24,
+      JSON.stringify(acSt.map((l) => [l.name, l.qty, l.price, (l.options || []).map((o) => o.name)])),
+    );
+
+    // ---- 2. an allowance then a fee (fixture: the sauces group, 1 included, then $4) ----
+    const feeUrl = `http://127.0.0.1:${port}/restaurant.html?id=${FEE_ID}`;
+    await clearOrder();
+    await cdp.send("Page.navigate", { url: feeUrl }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, { label: `${FEE_ID} to render a dish offering add-ons` });
+    const feeDishName = await driver.evalPage(`(() => {
+      const d = [...document.querySelectorAll("li.dish")].find((x) => x.querySelector(".dish-addons") &&
+        [...x.querySelectorAll(".addon-group-name")].some((n) => n.textContent === ${JSON.stringify(group.name)}));
+      return d ? d.dataset.name : null;
+    })()`);
+    if (!feeDishName) throw new Error(`no dish on ${FEE_ID} offers the "${group.name}" group - block (ac) needs one`);
+    const feeDish = `li.dish[data-name=${JSON.stringify(feeDishName)}]`;
+    await driver.click(`${feeDish} .dish-actions .stepper-add`); // the plain dish: its own price
+    const plainLine = (await driver.evalPage(storedExpr))[0];
+    await clearOrder();
+    await cdp.send("Page.navigate", { url: feeUrl }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, { label: `${FEE_ID} again, empty order` });
+    await driver.click(`${feeDish} .dish-addons-summary`);
+    const sauceNames = group.options.map((o) => o.name);
+    let fk = await driver.evalPage(pickExpr(feeDish, group.name));
+    report.check(
+      "(ac) the legend says the cap AND the allowance in words: \"Choose up to 3 · 1 included, then $4 each\"",
+      fk.rule === `Choose up to ${group.max} · ${FEE_INCLUDED} included, then ${acMoney(FEE_EACH)} each` && fk.feeNote === null,
+      JSON.stringify({ rule: fk.rule, note: fk.feeNote }),
+    );
+    await driver.click(`${feeDish} .addon-option`, sauceNames[0]);
+    fk = await driver.evalPage(pickExpr(feeDish, group.name));
+    report.check("(ac) WITHIN the allowance the picker says nothing about a fee", fk.feeNote === null, JSON.stringify(fk.feeNote));
+    await driver.click(`${feeDish} .addon-stepper .stepper-add`);
+    let feeSt = await driver.evalPage(storedExpr);
+    report.check(
+      "(ac) …and the line is priced at the dish's own price - the first pick is included",
+      feeSt.length === 1 && feeSt[0].price === plainLine.price && feeSt[0].options.length === 1,
+      JSON.stringify({ line: feeSt.map((l) => [l.price, l.options.length]), plain: plainLine.price }),
+    );
+    await clearOrder();
+    await cdp.send("Page.navigate", { url: feeUrl }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, { label: `${FEE_ID} for the fee line` });
+    await driver.click(`${feeDish} .dish-addons-summary`);
+    await driver.click(`${feeDish} .addon-option`, sauceNames[0]);
+    await driver.click(`${feeDish} .addon-option`, sauceNames[1]);
+    fk = await driver.evalPage(pickExpr(feeDish, group.name));
+    report.check(
+      "(ac) BEYOND the allowance the picker SAYS what it costs, in words: \"1 extra at $4.00 each: +$4.00\"",
+      fk.feeNote === `1 extra at ${acMoney(FEE_EACH)} each: +${acMoney(FEE_EACH)} on this dish.`,
+      JSON.stringify(fk.feeNote),
+    );
+    await driver.click(`${feeDish} .addon-stepper .stepper-add`);
+    feeSt = await driver.evalPage(storedExpr);
+    report.check(
+      "(ac) …and the LINE carries it: the dish plus $4 for the one pick beyond the allowance",
+      feeSt.length === 1 && feeSt[0].options.length === 2 && Math.abs(feeSt[0].price - (plainLine.price + FEE_EACH)) < 1e-9,
+      JSON.stringify({ line: feeSt.map((l) => [l.price, l.options.length]), want: plainLine.price + FEE_EACH }),
+    );
+    await clearOrder();
+    await cdp.send("Page.navigate", { url: feeUrl }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, { label: `${FEE_ID} for the third pick` });
+    await driver.click(`${feeDish} .dish-addons-summary`);
+    for (const n of sauceNames.slice(0, 3)) await driver.click(`${feeDish} .addon-option`, n);
+    fk = await driver.evalPage(pickExpr(feeDish, group.name));
+    await driver.click(`${feeDish} .addon-stepper .stepper-add`);
+    feeSt = await driver.evalPage(storedExpr);
+    report.check(
+      "(ac) a THIRD pick (the cap) is two beyond the allowance: +$8, and the note says 2 extra",
+      /^2 extra at/.test(fk.feeNote || "") && feeSt.length === 1 && Math.abs(feeSt[0].price - (plainLine.price + 2 * FEE_EACH)) < 1e-9,
+      JSON.stringify({ note: fk.feeNote, price: feeSt[0]?.price, want: plainLine.price + 2 * FEE_EACH }),
+    );
+
+    // ---- 3. the CONTROL: a group with none of the new fields is what it was ----
+    await clearOrder();
+    await cdp.send("Page.navigate", { url }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, { label: `${opts.id} for the unchanged-group control` });
+    const ctlDishName = await driver.evalPage(`(() => {
+      const d = [...document.querySelectorAll("li.dish")].find((x) => x.querySelector(".dish-addons") &&
+        [...x.querySelectorAll(".addon-group-name")].some((n) => n.textContent === ${JSON.stringify(group.name)}));
+      return d ? d.dataset.name : null;
+    })()`);
+    const ctlDish = `li.dish[data-name=${JSON.stringify(ctlDishName)}]`;
+    await driver.click(`${ctlDish} .dish-addons-summary`);
+    let ck = await driver.evalPage(pickExpr(ctlDish, group.name));
+    report.check(
+      "(ac) CONTROL: a group with none of the new fields reads exactly \"Choose up to 3\", has no fee note, and Add is NOT gated",
+      ck.rule === `Choose up to ${group.max}` && ck.feeNoteCount === 0 && ck.pickAdd?.disabled !== "true" && ck.rowAdd?.disabled !== "true" &&
+        ck.needText === null && !ck.chip,
+      JSON.stringify(ck),
+    );
+    for (const n of sauceNames.slice(0, group.max)) await driver.click(`${ctlDish} .addon-option`, n);
+    await driver.click(`${ctlDish} .addon-stepper .stepper-add`);
+    const ctlSt = await driver.evalPage(storedExpr);
+    await clearOrder();
+    await driver.click(`${ctlDish} .dish-actions .stepper-add`);
+    const ctlPlain = (await driver.evalPage(storedExpr))[0];
+    report.check(
+      "(ac) CONTROL: three free sauces cost nothing - the line is the plain dish's price, no fee anywhere",
+      ctlSt.length === 1 && ctlSt[0].options.length === group.max && Math.abs(ctlSt[0].price - ctlPlain.price) < 1e-9,
+      JSON.stringify({ line: ctlSt.map((l) => [l.price, l.options.length]), plain: ctlPlain.price }),
+    );
+    await clearOrder();
     }
 
     return report.summary(SITE) ? 0 : 1;
