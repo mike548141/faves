@@ -6964,3 +6964,11 @@ mark.search-match {
   color: var(--ink);
   font-size: var(--step-sub);
 }
+
+/* "Delete everything" (roadmap 180/010). A neighbour of Reset preferences in the
+   same panel, so it must not look like one: the same shape, but the danger cue
+   the confirm buttons carry, on the control that opens the confirmation. */
+.settings-erase {
+  color: var(--warn);
+  border-color: var(--warn);
+}
