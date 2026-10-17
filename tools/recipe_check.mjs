@@ -135,7 +135,7 @@ const HEIGHT = 844;
 // summary line cannot be reached by a run that fell out of the middle: this
 // repo has shipped a wall of PASS lines followed by a harness error and no
 // verdict more than once (sync_check.mjs, still). Add an assertion, bump this.
-const EXPECTED_ASSERTIONS = 65;
+const EXPECTED_ASSERTIONS = 66;
 
 const HELP = `Faves recipe-page check — verify the ingredient list's layout in a real browser.
 
@@ -998,6 +998,39 @@ async function run(opts) {
       "the − button stops at the floor of the range and stays focusable",
       floor.count === String(range.min) && floor.less === "true" && floor.focus === "less",
       `count ${floor.count} (range ${range.min}–${range.max}) · aria-disabled=${floor.less} · focus=${floor.focus}`
+    );
+
+    // A people count at which NOTHING can be scaled (13 from a recipe for 12:
+    // no kitchen fraction writes 13/12 of a cup). The picker must still be
+    // there - it once vanished on the very press that took the reader there,
+    // because it was offered only while some line moved - and every line is
+    // marked as written rather than silently left.
+    const stuck = items.flatMap((i) => {
+      if (!hasServes(i) || count(i, "double", "scaled") < 1) return [];
+      const r = peopleRange(i.serves);
+      for (let p = i.serves + 1; p <= r.max; p++) {
+        const sc = scaleFor(scaleKeyFor(scaleForPeople(i.serves, p)));
+        const lines = ingredientBlocks(i.ingredients).flatMap((b) => b.lines);
+        if (!lines.some((l) => scaleLineStatus(l.text, sc).status === "scaled")) return [{ item: i, p }];
+      }
+      return [];
+    })[0];
+    if (!stuck) throw new Error(`no recipe/people pair in ${COLLECTION} where nothing can scale`);
+    await goto(url(stuck.item));
+    for (let n = stuck.item.serves; n < stuck.p; n++) await click(people('.people-btn[data-people="more"]'));
+    const gone = await evalPage(`({
+      picker: document.querySelectorAll(".people-picker").length,
+      row: document.querySelectorAll(".scale-row").length,
+      count: document.querySelector(".people-count")?.textContent ?? null,
+    })`);
+    // Only press − if it is there: a vanished picker must fail THIS assertion by
+    // name, not abort the run with a missing-element error.
+    if (gone.picker) await click(people('.people-btn[data-people="less"]'));
+    const walked = await evalPage(`document.querySelector(".people-count")?.textContent ?? null`);
+    report.check(
+      "at a people count where no line can scale the controls stay, so the reader can step back",
+      gone.picker === 1 && gone.row === 1 && gone.count === String(stuck.p) && walked === String(stuck.p - 1),
+      `“${stuck.item.name}” at ${stuck.p} people: ${gone.picker} picker(s) · ${gone.row} scale row(s) · count ${gone.count} → back to ${walked}`
     );
 
     // "Makes" is a second, labelled fact beside "Serves", and a yield (prose) cannot

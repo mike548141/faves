@@ -321,6 +321,12 @@ function render(collection, item) {
     const scale = scaleFor(scaleKey);
     // Every line's verdict, computed once so the picker and the list agree.
     const verdicts = blocks.flatMap((b) => b.lines.map((l) => scaleLineStatus(l.text, scale)));
+    // Whether this recipe CAN be scaled is asked at a fixed reference scale, not
+    // the one on screen: at 13 people from a recipe for 12 no line may scale
+    // (nothing writes 13/12 of a cup), and a picker offered only while
+    // something moved would vanish on the very press that took it there,
+    // leaving the reader no way back.
+    const scalable = blocks.some((b) => b.lines.some((l) => scaleLineStatus(l.text, scaleFor("double")).status === "scaled"));
     const blocked = verdicts.filter((v) => v.status === "blocked").length;
 
     const listBody = [];
@@ -328,7 +334,7 @@ function render(collection, item) {
     // nothing but "Garlic" and "Herbs" — and the corpus has several — would get
     // a control that changes nothing on screen, which reads as a broken button
     // rather than as an honest one.
-    if (verdicts.some((v) => v.status === "scaled")) {
+    if (scalable) {
       // "Serve N people" (17a, ADR 0162), above the multipliers because it is
       // the question the reader actually has. Only where the recipe states a
       // whole `serves`; the multipliers below it stay for "double it" and
