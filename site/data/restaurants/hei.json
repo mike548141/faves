@@ -16,7 +16,13 @@
     "added": "2026-10-16"
   },
   "website": "https://hei.co.nz/",
-  "ordering": [],
+  "ordering": [
+    {
+      "platform": "ResDiary",
+      "url": "https://booking.resdiary.com/widget/Standard/HeiRestaurant/10550",
+      "kind": "booking"
+    }
+  ],
   "orderMode": [
     "dine-in"
   ],

@@ -1704,6 +1704,122 @@ def check_orphan_default_cues(venue_ids):
             err("defaults", f"data/defaults/{f.name}: no venue {f.stem!r} in site/data/restaurants/")
 
 
+BOOKING_STORE = ROOT / "data" / "bookings"
+# The kinds an `ordering[]` entry may declare. Only values with a reader-facing
+# branch belong here (ADR 0096's test): Theme 31's "first-party" / "aggregator" /
+# "app-store" are proposed, unbuilt, and stay out until a screen reads them.
+ORDERING_KINDS = {"booking"}
+
+
+def _host(url):
+    m = re.match(r"https://([^/?#:]+)", url) if isinstance(url, str) else None
+    h = m.group(1).lower() if m else None
+    return h[4:] if h and h.startswith("www.") else h
+
+
+def check_bookings(rid, data):
+    """A venue's own booking link (roadmap 33a, ADR 0165).
+
+    A booking entry is an `ordering[]` entry with `kind: "booking"`. It sends a
+    reader to a third party at the moment they are trying to commit to a table,
+    so three things are enforced that an order link never needed:
+
+      * it is https (the OS may upgrade it to the platform's app; a plain
+        http link cannot be);
+      * the venue PUBLISHED it, on its own website: a row in
+        `data/bookings/<venue>.json` names the page it was read from, and that
+        page's host must be the venue's `website` host — an aggregator listing
+        or a search result is not a source;
+      * it answered 200 when fetched, and the row says so. A dead link is worse
+        here than a missing one.
+
+    Checked both ways: a row whose link no entry carries is an error too, so a
+    removed link cannot leave a stale claim of provenance behind."""
+    ordering = data.get("ordering")
+    entries = ordering if isinstance(ordering, list) else []
+    booking = []
+    for o in entries:
+        if not isinstance(o, dict):
+            continue
+        # A typo'd `knd: "booking"` would otherwise ship as an ORDER link and
+        # land under "Order online" — no screen would reveal it (ADR 0047).
+        stray = sorted(set(o) - {"platform", "url", "kind"})
+        if stray:
+            err(rid, f"ordering entry carries unknown key(s) {stray}: {o!r}")
+        if "kind" not in o:
+            continue
+        if o["kind"] not in ORDERING_KINDS:
+            err(rid, f"ordering entry kind {o['kind']!r} not in {sorted(ORDERING_KINDS)}: {o!r}")
+        elif o["kind"] == "booking":
+            booking.append(o)
+    for o in booking:
+        if not (isinstance(o.get("platform"), str) and o["platform"].strip()):
+            err(rid, f"booking link needs a platform name: {o!r}")
+        if not (isinstance(o.get("url"), str) and o["url"].startswith("https://")):
+            err(rid, f"booking link must be an https URL: {o.get('url')!r}")
+
+    path = BOOKING_STORE / f"{rid}.json"
+    where = f"data/bookings/{rid}.json"
+    rows = {}
+    if path.is_file():
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"), parse_constant=_no_constants)
+        except (ValueError, OSError) as e:
+            err(rid, f"{where}: cannot be read ({e})")
+            doc = None
+        if doc is not None:
+            if not isinstance(doc, dict) or not isinstance(doc.get("rows"), list):
+                err(rid, f"{where}: must be an object with a `rows` list")
+            else:
+                if doc.get("venue") != rid:
+                    err(rid, f"{where}: `venue` must be {rid!r}, got {doc.get('venue')!r}")
+                for i, row in enumerate(doc["rows"]):
+                    at = f"{where} rows[{i}]"
+                    if not isinstance(row, dict) or not isinstance(row.get("url"), str):
+                        err(rid, f"{at} must be an object with a `url`")
+                        continue
+                    rows[row["url"]] = (row, at)
+
+    site_host = _host(data.get("website"))
+    for o in booking:
+        hit = rows.get(o.get("url"))
+        if hit is None:
+            err(rid, f"booking link {o.get('url')!r} has no row in {where} — record the "
+                     "venue's own page it was read from, and that it answered 200, or do "
+                     "not ship it (roadmap 33a)")
+            continue
+        row, at = hit
+        status = (row.get("http") or {}).get("status") if isinstance(row.get("http"), dict) else None
+        if status != 200:
+            err(rid, f"{at}: http.status is {status!r}, not 200 — a booking link that does "
+                     "not answer is not shipped")
+        pub = row.get("publishedOn")
+        if not (isinstance(pub, str) and pub.startswith("https://")):
+            err(rid, f"{at}: `publishedOn` must be the https page of the venue's own site "
+                     "the link was read from")
+        elif site_host is None or _host(pub) != site_host:
+            err(rid, f"{at}: `publishedOn` host {_host(pub)!r} is not the venue's own "
+                     f"website host {site_host!r} — only a link the venue itself publishes "
+                     "is a source")
+        for k in ("fetched", "sha256", "publisher"):
+            if not (isinstance(row.get(k), str) and row[k].strip()):
+                err(rid, f"{at}: missing `{k}`")
+    carried = {o.get("url") for o in booking}
+    for url, (_, at) in rows.items():
+        if url not in carried:
+            err(rid, f"{at}: no booking link {url!r} in the record — remove the row, or "
+                     "the link lost its entry")
+
+
+def check_orphan_bookings(venue_ids):
+    """A `data/bookings/` file for a venue that is not in the corpus."""
+    if not BOOKING_STORE.is_dir():
+        return
+    for f in sorted(BOOKING_STORE.glob("*.json")):
+        if f.stem not in venue_ids:
+            err("bookings", f"data/bookings/{f.name}: no venue {f.stem!r} in site/data/restaurants/")
+
+
 def check_add_on_groups(rid, data):
     """`record.addOnGroups`: the venue's priced extras, defined once and named
     by id from a section or a dish (ADR 0048). Returns {id: group} so the caller
@@ -2612,7 +2728,7 @@ def check_restaurant(path):
     # image / alt: optional self-hosted card photo; alt required when set.
     check_image(rid, data, "card image")
 
-    # ordering: optional list of {platform, url}
+    # ordering: optional list of {platform, url[, kind]}
     ordering = data.get("ordering")
     if ordering is not None:
         if not isinstance(ordering, list):
@@ -2626,6 +2742,7 @@ def check_restaurant(path):
                     or not o["url"].startswith("http")
                 ):
                     err(rid, f"ordering entry malformed: {o!r}")
+    check_bookings(rid, data)
 
     # status
     status = data.get("status")
@@ -3656,6 +3773,7 @@ def main(argv=None):
     for path in files:
         check_restaurant(path)
     check_orphan_default_cues(file_ids)
+    check_orphan_bookings(file_ids)
 
     check_version_bump()
     check_allergen_tags()

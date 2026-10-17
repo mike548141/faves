@@ -1,0 +1,20 @@
+{
+  "venue": "the-borough-tawa",
+  "rows": [
+    {
+      "url": "https://booking.resdiary.com/widget/Standard/TheBorough1/3349",
+      "platform": "ResDiary",
+      "publishedOn": "https://www.theboroughtawa.co.nz/",
+      "publisher": "The venue's own website.",
+      "via": "link",
+      "fetched": "2026-10-17T22:01Z",
+      "sha256": "6cdb2a63447685e0b695497a84604c7004ae64c7a0d00e12f48b290bba865cc4",
+      "saw": "The \"Book a table\" button in the site header and hero links here.",
+      "http": {
+        "status": 200,
+        "finalUrl": "https://booking.resdiary.com/widget/Standard/TheBorough1/3349"
+      },
+      "rendered": "ResDiary widget with party size, date and time pickers; confirmation address names The Borough. Read in headless Chrome on 2026-10-18."
+    }
+  ]
+}

@@ -15,7 +15,13 @@
     "added": "2026-08-15"
   },
   "website": "https://stargroup.nz/venues/southerncross",
-  "ordering": [],
+  "ordering": [
+    {
+      "platform": "ResDiary",
+      "url": "https://booking.resdiary.com/widget/Standard/thecross/5879",
+      "kind": "booking"
+    }
+  ],
   "orderMode": [
     "dine-in"
   ],

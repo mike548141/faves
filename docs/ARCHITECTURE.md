@@ -157,7 +157,9 @@ excluded from both stores, always.
   },
   "website": null,                   // or URL (the venue's own site)
   "ordering": [                      // 0..n online-order links (link out, never build)
-    { "platform": "Uber Eats", "url": "https://..." }
+    { "platform": "Uber Eats", "url": "https://..." },
+    { "platform": "ResDiary", "url": "https://...",   // optional `kind`; the only legal
+      "kind": "booking" }                              //   value is "booking" (ADR 0165)
   ],
   "orderMode": ["dine-in", "takeaway", "delivery"],  // the DOORS this venue opens;
                                      //   (`services` until 2026-10-02, roadmap 010);
@@ -1139,7 +1141,13 @@ cut got wrong.
 - `ordering` is a (possibly empty) list of `{platform, url}` — external
   online-order links (Uber Eats, Delivereasy, the venue's own ordering page):
   where a customer can buy, distinct from `website` (the venue's own site).
-  Keep these owner-confirmed — delivery links rot.
+  Keep these owner-confirmed — delivery links rot. An entry with
+  `kind: "booking"` is the venue's own table-booking page instead (ADR 0165):
+  it renders as "Book a table" on the contact card and never under "Order
+  online". It must be `https`, must have been published by the venue on its own
+  `website` host, and must have answered 200 — each has a provenance row in
+  `data/bookings/<venue>.json` that `validate.py` checks both ways. Theme 31's
+  other proposed kinds are not legal until a screen reads them.
 - `hours` is `null` (not stated) or a **full week** keyed `mon`…`sun`
   (all seven keys required). Each day is a list of `[open, close]`
   intervals in `"HH:MM"` 24h local time: `[]` = closed that day; two or
