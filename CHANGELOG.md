@@ -290,6 +290,13 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **The allergen sweep no longer reads "vegan mayo" or "eggless mayo" as egg.**
+  Hei's Vegan bao is made with vegan mayo and was tagged `contains-egg` for the
+  word "mayo" alone. Only the word the qualifier sits directly in front of is
+  cleared: a real mayo, an aioli or an egg beside a vegan mayo still warns. The
+  sweep never removes a tag, so Hei's two existing Vegan rows keep their egg
+  tag for now (only the stale reason line is dropped) until someone rules on
+  taking it off.
 - **Ice-cream wafers and cones now warn about gluten.** McDonald's Soft Serve
   Cone, Sprig & Fern Tawa's Kids Ice Cream Sundae and 1841 Bar & Restaurant's
   Ice Cream Sundae warned about dairy and said nothing about the wheat in the
