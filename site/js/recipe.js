@@ -35,7 +35,10 @@ import { syncTicks, tickRow } from "./checklist-ui.js";
 import { notes } from "./notes.js";
 import { noteControl } from "./notes-ui.js";
 import { ingredientBlocks, noteText } from "./ingredients.js";
-import { SCALES, DEFAULT_SCALE, scaleFor, scaleLineStatus, scaleServes } from "./quantity.js";
+import {
+  SCALES, DEFAULT_SCALE, scaleFor, scaleKeyFor, scaleLabel, scaleLineStatus,
+  scaleForPeople, peopleRange, servesAt,
+} from "./quantity.js";
 import { el } from "./dom.js";
 import { disclosure } from "./disclosure.js";
 import { tagRow, traceEntries } from "./tags.js";
@@ -70,6 +73,79 @@ function fail() {
   document.getElementById("recipe-loading").hidden = true;
   document.getElementById("recipe-error").hidden = false;
   root.setAttribute("aria-busy", "false");
+}
+
+// What the page says aloud after a re-render. The page rebuilds itself on every
+// scale change, so a live region INSIDE it would be torn down with the text it
+// was about to announce; this one lives on <body> and outlives every render.
+const live = el("div", { className: "sr-only", role: "status", "aria-live": "polite" });
+document.body.append(live);
+const announce = (text) => {
+  live.textContent = "";
+  setTimeout(() => { live.textContent = text; }, 60);
+};
+
+// Set by chooseScale, consumed once by the render it causes: the rebuild
+// destroys the button that was pressed, and a keyboard reader pressing "+"
+// five times must land back on "+" each time, not on <body> (WCAG 2.4.3).
+let pendingFocus = null;
+let pendingSay = null;
+
+function chooseScale(key, focusSelector, say) {
+  if (key === scaleKey) return;
+  scaleKey = key;
+  pendingFocus = focusSelector;
+  pendingSay = say;
+  reRender();
+}
+
+/**
+ * "Serve [-] N [+] people" for a recipe written for `serves` (ADR 0162). It
+ * moves the SAME scale the multiplier buttons move, as a fraction (3/2 for 6
+ * from 4), so cook mode, the shopping list and the ticks follow with no new
+ * path. An estimated base says "about" in words: the scaling is only as good as
+ * the count it starts from, and this surface is new - ADR 0135's unmarked panel
+ * does not reach it.
+ */
+function peoplePicker(serves, estimated, now) {
+  const range = peopleRange(serves);
+  const cur = now.value;
+  const exact = now.whole ? cur.n : null;
+  const lessTo = exact != null ? exact - 1 : Math.floor(cur.n / cur.d);
+  const moreTo = exact != null ? exact + 1 : Math.ceil(cur.n / cur.d);
+  const labelId = "people-label";
+  const make = (dir, to, glyph, name) => {
+    const target = scaleForPeople(serves, to);
+    // aria-disabled, not `disabled`: a button that disables itself under the
+    // finger drops focus to <body>, which is the failure the refocus exists for.
+    const b = el("button", {
+      type: "button", className: "people-btn", textContent: glyph,
+      "aria-label": name, "data-people": dir,
+    });
+    if (!target) b.setAttribute("aria-disabled", "true");
+    b.addEventListener("click", () => {
+      if (!target) return;
+      const key = scaleKeyFor(target);
+      chooseScale(
+        key,
+        `.people-btn[data-people="${dir}"]`,
+        `Serving ${to} people. Ingredients scaled to ${scaleLabel(key)}.`
+      );
+    });
+    return b;
+  };
+  return el("div", { className: "people-picker" }, [
+    el("div", { className: "people-row", role: "group", "aria-labelledby": labelId }, [
+      el("span", { className: "people-label", id: labelId, textContent: "Serve" }),
+      make("less", lessTo, "\u2212", `Fewer people, ${lessTo}`),
+      el("span", { className: "people-count", "data-people": "count", textContent: now.text }),
+      make("more", moreTo, "+", `More people, ${moreTo}`),
+      el("span", { className: "people-unit", textContent: "people" }),
+    ]),
+    el("p", { className: "people-basis", textContent:
+      `Written for ${estimated ? "about " : ""}${serves} people. ` +
+      `Pick ${range.min} to ${range.max}.` }),
+  ]);
 }
 
 function render(collection, item) {
@@ -141,23 +217,23 @@ function render(collection, item) {
   // after the stats; this is the owner's later call on a reversible layout.
   if (item.desc) parts.push(el("p", { className: "recipe-lede", textContent: item.desc }));
 
-  // `serves` restated at the chosen scale (17a). Only 3 of the 24 recipes carry
-  // it, so most read exactly as they always did; where it IS carried, a reader
-  // on 2× is told "Serves 12", not left to double 6 in their head. `time` is
-  // NOT scaled and never will be: a doubled mixture in a deeper dish takes
-  // longer but not twice as long, and for anything meat-based an under-scaled
-  // time is a food-safety failure rather than a disappointing dinner (17a's 🚩).
-  const scaled = scaleServes(item.serves, scaleFor(scaleKey));
-  const servesText = item.serves
-    ? scaled != null && scaleKey !== DEFAULT_SCALE
-      ? `Serves ${scaled}`
-      : `Serves ${item.serves}`
-    : null;
-  // The stats panel (ADR 0125), Whittaker's shape: Prep · Cook · Serves ·
-  // Difficulty. A value that is OUR estimate is shown like any other — the
-  // owner ruled the "est." marker off on 2026-09-28 (ADR 0135). `time` is not
-  // repeated here: prep + cook say it better, and the list screen still shows it.
-  const stats = recipeStats(item, servesText ? (scaled != null && scaleKey !== DEFAULT_SCALE ? scaled : item.serves) : null);
+  // `serves` restated at the chosen scale (17a). 22 of the 24 recipes carry it
+  // now (3 stated, 19 our estimate - data/estimates/), so a reader on 2x is told
+  // "Serves 8", not left to double 4 in their head. `time` is NOT scaled and
+  // never will be: a doubled mixture in a deeper dish takes longer but not twice
+  // as long, and for anything meat-based an under-scaled time is a food-safety
+  // failure rather than a disappointing dinner (17a's flag).
+  const baseServes = Number.isInteger(item.serves) && item.serves > 0 ? item.serves : null;
+  const nowServes = baseServes ? servesAt(baseServes, scaleFor(scaleKey)) : null;
+  // The stats panel (ADR 0125), Whittaker's shape: Prep - Cook - Serves -
+  // Difficulty, and what the recipe Makes when it says (ADR 0162). A value that
+  // is OUR estimate is shown like any other here - the owner ruled the "est."
+  // marker off on 2026-09-28 (ADR 0135). The picker below is a different
+  // surface and does say "about". `time` is not repeated here: prep + cook say
+  // it better, and the list screen still shows it.
+  const stats = recipeStats(item, nowServes ? nowServes.text : null, {
+    yieldScaled: scaleKey !== DEFAULT_SCALE,
+  });
   if (stats.length) {
     const dl = el("dl", { className: "recipe-stats" });
     for (const c of stats) {
@@ -166,7 +242,12 @@ function render(collection, item) {
       // 0135, amending 0125). The data still records which values are ours
       // (`estimated`, data/estimates/), so the list row's "about" and the
       // working stay; only this marker went.
-      dl.append(el("div", { className: "recipe-stat", "data-stat": c.key }, [
+      // A yield cannot be restated at a scale (it is prose), so it carries the
+      // same "as written" mark an unscalable ingredient line does.
+      // The space is IN the text: the accessible name is built from characters,
+      // not from the margin, and "hotcakesas written" is not a sentence.
+      if (c.note) dd.append(" ", el("span", { className: "scale-mark", textContent: c.note }));
+      dl.append(el("div", { className: c.wide ? "recipe-stat is-wide" : "recipe-stat", "data-stat": c.key }, [
         el("dt", { className: "recipe-stat-label", textContent: c.label }),
         dd,
       ]));
@@ -248,6 +329,13 @@ function render(collection, item) {
     // a control that changes nothing on screen, which reads as a broken button
     // rather than as an honest one.
     if (verdicts.some((v) => v.status === "scaled")) {
+      // "Serve N people" (17a, ADR 0162), above the multipliers because it is
+      // the question the reader actually has. Only where the recipe states a
+      // whole `serves`; the multipliers below it stay for "double it" and
+      // for the recipes with no count (BBQ Prawns, Caramel Banana).
+      if (nowServes) {
+        listBody.push(peoplePicker(baseServes, (item.estimated || []).includes("serves"), nowServes));
+      }
       const group = el("div", {
         className: "scale-row", role: "radiogroup", "aria-label": "Scale the ingredients",
       });
@@ -256,14 +344,18 @@ function render(collection, item) {
         const b = el("button", {
           type: "button", className: on ? "scale-btn is-on" : "scale-btn",
           textContent: s.label, role: "radio", "aria-checked": String(on),
+          "data-scale": s.key,
         });
         // Re-render rather than patching the lines in place: the blocked-line
         // notice, the ticks and `Serves` all move together, and one path that
         // rebuilds everything cannot drift the way three update paths would.
         b.addEventListener("click", () => {
-          if (scaleKey === s.key) return;
-          scaleKey = s.key;
-          reRender();
+          const at = baseServes ? servesAt(baseServes, scaleFor(s.key)) : null;
+          chooseScale(
+            s.key,
+            `.scale-btn[data-scale="${s.key}"]`,
+            `Ingredients scaled to ${s.label}${at ? `, serving ${at.text} people` : ""}.`
+          );
         });
         group.append(b);
       }
@@ -394,6 +486,11 @@ function render(collection, item) {
   // (later switches re-translate the whole page via reo's subscription).
   translate(root);
   root.setAttribute("aria-busy", "false");
+  if (pendingFocus) {
+    root.querySelector(pendingFocus)?.focus({ preventScroll: true });
+    if (pendingSay) announce(pendingSay);
+  }
+  pendingFocus = pendingSay = null;
 }
 
 // The recipe on screen, held so a live settings change can repaint it with the

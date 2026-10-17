@@ -4800,6 +4800,11 @@ body.faves-view .to-top {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+/* "Makes 12 waffles" is a sentence, not a figure: it takes the whole row
+   under the four short cells so neither grid (2x2, 4 across) grows an orphan. */
+.recipe-stat.is-wide {
+  grid-column: 1 / -1;
+}
 .recipe-stat-label {
   font-size: 0.72rem;
   font-weight: 700;
@@ -4886,6 +4891,54 @@ body.faves-view .to-top {
   border-color: var(--accent);
   color: var(--accent-ink);
   font-weight: 700;
+}
+/* "Serve [-] 6 [+] people" (17a, ADR 0162). The same 44 px targets as the
+   multiplier row under it, and the same chip look, so the two read as one
+   control with two ways in. The count is tabular so the row does not twitch as
+   it changes. The disabled look is aria-disabled's, not `disabled`'s: see
+   peoplePicker() for why the button must stay focusable. */
+.people-picker {
+  margin-bottom: var(--space-2);
+}
+.people-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+.people-label,
+.people-unit {
+  color: var(--ink-soft);
+}
+.people-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.people-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.people-count {
+  min-width: 3ch;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.people-basis {
+  font-size: var(--step-sub);
+  color: var(--ink-soft);
+  margin: var(--space-1) 0 var(--space-2);
 }
 .scale-note {
   font-size: var(--step-sub);

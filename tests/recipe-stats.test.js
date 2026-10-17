@@ -40,6 +40,33 @@ test("recipeStats: the estimate mark follows the field, and a scaled serves is u
   ]);
 });
 
+test("recipeStats: Makes is its own wide, labelled cell, last, and says when it was not scaled", () => {
+  const item = { prepMinutes: 10, serves: 12, yield: "12 waffles", difficulty: "easy" };
+  const at1 = recipeStats(item);
+  assert.deepEqual(at1.map((c) => c.label), ["Prep", "Serves", "Difficulty", "Makes"]);
+  const made = at1.at(-1);
+  assert.deepEqual([made.value, made.wide, made.note, made.estimated], ["12 waffles", true, null, false]);
+  // Serves and Makes are two facts: 12 waffles do not serve 12 by being 12.
+  assert.equal(at1.find((c) => c.key === "serves").value, "12");
+  // At 2x the yield is prose the scaler cannot restate, so it says so.
+  assert.equal(recipeStats(item, "24", { yieldScaled: true }).at(-1).note, "as written");
+  // A recipe with no yield gets no Makes cell, and a blank yield is no yield.
+  assert.ok(!recipeStats({ serves: 4 }).some((c) => c.key === "yield"));
+  assert.ok(!recipeStats({ serves: 4, yield: "  " }).some((c) => c.key === "yield"));
+});
+
+test("cook-at-home: a shipped yield is real text and nothing ships with a made-up one", () => {
+  const data = JSON.parse(
+    readFileSync(new URL("../site/data/restaurants/cook-at-home.json", import.meta.url), "utf8")
+  );
+  const withYield = data.menu.flatMap((s) => s.items).filter((i) => i.yield != null);
+  assert.deepEqual(
+    withYield.map((i) => i.dishId).sort(),
+    ["li-ge-waffles", "perfectly-pretty-hotcakes", "queen-cakes", "turkish-flatbread"]
+  );
+  for (const i of withYield) assert.ok(typeof i.yield === "string" && i.yield.trim(), i.dishId);
+});
+
 test("cook-at-home: every estimated field the data marks reaches the panel marked", () => {
   const data = JSON.parse(
     readFileSync(new URL("../site/data/restaurants/cook-at-home.json", import.meta.url), "utf8")

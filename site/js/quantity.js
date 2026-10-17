@@ -391,18 +391,67 @@ export const SCALES = [
 
 export const DEFAULT_SCALE = "one";
 
+// A scale chosen by PEOPLE rather than by multiplier ("serve 6" on a recipe
+// written for 4 is 3/2) has no preset, so its key spells the fraction: `x3/2`.
+// The page, cook mode and the shopping list all pass the KEY around and resolve
+// it here, so a new way of choosing a scale reaches all three by construction -
+// the 2026-08-17 lesson (a picker cook mode never knew about). Bounded so a key
+// read from anywhere can never become a runaway multiplier.
+const CUSTOM_KEY = /^x(\d{1,3})\/(\d{1,2})$/;
+
 /** The scale for a key, falling back to 1× for anything unrecognised. */
-export const scaleFor = (key) =>
-  (SCALES.find((s) => s.key === key) ?? SCALES.find((s) => s.key === DEFAULT_SCALE)).value;
+export function scaleFor(key) {
+  const preset = SCALES.find((s) => s.key === key);
+  if (preset) return preset.value;
+  const m = CUSTOM_KEY.exec(key ?? "");
+  const r = m ? rational(Number(m[1]), Number(m[2])) : null;
+  if (r && r.n > 0 && r.n <= 4 * r.d && r.d <= 4 * r.n) return r;
+  return SCALES.find((s) => s.key === DEFAULT_SCALE).value;
+}
+
+/** The key for a scale: a preset's own key where one matches, else `x<n>/<d>`. */
+export function scaleKeyFor(r) {
+  const preset = SCALES.find((s) => s.value.n === r.n && s.value.d === r.d);
+  return preset ? preset.key : `x${r.n}/${r.d}`;
+}
+
+/** How a scale reads on screen: "2×", "1½×", or "5/4×" where no fraction is writeable. */
+export function scaleLabel(key) {
+  const preset = SCALES.find((s) => s.key === key);
+  if (preset) return preset.label;
+  const r = scaleFor(key);
+  return `${formatRational(r) ?? `${r.n}/${r.d}`}×`;
+}
+
+/** The fewest and most people a recipe written for `serves` offers: a quarter to four times. */
+export function peopleRange(serves) {
+  if (!Number.isInteger(serves) || serves < 1) return null;
+  return { min: Math.max(1, Math.ceil(serves / 4)), max: Math.min(99, serves * 4) };
+}
 
 /**
- * `serves` restated at a scale, when the recipe states one at all.
- * Returns null when it does not, or when the scaled figure is not a whole
- * number of people — "serves 3½" is arithmetic, not hospitality.
+ * The scale that serves `people` from a recipe written for `serves`, or null
+ * when either is not a whole positive number or the answer is outside
+ * `peopleRange`. A pan, a pot and an oven do not stretch past a quarter or four
+ * times, and the scaler's refusals would mark most of the lines.
  */
-export function scaleServes(serves, scale) {
-  const n = typeof serves === "number" ? serves : Number(String(serves ?? "").trim());
-  if (!Number.isFinite(n) || n <= 0) return null;
-  const scaled = mul(rational(Math.round(n * 100), 100), scale);
-  return scaled.d === 1 ? scaled.n : null;
+export function scaleForPeople(serves, people) {
+  const range = peopleRange(serves);
+  if (!range || !Number.isInteger(people) || people < range.min || people > range.max) return null;
+  return rational(people, serves);
+}
+
+/**
+ * `serves` at a scale, as text and as an exact amount. A recipe for 9 at ½× is
+ * 4½ people, which is not a number of people: the text is then "4–5" - the two
+ * whole numbers either side - rather than a false 4 or a half person.
+ * Null when the recipe states no whole serves.
+ * @returns {{text: string, value: {n:number,d:number}, whole: boolean}|null}
+ */
+export function servesAt(serves, scale) {
+  if (!Number.isInteger(serves) || serves < 1 || !scale) return null;
+  const value = mul(rational(serves, 1), scale);
+  if (value.d === 1) return { text: String(value.n), value, whole: true };
+  const lo = Math.floor(value.n / value.d);
+  return { text: `${lo}–${lo + 1}`, value, whole: false };
 }
