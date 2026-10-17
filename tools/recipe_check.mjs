@@ -102,7 +102,10 @@ import {
 // produce. A second copy of either could drift and quietly test nothing.
 import { slug } from "../site/js/slug.js";
 import { ingredientBlocks, ingredientCount, composeRecipe, noteText as ingredientNoteText } from "../site/js/ingredients.js";
-import { SCALES, ingredientName, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
+import {
+  SCALES, ingredientName, scaleFor, scaleLineStatus,
+  scaleKeyFor, scaleForPeople, scaleLabel, peopleRange,
+} from "../site/js/quantity.js";
 // …and the shopping list's own view of a recipe, for the same reason: an
 // expectation hand-typed here would only prove the tool and the page agreed on
 // the day it was written.
@@ -132,7 +135,7 @@ const HEIGHT = 844;
 // summary line cannot be reached by a run that fell out of the middle: this
 // repo has shipped a wall of PASS lines followed by a harness error and no
 // verdict more than once (sync_check.mjs, still). Add an assertion, bump this.
-const EXPECTED_ASSERTIONS = 52;
+const EXPECTED_ASSERTIONS = 65;
 
 const HELP = `Faves recipe-page check — verify the ingredient list's layout in a real browser.
 
@@ -414,7 +417,7 @@ async function run(opts) {
     await cdp.send("DOM.enable", {}, sessionId);
 
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
-    const { evalPage, settle, click } = driver;
+    const { evalPage, settle, click, press } = driver;
     const layout = () => evalPage(LAYOUT);
 
     const size = async (width) => {
@@ -845,6 +848,255 @@ async function run(opts) {
           "so this assertion is unproven rather than passing"
       );
     }
+
+    // --- 6b. "Serve N people" and "Makes" (17a, ADR 0162) ------------------
+    //
+    // Everything here is a claim about a LIVE page that a unit test cannot see:
+    // the page rebuilds itself on every change, so a button the reader pressed
+    // is destroyed under their finger (focus), a tick is keyed on text that
+    // moves (survival), and the scale has to reach a second screen (cook mode).
+    // Fixtures are derived from the corpus, and the expected numbers come from
+    // quantity.js - the module the page uses - never hand-typed.
+    const hasServes = (i) => Number.isInteger(i.serves) && i.serves > 0;
+    const isEst = (i) => (i.estimated || []).includes("serves");
+    const peopleFixture = [...items]
+      .filter((i) => hasServes(i) && i.serves <= 8 && statuses(i, "double")[0] === "scaled" &&
+        count(i, "double", "scaled") >= 3)
+      .sort((a, b) => a.serves - b.serves || byLines(a, b))[0];
+    if (!peopleFixture) throw new Error(`no recipe with serves and scalable lines in ${COLLECTION}`);
+    const yieldFixture = [...items]
+      .filter((i) => hasServes(i) && typeof i.yield === "string" && count(i, "double", "scaled") >= 1)
+      .sort(byLines)[0];
+    if (!yieldFixture) throw new Error(`no recipe with a yield and scalable lines in ${COLLECTION}`);
+    const noServes = [...items].find((i) => !hasServes(i));
+    const estFixture = [...items].find((i) => hasServes(i) && isEst(i) && count(i, "double", "scaled") >= 1);
+    const statedFixture = [...items].find((i) => hasServes(i) && !isEst(i) && count(i, "double", "scaled") >= 1);
+    const n0 = peopleFixture.serves;
+    const range = peopleRange(n0);
+    const people = (sel = "") => `.people-picker ${sel}`.trim();
+    const firstRaw = ingredientBlocks(peopleFixture.ingredients).flatMap((b) => b.lines)[0].text;
+    const keyFor = (n) => scaleKeyFor(scaleForPeople(n0, n));
+    const textAt = (n) => scaleLineStatus(firstRaw, scaleFor(keyFor(n))).text;
+    const pageNow = () => evalPage(`(() => {
+      const a = document.activeElement;
+      return {
+        count: document.querySelector(".people-count")?.textContent ?? null,
+        first: document.querySelector(".recipe-body .ingredients .tick-text")?.textContent ?? null,
+        stat: document.querySelector('[data-stat="serves"] .recipe-stat-value')?.textContent ?? null,
+        ticked: !!document.querySelector(".recipe-body .ingredients .tick-box")?.checked,
+        focus: a ? (a.getAttribute("data-people") || a.getAttribute("data-scale") || a.tagName) : null,
+        on: [...document.querySelectorAll(".scale-row .scale-btn")]
+          .filter((b) => b.getAttribute("aria-checked") === "true").map((b) => b.textContent),
+        said: [...document.querySelectorAll('body > [role="status"]')].map((n) => n.textContent).join("|"),
+      };
+    })()`);
+
+    await rootFont(16);
+    await size(NARROW);
+    await goto(url(peopleFixture));
+    const pk = await evalPage(`(() => {
+      const row = document.querySelector(".people-row");
+      const btns = [...document.querySelectorAll(".people-btn")];
+      const labelledBy = row?.getAttribute("aria-labelledby");
+      return {
+        role: row?.getAttribute("role") || null,
+        name: labelledBy ? document.getElementById(labelledBy)?.textContent : null,
+        n: btns.length,
+        minH: Math.min(...btns.map((b) => Math.round(b.getBoundingClientRect().height))),
+        minW: Math.min(...btns.map((b) => Math.round(b.getBoundingClientRect().width))),
+        names: btns.map((b) => b.getAttribute("aria-label")),
+        count: document.querySelector(".people-count")?.textContent ?? null,
+        basis: document.querySelector(".people-basis")?.textContent ?? null,
+      };
+    })()`);
+    report.check(
+      "“Serve N people” is a labelled group of two 44px buttons around the recipe's own count",
+      pk.role === "group" && pk.name === "Serve" && pk.n === 2 && pk.minH >= 44 && pk.minW >= 44 &&
+        pk.count === String(n0) && pk.names.every((x) => /people/i.test(x || "")),
+      `“${peopleFixture.name}”: role=${pk.role} · label=${pk.name} · ${pk.n} buttons ≥ ${pk.minW}×${pk.minH}px · count ${pk.count} (serves ${n0}) · names ${JSON.stringify(pk.names)}`
+    );
+
+    // Tick FIRST, then step the people count: the tick is keyed on the raw line.
+    await click(".recipe-body .ingredients .tick-box");
+    await click(people('.people-btn[data-people="more"]'));
+    await sleep(250); // the announcement is deferred a beat so a re-announce is heard
+    const up1 = await pageNow();
+    report.check(
+      "pressing + serves one more person: the count, the Serves stat and the first line all move",
+      up1.count === String(n0 + 1) && up1.stat === String(n0 + 1) &&
+        up1.first === textAt(n0 + 1) && up1.first !== firstRaw,
+      `count ${up1.count} · Serves ${up1.stat} · “${firstRaw}” → “${up1.first}” (expected “${textAt(n0 + 1)}”)`
+    );
+    report.check(
+      "a tick made before the people count changed is STILL TICKED",
+      up1.ticked === true,
+      `checked=${up1.ticked} after ${n0} → ${n0 + 1} people`
+    );
+    // The page rebuilt itself, destroying the button that was pressed. Focus must
+    // come back to the same control, or a keyboard reader is dumped on <body>.
+    report.check(
+      "focus is back on the + button after the page rebuilds (not lost to the body)",
+      up1.focus === "more",
+      `document.activeElement = ${up1.focus}`
+    );
+    report.check(
+      "the change is announced to a screen reader, from a region that outlives the rebuild",
+      /Serving \d+ people/.test(up1.said) && up1.said.includes(scaleLabel(keyFor(n0 + 1))),
+      `status region: “${up1.said}”`
+    );
+    // The real keyboard, not a click: Enter on the focused button.
+    await press("Enter");
+    const up2 = await pageNow();
+    report.check(
+      "the picker works from the keyboard: Enter on the focused + adds another person",
+      up2.count === String(n0 + 2) && up2.focus === "more",
+      `count ${up2.count} · focus ${up2.focus}`
+    );
+
+    // The two ways in are ONE scale: stepping to exactly twice the recipe lights
+    // the 2× button, with no second spelling of "double" for anything downstream.
+    await click('.scale-btn[data-scale="double"]');
+    const dbl = await pageNow();
+    await click(people('.people-btn[data-people="less"]'));
+    await click(people('.people-btn[data-people="more"]'));
+    const back = await pageNow();
+    report.check(
+      "picking 2× shows twice the people, and stepping − then + returns to 2× lit",
+      dbl.count === String(n0 * 2) && dbl.on[0] === "2×" && back.count === String(n0 * 2) &&
+        back.on[0] === "2×" && back.focus === "more",
+      `2×: count ${dbl.count} on ${dbl.on} · after − + : count ${back.count} on ${back.on}`
+    );
+
+    // Cook mode must know. A fractional scale has no preset key, which is exactly
+    // the shape in which a screen that only knew the four presets would fall back
+    // to 1× and print a page that disagrees with the step under it (2026-08-17).
+    await click(people('.people-btn[data-people="more"]'));
+    const cookKey = keyFor(n0 * 2 + 1);
+    await click(".cook-start");
+    await untilPresent(async () => await evalPage(`!!document.querySelector(".cook-scale-mark")`), {
+      label: "the scale badge in cook mode",
+    });
+    const badge = await evalPage(`document.querySelector(".cook-scale-mark")?.textContent ?? null`);
+    report.check(
+      "cook mode opens at the scale the people picker chose, and says so",
+      badge === scaleLabel(cookKey),
+      `badge “${badge}” (expected “${scaleLabel(cookKey)}” for ${n0 * 2 + 1} people)`
+    );
+    await press("Escape");
+    await settle();
+
+    // The limits: a quarter to four times the recipe. At the floor the − button
+    // stays focusable (aria-disabled, not disabled) and a further press does nothing.
+    await goto(url(peopleFixture));
+    for (let i = 0; i < n0; i++) await click(people('.people-btn[data-people="less"]'));
+    const floor = await evalPage(`(() => ({
+      count: document.querySelector(".people-count")?.textContent,
+      less: document.querySelector('.people-btn[data-people="less"]')?.getAttribute("aria-disabled"),
+      focus: document.activeElement?.getAttribute("data-people"),
+    }))()`);
+    report.check(
+      "the − button stops at the floor of the range and stays focusable",
+      floor.count === String(range.min) && floor.less === "true" && floor.focus === "less",
+      `count ${floor.count} (range ${range.min}–${range.max}) · aria-disabled=${floor.less} · focus=${floor.focus}`
+    );
+
+    // "Makes" is a second, labelled fact beside "Serves", and a yield (prose) cannot
+    // be restated at a scale, so at 2× it is kept as written and says so.
+    await goto(url(yieldFixture));
+    const y1 = await evalPage(`(() => {
+      const cell = document.querySelector('[data-stat="yield"]');
+      return {
+        label: cell?.querySelector(".recipe-stat-label")?.textContent ?? null,
+        value: cell?.querySelector(".recipe-stat-value")?.textContent ?? null,
+        serves: document.querySelector('[data-stat="serves"] .recipe-stat-value')?.textContent ?? null,
+        wide: !!cell && cell.getBoundingClientRect().width >
+          1.5 * (document.querySelector('[data-stat="serves"]')?.getBoundingClientRect().width ?? 1e9),
+      };
+    })()`);
+    await click('.scale-btn[data-scale="double"]');
+    const y2 = await evalPage(`(() => {
+      const cell = document.querySelector('[data-stat="yield"] .recipe-stat-value');
+      return { text: cell?.textContent ?? null, mark: cell?.querySelector(".scale-mark")?.textContent ?? null,
+        serves: document.querySelector('[data-stat="serves"] .recipe-stat-value')?.textContent ?? null };
+    })()`);
+    report.check(
+      "Makes is its own labelled cell beside Serves, and at 2× the yield says it is as written",
+      y1.label === "Makes" && y1.value === yieldFixture.yield && y1.serves === String(yieldFixture.serves) &&
+        y1.wide && y2.mark === "as written" && (y2.text || "") === `${yieldFixture.yield} as written` &&
+        y2.serves === String(yieldFixture.serves * 2),
+      `“${yieldFixture.name}”: ${y1.label} “${y1.value}” · Serves ${y1.serves} · wide=${y1.wide} · at 2×: “${y2.text}” serves ${y2.serves}`
+    );
+
+    // Only a recipe that states a whole `serves` is offered the people picker.
+    await goto(url(noServes), ".recipe-detail-page");
+    const bare = await evalPage(`({
+      picker: document.querySelectorAll(".people-picker").length,
+      serves: document.querySelectorAll('[data-stat="serves"]').length,
+    })`);
+    report.check(
+      "a recipe with no serves is offered no people picker and shows no Serves",
+      bare.picker === 0 && bare.serves === 0,
+      `“${noServes.name}”: ${bare.picker} picker(s) · ${bare.serves} Serves cell(s)`
+    );
+
+    // The base is our estimate on 19 recipes, and the picker is only as good as the
+    // count it starts from: it says "about" in words, and says nothing of the kind
+    // where the recipe states the count.
+    const basisOf = async (item) => {
+      await goto(url(item));
+      return evalPage(`document.querySelector(".people-basis")?.textContent ?? null`);
+    };
+    const estBasis = await basisOf(estFixture);
+    const stBasis = await basisOf(statedFixture);
+    report.check(
+      "an estimated base says “about” in words; a stated one does not",
+      /Written for about \d+ people/.test(estBasis || "") && /Written for \d+ people/.test(stBasis || ""),
+      `estimated “${estFixture.name}”: “${estBasis}” · stated “${statedFixture.name}”: “${stBasis}”`
+    );
+
+    // Light and dark both: the buttons' own text against their own background.
+    await goto(url(peopleFixture));
+    // Computed colours can come back in any CSS colour syntax (color-mix, oklch,
+    // color()), so each is round-tripped through a canvas to plain sRGB first.
+    const contrast = () => evalPage(`(() => {
+      const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
+      const rgba = (css) => {
+        ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = "#000"; ctx.fillStyle = css; ctx.fillRect(0, 0, 1, 1);
+        const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data; return [r, g, b, a / 255];
+      };
+      const lum = ([r, g, b]) => {
+        const [R, G, B] = [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
+        return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+      };
+      const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+      // The first non-transparent background at or above the element.
+      const ground = (el) => {
+        for (let n = el; n; n = n.parentElement) {
+          const c = rgba(getComputedStyle(n).backgroundColor);
+          if (c[3] > 0.99) return lum(c);
+        }
+        return 1;
+      };
+      const btn = document.querySelector(".people-btn");
+      const cnt = document.querySelector(".people-count");
+      const page = ground(document.body);
+      return {
+        btn: ratio(lum(rgba(getComputedStyle(btn).color)), ground(btn)),
+        count: ratio(lum(rgba(getComputedStyle(cnt).color)), ground(cnt)),
+        page,
+      };
+    })()`);
+    const light = await contrast();
+    await cdp.send("Emulation.setEmulatedMedia",
+      { features: [{ name: "prefers-color-scheme", value: "dark" }] }, sessionId);
+    await sleep(200);
+    const dark = await contrast();
+    await cdp.send("Emulation.setEmulatedMedia", { features: [] }, sessionId);
+    report.check(
+      "the picker is legible (≥ 4.5:1) in light AND in dark, and dark really switched",
+      Math.min(light.btn, light.count, dark.btn, dark.count) >= 4.5 && dark.page !== light.page,
+      `light ${light.btn.toFixed(1)}/${light.count.toFixed(1)} · dark ${dark.btn.toFixed(1)}/${dark.count.toFixed(1)} · page luminance ${light.page.toFixed(3)} → ${dark.page.toFixed(3)}`
+    );
 
     // --- 7. The shopping list (17e, ADR 0124) -----------------------------
     //
