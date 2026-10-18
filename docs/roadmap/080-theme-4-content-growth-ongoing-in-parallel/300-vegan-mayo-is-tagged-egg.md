@@ -1,4 +1,4 @@
-- [ ] 🎯 **"Vegan mayo" is tagged `contains-egg`, on a dish the venue calls
+- [ ] **"Vegan mayo" is tagged `contains-egg`, on a dish the venue calls
       vegan** `[S][tools]` — found 2026-10-16 by the worker adding Hei
       (`080/290`), filed by `faves-11`.
 
@@ -51,3 +51,7 @@
   `vg`, so the `vg`-beside-egg warning (already in `validate.py`, now with
   four test cases) does not fire on it.
 
+  ✅ **Owner ruled 2026-10-18 (asked by faves-b4): REMOVE IT** — drop
+  `contains-egg` from Hei's `vegan` and `vegan-lunch` rows (the venue's own
+  "vegan mayo"), then `gen_summaries`. Unbuilt: the session closed under his
+  "no new claims" instruction, so the next session takes it.

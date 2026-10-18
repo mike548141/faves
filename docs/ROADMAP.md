@@ -75,7 +75,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [Groundup Cafe: menu and cabinet food from the owner's photos](roadmap/080-theme-4-content-growth-ongoing-in-parallel/270-groundup-cafe-from-the-owner-s-photos.md)
 - ✅ 🔎 [A section note that points elsewhere tags every dish under it](roadmap/080-theme-4-content-growth-ongoing-in-parallel/280-a-section-note-that-points-elsewhere-tags-every-dish-under-it.md)
 - ✅ [Add Hei, on Cuba Street, Wellington](roadmap/080-theme-4-content-growth-ongoing-in-parallel/290-add-hei-on-cuba-street.md)
-- [ ] 🎯 ["Vegan mayo" is tagged contains-egg, on a dish the venue calls](roadmap/080-theme-4-content-growth-ongoing-in-parallel/300-vegan-mayo-is-tagged-egg.md)
+- [ ] ["Vegan mayo" is tagged contains-egg, on a dish the venue calls](roadmap/080-theme-4-content-growth-ongoing-in-parallel/300-vegan-mayo-is-tagged-egg.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
@@ -162,7 +162,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [An unfinished dish on the order sheet: warn, and finish it there](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/130-an-unfinished-dish-on-the-order-sheet.md)
 - ✅ [How many you may pick, and what the extras beyond that cost](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/140-how-many-you-may-pick-and-what-extras-cost.md)
 - [ ] [A fee that is not a dish: takeaway containers and cups](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/150-a-fee-that-is-not-a-dish.md)
-- [ ] 🎯 [A swap is not an extra: name what it replaces](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/160-a-swap-is-not-an-extra.md)
+- [ ] [A swap is not an extra: name what it replaces](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/160-a-swap-is-not-an-extra.md)
 - ✅ [Priced per piece, per 100 g or per person, with a minimum order](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/170-per-unit-per-person-and-minimum-orders.md)
 - [ ] [Data defects the configuration survey saw in passing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/180-data-defects-the-configuration-survey-saw.md)
 - [ ] [Multi-buy: "Two for $10.00"](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/190-multi-buy-two-for-ten.md)
@@ -185,7 +185,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/README.md)*
 
 - ✅ [26a — Save and recall](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/010-26a-save-and-recall.md)
-- [ ] 🎯 [26b — Carry it across devices](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/020-26b-carry-it-across-devices.md)
+- [ ] [26b — Carry it across devices](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/020-26b-carry-it-across-devices.md)
 - ✅ [26c — What happens when the menu moves under it](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/030-26c-what-happens-when-the-menu-moves-under-it.md)
 
 ## Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)
@@ -400,7 +400,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - ⏳ [WAITING ON THE OWNER — the build is done; what is left is his data](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/010-37k-a-style-of-dining-filter.md)
 - ✅ [SUPERSEDED — not delivered, and not open work either.](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/020-37k-superseded-claim-note.md)
-- [ ] 🎯 [37n — the corpus disagrees with itself about allergens](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/030-37n-the-corpus-disagrees-with-itself-about-all.md)
+- [ ] [37n — the corpus disagrees with itself about allergens](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/030-37n-the-corpus-disagrees-with-itself-about-all.md)
 - ✅ [🚩 The "ambiguous single word" rule hides the ingredient line the](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/040-the-ambiguous-word-rule-hides-the-line-the-step-uses.md)
 - [ ] [✅ Cook at Home should use the venue/branch structure, so two houses…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/050-cook-at-home-as-a-venue-with-branches-one-per-house.md)
 - ✅ 🛑 [A section's NAME is evidence, and neither allergen tool reads it](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/060-a-section-name-is-evidence-the-tagger-never-reads.md)

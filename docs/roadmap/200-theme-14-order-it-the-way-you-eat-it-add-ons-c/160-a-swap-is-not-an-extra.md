@@ -1,4 +1,4 @@
-- [ ] 🎯 **A swap is not an extra: name what it replaces** `[M][schema][safety]` —
+- [ ] **A swap is not an extra: name what it replaces** `[M][schema][safety]` —
   the Theme 14 README's consequence *"A substitution is not an addition"*
   (2026-08-17) never became an item. `200/100`'s survey measured how much it
   matters ([the review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)).
@@ -79,3 +79,8 @@
   Thorndon's pizza base (the menus do not name what is replaced), Tawa's
   `nga-bun` (one of its two dishes is silent), and the prose swaps.
 
+  ✅ **Owner ruled 2026-10-18 (asked by faves-b4): YES, WHEN THE MENU SAYS
+  SO** — a swap may remove an allergen warning where the menu states the
+  replacement. Recommendation was "never, add only" and was declined. Part 2
+  is now buildable: an ADR first, and break-probes for BOTH directions (a
+  wrongly recorded swap must not under-warn silently).

@@ -1,4 +1,4 @@
-- [ ] 🎯 **26b — Carry it across devices** `[S]` — falls out of Theme 12's personal
+- [ ] **26b — Carry it across devices** `[S]` — falls out of Theme 12's personal
   transfer/sync for free if the store is shaped like the others; check that
   before designing anything bespoke.
 
@@ -18,3 +18,7 @@
   bump so an older build pauses rather than erasing it (the
   whitelist-sheds-a-field lesson), and `sync_check` assertions.
 
+  ✅ **Owner ruled 2026-10-18 (asked by faves-b4): YES, SYNC IT.** Build:
+  an ADR superseding ADR 0154 §3, the store added to the snapshot with a
+  schema bump so an older build pauses rather than erasing it, and
+  `sync_check` assertions. Per person, so it reaches only his own devices.

@@ -1,4 +1,4 @@
-- [ ] 🎯 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+- [ ] **37n — the corpus disagrees with itself about allergens** `[M][data]`
       📌 **CLAIM RELEASED 2026-09-24 (session `3e87e0bf`) — the four owner
       rulings of 2026-09-21 are DELIVERED and merged** (`1afd916`, ADR 0122).
       The report stands at **1 split / 1 row**: `abrakebabra/pizza-slice`,
@@ -276,3 +276,7 @@
   Chicken"* (Sides) cut from its Turkish pizza? Once that row is called,
   `--strict` can be wired, and that wiring wants its own item.
 
+  ✅ **Owner answered 2026-10-18 (asked by faves-b4): YES, the pizza slice
+  is cut from Abrakebabra's Turkish pizza.** That settles the last
+  disagreement row; next, record it (the slice inherits the Turkish pizza's
+  tags) and wire `--strict` as its own item.
