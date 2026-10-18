@@ -513,19 +513,20 @@ export function dishAddOns(record, section, item, onCompose, onVariant, onGate) 
       fields.append(
         el("label", { className: "addon-option" }, [
           input,
-          el("span", { className: "addon-option-name", textContent: option.name }),
           // A swap says what it takes the place of (ADR 0168), as words in the
           // label so it is part of the control's accessible name too. The
           // leading comma is for the screen reader only; sighted, the phrase
-          // sits on its own line under the name.
-          ...(swapText
-            ? [
+          // sits on its own line under the name. Wrapped with the name only
+          // for a swap, so every other option row is the DOM it always was.
+          swapText
+            ? el("span", { className: "addon-option-text" }, [
+                el("span", { className: "addon-option-name", textContent: option.name }),
                 el("span", { className: "addon-option-replaces" }, [
                   el("span", { className: "sr-only", textContent: ", " }),
                   swapText,
                 ]),
-              ]
-            : []),
+              ])
+            : el("span", { className: "addon-option-name", textContent: option.name }),
           ...heatChips(option),
           el("span", {
             className: "addon-option-price",
