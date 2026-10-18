@@ -13018,3 +13018,32 @@ the close extends it.*
   repos' suites; peer `shed-d7` asked for at most two concurrent heavy runs
   under `nice`. Workers were throttled (15-minute load under 40), dispatch
   held, and the rule saved to memory.
+- **After the interim entry (close, written last).**
+  - `200/160` part 1 (#129, ADR 0168) — four swaps name what they replace;
+    allergens still union in (`tests/swap.test.js` fails if a swap ever
+    removes one). Item left open, 🎯 for the owner's call on removal.
+  - Owner instruction mid-run: *"Dont claim any new work this session but
+    do finish everything you have claimed."* Nothing was claimed after it.
+  - **Full browser sweep on `main` at `94138b89`** (the 21 checks CI does not
+    run), one at a time under `nice`: all green, 0 retries — addon 210,
+    boot 38, branch 235, chatty 45, cook 85, device 91, distance 28, fetch 17,
+    filter_row 25, focus 50, geo 22, midnight 89, note 19, picks 20,
+    precache 20, recipe 86, rename 13, served 55, sync 47, to_top 142 — and
+    **fixture 1 red**: its sandbox lacked `data/bookings/`, the same gap CI
+    had caught in `test_tag_allergens`. Fixed on `main` (`218e1396`), 24/0.
+    CLAUDE.md's sync_check expectation moved 40 → 47.
+  - `node --test` on the final merged tree: 2016/2016.
+- 🎯 **Owner calls this session left open** (each on its item): Hei's two
+  vegan rows (`080/300`); may a swap remove an allergen (`200/160`); 28t's
+  four intake cases (`310/170`); Abrakebabra's pizza slice (`37n`); should
+  saved orders sync (`26b`); the CI screenshot upload (`510/420`). Readings
+  to be aware of, each easy to narrow: Delete everything removes the
+  profiles too and keeps the sync pairing (`180/010`); Regal's set menus got
+  a minimum of 6 heads (`200/170`).
+- 🔑 **Lessons** (saved to memory): an item's stale sentence gains authority
+  when an orchestrator pastes it into a brief; a new validator rule that
+  reads a new store breaks every partial-corpus harness, twice in two days,
+  so briefs now say "every Python step in ci.yml"; a gate polled straight
+  after a push reads the previous head; and the machine's load cap.
+- **Final state:** no open PRs, worktrees, stashes or `[~]` claims of this
+  session's; 13 PRs merged (#117–#129).
