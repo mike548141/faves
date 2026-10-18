@@ -13047,3 +13047,9 @@ the close extends it.*
   after a push reads the previous head; and the machine's load cap.
 - **Final state:** no open PRs, worktrees, stashes or `[~]` claims of this
   session's; 13 PRs merged (#117–#129).
+- **Owner's answers at the close (2026-10-18), recorded on each item, not
+  built** (he had said no new claims): remove `contains-egg` from Hei's two
+  vegan rows (`080/300`); a swap may remove a warning when the menu says so,
+  against the recommendation (`200/160`); saved orders sync (`26b`);
+  Abrakebabra's slice is Turkish pizza (`37n`). Still open with him: 28t's
+  four cases (`310/170`) and the CI screenshot upload (`510/420`).
