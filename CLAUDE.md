@@ -887,13 +887,15 @@ node tools/rename_check.mjs   # a stored heart SURVIVES its dish being renamed
                               # light (measured 2026-09-28), and asserting the
                               # behaviour of the day would have enforced the defect
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
-                              # Reaches its end: "OK — 40 passed, 0 failed". Check the
-                              # summary line is there AND that N is still 40 — a
+                              # Reaches its end: "OK — 47 passed, 0 failed". Check the
+                              # summary line is there AND that N is still 47 — a
                               # shrunken N is the tell. (It read 16 until 2026-09-28,
                               # six short since e95bbac added ADR 0118's assertions
                               # on 2026-09-20 — measured 22 at b6b9bc9; then six
                               # commits grew it, 510/050 to 510/430, and it was
-                              # measured 40 at bef4e6f4 on 2026-10-16.) A harness abort exits 2 and
+                              # measured 40 at bef4e6f4 on 2026-10-16; 180/010's
+                              # Delete-everything propagation took it to 47,
+                              # measured at 94138b89 on 2026-10-18.) A harness abort exits 2 and
                               # prints no "FAIL" line, so it does not look like a
                               # failure; if it aborts, the message now names which
                               # Settings navigation step broke — fix the NAV block in
