@@ -6643,6 +6643,41 @@ mark.search-match {
   font-weight: 700;
 }
 
+/* ---------- Minimum orders and per-unit prices (roadmap 200/170, ADR 0166) ----------
+   Words, never colour alone: "each" beside a price, "Minimum 3" under a
+   description, and a short line saying so in a sentence with the ⚠️ as decoration.
+   Same ink as the neighbouring captions (.order-line-config), which already clear
+   AA in both themes. No transition or transform, so nothing for
+   prefers-reduced-motion to reduce. */
+.dish-unit {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-weight: 400;
+  white-space: nowrap;
+}
+.dish-min {
+  margin-top: var(--space-1);
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+}
+.order-line-unit,
+.order-line-min {
+  display: block;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.order-line-min.is-short {
+  color: var(--ink);
+  font-weight: 700;
+}
+.order-rules-note {
+  margin: var(--space-1) 0 0;
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+}
+
 /* ---------- Saved orders (Theme 26a) ---------- */
 /* Two surfaces, one vocabulary. In the ORDER SHEET: a save control under a
    venue's lines, built from the note control's own parts (.order-note-save /
@@ -6975,4 +7010,12 @@ mark.search-match {
   gap: 0.35em;
   color: var(--ink);
   font-size: var(--step-sub);
+}
+
+/* "Delete everything" (roadmap 180/010). A neighbour of Reset preferences in the
+   same panel, so it must not look like one: the same shape, but the danger cue
+   the confirm buttons carry, on the control that opens the confirmation. */
+.settings-erase {
+  color: var(--warn);
+  border-color: var(--warn);
 }

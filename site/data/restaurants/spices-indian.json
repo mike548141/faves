@@ -252,6 +252,7 @@
           "name": "Roasted Poppadom",
           "dishId": "roasted-poppadom",
           "desc": "Each.",
+          "unit": "each",
           "price": 1.2,
           "tags": [
             "v"

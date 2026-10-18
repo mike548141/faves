@@ -22,6 +22,7 @@ import { settings } from "./settings.js";
 import { profiles, reloadProfileStores } from "./profiles.js";
 import { sync } from "./sync.js";
 import { recipes } from "./recipes.js";
+import { reloadAllLiveStores } from "./live-stores.js";
 
 /**
  * Start continual sync on this screen. Safe to call on every page and more than
@@ -53,7 +54,10 @@ export function startSync() {
       // over it (deleting it for everyone), and a remotely-deleted ACTIVE
       // profile left the scoped stores reading a purged key: the old name
       // still on screen, no allergens flagged. Cold review, 2026-08-17.
-      onApplied: () => {
+      onApplied: (_snapshot, info) => {
+        // A deletion from another device (ADR 0167) emptied the stores that
+        // never sync as well, so every live store is re-pointed, not four.
+        if (info?.wiped) return reloadAllLiveStores();
         profiles.reload();
         recipes.reload(); // a pull can bring a recipe in (and the registry just moved)
         reloadProfileStores({ favourites, ratings, notes, settings });

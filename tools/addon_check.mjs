@@ -2578,6 +2578,209 @@ async function run(opts) {
     );
     await driver.evalPage(`localStorage.removeItem(${JSON.stringify(SAVED_KEY)}); localStorage.removeItem("faves.order.v1"); true`);
 
+    // --- (ad) 200/170, ADR 0166: a MINIMUM ORDER and what a price is FOR ------
+    // Charley Noble prints "minimum order 3" on its oysters, "Minimum order of 2"
+    // on its arancini, and "Per 100g" on two steaks. Before this the stepper
+    // started at 1, so the sheet took one oyster and totalled it as though the
+    // venue would; and it multiplied a per-100 g price by a count, which is not
+    // what two steaks cost. Asserted against the REAL menu and the REAL sheet at
+    // 390 px, because the claim spans five modules (the row, the stepper, the
+    // store, the live-record join, recall) and a unit test of any one of them
+    // passes while the others disagree.
+    const CN = "charley-noble";
+    const cnUrl = `http://127.0.0.1:${port}/restaurant.html?id=${CN}`;
+    const OYSTER = "live-marlborough-oysters-natural";
+    const ARANCINI = "arancini";
+    const WAGYU = "southern-stations-nz-wagyu-ribeye-on-the-bone";
+    const rowOf = (id) => `li.dish[data-dish-id=${JSON.stringify(id)}]`;
+    const openCn = async (label) => {
+      await cdp.send("Page.navigate", { url: cnUrl }, sessionId);
+      await untilPresent(async () => await driver.evalPage(`!!document.querySelector(${JSON.stringify(rowOf(OYSTER))})`), { label });
+    };
+    const norm1 = (t) => (t || "").replace(/\s+/g, " ").trim();
+    const rowExpr = (id) => `(() => {
+      const r = document.querySelector(${JSON.stringify(rowOf(id))});
+      const t = (sel) => (r.querySelector(sel)?.textContent || "").replace(/\\s+/g, " ").trim();
+      return {
+        price: t(".dish-price"), min: r.querySelector(".dish-min") ? t(".dish-min") : null,
+        buttons: [...r.querySelectorAll(".dish-actions .stepper button")].map((b) => [b.textContent, b.getAttribute("aria-label")]),
+        count: r.querySelector(".dish-actions .stepper-count")?.textContent ?? null,
+      };
+    })()`;
+    const sheetAc = `(() => {
+      const sheet = document.querySelector("dialog.order-sheet[open]");
+      const n = (t) => (t || "").replace(/\\s+/g, " ").trim();
+      const q = (e, s) => e.querySelector(s);
+      return {
+        lines: [...sheet.querySelectorAll("li.order-line")].map((l) => ({
+          name: q(l, ".order-line-name")?.firstChild?.textContent ?? null,
+          price: n(q(l, ".order-line-price")?.textContent),
+          unit: n(q(l, ".order-line-unit")?.textContent) || null,
+          min: n(q(l, ".order-line-min")?.textContent) || null,
+          short: !!q(l, ".order-line-min.is-short"),
+          buttons: [...l.querySelectorAll(".stepper button")].map((b) => b.textContent),
+          count: q(l, ".stepper-count")?.textContent ?? null,
+        })),
+        total: n(q(sheet, ".order-total")?.textContent),
+        subtotal: n(q(sheet, ".order-subtotal-amount")?.textContent),
+        rules: (() => { const e = q(sheet, ".order-rules-note"); return e && !e.hidden ? n(e.textContent) : null; })(),
+        hOverflow: sheet.scrollWidth > sheet.clientWidth,
+      };
+    })()`;
+    const lineAc = (id, over = {}) => ({
+      venueId: CN, venueName: "Charley Noble", currency: "NZD", phone: null,
+      name: id, dishId: id, price: null, options: [], qty: 1, collected: false, ...over,
+    });
+
+    // The rows say it in words, beside the price.
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await openCn(`${CN} to render`);
+    let oy = await driver.evalPage(rowExpr(OYSTER));
+    const ar = await driver.evalPage(rowExpr(ARANCINI));
+    const wg = await driver.evalPage(rowExpr(WAGYU));
+    report.check(
+      "(ad) a dish with a minimum SAYS so on its row, in words: \"Minimum 3\" (oysters), \"Minimum 2\" (arancini)",
+      oy.min === "Minimum 3" && ar.min === "Minimum 2",
+      JSON.stringify({ oy: oy.min, ar: ar.min }),
+    );
+    report.check(
+      "(ad) a per-weight dish reads \"$26 per 100 g\" beside its price, and a dish with no unit gets no words after its price",
+      wg.price === `${money(26)} per 100 g` && ar.price === money(8.5),
+      JSON.stringify({ wagyu: wg.price, arancini: ar.price }),
+    );
+
+    // The stepper: Add puts the MINIMUM on the sheet, and nothing goes below it.
+    const seen = [];
+    const rowCount = async () => (await driver.evalPage(rowExpr(OYSTER))).count;
+    await driver.click(`${rowOf(OYSTER)} .dish-actions .stepper-add`);
+    seen.push(Number(await rowCount()));
+    oy = await driver.evalPage(rowExpr(OYSTER));
+    st = await driver.evalPage(storedExpr);
+    report.check(
+      "(ad) ＋ Add on \"minimum order 3\" puts THREE on the order, not one",
+      st.length === 1 && st[0].qty === 3 && seen[0] === 3,
+      JSON.stringify(st.map((l) => [l.name, l.qty])),
+    );
+    report.check(
+      "(ad) …at the minimum the − becomes ✕ and SAYS it removes the line (the minimum is 3), never a silent \"one fewer\"",
+      oy.buttons[0][0] === "✕" && /^Remove .* from your order — the minimum is 3$/.test(oy.buttons[0][1]) && /^One more /.test(oy.buttons[1][1]),
+      JSON.stringify(oy.buttons),
+    );
+    await driver.click(`${rowOf(OYSTER)} .dish-actions .stepper-btn`, "＋");
+    seen.push(Number(await rowCount()));
+    await driver.click(`${rowOf(OYSTER)} .dish-actions .stepper-btn`, "−");
+    seen.push(Number(await rowCount()));
+    report.check(
+      "(ad) ＋ goes 3 → 4 and − comes back 4 → 3 (above the minimum it is an ordinary − again)",
+      seen.join() === "3,4,3",
+      seen.join(),
+    );
+    await driver.click(`${rowOf(OYSTER)} .dish-actions .stepper-btn`, "✕");
+    st = await driver.evalPage(storedExpr);
+    oy = await driver.evalPage(rowExpr(OYSTER));
+    report.check(
+      "(ad) the ✕ at the minimum takes the line OFF (0, never 2 or 1), and the row is back to ＋ Add",
+      st.length === 0 && oy.buttons.length === 1 && oy.buttons[0][0] === "＋ Add",
+      JSON.stringify({ stored: st.length, buttons: oy.buttons }),
+    );
+    await driver.click(`${rowOf(ARANCINI)} .dish-actions .stepper-add`);
+    st = await driver.evalPage(storedExpr);
+    report.check(
+      "(ad) the minimum is per dish: arancini start at 2, and carry their price (8.5) on the line",
+      st.length === 1 && st[0].qty === 2 && st[0].price === 8.5 && !("minQty" in st[0]),
+      JSON.stringify(st.map((l) => [l.name, l.qty, l.price, "minQty" in l])),
+    );
+
+    // The sheet: a line SHORT of its minimum (it predates the rule, or came in a
+    // link) is flagged in words and raised by one press of ＋; the total says so.
+    await stage([lineAc(OYSTER, { name: "Live Marlborough Oysters — Natural", qty: 1 }), lineAc(ARANCINI, { name: "Arancini", price: 8.5, qty: 2 })]);
+    await openCn(`${CN} for the short-line case`);
+    await openSheet();
+    await untilPresent(async () => (await driver.evalPage(sheetAc)).lines.some((l) => l.short), { label: "the short line to be flagged" });
+    let sh = await driver.evalPage(sheetAc);
+    const short = sh.lines.find((l) => /Oysters/.test(l.name || ""));
+    report.check(
+      "(ad) a line BELOW its minimum is flagged on the sheet in words: \"Minimum 3 — 2 short\"",
+      !!short && short.short && /Minimum 3 — 2 short/.test(short.min || ""),
+      JSON.stringify(short),
+    );
+    report.check(
+      "(ad) …and the sheet's total says one dish is below the minimum, rather than total it as though nothing were wrong",
+      /1 dish is below the minimum order/.test(sh.rules || ""),
+      JSON.stringify(sh.rules),
+    );
+    report.check(
+      "(ad) …a line AT its minimum carries \"Minimum 2\" quietly, and no warning",
+      sh.lines.find((l) => l.name === "Arancini")?.min === "Minimum 2" && !sh.lines.find((l) => l.name === "Arancini").short,
+      JSON.stringify(sh.lines.find((l) => l.name === "Arancini")),
+    );
+    await driver.click(`dialog.order-sheet li.order-line .stepper-btn`, "＋");
+    sh = await driver.evalPage(sheetAc);
+    st = await driver.evalPage(storedExpr);
+    report.check(
+      "(ad) one press of ＋ on the short line raises it TO the minimum (1 → 3, not 2), and the warning goes",
+      st.find((l) => /Oysters/.test(l.name))?.qty === 3 && !sh.lines.some((l) => l.short) && sh.rules === null,
+      JSON.stringify({ stored: st.map((l) => [l.name, l.qty]), rules: sh.rules }),
+    );
+
+    // Per weight: shown at its unit price, NOT totalled.
+    await stage([
+      lineAc(WAGYU, { name: "Southern Stations NZ Wagyu Ribeye on the Bone", price: 26, qty: 2 }),
+      lineAc(ARANCINI, { name: "Arancini", price: 8.5, qty: 2 }),
+    ]);
+    await openCn(`${CN} for the per-weight case`);
+    await openSheet();
+    await untilPresent(async () => (await driver.evalPage(sheetAc)).lines.some((l) => l.unit && /100 g/.test(l.unit)), { label: "the per-weight line's unit" });
+    sh = await driver.evalPage(sheetAc);
+    const wgl = sh.lines.find((l) => /Wagyu/.test(l.name || ""));
+    report.check(
+      "(ad) a per-weight line shows its UNIT price and says it is not in the total — it shows no total of its own",
+      !!wgl && wgl.unit === `${money(26)} per 100 g — priced by weight, so not in the total` && wgl.price === "—",
+      JSON.stringify(wgl),
+    );
+    report.check(
+      "(ad) the venue subtotal and the TOTAL leave it out (arancini 2 × 8.50 = 17.00) and carry the \"+\" — never 17 + 2 × 26",
+      sh.total === `${money(17)}+` && sh.subtotal === `${money(17)}+` && !sh.total.includes(money(69)),
+      JSON.stringify({ total: sh.total, subtotal: sh.subtotal }),
+    );
+    report.check(
+      "(ad) …and a sentence under the total says one dish priced by weight is not in it",
+      /1 dish priced by weight isn't in this total/.test(sh.rules || ""),
+      JSON.stringify(sh.rules),
+    );
+    report.check(
+      "(ad) …without the sheet scrolling sideways at 390 px",
+      !sh.hOverflow,
+      String(sh.hOverflow),
+    );
+
+    // RECALL: a saved order under today's minimum is raised, said, and not dropped.
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1");
+      localStorage.setItem(${JSON.stringify(SAVED_KEY)}, ${JSON.stringify(JSON.stringify([
+        {
+          id: "usual-ac",
+          venueId: CN,
+          venueName: "Charley Noble",
+          name: "Oysters usual",
+          lines: [{ dishId: OYSTER, name: "Live Marlborough Oysters — Natural", qty: 1, price: null, currency: "NZD" }],
+        },
+      ]))}); true`);
+    await openCn(`${CN} for the recall`);
+    await driver.click(".saved-orders .saved-add");
+    const rcAc = await driver.evalPage(panelExpr);
+    st = await driver.evalPage(storedExpr);
+    report.check(
+      "(ad) RECALL of a saved 1 oyster lands THREE (the minimum), not dropped and not left short",
+      st.length === 1 && st[0].dishId === OYSTER && st[0].qty === 3,
+      JSON.stringify(st.map((l) => [l.name, l.qty])),
+    );
+    report.check(
+      "(ad) …and the recall says so in words: \"Raised to the minimum order\", naming the dish and both numbers",
+      /Raised to the minimum order/.test(rcAc.status) && /minimum order is 3, so 1 is now 3/.test(rcAc.status) && rcAc.skipped.length === 0,
+      JSON.stringify({ status: rcAc.status, skipped: rcAc.skipped }),
+    );
+    await driver.evalPage(`localStorage.removeItem(${JSON.stringify(SAVED_KEY)}); localStorage.removeItem("faves.order.v1"); true`);
+
     }
 
     {
@@ -2841,7 +3044,7 @@ async function run(opts) {
     }
 
     {
-    // --- (ad) 200/160, ADR 0168: a swap names what it replaces, and removes nothing --
+    // --- (ae) 200/160, ADR 0168: a swap names what it replaces, and removes nothing --
     // Four claims no unit test can see, each failing alone:
     //   1. the picker's option row says what the swap replaces, in words, in the
     //      label (so it is in the control's accessible name too);
@@ -2880,7 +3083,7 @@ async function run(opts) {
     await driver.click(`${swDish} .dish-addons-summary`);
     let sw = await driver.evalPage(adGroup(swDish, SWAP_GROUP));
     report.check(
-      "(ad) the picker's option row SAYS what the swap replaces, in words: \"No gluten added bun, instead of the milk bun\"",
+      "(ae) the picker's option row SAYS what the swap replaces, in words: \"No gluten added bun, instead of the milk bun\"",
       sw.found && sw.labels.length >= 1 && /No gluten added bun,? instead of the milk bun/.test(sw.labels[0]) &&
         sw.replacesText.length === 1 && sw.replacesText[0].replace(/^,\s*/, "") === SWAP_WORDS && sw.replacesVisible[0] === true,
       JSON.stringify({ labels: sw.labels, replaces: sw.replacesText }),
@@ -2890,14 +3093,14 @@ async function run(opts) {
     await driver.click(`${swDish} .addon-option`, SWAP_GROUP);
     sw = await driver.evalPage(adGroup(swDish, SWAP_GROUP));
     report.check(
-      "(ad) SAFETY: choosing the swap leaves EVERY contains-* the dish carried on its composed tags (words only - nothing is removed)",
+      "(ae) SAFETY: choosing the swap leaves EVERY contains-* the dish carried on its composed tags (words only - nothing is removed)",
       adGluten.length >= 2 && adGluten.every((t) => sw.tags.includes(t)),
       JSON.stringify({ before: adGluten, after: sw.tags.filter((t) => t.startsWith("contains-")) }),
     );
     await driver.click(`${swDish} .addon-stepper .stepper-add`);
     const swSt = await driver.evalPage(storedExpr);
     report.check(
-      "(ad) the stored LINE names what it replaces - and keeps the option's id, so it keys exactly as before",
+      "(ae) the stored LINE names what it replaces - and keeps the option's id, so it keys exactly as before",
       swSt.length === 1 && swSt[0].options.length === 1 && swSt[0].options[0].name === SWAP_LINE_NAME &&
         swSt[0].options[0].id === "no-gluten-added-bun" && swSt[0].options[0].group === "no-gluten-added-bun",
       JSON.stringify(swSt.map((l) => l.options)),
@@ -2914,7 +3117,7 @@ async function run(opts) {
       }));
     })()`);
     report.check(
-      "(ad) the ORDER SHEET line reads \"Cheeseburger\" then \"No gluten added bun (instead of the milk bun)\" - the kitchen no longer infers it",
+      "(ae) the ORDER SHEET line reads \"Cheeseburger\" then \"No gluten added bun (instead of the milk bun)\" - the kitchen no longer infers it",
       swSheet.length === 1 && swSheet[0].name === SWAP_DISH && swSheet[0].config === SWAP_LINE_NAME,
       JSON.stringify(swSheet),
     );
@@ -2927,7 +3130,7 @@ async function run(opts) {
     await driver.click(`${nsDish} .dish-addons-summary`);
     const ns = await driver.evalPage(adGroup(nsDish, SWAP_GROUP));
     report.check(
-      "(ad) CONTROL: a swap group that states nothing reads exactly as before - no replaces words anywhere on its option row",
+      "(ae) CONTROL: a swap group that states nothing reads exactly as before - no replaces words anywhere on its option row",
       ns.found && ns.labels.length === 1 && ns.replacesText.length === 0 && !/instead of/.test(ns.labels[0]),
       JSON.stringify({ labels: ns.labels, replaces: ns.replacesText }),
     );
@@ -2935,7 +3138,7 @@ async function run(opts) {
     await driver.click(`${nsDish} .addon-stepper .stepper-add`);
     const nsSt = await driver.evalPage(storedExpr);
     report.check(
-      "(ad) CONTROL: …and its line keeps the plain name \"No gluten added bun\"",
+      "(ae) CONTROL: …and its line keeps the plain name \"No gluten added bun\"",
       nsSt.length === 1 && nsSt[0].options.length === 1 && nsSt[0].options[0].name === SWAP_GROUP,
       JSON.stringify(nsSt.map((l) => l.options)),
     );

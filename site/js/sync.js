@@ -34,9 +34,18 @@
 // which is the case that actually matters — the person taps three hearts and
 // locks the phone.
 
-import { collectPersonalData, storesAhead, upgradePersonalData } from "./personal-data.js";
+import { collectPersonalData, eraseEverything, storesAhead, upgradePersonalData } from "./personal-data.js";
 import { deviceStorage, PROFILES_KEY, PURGED_BASE_KEYS, SCOPED_BASE_KEYS, sanitiseRegistry, scopeKey } from "./profiles.js";
-import { mergePersonal, needsDecision, baselessPeople, keepTheirsFor, CONFLICT_NO_BASE } from "./sync-merge.js";
+import {
+  mergePersonal,
+  needsDecision,
+  baselessPeople,
+  keepTheirsFor,
+  newWipe,
+  resolveWipe,
+  voidedSnapshot,
+  CONFLICT_NO_BASE,
+} from "./sync-merge.js";
 import { followMovesInSnapshot } from "./recipe-move.js";
 import { appendSyncLog, heartChange, readSyncLog } from "./sync-log.js";
 import { currentVersions } from "./versions.js";
@@ -427,6 +436,19 @@ export function createSync({
   };
 
   const readBase = () => upgradeSnapshot(parse(storage.getItem(SYNC_BASE_KEY)));
+  // After a deletion is honoured the registry is the server's, not the empty
+  // default `eraseEverything` leaves: writeSnapshot only ever ADDS people it
+  // has not met, so a person renamed there would keep the default's name here.
+  const seedRegistry = (st, snap) => {
+    try {
+      const people = (Array.isArray(snap?.profiles) ? snap.profiles : [])
+        .map((p) => ({ id: String(p?.id ?? ""), name: p?.name }))
+        .filter((p) => p.id);
+      if (people.length) st.setItem(PROFILES_KEY, JSON.stringify(sanitiseRegistry({ activeId: people[0].id, profiles: people })));
+    } catch {
+      /* blocked — writeSnapshot below adds what it can */
+    }
+  };
   const writeBase = (snap) => {
     try {
       const next = JSON.stringify(snap);
@@ -471,6 +493,11 @@ export function createSync({
       state: s,
       code: cfg.code || null,
       lastSyncedAt: cfg.lastSyncedAt || null,
+      // A deletion made on this device that the group has not yet taken, and
+      // the last one this device went through (made here or honoured), for
+      // the panel to say. Neither says anything about other devices (ADR 0167).
+      wipePending: !!cfg.wipe,
+      wiped: cfg.wiped ?? null,
       error,
       conflicts: ask ? [askConflict(ask)] : askedHere ? null : pending?.conflicts ?? null,
     };
@@ -496,7 +523,7 @@ export function createSync({
    * "no opinion", never "everything in it was deleted": this device's recipes
    * stand and the bucket is written again.
    */
-  async function readRecipes({ blobId, key, actual, theirs, base, mineRecipes }) {
+  async function readRecipes({ blobId, key, actual, theirs, base, mineRecipes, voidTheirs = false }) {
     const mine = mineRecipes || {};
     const theirsN = theirs?.recipeBuckets?.n;
     // No report from the Worker (it predates buckets), or buckets cut a
@@ -516,7 +543,11 @@ export function createSync({
       let version = actual[name];
       if ((version || recorded[name]) && version !== recorded[name]) mismatch.push(name);
       let theirsK = null; // null: the server holds what we last agreed
-      if (version && version !== agreed[name]) {
+      if (voidTheirs) {
+        // This device's deletion stands (ADR 0167): whatever the server holds
+        // in this bucket is deleted, so it is neither read nor merged.
+        theirsK = {};
+      } else if (version && version !== agreed[name]) {
         const got = await fetchImpl(url(`${blobId}:${name}`), { method: "GET" });
         if (got.status === 200) {
           const plain = await openBlob(key, new Uint8Array(await got.arrayBuffer()));
@@ -536,6 +567,7 @@ export function createSync({
       conflicts.push(...r.conflicts);
       let needs;
       if (!version) needs = null; // decided below, once we know if any recipe exists
+      else if (voidTheirs) needs = true; // overwrite what is there, empty or not
       else if (theirsK) needs = !sameRecipes(r.map, theirsK);
       else needs = canonicalJson(hashRecipes(r.map)) !== canonicalJson(baseK);
       buckets.push({ k, name, version, map: r.map, needs });
@@ -672,7 +704,7 @@ export function createSync({
               : res.error === "update-needed"
                 ? "paused"
                 : "error";
-      const moved = !!(trace.here?.nAdded || trace.here?.nRemoved || trace.sent);
+      const moved = !!(trace.here?.nAdded || trace.here?.nRemoved || trace.sent || trace.wipe);
       if (outcome === "synced" && !moved && trace.base === "yes") return;
       const entry = {
         at: now(),
@@ -683,8 +715,14 @@ export function createSync({
         outcome,
       };
       if (outcome === "error" || outcome === "paused") entry.error = error || null;
-      if (trace.here) entry.here = trace.here;
-      if (outcome === "synced") entry.sent = trace.sent ?? null;
+      if (trace.wipe) {
+        // A deletion is logged as the fact and nothing more: the lists of
+        // removed hearts a normal entry keeps would be the very thing deleted.
+        entry.wipe = trace.wipe;
+      } else {
+        if (trace.here) entry.here = trace.here;
+        if (outcome === "synced") entry.sent = trace.sent ?? null;
+      }
       appendSyncLog(storage, entry);
     } catch {
       /* the log is a diagnostic; it must never fail the sync it describes */
@@ -767,11 +805,32 @@ export function createSync({
       if (read.result) return read.result;
       const { actual, etag } = read;
 
+      // 2a. a DELETION in play (roadmap 180/010, ADR 0167). "Delete everything"
+      //     cannot travel as a three-way merge — what another device added
+      //     since the last agreement reads as an addition, and four stores
+      //     never enter the snapshot at all — so it travels as an epoch. If
+      //     this device's deletion stands, what the server holds is void; if
+      //     the server carries one this device has not honoured, what this
+      //     device holds is void. Either way the merge below is run against
+      //     nothing on the voided side, and with no base.
+      const epoch = resolveWipe(base, readConfig().wipe, read.theirs);
+      const mineWins = epoch.winner === "mine";
+      const honouring = epoch.winner === "theirs";
+      if (epoch.winner) trace.wipe = mineWins ? "here" : "other";
+
       // 2b. the recipe buckets (roadmap 510/050). Read before any write, so a
       //     bucket that will not open stops the cycle with nothing written.
       //     Read before the merge since 510/400: the cookbooks they hold say
       //     which recipes moved, which the merge's three inputs follow.
-      const rec = await readRecipes({ blobId, key, actual, theirs: read.theirs, base, mineRecipes });
+      const rec = await readRecipes({
+        blobId,
+        key,
+        actual,
+        theirs: read.theirs,
+        base: epoch.winner ? null : base,
+        mineRecipes: honouring ? {} : mineRecipes,
+        voidTheirs: mineWins,
+      });
       if (rec.error === "mismatch") {
         setState(ERROR, "That sync code doesn’t match the data on the server.");
         return { ok: false, error: "That sync code doesn’t match the data on the server." };
@@ -789,13 +848,13 @@ export function createSync({
       //     would read the other's old key as a separate heart and keep both.
       //     The moves come from every cookbook this cycle holds — this
       //     device's and the buckets' — never from an id in the app.
-      const books = new Map(mine.profiles.map((p) => [String(p.id), p.recipes || {}]));
+      const books = new Map(honouring ? [] : mine.profiles.map((p) => [String(p.id), p.recipes || {}]));
       if (rec.supported) {
         for (const [pid, book] of groupCookbooks(rec.merged)) books.set(pid, { ...(books.get(pid) || {}), ...book });
       }
-      const theirs = followMovesInSnapshot(read.theirs, books);
-      const baseF = followMovesInSnapshot(base, books);
-      let mineF = followMovesInSnapshot(mine, books);
+      const theirs = followMovesInSnapshot(mineWins ? voidedSnapshot(read.theirs) : read.theirs, books);
+      const baseF = epoch.winner ? null : followMovesInSnapshot(base, books);
+      let mineF = followMovesInSnapshot(honouring ? voidedSnapshot(mine) : mine, books);
 
       // 2d. no silent merge without a base (roadmap 510/390). A person both
       //     sides hold, whose last agreement this device does not have, and
@@ -835,6 +894,7 @@ export function createSync({
       // silently discarded on the one question in this app that can hurt.
       applyDietDecision(merged, conflicts, decisions);
       pending = null;
+      if (epoch.marker) merged.wipe = epoch.marker;
 
       // 3. write it back BEFORE touching local storage, so a rejected write
       //    never leaves this device holding a state the pair never agreed on.
@@ -855,13 +915,13 @@ export function createSync({
         }
         // Recorded only once a bucket exists: a group with no recipes carries
         // no field, so turning this on costs nothing until the first recipe.
-        if (Object.keys(w.v).length || theirs?.recipeBuckets) {
+        if (Object.keys(w.v).length || read.theirs?.recipeBuckets) {
           merged.recipeBuckets = { n: RECIPE_BUCKETS, v: w.v };
         }
         vouch = w.vouch;
-      } else if (theirs?.recipeBuckets) {
+      } else if (read.theirs?.recipeBuckets) {
         // Not ours to change without reading the buckets: carried as found.
-        merged.recipeBuckets = theirs.recipeBuckets;
+        merged.recipeBuckets = read.theirs.recipeBuckets;
       }
 
       // Skipped when the server already holds exactly this — a pull that
@@ -870,7 +930,11 @@ export function createSync({
       // READ, not as followed (510/400): a server copy still holding a moved
       // recipe's old key is rewritten once, so no older build reads it back.
       const raw = read.theirs;
-      if (!(raw && sameSnapshot(merged, raw) && sameBuckets(merged.recipeBuckets, raw.recipeBuckets))) {
+      // A deletion made here is always sent — even when the synced snapshot is
+      // already identical, because the stores that never sync are only emptied
+      // elsewhere by the marker (and the server's copy has none yet).
+      const sameMarker = (merged.wipe?.id ?? null) === (raw?.wipe?.id ?? null);
+      if (!(raw && sameMarker && sameSnapshot(merged, raw) && sameBuckets(merged.recipeBuckets, raw.recipeBuckets))) {
         trace.sent = heartChange(raw, merged);
         const sealed = await sealBlob(key, merged);
         // How many buckets this user has, so the Worker re-arms those and no
@@ -946,8 +1010,12 @@ export function createSync({
       //    before its `storage` event is dispatched here (that is a queued
       //    task), and a marker bumped by events would miss exactly the change
       //    this step exists to catch.
-      const now2 = reading.unchanged(mine.profiles) ? mine : collectPersonalData(storage, { exportedAt: now() });
+      //
+      //    A deletion honoured here (`honouring`) is the one thing that does not
+      //    combine: everything this device holds is void, a tap included.
+      const now2 = honouring || reading.unchanged(mine.profiles) ? mine : collectPersonalData(storage, { exportedAt: now() });
       const localMoved =
+        !honouring &&
         now2 !== mine &&
         (!sameSnapshot(mine, now2) || !sameRecipes(mineRecipes, flattenCookbooks(now2.profiles)));
       let local = merged;
@@ -957,9 +1025,20 @@ export function createSync({
         if (needsDecision(combined.conflicts)) agreed = false;
         else local = combined.merged;
       }
-      const coreMoved = agreed && !sameSnapshot(local, now2);
+      const coreMoved = agreed && (honouring || !sameSnapshot(local, now2));
       if (coreMoved) trace.here = heartChange(now2, local);
-      const recipesMoved = rec.supported && !localMoved && !sameRecipes(rec.merged, mineRecipes);
+      const recipesMoved = rec.supported && !localMoved && (honouring || !sameRecipes(rec.merged, mineRecipes));
+      if (honouring) {
+        // Everything but the pairing goes, then the server's copy is written
+        // in. Before the base, so a refused erase (a stale tab) leaves the
+        // last agreement standing and the next cycle honours it.
+        const gone = eraseEverything(storage);
+        if (!gone.ok) {
+          setState(PAUSED, RELOAD_NEEDED);
+          return { ok: false, error: "reload-needed" };
+        }
+        seedRegistry(storage, local);
+      }
       if (coreMoved || recipesMoved) {
         if (coreMoved) writeSnapshot(storage, local);
         if (recipesMoved) writeRecipes(storage, rec.merged);
@@ -969,7 +1048,7 @@ export function createSync({
         // not re-arm the debounce.
         quiet = true;
         try {
-          applied(local);
+          applied(local, { wiped: honouring });
         } catch {
           /* a screen that failed to repaint is not a reason to fail the sync */
         } finally {
@@ -993,7 +1072,15 @@ export function createSync({
       // An agreement answers the no-base question (510/390) for good: there
       // is a base now. Cleared in the same write as the stamp, so a no-op
       // pull still writes one key.
-      writeConfig(agreed && readConfig().ask ? { lastSyncedAt: now(), ask: null } : { lastSyncedAt: now() });
+      const cfgNow = readConfig();
+      writeConfig({
+        lastSyncedAt: now(),
+        ...(agreed && cfgNow.ask ? { ask: null } : {}),
+        // The deletion is agreed: no longer pending here. `wiped` is what the
+        // sync panel says about it, and only says what happened to THIS device.
+        ...(agreed && cfgNow.wipe && (epoch.winner || epoch.marker?.id === cfgNow.wipe.id) ? { wipe: null } : {}),
+        ...(agreed && epoch.winner ? { wiped: { at: now(), by: mineWins ? "here" : "other" } } : {}),
+      });
       setState(IDLE);
       if (localMoved) schedule();
       return { ok: true, changes, deferredLocal: localMoved, bucketMismatch: rec.mismatch };
@@ -1036,6 +1123,7 @@ export function createSync({
    */
   function holdsUnsent() {
     try {
+      if (readConfig().wipe) return true; // a deletion made here and not yet agreed
       const base = readBase();
       if (!base) return true;
       const mine = collectPersonalData(storage, { exportedAt: now() });
@@ -1127,6 +1215,53 @@ export function createSync({
         if (cfg.ask) writeConfig({ ask: { ...cfg.ask, answer: decisions.noBase } });
       }
       return syncNow({ decisions, why: "answer" });
+    },
+
+    /**
+     * "Delete everything" (roadmap 180/010, ADR 0167): erase every personal
+     * store on this device and, when it is paired, send the deletion to every
+     * device signed in with the same code.
+     *
+     * The marker is recorded BEFORE the erase and in the same synchronous run,
+     * so there is no moment where data is gone and nothing says why; and a
+     * paired device that cannot reach the server keeps the marker in its sync
+     * config and sends it when it next can (`holdsUnsent`, `online`), so the
+     * deletion is not lost with the connection. `afterErase` runs between the
+     * erase and the network so the caller can re-point the live stores before
+     * anything else reads storage.
+     *
+     * Returns `{ ok, paired, reached }`. `reached` is true only when the
+     * server accepted the deletion — "everywhere" is the other devices' next
+     * sync, which this cannot see; a caller must not claim more.
+     */
+    async eraseEverywhere({ afterErase = () => {} } = {}) {
+      if (behind()) return { ok: false, error: RELOAD_NEEDED };
+      const paired = !!readConfig().code;
+      if (paired) {
+        // The open no-base question names hearts that are about to be gone.
+        writeConfig({ wipe: newWipe(now()), ask: null });
+        pending = null;
+      }
+      const gone = eraseEverything(storage);
+      if (!gone.ok) {
+        if (paired) writeConfig({ wipe: null });
+        return { ok: false, error: gone.error };
+      }
+      try {
+        afterErase();
+      } catch {
+        /* a screen that failed to repaint is not a reason to stop */
+      }
+      if (!paired) return { ok: true, paired: false, reached: false };
+      waiting = true;
+      let res = null;
+      for (let i = 0; i < 2; i += 1) {
+        // The second round exists for the first coalescing onto a cycle that
+        // was already in flight and so began before the marker did.
+        res = await syncNow({ why: "deleted everything" });
+        if (!readConfig().wipe) break;
+      }
+      return { ok: true, paired: true, reached: !readConfig().wipe, error: res?.error ?? null };
     },
 
     /**

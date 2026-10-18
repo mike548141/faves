@@ -158,6 +158,7 @@
           "name": "Live Marlborough Oysters — Natural",
           "dishId": "live-marlborough-oysters-natural",
           "desc": "Freshly shucked to order (minimum order 3). Champagne mignonette, lemon, bádisch dunkel rye.",
+          "minQty": 3,
           "price": null,
           "tags": [
             "contains-shellfish",
@@ -177,6 +178,7 @@
           "name": "Live Marlborough Oysters — Beer Battered",
           "dishId": "live-marlborough-oysters-beer-battered",
           "desc": "Freshly shucked to order (minimum order 3). Tartare, lemon, kale chip.",
+          "minQty": 3,
           "price": null,
           "tags": [
             "contains-shellfish",
@@ -334,6 +336,7 @@
           "name": "Arancini",
           "dishId": "arancini",
           "desc": "Minimum order of 2. Tomato, mozzarella, basil.",
+          "minQty": 2,
           "price": 8.5,
           "tags": [
             "contains-dairy",
@@ -346,6 +349,7 @@
           "name": "Smoked Fish Croquette",
           "dishId": "smoked-fish-croquette",
           "desc": "Minimum order of 2. Béchamel sauce, smoked fish, soft herbs, salsa verde.",
+          "minQty": 2,
           "price": 9.5,
           "tags": [
             "contains-dairy",
@@ -770,6 +774,7 @@
           "name": "Southern Stations NZ Wagyu Ribeye on the Bone",
           "dishId": "southern-stations-nz-wagyu-ribeye-on-the-bone",
           "desc": "Per 100g, served carved, size subject to availability. Elite purebred Wagyu, dry-aged in-house no less than 55 days, marbling score 9.",
+          "unit": "per 100 g",
           "price": 26,
           "tags": [
             "contains-dairy",
@@ -803,6 +808,7 @@
           "name": "A5 Sirloin (Japanese Wagyu)",
           "dishId": "a5-sirloin-japanese-wagyu",
           "desc": "Per 100g, cooked medium rare, size subject to availability. Grass-fed, grain-finished Kuroge (Japanese Black) A5-grade Wagyu.",
+          "unit": "per 100 g",
           "price": 87,
           "tags": [
             "contains-dairy",

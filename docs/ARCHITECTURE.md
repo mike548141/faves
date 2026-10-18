@@ -326,6 +326,16 @@ excluded from both stores, always.
           "desc": "Flat rice noodles wok-fried with egg, bean sprouts and soy.",
           "price": 18.5,             // NZD **at the counter**; null if market/varies.
                                      //   May instead be a dated series — see "Time"
+          "minQty": 3,               // optional, integer >= 2: the least the venue will
+                                     //   take ("minimum order 3"). The sheet's stepper
+                                     //   starts there and won't stop short of it; the
+                                     //   row says "Minimum 3". Only where the menu
+                                     //   prints it; ADR 0166
+          "unit": "each",            // optional: what `price` is FOR, from a closed set:
+                                     //   "each" | "per person" | "per 100 g". Shown
+                                     //   beside the price. Never inferred; needs a
+                                     //   price. "per 100 g" is WEIGHED: its line is
+                                     //   not in the total, and carries no minQty
           "prices": {                // optional: the same dish through another door
             "delivery": 24           //   (ADR 0089). Every key must be declared in the
           },                         //   venue's `priceChannels`, and `price` must exist
@@ -975,6 +985,19 @@ section is written once.
   are written into the line's option `name` (`lineName`), the one field every
   line-carrying table already carries, so the share codec, backup, saved orders
   and collect mode need no change; the line is still keyed on the option `id`.
+- **A dish's `minQty` and `unit`** (roadmap 200/170, ADR 0166) say how it is
+  sold, and are read from the venue's live record when the sheet is drawn,
+  never stored on an order line (so a line made before the rule, or one that
+  arrived in a link, is judged by today's menu). `minQty` means the price is
+  per counted unit and the quantity counts those units: a new line starts at
+  the minimum, ＋ on a line short of it jumps to it, and − at the minimum takes
+  the line off (✕, worded) instead of stepping below. A recalled saved line
+  under it is raised and said ("Raised to the minimum order"). A `unit` of
+  `"per 100 g"` cannot be totalled honestly (two steaks are not 2 × $26), so
+  the sheet shows its unit price, leaves it out of the subtotal and total, and
+  says so under the total. How a party size changes the dish ("select 4 mains for
+  a table of 6-7", "one set menu per table") stays in prose. A selects option
+  has neither field: no menu needs it.
 - **`mustSee: true`** (ADR 0159) makes pressing the row's ＋ Add open the
   picker, so a choice the reader would otherwise never look at is shown to
   them. The dish is still added. **Every `selects` group is must-see by rule**

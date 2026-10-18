@@ -1927,6 +1927,16 @@ deliberation those compact docs omit.
   Noble's "Choose two" is the one data change; the grill sauce and Hell's dips
   fit the shape but are not structured groups yet; per-category counts inside a
   build are left out on purpose.
+- [0166](0166-a-dish-states-its-minimum-order-and-what-its-price-is-for.md) —
+  **A dish states its minimum order and what its price is for** (`200/170`). Optional
+  `minQty` (integer >= 2) and `unit` (`each` / `per person` / `per 100 g`), only
+  where the menu prints them. A new line starts at the minimum, ＋ jumps a short
+  line to it, − at the minimum becomes ✕ and removes the line. The rule is read
+  from the live record when the sheet draws (never stored on a line), so old and
+  shared lines are judged too; a short line is flagged in words and the total says
+  so. A per-100 g line shows its unit price and is left out of the total, which
+  says so. Recall raises a short quantity and says it. Party-size scaling, per-head
+  platters and multi-buy stay in prose.
 - [0164](0164-the-activity-log-is-per-person-device-local-and-honest.md) —
   **The activity log is per person, device-local, capped at 500 and honest**
   (`390/010`+`390/040`, owner-ruled 2026-08-16). `faves.activity.v1` rides
@@ -1943,6 +1953,15 @@ deliberation those compact docs omit.
   has a provenance row in `data/bookings/` that `validate.py` checks both ways.
   Six venues ship; Now Book It links are withheld (its pages cannot show a venue
   today, and answer 200 to any id).
+- [0167](0167-delete-everything-is-an-epoch-the-whole-group-honours.md) —
+  **"Delete everything" is an epoch the whole sync group honours** (`180/010`,
+  owner-ruled 2026-08-16). A second typed control (`delete everything`, not
+  Reset's `I agree`) that erases every `faves.` key but a four-key keep-list
+  (sync pairing, storage stamp, two browser answers). A three-way merge cannot
+  carry it (what another device added since the base merges back; four stores
+  never sync), so it travels as a marker in the snapshot: the side whose
+  deletion is newer voids the other, and the later of two simultaneous
+  deletions wins on both ends. No device count in the wording.
 - [0168](0168-a-swap-names-what-it-replaces-and-removes-nothing.md) —
   **A swap names what it replaces, and removes nothing** (`200/160` part 1). One
   optional `replaces` on a pick-one group, a noun phrase in the menu's own words;
