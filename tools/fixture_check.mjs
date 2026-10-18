@@ -143,6 +143,9 @@ async function sandbox() {
   // The repo-only default cues (ADR 0157): validate.py needs them to pass the
   // real corpus, whose Spices Indian ladders default to the dearer Full.
   await cp(join(ROOT, "data", "defaults"), join(work, "data", "defaults"), { recursive: true });
+  // …and the booking-link provenance rows (ADR 0165): validate.py checks every
+  // shipped booking link against one, so without them the control fails.
+  await cp(join(ROOT, "data", "bookings"), join(work, "data", "bookings"), { recursive: true });
   for (const mod of ["renames.js", "addons.js", "vibes.js", "dietary.js"]) {
     await cp(join(SITE, "js", mod), join(work, "site", "js", mod), { recursive: true });
   }
