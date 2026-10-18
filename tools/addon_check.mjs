@@ -3067,7 +3067,7 @@ async function run(opts) {
       return {
         found: !!f,
         labels: opts.map((l) => norm(l.textContent)),
-        replacesVisible: replaces.map((r) => norm(r.textContent) && r.getBoundingClientRect().height > 0),
+        replacesVisible: replaces.map((r) => norm(r.textContent) !== "" && r.getBoundingClientRect().height > 0),
         replacesText: replaces.map((r) => norm(r.textContent)),
         tags: (dish.dataset.tags || "").split(" ").filter(Boolean),
         warnText: warn && !warn.hidden ? warn.textContent : "",
@@ -3084,7 +3084,7 @@ async function run(opts) {
     let sw = await driver.evalPage(adGroup(swDish, SWAP_GROUP));
     report.check(
       "(ae) the picker's option row SAYS what the swap replaces, in words: \"No gluten added bun, instead of the milk bun\"",
-      sw.found && sw.labels.length >= 1 && /No gluten added bun,? instead of the milk bun/.test(sw.labels[0]) &&
+      sw.found && sw.labels.some((l) => /^No gluten added bun,? instead of the milk bun\b/.test(l)) &&
         sw.replacesText.length === 1 && sw.replacesText[0].replace(/^,\s*/, "") === SWAP_WORDS && sw.replacesVisible[0] === true,
       JSON.stringify({ labels: sw.labels, replaces: sw.replacesText }),
     );
@@ -3131,7 +3131,8 @@ async function run(opts) {
     const ns = await driver.evalPage(adGroup(nsDish, SWAP_GROUP));
     report.check(
       "(ae) CONTROL: a swap group that states nothing reads exactly as before - no replaces words anywhere on its option row",
-      ns.found && ns.labels.length === 1 && ns.replacesText.length === 0 && !/instead of/.test(ns.labels[0]),
+      // The label list also holds "None" (an optional pick-one group has it), so the swap's own row is found by its name.
+      ns.found && ns.labels.some((l) => l.startsWith(SWAP_GROUP)) && ns.replacesText.length === 0 && !ns.labels.some((l) => /instead of/.test(l)),
       JSON.stringify({ labels: ns.labels, replaces: ns.replacesText }),
     );
     await driver.click(`${nsDish} .addon-option`, SWAP_GROUP);
