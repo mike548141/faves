@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A swap now says what it takes the place of.** Hotel Bristol's "No gluten
+  added bun" reads "instead of the milk bun" in the picker and on your order
+  ("No gluten added bun (instead of the milk bun)"), so the kitchen no longer has
+  to guess; Sprig & Fern Thorndon's bun ("instead of the sesame bun") and curly
+  fries ("instead of the hot chips"), and Sprig & Fern Tawa's gluten free toast
+  ("instead of the toasted sourdough") do the same, and a shared order carries
+  the wording. Only the words change: choosing a swap still warns about
+  everything the dish itself contains. Menus whose text does not say what is
+  replaced are left alone.
 - **Settings has a second, separate Delete everything beside Reset preferences.**
   Reset preferences (the old "Reset to defaults") still clears only the person
   you are browsing as, behind "I agree". Delete everything erases every person's

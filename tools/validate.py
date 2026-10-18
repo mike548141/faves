@@ -139,7 +139,7 @@ ADD_ON_SELECT = {"one", "many"}
 # variant (`dishPrice`), never a surcharge.
 ADD_ON_KINDS = {"adds", "selects"}
 ADD_ON_GROUP_KEYS = {"id", "name", "kind", "select", "required", "mustSee", "min", "max",
-                     "included", "extraPrice", "price", "options"}
+                     "included", "extraPrice", "price", "options", "replaces"}
 ADD_ON_OPTION_KEYS = {"name", "id", "price", "dishPrice", "default", "tags"}
 # The tags that make a dietary CLAIM, `-option` forms included — the Python
 # mirror of DIET_FILTERS' `satisfies` lists in site/js/dietary.js, which is what
@@ -1348,6 +1348,80 @@ def check_item_prices(rid, item, where, declared):
             err(rid, f"{where}: prices.{key} must be a finite, non-negative number")
 
 
+REPLACES_MAX = 60
+
+
+def check_replaces_shape(rid, g, where, selects):
+    """`replaces` on a pick-one group (ADR 0168): the thing a swap takes the place
+    of, in the menu's own words ("milk bun"). The picker says "instead of the milk
+    bun" and the order line carries it, so the kitchen is not left to infer it.
+
+    Refused where it would mean nothing or something false, for the reason ADR
+    0156 and 0159 give (a field that does nothing is one a transcriber believes
+    is doing something):
+
+    - a `selects` group chooses WHICH plate (a size, a protein); there is nothing
+      it takes the place of, and the field would never be read;
+    - a pick-many group is a list of extras, not one thing swapped for another;
+    - it is a noun phrase, not a sentence: the app supplies "instead of the", so a
+      leading article or "instead" would print twice.
+
+    Whether the MENU says it is a separate gate over the dishes that offer the
+    group (`check_replaces_stated`): that one needs the menu, this one does not."""
+    if "replaces" not in g:
+        return
+    r = g["replaces"]
+    if selects:
+        err(rid, f"{where}: replaces does not apply to a selects group — a variant "
+                 "chooses which plate, it takes the place of nothing (ADR 0130, ADR 0168)")
+        return
+    if g.get("select") != "one":
+        err(rid, f"{where}: replaces only applies to a pick-one group — a swap puts one "
+                 "thing in the place of another (ADR 0168)")
+    if not isinstance(r, str) or not r.strip():
+        err(rid, f"{where}: replaces must be a non-empty string, got {r!r} — absent already "
+                 "means the group replaces nothing named (ADR 0168)")
+        return
+    if r != r.strip() or any(ord(c) < 32 for c in r):
+        err(rid, f"{where}: replaces must be trimmed and free of control characters, got {r!r}")
+    if len(r) > REPLACES_MAX:
+        err(rid, f"{where}: replaces is {len(r)} characters, over {REPLACES_MAX} — name the "
+                 "component, not the sentence")
+    if re.match(r"(?i)(the|a|an|instead|in place)\b", r.strip()):
+        err(rid, f"{where}: replaces {r!r} starts with an article or \"instead\" — write the "
+                 "noun phrase alone (\"milk bun\"); the app says \"instead of the …\" (ADR 0168)")
+
+
+def check_replaces_stated(rid, data, defs):
+    """A swap may only name what the MENU says it replaces (ADR 0168).
+
+    The picker would print "instead of the milk bun" under the owner's name for a
+    venue's option, and a venue's food is not ours to describe. So every dish that
+    offers a `replaces` group must state the phrase itself — in its own `desc` or
+    in its section's `note` — compared case-insensitively. Not stated in ONE of the
+    dishes sharing a group is an error, not a warning: the group's wording would be
+    a claim about that dish that nothing on its menu supports, and the fix is to
+    leave `replaces` out (or give that dish its own group), never to guess."""
+    for section in data.get("menu") or []:
+        if not isinstance(section, dict):
+            continue
+        for item in section.get("items") or []:
+            if not isinstance(item, dict):
+                continue
+            for g in groups_for(defs, section, item):
+                r = g.get("replaces")
+                if not isinstance(r, str) or not r.strip() or is_selects(g):
+                    continue
+                said = " ".join(
+                    str(x) for x in (item.get("desc"), section.get("note")) if isinstance(x, str)
+                ).lower()
+                if r.strip().lower() not in said:
+                    err(rid, f"add-on group {g.get('id')!r}: replaces {r!r}, but "
+                             f"{item.get('name')!r} (section {section.get('section')!r}) does not "
+                             "say so in its desc or its section note — the menu must state what "
+                             "a swap takes the place of (ADR 0168)")
+
+
 def check_pick_counts(rid, g, where, options, selects):
     """`min`, `included` and `extraPrice` on a pick-many group (ADR 0163).
 
@@ -1921,6 +1995,8 @@ def check_add_on_groups(rid, data):
             elif g.get("required") is True:
                 err(rid, f"{where}: mustSee does not apply to a required group — Add already "
                          "waits for it (ADR 0156, ADR 0159)")
+
+        check_replaces_shape(rid, g, where, selects)
 
         # "Choose up to 3" is a rule the venue set, so it lives in the data — but
         # only a pick-many group can have one, and a cap above the options is a
@@ -3204,6 +3280,7 @@ def check_restaurant(path):
     # so the extras the venue actually sells are simply never offered. And a
     # group nobody names is precached payload no screen can reach (ADR 0047),
     # downloaded by every phone to sit there unused.
+    check_replaces_stated(rid, data, add_on_defs)
     referenced = set()
     for gid, where in add_on_refs:
         if gid in add_on_defs:

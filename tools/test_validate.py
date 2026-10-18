@@ -120,6 +120,24 @@ def _add_ons(d):
     return group
 
 
+def _swap(says="milk bun", *, desc="Beef patty in a milk bun with fries.", note=None, **extra):
+    """A case that installs the good add-on group as a SWAP (a pick-one group that
+    replaces `says`, ADR 0168), sets what the first dish's own words say, then lets
+    the case break it. The positive shape is the one the corpus ships: the menu
+    states the component in the dish's desc (or its section's note)."""
+
+    def mutate(d):
+        g = _add_ons(d)
+        g.pop("max")
+        g.update(select="one", replaces=says, **extra)
+        _first_item(d)["desc"] = desc
+        if note is not None:
+            _first_section(d)["note"] = note
+        return d
+
+    return mutate
+
+
 def _channels(d):
     """Give the subject one declared delivery channel and one dish priced on it.
 
@@ -988,6 +1006,42 @@ CASES = {
     "mustSee on a required group": (
         _breaks(lambda g, d: (g.update(select="one", required=True, mustSee=True), g.pop("max"))),
         "error", r"add-on group 'sauces': mustSee does not apply to a required group",
+    ),
+    # --- ADR 0168: a swap NAMES what it replaces (roadmap 200/160 part 1) -------
+    # The legal shapes first - a validator that refused every `replaces` would pass
+    # every refusal below - then each way the field is mis-set, would do nothing,
+    # or would put words on the screen the menu never printed.
+    "a swap that names a component its dish states is legal": (_swap(), "clean", None),
+    "a swap stated by the section note is legal": (
+        _swap(desc="Beef patty with fries.", note="All burgers come in a milk bun."), "clean", None),
+    "the match is case-insensitive": (_swap(desc="Beef patty in a Milk Bun."), "clean", None),
+    "replaces on a pick-many group": (
+        _breaks(lambda g, d: (g.update(replaces="milk bun"), _first_item(d).update(desc="A milk bun."))),
+        "error", r"add-on group 'sauces': replaces only applies to a pick-one group",
+    ),
+    "replaces on a selects group": (
+        _ladder(lambda g, d: g.update(replaces="regular size")),
+        "error", r"add-on group 'size': replaces does not apply to a selects group",
+    ),
+    "replaces written as an empty string": (
+        _swap(""), "error", r"add-on group 'sauces': replaces must be a non-empty string, got ''"),
+    "replaces written as a number": (
+        _swap(7), "error", r"add-on group 'sauces': replaces must be a non-empty string, got 7"),
+    "replaces with a leading article": (
+        _swap("the milk bun"), "error", r"add-on group 'sauces': replaces 'the milk bun' starts with an article"),
+    "replaces that says 'instead' itself": (
+        _swap("instead of the milk bun"), "error", r"replaces 'instead of the milk bun' starts with an article or \"instead\""),
+    "replaces with stray space": (
+        _swap(" milk bun", desc="A milk bun."), "error", r"replaces must be trimmed"),
+    "replaces longer than a component name": (
+        _swap("x" * 61, desc="x" * 61), "error", r"replaces is 61 characters, over 60"),
+    "a swap the dish's own words never state": (
+        _swap(desc="Beef patty with fries."), "error",
+        r"add-on group 'sauces': replaces 'milk bun', but '.*' \(section '.*'\) does not say so in its desc or its section note",
+    ),
+    "a swap that one of two sharing dishes does not state": (
+        lambda d: (_swap()(d), _first_section(d)["items"][1].update(desc="Plain fries.", addOns=["sauces"])),
+        "error", r"add-on group 'sauces': replaces 'milk bun', but",
     ),
     # --- ADR 0163: HOW MANY a group asks for, and what extras cost (200/140) --
     # The fixture group is a pick-many "sauces" with max 2 over two options. The

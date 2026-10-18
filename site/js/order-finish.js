@@ -14,7 +14,7 @@
 // the allergen tags) are addons.js's. This file only joins a stored line to them.
 
 import { findDish, dishId } from "./dish-id.js";
-import { groupsFor, missingRequired, owed, extraFee, optionId, optionPrice, lineOptions } from "./addons.js";
+import { groupsFor, missingRequired, owed, extraFee, optionId, optionPrice, lineOptions, swapField } from "./addons.js";
 
 const cents = (n) => Math.round(n * 100) / 100;
 
@@ -150,7 +150,7 @@ export function answeredBy(info, picks) {
       }
       for (const id of ids) {
         const opt = open.get(id);
-        added.push({ group: g.id, id, name: opt.name, price: optionPrice(g, opt), tags: opt.tags || [] });
+        added.push({ group: g.id, id, name: opt.name, price: optionPrice(g, opt), tags: opt.tags || [], ...swapField(g) });
       }
       continue;
     }
@@ -159,7 +159,7 @@ export function answeredBy(info, picks) {
       missing.push(g);
       continue;
     }
-    added.push({ group: g.id, id: optionId(opt), name: opt.name, price: optionPrice(g, opt), tags: opt.tags || [] });
+    added.push({ group: g.id, id: optionId(opt), name: opt.name, price: optionPrice(g, opt), tags: opt.tags || [], ...swapField(g) });
   }
   return { added, missing };
 }

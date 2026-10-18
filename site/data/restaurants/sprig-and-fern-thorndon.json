@@ -76,6 +76,7 @@
       "id": "nga-bun",
       "name": "No added gluten bun",
       "select": "one",
+      "replaces": "sesame bun",
       "options": [
         {
           "name": "No added gluten bun",
@@ -89,6 +90,7 @@
       "id": "swap-curly-fries",
       "name": "Swap to curly fries",
       "select": "one",
+      "replaces": "hot chips",
       "options": [
         {
           "name": "Curly fries",

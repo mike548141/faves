@@ -1962,3 +1962,12 @@ deliberation those compact docs omit.
   never sync), so it travels as a marker in the snapshot: the side whose
   deletion is newer voids the other, and the later of two simultaneous
   deletions wins on both ends. No device count in the wording.
+- [0168](0168-a-swap-names-what-it-replaces-and-removes-nothing.md) —
+  **A swap names what it replaces, and removes nothing** (`200/160` part 1). One
+  optional `replaces` on a pick-one group, a noun phrase in the menu's own words;
+  validate.py requires every dish offering the group to state it. The picker says
+  "instead of the milk bun" and the line reads "No gluten added bun (instead of the
+  milk bun)", carried in the option `name` so the codec, backup and saved orders
+  need no change. Words only: `composeTags` never reads it, so allergens still
+  union in and a swap drops no tag or warning (tested, break-probed); whether a
+  swap may drop the replaced component's allergen is the owner's decision.

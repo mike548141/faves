@@ -6276,6 +6276,25 @@ body:not(.menu-page):has(> .order-fab:not([hidden])) > main {
 .addon-option-tag {
   flex: none;
 }
+/* What a swap takes the place of (ADR 0168): "instead of the milk bun", stacked
+   under the option's name (the wrapper exists only on a swap row, so every other
+   row is unchanged) so the name keeps its width instead of both wrapping side by
+   side at 390px. Words, never colour alone; muted like the price because it is a
+   fact about the option, not the option. */
+.addon-option-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.addon-option-replaces {
+  color: var(--ink-soft);
+  font-weight: 400;
+  min-width: 0;
+}
+.addon-option:has(.addon-input:checked) .addon-option-replaces {
+  color: inherit;
+}
 .addon-option-price {
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
