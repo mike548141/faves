@@ -534,6 +534,20 @@ const FEE_ID = `${VENUE}-allowance-fixture`;
 const FEE_INCLUDED = 1;
 const FEE_EACH = 4;
 
+// --- 200/160 (ADR 0168): a swap NAMES what it replaces, and removes nothing --------
+// Hotel Bristol's "No gluten added bun" carries the REAL `replaces: "milk bun"`,
+// served from disk untouched; every Bristol burger's own description says "milk
+// bun", which is why the validator lets it. Sprig & Fern Tawa's Mains Cheeseburger
+// offers a group of the same shape that states NOTHING (its Gold Card twin shares
+// the group and the menu does not say what that bun is), so it is the control: the
+// same picker, no words, the plain name on the line.
+const SWAP_VENUE = "hotel-bristol";
+const SWAP_DISH = "Cheeseburger";
+const SWAP_GROUP = "No gluten added bun";
+const SWAP_WORDS = "instead of the milk bun";
+const SWAP_LINE_NAME = `${SWAP_GROUP} (${SWAP_WORDS})`;
+const NOSWAP_VENUE = "sprig-and-fern-tawa";
+
 const sizeExpr = `(() => {
   const dish = ${need(dishSel(SIZE_DISH))};
   const box = ${need(".dish-addons", "dish")};
@@ -2824,6 +2838,108 @@ async function run(opts) {
       JSON.stringify({ line: ctlSt.map((l) => [l.price, l.options.length]), plain: ctlPlain.price }),
     );
     await clearOrder();
+    }
+
+    {
+    // --- (ad) 200/160, ADR 0168: a swap names what it replaces, and removes nothing --
+    // Four claims no unit test can see, each failing alone:
+    //   1. the picker's option row says what the swap replaces, in words, in the
+    //      label (so it is in the control's accessible name too);
+    //   2. the ORDER LINE the kitchen reads says it, on the stored line (so a shared
+    //      order, which carries that name, carries it) and on the sheet;
+    //   3. THE SAFETY HALF: choosing the swap leaves every `contains-*` the dish had
+    //      on the dish row's composed tags and does not blank the warning - a swap
+    //      is words only (composition still unions allergens in);
+    //   4. the CONTROL: a swap group that states nothing reads exactly as before.
+    const adSel = (name) => dishSel(name);
+    const adGroup = (liSel, groupName) => `(() => {
+      const dish = ${need(liSel)};
+      const box = ${need(".dish-addons", "dish")};
+      const f = [...box.querySelectorAll("fieldset.addon-group")]
+        .find((x) => x.querySelector(".addon-group-name")?.textContent === ${JSON.stringify(groupName)});
+      const norm = (t) => (t || "").replace(/\\s+/g, " ").trim();
+      const opts = f ? [...f.querySelectorAll("label.addon-option")] : [];
+      const replaces = f ? [...f.querySelectorAll(".addon-option-replaces")] : [];
+      const warn = box.querySelector(".addon-warning");
+      return {
+        found: !!f,
+        labels: opts.map((l) => norm(l.textContent)),
+        replacesVisible: replaces.map((r) => norm(r.textContent) && r.getBoundingClientRect().height > 0),
+        replacesText: replaces.map((r) => norm(r.textContent)),
+        tags: (dish.dataset.tags || "").split(" ").filter(Boolean),
+        warnText: warn && !warn.hidden ? warn.textContent : "",
+      };
+    })()`;
+    const adClear = () => driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+
+    // ---- the real swap: Hotel Bristol ------------------------------------------
+    await adClear();
+    const swUrl = `http://127.0.0.1:${port}/restaurant.html?id=${SWAP_VENUE}`;
+    const swDish = adSel(SWAP_DISH);
+    await openAt(swUrl, swDish, `${SWAP_VENUE} to render ${SWAP_DISH}`);
+    await driver.click(`${swDish} .dish-addons-summary`);
+    let sw = await driver.evalPage(adGroup(swDish, SWAP_GROUP));
+    report.check(
+      "(ad) the picker's option row SAYS what the swap replaces, in words: \"No gluten added bun, instead of the milk bun\"",
+      sw.found && sw.labels.length >= 1 && /No gluten added bun,? instead of the milk bun/.test(sw.labels[0]) &&
+        sw.replacesText.length === 1 && sw.replacesText[0].replace(/^,\s*/, "") === SWAP_WORDS && sw.replacesVisible[0] === true,
+      JSON.stringify({ labels: sw.labels, replaces: sw.replacesText }),
+    );
+    const adTagsBefore = sw.tags;
+    const adGluten = adTagsBefore.filter((t) => t.startsWith("contains-"));
+    await driver.click(`${swDish} .addon-option`, SWAP_GROUP);
+    sw = await driver.evalPage(adGroup(swDish, SWAP_GROUP));
+    report.check(
+      "(ad) SAFETY: choosing the swap leaves EVERY contains-* the dish carried on its composed tags (words only - nothing is removed)",
+      adGluten.length >= 2 && adGluten.every((t) => sw.tags.includes(t)),
+      JSON.stringify({ before: adGluten, after: sw.tags.filter((t) => t.startsWith("contains-")) }),
+    );
+    await driver.click(`${swDish} .addon-stepper .stepper-add`);
+    const swSt = await driver.evalPage(storedExpr);
+    report.check(
+      "(ad) the stored LINE names what it replaces - and keeps the option's id, so it keys exactly as before",
+      swSt.length === 1 && swSt[0].options.length === 1 && swSt[0].options[0].name === SWAP_LINE_NAME &&
+        swSt[0].options[0].id === "no-gluten-added-bun" && swSt[0].options[0].group === "no-gluten-added-bun",
+      JSON.stringify(swSt.map((l) => l.options)),
+    );
+    await driver.click(".order-fab");
+    await untilPresent(async () => await driver.evalPage(`!!document.querySelector("dialog.order-sheet .order-line")`), {
+      label: "the swap line to appear on the sheet",
+    });
+    const swSheet = await driver.evalPage(`(() => {
+      const norm = (t) => (t || "").replace(/\\s+/g, " ").trim();
+      return [...document.querySelectorAll("dialog.order-sheet .order-line")].map((l) => ({
+        name: norm(l.querySelector(".order-line-name")?.firstChild?.textContent),
+        config: norm(l.querySelector(".order-line-config")?.textContent),
+      }));
+    })()`);
+    report.check(
+      "(ad) the ORDER SHEET line reads \"Cheeseburger\" then \"No gluten added bun (instead of the milk bun)\" - the kitchen no longer infers it",
+      swSheet.length === 1 && swSheet[0].name === SWAP_DISH && swSheet[0].config === SWAP_LINE_NAME,
+      JSON.stringify(swSheet),
+    );
+    await adClear();
+
+    // ---- the control: a swap group that states nothing ---------------------------
+    const nsUrl = `http://127.0.0.1:${port}/restaurant.html?id=${NOSWAP_VENUE}`;
+    const nsDish = adSel(SWAP_DISH);
+    await openAt(nsUrl, nsDish, `${NOSWAP_VENUE} to render ${SWAP_DISH}`);
+    await driver.click(`${nsDish} .dish-addons-summary`);
+    const ns = await driver.evalPage(adGroup(nsDish, SWAP_GROUP));
+    report.check(
+      "(ad) CONTROL: a swap group that states nothing reads exactly as before - no replaces words anywhere on its option row",
+      ns.found && ns.labels.length === 1 && ns.replacesText.length === 0 && !/instead of/.test(ns.labels[0]),
+      JSON.stringify({ labels: ns.labels, replaces: ns.replacesText }),
+    );
+    await driver.click(`${nsDish} .addon-option`, SWAP_GROUP);
+    await driver.click(`${nsDish} .addon-stepper .stepper-add`);
+    const nsSt = await driver.evalPage(storedExpr);
+    report.check(
+      "(ad) CONTROL: …and its line keeps the plain name \"No gluten added bun\"",
+      nsSt.length === 1 && nsSt[0].options.length === 1 && nsSt[0].options[0].name === SWAP_GROUP,
+      JSON.stringify(nsSt.map((l) => l.options)),
+    );
+    await adClear();
     }
 
     return report.summary(SITE) ? 0 : 1;
