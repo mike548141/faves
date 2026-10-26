@@ -1,7 +1,7 @@
 # Faves — instructions for AI builders
 
 <!-- stamp:begin source=docs/method/PROPAGATION.md region=floor -->
-## Doctrine — inherited from atelier (pinned `atelier@b2c53da`)
+## Doctrine — inherited from atelier (pinned `atelier@0a2b7a7`)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -80,7 +80,7 @@ in atelier and is read on demand — never wholesale.
   (`PROPAGATION.md` § *Pointing up*.)
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
   session start run `git -C "../atelier" fetch -q` then `git -C
-  "../atelier" log --oneline b2c53da..origin/main` — the parent's published
+  "../atelier" log --oneline 0a2b7a7..origin/main` — the parent's published
   mainline, never whatever branch its checkout is parked on; any output means
   the house doctrine moved — read it, then bump the pin above deliberately.
 - **Estate resources — point up, don't re-derive:** providers & account plans,
@@ -1263,14 +1263,13 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   line under _Unreleased_ in `CHANGELOG.md` when a user-visible feature
   or fix lands. Append a `docs/SESSIONS.md` entry (append-only, newest
   last) before finishing a session.
-- ⏳ **Pending upstream (atelier `180/020`, PR #90, filed 2026-09-27) — remove
-  this line when atelier rules.** Owner-ruled here 2026-09-07 (roadmap
-  `340/240`): **every sub-agent brief ends by requiring a terminal line**,
-  e.g. `WORKER DONE: <branch>@<sha>`, and **a worker's worktree is not removed
-  until the harness's completion notification arrives**. A clean tree plus a
-  pushed HEAD means nothing is unpushed, not that the agent has stopped — two
-  workers had their directory torn down mid-verification. Merging from
-  `origin/<branch>` early stays safe.
+- **Teardown waits for the worker to stop — now house doctrine.** Owner-ruled
+  here 2026-09-07 (roadmap `340/240`), handed up as atelier `180/020` and
+  adopted there 2026-10-18: atelier `CONCURRENCY.md` § *Orchestrated queue
+  runs*, *"Teardown waits for the worker to stop"*, at the pin above. Every
+  sub-agent brief ends by requiring `WORKER DONE: <branch>@<sha>`; merging
+  from `origin/<branch>` early is safe, removing the worktree waits for the
+  harness's completion notice. Read the house text, not this summary.
 - **A blocked command is a decision. Say so THE MOMENT you route around it**
   (owner-ruled 2026-08-17) — not in your closing report. If the permission
   system refuses a command and you reach for another way to get the same

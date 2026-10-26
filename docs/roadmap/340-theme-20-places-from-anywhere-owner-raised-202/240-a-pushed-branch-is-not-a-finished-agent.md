@@ -9,6 +9,12 @@
       house-shaped, so it was handed up rather than kept: atelier `180/020`
       (PR #90), which quotes atelier's *"Delete a worktree when its branch
       lands"* as the line that produced this incident.
+      📌 **Upstream ruled (noted 2026-10-26, session `6cdb3fe0`).** atelier
+      adopted `180/020` on 2026-10-18: its `CONCURRENCY.md` § *Orchestrated
+      queue runs* now carries *"Teardown waits for the worker to stop"* and
+      the *"Delete a worktree"* line waits for the agent too. The atelier pin
+      bump to `0a2b7a7` retired the pending-upstream line in `CLAUDE.md` for
+      a pointer to the house text.
 
   ⚠️ **It says TWICE because the second report corrected the first count.** This
   item was written from the `past-midnight` agent's report and said "an agent".
