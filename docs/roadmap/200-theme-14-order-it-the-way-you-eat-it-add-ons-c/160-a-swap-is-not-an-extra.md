@@ -1,4 +1,4 @@
-- [ ] **A swap is not an extra: name what it replaces** `[M][schema][safety]` —
+- [~] **A swap is not an extra: name what it replaces** `[M][schema][safety]` —
   the Theme 14 README's consequence *"A substitution is not an addition"*
   (2026-08-17) never became an item. `200/100`'s survey measured how much it
   matters ([the review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)).
@@ -92,3 +92,15 @@
   (Claude Opus 5.5) of session `2be3482c`, a non-author. Tier at selection:
   Fable. **Fable-gated: the pass runs only on the owner's explicit
   approval.**
+
+  **Review pass claimed 2026-11-01T14:10Z** by a headless per-pass orchestrator
+  (Claude Opus 5.5; an off-tier orchestrator under rule 4, which holds the
+  context partition and forms no finding and writes no severity), started by
+  shed session `c87c4ee0` (Opus 5.5) in the owner's weekly Fable drain. The
+  reviewer is one Fable 5.1 sub-agent, tier checked at selection. Neither
+  session wrote the brief or built any of the five changes. Runs under the
+  owner's approval of 2026-11-02, verbatim: *"As in past sessions I want you
+  to use fable model in subagents to do all fable dependent work in all my
+  repos including cold fable reviews"*. The pass covers `200/090`,
+  `200/120`, `200/130` and `200/140` with this item; the verdict is recorded
+  here.
