@@ -93,3 +93,11 @@ none of the 74 pick-one `adds` groups has a negative-priced option. 28r should
 say: *default to the cheapest option; make another the default only if the menu
 names it by wording or a printed headline price, and record that in
 `data/defaults/<venue>.json` with the printed text.*
+
+  review: not warranted — ADR 0157 is a data rule over which option a size
+  ladder pre-selects, enforced by `validate.py` both ways and reversible by a
+  data edit; its one safety edge, a default that carries allergens, is in
+  scope of the dish-configuration pass
+  (`docs/reviews/2026-11-02-1214-dish-configuration-obligations-and-allergens-cold.md`).
+  (The brief-writer's judgement, 2026-11-02, a sub-agent of session
+  `2be3482c`; open to challenge.)

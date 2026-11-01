@@ -41,3 +41,8 @@ falls back to English). A liveness re-check (31c) would cover these links too.
   SHELL_VERSION 2026-10-18.4): six venues carry a booking link. The withheld
   ones are carried by [`050`](050-33e-booking-links-withheld.md).
 
+  review: not warranted — ADR 0165 adds one enum value to an existing link
+  list, rendered by the existing off-site link pattern, with `validate.py`
+  requiring `https`, a live status and a source page; reversible, nothing
+  in-app. (The brief-writer's judgement, 2026-11-02, a sub-agent of session
+  `2be3482c`; open to challenge.)

@@ -110,3 +110,11 @@ leaves ONE line", "…is SAID", "a third rung is still ONE line", the confirm-by
 pair), and the run then stops on a missing element. Earlier probes (unflagged
 optional made must-see; `required` made must-see; focus restore removed) each
 failed their named assertion.
+
+  review: queued
+  (`docs/reviews/2026-11-02-1214-dish-configuration-obligations-and-allergens-cold.md`,
+  one pass over ADRs 0156, 0158, 0159, 0163 and 0168 together, with a
+  held-back sibling). Brief written 2026-11-02 by a brief-writing sub-agent
+  (Claude Opus 5.5) of session `2be3482c`, a non-author. Tier at selection:
+  Fable. **Fable-gated: the pass runs only on the owner's explicit
+  approval.**

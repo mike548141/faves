@@ -66,3 +66,8 @@
   kept as evidence; trimming them is a content call), and a picker change on
   a dish with a minimum could leave a line short, which no dish has today.
 
+  review: not warranted — ADR 0166 adds two optional, closed-set display
+  fields and a stepper floor, read from the live record and never stored on
+  the line; reversible, validator-fenced, and no allergen, privacy or sync
+  surface. (The brief-writer's judgement, 2026-11-02, a sub-agent of session
+  `2be3482c`; open to challenge.)

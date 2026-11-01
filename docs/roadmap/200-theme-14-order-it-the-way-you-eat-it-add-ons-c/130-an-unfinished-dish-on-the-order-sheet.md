@@ -65,3 +65,11 @@ Add still waits on the menu; the sheet flags and finishes. ADR 0158.
   choice (browser 1). `device_check` could not complete: HARNESS ERROR (Runtime.evaluate
   timeout) at the settings-focus loop, and it does the same on the untouched base
   commit 9fc0b119 on this loaded machine, so it is not evidence either way.
+
+  review: queued
+  (`docs/reviews/2026-11-02-1214-dish-configuration-obligations-and-allergens-cold.md`,
+  one pass over ADRs 0156, 0158, 0159, 0163 and 0168 together, with a
+  held-back sibling). Brief written 2026-11-02 by a brief-writing sub-agent
+  (Claude Opus 5.5) of session `2be3482c`, a non-author. Tier at selection:
+  Fable. **Fable-gated: the pass runs only on the owner's explicit
+  approval.**

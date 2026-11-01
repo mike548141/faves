@@ -168,3 +168,9 @@
   *Proof:* with `device_check`'s first home-page click delayed 1.8 s after the
   list paints, the unseeded run fails `UNREACHABLE ELEMENT — #overflow-btn …
   would land on #geo-dialog` and the seeded run passes 81/0. `site/` untouched.
+
+  review: not warranted — ADR 0160 is test-harness tooling: one extra Chrome
+  launch on a single tagged condition, announced loudly and as a CI warning,
+  plus a screenshot of the test page on a refused click; nothing ships to the
+  app. (The brief-writer's judgement, 2026-11-02, a sub-agent of session
+  `2be3482c`; open to challenge.)

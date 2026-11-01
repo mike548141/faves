@@ -155,3 +155,7 @@ Both owed halves are built; no owner question was asked or needed.
 [`060`](060-17a-follow-ups-reo-labels-and-odd-counts.md), none of them an
 owner question.
 
+  review: not warranted — ADR 0162 labels two stated recipe facts and moves an
+  existing scale control; display only, reversible, with `recipe_estimates.py
+  --check` guarding what ships. (The brief-writer's judgement, 2026-11-02, a
+  sub-agent of session `2be3482c`; open to challenge.)
