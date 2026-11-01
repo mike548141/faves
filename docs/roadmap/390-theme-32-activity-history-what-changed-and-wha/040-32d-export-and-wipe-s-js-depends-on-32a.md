@@ -24,3 +24,9 @@ kind of gap nobody finds until it matters.
   must also clear the log had no item; it is now
   [`180/010`](../180-theme-12-export-your-data-owner-raised-2026-08/010-delete-everything-the-second-reset.md).
 
+  review: queued
+  (`docs/reviews/2026-11-02-1204-delete-everything-and-activity-log-cold.md`,
+  one pass over ADRs 0164 and 0167 together, with a held-back sibling).
+  Brief written 2026-11-02 by a brief-writing sub-agent (Claude Opus 5.5) of
+  session `2be3482c`, a non-author. Tier at selection: Fable.
+  **Fable-gated: the pass runs only on the owner's explicit approval.**
