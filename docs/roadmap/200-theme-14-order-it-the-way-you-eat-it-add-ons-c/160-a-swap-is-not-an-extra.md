@@ -1,4 +1,4 @@
-- [~] **A swap is not an extra: name what it replaces** `[M][schema][safety]` —
+- [ ] 🎯 **A swap is not an extra: name what it replaces** `[M][schema][safety]` —
   the Theme 14 README's consequence *"A substitution is not an addition"*
   (2026-08-17) never became an item. `200/100`'s survey measured how much it
   matters ([the review](../../reviews/2026-10-03-0759-dish-configuration-survey.md)).
@@ -85,7 +85,8 @@
   is now buildable: an ADR first, and break-probes for BOTH directions (a
   wrongly recorded swap must not under-warn silently).
 
-  review: queued
+  review: done (pass ran 2026-11-01 UTC on Fable 5.1, 1 MAJOR / 3 MINOR /
+  8 NOTE; verdict, owed rulings and routing below) — was queued
   (`docs/reviews/2026-11-02-1214-dish-configuration-obligations-and-allergens-cold.md`,
   one pass over ADRs 0156, 0158, 0159, 0163 and 0168 together, with a
   held-back sibling). Brief written 2026-11-02 by a brief-writing sub-agent
@@ -104,3 +105,38 @@
   repos including cold fable reviews"*. The pass covers `200/090`,
   `200/120`, `200/130` and `200/140` with this item; the verdict is recorded
   here.
+
+  🎯 **PASS RAN 2026-11-01 (UTC), acts 1 and 2; sibling folded in the
+  brief.** Reviewer Fable 5.1 (tier checked at selection) at HEAD
+  `3016d708`; the orchestrators were off-tier (Opus 5.5) and formed no
+  finding. **Verdict, the reviewer's words:** *"the five changes stand as
+  shipped"*, but the swap's headline case reads as self-contradicting until
+  F1's stopgap (or the ruled part 2) lands, and the sheet's "finished" check
+  must resolve the options it counts (F2). **Tally: 1 MAJOR / 3 MINOR /
+  8 NOTE**; every brief re-run line reproduced, `addon_check` 216/0.
+
+  **Standing MAJOR — F1:** three of four shipped swaps (Bristol's and
+  Thorndon's no-gluten-added buns, Thorndon's curly fries) are tagged `[]`,
+  so choosing one drops the dish's `gf-option`, keeps "contains gluten" and
+  adds "isn't tagged gluten free": two messages that cancel for a reader
+  avoiding gluten.
+
+  🎯 **Rulings owed by the owner** (put here, not asked, per his drain
+  ruling of 2026-11-02; options and reasoning are in the verdict):
+  - **F1 (MAJOR):** (1) a stated-rule sentence on any `replaces` swap and
+    the residue line suppressed for it, now; (2) tag a swap with what its
+    menu does claim; (3) part 2 as already ruled 2026-10-18. Reviewer
+    recommends **1 now**, 2 where wording allows, 3 in part 2's own ADR.
+  - **F3 (MINOR):** the row's Add drops optional picks once 0156 has sent
+    the reader into the picker. Options: the row Add carries the whole
+    selection; the stepper mirrors the picker's; or say it in the text.
+    Reviewer recommends **the first** (two buttons, one dish).
+  - **F4 (MINOR):** `replaces` must be stated by the menu but `required`
+    needs no evidence; 7 of 33 required groups have no stated source.
+    Reviewer recommends a `validate.py` *warning* shaped like
+    `check_replaces_stated`.
+
+  **Routing (the reviewer's, one follow-ups item):** F1 stopgap and part 2;
+  F2, F7, F12 fixes with tests; F6 one harness assertion; F11 ADR 0168 is
+  stale against the 2026-10-18 ruling; F5, F8, F9, F10 record only. The
+  follow-ups item is not yet filed.

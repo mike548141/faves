@@ -1,7 +1,8 @@
 # Cold pass — dish configuration: obligations and allergens (refs-only)
 
-**Status:** ACT 1 RUN — the cold pass ran on 2026-11-02 (verdict below the
-divider; act 2, the sibling fold-in, follows once act 1 is committed).
+**Status:** ACTS 1 AND 2 RUN, SIBLING FOLDED — the cold pass ran on
+2026-11-02 (verdict below the divider; the sibling's seven entries are
+answered beneath it, and the sibling itself is folded in at the end).
 Written 2026-11-02 1214 UTC for board items `200/090`, `200/120`,
 `200/130`, `200/140` and `200/160`. **Fable-gated:** the pass ran under the
 owner's Fable drain approval of 2026-11-02. The verdict is below the divider
@@ -178,6 +179,9 @@ finding.
 beside this file, holds 7 entries. Open it only after your findings are
 durably written here; then fold it in below your verdict and delete it
 (`REVIEW.md` rule 1).
+
+*Folded in below the verdict and deleted at 2026-11-01T14:32Z; see* Deferred
+*sibling, folded below the verdict, at the end of this file.*
 
 ---
 
@@ -628,3 +632,148 @@ F12 above. Its one unscored item — the activity log (`activity.js`,
 roadmap 32a) now receives `subjectOf(line)` for every add/remove/merge —
 belongs to a different change and is outside this pass; noted for whoever
 reviews 32a.
+
+## Act 2 — the held-back sibling, read after act 1 was committed
+
+Act 1 was committed as `d2c2ea36` before the sibling was opened (its held
+copy, handed over by the orchestrator). The sibling carries seven
+hypotheses, D1–D7, written from the ADRs' decision sections without the
+diffs. Each is answered against act 1's findings; nothing in act 1 is
+rewritten, and the one revision is stated as such at the end.
+
+- **D1 — a default that decides allergens.** *Damaged.* A `selects`
+  default is composed the moment the picker is built: `dishAddOns` seeds
+  `selection` with the default variant and `refresh()` runs at
+  construction, so the row's chips, flag and `dataset.tags` carry the
+  default's tags before any tap. On the claim side `validate.py` (lines
+  1612–1675) makes every variant restate its dish's dietary claims exactly
+  and contradict none, so a default can neither add a claim nor silently
+  cost one; on the allergen side a variant's allergens union in and are
+  painted. And since ADR 0159 every ladder is must-see by rule, so the
+  reader is shown the default on Add. Not previously stated as a finding;
+  no finding follows.
+- **D2 — a menu that changes under a stored line.** *Confirmed, and
+  wider than F2.* A finished line becomes unfinished when the venue adds
+  a required group (by design, ADR 0158: it is flagged on the sheet), but
+  nothing says *what moved*; and the allergen sentence is composed only
+  at configure time, so a tag edit on the live record changes nothing a
+  finished line shows (the sheet carries no sentence for a finished line
+  at all). Recall reports a price change (`changed`) and nothing else. F2
+  is the sharpest instance (a withdrawn option read as complete); the
+  general "nothing tells the reader what moved" is a gap act 1 did not
+  name. Recorded here as an extension of F2, not a new severity: the
+  fail-safe direction holds throughout (a stale option composes as
+  not-stated, a new required group flags), so what is missing is
+  explanation, not safety.
+- **D3 — every way in.** *Already covered* by assumption A4 and findings
+  F2/F6: the sheet judges every line it holds, whatever route it came by
+  (menu, picker, recall, share link, backup import, sync pull), so the net
+  is the sheet. The shopping list holds recipe ingredients, not order
+  lines, and collect mode renders the same judged lines with "choice not
+  made" in the spoken line (`cart-ui.js` `lineRow`). The holes are the two
+  act 1 found: a withdrawn option counted as an answer (F2) and the
+  loading window with no caption (F6).
+- **D4 — menu words on the page.** *Already covered* by F10: every group
+  name, option name and `replaces` phrase reaches the DOM as a text node
+  through `el()` or as `textContent`/an attribute, never as markup; the
+  swap phrase is a string child of a span (`addons-ui.js` 521–528).
+- **D5 — a swap that keeps the old thing's allergens.** *Caught: this is
+  F1*, measured on the shipped data. The gluten-free bun does not merely
+  fail to earn `gf`: being untagged, it *withdraws* the dish's `gf-option`
+  under intersection and the page says "isn't tagged gluten free, so that
+  label describes the dish as listed", beside the unremoved "contains
+  gluten". The page says which claim died and why; it does not say that a
+  swap never lowers a warning here, which is the sentence F1 recommends.
+- **D6 — Add that is "disabled" but focusable.** *Confirmed by reading,
+  not driven.* The blocked Add is a real `<button>` with a `click`
+  listener (`cart-ui.js` `dishStepper`, gate branch), and Enter, Space, a
+  screen reader's activate, switch control and a double tap all dispatch
+  `click` on a button, so every route reaches `onBlocked`. Its size is the
+  button's own — `.stepper-add.is-blocked` changes only border style and
+  background (`app.css` 1964–1967), and the finish control's blocked
+  button the same (6641–6645), under a stylesheet comment that every
+  target is at least 44 px. Block (z) drives a pointer click only; no
+  check measures the gated button's box or a keyboard activation. Not
+  raised to a finding: the mechanism is the platform's, and act 1 found
+  nothing that contradicts it.
+- **D7 — "the menu must state it".** *Half caught, half confirmed.* The
+  first half is F12(c): the match is a substring, so "bun" is satisfied by
+  "bundle", and — beyond that — the rule is "the phrase appears", not
+  "the phrase is what is replaced", so a `desc` naming the component in
+  an unrelated sentence passes by design. The second half holds: the 0168
+  block of `test_validate.py` carries exactly 13 cases — three legal
+  shapes (a stated component, a section-note statement, case-insensitive)
+  and ten refusals that cover each one the ADR lists (pick-many, selects,
+  empty, a number, a leading article, "instead", untrimmed, over 60, a
+  dish that never states it, one of two sharing dishes that does not).
+
+**Revision following act 2.** No severity changes. F2 is extended by D2's
+wider point — the sheet never says what moved under a stored line — and
+the follow-ups item should carry that sentence with F2. The tally stands.
+
+**Overall verdict, in one sentence.** The five changes stand as shipped —
+the obligation mechanism is one function everywhere it is asked, the
+composer removes nothing and every recorded proof re-runs — but the swap
+feature's own headline case reads as self-contradicting to the reader it
+serves until the stopgap sentence in F1 (or the already-ruled part 2)
+lands, and the sheet's "finished" verdict needs to resolve the options it
+counts (F2) before a withdrawn choice can be trusted.
+
+**Final tally: 1 MAJOR / 3 MINOR / 8 NOTE.**
+
+---
+
+## Deferred sibling, folded below the verdict (orchestrator, 2026-11-01T14:32Z)
+
+The text below is the held-back sibling
+`2026-11-02-1214-dish-configuration-obligations-and-allergens-cold.deferred.md`,
+written by the brief-writing sub-agent of session `2be3482c`, copied here
+verbatim and then deleted (`REVIEW.md` rule 1, *Split for the duration,
+merged at rest*). It was removed from the reviewer's worktree before the
+pass began, held outside the repo, and handed to the reviewer only after
+act 1 was committed (`d2c2ea36` before rebase). The reviewer's answers to
+its seven entries are in *Act 2* above. The fold was done by the off-tier
+orchestrator (Opus 5.5) started by shed session `c87c4ee0`, which formed no
+finding and changed nothing in the text below.
+
+# Held back — angles for the dish-configuration pass
+
+For `2026-11-02-1214-dish-configuration-obligations-and-allergens-cold.md`.
+**Open only after your own findings are durably written in the brief**
+(`REVIEW.md` rule 1). Then fold this in below the verdict and delete this
+file.
+
+Written by the brief-writing sub-agent (Claude Opus 5.5, of session
+`2be3482c`) from the five ADRs' decision sections and the merge file lists;
+it did not read the diffs. Hypotheses, unproven; none was driven. Answer
+each: confirmed, damaged, or already covered by your finding N.
+
+- **D1 — a default that decides allergens.** 0156 refuses a pre-selected
+  answer on a required group because the dish's allergens depend on it. A
+  `selects` group (a size, a variant) always has a default. Can a default
+  variant carry allergens or dietary claims the reader never chose?
+- **D2 — a menu that changes under a stored line.** Lines are judged
+  against the live record. When a venue's menu changes, can a line that
+  was finished become unfinished, or its allergen sentence change, with
+  nothing telling the reader what moved?
+- **D3 — every way in.** Is there a path that puts a line on an order
+  without passing the obligation check: a received shared order, a saved
+  order made before a group became required, an import, the shopping
+  list, collect mode?
+- **D4 — menu words on the page.** Group names, option names and the
+  `replaces` phrase reach visible text and accessible names ("Needs a
+  choice: …", "instead of the …"). Are they always set as text, never as
+  markup?
+- **D5 — a swap that keeps the old thing's allergens.** Unioning a swap's
+  allergens into the dish keeps the replaced item's tags. That errs safe
+  for allergens, but can it wrongly withdraw a dietary claim the swap was
+  chosen to earn (a gluten-free bun on a dish that then never reads as
+  gluten-free)? Does the page say which?
+- **D6 — Add that is "disabled" but focusable.** With `aria-disabled`, a
+  tap or Enter opens the picker instead. Does that hold for every input
+  route (switch control, a screen reader's activate, a double tap), and
+  does the button keep its 44 px target while gated?
+- **D7 — "the menu must state it".** The `replaces` rule is a
+  case-insensitive match on the dish's `desc` or section `note`. Can a
+  phrase pass because it appears in an unrelated sentence, and do the 13
+  mutations cover each refusal the ADR lists?

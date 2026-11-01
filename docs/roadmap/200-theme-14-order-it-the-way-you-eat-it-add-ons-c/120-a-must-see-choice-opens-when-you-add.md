@@ -111,7 +111,8 @@ pair), and the run then stops on a missing element. Earlier probes (unflagged
 optional made must-see; `required` made must-see; focus restore removed) each
 failed their named assertion.
 
-  review: queued
+  review: done (pass ran 2026-11-01 UTC on Fable 5.1, 1 MAJOR / 3 MINOR /
+  8 NOTE; verdict, owed rulings and routing on `200/160`) — was queued
   (`docs/reviews/2026-11-02-1214-dish-configuration-obligations-and-allergens-cold.md`,
   one pass over ADRs 0156, 0158, 0159, 0163 and 0168 together, with a
   held-back sibling). Brief written 2026-11-02 by a brief-writing sub-agent
