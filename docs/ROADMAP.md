@@ -319,6 +319,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔥 [Evidence by fingerprint, originals backed up privately — OWNER RULED…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/310-evidence-by-fingerprint-originals-backed-up-privately.md)
 - ✅ 🔎 [device_check hangs at the same step every run, so 11 of its 81…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/320-device-check-hangs-and-eleven-assertions-go-unrun.md)
 - [ ] [List every tracked binary in .leakscanbinaries before leakscan starts…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/330-list-every-tracked-binary-before-leakscan-blocks.md)
+- [ ] 🔥 [G3 blocks this repo's CI from 2026-11-18: strip or list 93 binaries.](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/340-g3-blocks-ci-from-2026-11-18-strip-or-list-binaries.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
