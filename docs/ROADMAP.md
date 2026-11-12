@@ -11,7 +11,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/README.md)*
 
 - ✅ 🛑 [service is renamed to order-mode, INCLUDING the shipped filter](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/010-service-is-renamed-to-order-mode-including-the.md)
-- [ ] [URL stability is NOT a constraint yet, and the day it becomes one is…](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/020-url-stability-becomes-a-constraint-when-there-are-users.md)
+- [ ] [🚩 URL stability is NOT a constraint yet, and the day it becomes one is…](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/020-url-stability-becomes-a-constraint-when-there-are-users.md)
 - ✅ 🛑 [The roadmap is SPLIT — one file per item](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/030-the-roadmap-is-split-one-file-per-item.md)
 - ✅ [Remove the services → orderMode bridge, on or after 2026-10-16](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/040-remove-the-ordermode-bridge-after-2026-10-16.md)
 
@@ -54,20 +54,20 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [1841 — kids menu not transcribed](roadmap/080-theme-4-content-growth-ongoing-in-parallel/060-1841-kids-menu-not-transcribed.md)
 - [ ] [The Borough — phone is the one third-party detail](roadmap/080-theme-4-content-growth-ongoing-in-parallel/070-the-borough-phone-is-the-one-third-party-detai.md)
 - [ ] ⏳ [Baylands — the food menu we hold is a festival menu](roadmap/080-theme-4-content-growth-ongoing-in-parallel/080-baylands-the-food-menu-we-hold-is-a-festival-m.md)
-- [ ] [Baylands has no drinks, and that is deliberate](roadmap/080-theme-4-content-growth-ongoing-in-parallel/090-baylands-has-no-drinks-and-that-is-deliberate.md)
+- [ ] [🚩 Baylands has no drinks, and that is deliberate](roadmap/080-theme-4-content-growth-ongoing-in-parallel/090-baylands-has-no-drinks-and-that-is-deliberate.md)
 - [ ] 🎯 [Owner calls the menu fetch left owing](roadmap/080-theme-4-content-growth-ongoing-in-parallel/100-owner-calls-the-menu-fetch-left-owing.md)
 - ✅ [Restore The Victoria Tavern's dropped spirits](roadmap/080-theme-4-content-growth-ongoing-in-parallel/110-restore-the-victoria-tavern-s-dropped-spirits.md)
-- [ ] [Every chain we hold should carry all its Wellington-region branches](roadmap/080-theme-4-content-growth-ongoing-in-parallel/120-every-chain-we-hold-should-carry-all-its-welli.md)
-- ✅ [No branch of McDonald's or Subway has opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/130-no-branch-of-mcdonald-s-or-subway-has-opening.md)
+- [ ] [🚩 Every chain we hold should carry all its Wellington-region branches](roadmap/080-theme-4-content-growth-ongoing-in-parallel/120-every-chain-we-hold-should-carry-all-its-welli.md)
+- ✅ [🚩 No branch of McDonald's or Subway has opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/130-no-branch-of-mcdonald-s-or-subway-has-opening.md)
 - [ ] [picks are empty on most venues](roadmap/080-theme-4-content-growth-ongoing-in-parallel/140-picks-are-empty-on-most-venues.md)
-- [ ] [Venues still stub](roadmap/080-theme-4-content-growth-ongoing-in-parallel/150-venues-still-stub.md)
-- [ ] [The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
+- [ ] [📸 Venues still stub](roadmap/080-theme-4-content-growth-ongoing-in-parallel/150-venues-still-stub.md)
+- [ ] [🚩 The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
 - ✅ [RULED AND FIXED 2026-08-17 (77726e2): the salad keeps its gf label —…](roadmap/080-theme-4-content-growth-ongoing-in-parallel/170-rock-yard-s-vietnamese-salad-is-tagged-gf-and-contains-gluten.md)
 - ✅ 🎯 [Dragonfly, Courtenay Place — owner-directed online fetch](roadmap/080-theme-4-content-growth-ongoing-in-parallel/180-dragonfly-owner-directed-fetch.md)
 - ✅ 🔎 [The "not one stub is fetchable" sweep missed at least one venue that…](roadmap/080-theme-4-content-growth-ongoing-in-parallel/190-the-stub-sweep-missed-a-fetchable-menu.md)
 - ✅ 🎯 [Simmer, Churton Park — owner-supplied menu photos](roadmap/080-theme-4-content-growth-ongoing-in-parallel/200-simmer-owner-supplied-menu-photos.md)
 - ✅ 🎯 [Two allergen decisions the tagger cannot take: reading image alt, and…](roadmap/080-theme-4-content-growth-ongoing-in-parallel/210-mcdonalds-alt-text-and-two-false-gluten-tags.md)
-- ✅ [Three allergen findings the caption sweep turned up, none of them…](roadmap/080-theme-4-content-growth-ongoing-in-parallel/220-three-allergen-findings-the-alt-tier-sweep-turned-up.md)
+- ✅ [🚩 Three allergen findings the caption sweep turned up, none of them…](roadmap/080-theme-4-content-growth-ongoing-in-parallel/220-three-allergen-findings-the-alt-tier-sweep-turned-up.md)
 - [ ] 🎯 [Which of the remaining 47 venues deliver?](roadmap/080-theme-4-content-growth-ongoing-in-parallel/230-which-of-the-remaining-47-venues-deliver.md)
 - [ ] [A photo for every item, eventually — OWNER GOAL 2026-09-28, not a…](roadmap/080-theme-4-content-growth-ongoing-in-parallel/240-a-photo-for-every-item-owner-goal.md)
 - ✅ 🔎 [Nine Simmer photographs dropped into intake/ on 2026-09-09 were never…](roadmap/080-theme-4-content-growth-ongoing-in-parallel/250-nine-simmer-photos-never-read.md)
@@ -91,7 +91,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - ✅ [RULED 2026-08-16 — ADD contains-fish, and land it WITH 37n.](roadmap/110-theme-5-richer-dish-data/010-ruled-2026-08-16-add-contains-fish-and-land-it.md)
 - ✅ [RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,…](roadmap/110-theme-5-richer-dish-data/020-ruled-2026-08-16-capture-present-and-trace-sep.md)
-- ✅ [ANSWERED AND SUPERSEDED by 010 in this same section — its ⚑ is…](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
+- ✅ [⚠️ ANSWERED AND SUPERSEDED by 010 in this same section — its ⚑ is…](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
 - ✅ 🛑 [Adding a fish option to a dish produces NO allergen warning — the one…](roadmap/110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
 - ✅ 🔎 [The allergen sweep has no rule for seven everyday food words, and one…](roadmap/110-theme-5-richer-dish-data/050-the-allergen-sweep-misses-seven-everyday-food-words.md)
 - ✅ 🔎 [An add-on option carries no allergen but fish — a hummus extra is…](roadmap/110-theme-5-richer-dish-data/060-an-add-on-option-carries-no-allergen-but-fish.md)
@@ -172,10 +172,10 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/README.md)*
 
 - ✅ [27a — Rank a facet match above a text match](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/010-27a-rank-a-facet-match-above-a-text-match.md)
-- ✅ [Settings promises to hide places and nothing hides](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/020-settings-says-hide-when-nothing-hides.md)
+- ✅ [⚑ Settings promises to hide places and nothing hides](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/020-settings-says-hide-when-nothing-hides.md)
 - ✅ [Ranking and "Open now" ignore lifecycle closure](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/030-ranking-and-open-now-ignore-a-closed-venue.md)
-- ✅ [The branch picker is a FIFTH surface that disagrees about a closed…](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/040-the-branch-picker-is-a-fifth-surface-that-disagrees.md)
-- ✅ [A shut seven-branch chain now says "Permanently closed" eight times](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/050-a-shut-chain-says-permanently-closed-eight-times.md)
+- ✅ [🚩 The branch picker is a FIFTH surface that disagrees about a closed…](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/040-the-branch-picker-is-a-fifth-surface-that-disagrees.md)
+- ✅ [⚑ A shut seven-branch chain now says "Permanently closed" eight times](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/050-a-shut-chain-says-permanently-closed-eight-times.md)
 - ✅ 🔎 [The sticky contact bar is a NINTH place the closure sentence appears,…](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/060-the-sticky-contact-bar-is-a-ninth-closure-notice.md)
 - ✅ 🔎 [The check harness reads and clicks geometry while it is still…](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/070-the-harness-reads-geometry-while-it-is-still-animating.md)
 - ✅ 🔎 [Search ignores lifecycle closure entirely, and no item covered it…](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/080-search-ignores-lifecycle-closure.md)
@@ -199,7 +199,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/README.md)*
 
-- ✅ [The service worker's install guard is decorative on Pages, and one…](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/010-the-service-worker-s-install-guard-is-decorative-on-pages.md)
+- ✅ [🚩 The service worker's install guard is decorative on Pages, and one…](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/010-the-service-worker-s-install-guard-is-decorative-on-pages.md)
 - ✅ 🔎 [The version constants and the record filenames run on different…](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/020-the-version-constants-and-the-record-filenames-use-different-clocks.md)
 - ✅ [An update to one venue should not re-download every venue](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/030-an-update-to-one-venue-should-not-redownload-them-all.md)
 
@@ -219,7 +219,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/README.md)*
 
 - [ ] [18b — Recipe quantities](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/010-18b-recipe-quantities.md)
-- ✅ [GB → imperial rewrites oven temperatures to °F, and UK ovens are °C](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/020-gb-imperial-rewrites-oven-temperatures-to-f.md)
+- ✅ [⚑ GB → imperial rewrites oven temperatures to °F, and UK ovens are °C](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/020-gb-imperial-rewrites-oven-temperatures-to-f.md)
 - ✅ [18d — units resolve as region × usage, not one word](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/030-18d-units-resolve-as-region-usage-not-one-word.md)
 
 ## Theme 19 — from the 2026-08-15 Johnsonville intake
@@ -234,7 +234,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/README.md)*
 
 - ✅ [Turn can_approve_pull_request_reviews back off — UNBLOCKED…](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/010-turn-can-approve-pull-request-reviews-back-off.md)
-- ✅ [The weekly FX PR opens correctly and cannot land on its own — the…](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/020-the-weekly-fx-pr-opens-and-cannot-land-on-its-own.md)
+- ✅ [🚩 The weekly FX PR opens correctly and cannot land on its own — the…](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/020-the-weekly-fx-pr-opens-and-cannot-land-on-its-own.md)
 
 ## Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)
 
@@ -244,7 +244,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/README.md)*
 
-- ✅ [RULED NOT TO FIX 2026-08-16 — deliberately deferred, not unnoticed,…](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/010-the-order-pill-eats-a-dietary-chip-s-tap-at-la.md)
+- ✅ [⏸️ RULED NOT TO FIX 2026-08-16 — deliberately deferred, not unnoticed,…](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/010-the-order-pill-eats-a-dietary-chip-s-tap-at-la.md)
 - ✅ 🎯 [The back-to-top arrow should appear on the way DOWN too — and still…](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/020-the-arrow-should-appear-on-the-way-down-too.md)
 - ✅ 🔎 [The ⋯ button may be covered once a menu is scrolled](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/030-the-overflow-button-is-covered-mid-menu.md)
 
@@ -286,46 +286,46 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md)*
 
-- [ ] [PART-DONE, not open — the mechanism half shipped (ecbc82e), the…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/010-cook-check-mjs-is-the-shared-harness-is-flaky.md)
-- ✅ [CI runs NONE of the browser checks](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/020-ci-runs-none-of-the-browser-checks.md)
+- [ ] [🚩 PART-DONE, not open — the mechanism half shipped (ecbc82e), the…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/010-cook-check-mjs-is-the-shared-harness-is-flaky.md)
+- ✅ [🚩 CI runs NONE of the browser checks](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/020-ci-runs-none-of-the-browser-checks.md)
 - ⏳ [WAITING ON THE OWNER — (a) is shipped, (b) is his alone.](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/030-two-ci-jobs-run-on-every-push-and-cannot-block.md)
-- ✅ [linkscan is blind to reference-style links, and it is an ENFORCED…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/040-linkscan-is-blind-to-reference-style-links-and.md)
-- ✅ [SUPERSEDED 2026-08-17 by 020-ci-runs-none-of-the-browser-checks.md in…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/050-ci-runs-none-of-the-eight-browser-checks.md)
+- ✅ [🚩 linkscan is blind to reference-style links, and it is an ENFORCED…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/040-linkscan-is-blind-to-reference-style-links-and.md)
+- ✅ [⚠️ SUPERSEDED 2026-08-17 by 020-ci-runs-none-of-the-browser-checks.md in…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/050-ci-runs-none-of-the-eight-browser-checks.md)
 - ✅ [Our inlined floor is a stamped copy nothing watches](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/060-our-inlined-floor-is-a-stamped-copy-nothing-wa.md)
-- ✅ [A browser check that names an element by id is only as durable as…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/070-a-browser-check-that-names-an-element-by-id-is.md)
-- ✅ [The data gates accept what their own comments say they reject](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/080-the-data-gates-accept-what-their-own-comments-forbid.md)
+- ✅ [🚩 A browser check that names an element by id is only as durable as…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/070-a-browser-check-that-names-an-element-by-id-is.md)
+- ✅ [🚩 The data gates accept what their own comments say they reject](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/080-the-data-gates-accept-what-their-own-comments-forbid.md)
 - ✅ [The decision records have drifted from the decisions](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/090-the-decision-records-have-drifted-from-the-decisions.md)
 - ✅ [Every guard here must declare: cheap failure, or forbid the act?](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/100-every-guard-here-must-declare-cheap-failure-or-forbid.md)
-- ✅ [FILED UPSTREAM — the board's state vocabulary is atelier's, and three…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
+- ✅ [📤 FILED UPSTREAM — the board's state vocabulary is atelier's, and three…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
 - [ ] 🛑 [cook_check wedges on its DEFAULT recipe, deterministically, and it is…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/120-cook-check-wedges-on-its-default-recipe.md)
 - ✅ [DONE 2026-08-17 (436041d) — the job is now repo invariants, and the…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/130-the-guard-job-name-cannot-be-fixed-alone.md)
 - ⏳ [The "Dining" filter has no te reo, and the gloss on it is knowingly…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/140-the-dining-label-has-no-te-reo.md)
 - ✅ 🔎 [The corpus is uniformly healthy, so a whole class of behaviour ships…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/150-the-corpus-holds-no-degenerate-state-to-test-against.md)
-- ✅ [until() timeouts still exit 2, so a deleted element a check WAITS for…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/160-until-timeouts-still-exit-2-as-a-transport-error.md)
-- ✅ [A tolerant OR-list selector can pass with every named target gone](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/170-a-tolerant-selector-can-pass-with-every-named-target-gone.md)
+- ✅ [🚩 until() timeouts still exit 2, so a deleted element a check WAITS for…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/160-until-timeouts-still-exit-2-as-a-transport-error.md)
+- ✅ [🚩 A tolerant OR-list selector can pass with every named target gone](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/170-a-tolerant-selector-can-pass-with-every-named-target-gone.md)
 - ✅ 🔎 [A direct push to main can never satisfy a required status check — so…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/180-a-direct-push-to-main-can-never-satisfy-a-required-check.md)
-- ✅ [Two of the harness guarantees CLAUDE.md states are not true — a THIRD…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/190-two-holes-in-the-check-harness-guarantees.md)
+- ✅ [🚩 Two of the harness guarantees CLAUDE.md states are not true — a THIRD…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/190-two-holes-in-the-check-harness-guarantees.md)
 - ✅ 🛑 [untilPresent can manufacture a FALSE REGRESSION under load, and it…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/200-untilpresent-can-manufacture-a-false-regression-under-load.md)
 - ✅ 🛑 [to_top_check described a sweep it never ran, and its key assertion…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/210-a-check-described-a-sweep-it-never-ran.md)
-- ✅ [Two orphaned stashes have sat on the shared stash stack for three…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/220-two-orphaned-stashes-sit-on-a-stack-every-worktree-shares.md)
+- ✅ [🚩 Two orphaned stashes have sat on the shared stash stack for three…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/220-two-orphaned-stashes-sit-on-a-stack-every-worktree-shares.md)
 - ✅ 🔎 [Nothing holds the four JavaScript allergen LABEL tables in step with…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/230-nothing-holds-the-allergen-label-tables-in-step.md)
 - ✅ 🔎 [An orchestrator tore down a sub-agent's worktree while the agent was…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/240-a-pushed-branch-is-not-a-finished-agent.md)
 - [ ] 🛑 [Intake throws away the evidence's own provenance, and the first…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/250-intake-throws-away-the-evidences-own-provenance.md)
 - ✅ 🔎 [The Python gates print no tree line, so CLAUDE.md's "EVERY check…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/260-the-python-gates-print-no-tree-line.md)
-- [ ] [The machine-side half of the 2026-08-17 force-push ruling does not…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/270-the-auto-mode-rules-do-not-reach-a-worktree.md)
+- [ ] [🚩 The machine-side half of the 2026-08-17 force-push ruling does not…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/270-the-auto-mode-rules-do-not-reach-a-worktree.md)
 - ✅ 🛑 [An unresolved merge conflict shipped to a PUBLIC main and stood for a…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/280-a-merge-conflict-shipped-to-a-public-main-and-no-gate-saw-it.md)
 - [ ] 🔎 [A gate that is on the verify list but not in CI went red on main, and…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/290-a-gate-not-in-ci-went-red-on-main-and-nobody-saw-it.md)
 - ✅ [The browser checks beep through the owner's speakers](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/300-browser-checks-beep-through-the-owners-speakers.md)
 - ✅ 🔥 [Evidence by fingerprint, originals backed up privately — OWNER RULED…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/310-evidence-by-fingerprint-originals-backed-up-privately.md)
 - ✅ 🔎 [device_check hangs at the same step every run, so 11 of its 81…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/320-device-check-hangs-and-eleven-assertions-go-unrun.md)
-- [ ] [List every tracked binary in .leakscanbinaries before leakscan starts…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/330-list-every-tracked-binary-before-leakscan-blocks.md)
+- [ ] [🚩 List every tracked binary in .leakscanbinaries before leakscan starts…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/330-list-every-tracked-binary-before-leakscan-blocks.md)
 - [ ] 🔥 [G3 blocks this repo's CI from 2026-11-18: strip or list 93 binaries.](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/340-g3-blocks-ci-from-2026-11-18-strip-or-list-binaries.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
 *[Narrative](roadmap/350-theme-22-the-personal-layer-holistically-owner/README.md)*
 
-- [ ] [RULED AND SHIPPED (first half) 2026-08-17 — the answer is DULL, NOT…](roadmap/350-theme-22-the-personal-layer-holistically-owner/010-22d-hide-what-does-not-apply-to-this-reader.md)
+- [ ] [✅ RULED AND SHIPPED (first half) 2026-08-17 — the answer is DULL, NOT…](roadmap/350-theme-22-the-personal-layer-holistically-owner/010-22d-hide-what-does-not-apply-to-this-reader.md)
 - ✅ [22e — a dish's tags: sorted, collapsed, explained, and composed from…](roadmap/350-theme-22-the-personal-layer-holistically-owner/020-22e-tags-sorted-collapsed-and-explained.md)
 - [ ] 🤔 [22f — a heat preference: "no spice" and "mild only"](roadmap/350-theme-22-the-personal-layer-holistically-owner/030-22f-a-heat-preference-no-spice-or-mild-only.md)
 - [ ] 🤔 [22g — which dishes should Meatarian affect?](roadmap/350-theme-22-the-personal-layer-holistically-owner/040-22g-which-dishes-should-meatarian-affect.md)
@@ -338,7 +338,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/README.md)*
 
-- [ ] [30g — a delivery price is a SERVICE FEE, not a second price](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/010-30g-a-delivery-price-is-a-service-fee-not-a-se.md)
+- [ ] [💡 30g — a delivery price is a SERVICE FEE, not a second price](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/010-30g-a-delivery-price-is-a-service-fee-not-a-se.md)
 
 ## Theme 31 — the venue's own ordering app (owner-raised 2026-08-16)
 
@@ -393,18 +393,18 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🎯 [36c — serving sizes](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/030-36c-serving-sizes-m-data-not-researchable.md)
 - ✅ [36d — the timer's alarm](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/040-36d-the-timer-s-alarm-shipped-2026-08-16.md)
 - [ ] [36e — one place to look, not two](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/050-36e-one-place-to-look-not-two-m-ux.md)
-- ✅ [PARKED 2026-08-16 by the owner — no work owed, and this is not…](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/060-36f-what-it-costs-to-make-it-l-schema-data-own.md)
-- ✅ [Closing the sheet discards every running timer and its bell](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/070-closing-the-sheet-discards-every-running-timer.md)
+- ✅ [⏸️ PARKED 2026-08-16 by the owner — no work owed, and this is not…](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/060-36f-what-it-costs-to-make-it-l-schema-data-own.md)
+- ✅ [🚩 Closing the sheet discards every running timer and its bell](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/070-closing-the-sheet-discards-every-running-timer.md)
 
 ## Theme 37 — cook mode and the recipe page, as the owner reads them (owner-raised 2026-08-16)
 
 *[Narrative](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/README.md)*
 
 - ⏳ [WAITING ON THE OWNER — the build is done; what is left is his data…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/010-37k-a-style-of-dining-filter.md)
-- ✅ [SUPERSEDED — not delivered, and not open work either.](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/020-37k-superseded-claim-note.md)
+- ✅ [⏸️ SUPERSEDED — not delivered, and not open work either.](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/020-37k-superseded-claim-note.md)
 - [ ] [37n — the corpus disagrees with itself about allergens](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/030-37n-the-corpus-disagrees-with-itself-about-all.md)
-- ✅ [The "ambiguous single word" rule hides the ingredient line the step…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/040-the-ambiguous-word-rule-hides-the-line-the-step-uses.md)
-- [ ] [Cook at Home should use the venue/branch structure, so two houses are…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/050-cook-at-home-as-a-venue-with-branches-one-per-house.md)
+- ✅ [🚩 The "ambiguous single word" rule hides the ingredient line the step…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/040-the-ambiguous-word-rule-hides-the-line-the-step-uses.md)
+- [ ] [✅ Cook at Home should use the venue/branch structure, so two houses are…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/050-cook-at-home-as-a-venue-with-branches-one-per-house.md)
 - ✅ 🛑 [A section's NAME is evidence, and neither allergen tool reads it — ✅](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/060-a-section-name-is-evidence-the-tagger-never-reads.md)
 
 ## What the owner wants moved next (asked and answered 2026-08-16) — ✅ BOTH DONE
