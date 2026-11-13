@@ -13192,3 +13192,13 @@ reported clean). No Fable model was used and no review ran.
 - **Worktrees and branches:** `faves-briefs-1210` on `briefs-1210`,
   removed at the close.
 - **Agents:** none launched.
+
+## 2026-11-13 — atelier pin `0a2b7a7` → `2a6d7a4`, and an estate health sweep (session `52b6d566`)
+
+Dispatched by an estate health sweep, orchestrator session e820bff5. Floor
+re-copied word for word and the pin moved; `CLAUDE.md` text the delta made
+false fixed (BS1 retired on its own trigger, estate-root section, cold-reviewer
+clause); `.leakscanbinaries` lists all 50 tracked binaries ahead of the
+2026-11-18 G3 date (`340/340` closed); visibility declared public, which
+filed `340/350`; two house hooks added. Detail:
+[`sessions/2026-11-13-0614-pin-bump-2a6d7a4-and-health-sweep.md`](sessions/2026-11-13-0614-pin-bump-2a6d7a4-and-health-sweep.md).
