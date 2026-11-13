@@ -1,0 +1,9 @@
+# Paths exempt from wrapscan (fnmatch globs from the repo root, one per line).
+# Keep this list SHORT and reasoned: every entry is a hole in the boundary.
+
+# The session index (2026-11-13 split): one line per session, each a dated
+# link to its detail file plus the entry's own title. One line per entry is
+# the format atelier RECORD.md asks of the index, and wrapscan's own docstring
+# names docs/SESSIONS.md as this deliberate record class. The detail files in
+# docs/sessions/ are NOT exempt: they are wrapped prose and scan clean.
+docs/SESSIONS.md

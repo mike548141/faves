@@ -36,8 +36,11 @@
 # is actually possible, rather than firing where it is forbidden.
 
 # Append-only session history. Written once, at the time, and true as of then.
+# docs/sessions/ holds the same entries, moved there verbatim when the index
+# was split on 2026-11-13, so the same exemption follows them.
 docs/SESSIONS.md
 docs/SESSIONS-ARCHIVE.md
+docs/sessions
 
 # Harvested closed-cycle write-ups — the archive half of the roadmap. Items
 # land here when they are finished and are not revisited.
