@@ -1,7 +1,7 @@
 # Faves — instructions for AI builders
 
 <!-- stamp:begin source=docs/method/PROPAGATION.md region=floor -->
-## Doctrine — inherited from atelier (pinned `atelier@0a2b7a7`)
+## Doctrine — inherited from atelier (pinned `atelier@2a6d7a4`)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -14,35 +14,42 @@ in atelier and is read on demand — never wholesale.
   honesty is what makes the evidence trustworthy. Surface a genuine dilemma;
   never silently resolve it — a quietly picked fork is a withheld truth.
 - **Always stop and confirm (the floor):** making a private repo public or
-  widening its audience; anything truly destructive or irreversible; secrets;
-  spending money; anything touching people's safety; widening your own grant
+  widening its audience; anything truly destructive or irreversible; bulk
+  deletion from a record store, meaning the roadmap, session logs, ADRs or
+  reviews, whoever wrote it, shown first because recoverable bytes are the
+  wrong test there; secrets; spending money; anything touching people's safety;
+  widening your own grant
   (record the principal's decision, never originate it); a lockout-class change
   that could sever your own access; installing an unapproved tool or adding a
   new trust surface (deploy keys, webhooks, OAuth/app grants). Each such
-  confirmation is an *informed* one — the agent puts what it wants to do, why,
-  and the likely impact in plain language first. The principal's authority is
+  confirmation is an *informed* one — the agent gives the full account
+  `00-APEX.md` owes, in plain language, first. The principal's authority is
   absolute — never overrule him, even if you believe him uninformed; an approval
   given without that account is open to challenge on the briefing, and the
   challenge is raised to him by re-briefing (`00-APEX.md`) — and at *this*
   floor the re-briefing comes **before** the action, never after it, because
   what the floor guards cannot be taken back. Everything
-  recoverable — commit/push/PR included — just proceed.
+  else recoverable — commit/push/PR included — just proceed.
 - **Asking — any question, decision or ruling:** put the ask in the harness's
   structured question device where one exists (Claude Code:
-  `AskUserQuestion`), never buried in prose. The account must have *reached*
-  the principal before the choice is put — in the same reply ahead of the
-  device, or, where the display mode hides mid-turn text, in a completed
-  message before the ask — and the device carries only the choice; never trim
-  the account to fit. Give the real options, each with its
-  pros, cons, impacts, risks and costs, plus **a recommendation** with its
-  reasoning shown. Every fact in the ask is verified, or plainly marked as
-  assumed where verifying would cost more than the decision is worth.
+  `AskUserQuestion`), never buried in prose; with no device (a non-interactive
+  run, a scheduled batch, a harness without one) the same content goes in
+  prose. The account must have *reached* the principal before the choice is
+  put — always as a finished message of its own, ahead of the device, in every
+  view (one extra turn) — and the device carries only the choice; never trim
+  the account to fit. Give the real options, each with its pros, cons,
+  impacts, risks, costs and any other consideration that bears on the choice,
+  plus **a recommendation** with its reasoning shown. Every fact in the ask is
+  verified, or plainly marked as assumed where verifying would cost more than
+  the decision is worth.
   (`00-APEX.md` for what an ask must contain; `COMMUNICATION.md` § *Asking for
   a ruling* for how it travels.)
 - **Concurrency:** assume another session may be live — a clean tree is not
-  proof you're alone. At session start read `git status` first — dirty work
+  proof you're alone. At session start run `cclive` where it is installed
+  (every live session, claim and worktree on this machine, about 2 s), and
+  read `git status` first — dirty work
   this session didn't make means stop and move, never autostash it — then,
-  where there is a remote, `git pull --rebase --autostash`; push after each
+  where the branch has an upstream, `git pull --rebase --autostash`; push after each
   commit. Take a worktree by default for write-heavy or multi-commit
   work; uncommitted changes this session didn't make are positive proof ⇒ move
   to a worktree — never work around or absorb them (`CONCURRENCY.md`). Name
@@ -74,24 +81,29 @@ in atelier and is read on demand — never wholesale.
   house would get. Check the parent's actual file first — this block is a lossy
   summary and is not evidence about what the house says. File it in atelier's
   board directly, or hand it over the peer channel, or — where neither is
-  reachable — hold it in this repo's record marked owed upstream. Filing without
-  harming the parent: name the branch for the report, say it is a hand-up in the
-  first line, open the PR before you stop, and touch nothing but your own item.
-  (`PROPAGATION.md` § *Pointing up*.)
+  reachable — hold it in this repo's record marked owed upstream. Describe the
+  problem by its class only: atelier is public and a push cannot be retracted,
+  so a private repo never names itself or its contents (hosts, clients,
+  secrets) on the branch, PR title, commit subject, PR body or item. Filing
+  without harming the parent: name the branch for the report, say it is a
+  hand-up in the first line, open the PR before you stop, and touch nothing but
+  your own item. (`PROPAGATION.md` § *Pointing up*.)
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
-  session start run `git -C "../atelier" fetch -q` then `git -C
-  "../atelier" log --oneline 0a2b7a7..origin/main` — the parent's published
-  mainline, never whatever branch its checkout is parked on; any output means
-  the house doctrine moved — read it, then bump the pin above deliberately.
+  session start run `git -C "../atelier" fetch -q && git -C
+  "../atelier" log --oneline 2a6d7a4..origin/main` — the parent's published
+  mainline (its remote is assumed to be `origin`), never whatever branch its
+  checkout is parked on. A fetch error is *no result*, not *no drift*; any
+  output means the house doctrine moved — read it, then bump the pin above
+  deliberately.
 - **Estate resources — point up, don't re-derive:** providers & account plans,
   financial constraints & plan entitlements, licences, credentials and the
   estate inventory live in the operator's **private estate-root repo**
   (atelier's private counterpart). Reference it for these; never re-derive
   them locally or copy its contents down. The **expected toolbox** (which
   tools to expect, and how to find them) is atelier's: `method/TOOLBOX.md`.
-  If **this** repo is public, reference the root by local-path convention,
-  never by name — a public repo naming the estate's credential/inventory root
-  is reconnaissance.
+  The root is a private repo like any other: it may be named, and in a
+  public tree what it holds and its condition go by type only
+  (`RECORD.md` § *The record is public*).
 - **This repo's visibility:** **PUBLIC** since 2026-08-09 (`a207a15`, Theme
   8) — a push *is* publication, to the world, immediately and irreversibly;
   git history is public too, so a secret committed and then removed is still
@@ -140,34 +152,26 @@ stands verbatim above; the practice clauses live here and still bind:
 - Any doctrine or design change rides on **repeatable** evidence, never
   testimony.
 
-## Concurrency — BS1, and why a dirty checkout stops you claiming
+## Concurrency — BS1, and the dirty-checkout claim (retired 2026-11-13)
 
 The floor says take a worktree and never absorb a stranger's uncommitted work.
-This repo's split board (ADR 0086) adds a sharper rule that the floor does not
-carry, and it was learned here the expensive way.
+This repo's split board (ADR 0086) used to add a sharper rule here: **a dirty
+item state line anywhere under `docs/roadmap/` stopped any claim from that
+checkout** (BS1, owner-ruled in atelier 2026-08-17, *"until the staged-plane
+check lands"*). The staged-plane check landed upstream on 2026-09-20 (atelier
+`010/020`, `board.py rebuild --from-index`), and this paragraph said it would
+go when atelier `010/160` was ruled. It was: CF3 now stops a claim **only for
+the same item** (Mike, 2026-11-09, to the options offered: *"Stop only for the
+same item"* — an answer, not a ruling in his words). The rule is the house's,
+read it there, never here: atelier `CONCURRENCY.md` § *Claiming at a dirty
+primary checkout*. Retired at the 2a6d7a4 pin bump (an estate health sweep
+session); what follows is the history, kept because the shape is the lesson.
 
-🛑 **A dirty item state line anywhere under `docs/roadmap/` is a stop for
-claiming from that checkout** — take a worktree, don't pick a different item
-(BS1, owner-ruled in atelier 2026-08-17, until the staged-plane check lands).
-
-📌 **The staged-plane check LANDED upstream on 2026-09-20** (atelier `010/020`:
-the `board` floor check reads the git index at the hook, and `board.py rebuild
---from-index` regenerates from the staged plane, so a sibling's unstaged line
-can no longer be absorbed). That closes BS1's *cause*. It does **not** relax
-the stop above, and this repo may not relax it: atelier's `CONCURRENCY.md`
-says the rule is *"CF3's to restate or relax now that its cause is closed"*,
-carries a second reason the flag does nothing about (a dirty sibling item is
-evidence a peer is queue-active), and holds the question open as `010/160` —
-🎯 for the owner. Read at the 2026-09-21 pin bump; this paragraph goes when
-`010/160` is ruled. Until then: **claim from a dirty checkout with `rebuild
---from-index`, never bare `rebuild`**, which is the half that is already
-safe to adopt because it narrows rather than relaxes.
-
-**A claim still lands on `main` from the primary checkout even when that
-checkout is dirty:** if the stranger's edits don't touch the queue file, stage
-and commit *the claim line alone* — the one sanctioned touch inside another
-session's tree, safe because it stages only your own hunk. **But a claim here
-is never the claim line alone** — it also carries the regenerated
+**Why the stop existed.** A claim lands on `main` from the primary checkout
+even when that checkout is dirty: if the stranger's edits don't touch the queue
+file, stage and commit *the claim line alone* — the one sanctioned touch inside
+another session's tree, safe because it stages only your own hunk. **But a
+claim here is never the claim line alone** — it also carries the regenerated
 `docs/ROADMAP.md`, and `board.py rebuild` reads the *worktree*, so **any**
 dirty item state line under `docs/roadmap/` — yours or a sibling item's — gets
 absorbed into the index you are about to commit, publishing another session's
@@ -197,8 +201,11 @@ doctrine at `46dd5a0`, bearing 2026-08-13 to 2026-08-17 — so those three
 sentences return rather than arrive. ⚠️ Our copy of it was **wrong here until
 2026-08-18**: it said *"read the staged hunk headers"* and pointed at § The
 channel. Both were corrected upstream on a private child's incident — a
-session read its own compressed block, concluded the house had a gap it does
-not have, and wrote a local duplicate. A hunk-by-hunk read only shows what
+session read its own compressed block, concluded the house had a gap, and wrote
+a local duplicate. (Corrected at the 2a6d7a4 bump: this said the gap was one
+the house *does not have*. atelier `PROPAGATION.md` § *The instance* now
+records that the house owned the rule but its command then was the path-blind
+hunk-header read, fixed upstream 2026-08-22.) A hunk-by-hunk read only shows what
 *you* staged; the paths you did **not** stage are the point of the check. An
 index outlives the ref that fed it, so a stale entry needs no live peer to
 have put it there.
@@ -298,17 +305,24 @@ up*:
 3. Otherwise file an item in **atelier's** board carrying the class, the
    incident and options — offered, never recommended.
 4. Hold at most **one dated, self-removing pending-upstream line** here,
-   naming the parent item.
+   naming the parent item, in the house's greppable form
+   (`Pending upstream: <date UTC>, <item or unfiled> — <one line>`;
+   `PROPAGATION.md` § *Pointing up*, step 3).
 5. The incident goes in our session log — a record may be the home of the
    evidence, never of the rule.
 
 ## Estate resources — this repo is publication-bound
 
-The floor's estate-resources bullet is conditional (*"if **this** repo is
-public…"*). For faves the condition is **settled and permanent**: reference
-the estate root by local-path convention only, never by name. A public repo
-naming the estate's credential/inventory root is reconnaissance, and this repo
-has been public since 2026-08-09.
+This repo has been public since 2026-08-09, so the floor's rule for a public
+tree always applies here: what the estate root holds and its condition go by
+type only (atelier `RECORD.md` § *The record is public*). Until the 2a6d7a4
+pin bump the floor also said a public repo references the root by local-path
+convention and **never by name**; the house withdrew that on 2026-11-09
+(atelier `020/050`), and the root may now be named. **This repo keeps the
+stricter form — do not name the estate root, or any other private repo, here
+— as a narrowing a child may hold.** That is the bump session's call, carried
+from the brief that dispatched it, not a ruling; whether to keep it is the
+owner's, and the question is in that session's report.
 
 ## Checking the stamp above — by hand, because no tool can
 
@@ -327,9 +341,14 @@ atelier `320/160` (still `[ ]` open as at 2026-09-21):
    obtainable by pure deletion, and substitution *rewords*. **So a fully
    compliant child copy reds by construction.**
 
-🔑 **The consequence: the hand check is not a stopgap.** It is the only
-instrument that can pass a compliant child today. Run it **every pin bump** —
-the one moment the parent's region can have moved, so it costs nothing extra:
+🔑 **The consequence: the hand check is not a stopgap.** Until 2026-11-09 it
+was the only instrument that could pass a compliant child. Since then atelier's
+`pins.py --child <this checkout>` also compares the copy with the floor at the
+pin (report-only until 2026-12-09, failing the fleet check from then;
+`PROPAGATION.md` § *The safety floor never narrows*), and at the 2a6d7a4 bump
+both read clean. They are two instruments, not one, so run both **every pin
+bump** — the one moment the parent's region can have moved, so it costs
+nothing extra:
 
 ```sh
 # $A = the atelier checkout (ABSOLUTE — `../atelier` is wrong from a worktree)
@@ -376,12 +395,14 @@ alone.
 
 ## Where to start
 
-Read `docs/STRATEGY.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, then
-work from `docs/WORKPLAN.md`. Skim the tail of `docs/SESSIONS.md` for
-where the last session left off. Do not deviate from the architecture
-without recording the decision — a short ADR in `docs/decisions/`
-(see its README) for anything a future session might re-propose, and a
-line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
+Read `docs/STRATEGY.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, then work
+from `docs/WORKPLAN.md`. Skim the tail of `docs/SESSIONS.md` for where the last
+session left off. A cold reviewer skips this step: the log is on the review
+rules' barred list (`../atelier/docs/method/REVIEW.md` rule 2). Do not deviate
+from the architecture without recording the decision — a short ADR in
+`docs/decisions/` (see its README) for anything a future session might
+re-propose, and a line in `docs/ARCHITECTURE.md` if it changes the compact
+current-truth.
 Guard postures (cheap-failure vs. forbids-the-act) are declared in `docs/GUARDS.md`.
 
 ## Hard constraints
