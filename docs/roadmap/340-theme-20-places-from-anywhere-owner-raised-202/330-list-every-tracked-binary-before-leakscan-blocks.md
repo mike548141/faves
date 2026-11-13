@@ -3,6 +3,10 @@
       (session `6cdb3fe0`) reading the atelier delta at the pin bump to
       `0a2b7a7`.
 
+  **2026-11-13: the listing half is done** under `340`, which superseded this
+  item. What remains here is only the 🎯 at the end: strip the 42 `icc`
+  profiles, or keep them. They are kept today, listed with a reason.
+
   **What changed upstream.** atelier `020/150` (CHANGELOG, *Added
   2026-10-18 — leakscan gates binary files*): `leakscan` no longer skips a
   tracked binary in silence. Each one needs a line in `.leakscanbinaries` at

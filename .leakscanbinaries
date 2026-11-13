@@ -1,0 +1,119 @@
+# .leakscanbinaries — every tracked binary in this PUBLIC repo, with why it is
+# here and which metadata it keeps (atelier leakscan G3; roadmap 340/340).
+# Written 2026-11-13 by an estate health sweep session: every file had its
+# metadata sets read and four were viewed by eye (each line says which), and every
+# entry is that session's own judgement (by=agent), not the owner's.
+
+# App icons and favicons: the site's own heart mark, drawn for this project.
+# No photograph, no person, no place; no metadata set carried.
+c5820d3eb7d03058  site/favicon.ico  # the site's heart mark (metadata read; icon-512 checked by eye); by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+45faf75338eccf6c  site/icons/apple-touch-icon.png  # the site's heart mark (metadata read; icon-512 checked by eye); by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+f05c4712bc625840  site/icons/favicon-16.png  # the site's heart mark (metadata read; icon-512 checked by eye); by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+66341c82edb6cb0b  site/icons/favicon-32.png  # the site's heart mark (metadata read; icon-512 checked by eye); by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+67c9ffc771fa1822  site/icons/favicon-48.png  # the site's heart mark (metadata read; icon-512 checked by eye); by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+74ae6a7d26475430  site/icons/icon-192.png  # the site's heart mark (metadata read; icon-512 checked by eye); by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+b1dd22ea2bcba406  site/icons/icon-512.png  # the site's heart mark (metadata read; icon-512 checked by eye); by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+
+# Social-share card (Open Graph image): the heart mark on a plain field.
+# Keeps three EXIF fields only — ColorSpace, PixelXDimension, PixelYDimension:
+# colour space and pixel size, naming no person, place, device or date.
+# Kept rather than stripped because rewriting a shipped asset forces a shell
+# version bump and re-verification for no privacy gain.
+e50e1f79235e1b7e  site/icons/og-image.png  # looked at by eye: the heart mark on a plain field; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+e50e1f79235e1b7e:exif:ColorSpace,PixelXDimension,PixelYDimension  site/icons/og-image.png  # colour-space and size tags only; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+
+# Recipe photograph for the Cook at Home collection, the publisher's own
+# photo of its own recipe, shown credited beside it; provenance and rights
+# in data/images/cook-at-home.json. Keeps its ICC set: a 456-byte sRGB
+# colour profile with no text in it, needed so browsers render the colours
+# as published.
+d949c18280567658  site/img/cook-at-home/chocolate-lava-cakes.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/cook-at-home.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+d949c18280567658:icc  site/img/cook-at-home/chocolate-lava-cakes.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+
+# Dish photographs for the McDonald's menu: the venue's own product cutouts,
+# depicting its own named products; provenance and rights in
+# data/images/mcdonalds.json. Each keeps its ICC set: the same 456-byte sRGB
+# colour profile with no text in it, needed so browsers render the colours
+# as published. No other metadata set is carried.
+902001536ecd70fa  site/img/mcdonalds/bacon-egg-mcmuffin.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+902001536ecd70fa:icc  site/img/mcdonalds/bacon-egg-mcmuffin.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+434fb030dcec32b1  site/img/mcdonalds/big-arch.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+434fb030dcec32b1:icc  site/img/mcdonalds/big-arch.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+6baf652eece5567a  site/img/mcdonalds/big-brekkie-burger.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+6baf652eece5567a:icc  site/img/mcdonalds/big-brekkie-burger.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+31d8be4ef25ddaa0  site/img/mcdonalds/big-mac.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+31d8be4ef25ddaa0:icc  site/img/mcdonalds/big-mac.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+f2c2390e017e5d29  site/img/mcdonalds/cappuccino.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+f2c2390e017e5d29:icc  site/img/mcdonalds/cappuccino.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+c5dca0e15933260b  site/img/mcdonalds/cheeseburger.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+c5dca0e15933260b:icc  site/img/mcdonalds/cheeseburger.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+ad952377541b3ea5  site/img/mcdonalds/chicken-mcmuffin.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+ad952377541b3ea5:icc  site/img/mcdonalds/chicken-mcmuffin.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+a6d5d2a1e6c51cf8  site/img/mcdonalds/chicken-mcnuggets-10-pack.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+a6d5d2a1e6c51cf8:icc  site/img/mcdonalds/chicken-mcnuggets-10-pack.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+cb5f7e759c6e434c  site/img/mcdonalds/chicken-mcnuggets-20-pack.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+cb5f7e759c6e434c:icc  site/img/mcdonalds/chicken-mcnuggets-20-pack.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+1d95f3019c02abf3  site/img/mcdonalds/chicken-mcnuggets-6-pack.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+1d95f3019c02abf3:icc  site/img/mcdonalds/chicken-mcnuggets-6-pack.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+d67a908b5d52cb8d  site/img/mcdonalds/double-cheeseburger.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+d67a908b5d52cb8d:icc  site/img/mcdonalds/double-cheeseburger.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+099a54c4dce9c24c  site/img/mcdonalds/double-mccrispy.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+099a54c4dce9c24c:icc  site/img/mcdonalds/double-mccrispy.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+32b19d9f61f22fa0  site/img/mcdonalds/double-quarter-pounder.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+32b19d9f61f22fa0:icc  site/img/mcdonalds/double-quarter-pounder.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+62f4ac4e902c84e4  site/img/mcdonalds/filet-o-fish.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+62f4ac4e902c84e4:icc  site/img/mcdonalds/filet-o-fish.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+f2c3302190054278  site/img/mcdonalds/flat-white.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+f2c3302190054278:icc  site/img/mcdonalds/flat-white.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+8160eccc1dd9bf78  site/img/mcdonalds/fries-large.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+8160eccc1dd9bf78:icc  site/img/mcdonalds/fries-large.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+2d072909a3c388e4  site/img/mcdonalds/fries-medium.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+2d072909a3c388e4:icc  site/img/mcdonalds/fries-medium.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+9e6c9adaecfb4011  site/img/mcdonalds/fries-small.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+9e6c9adaecfb4011:icc  site/img/mcdonalds/fries-small.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+ca51e64222c3891b  site/img/mcdonalds/frozen-coke.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+ca51e64222c3891b:icc  site/img/mcdonalds/frozen-coke.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+4438e3b8307ad1a9  site/img/mcdonalds/hamburger.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+4438e3b8307ad1a9:icc  site/img/mcdonalds/hamburger.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+fe46723a74e28c3a  site/img/mcdonalds/hash-brown.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+fe46723a74e28c3a:icc  site/img/mcdonalds/hash-brown.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+a881956454612be9  site/img/mcdonalds/hot-apple-pie.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+a881956454612be9:icc  site/img/mcdonalds/hot-apple-pie.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+3c3527110af75921  site/img/mcdonalds/hot-chocolate.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+3c3527110af75921:icc  site/img/mcdonalds/hot-chocolate.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+43af4fc461a62ef6  site/img/mcdonalds/hot-fudge-sundae.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+43af4fc461a62ef6:icc  site/img/mcdonalds/hot-fudge-sundae.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+81340aec39c4bf69  site/img/mcdonalds/hotcakes.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+81340aec39c4bf69:icc  site/img/mcdonalds/hotcakes.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+3eb3bfa5511e1183  site/img/mcdonalds/iced-chocolate.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+3eb3bfa5511e1183:icc  site/img/mcdonalds/iced-chocolate.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+0fe5336ff4839705  site/img/mcdonalds/iced-latte.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+0fe5336ff4839705:icc  site/img/mcdonalds/iced-latte.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+c7552db5d340d2e1  site/img/mcdonalds/iced-mocha.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+c7552db5d340d2e1:icc  site/img/mcdonalds/iced-mocha.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+a6d9c0d9db1731b5  site/img/mcdonalds/latte.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+a6d9c0d9db1731b5:icc  site/img/mcdonalds/latte.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+9c37de28617a63c4  site/img/mcdonalds/long-black.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+9c37de28617a63c4:icc  site/img/mcdonalds/long-black.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+ce1d61dded4cebba  site/img/mcdonalds/massive-mcmuffin.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+ce1d61dded4cebba:icc  site/img/mcdonalds/massive-mcmuffin.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+a55722ed1e1f9cc8  site/img/mcdonalds/mcchicken.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+a55722ed1e1f9cc8:icc  site/img/mcdonalds/mcchicken.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+aab37dd87b21cc3c  site/img/mcdonalds/mccrispy-bacon-deluxe.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+aab37dd87b21cc3c:icc  site/img/mcdonalds/mccrispy-bacon-deluxe.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+0019f3392272ff8c  site/img/mcdonalds/mccrispy.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+0019f3392272ff8c:icc  site/img/mcdonalds/mccrispy.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+32f26f2af44aef09  site/img/mcdonalds/mcflurry.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+32f26f2af44aef09:icc  site/img/mcdonalds/mcflurry.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+c29d9313ddb8f750  site/img/mcdonalds/mocha.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+c29d9313ddb8f750:icc  site/img/mcdonalds/mocha.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+88229c7ee1041f91  site/img/mcdonalds/quarter-pounder.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+88229c7ee1041f91:icc  site/img/mcdonalds/quarter-pounder.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+c59f6d1540b9c843  site/img/mcdonalds/sausage-egg-mcmuffin.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+c59f6d1540b9c843:icc  site/img/mcdonalds/sausage-egg-mcmuffin.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+988f42f652925fff  site/img/mcdonalds/sausage-mcmuffin.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+988f42f652925fff:icc  site/img/mcdonalds/sausage-mcmuffin.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+dc942bc06b5de278  site/img/mcdonalds/soft-serve-cone.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+dc942bc06b5de278:icc  site/img/mcdonalds/soft-serve-cone.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+015440f902c9f1be  site/img/mcdonalds/thickshake.webp  # a dish photograph (metadata read; checked by eye in a sample only), provenance in data/images/mcdonalds.json; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13
+015440f902c9f1be:icc  site/img/mcdonalds/thickshake.webp  # sRGB colour profile, no text in it, needed to render the colours as published; by=agent session=52b6d566-5b5a-43c6-82f7-00adfb5f219d on=2026-11-13

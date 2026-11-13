@@ -1,5 +1,6 @@
 {
   "licence": "Apache-2.0",
+  "visibility": "public",
   "scope": {
     "pathscan": {
       "paths": [

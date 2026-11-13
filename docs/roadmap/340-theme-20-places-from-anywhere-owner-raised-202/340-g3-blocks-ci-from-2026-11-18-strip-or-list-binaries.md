@@ -1,4 +1,4 @@
-- [ ] 🔥 **G3 blocks this repo's CI from 2026-11-18: strip or list 93 binaries.**
+- [x] 🔥 **G3 blocks this repo's CI from 2026-11-18: strip or list 93 binaries.**
       DUE 2026-11-18, firm. Filed 2026-11-09 by atelier queue run 722ac2e2.
 
       **What.** atelier's `leakscan` rule G3 gates personal data inside tracked
@@ -17,8 +17,7 @@
       That is an *answer*, not a standing ruling; do not cite it as one.
 
       **Two ways to clear a file** (the format and command are in atelier's
-      `tools/README.md`, § *Binary files (G3)*, at
-      `<atelier>/tools/README.md`):
+      tools README, § *Binary files (G3)*, in the atelier checkout):
       1. **Strip the metadata**, for example `exiftool -all= <file>` or
          re-export the image. Stripping changes the file's hash, so re-run.
       2. **List it in `.leakscanbinaries`** at the repo root: the first 16+ hex
@@ -57,3 +56,17 @@
 
       **Done when** `leakscan.py --root . .` reports no G3 findings, the
       manifest is committed alongside any stripped files, and CI is green.
+
+      ✅ **Done 2026-11-13** by an estate health sweep session (orchestrator
+      session e820bff5), before the date. `.leakscanbinaries` lists all 50
+      tracked binaries, each with a reason and `by=agent` (the session's own
+      judgement, not the owner's): 7 icons, the share card, 1 recipe photo and
+      41 dish photos. Nothing was stripped, so nothing under `site/` changed.
+      Kept sets: the 456-byte sRGB `icc` profile on the 42 WebP photos (it
+      carries no text), and three EXIF fields on the share card (colour space
+      and pixel size), named at field level so the 2026-12-18 type-level cut
+      does not reach them. Every file's metadata was read; four were viewed by
+      eye, and each line says which. `leakscan --root .` then reported 0 G3
+      findings. `330`'s open question (strip the `icc` profiles, or keep them)
+      was not decided here: keeping is the no-change default, and `330` stays
+      open for that call alone.
