@@ -54,6 +54,12 @@ R & S and food-takeaway at Sprig + Fern; third-party phone numbers.
 Name corrected: "Spring & Fern" → **Sprig + Fern**. Menu capture
 verified via `tools/validate.py`.
 
+⏭️ Overtaken (estate health sweep dedupe, 2026-11-14): the menu-photo ask
+for Takeaway @ Churton & Spices Indian only. Both venues are now
+`menu-complete` (spices-indian verified 2026-07-06, takeaway-at-churton
+2026-08-08) (`site/data/restaurants/spices-indian.json:84`). The other
+asks in this paragraph are untouched by this note.
+
 **Accept when**: all 7 files validate against the schema; at least 5 of
 7 reach `menu-complete`; no invented data (anything unconfirmed stays
 null).
