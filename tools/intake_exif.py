@@ -149,20 +149,106 @@ def read_jpeg_exif(path):
             continue
         marker, seglen = data[i + 1], struct.unpack_from(">H", data, i + 2)[0]
         if marker == 0xE1 and data[i + 4:i + 10] == b"Exif\x00\x00":
-            buf = data[i + 10:i + 2 + seglen]
-            if buf[:2] not in (b"II", b"MM"):
-                return {}
-            endian = "<" if buf[:2] == b"II" else ">"
-            (ifd0_off,) = struct.unpack_from(endian + "I", buf, 4)
-            ifd0, exif, gps = {}, {}, {}
-            _read_tiff(buf, 0, IFD0_TAGS, ifd0, endian, ifd0_off,
-                       follow={0x8769: (EXIF_TAGS, exif), 0x8825: (GPS_TAGS, gps)})
-            return {"ifd0": ifd0, "exif": exif, "gps": gps}
+            return _parse_tiff(data[i + 10:i + 2 + seglen])
         if marker in (0xD8, 0xD9) or 0xD0 <= marker <= 0xD7:
             i += 2
             continue
         i += 2 + seglen
     return {}
+
+
+def _parse_tiff(buf):
+    """{ifd0, exif, gps} from a bare TIFF block — the body of an EXIF payload,
+    whichever container (JPEG APP1, HEIC item) it arrived in."""
+    if buf[:2] not in (b"II", b"MM"):
+        return {}
+    endian = "<" if buf[:2] == b"II" else ">"
+    (ifd0_off,) = struct.unpack_from(endian + "I", buf, 4)
+    ifd0, exif, gps = {}, {}, {}
+    _read_tiff(buf, 0, IFD0_TAGS, ifd0, endian, ifd0_off,
+               follow={0x8769: (EXIF_TAGS, exif), 0x8825: (GPS_TAGS, gps)})
+    return {"ifd0": ifd0, "exif": exif, "gps": gps}
+
+
+def _boxes(data, start, end):
+    """ISO-BMFF boxes between two offsets: (type, payload start, box end)."""
+    i = start
+    while i + 8 <= end:
+        size, typ = struct.unpack_from(">I4s", data, i)
+        hdr = 8
+        if size == 1:
+            size, hdr = struct.unpack_from(">Q", data, i + 8)[0], 16
+        elif size == 0:
+            size = end - i
+        if size < hdr or i + size > end:
+            return
+        yield typ, i + hdr, i + size
+        i += size
+
+
+def read_heic_exif(path):
+    """Return {ifd0, exif, gps} for a HEIC, or {} when it carries no EXIF.
+
+    Why this exists: an iPhone photo taken straight out of the Photos library is
+    HEIC, and until 2026-11-14 this tool listed `.heic` as intake material and
+    then read nothing from it — every row came back undated, so
+    `check_provenance.py` called a same-day reading "unbounded". The EXIF is an
+    ITEM of type `Exif` inside the `meta` box: `iinf` names the item, `iloc`
+    says where its bytes are, and those bytes are a 4-byte offset followed by
+    the same TIFF block a JPEG carries. Construction method 0 (file offsets)
+    only; anything else reads as no EXIF, never as a guess.
+    """
+    data = path.read_bytes()
+    if data[4:8] != b"ftyp":
+        return {}
+    meta = next(((s, e) for t, s, e in _boxes(data, 0, len(data)) if t == b"meta"), None)
+    if not meta:
+        return {}
+    exif_id, extents = None, {}
+    for t, s, e in _boxes(data, meta[0] + 4, meta[1]):  # meta is a full box
+        if t == b"iinf":
+            v, p = data[s], s + 4
+            p += 2 if v == 0 else 4
+            for t2, s2, _e2 in _boxes(data, p, e):
+                if t2 != b"infe" or data[s2] < 2:
+                    continue
+                v2, q = data[s2], s2 + 4
+                iid = struct.unpack_from(">H" if v2 == 2 else ">I", data, q)[0]
+                q += (2 if v2 == 2 else 4) + 2  # item id, protection index
+                if data[q:q + 4] == b"Exif":
+                    exif_id = iid
+        elif t == b"iloc":
+            v, p = data[s], s + 4
+            off_sz, len_sz = data[p] >> 4, data[p] & 15
+            base_sz, idx_sz = data[p + 1] >> 4, (data[p + 1] & 15) if v in (1, 2) else 0
+            p += 2
+
+            def take(n):
+                nonlocal p
+                val = int.from_bytes(data[p:p + n], "big") if n else 0
+                p += n
+                return val
+
+            for _ in range(take(2 if v < 2 else 4)):
+                iid = take(2 if v < 2 else 4)
+                method = take(2) & 15 if v in (1, 2) else 0
+                take(2)  # data reference index
+                base = take(base_sz)
+                n_ext = take(2)
+                ext = []
+                for _ in range(n_ext):
+                    take(idx_sz)
+                    ext.append((base + take(off_sz), take(len_sz)))
+                if method == 0 and ext:
+                    extents[iid] = ext[0]
+    if exif_id is None or exif_id not in extents:
+        return {}
+    off, length = extents[exif_id]
+    payload = data[off:off + length]
+    if len(payload) < 4:
+        return {}
+    skip = 4 + struct.unpack_from(">I", payload, 0)[0]
+    return _parse_tiff(payload[skip:])
 
 
 PDF_DATE_RE = re.compile(rb"/(?:Creation|Mod)Date\s*\(D:(\d{4})(\d{2})(\d{2})")
@@ -231,8 +317,8 @@ def describe(path, venues=None):
     rec = {"file": str(path.relative_to(ROOT) if ROOT in path.parents else path)}
     suffix = path.suffix.lower()
 
-    if suffix in (".jpg", ".jpeg", ".tif", ".tiff"):
-        ex = read_jpeg_exif(path)
+    if suffix in (".jpg", ".jpeg", ".tif", ".tiff", ".heic"):
+        ex = read_heic_exif(path) if suffix == ".heic" else read_jpeg_exif(path)
         ifd0, exif, gps = ex.get("ifd0", {}), ex.get("exif", {}), ex.get("gps", {})
         date, stamp = parse_exif_dt(exif.get("captured"), exif.get("offset"))
         rec["captured"] = date
