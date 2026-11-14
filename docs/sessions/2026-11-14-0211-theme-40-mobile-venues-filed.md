@@ -68,13 +68,13 @@ built, no ADR allocated, no CHANGELOG line (not user-visible).
   image-location all pass; pdlistscan's advisory (no `docs/PERSONAL-DATA.md`,
   blocking from 2027-03-08) is pre-existing and left for the owner. Msg plane:
   quotescan passes.
-- 🛑 **leakscan and namescan could run only their structural half here.**
-  Both carry `--require-terms` and the owner's private term list exists only
-  on his machine, so each exited 2 (*"refusing to report it as a pass"*). Run
-  without the flag they pass structurally. **The term half is CI's to report:
-  the `floor` workflow's result on the pushed head is the evidence, not this
-  record.** Nothing was bypassed to commit — the hooks were simply never
-  installed in this clone; said here so the person merging can weigh it.
+- 🛑 **leakscan and namescan could run only their structural half here, and —
+  corrected below — CI ran only that half too.** Both carry `--require-terms`
+  on the hook plane and the owner's private term list exists only on his
+  machine, so each exited 2 here (*"refusing to report it as a pass"*). Run
+  without the flag they pass structurally. Nothing was bypassed to commit —
+  the hooks were simply never installed in this clone; said here so the person
+  merging can weigh it.
 - Two datescan allow-markers were placed, both on the owner's verbatim
   example (*"from 11am until 3pm today"*), matching the house form used for
   quoted product vocabulary in Theme 13's README.
@@ -87,3 +87,43 @@ markets)`), pushed to `claude/eloquent-archimedes-wlr13d`; draft
 events. **CI pending when this record was written** — the all-clear is the
 pushed `CI` and `floor` results on that head, and a cancelled run is not a
 result.
+
+
+## Correction, 2026-11-14 0228 UTC — the term half ran nowhere
+
+The text above, as first pushed, and PR #134's body both said the term half of
+leakscan and namescan was *"CI's to report"*. **That was a claim stronger than
+its evidence, and it was wrong.** The `floor / scanner floor` job's own log on
+`0bf10af` says, for leakscan: *"no local term list found — scanned STRUCTURAL
+patterns only"*, and its summary line: *"cover not guaranteed — the ci plane
+does not pass --require-terms"*; namescan on the ci plane prints the same. The
+private term list is not on the runner either, by design. So on this PR the
+term half has run **nowhere**, and the only place it can run is the owner's
+machine. A merge made on GitHub does not run his pre-commit hook, so unless he
+runs `leakscan.py` over the merged tree, or pulls and commits, these files
+never get term cover. Found by reading the job log rather than its green tick,
+which is the whole reason the house says to read the log.
+
+🔎 **The general shape, owed upstream and unfiled:** a PR authored anywhere but
+the owner's machine gets no term scan before merge in this estate — the ci
+plane deliberately drops `--require-terms` because the list is private, and
+the hook plane that requires it never runs on a GitHub merge. Whether that is
+a gap in the floor or an accepted limit is atelier's to say; this session has
+read access to atelier and no push, so it is held here, marked owed, for the
+owner to carry up or decline.
+
+Also from the same log: **signscan warns that both commits of this session,
+`17107d3` and `0bf10af`, are unsigned** (*"No principal matched"*, warn-only
+on the ci plane). A cloud session holds no signing key. Seven older commits
+carry the same warning, so this is a known limit, stated rather than new.
+
+`docs/SESSIONS.md`'s index line for this session still reads *"term half left
+to CI"*. The index is append-only by its own preamble (*"an entry is never
+edited or reordered once written"*), so the line stands and this section is
+the correction it points to. Whether to amend the line anyway is put to the
+owner in the session's report, not decided here.
+
+CI on `0bf10af` when this was written: Cloudflare Pages, both `floor` runs
+(structural-only for the two term scanners, as above), JS unit tests, repo
+invariants, every screen boots and the service-worker lockstep all `success`;
+**menu data validates still in progress**. The all-clear waits for it.
