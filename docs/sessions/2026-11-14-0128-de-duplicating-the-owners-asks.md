@@ -32,3 +32,12 @@ and the wording that scopes it differ.
 
 Applied 1, skipped 0 (one row proposed). No board item changed, so the board
 index was not rebuilt; `board.py` was run as a check.
+
+## Landed
+
+`a21e0f4d` (`docs: de-duplicate the owner's asks (estate health sweep)`), CI
+green at that head: `CI` (all five jobs), `floor` and `FX rates` all
+`success`, none cancelled
+([CI run 43540833497](https://github.com/mike548141/faves/actions/runs/43540833497)).
+The hook's advisory `pdlistscan` finding (no `docs/PERSONAL-DATA.md`; blocking
+from 2027-03-08) is pre-existing and left for the owner.
