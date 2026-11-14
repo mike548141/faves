@@ -42,7 +42,7 @@
           "name": "Hot Dog",
           "dishId": "hot-dog",
           "price": 7,
-          "tags": ["contains-pork"],
+          "tags": ["contains-pork", "contains-gluten"],
           "tagNotes": {"contains-pork": "The menu says “Hot Dog” — is usually pork in NZ unless the menu names another meat."}
         },
         {

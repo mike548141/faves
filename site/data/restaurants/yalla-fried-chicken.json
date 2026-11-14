@@ -78,7 +78,8 @@
           "price": 12,
           "tags": [
             "halal",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ],
           "tagNotes": {"contains-dairy": "The menu says “Cheesy”."}
         }

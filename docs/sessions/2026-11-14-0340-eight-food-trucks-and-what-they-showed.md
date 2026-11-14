@@ -87,6 +87,18 @@ could move: `distance_check` (28/28; eight venues share one coordinate),
 groups). Both truck menu pages were also looked at in headless Chrome at
 390 px. The CI result is under *Landed*.
 
-## Landed
+## Landed — and what broke first
 
-(filled in at merge)
+Pushed to `main` as `380aa57`, which also carried PR #134's commits (GitHub
+marks it merged). 🛑 **CI went red on it**: `repo invariants` failed at
+`test_allergen_disagreements.py`, a gate this session did not type. Its R3 case
+says no row in the "sausage" class may lack `contains-gluten` (NZ sausages
+carry wheat rusk), and two new rows did: Baxters' Hot Dog and Yalla's Corndog
+(both battered, too). Because a push to `main` is the deploy, the two rows were
+live without the gluten warning between that push and the fix. Fixed by adding
+`contains-gluten` to both by hand — the presence direction, fail-safe — after
+which that test passes 31/31, and every python and node step in `ci.yml` was
+then run locally, all green. The lesson is the repo's own: the verify list in
+`CLAUDE.md` names `test_allergen_disagreements.py`, and the list typed here was
+assembled from memory instead of from `ci.yml`. The fix's CI result is the
+next commit's.
