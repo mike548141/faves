@@ -205,3 +205,4 @@ filed `340/350`; two house hooks added. Detail:
 [`sessions/2026-11-13-0614-pin-bump-2a6d7a4-and-health-sweep.md`](sessions/2026-11-13-0614-pin-bump-2a6d7a4-and-health-sweep.md).
 - [2026-11-13 · 0749 UTC](sessions/2026-11-13-0749-sessions-log-split.md) — the session log split into an index and 164 detail files, every byte proved to survive (session `84039f05`)
 - [2026-11-14 · 0128 UTC](sessions/2026-11-14-0128-de-duplicating-the-owners-asks.md) — de-duplicating the owner's asks: one overtaken note on the Phase 1 menu-photo ask (session `f7071565`)
+- [2026-11-14 · 0211 UTC](sessions/2026-11-14-0211-theme-40-mobile-venues-filed.md) — Theme 40 filed from the owner's ask: mobile venues, three open items, nothing built; leakscan/namescan term half left to CI (session `0129HcgnfVQXF2UANMbwdAKk`)
