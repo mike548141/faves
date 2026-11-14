@@ -488,3 +488,11 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] ⏳ [Turn the KV mirror off after a clean week](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/410-turn-the-kv-mirror-off-after-a-clean-week.md)
 - [ ] 🔎 [Two flakes seen under heavy load on 2026-10-02, neither named](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/420-flakes-under-load-2026-10-02.md)
 - ✅ [A banner outside Settings while sync waits for an answer](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/430-a-banner-when-sync-waits-for-an-answer.md)
+
+## Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)
+
+*[Narrative](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md)*
+
+- [ ] [A branch that moves: the roaming branch and its dated spots](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/010-a-branch-that-moves-the-roaming-branch-and-its-dated-spots.md)
+- [ ] [Today's spot: the announcement, and whether a phone hears it](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/020-todays-spot-the-announcement-and-whether-a-phone-hears-it.md)
+- [ ] [Occasional sellers: roadside tables, tents and market pitches](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/030-occasional-sellers-roadside-tables-tents-and-market-pitches.md)
