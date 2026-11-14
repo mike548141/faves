@@ -102,3 +102,8 @@ then run locally, all green. The lesson is the repo's own: the verify list in
 `CLAUDE.md` names `test_allergen_disagreements.py`, and the list typed here was
 assembled from memory instead of from `ci.yml`. The fix's CI result is the
 next commit's.
+
+**CI all-clear, read 2026-11-14 on `977be71`:** 8 of 8 check runs `success`,
+none cancelled — `CI` run 43554782868 (all five jobs, `repo invariants`
+included), `floor / scanner floor`, `refresh site/data/fx.json` and Cloudflare
+Pages. This commit, the record of that result, is the branch's last.
