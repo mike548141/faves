@@ -123,7 +123,11 @@ edited or reordered once written"*), so the line stands and this section is
 the correction it points to. Whether to amend the line anyway is put to the
 owner in the session's report, not decided here.
 
-CI on `0bf10af` when this was written: Cloudflare Pages, both `floor` runs
-(structural-only for the two term scanners, as above), JS unit tests, repo
-invariants, every screen boots and the service-worker lockstep all `success`;
-**menu data validates still in progress**. The all-clear waits for it.
+**CI all-clear, read at 2026-11-14 02:35 UTC on the corrected head
+`26faffa`:** 8 of 8 checks `success`, none cancelled — `CI` run 43546480769
+(JS unit tests, menu data validates, repo invariants, every screen boots,
+service-worker version lockstep), both `floor / scanner floor` runs
+(43546476545 and 43546481130; structural-only for the two term scanners, as
+above), and Cloudflare Pages. The previous head `0bf10af` also finished 8 of 8
+green before it was superseded. This commit, the record of that result, is the
+branch's last and is not cited by anything.
