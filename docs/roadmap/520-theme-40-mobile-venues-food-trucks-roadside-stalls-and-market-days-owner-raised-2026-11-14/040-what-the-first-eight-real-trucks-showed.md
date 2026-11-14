@@ -3,7 +3,7 @@
       see if faves data or general architecture needs to be extended at all to
       support these mobile food locations and temporary sites. And add the food
       trucks that are in the menu"* — from his own photographs, Frank Kitts Park,
-      Saturday 2026-11-14, 15:38–15:42 NZDT. ⚑ Two owner calls; the data is in.
+      Saturday 2026-11-14, 15:38–15:42 NZDT. ⚑ Three owner calls; the data is in.
 
   **What landed the same day, under today's schema (no model change).** Eight
   records, each a single pitch at Frank Kitts Park with `hours: null`,
