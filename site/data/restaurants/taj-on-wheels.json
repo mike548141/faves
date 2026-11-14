@@ -1,0 +1,148 @@
+{
+  "id": "taj-on-wheels",
+  "name": "Taj on Wheels",
+  "cuisine": [
+    "Indian"
+  ],
+  "area": "Wellington Central",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "Frank Kitts Park, Wellington waterfront",
+  "lat": -41.28702,
+  "lng": 174.77874,
+  "orderMode": [
+    "takeaway"
+  ],
+  "phone": "+64 21 876 555",
+  "website": "https://www.tajrestaurants.co.nz",
+  "hours": null,
+  "vibe": [
+    "counter-order"
+  ],
+  "verified": "2026-11-14",
+  "verifiedBy": "in-store",
+  "detailsVerified": "2026-11-14",
+  "detailsVerifiedBy": "in-store",
+  "lifecycle": {
+    "added": "2026-11-14"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Today's menu",
+      "sectionId": "today-s-menu",
+      "note": "Read off the truck's two A-frame boards, mostly handwritten deals.",
+      "items": [
+        {
+          "name": "Meat on Chips",
+          "dishId": "meat-on-chips",
+          "desc": "Fries, tender meat, butter chicken sauce and cheese.",
+          "price": 20,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “butter”."}
+        },
+        {
+          "name": "Chicken Tikka Wrap",
+          "dishId": "chicken-tikka-wrap",
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "The truck showed two prices on 2026-11-14: one A-frame $18, the other $20.",
+              "since": "2026-11-14"
+            }
+          ]
+        },
+        {
+          "name": "Paneer Tikka Wrap",
+          "dishId": "paneer-tikka-wrap",
+          "price": 18,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Paneer”."}
+        },
+        {
+          "name": "Chicken Tikka Masala Combo",
+          "dishId": "chicken-tikka-masala-combo",
+          "price": 22,
+          "tags": [
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Tikka Masala” — the sauce is cream- or butter-based."}
+        },
+        {
+          "name": "Thali",
+          "dishId": "thali",
+          "desc": "Chickpea curry, paneer tikka masala, rice and naan.",
+          "price": 24,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “naan”.", "contains-dairy": "The menu says “paneer”."}
+        },
+        {
+          "name": "Veg Samosa (2 pcs)",
+          "dishId": "veg-samosa-2-pcs",
+          "price": 12,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Samosa” — a wheat-flour wrapper."}
+        },
+        {
+          "name": "Veg Spring Rolls (3 pcs)",
+          "dishId": "veg-spring-rolls-3-pcs",
+          "desc": "Vegetable and noodle filling.",
+          "price": 15,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Spring Rolls” — a wheat-flour wrapper."}
+        },
+        {
+          "name": "Fries (small)",
+          "dishId": "fries-small",
+          "price": 8,
+          "tags": []
+        },
+        {
+          "name": "Fries (large)",
+          "dishId": "fries-large",
+          "price": 10,
+          "tags": []
+        },
+        {
+          "name": "Plain Naan",
+          "dishId": "plain-naan",
+          "price": 5,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”."}
+        },
+        {
+          "name": "Garlic Naan",
+          "dishId": "garlic-naan",
+          "price": 6,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Naan”."}
+        },
+        {
+          "name": "Masala Tea",
+          "dishId": "masala-tea",
+          "price": 5,
+          "tags": []
+        }
+      ]
+    }
+  ]
+}

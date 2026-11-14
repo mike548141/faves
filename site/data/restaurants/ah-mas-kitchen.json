@@ -1,0 +1,156 @@
+{
+  "id": "ah-mas-kitchen",
+  "name": "Ah Ma's Kitchen",
+  "cuisine": [
+    "Taiwanese",
+    "Fried chicken"
+  ],
+  "area": "Wellington Central",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "Frank Kitts Park, Wellington waterfront",
+  "lat": -41.28702,
+  "lng": 174.77874,
+  "orderMode": [
+    "takeaway"
+  ],
+  "phone": null,
+  "website": null,
+  "hours": null,
+  "vibe": [
+    "counter-order"
+  ],
+  "verified": "2026-11-14",
+  "verifiedBy": "in-store",
+  "detailsVerified": "2026-11-14",
+  "detailsVerifiedBy": "in-store",
+  "lifecycle": {
+    "added": "2026-11-14"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Fried chicken",
+      "sectionId": "fried-chicken",
+      "items": [
+        {
+          "name": "Taiwanese Fried Chicken",
+          "dishId": "taiwanese-fried-chicken",
+          "desc": "Boneless breast. Chicken only.",
+          "price": 14,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Taiwanese Fried Chicken with Chips",
+          "dishId": "taiwanese-fried-chicken-with-chips",
+          "desc": "Boneless breast.",
+          "price": 17,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Taiwanese Fried Chicken with Rice",
+          "dishId": "taiwanese-fried-chicken-with-rice",
+          "desc": "Boneless breast.",
+          "price": 17,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Popcorn Chicken",
+          "dishId": "popcorn-chicken",
+          "desc": "Boneless thigh. Chicken only.",
+          "price": 14,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Popcorn Chicken with Chips",
+          "dishId": "popcorn-chicken-with-chips",
+          "desc": "Boneless thigh.",
+          "price": 17,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Popcorn Chicken with Rice",
+          "dishId": "popcorn-chicken-with-rice",
+          "desc": "Boneless thigh.",
+          "price": 17,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Crispy Chicken Skins",
+          "dishId": "crispy-chicken-skins",
+          "price": 10,
+          "tags": []
+        },
+        {
+          "name": "Chicken Burger",
+          "dishId": "chicken-burger",
+          "price": 17,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
+        },
+        {
+          "name": "Chicken Burger with Chips",
+          "dishId": "chicken-burger-with-chips",
+          "price": 20,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
+        },
+        {
+          "name": "Taiwanese PO'corn Boy",
+          "dishId": "taiwanese-po-corn-boy",
+          "price": 14,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Sides and drinks",
+      "sectionId": "sides-and-drinks",
+      "items": [
+        {
+          "name": "Chips",
+          "dishId": "chips",
+          "price": 6,
+          "tags": []
+        },
+        {
+          "name": "Mango Sunrise Boba",
+          "dishId": "mango-sunrise-boba",
+          "desc": "Mango boba with watermelon lemonade.",
+          "price": 7,
+          "tags": []
+        },
+        {
+          "name": "Drink",
+          "dishId": "drink",
+          "price": 3,
+          "tags": []
+        },
+        {
+          "name": "Kuki Boy",
+          "dishId": "kuki-boy",
+          "desc": "3 for $20.",
+          "price": 7,
+          "tags": [],
+          "unit": "each"
+        }
+      ]
+    }
+  ]
+}

@@ -3,6 +3,29 @@
   "written by": "tools/check_provenance.py --rebuild (the mapping below is hand-authored; GPS sorts photos, it never pins them)",
   "checked by": "tools/check_provenance.py",
   "venues": {
+    "ah-mas-kitchen": {
+      "folder": "intake/menus/Ah Mas Kitchen",
+      "evidence": [
+        {
+          "file": "526C59EA-F7BB-445C-A35B-FD34B1E63559.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:40:35+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "b26b8ba1f888068bd831d6645047a138c903c153a51290605682ea359feabd84"
+        },
+        {
+          "file": "AF417C2C-E1D8-4193-9010-3851A0F6FA48.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:40:42+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "9e1c64a616329e054ef986ce762b56798f3e31f389348d275335a3c8519fe0cf"
+        }
+      ]
+    },
     "bambina-pizzeria": {
       "folder": "intake/menus/Bambina Pizzeria",
       "evidence": [
@@ -23,6 +46,29 @@
           "device": "Apple iPhone 14 Pro",
           "gps": "present",
           "sha256": "6a683165eefda97759a18e21405efbf5072ee2648f55c0b2ccd06687c07435e3"
+        }
+      ]
+    },
+    "baxters-catering": {
+      "folder": "intake/menus/Baxters Catering",
+      "evidence": [
+        {
+          "file": "214F1F13-5411-400C-9EE1-82B033428082.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:41:12+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "dea8ab495e7b36e77f38c84e3a2c2446e9051ca885262aca69c7a64e0c6f7c35"
+        },
+        {
+          "file": "5F0AE165-BFA3-43BA-AF89-F3DF40C735B8.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:41:47+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "33d4a2ad1384277581a5b2fa8f521e124a3a6e1b36cff4d7d041e1c766cf9162"
         }
       ]
     },
@@ -60,6 +106,38 @@
           "device": "Apple iPhone 14 Pro",
           "gps": "present",
           "sha256": "d148ff8c5a4850963cb9aa2e67329598690e1a766922251c931a9d4c3d7d4727"
+        }
+      ]
+    },
+    "garuda-truck": {
+      "folder": "intake/menus/Garuda Truck",
+      "evidence": [
+        {
+          "file": "6342BD96-0ABB-4F71-93AA-2DEC807E6367.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:40:57+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "2ca708ce21c6791bbe7568736f761ac94763e0e322eb0c1014d1da1a405c8ba9"
+        },
+        {
+          "file": "AF85C0DE-4E45-437F-A168-62D7BCB2CFA4.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:41:04+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "0b008504d309e051de4dcf2dae59a894b1fe3aa741cf64fc91f01739671ad6fb"
+        },
+        {
+          "file": "B77A27F2-FD35-468F-AA33-94356474DB99.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:40:59+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "d7884affb200d54386978fb65554b1d3b61a0b067b867329a5d2fcdc601fa05e"
         }
       ]
     },
@@ -344,6 +422,52 @@
         }
       ]
     },
+    "ngon-spot": {
+      "folder": "intake/menus/Ngon Spot",
+      "evidence": [
+        {
+          "file": "0901D428-BB75-4147-9665-E1A88B26596D.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:42:07+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "19006f1730e71188d8e4a138eb0ce603e2d801c26c21238e1a2c24fd901fa41c"
+        },
+        {
+          "file": "8AB1B963-9C4E-4726-BEC2-8301D257E574.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:42:11+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "aa47e55411ab53d7db692d4c82bcde8669dfea5859b083599d8776bbacffe58a"
+        },
+        {
+          "file": "FC94DF94-3924-409E-AC5F-F910BE85B58C.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:42:02+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "663e61ab0f13e00b391e86ab64e85141cc7b462632c2a3fca0627e1630c30fac"
+        }
+      ]
+    },
+    "nonys-coffee-and-gelato": {
+      "folder": "intake/menus/Nonys Coffee and Gelato",
+      "evidence": [
+        {
+          "file": "34100259-6D40-4D07-8D91-1A04CE76DB0C.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:39:35+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "976fc5cb4d5e9c10658a652ab18a57e30cd48fc4a44e6ea0481f795d8244cf33"
+        }
+      ]
+    },
     "noodle-canteen": {
       "folder": "intake/menus/Noodle Canteen",
       "evidence": [
@@ -409,6 +533,38 @@
           "device": "Apple iPhone 14 Pro",
           "gps": "present",
           "sha256": "603a7e35a2a1ccf1f9177efee170e2855c5c4e448bcee372fa85615a8926473d"
+        }
+      ]
+    },
+    "rock-yard-food-truck": {
+      "folder": "intake/menus/Rock Yard Food Truck",
+      "evidence": [
+        {
+          "file": "05DDC3B4-6016-47B7-8823-AC2DFE66DF32.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:40:12+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "f3b0996d3c3e2f6836cd3edd923455ff4d61564848aa8c5ec6a3670253e634c7"
+        },
+        {
+          "file": "5CFFEFE3-07FE-4622-9EAF-70EE0E8E5887.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:39:57+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "7780a9699529931cc9d3e16c9531db32a969f623deef301051cabc5c3ceb8f16"
+        },
+        {
+          "file": "92CD486F-141D-4CCD-B841-2D5EA33F60D3.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:39:51+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "3de45f007947ac7202f6ee9428a8e972e26c8fa856acddbcb71d2732e68be7c9"
         }
       ]
     },
@@ -595,6 +751,29 @@
           "device": null,
           "gps": "absent",
           "sha256": "8bc8f2008126902bb7ed390bc74b524ee94d83980dbd7da98638b3fc668e690a"
+        }
+      ]
+    },
+    "taj-on-wheels": {
+      "folder": "intake/menus/Taj on Wheels",
+      "evidence": [
+        {
+          "file": "27581CEB-261C-402F-9053-40B83DBC56F2.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:40:19+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "961490b63dab05658fa4366badb0587673ab985911dc4ac0aa291d9d9330b546"
+        },
+        {
+          "file": "30A500BF-1306-4679-A555-363C21C3AFE6.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:40:27+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "42ee27a765685ebe9f6dc836e2fb8c423bdf71aa950e792b143e440a638b61aa"
         }
       ]
     },
@@ -867,6 +1046,38 @@
           "device": "Apple iPhone 14 Pro",
           "gps": "present",
           "sha256": "b1f605d2cf684edc53b6a31a4fa4396e3cda89f13e37318088ebe628f4faf3a5"
+        }
+      ]
+    },
+    "yalla-fried-chicken": {
+      "folder": "intake/menus/Yalla Fried Chicken",
+      "evidence": [
+        {
+          "file": "197ED7FA-8467-4308-A11F-AC427C6D2942.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:38:51+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "1cb6008d44a3cf65bbe14905418c506319206688669e6b40b49aa26fcad57b6f"
+        },
+        {
+          "file": "2E528B7C-079F-447C-A754-27CF6206182F.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:38:46+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "909c114b2757cea2626aaec78227fab3f2c97368a6f09a4210026c8568b4abaa"
+        },
+        {
+          "file": "52E9E274-9FE3-4A9C-B06E-94EEF1310174.heic",
+          "kind": "photo",
+          "captured": "2026-11-14",
+          "capturedAt": "2026-11-14T15:39:20+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present",
+          "sha256": "aac0374851faa1b7db138585d94234d6187be9d24b3b49000274a1d31a983559"
         }
       ]
     }

@@ -1,0 +1,75 @@
+{
+  "id": "baxters-catering",
+  "name": "Baxters Catering",
+  "cuisine": [
+    "Fast food"
+  ],
+  "area": "Wellington Central",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "Frank Kitts Park, Wellington waterfront",
+  "lat": -41.28702,
+  "lng": 174.77874,
+  "orderMode": [
+    "takeaway"
+  ],
+  "phone": "+64 4 238 9170",
+  "website": "https://www.eventcatering.co.nz",
+  "hours": null,
+  "vibe": [
+    "counter-order"
+  ],
+  "verified": "2026-11-14",
+  "verifiedBy": "in-store",
+  "detailsVerified": "2026-11-14",
+  "detailsVerifiedBy": "in-store",
+  "lifecycle": {
+    "added": "2026-11-14"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Hot dogs & hot chips",
+      "sectionId": "hot-dogs-hot-chips",
+      "items": [
+        {
+          "name": "Chips",
+          "dishId": "chips",
+          "price": 8,
+          "tags": []
+        },
+        {
+          "name": "Hot Dog",
+          "dishId": "hot-dog",
+          "price": 7,
+          "tags": ["contains-pork"],
+          "tagNotes": {"contains-pork": "The menu says “Hot Dog” — is usually pork in NZ unless the menu names another meat."}
+        },
+        {
+          "name": "Spin Spud",
+          "dishId": "spin-spud",
+          "price": 8,
+          "tags": []
+        },
+        {
+          "name": "Cold Drinks",
+          "dishId": "cold-drinks",
+          "price": 4,
+          "tags": []
+        },
+        {
+          "name": "Water",
+          "dishId": "water",
+          "price": 4,
+          "tags": []
+        },
+        {
+          "name": "Cans",
+          "dishId": "cans",
+          "price": 4,
+          "tags": []
+        }
+      ]
+    }
+  ]
+}

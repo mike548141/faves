@@ -1,0 +1,54 @@
+{
+  "id": "nonys-coffee-and-gelato",
+  "name": "Nony's Coffee & Gelato",
+  "cuisine": [
+    "Gelato",
+    "Coffee"
+  ],
+  "area": "Wellington Central",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "Frank Kitts Park, Wellington waterfront",
+  "lat": -41.28702,
+  "lng": 174.77874,
+  "orderMode": [
+    "takeaway"
+  ],
+  "phone": null,
+  "website": null,
+  "hours": null,
+  "vibe": [
+    "counter-order"
+  ],
+  "verified": "2026-11-14",
+  "verifiedBy": "in-store",
+  "detailsVerified": "2026-11-14",
+  "detailsVerifiedBy": "in-store",
+  "lifecycle": {
+    "added": "2026-11-14"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Gelato tubs",
+      "sectionId": "gelato-tubs",
+      "note": "The van also sells coffee; only its gelato poster was photographed.",
+      "items": [
+        {
+          "name": "Gelato Tub",
+          "dishId": "gelato-tub",
+          "desc": "Strawberry, chocolate, vanilla, lemon or caramel.",
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "The van's gelato poster names the flavours and no price.",
+              "since": "2026-11-14"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

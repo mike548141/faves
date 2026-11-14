@@ -1,0 +1,280 @@
+{
+  "id": "rock-yard-food-truck",
+  "name": "Rock Yard Food Truck",
+  "cuisine": [
+    "Vietnamese"
+  ],
+  "area": "Wellington Central",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "Frank Kitts Park, Wellington waterfront",
+  "lat": -41.28702,
+  "lng": 174.77874,
+  "orderMode": [
+    "takeaway"
+  ],
+  "phone": null,
+  "website": "https://www.rockyard.co.nz/",
+  "hours": null,
+  "vibe": [
+    "counter-order"
+  ],
+  "verified": "2026-11-14",
+  "verifiedBy": "in-store",
+  "detailsVerified": "2026-11-14",
+  "detailsVerifiedBy": "in-store",
+  "lifecycle": {
+    "added": "2026-11-14"
+  },
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "baguette-filling",
+      "name": "Filling",
+      "select": "one",
+      "required": true,
+      "price": 0,
+      "options": [
+        {
+          "name": "Grilled pork",
+          "id": "grilled-pork",
+          "tags": [
+            "has-meat",
+            "contains-pork"
+          ]
+        },
+        {
+          "name": "Lemongrass chicken",
+          "id": "lemongrass-chicken",
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Soy-glazed tofu",
+          "id": "soy-glazed-tofu",
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vermicelli-filling",
+      "name": "Filling",
+      "select": "one",
+      "required": true,
+      "price": 0,
+      "options": [
+        {
+          "name": "Lemongrass chicken",
+          "id": "lemongrass-chicken",
+          "tags": [
+            "has-meat",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Soy-glazed tofu",
+          "id": "soy-glazed-tofu",
+          "tags": [
+            "gf",
+            "vg",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fried-rice-filling",
+      "name": "Filling",
+      "select": "one",
+      "required": true,
+      "price": 0,
+      "options": [
+        {
+          "name": "Pork belly",
+          "id": "pork-belly",
+          "tags": [
+            "has-meat",
+            "contains-pork",
+            "df"
+          ]
+        },
+        {
+          "name": "Lemongrass chicken",
+          "id": "lemongrass-chicken",
+          "tags": [
+            "has-meat",
+            "df"
+          ]
+        },
+        {
+          "name": "Soy-glazed tofu",
+          "id": "soy-glazed-tofu",
+          "tags": [
+            "vg",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "roti-filling",
+      "name": "Filling",
+      "select": "one",
+      "required": true,
+      "price": 0,
+      "options": [
+        {
+          "name": "Five-spice pork belly",
+          "id": "five-spice-pork-belly",
+          "tags": [
+            "has-meat",
+            "contains-pork",
+            "df"
+          ]
+        },
+        {
+          "name": "Grilled chicken",
+          "id": "grilled-chicken",
+          "tags": [
+            "has-meat",
+            "df"
+          ]
+        },
+        {
+          "name": "Soy-glazed tofu",
+          "id": "soy-glazed-tofu",
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy"
+          ]
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Street food",
+      "sectionId": "street-food",
+      "items": [
+        {
+          "name": "Vietnamese Baguette",
+          "dishId": "vietnamese-baguette",
+          "desc": "Crispy, airy baguette with savoury meats, mayo, chicken pâté, cucumber, pickles and fresh herbs.",
+          "price": 13,
+          "tags": [
+            "v-option",
+            "vg-option",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Baguette”.", "contains-egg": "The menu says “mayo” — an egg emulsion."},
+          "addOns": [
+            "baguette-filling"
+          ]
+        },
+        {
+          "name": "Vermicelli Noodles",
+          "dishId": "vermicelli-noodles",
+          "desc": "Rice noodles with fried spring roll, lettuce, crushed peanuts, herbs and Vietnamese traditional dressing.",
+          "price": 14,
+          "tags": [
+            "gf",
+            "df",
+            "v-option",
+            "vg-option",
+            "contains-peanuts"
+          ],
+          "tagNotes": {"contains-peanuts": "The menu says “peanuts”."},
+          "addOns": [
+            "vermicelli-filling"
+          ]
+        },
+        {
+          "name": "Saigon Fried Rice",
+          "dishId": "saigon-fried-rice",
+          "desc": "Served with Asian slaw.",
+          "price": 15,
+          "tags": [
+            "df",
+            "gf-option",
+            "v-option",
+            "vg-option"
+          ],
+          "addOns": [
+            "fried-rice-filling"
+          ],
+          "needs": [
+            {
+              "what": "allergens",
+              "note": "The side board says the pork belly and chicken are gluten free; the counter card says gluten free on request. Recorded as the weaker claim.",
+              "since": "2026-11-14"
+            }
+          ]
+        },
+        {
+          "name": "Roti Rolls",
+          "dishId": "roti-rolls",
+          "desc": "Wrapped with fresh Asian slaw and mayo.",
+          "price": null,
+          "tags": [
+            "df",
+            "v-option",
+            "vg-option",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Roti”.", "contains-egg": "The menu says “mayo” — an egg emulsion."},
+          "addOns": [
+            "roti-filling"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "The truck showed two prices on 2026-11-14: the side board $14, the counter card $13.",
+              "since": "2026-11-14"
+            }
+          ]
+        },
+        {
+          "name": "Crispy Chicken Popcorn",
+          "dishId": "crispy-chicken-popcorn",
+          "desc": "10 pcs, coated in young green sticky rice.",
+          "price": 10,
+          "tags": [
+            "df"
+          ]
+        },
+        {
+          "name": "Pork & Prawn Dumplings",
+          "dishId": "pork-prawn-dumplings",
+          "desc": "4 pcs. Crispy fried dumplings filled with seasoned pork, prawn, shiitake and black mushrooms.",
+          "price": 10,
+          "tags": [
+            "df",
+            "contains-shellfish",
+            "contains-pork",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawn”.", "contains-pork": "The menu says “Pork”.", "contains-gluten": "The menu says “Dumplings” — a wheat-flour wrapper."}
+        },
+        {
+          "name": "Fried Vegetable Spring Rolls",
+          "dishId": "fried-vegetable-spring-rolls",
+          "desc": "2 rolls.",
+          "price": 7,
+          "tags": [
+            "gf",
+            "vg"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Eight food trucks from Wellington's waterfront.** Yalla Fried Chicken,
+  Nony's Coffee & Gelato, Rock Yard Food Truck, Taj on Wheels, Ah Ma's Kitchen,
+  Garuda Truck, Baxters Catering and Ngon Spot, read off their own boards at
+  Frank Kitts Park on 14 November 2026, with the halal, vegetarian, vegan,
+  gluten-free and dairy-free marks each truck printed. None of them posts its
+  hours, so none is shown; the pickup line names Frank Kitts Park, where all
+  eight were trading that day.
+  Two prices the trucks showed twice, differently, are left blank rather than
+  guessed.
 - **A swap now says what it takes the place of.** Hotel Bristol's "No gluten
   added bun" reads "instead of the milk bun" in the picker and on your order
   ("No gluten added bun (instead of the milk bun)"), so the kitchen no longer has

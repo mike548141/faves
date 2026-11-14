@@ -1,0 +1,191 @@
+{
+  "id": "yalla-fried-chicken",
+  "name": "Yalla Fried Chicken",
+  "cuisine": [
+    "Fried chicken",
+    "Fast food"
+  ],
+  "area": "Wellington Central",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "Frank Kitts Park, Wellington waterfront",
+  "lat": -41.28702,
+  "lng": 174.77874,
+  "orderMode": [
+    "takeaway"
+  ],
+  "phone": null,
+  "website": null,
+  "hours": null,
+  "vibe": [
+    "counter-order"
+  ],
+  "verified": "2026-11-14",
+  "verifiedBy": "in-store",
+  "detailsVerified": "2026-11-14",
+  "detailsVerifiedBy": "in-store",
+  "lifecycle": {
+    "added": "2026-11-14"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Snacks",
+      "sectionId": "snacks",
+      "items": [
+        {
+          "name": "Fries (regular)",
+          "dishId": "fries-regular",
+          "desc": "Shoestring fries, cooked in canola oil.",
+          "price": 7,
+          "tags": [
+            "halal"
+          ]
+        },
+        {
+          "name": "Fries (large)",
+          "dishId": "fries-large",
+          "desc": "Shoestring fries, cooked in canola oil.",
+          "price": 10,
+          "tags": [
+            "halal"
+          ]
+        },
+        {
+          "name": "Cheesy Fries",
+          "dishId": "cheesy-fries",
+          "desc": "Fries with homemade cheese sauce.",
+          "price": 13,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesy”."}
+        },
+        {
+          "name": "Kimchi Fries",
+          "dishId": "kimchi-fries",
+          "desc": "Homemade.",
+          "price": 12,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Corndog",
+          "dishId": "corndog",
+          "desc": "Cheesy and chicken sausage.",
+          "price": 12,
+          "tags": [
+            "halal",
+            "contains-dairy"
+          ],
+          "tagNotes": {"contains-dairy": "The menu says “Cheesy”."}
+        }
+      ]
+    },
+    {
+      "section": "Lunch meals",
+      "sectionId": "lunch-meals",
+      "items": [
+        {
+          "name": "Chicken Kebab Roll",
+          "dishId": "chicken-kebab-roll",
+          "desc": "Homemade wrap, mixed vegetables, marinated chicken, house sauces, fries and hummus.",
+          "price": 18,
+          "tags": [
+            "halal",
+            "contains-sesame"
+          ],
+          "tagNotes": {"contains-sesame": "The menu says “hummus” — hummus is made with tahini."}
+        },
+        {
+          "name": "Chicken Burger",
+          "dishId": "chicken-burger",
+          "desc": "Crispy chicken burger.",
+          "price": 15,
+          "tags": [
+            "halal",
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
+        },
+        {
+          "name": "Chicken on Chips",
+          "dishId": "chicken-on-chips",
+          "price": 16,
+          "tags": []
+        },
+        {
+          "name": "Chicken Salad Bowl",
+          "dishId": "chicken-salad-bowl",
+          "price": 17,
+          "tags": []
+        },
+        {
+          "name": "Fried Chicken with Fries",
+          "dishId": "fried-chicken-with-fries",
+          "price": 16,
+          "tags": []
+        },
+        {
+          "name": "Falafel Salad Bowl",
+          "dishId": "falafel-salad-bowl",
+          "price": 13,
+          "tags": []
+        },
+        {
+          "name": "Burmese Chicken Briyani",
+          "dishId": "burmese-chicken-briyani",
+          "price": 15,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "sectionId": "drinks",
+      "items": [
+        {
+          "name": "Water Bottle",
+          "dishId": "water-bottle",
+          "price": 3,
+          "tags": []
+        },
+        {
+          "name": "Can Drinks",
+          "dishId": "can-drinks",
+          "price": 3.5,
+          "tags": []
+        },
+        {
+          "name": "Mogu Mogu",
+          "dishId": "mogu-mogu",
+          "price": 3,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Combos",
+      "sectionId": "combos",
+      "items": [
+        {
+          "name": "Corndog + Small Fries",
+          "dishId": "corndog-small-fries",
+          "price": 14.99,
+          "tags": []
+        },
+        {
+          "name": "Chicken Burger + Small Fries + Any Drink",
+          "dishId": "chicken-burger-small-fries-any-drink",
+          "price": 22.99,
+          "tags": [
+            "contains-gluten"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “Burger” — a wheat bakery item."}
+        }
+      ]
+    }
+  ]
+}

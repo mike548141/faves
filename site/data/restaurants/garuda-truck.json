@@ -1,0 +1,102 @@
+{
+  "id": "garuda-truck",
+  "name": "Garuda Truck",
+  "cuisine": [
+    "Indonesian"
+  ],
+  "area": "Wellington Central",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "Frank Kitts Park, Wellington waterfront",
+  "lat": -41.28702,
+  "lng": 174.77874,
+  "orderMode": [
+    "takeaway"
+  ],
+  "phone": null,
+  "website": null,
+  "hours": null,
+  "vibe": [
+    "counter-order"
+  ],
+  "verified": "2026-11-14",
+  "verifiedBy": "in-store",
+  "detailsVerified": "2026-11-14",
+  "detailsVerifiedBy": "in-store",
+  "lifecycle": {
+    "added": "2026-11-14"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "A bite of Indonesia",
+      "sectionId": "a-bite-of-indonesia",
+      "note": "The truck's banner reads “Halal | Gluten Free | Dairy Free | Vegan” without saying which dishes; only the halal claim is carried on every dish.",
+      "items": [
+        {
+          "name": "Mie Goreng Beef Rendang",
+          "dishId": "mie-goreng-beef-rendang",
+          "desc": "Stir-fried noodles, beef rendang, spices, vegetables, sweet soya sauce and crunchy shallot. Mild or spicy.",
+          "price": 19,
+          "tags": [
+            "halal",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soya”."}
+        },
+        {
+          "name": "Mie Goreng Chicken",
+          "dishId": "mie-goreng-chicken",
+          "desc": "Stir-fried noodles, kaffir lime chicken, spices, vegetables, sweet soya sauce and crunchy shallot. Mild or spicy.",
+          "price": 19,
+          "tags": [
+            "halal",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soya”."}
+        },
+        {
+          "name": "Mie Goreng Tempeh & Tofu",
+          "dishId": "mie-goreng-tempeh-tofu",
+          "desc": "Vegetarian fried noodles: stir-fried noodles, tempeh and tofu, spices, vegetables, sweet soya sauce and crunchy shallot. Mild or spicy.",
+          "price": 19,
+          "tags": [
+            "halal",
+            "v",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “Tempeh”."}
+        },
+        {
+          "name": "Nasi Goreng Chicken or Vegetarian",
+          "dishId": "nasi-goreng-chicken-or-vegetarian",
+          "desc": "Fried rice with tempeh and tofu or shredded chicken, spices, vegetables, sweet soya sauce and crunchy shallot. Mild or spicy.",
+          "price": 19,
+          "tags": [
+            "halal",
+            "v-option",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “tempeh”."}
+        },
+        {
+          "name": "Chicken & Prawns Mie Goreng or Nasi Goreng",
+          "dishId": "chicken-prawns-mie-goreng-or-nasi-goreng",
+          "desc": "Stir-fried noodles or rice, kaffir lime chicken, prawns, spices, vegetables, sweet soya sauce and crunchy shallot. Mild or spicy.",
+          "price": 23,
+          "tags": [
+            "halal",
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "tagNotes": {"contains-shellfish": "The menu says “Prawns”.", "contains-gluten": "The menu says “soya sauce” — soy sauce is brewed with wheat.", "contains-soy": "The menu says “soya”."}
+        }
+      ]
+    }
+  ]
+}
