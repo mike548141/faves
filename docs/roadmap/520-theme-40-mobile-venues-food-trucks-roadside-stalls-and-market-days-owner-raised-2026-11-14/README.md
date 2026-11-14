@@ -87,10 +87,11 @@ no "food truck", "farmers", "market day", "roadside" or "mobile venue" under
 
 ## Asks now sitting with the owner
 
-- 🎯 **Which real venues.** No truck, roadside seller or market is in the
-  corpus or `data/`. Every item below is `[content]` until he names at least
-  one of each, with whatever he wants fetched; the design should be measured
-  against a real schedule, not an imagined one.
+- ✅ **Which real venues — answered for trucks, 2026-11-14.** He photographed
+  eight at Frank Kitts Park the same afternoon; all eight are in the corpus,
+  and `040` records what they showed. None posted a schedule, so the design is
+  now measured against real *sightings*; a real *schedule* is still unseen.
+  Roadside sellers and markets still have no real example.
 - ⚑ **Is a roaming branch a branch** (one noun, ADR 0035), or does a truck
   with no fixed pitch become the first new `kind` since recipes? `010` sets
   out both and recommends.
