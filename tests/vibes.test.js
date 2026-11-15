@@ -138,13 +138,18 @@ test("FORMER_VIBES: no superseded value is also a live key", () => {
   }
 });
 
-test("food-truck: a STYLE, and the one a truck reads as (520/040)", () => {
-  // Owner-ruled 2026-11-15: "Food truck" is a way the meal happens, so it sits
-  // in the facet the Style filter offers — an amenity would never reach it.
-  assert.equal(vibe("food-truck").facet, "style");
+test("food-truck: a DINING value, never a style (520/040, 520/050)", () => {
+  // Owner-ruled 2026-11-15: the Dining filter is how you get the food, the
+  // Style filter what the experience is like. A food truck is the first, so
+  // it must not reach the Style list, and a truck has no style by it alone.
+  assert.equal(vibe("food-truck").facet, "dining");
   assert.equal(vibe("food-truck").label, "Food truck");
-  // A truck carries it in place of counter-order; were both present, the card
-  // and the filter must still say "Food truck", so it leads the styles.
-  assert.equal(styleOf(["counter-order", "food-truck"]).key, "food-truck");
-  assert.equal(vibesOf("style")[0].key, "food-truck");
+  assert.ok(!vibesOf("style").some((v) => v.key === "food-truck"));
+  assert.equal(styleOf(["food-truck"]), null);
+});
+
+test("counter-order: a chip, no longer a style (520/050)", () => {
+  // It says how you order, not what the experience is like.
+  assert.equal(vibe("counter-order").facet, "amenity");
+  assert.equal(styleOf(["counter-order"]), null);
 });

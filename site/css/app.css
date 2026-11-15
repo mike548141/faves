@@ -365,7 +365,8 @@ main {
 }
 
 /* Shared pill toggles, inside the filter sheet's "Narrow to" group: "Open
-   now" / "Cheap eats". The location ask no longer borrows this look at all:
+   now" (and "Cheap eats" until 2026-11-15). The location ask no longer
+   borrows this look at all:
    ADR 0083 removed the #geo-ask pill and moved the ask to #geo-dialog and
    #geo-banner, which carry `.geo-btn` precisely so a permission never reads as
    a filter you can flip back off. */
@@ -1096,8 +1097,11 @@ html:has(.home-tools) {
      and grid auto-flow lays the remaining cards into the other cells starting
      top-left. Negative column lines target the last column, so it stays
      top-right even if a wider breakpoint adds a third column later. Reversible:
-     delete this block to restore top-left. */
-  .card-grid .card-recipes {
+     delete this block to restore top-left.
+     `:not(:only-child)` (2026-11-15): the Dining filter's "Cook at home"
+     option shows it ALONE, and the reserved top-right cell then left the
+     prime left column empty. A lone card takes the first cell like any other. */
+  .card-grid .card-recipes:not(:only-child) {
     grid-row: 1;
     grid-column: -2 / -1;
   }

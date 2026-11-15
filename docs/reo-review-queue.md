@@ -151,3 +151,17 @@ it may not carry: the English axis is **style of dining** — how the meal happe
 from counter-order to fine dining — and a gloss that reads as "style of food"
 would name the cuisine filter sitting beside it. If the right phrase is closer to
 manner-of-eating than to style-of-food, this wants replacing rather than tidying.
+
+## `orderMode.foodTruck` / `orderMode.cookAtHome` — two Dining options (2026-11-15)
+
+**Owed, not drafted.** The Dining filter gained *"Food truck"* and *"Cook at
+home"* when the owner split the filters by question (roadmap `520/050`). Both
+render in English until a looked-up entry exists. Neither was composed: the
+owner-nominated dictionary was not searched for them in that session, and a
+phrase built from *kai* plus a verb is exactly the assembled kind this file
+asks to be marked. A lookup for a vehicle sense of "truck" and a headword for
+cooking for yourself at home is the next step; then a speaker's eye.
+
+🔎 **`toggle.cheapEats` / "Kai utu-iti" was retired the same day, not
+re-queued.** The owner removed the Cheap eats button (*"I dont think its useful
+as it is"*), so no screen shows the string. Same rule as `toggle.nearMe` above.

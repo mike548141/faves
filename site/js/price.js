@@ -7,7 +7,7 @@
 //
 // The median misleads for menus that mix mains with lots of cheap sides/
 // drinks (a gastropub reads "$") or few, pricey items (a noodle house reads
-// "$$$"), and the cheap-eats filter amplifies that. So a record may carry a
+// "$$$"), and a band on a card is read at a glance. So a record may carry a
 // *curated* override that wins over the derived figure:
 //   priceBand:      "$" | "$$" | "$$$"   authoritative band
 //   pricePerPerson: <positive, venue currency>  authoritative typical spend
@@ -83,7 +83,7 @@ export function priceBand(record) {
   // A home-screen summary (tools/gen_summaries.mjs, roadmap 510/020) carries
   // this band PRECOMPUTED against the venue's real menu prices, because the
   // summary's own `menu` is thinned to dish ids and names only (ADR 0146: the
-  // home card and the cheap-eats filter still need the band and figure, so it
+  // home card still needs the band and figure, so it
   // rides along rather than being lost with the prices it was derived from).
   // A record loaded from `data/restaurants/*.json` never carries this field —
   // it falls straight through to the real computation below, unchanged.
@@ -139,12 +139,3 @@ export function priceLabel(record) {
   return `${p.band} · ~${formatMoney(shown.amount, shown.currency)}pp`;
 }
 
-/**
- * Is this a "cheap eats" venue? True only for the "$" band — self-consistent
- * with the chip the user already sees on the card. A venue with too little
- * price data (null band) is *not* cheap: we can't vouch that it is, and
- * "no tag = not stated" is the house rule. Drives the picker's cheap-eats mode.
- */
-export function isCheapEats(record) {
-  return priceBand(record)?.band === "$";
-}

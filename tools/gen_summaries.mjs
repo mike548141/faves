@@ -38,8 +38,8 @@
 // `detailsVerified(By)` (menu/contact-card only) and the raw menu are all
 // dropped. `_priceSummary` carries `price.js`'s `priceBand()` result,
 // computed against the real prices BEFORE they're gone — `price.js` reads
-// this field first when present, so the card's price chip and the cheap-eats
-// filter work unchanged on a summary record with no menu at all.
+// this field first when present, so the card's price chip works unchanged
+// on a summary record with no menu at all.
 //
 // THE SEARCH INDEX carries, per venue, its dishes grouped by section:
 // `{ dishId, name, formerIds?, hay }`. `hay` is `dishHay()`'s output — the

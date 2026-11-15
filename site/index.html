@@ -886,6 +886,12 @@
                        a dish's `prices.delivery` (ADR 0089) is a different
                        claim and does not qualify one (ADR 0117). -->
                   <option value="delivery" data-i18n="orderMode.delivery">Delivery</option>
+                  <!-- Food truck and Cook at home joined 2026-11-15, owner-ruled
+                       (roadmap 520/050): this control answers HOW YOU GET THE
+                       FOOD, and both are answers to it. Each is a predicate in
+                       filters.js DINING, not an orderMode value. -->
+                  <option value="food-truck" data-i18n="orderMode.foodTruck">Food truck</option>
+                  <option value="cook-at-home" data-i18n="orderMode.cookAtHome">Cook at home</option>
                 </select>
               </div>
             </div>
@@ -923,11 +929,9 @@
               <button type="button" id="open-now" class="list-toggle" aria-pressed="false">
                 <span aria-hidden="true">🟢</span> <span data-i18n="toggle.openNow">Open now</span>
               </button>
-              <!-- Narrows the list to the $ price band (see price.isCheapEats);
-                   the "Pick for us" shuffle inherits it via applyFilters. -->
-              <button type="button" id="cheap-eats" class="list-toggle" aria-pressed="false">
-                <span aria-hidden="true">💸</span> <span data-i18n="toggle.cheapEats">Cheap eats</span>
-              </button>
+              <!-- "Cheap eats" sat here until 2026-11-15; the owner removed it
+                   (roadmap 520/050): "I dont think its useful as it is". The
+                   price band still shows on every card. -->
             </div>
           </section>
           <!-- THE SORT BY GROUP IS GONE (ADR 0068). There is one ranking now and

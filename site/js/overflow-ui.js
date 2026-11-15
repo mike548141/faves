@@ -1,6 +1,6 @@
 // Header overflow ("⋯") menu. Consolidates the account-less app chrome —
 // Favourites and Settings — under one button so the home header stays
-// uncluttered (the Open-now/Cheap-eats/Near-me toggles act on the list and
+// uncluttered (the list's own toggles, Open now today, act on the list and
 // stay put; per-restaurant dish filters are untouched). The menu items keep
 // their own IDs and are wired by app.js / settings-ui.js exactly as before —
 // this module only owns opening/closing the popup and its keyboard model.

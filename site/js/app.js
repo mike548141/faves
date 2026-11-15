@@ -487,7 +487,6 @@ function init(restaurants, compactIndex) {
     // screen disagree about which control is being cleared.
     orderMode: "dining",
     openNow: "Open now",
-    cheap: "Cheap eats",
   };
   // The three <select>s a URL can carry, and the only ones syncQuery writes.
   const QUERY_SELECTS = { cuisine: cuisineSel, area: areaSel, style: styleSel };
@@ -508,10 +507,9 @@ function init(restaurants, compactIndex) {
       }
       dropOrderModeQuery();
     } else {
+      // Open now is the one toggle left (Cheap eats went 2026-11-15, 520/050).
       state[kind] = false;
-      document
-        .getElementById(kind === "openNow" ? "open-now" : "cheap-eats")
-        ?.setAttribute("aria-pressed", "false");
+      document.getElementById("open-now")?.setAttribute("aria-pressed", "false");
     }
   }
 
@@ -717,7 +715,10 @@ function init(restaurants, compactIndex) {
     const n = shown.length;
     const total = restaurants.length;
     countEl.textContent =
-      n === total ? `${total} places` : `${n} of ${total} place${n === 1 ? "" : "s"}`;
+      // "1 of 66 places": the noun agrees with the 66, not the 1. It read "1 of
+      // 66 place" until 2026-11-15, when the Cook at home option made one
+      // result an ordinary sight.
+      n === total ? `${total} places` : `${n} of ${total} places`;
     // Redrawn with the count so the chips, the badge and the number they
     // explain can never disagree — including when a filter changes inside the
     // sheet. All three read the same activeFilters(state).
@@ -782,7 +783,6 @@ function init(restaurants, compactIndex) {
   }
 
   wireOpenNow(state, render);
-  wireCheapEats(state, render);
   wireSearch(restaurants, compactIndex);
   wireFavourites(restaurants, compactIndex);
   wireHomeButton();
@@ -826,7 +826,7 @@ function init(restaurants, compactIndex) {
   // falls back to the whole filtered set if none are available, never dead-ends.
   initPicker(() => {
     const clock = makeClock();
-    // Respects the whole filter bar, Cheap eats and Open now included.
+    // Respects the whole filter bar, Open now included.
     const filtered = applyFilters(restaurants, state, clock);
     const { farKm } = settings.get();
     const available = filtered.filter((r) => isAvailableNow(r, { clock, origin: state.origin, farKm }));
@@ -1374,7 +1374,7 @@ function wireProfiles() {
 }
 
 // A plain boolean list toggle: flip a flag on `state`, reflect aria-pressed,
-// re-render. Shared by "Open now" and "Cheap eats" (both AND-ed in filters.js).
+// re-render. "Open now" is the one user today (AND-ed in filters.js).
 function wireListToggle(id, key, state, render) {
   const btn = document.getElementById(id);
   if (!btn) return;
@@ -1389,12 +1389,6 @@ function wireListToggle(id, key, state, render) {
 // venues and recipes drop out — the honest reading of "open".
 function wireOpenNow(state, render) {
   wireListToggle("open-now", "openNow", state, render);
-}
-
-// "Cheap eats": only the $ price band (price.isCheapEats). A venue we can't
-// price stays out — no implied bargain.
-function wireCheapEats(state, render) {
-  wireListToggle("cheap-eats", "cheap", state, render);
 }
 
 // Said in place of the button, never as a modal or a repeat ask. It names the

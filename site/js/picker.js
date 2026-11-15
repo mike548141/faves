@@ -74,7 +74,7 @@ function chips(r) {
 /**
  * Wire up the picker. `getCandidates` returns the currently filtered
  * restaurant list — the shuffle always respects the filter bar (including
- * the "Cheap eats" and "Open now" toggles). `isFavourite(r)` (optional) lets
+ * the "Open now" toggle). `isFavourite(r)` (optional) lets
  * the draw lean toward hearted places — "favour the usual" without ever
  * excluding the rest.
  */

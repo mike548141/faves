@@ -1,4 +1,4 @@
-- [ ] **The Dining and Style filters overlap in purpose**
+- [x] **The Dining and Style filters overlap in purpose**
       `[M][ux][data]` — owner-raised 2026-11-15, from a screenshot of the
       live home screen with the Dining list open: *"I think the dinig and
       the styles drop downs are overlapping in purpose"*. ⚑ Owner's call on
@@ -48,3 +48,31 @@
 
   **Recommendation: 1.** It is the shape he described in his own words, it
   is reversible, and it removes a control rather than adding rules.
+
+  ✅ **Owner ruled 2026-11-15 — option 2, in his words:** *"I choose option 2
+  "Keep two lists, but split them by question" … You have the difference
+  correct, "How you get [the food]" vs "What [the dining experience is] like".
+  And I see that Cook at home is really just another form of "How you get
+  [the food]""*. And, same message: *"Remove the "Cheap eats" button from the
+  filter list I dont think its useful as it is"*.
+
+  **Built (session record `2026-11-15-0222`):**
+  - **Dining** offers Takeaway, Dine-in, Delivery, **Food truck** and **Cook
+    at home**. Each option is a predicate (`filters.js` `DINING`): the three
+    doors still read `orderMode`; Food truck reads the `food-truck` vibe, now
+    in a new `dining` facet; Cook at home is the recipe collection. A truck
+    stays under Takeaway too, because it is declared takeaway.
+  - **Style** offers Quick eats, Sit-down, Banquet and Fine dining. Counter
+    order moved to the `amenity` facet, so its chip stays and the filter no
+    longer offers it.
+  - **Cheap eats is gone**: the button, its state key, its chip and
+    `price.isCheapEats` (nothing else called it). The price band still shows
+    on every card. A stale `cheap` in saved state filters nothing.
+  - Found on the way: with Cook at home chosen, its card sat alone in the
+    right-hand column at desktop width (it is pinned top-right); a lone card
+    now takes the first cell. And the count read "1 of 66 place"; it now
+    reads "1 of 66 places".
+  - **Te reo** for the two new options is owed, not drafted
+    (`docs/reo-review-queue.md`); they render in English until looked up.
+  - Still true and unchanged: 39 of 65 venues carry no style, so the Style
+    list finds only tagged places; that tagging is 37k's and his.

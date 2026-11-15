@@ -497,4 +497,13 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [Today's spot: the announcement, and whether a phone hears it](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/020-todays-spot-the-announcement-and-whether-a-phone-hears-it.md)
 - [ ] [Occasional sellers: roadside tables, tents and market pitches](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/030-occasional-sellers-roadside-tables-tents-and-market-pitches.md)
 - ✅ [What the first eight real trucks showed, and the two model gaps they…](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/040-what-the-first-eight-real-trucks-showed.md)
-- [ ] [The Dining and Style filters overlap in purpose](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/050-the-dining-and-style-filters-overlap.md)
+- ✅ [The Dining and Style filters overlap in purpose](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/050-the-dining-and-style-filters-overlap.md)
+
+## Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)
+
+*[Narrative](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md)*
+
+- [ ] [The three-entity model and its rules, as one ADR](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/010-the-three-entity-model-and-its-rules.md)
+- [ ] [A branch has a kind: mobile, temporary or permanent](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/020-a-branch-has-a-kind-mobile-temporary-or-permanent.md)
+- [ ] [A menu is versioned like code](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/030-a-menu-is-versioned-like-code.md)
+- [ ] [Cook at Home is a provider; a recipe is a dish with a method](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/040-cook-at-home-is-a-provider-a-recipe-is-a-dish-with-a-method.md)

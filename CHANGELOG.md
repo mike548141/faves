@@ -9,8 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
-- **A "Food truck" style.** The Style filter now offers Food truck, every
-  truck's card says so, and searching "truck" or "food trucks" finds them.
+- **Food truck and Cook at home in the Dining filter.** Dining now answers
+  how you get the food — Takeaway, Dine-in, Delivery, Food truck or Cook at
+  home — and Style answers what the experience is like: Quick eats,
+  Sit-down, Banquet, Fine dining. Every truck's card says Food truck, and
+  searching "truck" or "food trucks" finds them.
 - **Eight food trucks from Wellington's waterfront.** Yalla Fried Chicken,
   Nony's Coffee & Gelato, Rock Yard Food Truck, Taj on Wheels, Ah Ma's Kitchen,
   Garuda Truck, Baxters Catering and Ngon Spot, read off their own boards at
@@ -339,6 +342,9 @@ content freshness separately from this file.
   unchanged.
 
 ### Fixed
+- **A filtered list that leaves one place reads "1 of 66 places"**, not "1 of 66
+  place", and Cook at Home shown alone no longer sits in the right-hand column
+  with the left one empty.
 - **The allergen sweep no longer reads "vegan mayo" or "eggless mayo" as egg.**
   Hei's Vegan bao is made with vegan mayo and was tagged `contains-egg` for the
   word "mayo" alone. Only the word the qualifier sits directly in front of is
@@ -1085,6 +1091,7 @@ content freshness separately from this file.
   lose this?" — so they are now on one screen instead of two.
 
 ### Removed
+- **The Cheap eats button.** Each card still shows its price band.
 - **"Transfer to another device" is gone.** It made a one-off link that copied
   the person you were browsing as — favourites, ratings and preferences — onto
   a second device, and then the two drifted apart again. Both of the things it

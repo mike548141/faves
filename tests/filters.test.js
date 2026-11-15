@@ -17,7 +17,8 @@ import {
   DEFAULT_FILTERS,
   filterHref,
   filtersFromQuery,
-  ORDER_MODES,
+  DINING,
+  DINING_VALUES,
 } from "../site/js/filters.js";
 // The closure fixture below is built through the REAL fold, not hand-written.
 import { resolveRecord } from "../site/js/temporal.js";
@@ -356,23 +357,41 @@ test("openNow off: a shut-down venue is STILL LISTED, wearing its badge", () => 
   assert.deepEqual(shown.map((r) => r.id), ["open", "gone", "refit"]);
 });
 
-// "Cheap eats" filter — needs priced menus (see price.isCheapEats: $ band only).
-const menuOf = (...prices) => [{ section: "All", items: prices.map((price, i) => ({ name: `d${i}`, price })) }];
-const CHEAP_FIXTURE = [
-  { id: "cheap", orderMode: [], cuisine: [], menu: menuOf(8, 10, 12) }, // median 10 → $
-  { id: "mid", orderMode: [], cuisine: [], menu: menuOf(18, 24, 30) }, // $$
-  { id: "thin", orderMode: [], cuisine: [], menu: menuOf(6, 6) }, // < 3 priced → no band
-  { id: "cook", kind: "recipes", orderMode: [], cuisine: [], menu: menuOf(5, 5, 5) },
+// The Dining filter is HOW YOU GET THE FOOD (owner-ruled 2026-11-15, roadmap
+// 520/050): the three declared doors, plus a food truck and Cook at Home.
+const DINING_FIXTURE = [
+  { id: "shop", orderMode: ["takeaway", "dine-in"], cuisine: [], vibe: ["counter-order"] },
+  { id: "truck", orderMode: ["takeaway"], cuisine: [], vibe: ["food-truck"] },
+  { id: "home", kind: "recipes", orderMode: [], cuisine: [], vibe: [] },
 ];
+const dining = (value) =>
+  applyFilters(DINING_FIXTURE, { ...DEFAULT_FILTERS, orderMode: value }).map((r) => r.id);
 
-test("cheap: keeps only $ venues; unpriced/thin/recipes drop out", () => {
-  const shown = applyFilters(CHEAP_FIXTURE, { ...DEFAULT_FILTERS, cheap: true });
-  assert.deepEqual(shown.map((r) => r.id), ["cheap"]);
+test("dining: a food truck is found by Food truck, and is still takeaway", () => {
+  assert.deepEqual(dining("food-truck"), ["truck"]);
+  // Not a fourth door that hides it from the other three: it is declared takeaway.
+  assert.deepEqual(dining("takeaway"), ["shop", "truck"]);
+  assert.deepEqual(dining("dine-in"), ["shop"]);
 });
 
-test("cheap off (the default) keeps every venue regardless of price", () => {
-  const shown = applyFilters(CHEAP_FIXTURE, DEFAULT_FILTERS);
-  assert.equal(shown.length, 4);
+test("dining: Cook at home finds the recipe collection and nothing else", () => {
+  assert.deepEqual(dining("cook-at-home"), ["home"]);
+  // …and the three doors still leave it out, as they always did.
+  assert.deepEqual(dining("delivery"), []);
+});
+
+test("dining: an unknown value from a URL is no filter at all", () => {
+  const facets = { areas: [], cuisines: [], styles: [] };
+  assert.equal(filtersFromQuery("?order-mode=hovercraft", facets).orderMode, "all");
+  for (const v of DINING_VALUES) {
+    assert.equal(filtersFromQuery(`?order-mode=${v}`, facets).orderMode, v);
+  }
+});
+
+test("Cheap eats is gone: no state key, and a stale `cheap: true` filters nothing", () => {
+  assert.equal("cheap" in DEFAULT_FILTERS, false);
+  assert.equal(applyFilters(DINING_FIXTURE, { ...DEFAULT_FILTERS, cheap: true }).length, 3);
+  assert.deepEqual(activeFilters({ ...DEFAULT_FILTERS, cheap: true }), []);
 });
 
 // Facet links: a menu page's subheading routes back into this list carrying a
@@ -548,12 +567,11 @@ test("every kind of filter is named — none can be on and invisible", () => {
     cuisine: "Malaysian",
     style: "fine-dining",
     openNow: true,
-    cheap: true,
   });
-  assert.equal(all.length, 6);
+  assert.equal(all.length, 5);
   assert.deepEqual(
     all.map((f) => f.kind).sort(),
-    ["area", "cheap", "cuisine", "openNow", "orderMode", "style"]
+    ["area", "cuisine", "openNow", "orderMode", "style"]
   );
   // Every entry can be shown to a person and cleared by its kind.
   for (const f of all) {
@@ -571,7 +589,6 @@ test("the two facets a URL can carry come first, so neither is ever the one fold
     cuisine: "Malaysian",
     style: "sit-down",
     openNow: true,
-    cheap: true,
   }).map((f) => f.kind);
   assert.deepEqual(kinds.slice(0, 2), ["cuisine", "area"]);
   // Style is URL-carryable too, but no venue's subheading links one, so it does
@@ -589,7 +606,7 @@ test("an active style is named by its LABEL, never by its stored key", () => {
 
 test("style 'all' is the absence of a filter, and so is a missing style key", () => {
   assert.deepEqual(activeFilters({ ...DEFAULT_FILTERS, style: "all" }), []);
-  assert.deepEqual(activeFilters({ orderMode: "all", openNow: false, cheap: false }), []);
+  assert.deepEqual(activeFilters({ orderMode: "all", openNow: false }), []);
 });
 
 test("a sort mode is not a filter — it reorders, it never shortens (ADR 0014)", () => {
@@ -607,12 +624,12 @@ test("order mode 'all' is the absence of a filter, not a filter set to everythin
 
 test("every order mode can name itself on a chip, and carries a te reo key", () => {
   // The failure this catches is silent and permanent: a mode added to
-  // ORDER_MODES but not to ORDER_MODE_LABEL filters the list correctly and then
+  // DINING but given no label filters the list correctly and then
   // names NOTHING on the chip row — which is the one thing standing between a
   // reader and a mystery short list (see activeFilters' own doc comment). It is
   // written over the exported vocabulary rather than over a literal so the next
   // mode is covered on the day it is added.
-  for (const mode of ORDER_MODES) {
+  for (const { value: mode } of DINING) {
     const [chip] = activeFilters({ ...DEFAULT_FILTERS, orderMode: mode });
     assert.ok(chip, `${mode} names no chip`);
     assert.equal(chip.kind, "orderMode");
@@ -630,7 +647,7 @@ test("delivery names itself in words, not by its stored value", () => {
 
 // --- the vocabulary and the control it is painted on -------------------------
 //
-// 🚩 THE ONLY THING JOINING THESE TWO IS A HUMAN REMEMBERING. `ORDER_MODES`
+// 🚩 THE ONLY THING JOINING THESE TWO IS A HUMAN REMEMBERING. `DINING`
 // lives in filters.js and the <option> list lives in index.html, hand-written;
 // nothing else in the repo reads both. Either half being right on its own is
 // invisible: a mode in the vocabulary with no <option> is unreachable (nobody
@@ -646,10 +663,10 @@ test("the <select> in index.html offers exactly the modes the vocabulary knows",
   assert.ok(select, "the order-mode <select> is not in index.html under that id");
   const values = [...select[0].matchAll(/<option value="([^"]+)"/g)].map((m) => m[1]);
   // "all" is the absence of a filter, so it is an <option> and NOT an
-  // ORDER_MODES entry — asserted rather than filtered away, because a vocabulary
+  // DINING entry — asserted rather than filtered away, because a vocabulary
   // that grew an "all" member would break applyFilters and nothing else here.
   assert.equal(values[0], "all", "the first option must be the unfiltered one");
-  assert.deepEqual(values.slice(1), ORDER_MODES);
+  assert.deepEqual(values.slice(1), DINING_VALUES);
 });
 
 test("every <option> carries the i18n key its chip uses", async () => {
@@ -659,12 +676,21 @@ test("every <option> carries the i18n key its chip uses", async () => {
   const { readFile } = await import("node:fs/promises");
   const html = await readFile(new URL("../site/index.html", import.meta.url), "utf8");
   const reo = await readFile(new URL("../site/js/reo.js", import.meta.url), "utf8");
+  // A key may instead be OWED: listed in the fluent-speaker queue, because te
+  // reo here is looked up in the owner's nominated dictionary, never composed
+  // (reo.js's header). Owed is a stated state; silent is the fault.
+  const queue = await readFile(new URL("../docs/reo-review-queue.md", import.meta.url), "utf8");
   const select = html.match(/<select id="filter-order-mode"[\s\S]*?<\/select>/)[0];
   const keys = [...select.matchAll(/data-i18n="([^"]+)"/g)].map((m) => m[1]);
-  assert.equal(keys.length, ORDER_MODES.length + 1, "every option needs a key, 'all' included");
+  assert.equal(keys.length, DINING.length + 1, "every option needs a key, 'all' included");
   for (const key of keys) {
-    assert.ok(reo.includes(`"${key}"`), `${key} has no entry in reo.js`);
+    assert.ok(
+      reo.includes(`"${key}"`) || queue.includes(`\`${key}\``),
+      `${key} has no entry in reo.js and is not owed in docs/reo-review-queue.md`,
+    );
   }
+  // Every option's key is also the one its chip carries.
+  assert.deepEqual(keys.slice(1), DINING.map((d) => d.key));
 });
 
 test("the count matches what applyFilters actually did — badge and list agree", () => {
@@ -676,7 +702,7 @@ test("the count matches what applyFilters actually did — badge and list agree"
     { ...DEFAULT_FILTERS, cuisine: facets.cuisines[0] },
     { ...DEFAULT_FILTERS, orderMode: "takeaway" },
     { ...DEFAULT_FILTERS, style: facets.styles[0].key },
-    { ...DEFAULT_FILTERS, cheap: true },
+    { ...DEFAULT_FILTERS, orderMode: "food-truck" },
   ]) {
     const shown = applyFilters(FIXTURE, state);
     const n = activeFilters(state).length;
@@ -693,13 +719,11 @@ test("a te reo key rides along for the filters that have one; facet values don't
       cuisine: "Malaysian",
       style: "fine-dining",
       openNow: true,
-      cheap: true,
     }).map((f) => [f.kind, f])
   );
   // Chrome strings are translatable…
   assert.equal(byKind.orderMode.key, "orderMode.takeaway");
   assert.equal(byKind.openNow.key, "toggle.openNow");
-  assert.equal(byKind.cheap.key, "toggle.cheapEats");
   // …place and cuisine names are content, and are shown as the venues wrote them.
   assert.equal(byKind.area.key, null);
   assert.equal(byKind.cuisine.key, null);

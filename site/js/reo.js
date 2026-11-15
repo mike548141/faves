@@ -60,7 +60,6 @@ const MI = {
   "nav.backToTop": "Hoki ki runga",
   // Home list toggles
   "toggle.openNow": "E tuwhera ana",
-  "toggle.cheapEats": "Kai utu-iti",
   // The location ask (ADR 0083; the #geo-ask pill it names was removed with
   // that record). `toggle.nearMe` / "E tata ana" — the
   // key the "Near me" pill carried, then the retired "Sort by" select's second

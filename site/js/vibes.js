@@ -20,8 +20,13 @@
 //
 // ── THE FACETS ──
 //
-//   style      how the meal happens. Mutually exclusive in practice, and the
-//              only facet the filter offers.
+//   dining     how you get the food. Owner-ruled 2026-11-15 (roadmap 520/050):
+//              the Style list had been answering two questions, and the half
+//              that says how you get the food belongs to the Dining filter
+//              (filters.js DINING), which offers it beside Takeaway, Dine-in,
+//              Delivery and Cook at home. The Style filter never reads it.
+//   style      what the dining experience is like. Mutually exclusive in
+//              practice, and the only facet the Style filter offers.
 //   amenity    what the place has or does. Freely combined; orthogonal to
 //              style — a beer garden tells you nothing about how you order.
 //   character  what it is known for. Not a facility and not a service model.
@@ -38,31 +43,34 @@
 // beside `Wellington icon` — which is exactly what a vocabulary is for. Keys are
 // what a URL, a filter and a validator handle; labels are what a card shows.
 
-export const FACETS = ["style", "amenity", "character"];
+export const FACETS = ["dining", "style", "amenity", "character"];
 
-// Ordered: style first (it is the axis being filtered on), then amenity, then
+// Ordered: dining, then style (the two the filters read), then amenity, then
 // character. A card renders chips in this order, so two venues never present
 // the same facts in a different sequence.
 export const VIBES = [
-  // --- style: how the meal happens -----------------------------------------
-  // Ordered by commitment, least to most, which is the order a reader compares
-  // them in and the order the filter's <select> offers.
-  //
+  // --- dining: how you get the food ----------------------------------------
   // `food-truck` (owner-ruled 2026-11-15, roadmap 520/040): *"I agree "Food
   // truck" is another vibe like Takeaway, Dine-in, Delivery, Cook yourself
-  // etc"*. It leads because it is the least commitment of all: you walk up to
-  // a window, and there is often nowhere to sit. A truck carries it INSTEAD of
-  // `counter-order` — a style is one per venue in practice (`styleOf` takes
-  // the first), and "food truck" already says how you order. It names the
-  // venue, not where it is today: the dated spot is 520/010's job.
-  { key: "food-truck", label: "Food truck", facet: "style" },
+  // etc"*. Added as a style that morning; moved here the same day when he
+  // split the filters by question (520/050), because his examples are all
+  // ways of getting the food. It names the venue, not where it is today: the
+  // dated spot is 520/010's job, and a mobile BRANCH is roadmap 530's.
+  { key: "food-truck", label: "Food truck", facet: "dining" },
+
+  // --- style: what the dining experience is like ---------------------------
+  // Ordered by commitment, least to most, which is the order a reader compares
+  // them in and the order the filter's <select> offers.
   { key: "quick-eats", label: "Quick eats", facet: "style" },
-  { key: "counter-order", label: "Counter order", facet: "style" },
   { key: "sit-down", label: "Sit-down", facet: "style" },
   { key: "banquet", label: "Banquet", facet: "style" },
   { key: "fine-dining", label: "Fine dining", facet: "style" },
 
   // --- amenity: what the place has or does ---------------------------------
+  // `counter-order` was a style until 2026-11-15 (520/050): it says how you
+  // order, not what the experience is like, and every venue carrying it is
+  // also takeaway. It keeps its chip here; the Style filter no longer offers it.
+  { key: "counter-order", label: "Counter order", facet: "amenity" },
   { key: "family-friendly", label: "Family friendly", facet: "amenity" },
   { key: "dog-friendly", label: "Dog friendly", facet: "amenity" },
   { key: "garden-bar", label: "Garden bar", facet: "amenity" },

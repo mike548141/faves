@@ -2,8 +2,7 @@
 // about and reuse (e.g. the "Pick for us" picker filters the same way).
 
 import { openStatus } from "./hours.js";
-import { kindOf } from "./kinds.js";
-import { isCheapEats } from "./price.js";
+import { isRecipeKind, kindOf } from "./kinds.js";
 import { venueHours } from "./locations.js";
 import { venueTimezone } from "./place.js";
 import { isTrading } from "./temporal.js";
@@ -89,6 +88,40 @@ export function filterHref(facet, value, page = "index.html") {
  */
 export const ORDER_MODES = ["takeaway", "dine-in", "delivery"];
 
+/**
+ * The Dining filter's options: HOW YOU GET THE FOOD. Owner-ruled 2026-11-15
+ * (roadmap 520/050, option 2): the Dining and Style lists were answering
+ * overlapping questions, so they are split by question — Dining is *how you
+ * get the food*, Style is *what the dining experience is like*. In his words,
+ * "Cook at home is really just another form of How you get [the food]", and a
+ * food truck is another.
+ *
+ * So an option is a PREDICATE, not a value of one field. The three doors are
+ * still declared in `orderMode` (ADR 0117); a food truck is read off the
+ * `food-truck` vibe; Cook at Home is the recipe collection. 🚩 Both of the new
+ * predicates are stand-ins for the model the owner described the same day
+ * (roadmap 530): "food truck" is really a MOBILE BRANCH and "cook at home" is
+ * really a provider whose dishes are recipes. When those exist, these two
+ * lines read them instead — the option, its URL value and its chip do not
+ * change.
+ */
+export const DINING = [
+  { value: "takeaway", label: "Takeaway", key: "orderMode.takeaway",
+    test: (r) => (r.orderMode || []).includes("takeaway") },
+  { value: "dine-in", label: "Dine-in", key: "orderMode.dineIn",
+    test: (r) => (r.orderMode || []).includes("dine-in") },
+  { value: "delivery", label: "Delivery", key: "orderMode.delivery",
+    test: (r) => (r.orderMode || []).includes("delivery") },
+  { value: "food-truck", label: "Food truck", key: "orderMode.foodTruck",
+    test: (r) => vibesFor(r.vibe).some((v) => v.key === "food-truck") },
+  { value: "cook-at-home", label: "Cook at home", key: "orderMode.cookAtHome",
+    test: (r) => isRecipeKind(r) },
+];
+const DINING_BY_VALUE = new Map(DINING.map((d) => [d.value, d]));
+
+/** Every value the Dining control (and `?order-mode=`) may carry. */
+export const DINING_VALUES = DINING.map((d) => d.value);
+
 /** The query key this axis is read under. Both ends read it from here so a URL
  *  and the state can never disagree about the spelling. */
 export const ORDER_MODE_KEY = "order-mode";
@@ -114,7 +147,7 @@ export const ORDER_MODE_KEY = "order-mode";
  */
 function orderModeFromQuery(params) {
   const v = params.get(ORDER_MODE_KEY);
-  return v && ORDER_MODES.includes(v) ? v : "all";
+  return v && DINING_BY_VALUE.has(v) ? v : "all";
 }
 
 /**
@@ -154,9 +187,8 @@ export function filtersFromQuery(search, facets) {
 
 /**
  * Filter state shape:
- * { orderMode: 'all'|'takeaway'|'dine-in'|'delivery', area, cuisine, style,
- *   openNow: bool,
- *   cheap: bool }. `style` is a `vibes.js` style KEY ("sit-down"), never a
+ * { orderMode: 'all' | a DINING value, area, cuisine, style,
+ *   openNow: bool }. `style` is a `vibes.js` style KEY ("sit-down"), never a
  * label.
  *
  * `orderMode` was `service` until 2026-08-16; the word was doing three unrelated
@@ -168,16 +200,13 @@ export const DEFAULT_FILTERS = {
   cuisine: "all",
   style: "all",
   openNow: false,
-  cheap: false,
 };
 
-// How an order mode reads to a person. Same words the <select> shows; "all" is
+// How a Dining option reads on a chip. Same words the <select> shows; "all" is
 // the absence of a filter, so it never appears here.
-const ORDER_MODE_LABEL = {
-  takeaway: { label: "Takeaway", key: "orderMode.takeaway" },
-  "dine-in": { label: "Dine-in", key: "orderMode.dineIn" },
-  delivery: { label: "Delivery", key: "orderMode.delivery" },
-};
+const ORDER_MODE_LABEL = Object.fromEntries(
+  DINING.map(({ value, label, key }) => [value, { label, key }]),
+);
 
 /**
  * Every filter currently narrowing the list, as `{ kind, value, label, key }`.
@@ -231,9 +260,6 @@ export function activeFilters(state) {
   if (state.openNow) {
     out.push({ kind: "openNow", value: true, label: "Open now", key: "toggle.openNow" });
   }
-  if (state.cheap) {
-    out.push({ kind: "cheap", value: true, label: "Cheap eats", key: "toggle.cheapEats" });
-  }
   return out;
 }
 
@@ -263,8 +289,9 @@ export function applyFilters(restaurants, state, clock = null) {
     // The state key and the record field are both `orderMode` (the field was
     // `services` until 2026-10-02, roadmap 010). The one-release bridge that
     // read the old name went on 2026-10-16; validate.py refuses it in a venue file.
-    if (state.orderMode !== "all" && !(r.orderMode || []).includes(state.orderMode)) {
-      return false;
+    if (state.orderMode && state.orderMode !== "all") {
+      const option = DINING_BY_VALUE.get(state.orderMode);
+      if (!option || !option.test(r)) return false;
     }
     if (state.area !== "all" && r.area !== state.area) return false;
     if (state.cuisine !== "all" && !(r.cuisine || []).includes(state.cuisine)) {
@@ -274,8 +301,8 @@ export function applyFilters(restaurants, state, clock = null) {
     // amenities and character tags are dropped, so "sit-down" cannot be
     // answered by a venue tagged "licensed", and a pre-migration string is
     // outside the vocabulary and matches nothing. A venue with no style is not
-    // silently a match — an untagged place drops out, the same way an unpriced
-    // one drops out of Cheap eats rather than being called a bargain.
+    // silently a match — an untagged place drops out rather than being
+    // claimed for a style nobody gave it.
     if (
       state.style &&
       state.style !== "all" &&
@@ -302,9 +329,6 @@ export function applyFilters(restaurants, state, clock = null) {
       const st = openStatus(venueHours(r, origin), clock.at(venueTimezone(r, origin))).state;
       if (st !== "open" && st !== "closing-soon") return false;
     }
-    // "Cheap eats" — only the $ band (see price.isCheapEats). A venue we can't
-    // price (stub, recipe, thin menu) is not cheap: we won't imply a bargain.
-    if (state.cheap && !isCheapEats(r)) return false;
     return true;
   });
 }
