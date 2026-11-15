@@ -56,3 +56,10 @@ four threads already on the board under one model rather than replacing them.
 - `020` — a branch has a kind: mobile, temporary or permanent.
 - `030` — a menu is versioned like code.
 - `040` — Cook at Home is a provider; a recipe is a dish with a method.
+
+## Questions for the owner, later (none blocks stage 1)
+
+- 🤔 **Franchises.** Can a branch change operator, or be operated by two
+  providers (a food court, a franchisee)? Can two providers share one menu (a
+  franchise menu)? ADR 0169 leaves both open: plausible, no real record yet.
+  McDonald's and Subway are the corpus's nearest cases.
