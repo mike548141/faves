@@ -114,6 +114,11 @@ export const DINING = [
     test: (r) => (r.orderMode || []).includes("delivery") },
   { value: "food-truck", label: "Food truck", key: "orderMode.foodTruck",
     test: (r) => vibesFor(r.vibe).some((v) => v.key === "food-truck") },
+  // Cook at home is a way of getting the food, not one record: the owner,
+  // 2026-11-16, *"I can see options in the future where you buy the food and
+  // cook at home so there could be more restaurants coming"*. Today the recipe
+  // collection is the only provider of that kind, so this reads it; the next
+  // one changes this predicate, not the option (roadmap 530/040, ADR 0169).
   { value: "cook-at-home", label: "Cook at home", key: "orderMode.cookAtHome",
     test: (r) => isRecipeKind(r) },
 ];

@@ -76,3 +76,8 @@
     (`docs/reo-review-queue.md`); they render in English until looked up.
   - Still true and unchanged: 39 of 65 venues carry no style, so the Style
     list finds only tagged places; that tagging is 37k's and his.
+
+  🔁 **Counter order put back in Style, 2026-11-16, owner-ruled:** *"put that
+  back on, it changes the dining experience to order at the counter"*. So
+  Style offers Quick eats, Counter order, Sit-down, Banquet, Fine dining; the
+  move to `amenity` above lasted a day.

@@ -11,8 +11,8 @@ content freshness separately from this file.
 ### Added
 - **Food truck and Cook at home in the Dining filter.** Dining now answers
   how you get the food — Takeaway, Dine-in, Delivery, Food truck or Cook at
-  home — and Style answers what the experience is like: Quick eats,
-  Sit-down, Banquet, Fine dining. Every truck's card says Food truck, and
+  home — and Style answers what the experience is like: Quick eats, Counter
+  order, Sit-down, Banquet, Fine dining. Every truck's card says Food truck, and
   searching "truck" or "food trucks" finds them.
 - **Eight food trucks from Wellington's waterfront.** Yalla Fried Chicken,
   Nony's Coffee & Gelato, Rock Yard Food Truck, Taj on Wheels, Ah Ma's Kitchen,

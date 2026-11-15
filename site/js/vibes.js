@@ -62,15 +62,16 @@ export const VIBES = [
   // Ordered by commitment, least to most, which is the order a reader compares
   // them in and the order the filter's <select> offers.
   { key: "quick-eats", label: "Quick eats", facet: "style" },
+  // `counter-order` was moved out to an amenity on 2026-11-15 and put back the
+  // next day, owner-ruled (520/050): *"put that back on, it changes the dining
+  // experience to order at the counter"*. Ordering at the counter is part of
+  // what the experience is like, not only of how you get the food.
+  { key: "counter-order", label: "Counter order", facet: "style" },
   { key: "sit-down", label: "Sit-down", facet: "style" },
   { key: "banquet", label: "Banquet", facet: "style" },
   { key: "fine-dining", label: "Fine dining", facet: "style" },
 
   // --- amenity: what the place has or does ---------------------------------
-  // `counter-order` was a style until 2026-11-15 (520/050): it says how you
-  // order, not what the experience is like, and every venue carrying it is
-  // also takeaway. It keeps its chip here; the Style filter no longer offers it.
-  { key: "counter-order", label: "Counter order", facet: "amenity" },
   { key: "family-friendly", label: "Family friendly", facet: "amenity" },
   { key: "dog-friendly", label: "Dog friendly", facet: "amenity" },
   { key: "garden-bar", label: "Garden bar", facet: "amenity" },

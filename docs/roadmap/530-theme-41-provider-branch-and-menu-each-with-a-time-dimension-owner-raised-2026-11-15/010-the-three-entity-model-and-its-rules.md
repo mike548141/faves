@@ -1,6 +1,6 @@
-- [ ] **The three-entity model and its rules, as one ADR**
+- [x] **The three-entity model and its rules, as one ADR**
       `[L][schema][design]` — owner-raised 2026-11-15 (the theme README holds
-      his words). ⚑ Owner's go to write the ADR; nothing built.
+      his words). ✅ Owner said go 2026-11-16; written as **ADR 0169**.
 
   **What the ADR must state, from his message:**
   - **Provider** — the organisation, typically a registered company.
@@ -34,3 +34,13 @@
   🔗 Rests on ADR 0011 (branches), 0047 (payload vs record), 0051 (dish ids),
   0103 (branch ids), 0155 (the Anywhere branch); folds in `370`, `520/010`,
   `470/050`.
+
+  ✅ **Written 2026-11-16 as [ADR 0169](../../decisions/0169-provider-branch-and-menu-are-three-independent-objects.md)**,
+  on his *"yes"*, with his correction the same day built in: *"they are not
+  parent child objects … 3 independent objects that are not in a heirachy of
+  each other, they have relatiionships to each other."* So the ADR states
+  three objects joined by relationships (operated by, offered by, serves),
+  not the nesting this item's text implied, and leaves storage, field names
+  and two franchise questions open. What remains is BUILD, one stage at a
+  time, each with its own ADR; stage 1 (the serves relationship) is the one
+  Rock Yard's truck waits on.

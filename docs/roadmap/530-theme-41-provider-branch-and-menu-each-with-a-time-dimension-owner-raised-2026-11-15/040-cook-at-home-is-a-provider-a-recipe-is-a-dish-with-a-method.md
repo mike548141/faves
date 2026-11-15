@@ -10,7 +10,11 @@
 
   **What his 2026-11-15 message adds:**
   - **Cooking at home is a way of getting the food** — now an option in the
-    Dining filter (`520/050`).
+    Dining filter (`520/050`). And not only this one provider's, 2026-11-16:
+    *"I can see options in the future where you buy the food and cook at
+    home so there could be more restaurants coming"*. The filter's predicate
+    reads the recipe collection today and is the line to change when the
+    second one arrives (ADR 0169 decision 7).
   - **The dish differs, not the provider:** a recipe carries ingredients and
     a method. Today that is the `recipes` kind on the whole record (ADR
     0003, `kinds.js`); in the three-entity model it belongs on the dish, so

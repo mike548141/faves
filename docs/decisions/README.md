@@ -1971,3 +1971,13 @@ deliberation those compact docs omit.
   need no change. Words only: `composeTags` never reads it, so allergens still
   union in and a swap drops no tag or warning (tested, break-probed); whether a
   swap may drop the replaced component's allergen is the owner's decision.
+- [0169](0169-provider-branch-and-menu-are-three-independent-objects.md) —
+  **Provider, branch and menu are three independent objects** (Theme 41,
+  owner-directed 2026-11-15/16). Not a hierarchy: joined by relationships
+  (operated by, offered by, serves), each of which is data and can start and
+  stop. A provider has at least one branch and one menu. Time in three senses
+  (lifecycle, availability, versions); one availability model for branches
+  and menus with three kinds of evidence (sighting, announcement, schedule);
+  branch kind permanent/temporary/mobile; a meal is not a menu; more than one
+  provider may offer cooking at home. Storage not decided; staged migration,
+  each stage its own ADR, today's venue file the degenerate case throughout.

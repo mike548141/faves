@@ -83,3 +83,23 @@ a restaurant"*.
 25, `focus_check` 50, `distance_check` 28, `picks_check` 20, `geo_check` 22,
 all passing; every `ci.yml` step locally after the commit; the two new
 options screenshotted at 1200 px (8 trucks; Cook at Home alone, left column).
+
+## Third round, 2026-11-16 (NZ) — counter order back, and ADR 0169
+
+**His words.** *"put that back on, it changes the dining experience to order
+at the counter"* (Counter order) · *"to be clear they are not parent child
+objects, Restaurant, Branch, Menu are 3 independent objects that are not in a
+heirachy of each other, they have relatiionships to each other."* · *"I can
+see options in the future where you buy the food and cook at home so there
+could be more restaurants coming"* · and *"yes"* to writing the ADR.
+
+**What changed.** `counter-order` back to the `style` facet, after Quick eats
+(`SHELL_VERSION` → `2026-11-16.1`); its unit test now asserts the style. The
+Cook at home predicate's comment names his future providers. **ADR 0169**
+written and indexed; `530/010` closed; `530/040`, Theme 41's README and
+`520/050` carry his words.
+
+**Judgement calls.** 🚩 The ADR deliberately leaves open whether a branch can
+change operator or have two, and whether two providers can share a menu
+(franchises): plausible, no real record yet, and his message did not say.
+Storage is undecided too — independent objects need not be separate files.

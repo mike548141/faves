@@ -148,8 +148,9 @@ test("food-truck: a DINING value, never a style (520/040, 520/050)", () => {
   assert.equal(styleOf(["food-truck"]), null);
 });
 
-test("counter-order: a chip, no longer a style (520/050)", () => {
-  // It says how you order, not what the experience is like.
-  assert.equal(vibe("counter-order").facet, "amenity");
-  assert.equal(styleOf(["counter-order"]), null);
+test("counter-order: a STYLE (put back 2026-11-16, 520/050)", () => {
+  // Owner: "it changes the dining experience to order at the counter".
+  assert.equal(vibe("counter-order").facet, "style");
+  assert.equal(styleOf(["counter-order"]).key, "counter-order");
+  assert.ok(vibesOf("style").some((v) => v.key === "counter-order"));
 });

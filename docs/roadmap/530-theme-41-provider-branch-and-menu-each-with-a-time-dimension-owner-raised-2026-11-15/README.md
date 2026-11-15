@@ -30,8 +30,15 @@ home, like a holday home and their main home or an RV. Those are similar to
 branches of a restaurant. I'm pretty sure I've discussed this in past
 sessions."* He had: `470/050`, ruled 2026-09-08 (below).
 
-This theme is the **direction**. It gathers four threads already on the board
-under one model rather than replacing them.
+And on 2026-11-16, correcting a summary that read as nesting: *"to be clear
+they are not parent child objects, Restaurant, Branch, Menu are 3 independent
+objects that are not in a heirachy of each other, they have relatiionships to
+each other."* On Cook at home, the same day: *"I can see options in the
+future where you buy the food and cook at home so there could be more
+restaurants coming"*.
+
+This theme is the **direction**, now written down as **ADR 0169**. It gathers
+four threads already on the board under one model rather than replacing them.
 
 ## Where today's model stands against his three entities
 
@@ -44,7 +51,8 @@ under one model rather than replacing them.
 
 ## Items
 
-- `010` — the three-entity model and its rules, written down as one ADR.
+- `010` — the three-entity model and its rules, written down as one ADR
+  (done: ADR 0169).
 - `020` — a branch has a kind: mobile, temporary or permanent.
 - `030` — a menu is versioned like code.
 - `040` — Cook at Home is a provider; a recipe is a dish with a method.
