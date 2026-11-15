@@ -507,3 +507,4 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [A branch has a kind: mobile, temporary or permanent](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/020-a-branch-has-a-kind-mobile-temporary-or-permanent.md)
 - [ ] [A menu is versioned like code](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/030-a-menu-is-versioned-like-code.md)
 - [ ] [Cook at Home is a provider; a recipe is a dish with a method](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/040-cook-at-home-is-a-provider-a-recipe-is-a-dish-with-a-method.md)
+- [ ] ⏳ [Cold review owed: ADR 0169 and the HEIC EXIF reader](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/050-cold-review-owed-adr-0169-and-the-heic-exif-reader.md)
