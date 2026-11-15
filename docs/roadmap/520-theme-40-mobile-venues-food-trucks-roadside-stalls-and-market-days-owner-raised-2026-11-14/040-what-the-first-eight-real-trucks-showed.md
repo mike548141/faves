@@ -1,9 +1,10 @@
-- [ ] **What the first eight real trucks showed, and the two model gaps they prove**
+- [x] **What the first eight real trucks showed, and the two model gaps they prove**
       `[M][schema][ux][data]` — owner-raised 2026-11-14: *"Look at the design to
       see if faves data or general architecture needs to be extended at all to
       support these mobile food locations and temporary sites. And add the food
       trucks that are in the menu"* — from his own photographs, Frank Kitts Park,
-      Saturday 2026-11-14, 15:38–15:42 NZDT. ⚑ Three owner calls; the data is in.
+      Saturday 2026-11-14, 15:38–15:42 NZDT. ✅ All three owner calls ruled
+      2026-11-15 (below); the data is in and the vibe is built.
 
   **What landed the same day, under today's schema (no model change).** Eight
   records, each a single pitch at Frank Kitts Park with `hours: null`,
@@ -63,11 +64,32 @@
   conversion on all 19 photos: capture date, time, offset, device and GPS
   identical.
 
-  **Owner calls (put to him in the session; not decided here):**
-  1. ⚑ Gap 1's shape — a sighting-capable dated spot (recommended), the
-     interim line, or wait.
-  2. ⚑ Gap 2 — Rock Yard's truck as its own record (as landed) until per-branch
-     menus exist, or folded into the restaurant.
-  3. ⚑ A **"Food truck"** vibe (`site/js/vibes.js`, closed vocabulary, ADR
-     0084) so a reader can filter for them — not added, because extending a
-     closed vocabulary is his call.
+  **Owner calls — ruled 2026-11-15, in his words (session record
+  `2026-11-15-0222`):**
+  1. ✅ **Gap 1 — the spot needs three kinds, not one.** *"they wll need
+     multiple stypes i.e. sightings, announed/booked time & place,
+     schedule"*. So `010`'s dated spot is not a sighting variant beside an
+     announced window: it is three kinds — a **sighting** (seen there, when,
+     on whose evidence), an **announced or booked** time and place (a one-off
+     the truck or an event posted), and a **schedule** (a recurring pattern).
+     Carried into `010`, which holds the build; nothing built here.
+  2. ✅ **Gap 2 — agreed: a separate record now.** He accepted (b) as put:
+     *"agreed"*. And he stated the relationship as a fact: *""Rock Yard Food
+     Truck" is a branch of "Rock Yard Vietnamese Restaurant""*. So the truck
+     is the restaurant's branch, kept as its own record (`rock-yard-food-truck`)
+     only because a branch cannot yet carry its own menu; it folds into
+     `rock-yard-restaurant` when Theme 30 (`370`) gives branches menus, with
+     `formerIds` keeping every heart. Nothing in `site/data/` links the two
+     today, deliberately: no screen would render the link (ADR 0047).
+  3. ✅ **A "Food truck" vibe — yes, built.** *"I agree "Food truck" is
+     another vibe like Takeaway, Dine-in, Delivery, Cook yourself etc"*.
+     Added as `food-truck`, facet `style`, leading the styles, so the Style
+     filter offers it and every truck card carries the chip; the eight trucks
+     carry it in place of `counter-order`. Search finds it by "truck", "food
+     trucks" and "trucks". 🚩 **Not where his examples live:** Takeaway,
+     Dine-in and Delivery are the *Dining* filter (`orderMode`, ADR 0117) and
+     Cook at Home is a record kind. It went in the vibe vocabulary because
+     that is what he was asked and answered, and because a truck is also
+     takeaway, so a Dining value would have to either hide trucks from
+     Takeaway or double-file them. Moving it to the Dining filter is a small,
+     reversible change if he wants it there.

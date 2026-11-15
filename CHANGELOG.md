@@ -9,6 +9,8 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A "Food truck" style.** The Style filter now offers Food truck, every
+  truck's card says so, and searching "truck" or "food trucks" finds them.
 - **Eight food trucks from Wellington's waterfront.** Yalla Fried Chicken,
   Nony's Coffee & Gelato, Rock Yard Food Truck, Taj on Wheels, Ah Ma's Kitchen,
   Garuda Truck, Baxters Catering and Ngon Spot, read off their own boards at

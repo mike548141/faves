@@ -433,6 +433,14 @@ const VIBEY = [
     vibe: ["fine-dining", "quiz-night"],
     menu: [],
   },
+  {
+    id: "truck",
+    name: "Ngon Spot",
+    area: "Wellington Central",
+    cuisine: ["Vietnamese"],
+    vibe: ["food-truck"],
+    menu: [],
+  },
 ];
 const vibey = buildIndex(VIBEY);
 const vhit = (q) => search(vibey, q);
@@ -461,6 +469,11 @@ test("the vibe synonyms map onto exactly one vocabulary label", () => {
   assert.deepEqual(vhit("pub quiz").places.items.map((p) => p.id), ["posh"]);
   assert.deepEqual(vhit("kids").places.items.map((p) => p.id), ["marigold"]);
   assert.deepEqual(vhit("dogs").places.items.map((p) => p.id), ["goldings"], "the plural can't substring-match");
+  // 520/040: the owner's "Food truck" vibe. "truck" lands inside the label;
+  // the plurals are the synonyms, and each must find the truck and nothing else.
+  assert.deepEqual(vhit("truck").places.items.map((p) => p.id), ["truck"]);
+  assert.deepEqual(vhit("food trucks").places.items.map((p) => p.id), ["truck"]);
+  assert.deepEqual(vhit("trucks").places.items.map((p) => p.id), ["truck"]);
 });
 
 test("'fast food' is NOT a synonym — it names a segment, not one of the styles", () => {

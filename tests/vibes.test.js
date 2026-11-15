@@ -137,3 +137,14 @@ test("FORMER_VIBES: no superseded value is also a live key", () => {
     assert.ok(!keys.has(was), `${was} is in both VIBES and FORMER_VIBES`);
   }
 });
+
+test("food-truck: a STYLE, and the one a truck reads as (520/040)", () => {
+  // Owner-ruled 2026-11-15: "Food truck" is a way the meal happens, so it sits
+  // in the facet the Style filter offers — an amenity would never reach it.
+  assert.equal(vibe("food-truck").facet, "style");
+  assert.equal(vibe("food-truck").label, "Food truck");
+  // A truck carries it in place of counter-order; were both present, the card
+  // and the filter must still say "Food truck", so it leads the styles.
+  assert.equal(styleOf(["counter-order", "food-truck"]).key, "food-truck");
+  assert.equal(vibesOf("style")[0].key, "food-truck");
+});

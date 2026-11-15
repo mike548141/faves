@@ -47,6 +47,15 @@ export const VIBES = [
   // --- style: how the meal happens -----------------------------------------
   // Ordered by commitment, least to most, which is the order a reader compares
   // them in and the order the filter's <select> offers.
+  //
+  // `food-truck` (owner-ruled 2026-11-15, roadmap 520/040): *"I agree "Food
+  // truck" is another vibe like Takeaway, Dine-in, Delivery, Cook yourself
+  // etc"*. It leads because it is the least commitment of all: you walk up to
+  // a window, and there is often nowhere to sit. A truck carries it INSTEAD of
+  // `counter-order` — a style is one per venue in practice (`styleOf` takes
+  // the first), and "food truck" already says how you order. It names the
+  // venue, not where it is today: the dated spot is 520/010's job.
+  { key: "food-truck", label: "Food truck", facet: "style" },
   { key: "quick-eats", label: "Quick eats", facet: "style" },
   { key: "counter-order", label: "Counter order", facet: "style" },
   { key: "sit-down", label: "Sit-down", facet: "style" },

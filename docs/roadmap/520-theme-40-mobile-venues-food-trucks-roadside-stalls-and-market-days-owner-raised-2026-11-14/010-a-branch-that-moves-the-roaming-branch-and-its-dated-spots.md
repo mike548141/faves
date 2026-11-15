@@ -42,6 +42,15 @@
      a market cart), and `kind` is per *record*. The truck's difference is in
      the **branch**, which is where the owner put it.
 
+  **Owner-ruled 2026-11-15 (`040`): a spot has three kinds.** *"they wll
+  need multiple stypes i.e. sightings, announed/booked time & place,
+  schedule"*. So option 2's `spots[]` must hold a **sighting** (seen there,
+  when, on whose evidence; a past fact that ages), an **announced or booked**
+  time and place (a dated one-off), and a **schedule** (a recurring
+  pattern, which is option 1's week moved inside the spot). The first eight
+  real trucks (`040`) gave only sightings, which is why the sighting must not
+  be an afterthought. Every surface below must say which kind it is showing.
+
   **Recommendation: option 2, built after option 1 has carried one real
   venue for a few weeks.** Option 1 is free and tells us what a real schedule
   looks like; option 2 is the shape the brief describes; option 3 puts the

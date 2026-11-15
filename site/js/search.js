@@ -84,6 +84,9 @@ const SYNONYMS = {
   "quick lunch": ["quick eats"],
   "quick bite": ["quick eats"],
   "pub quiz": ["quiz night"],
+  // "truck" already lands inside "Food truck"; the plural can't (520/040).
+  "food trucks": ["food truck"],
+  trucks: ["food truck"],
   dogs: ["dog friendly"], // "dog" already lands inside the label; "dogs" can't
   kids: ["family friendly"],
   "kid friendly": ["family friendly"],
