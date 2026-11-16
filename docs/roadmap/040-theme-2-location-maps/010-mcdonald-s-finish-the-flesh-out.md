@@ -18,6 +18,16 @@
   this session); (c) **allergen/dietary tags** from a reliable source
   (deliberately omitted for now — "not stated" ≠ free-of, safety floor); (d)
   revisit prices if a per-store source appears.
+
+  - 🔀 Tidied 2026-11-16 (C0711, verified high; Mike approved 2026-11-16):
+    part (b)'s "needs the actual image files" above is already closed and is
+    not an ask of Mike: lines 1-3 of this item record (b) done 2026-08-16,
+    "all 41 dishes now carry McDonald's own NZ product photography, ADR
+    0053". What stays open, (c) tags and (d) prices, is content work, not
+    his. Nothing above was changed; the original text is as it was. To
+    revert: delete this line (its commit is listed in
+    docs/sessions/2026-11-16-0545-asks-tidy-applied.md).
+
   📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
   branch, no live session behind it. The bracket was standing in for
   "part-done", which the house board does not define — `[~]` means
