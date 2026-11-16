@@ -8,7 +8,7 @@
   The four costs, before → after, and the risks are in
   [the survey](../../reviews/2026-10-01-0418-chatty-app-survey.md) under proposal I.
 
-  🎯 **Design ruling needed:** reading the real buckets is what detects a
+  **Design ruling needed:** reading the real buckets is what detects a
   bucket written without its core update (ADR 0146 §2). This trades that
   detection for cost. Comes after `140`.
 
@@ -25,3 +25,8 @@
     figures. Nothing above was changed; the original text is as it was. To
     revert: delete this line (its commit is listed in
     docs/sessions/2026-11-16-0545-asks-tidy-applied.md).
+  - 🔀 2026-11-16 (C0746): removed the 🎯 marker from the line above, because
+    this ask is closed / not Mike's (tidy line above). Original: the
+    "**Design ruling needed:**" line began with 🎯. To revert: git revert
+    this repo's marker commit (listed in
+    docs/sessions/2026-11-16-0638-asks-markers-removed.md).

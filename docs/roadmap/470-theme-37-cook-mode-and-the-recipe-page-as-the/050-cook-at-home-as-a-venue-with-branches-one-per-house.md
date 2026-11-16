@@ -155,7 +155,7 @@
   refuses lat, lng or phone beside it and every near miss. `data.js`
   normalises it before any reader sees it. Nothing on screen changed; sort and
   distance cut measured byte-identical over 60 scenarios.
-  🎯 **Owner fork: where the wildcard sorts once private houses exist.** (1)
+  **Owner fork: where the wildcard sorts once private houses exist.** (1)
   no distance, as built (recommended now); (2) distance 0, at the reader's
   position (shows "0 m", always beats a real house); (3) out of the distance
   comparison, used only when no private house is near (needs the private
@@ -174,3 +174,9 @@
     it, which puts the fork back to him then. Nothing above was changed;
     the original text is as it was. To revert: delete this line (its commit
     is listed in docs/sessions/2026-11-16-0545-asks-tidy-applied.md).
+  - 🔀 2026-11-16 (C0740): removed the 🎯 marker from the line above, because
+    this ask is closed / not Mike's (tidy line above). Original: the "**Owner
+    fork: where the wildcard sorts once private houses exist.**" line began
+    with 🎯. The 🎯 in the older options block further up is untouched. To
+    revert: git revert this repo's marker commit (listed in
+    docs/sessions/2026-11-16-0638-asks-markers-removed.md).

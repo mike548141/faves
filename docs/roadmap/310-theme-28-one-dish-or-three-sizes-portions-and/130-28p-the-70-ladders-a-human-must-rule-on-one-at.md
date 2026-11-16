@@ -25,7 +25,7 @@
     the option.
   - **`prices` differ in shape** (6 groups) — a per-channel price on one
     sibling and not the other (ADR 0089). A `selects` option carrying a price
-    per door is a shape neither ADR describes. 🎯 **Likely a further ask.**
+    per door is a shape neither ADR describes. **Likely a further ask.**
     - 🔀 Tidied 2026-11-16 (C0728, verified high; Mike approved 2026-11-16):
       the "Likely a further ask" above is a forecast, not an ask of Mike
       yet. It is this item's: the 70 groups are worked first, and any group
@@ -33,6 +33,11 @@
       it landed" below says. Nothing above was changed; the original text is
       as it was. To revert: delete this line (its commit is listed in
       docs/sessions/2026-11-16-0545-asks-tidy-applied.md).
+    - 🔀 2026-11-16 (C0728): removed the 🎯 marker from the line above, because
+      this ask is closed / not Mike's (tidy line above). Original: a 🎯 stood
+      just before "**Likely a further ask.**" on that line. To revert:
+      git revert this repo's marker commit (listed in
+      docs/sessions/2026-11-16-0638-asks-markers-removed.md).
   - **Not a ladder at all.** `28b` already found these and they must be
     honoured: Heineken on-tap / bottle / **0.0 alcohol-free** is not a size
     ladder, and Sushi Bi's Platters 1–9 are nine compositions. `28h`'s
