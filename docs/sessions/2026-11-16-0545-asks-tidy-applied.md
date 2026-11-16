@@ -56,3 +56,10 @@ and `FX rates`
 The earlier row commits' `floor` runs were cancelled by the next push, which
 is not a result; the green at `d6ec0d26` covers all five. CI on this record's
 own commit is reported in the sweep's report.
+
+## Addendum, 2026-11-16 0638 UTC: the 🎯 markers
+
+A later run removed the 🎯 from the asks three of these rows closed (C0728,
+C0740, C0746) in one commit, `ade5dd10`; revert all three with
+`git revert ade5dd10`. C0711 was held: its item carries no 🎯. Detail in
+[`2026-11-16-0638-asks-markers-removed.md`](2026-11-16-0638-asks-markers-removed.md).
