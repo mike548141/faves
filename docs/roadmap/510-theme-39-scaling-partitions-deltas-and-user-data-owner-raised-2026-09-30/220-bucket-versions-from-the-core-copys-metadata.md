@@ -17,3 +17,11 @@
   (one row read per bucket); bucket bodies no longer travel through the Worker
   as KV reads did. The survey's 9 reads / 227 KB figures were KV-era. Re-measure
   with `chatty_check` before anyone rules on this.
+
+  - 🔀 Tidied 2026-11-16 (C0746, verified high; Mike approved 2026-11-16):
+    the design ruling above is not Mike's yet. Its premise moved on
+    2026-10-02 (lines 15-19 above), so a session first re-measures with
+    `chatty_check`, and only then is the trade put to him with current
+    figures. Nothing above was changed; the original text is as it was. To
+    revert: delete this line (its commit is listed in
+    docs/sessions/2026-11-16-0545-asks-tidy-applied.md).
