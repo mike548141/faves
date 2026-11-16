@@ -165,3 +165,12 @@
   ✅ **Owner ruled 2026-10-02: no distance for the wildcard now**; decide
   between that and "only when no private house is near" when the
   private-branch store is built.
+
+  - 🔀 Tidied 2026-11-16 (C0740, verified high; Mike approved 2026-11-16):
+    the wildcard-sort fork above is not a live ask of Mike. The item
+    records his 2026-10-02 decision (lines 165-167 above): no distance for
+    now, and choose again only when the private-branch store is built. That
+    store does not exist yet, so the ask belongs to the session that builds
+    it, which puts the fork back to him then. Nothing above was changed;
+    the original text is as it was. To revert: delete this line (its commit
+    is listed in docs/sessions/2026-11-16-0545-asks-tidy-applied.md).
