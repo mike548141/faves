@@ -140,3 +140,13 @@
   F2, F7, F12 fixes with tests; F6 one harness assertion; F11 ADR 0168 is
   stale against the 2026-10-18 ruling; F5, F8, F9, F10 record only. The
   follow-ups item is not yet filed.
+
+  - 🔀 Tidied 2026-11-16 (C0103, verified high; Mike approved 2026-11-16):
+    this item grouped two matters and only one is answered. Answered: may a
+    swap take an allergen out — 💬 "YES, WHEN THE MENU SAYS SO" (2026-10-18,
+    his answer to a question a session put; lines 82-84 above). Still open
+    and still his: F1, F3 and F4 from the 2026-11-02 cold review (lines
+    124-137 above), which that answer does not settle. Nothing above was
+    changed; the original text is as it was. To revert: delete this line
+    (its commit is listed in
+    docs/sessions/2026-11-16-0545-asks-tidy-applied.md).
