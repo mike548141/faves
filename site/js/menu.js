@@ -51,6 +51,7 @@ import {
 } from "./place.js";
 import { slug } from "./slug.js";
 import { wireDialog } from "./dialog.js";
+import { openPhoto } from "./photo-viewer.js";
 import { dishId, findDish } from "./dish-id.js";
 import { dishStepper, initOrderUI, noteVenueRecord } from "./cart-ui.js";
 import { savedOrdersPanel } from "./saved-orders-ui.js";
@@ -1192,33 +1193,6 @@ function pairingLinks(refs, r) {
   return wrap;
 }
 
-// The full-size viewer, built once on first use and reused. Not in the HTML of
-// either page that renders dishes: a lightbox nobody opens should cost nothing,
-// and building it here keeps restaurant.html and recipe.html from having to
-// carry the same markup twice.
-let lightbox = null;
-function openPhoto(src, alt) {
-  if (!lightbox) {
-    const img = el("img", { className: "photo-full", alt: "" });
-    const close = el("button", {
-      type: "button",
-      className: "photo-close",
-      textContent: "✕",
-      "aria-label": "Close",
-    });
-    lightbox = el("dialog", { className: "photo-lightbox" }, [close, img]);
-    lightbox._img = img;
-    document.body.append(lightbox);
-    wireDialog(lightbox, { closeBtn: close });
-    // The picture is the whole content, so a tap anywhere on it closes too —
-    // the gesture every phone photo viewer already trained the reader to use.
-    img.addEventListener("click", () => lightbox.close());
-  }
-  lightbox._img.src = src;
-  lightbox._img.alt = alt || "";
-  lightbox.showModal();
-}
-
 // Lazy-loaded, layout-stable dish photo (only when the item has one).
 //
 // A THUMBNAIL, not a hero. Shipped 2026-08-16 full-bleed at 4/3 and the owner
@@ -1232,7 +1206,14 @@ function openPhoto(src, alt) {
 //
 // `object-fit: contain`, not `cover`: these are transparent cutouts trimmed to
 // the food (ADR 0053), so cropping to fill a square eats the product.
-function dishPhoto(item) {
+//
+// Where the dish has its own page (a recipe), the photo is a second way into
+// it — it goes where the title goes (owner, 2026-11-18: "it should do the same
+// thing as clicking on the title"), and the bigger photo moves to that page's
+// hero. Kept out of the tab order and the accessibility tree: the title is the
+// same link one stop later, and announcing it twice is noise. A restaurant
+// dish has no page, so its photo still opens the viewer.
+function dishPhoto(item, href = null) {
   if (!item.image) return null;
   const img = el("img", {
     className: "dish-photo",
@@ -1241,12 +1222,22 @@ function dishPhoto(item) {
     loading: "lazy",
     decoding: "async",
   });
-  const button = el("button", {
-    type: "button",
-    className: "dish-photo-btn",
-    "aria-label": `See a bigger photo of ${item.name}`,
-  }, [img]);
-  button.addEventListener("click", () => openPhoto(item.image, item.alt || ""));
+  let button;
+  if (href) {
+    button = el("a", {
+      className: "dish-photo-btn is-link",
+      href,
+      tabIndex: -1,
+      "aria-hidden": "true",
+    }, [img]);
+  } else {
+    button = el("button", {
+      type: "button",
+      className: "dish-photo-btn",
+      "aria-label": `See a bigger photo of ${item.name}`,
+    }, [img]);
+    button.addEventListener("click", () => openPhoto(item.image, item.alt || ""));
+  }
   // A photo that fails to load leaves a broken-image icon and the alt text
   // sprawling inside a 269 px empty box — measurably uglier than no photo at
   // all. And this is not the rare case: dish photos are runtime-cached, never
@@ -1354,12 +1345,15 @@ function renderDish(
   // heading, so a screen reader says it with the dish (the one label, shared
   // with Favourites and the recipe page).
   const ownerBadge = ownKind ? ownerLabel(ownKind) : null;
+  const itemHref = kind.itemPage && collectionId
+    ? `${kind.itemPage}?id=${collectionId}&dish=${dishId(item)}`
+    : null;
   const nameEl =
-    kind.itemPage && collectionId
+    itemHref
       ? el("h3", { className: "dish-name", lang: lead.lang }, [
           el("a", {
             className: "dish-name-link",
-            href: `${kind.itemPage}?id=${collectionId}&dish=${dishId(item)}`,
+            href: itemHref,
             textContent: lead.text,
           }),
           codeBadge,
@@ -1417,7 +1411,7 @@ function renderDish(
   // about the reading order changes — a float is taken out of flow, and it
   // carries its own accessible name — but the picture now starts level with the
   // name it belongs to.
-  const photo = dishPhoto(item);
+  const photo = dishPhoto(item, itemHref);
   if (photo) children.unshift(photo);
   if (item.desc) {
     const d = preferred(item, "desc", venueLang) ?? { text: item.desc, lang: venueLang };

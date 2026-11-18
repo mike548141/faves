@@ -40,6 +40,7 @@ import {
   scaleForPeople, peopleRange, servesAt,
 } from "./quantity.js";
 import { el } from "./dom.js";
+import { openPhoto } from "./photo-viewer.js";
 import { disclosure } from "./disclosure.js";
 import { tagRow, traceEntries } from "./tags.js";
 import { recipeStats } from "./recipe-stats.js";
@@ -473,12 +474,26 @@ function render(collection, item) {
   // and lazy-loading an above-the-fold image only delays the paint it is for.
   // Explicit width/height give the box its shape before the bytes arrive, so
   // nothing below it jumps (CLS).
-  const hero = item.image
-    ? el("header", { className: "recipe-hero has-photo" }, [
+  //
+  // A tap opens it full-size (owner, 2026-11-18). The hero is cropped to fill
+  // its frame (`object-fit: cover`), so the viewer is the only place the whole
+  // picture is seen; on the recipe LIST the thumbnail opens this page instead.
+  const heroPhoto = item.image
+    ? el("button", {
+        type: "button",
+        className: "recipe-photo-btn",
+        "aria-label": `See a bigger photo of ${item.name}`,
+      }, [
         el("img", {
           className: "recipe-photo", src: item.image, alt: item.alt || "",
           width: 800, height: 800, decoding: "async",
         }),
+      ])
+    : null;
+  heroPhoto?.addEventListener("click", () => openPhoto(item.image, item.alt || ""));
+  const hero = item.image
+    ? el("header", { className: "recipe-hero has-photo" }, [
+        heroPhoto,
         el("div", { className: "recipe-hero-text" }, parts),
       ])
     : el("header", { className: "recipe-hero" }, [el("div", { className: "recipe-hero-text" }, parts)]);

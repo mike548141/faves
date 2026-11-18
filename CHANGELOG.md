@@ -8,6 +8,14 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **A recipe's photo now opens the recipe.** On the Cook at Home list, tapping
+  a recipe's thumbnail goes to its page, the same as tapping its name — it used
+  to open a bigger copy of the photo. The bigger photo moved to the recipe page:
+  tap the photo at the top to see the whole picture (the page crops it to fit
+  its frame). A restaurant dish's photo still opens the bigger photo, because a
+  dish has no page of its own to go to.
+
 ### Added
 - **Food truck and Cook at home in the Dining filter.** Dining now answers
   how you get the food — Takeaway, Dine-in, Delivery, Food truck or Cook at

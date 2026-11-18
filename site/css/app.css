@@ -4454,6 +4454,12 @@ body.faves-view .to-top {
   cursor: zoom-in;
   line-height: 0;
 }
+/* On the recipe list the thumbnail is a link to the recipe, as the title is
+   (owner, 2026-11-18); the zoom cursor would promise a viewer it no longer
+   opens. */
+.dish-photo-btn.is-link {
+  cursor: pointer;
+}
 .dish-photo {
   display: block;
   /* Grows with the window, within bounds the layout can take: never smaller
@@ -4786,6 +4792,23 @@ body.faves-view .to-top {
   border-radius: var(--radius);
   margin-bottom: var(--space-3);
   background: var(--surface-2);
+}
+/* The hero photo is a button that opens the full picture (owner, 2026-11-18):
+   the frame crops it (`cover`), the viewer does not. The button takes the
+   photo's grid cell and adds nothing visible of its own. */
+.recipe-photo-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  cursor: zoom-in;
+  line-height: 0;
+}
+.recipe-photo-btn:focus-visible {
+  outline: 3px solid var(--focus, var(--accent));
+  outline-offset: 2px;
 }
 /* Prep · Cook · Serves · Difficulty. Two by two on a phone, one row of four
    from 36rem. Explicit counts rather than `auto-fit`: auto-fit gave three and
