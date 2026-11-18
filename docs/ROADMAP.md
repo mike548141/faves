@@ -194,6 +194,9 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - ✅ 🎯 [A closed "If it's your first time, try…" block has no way back](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/010-a-closed-picks-block-has-no-way-back.md)
 - ✅ 🔎 [Closing Settings may leave focus on <body>](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/020-closing-settings-may-strand-focus-on-body.md)
+- [ ] [💡 The shopping list appears on screen when it has items, not in the ⋯…](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/030-shopping-list-appears-on-screen-when-it-has-items.md)
+- [ ] [💡 Favourites becomes a filter on the home screen, and the Favourites…](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/040-favourites-as-a-filter-on-the-home-screen.md)
+- [ ] [💡 A share button on each recipe page](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/050-a-share-button-on-each-recipe-page.md)
 
 ## Theme 16 — Staying current: PWA updates & a manual refresh (owner-raised 2026-08-09)
 
