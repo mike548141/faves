@@ -80,7 +80,7 @@ made every claim unreachable while any session held it; three sessions were
 blocked simultaneously on 2026-08-16. The split is what makes the inherited rule
 correct as written.)
 
-**Where the pre-split archive lives.** [`../ROADMAP-DONE.md`](../ROADMAP-DONE.md)
+**Where the pre-split archive lives.** [`990-done-before-the-split/README.md`](990-done-before-the-split/README.md)
 is **frozen** as the verbatim record of everything harvested before the split.
 Nothing is added to it again.
 

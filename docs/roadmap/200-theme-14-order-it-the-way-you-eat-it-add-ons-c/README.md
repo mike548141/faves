@@ -60,17 +60,17 @@ wrong.
 
 - ✅ **14a — Structured add-ons** — **shipped 2026-08-16** (ADR 0048):
   venue-level `addOnGroups`, `select: one|many` + `max`, group price default,
-  required per-option `tags`. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  required per-option `tags`. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 - ✅ **14d — an add-on carries its own tags** — **shipped with 14a**, as it
   insisted. Allergens union, dietary claims intersect. Detail →
-  [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 - ✅ **14e — Order-tally knock-ons** — **shipped 2026-08-16**. Line identity is
   now `(venueId, name, selectionKey)`; the share codec deliberately did *not*
-  bump. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  bump. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 - ✅ **14c — Customise / omit — SHIPPED 2026-08-16** ([ADR 0073]) as the
   recommended half: a free-text note per order line, part of line identity.
   The **components** half stays unbuilt and is still the right answer *if* a
-  venue's data ever justifies it. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  venue's data ever justifies it. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 **The worked example, transcribed from the counter board (2026-08-15, in
 store).** The owner photographed Wellington Kebab Grill's "EXTRAS & SAUCES —
 customize your meal" card. Everything **priced** on it is already in the payload <!-- spellscan:allow: verbatim quote of the venue's own printed card, which spells it the US way — correcting it would misquote the shop -->

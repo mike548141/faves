@@ -5,7 +5,7 @@ curated `priceBand` override), dish order-codes, the extended allergen
 **vocabulary** (populating stays an `intake/` content task — no tag = not stated),
 device-local dietary/allergen preferences with load-bearing safety framing, and
 hearted favourites (`favourites.js` + shared `store.js`). Popular/busy times ruled
-out (no official API). Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+out (no official API). Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 ✅ **Allergen tag sweep — done 2026-08-08 ([ADR 0024](../../decisions/0024-derived-allergen-tags.md)),
 owner-requested.** Two gaps closed at once: satay carried a peanut tag only at
@@ -50,7 +50,7 @@ unclaimed.
       ticked here 2026-08-16 by a second session that found the item still open
       after the work had landed. 6 real missing tags applied corpus-wide; a
       re-run now reports **0 missing**. Detail →
-      [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md). ⚠️ One residue stays open under
+      [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md). ⚠️ One residue stays open under
       Theme 4, not here: three `sprig-and-fern-tawa` Cheeseburger twin warnings
       that ADR 0025 forbids a rule from closing.
 

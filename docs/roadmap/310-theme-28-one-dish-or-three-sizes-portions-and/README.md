@@ -70,13 +70,13 @@ uses. **Two of the twelve parts are asks the owner has not yet answered**
   it never filters**, because a filtered section breaks a link someone was
   *sent* as a function of the clock. Full write-up, including the two
   decorative assertions found inside the new check itself, in
-  [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 - ✅ **28d, 28f, 28g — the section heading, its qualifier and its identity** —
   **done 2026-08-16** (`82ddb4b`, `b391f1b`, `2f0da85`), ADRs 0057 and 0058.
   The qualifier came out of eleven headings into a `note`; the anchor stopped
   being derived from the heading and became a stored `sectionId`. Full write-up,
   including the owner ruling that went against the recommendation, in
-  [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 - ✅ **28g-tail — the last 25 sections, and the field made required** —
   **done 2026-08-16.** The six files landed (`9cae14e`), the seed finished the
   job — burgerfuel 9, hell-pizza 11, noodle-canteen 5 — and `validate.py` now

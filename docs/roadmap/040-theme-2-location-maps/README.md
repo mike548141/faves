@@ -21,24 +21,24 @@
 ✅ **Shipped 2026-07-08** — availability + favourite ranking (`ranking.js`) and
 its tunable distance dials; schema coordinates, native-maps handoff (ADR 0005),
 and the "📍 Near me" distance-sorted list. A real tile-map view was ruled out on
-the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+the offline/no-CDN constraint. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 **Now all shipped** — three route/reachability items landed 2026-07-22/23;
-verbatim design records → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+verbatim design records → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 - ✅ **Pick along a route** `[L][constraint]` — **shipped 2026-07-23** (ADR
   0014): offline least-detour sort (`site/js/route.js`) + routed maps handoff
   (`geo.routeMapsUrlFor`); suburb-centroid or specific-place destination, no
   geocoder, no stored address. Live routed corridor stays ✗ (keyed/paid API).
-  Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 - ✅ **Drive time from me to a venue** `[M]` — **shipped 2026-07-22** (ADR
   0010): driving-directions maps handoff + a "~N min drive" haversine hint on
   Near-me cards. Live in-app routed time stays ✗. Detail →
-  [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 - ✅ **Restaurants with multiple locations** `[M][schema]` — **shipped
   2026-07-22** (ADR 0011, `site/js/locations.js`): optional per-venue
   `locations[]`, nearest-branch resolution across Near-me/drive-time/open-badge/
-  maps-handoff. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  maps-handoff. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
   **Still open:** Kaffee Eis + Gong Cha's **second branches** — need real
   addresses + a dev-time geocode; a content session appends them, no code change.
 - ✅ **Branches list scrolls with the menu** `[S]` — **shipped 2026-07-23**

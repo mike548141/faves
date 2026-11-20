@@ -2,9 +2,9 @@
 
 - ✅ **The "Call to order" button looked cut off** — **fixed 2026-08-16**;
   3px of clearance under a pinned 44px button became 11.5px, measured in a
-  real browser. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  real browser. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 ✅ **Both items — SHIPPED 2026-08-16** (`f619722`). Detail →
-[`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+[`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 🔎 **Measured properly, it was worse than it looked, and the measurement chose
 the fix.** A full-document sweep in 37 px steps at two widths and two text sizes
 — because a fixed control's victim depends entirely on where you stop, and a

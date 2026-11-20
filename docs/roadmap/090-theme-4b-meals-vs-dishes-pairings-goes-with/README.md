@@ -5,7 +5,7 @@ individual dishes, but people eat *meals*. Two shapes, not exclusive:
 
 - **(b) Recommended pairings** `[M][schema]` — ✅ done 2026-07-08 (ADR 0007):
   optional `goesWith` → "Goes well with …" chips. Detail →
-  [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 - **(a) Reorganise around meals** `[L][schema][design]` — a `meal` becomes
   a first-class set (main + sides + dessert); Cook-at-Home sections become

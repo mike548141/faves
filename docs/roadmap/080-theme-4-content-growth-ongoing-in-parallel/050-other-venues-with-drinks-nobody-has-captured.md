@@ -23,7 +23,7 @@
       the two 2026-08-15 pubs (Southern Cross, The Borough) plus Khandallah
       Trading Company. All five flippers are now curated; `--price-effect`
       is the regression check. Detail →
-      [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md), Theme 4.
+      [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md), Theme 4.
       🔑 **Worth keeping:** the mislabel was invisible to every existing
       gate — `validate.py` passes a record with no `priceBand` because the
       field is optional and the app derives one. It took a tool built to

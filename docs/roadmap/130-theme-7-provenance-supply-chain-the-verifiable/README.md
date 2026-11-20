@@ -11,7 +11,7 @@ against dependency creep.
 ✅ **Shipped** — **SBOM publishing** (2026-07-09, ADR 0008: deterministic
 CycloneDX at `/.well-known/sbom.json`, `gen_sbom.py --check` CI gate) and the
 **zero-dependency CI guard** (2026-07-08, `check_no_deps.py`). Detail →
-[`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+[`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 **Still open:**
 

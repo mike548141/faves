@@ -13,7 +13,7 @@ trip that re-merged the two Cheeseburgers. Measured cost: **+12.6 KB gzipped**,
 
 ✅ **Theme 25's residue is closed — 2026-08-16** (`727cea9`, `b92270c`). Three
 of the four items shipped and the fourth was answered by measurement. Full
-original text and the evidence → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+original text and the evidence → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 - ✅ **A shared shortlist now lands on the dish you meant.** The wire format
   gained an optional `k` array, positionally parallel to the existing bare-string

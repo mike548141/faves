@@ -23,7 +23,7 @@ non-recipe record and About no longer claims a site currency; the second half �
 0045 chose one NZD calibration reached by conversion. **Seasons assume the
 southern hemisphere**: `venueHemisphere()` derives it from latitude and
 `data.js` passes it on every load. Detail, and the honest residue in each →
-[`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+[`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 > ✅ **FIXED 2026-08-16 (wt: faves-cook)** — `sync_check.mjs` reaches its own
 > `OK — 16 passed, 0 failed` again, five consecutive green runs, and three
@@ -67,7 +67,7 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
 >   with this fix — **CI runs none of the browser checks.** Nothing was calling
 >   it. Every Settings selector now lives in one `NAV` block so the next
 >   refactor breaks one line loudly.
-> Detail in the tool's own header and → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> Detail in the tool's own header and → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 ✅ **Shipped 2026-08-17 (`ecbc82e`)** — **a killed browser check no longer
 leaks its Chrome.** `tools/lib/browser.mjs` reaps its registered children and
@@ -78,7 +78,7 @@ sweeps unheld `faves-*-check-*` profiles from `$TMPDIR` on first launch. 🛑
 profile dir on the **happy** path — 178 of the 189 measured that morning. And a
 CDP transport timeout now aborts as a harness error with exit 2 instead of
 printing `FAIL <assertion>` with exit 1. Detail →
-[`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+[`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 > ✅ **OWNER RULING 2026-08-16 — FIVE parallel sessions stay. Recommendation
 > overruled, deliberately.** A session proposed cutting to **three**, each given
@@ -116,7 +116,7 @@ printing `FAIL <assertion>` with exit 1. Detail →
 > the item's premise was a *neighbouring repo's convention*, and it moved.
 > Bare sweeps are safe here again. 🚩 Returns if a worktree is ever taken inside
 > the tree; upstream atelier E9 stays valid and untouched. Detail →
-> [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 ✅ **Two accepted ADRs both numbered 0025 — ruled 2026-08-15.**
 `0025-settings-index-and-panels.md` (2026-08-08) and
@@ -141,7 +141,7 @@ queue-never-deliver rule and fixed upstream in `atelier@ab74014`. Re-verified
 here today: 16 findings → 0. 🔎 **Our stated root cause was wrong** — we named
 the dot-directory, upstream found the hyphen — and the write-up carries why a
 repro built from a single failing shape confirms the shape, not the cause.
-Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 ✅ **`plainscan` — scope and both sub-calls ruled, 2026-08-15.** Arrived
 2026-08-09 with **1177** findings and no decided scope; **302 today**. The scope
 question was answered twice over and independently: the owner ruled it here on
@@ -186,7 +186,7 @@ tree, its `SHELL_VERSION` and its `branch@sha`; the `OK — N passed, N failed`
 first line is byte-identical, so every existing grep still works. The item's own
 premise — that `tools/lib/browser.mjs` owns the summary — was **false**, all ten
 hand-rolled their own tail, so the fix made the premise true rather than working
-around it. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+around it. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
 **shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**
@@ -196,7 +196,8 @@ pass over all 68 strings). ⚠ **honest caveat:** the AI pass is **not** a
 fluent-speaker sign-off — a native review of the 9 flagged strings stays the
 **owner option** before public launch
 ([review](../../reviews/2026-07-22-1148-reo-wording-review.md)). Detail →
-[`ROADMAP-DONE.md`](../../ROADMAP-DONE.md). **2026-08-09 additions to that review
+[`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
+**2026-08-09 additions to that review
 queue:** ~25 new `// draft` strings landed with the update notice, units,
 report and import/transfer features (all flagged in `reo.js`); the dictionary
 check flagged two existing choices worth a fluent speaker's eye — **`tahua

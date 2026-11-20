@@ -1,9 +1,9 @@
 # Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)
 
 ✅ **`.order-head` collision — fixed 2026-08-09.** Detail →
-[`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+[`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 ✅ **"Your data" panel split — fixed 2026-08-09.** Detail →
-[`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+[`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 **a. Settings: alternatives to drill-in** ✅ **RULED 2026-08-16 — keep the
 drill-in.** Owner asked the question and answered it: the index-of-rows into
@@ -47,7 +47,7 @@ branches within" — so two different jobs stop reading as one. 18 strings acros
 specifically an eating-house — would have desynced the moment the English
 stopped saying "restaurants"). 🎯 **Two judgement calls the owner may want to
 overrule, and one pre-existing flaw found:** detail →
-[`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+[`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 **c. Home screen: one place for filters** — ✅ **MEASURED AND BUILT 2026-08-16.**
 The owner re-raised it from his own iPhone (*"On the iPhone its pretty bad"*),
@@ -152,7 +152,7 @@ now holds only "Pick for us" and the order pill, so its label is slightly off.
 > SC 1.4.13 on its hover path; the owner accepted the recommendation to delete
 > the reveal rather than patch it. [ADR 0059]; record, and why its regression
 > guard is a source test rather than a headless one →
-> [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 > ✅ **15z — the desktop filter row IS a row** (2026-08-16, `58432eb`,
 > [ADR 0062]). Owner, raw, on seeing 15x shipped: *"truly horrible UI, it wastes

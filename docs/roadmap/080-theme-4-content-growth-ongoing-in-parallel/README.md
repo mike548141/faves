@@ -10,7 +10,7 @@
   in `cook-at-home.json` get replaced from the Notes export.
 - **Dish photos** `[L][schema]` — ✅ rendering shipped 2026-07-08 (self-hosted
   `image`/`alt`, SW-cached, no layout shift); now purely a sourcing task (drop
-  owner photos into `intake/`). Render detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  owner photos into `intake/`). Render detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 ### Per-venue content follow-ups
 
@@ -44,4 +44,4 @@ delivery app.** Clear one by bringing back the fact.
 > 🔑 **The fetch authorisation is now exhausted**, so every one of the 18
 > remaining stubs is blocked on a photo or an in-store visit. Do not re-attempt
 > them as research — see "Venues still `stub`" below.
-> Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).

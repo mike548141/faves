@@ -5,7 +5,7 @@ entry is never edited or reordered once written. At session start read only
 the recent tail (`tail -60 docs/SESSIONS.md`); the full history is for
 grepping, not for loading whole. When the index outgrows its budget it
 **rotates**: the recent tail stays here, older entries move verbatim to
-[`SESSIONS-ARCHIVE.md`](SESSIONS-ARCHIVE.md) (grep on demand, never load
+[`SESSIONS.md`](SESSIONS.md) (grep on demand, never load
 whole) — the current-truth/history split, same as `ROADMAP`→`ROADMAP-DONE`.
 A substantial session may also put full detail in `docs/sessions/` and carry
 a one-line pointer here. Convention adopted from `ros`/`tiki` (2026-07-08);
@@ -28,6 +28,82 @@ writes its detail file and adds one line at the bottom.
 
 <!-- indexscan:maps dir=sessions match=*.md -->
 
+<!-- archivecut:begin docs/SESSIONS-ARCHIVE.md -->
+- [2026-07-18 · Faves session log — archive](sessions/2026-07-18-archived-000-faves-session-log-archive.md) — archived preamble, verbatim in its file
+- [2026-07-06 · 2026-07-06 and earlier (backfilled from git history)](sessions/2026-07-06-archived-001-2026-07-06-and-earlier-backfilled-from-git-his.md) — archived entry, verbatim in its file
+
+- [2026-07-07 · 2026-07-07 → 08](sessions/2026-07-07-archived-002-2026-07-07-08.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (conventions)](sessions/2026-07-08-archived-003-2026-07-08-conventions.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (roadmap Theme 2, step 1 — coords + native maps)](sessions/2026-07-08-archived-004-2026-07-08-roadmap-theme-2-step-1-coords-nativ.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (roadmap Theme 2, step 3 — "what's close")](sessions/2026-07-08-archived-005-2026-07-08-roadmap-theme-2-step-3-what-s-close.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (live opening hours — the parked "Open now", expanded)](sessions/2026-07-08-archived-006-2026-07-08-live-opening-hours-the-parked-open.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (dish/venue photos + recommended pairings)](sessions/2026-07-08-archived-007-2026-07-08-dish-venue-photos-recommended-pairi.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (batch 4: +11 venues, filters, sticky headings, roadmap)](sessions/2026-07-08-archived-008-2026-07-08-batch-4-11-venues-filters-sticky-he.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (Cook at Home full recipe pages)](sessions/2026-07-08-archived-009-2026-07-08-cook-at-home-full-recipe-pages.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (global search on the home screen)](sessions/2026-07-08-archived-010-2026-07-08-global-search-on-the-home-screen.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (order tally — Theme 1 flagship)](sessions/2026-07-08-archived-011-2026-07-08-order-tally-theme-1-flagship.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (hearted favourites — local personal layer, part 2)](sessions/2026-07-08-archived-012-2026-07-08-hearted-favourites-local-personal-l.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (smart default order + heart polish)](sessions/2026-07-08-archived-013-2026-07-08-smart-default-order-heart-polish.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (favourites influence the sort order)](sessions/2026-07-08-archived-014-2026-07-08-favourites-influence-the-sort-order.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (weighted favourite/distance metric + user settings)](sessions/2026-07-08-archived-015-2026-07-08-weighted-favourite-distance-metric.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (navigation fixes + a batch of roadmap capture)](sessions/2026-07-08-archived-016-2026-07-08-navigation-fixes-a-batch-of-roadmap.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (design declutter: ⓘ caveat disclosure + page footer)](sessions/2026-07-08-archived-017-2026-07-08-design-declutter-i-caveat-disclosur.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (add two pizza venues: Hell Pizza Newlands + Pizza Hut](sessions/2026-07-08-archived-018-2026-07-08-add-two-pizza-venues-hell-pizza-new.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (typical price per person, Theme 5)](sessions/2026-07-08-archived-019-2026-07-08-typical-price-per-person-theme-5.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (sticky menu search, Theme 3)](sessions/2026-07-08-archived-020-2026-07-08-sticky-menu-search-theme-3.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (prominent back link, Theme 3)](sessions/2026-07-08-archived-021-2026-07-08-prominent-back-link-theme-3.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (nest dishes under their place in Favourites, Theme 3)](sessions/2026-07-08-archived-022-2026-07-08-nest-dishes-under-their-place-in-fa.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (cheap-eats picker mode, Theme 5)](sessions/2026-07-08-archived-023-2026-07-08-cheap-eats-picker-mode-theme-5.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (relocate cheap-eats to a list filter + Fable UX review +](sessions/2026-07-08-archived-024-2026-07-08-relocate-cheap-eats-to-a-list-filte.md) — archived entry, verbatim in its file
+
+- [2026-07-08 · 2026-07-08 (P1 batch + P2 price override + two-column panel + overflow](sessions/2026-07-08-archived-025-2026-07-08-p1-batch-p2-price-override-two-colu.md) — archived entry, verbatim in its file
+
+- [2026-07-09 · 2026-07-09 (queue batch: order-codes, SBOM, more allergens, food](sessions/2026-07-09-archived-026-2026-07-09-queue-batch-order-codes-sbom-more-a.md) — archived entry, verbatim in its file
+
+- [2026-07-09 · 2026-07-09 (queue batch: surface favourites + te reo Māori toggle)](sessions/2026-07-09-archived-027-2026-07-09-queue-batch-surface-favourites-te-r.md) — archived entry, verbatim in its file
+
+- [2026-07-09 · 2026-07-09 (te reo second pass: menu + recipe screens)](sessions/2026-07-09-archived-028-2026-07-09-te-reo-second-pass-menu-recipe-scre.md) — archived entry, verbatim in its file
+
+- [2026-07-09 · 2026-07-09 (design: group ordering + backend stance)](sessions/2026-07-09-archived-029-2026-07-09-design-group-ordering-backend-stanc.md) — archived entry, verbatim in its file
+
+- [2026-07-10 · 2026-07-10 (Opus: Theme 1b group ordering — send/receive)](sessions/2026-07-10-archived-030-2026-07-10-opus-theme-1b-group-ordering-send-r.md) — archived entry, verbatim in its file
+
+- [2026-07-10 · 2026-07-10 (Opus: Theme 1b QR fallback — the last piece)](sessions/2026-07-10-archived-031-2026-07-10-opus-theme-1b-qr-fallback-the-last.md) — archived entry, verbatim in its file
+
+- [2026-07-10 · 2026-07-10 (Opus: shareable shortlist links — Theme 1b fully closed)](sessions/2026-07-10-archived-032-2026-07-10-opus-shareable-shortlist-links-them.md) — archived entry, verbatim in its file
+
+- [2026-07-10 · 2026-07-10 (Opus: Phase 7 deploy — prep + push; owner steps remain)](sessions/2026-07-10-archived-033-2026-07-10-opus-phase-7-deploy-prep-push-owner.md) — archived entry, verbatim in its file
+
+- [2026-07-11 · 2026-07-11 (Fable: Phase 7 deploy — the site is LIVE)](sessions/2026-07-11-archived-034-2026-07-11-fable-phase-7-deploy-the-site-is-li.md) — archived entry, verbatim in its file
+
+- [2026-07-12 · 2026-07-12 (Opus: UX queue — mobile contact bar collapse)](sessions/2026-07-12-archived-035-2026-07-12-opus-ux-queue-mobile-contact-bar-co.md) — archived entry, verbatim in its file
+
+- [2026-07-12 · 2026-07-12 (Opus: UX queue — About surface, Share this app, Pick-FAB](sessions/2026-07-12-archived-036-2026-07-12-opus-ux-queue-about-surface-share-t.md) — archived entry, verbatim in its file
+
+- [2026-07-12 · 2026-07-12 (Opus: real-device UX fixes — menu + home chrome)](sessions/2026-07-12-archived-037-2026-07-12-opus-real-device-ux-fixes-menu-home.md) — archived entry, verbatim in its file
+<!-- archivecut:end -->
 - [2026-07-11 · ~2254 UTC](sessions/2026-07-11-2254-fable-code-review-of-the-ux-chrome-block.md) — 2026-07-12 (Fable: code review of the UX/chrome block)
 - [2026-07-12 · ~0050 UTC](sessions/2026-07-12-0050-opus-fixed-the-six-confirmed-review-bugs.md) — 2026-07-12 (Opus: fixed the six confirmed review bugs)
 - [2026-07-12 · ~0114 UTC](sessions/2026-07-12-0114-opus-the-7-cleanup-block-from-the-fable-review.md) — 2026-07-12 (Opus: the #7 cleanup block from the Fable review)

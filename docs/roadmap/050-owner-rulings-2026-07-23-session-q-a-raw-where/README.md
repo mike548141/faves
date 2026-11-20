@@ -80,5 +80,6 @@
 > ✅ **Ratings UX — settled 2026-08-16.** Owner: *"I've decided to keep the
 > current rating stars."* Attempt 3 is **cancelled, not parked** — ADR 0019's
 > 1–5 slider is the answer, and no superseding ADR is needed. The two rejected
-> designs and why they were rejected → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md), so
-> neither is re-proposed.
+> designs and why they were rejected →
+> [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md),
+> so neither is re-proposed.

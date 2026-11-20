@@ -62,3 +62,12 @@ data/products/*.json  # manufacturers' own printed factory addresses; private-ad
 # per-line marker is impossible in JSON, hence the glob.
 data/intake/menu-sources.json  # sha256 hex digests trip nz-phone on digit runs; file holds provenance rows only, no contact data
 data/intake/maps-hours-readings.json  # the street addresses of two fast-food chains' shops as their Google listings print them, mirroring site/data/ (ADR 0022 gate 1); no person's detail; the only phones are McDonald's listing numbers already in site/data, kept for the phone match (ADR 0161)
+
+# The pre-split board archive, cut into section 990 on 2026-11-20 by atelier's
+# archivecut (a move proven byte for byte against the old docs/ROADMAP-DONE.md).
+# Its README re-adds, as new lines, prose that was already committed in the old
+# file. One of those lines trips a local literal term: the same line, unchanged,
+# published since 2026-08. A per-line marker is impossible here: it would change
+# the bytes the --verify proof rebuilds the source from. The page is frozen, so
+# this hole cannot grow. It covers this one file, not the folder.
+docs/roadmap/990-done-before-the-split/README.md  # frozen verbatim archive page; the flagged line was already public in the old ROADMAP-DONE.md, and a marker would break archivecut's byte-for-byte proof

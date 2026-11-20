@@ -12,27 +12,27 @@ only the owner's tagging owed), and 37n is open.
 The released claim only ever covered the owner's original five.
 
 > ✅ **Shipped 2026-08-16** — 37a — the Clear ticks button goes. Detail →
-> [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 > ✅ **Shipped 2026-08-16** — 37b — the timer's whole presentation is wrong. Detail →
-> [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 > ✅ **Shipped 2026-08-16 — 37c, 37d and 37e**, with 37l and 37m below: the
 > recipe-page pass, done together because all five move the same rows. The
 > ingredient list folds and remembers, splits into two columns where two fit,
 > and a recipe carries its source as a field. [ADR 0070] holds the schema.
-> Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 > ✅ **Shipped 2026-08-16** — 37f — "Along a route" is removed whole. Detail →
-> [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 > ✅ **Shipped 2026-08-17** — 37g — the SORT BY section goes, and distance joins
 > the one ranking. Built to [ADR 0068], its item 4 superseded by [ADR 0069] (the
-> location ask is primed, not sprung). Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> location ask is primed, not sprung). Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 > ✅ **Shipped 2026-08-16** — 37h — remove "Transfer to another device". Detail →
-> [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 > ✅ **Shipped 2026-08-16** — 37i — Sync lives inside "Your data". Detail →
-> [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 > ✅ **Shipped 2026-08-17** — 37j — "Everywhere" → "Any service", and the te reo
-> re-glossed with it. Landed inside 37g. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> re-glossed with it. Landed inside 37g. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 > ✅ **37k's BLOCKING 🚩 IS CLEARED 2026-08-16 — and nothing else is.** Recorded
 > as **ADR 0077**. The owner's ruling was *check Theme 30's `service` axis
@@ -187,7 +187,7 @@ The released claim only ever covered the owner's original five.
 > `column-width` not `column-count`, `:has(li:nth-child(6))` so a short list is
 > never split, and `break-inside: avoid`. Proven at 390/1100 px and 16/24/32 px
 > text by the new `tools/recipe_check.mjs` (22 assertions, each verified by
-> reintroducing its own bug). Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> reintroducing its own bug). Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 ### 37n's owner rulings — taken 2026-08-16, all four, before the sweep runs
 

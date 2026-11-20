@@ -80,7 +80,7 @@ Android, all paths but `/_/*`). The rest are worse than absent:
 - ✅ **31d — accessibility wording — DONE 2026-08-16** (`cfc9309`). Every
   off-site link the menu screen renders now carries a visually-hidden
   " (opens in a new window)" — the literal WCAG G201 wording, naming only the
-  guaranteed behaviour. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+  guaranteed behaviour. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 🚩 **Do not publish** any per-store Domino's link, `order.subway.com/en-nz/menu`,
 `subway.co.nz`, `easyeats.nz`, or `hellpizza.com` — none verified or resolving.

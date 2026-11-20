@@ -5,7 +5,7 @@ the `intake/` pipeline (suggest a place / report a change). When revisited, the
 honest candidates within the constraints: **GitHub Issues** (pre-filled
 `issues/new` to a public `faves-feedback` repo) or a **Cloudflare Pages form + edge
 function** (R2 photo uploads, adds serverless + a spam guard); third-party forms
-stay ✗-by-default. Full pre-decision analysis → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+stay ✗-by-default. Full pre-decision analysis → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 ### Reactivated 2026-08-09 (owner) — "tell us what's wrong or missing"
 

@@ -1,15 +1,28 @@
+# Done before the split
+
+The board's finished work from before it moved to one file per item,
+cut from `docs/ROADMAP-DONE.md`
+(last changed in `d57e359f`) into one `[x]` item file per entry by
+`tools/archivecut.py`. Below the marker line this page is that file
+verbatim: its preamble, its headings and every line that was not an
+entry, in order, with each entry replaced by a link to the item file
+that holds it, and links re-pointed for the new depth.
+`python3 tools/archivecut.py --verify` rebuilds the original from these
+files and compares it with the last committed copy.
+
+<!-- archivecut:verbatim-below -->
 # Roadmap — resolved detail (archive)
 
 🛑 **FROZEN 2026-08-17 — nothing is added to this file again.** It is the
 verbatim record of everything harvested while the roadmap was one file. The
-board is now one file per item under [`roadmap/`](roadmap/README.md), and a done
+board is now one file per item under [`roadmap/`](../README.md), and a done
 item simply stays in its own file as `[x]`, carrying its own `git log` as
 provenance — so the harvest step, and the half-landed window it opened between
 finishing work and recording it, are both retired. Read this for the *why*
 behind anything resolved before the split; write nothing into it.
 
 Verbatim design records for the roadmap items that are **resolved** — shipped,
-decided-against, or owner-parked — moved out of [`ROADMAP.md`](ROADMAP.md) on
+decided-against, or owner-parked — moved out of [`ROADMAP.md`](../../ROADMAP.md) on
 2026-07-18 to keep the always-loaded roadmap to what's *open*. Each block is the
 original write-up (the *why*, the deferrals, the rejected alternatives) — grep it
 when a one-line pointer in the roadmap isn't enough; do not load it whole.
@@ -739,7 +752,7 @@ dependency.
 - **Te reo Māori wording review** ✅ **ran 2026-07-22** — moved here from
   `ROADMAP.md` on 2026-07-23. The pre-launch reo **wording review ran**
   (2026-07-22,
-  [`docs/reviews/2026-07-22-1148-reo-wording-review.md`](reviews/2026-07-22-1148-reo-wording-review.md)):
+  [`docs/reviews/2026-07-22-1148-reo-wording-review.md`](../../reviews/2026-07-22-1148-reo-wording-review.md)):
   all 68 strings reviewed — macrons clean, 59 kept, 0 wording changes, 9
   flagged, plus a `lang="mi"` per-part a11y fix. ⚠ **honest caveat:** an AI
   pass, not a fluent-speaker sign-off — a native review of the 9 flagged
@@ -784,56 +797,17 @@ dependency.
 
 ## Theme 13 — What the time dimension unlocks
 
-Resolved items only; the open ones stay in [`ROADMAP.md`](ROADMAP.md).
+Resolved items only; the open ones stay in [`ROADMAP.md`](../../ROADMAP.md).
 
-- [x] **f. `verified` must carry its derivation** `[M][schema]` — shipped
-  2026-08-09 (ADR 0031). `verified` keeps its shape and gains a sibling
-  **`verifiedBy`** naming one of six **source classes**: `in-store` ·
-  `paper-menu` · `official-site` · `phone` · `delivery-app` ·
-  `third-party`. Granularity is the **record**, argued rather than assumed —
-  acquisition here is a session act (one person, one source, a whole menu),
-  and where a menu genuinely has two readings the schema already separates
-  them as two price-series entries, so an optional per-entry `method`
-  override ships too and inherits the venue's when absent. Per-price as the
-  primary level was rejected: with no backfill it would ship 100% empty
-  (§9's own "more dimension than the questions justify"). `verified` as an
-  object was rejected too — four live consumers read it as a bare string on
-  installed phones. `validate.py` errors on an off-vocabulary method, a
-  method with no date, and `status: "verified"` without both; it **warns**
-  on a date with no method, so nothing is invented. Applied to the only two
-  records with a date, from provenance `SESSIONS.md` states: Gold Lining
-  `in-store`, Churton `paper-menu`. Menu header reads "Read from a paper
-  menu, 8 Aug 2026". Verified: node --test 491 pass, validate 31 files, <!-- datescan:allow: quoted UI copy — the date as the menu screen prints it, not a dated claim -->
-  headless-Chrome check on the two records at 390 px.
+- ✅ [0010-f-verified-must-carry-its-derivation](0010-f-verified-must-carry-its-derivation.md)
 
 ## Tooling — the gates themselves
 
-- [x] **A negative dish price validated clean** `[S][schema]` — fixed
-  2026-08-09. Found by mutation-testing `validate.py`: 8 deliberate
-  corruptions of a real record, 7 caught, this one through. `price` was
-  type-checked (number, not bool, not string, series values checked
-  identically under ADR 0023) but never **sign**-checked, while
-  `pricePerPerson` ten lines above it had always required `> 0`. One
-  rule in the file guarded its sign and its neighbour did not.
-  The bound shipped is `>= 0`, not `> 0`: a genuinely free item is a
-  real thing a menu can say, and refusing it would push the value to
-  `null`, which already means "no price recorded" — a different fact.
-  No data changed (checked: no zero and no negative prices across all
-  31 records; the lowest real price is $0.90).
-  **The durable half is `tools/test_validate.py`** — the harness made
-  permanent and wired into CI. It copies the data + tools to a temp
-  dir, breaks one real record 14 specific ways, and asserts the gate
-  errors, warns or accepts as specified. Self-checked by deleting the
-  new sign check and confirming the harness exits 1 naming the hole,
-  then restoring it and confirming exit 0 — a harness that cannot fail
-  would have been worthless. It is this repo's **first Python test**:
-  483 JS tests and zero Python ones meant every `tools/*.py` gate was
-  itself unexercised, and a validator's failure mode is silence — a
-  check that never fires looks exactly like data that is always clean.
+- ✅ [0020-a-negative-dish-price-validated-clean](0020-a-negative-dish-price-validated-clean.md)
 
 ### One noun for one thing — the wording sweep (Theme 15b, 2026-08-09)
 
-Shipped on `faves-one-noun`, [ADR 0035](decisions/0035-one-noun-place-and-branch.md).
+Shipped on `faves-one-noun`, [ADR 0035](../../decisions/0035-one-noun-place-and-branch.md).
 The decision, the calls made inside it, and what it deliberately left alone.
 
 **The two nouns.** *place* for a venue as the reader sees it; *branch* for one
@@ -1038,66 +1012,14 @@ carrying forward, because it generalises past this venue:
 > ✅ **Shipped 2026-08-16** (ADR 0048). The verbatim records, moved out of
 > ROADMAP.md on completion. 14b, 14c and 14f remain open there.
 
-- [x] ✅ **14a — Structured add-ons** — **shipped 2026-08-16** (ADR 0048):
-  venue-level `addOnGroups` referenced by id from a section or a dish,
-  `select: one|many` with a `max` cap, group-level price default, required
-  per-option `tags`. `site/js/addons.js` (resolver + composition, 25 unit
-  tests) and `site/js/addons-ui.js` (the picker). Enforced in `validate.py`,
-  including unknown-key rejection — `"prive": 2.5` inside a group defaulting
-  to `0` would otherwise validate clean and sell the extra free. Two design
-  calls deviate from the notes below and are recorded in the ADR: **free is
-  written `0`, not implied by an absent price**, and **options are standalone
-  records, not references to menu items** (that is Theme 25's question).
-  Original note: optional `addOns` on
-  a dish (`{ name, price, tags }`) plus a **reusable group** defined once per
-  section or venue that dishes reference, so "brunch sides" attaches to eight
-  brunch dishes without being written eight times. Design calls: single-select vs
-  multi-select per group (the Garden Salad's "chicken, halloumi, prawns **or**
-  beef" is a pick-one; brunch sides are pick-many); whether an add-on may itself
-  be an existing menu item by id (the brunch sides *are* menu items) or is always
-  a standalone record. Record in `ARCHITECTURE.md` + enforce in `validate.py`
-  when it lands.
+- ✅ [0030-14a-structured-add-ons](0030-14a-structured-add-ons.md)
 
-- [x] ✅ **14d — Safety: an add-on carries its own tags** — **shipped
-  2026-08-16 with 14a**, as this item insisted. Composition rule: **allergens
-  union, dietary claims intersect**. 🔎 The intersection half is the finding —
-  a contradiction-only rule (drop `vg` only when an option states a clashing
-  allergen) handles satay perfectly and **misses grilled chicken entirely**,
-  because meat carries no `contains-*` at all, leaving a vegan dish plus
-  chicken still reading vegan. The satay example alone could never have taught
-  that. `tools/addon_check.mjs` asserts the whole path in a real browser.
-  Original note: **the
-  load-bearing point.** Adding halloumi to a dairy-free dish makes it not
-  dairy-free; a satay add-on makes a dish contain peanuts. So `dietary.js`'s
-  `dishFlagged` / `dishSatisfiesDiet` must evaluate **dish + selected add-ons**,
-  not the dish alone, and the order line must show the resulting warning — a
-  dish that was safe when you tapped it can stop being safe when you configure
-  it. This is not optional polish on 14a; it ships with it.
-- [x] ✅ **14e — Order-tally knock-ons** — **shipped 2026-08-16**. Line
-  identity widened to `(venueId, name, selectionKey)`; a line's `price` is now
-  the *configured* unit price, which is why the totals maths needed no change.
-  🔎 **The codec did NOT bump, against this item's expectation.** Measured:
-  `CODEC_VERSION` is shared by orders, shortlists *and* personal transfers and
-  checked with a strict `!==`, so bumping it would invalidate every outstanding
-  link of all three kinds for a change two of them never use. The selection is
-  appended as a fourth positional slot, which every existing decoder ignores by
-  construction. Original note: a dish added twice with different
-  add-ons is **two lines, not a quantity of 2**; the subtotal maths takes add-on
-  prices; and the group-order share codec (ADR 0009) has to carry the
-  configuration, which means a **versioned codec bump** and a receive-side path
-  for links minted before it. Audit these together before building 14a, not after.
+- ✅ [0040-14d-safety-an-add-on-carries-its-own-tags](0040-14d-safety-an-add-on-carries-its-own-tags.md)
+- ✅ [0050-14e-order-tally-knock-ons](0050-14e-order-tally-knock-ons.md)
 
 ## Theme 29 — things pinned over the menu
 
-- [x] ✅ **The "Call to order" button looked cut off** — **fixed 2026-08-16**.
-  Pinned at the top of a long menu, the 44px button sat in a 49px bar, leaving
-  3px under it, so its rounded bottom read as clipped and merged with whatever
-  scrolled past. `padding-block` on `.contact-bar-inner`; `menu.js` measures
-  that element and feeds the height back into `--contact-bar-h`, so the sticky
-  toolbar's offset followed on its own. Measured in a real browser before and
-  after: 3px → 11.5px of clearance, toolbar offset correct in both.
-  🔎 The sticky search toolbar had *already* been fixed for the identical
-  mistake on its rounded top edge; the same trap, sprung twice.
+- ✅ [0060-the-call-to-order-button-looked-cut-off](0060-the-call-to-order-button-looked-cut-off.md)
 
 ## Ticked 2026-08-16 by staleness audit (Themes 19–20 residue)
 
@@ -1105,48 +1027,9 @@ Found by auditing every open roadmap item against the tree rather than against
 its own prose. Kept verbatim, including each item's original text, because the
 value is in seeing what was asked for beside what landed.
 
-- [x] ✅ **Venue timezone — DELIVERED (ADR 0043), ticked 2026-08-16 by audit.**
-  Every named deliverable landed and nobody ticked the box: `place.js`
-  `venueTimezone()`/`branchTimezone()` resolve per branch then venue then
-  `HOME_TIMEZONE`; `hours.nowIn(tz)` and `temporal.todayIn(tz)` replaced
-  `nzNow`/`todayNZ`, which no longer exist; `menu.js` renders
-  `Hours · ${zoneLabel(tz)}`; `app.js` computes the timezone note and **names no
-  zone when the list spans several**; `viewerOnNzTime` became
-  `viewerOnVenueTime(tz)`; `validate.py` checks IANA zones at card and branch
-  level. Residue is **data, not code**: no record carries a `timezone` yet
-  because all 55 are in New Zealand, so the fallback does the work. Original
-  text kept below for the record.
-  🗄 `[M][schema]` — `hours.js` computes open/closed in `Pacific/Auckland` and
-  `temporal.js` reads the current date the same way (ADR 0006). A London venue
-  would render open/closed against Wellington's clock, off by roughly half a
-  day, with nothing on screen saying so. Needs an optional per-venue `timezone`
-  (IANA) defaulting to `Pacific/Auckland`, `nzNow`/`todayNZ` taking a zone, an
-  ADR superseding 0006, and the two visible strings that hard-code the claim —
-  `Hours · NZ time` and *"Open/closed times are New Zealand time"* — becoming
-  the venue's own zone. `viewerOnNzTime` generalises to a per-venue comparison.
-- [x] ✅ **Currency is NZD by construction — DELIVERED, ticked 2026-08-16 by
-  audit.** `about-ui.js` no longer claims a site currency (*"Each place's prices
-  are in its own local currency"*); `place.js` carries `venueCurrency()`,
-  `priceCurrency()` (per-item) and `formatMoney()`; `menu.js`'s caveat names the
-  venue's own currency; and `validate.py` now **requires** `currency` on every
-  non-recipe record with a rate in `fx.json` — all 55 carry it. ⚠️ The second
-  half was **answered by ruling, not built**: `price.js` still holds one
-  `BAND_CURRENCY = "NZD"` calibration and converts into it
-  (`toBandCurrency()`), because [ADR 0045](decisions/0045-prices-convert-and-localisation-can-follow-you.md)
-  deliberately reversed 0043's refusal — *"one calibration, in NZD, reached from
-  any other currency by conversion"*. So "the bands stop being global" is not
-  outstanding work; it is a decision that went the other way.
-- [x] ✅ **Seasons assume the southern hemisphere — DELIVERED, ticked 2026-08-16
-  by audit.** `place.venueHemisphere()` derives north/south from the branch's or
-  venue's latitude (never stored — a coordinate already answers it, and a stored
-  copy can disagree with the pin); `seasonMonths`/`isAvailable`/`resolveRecord`
-  all take a `hemisphere`, and `data.js` passes it on every load. Tested in
-  `tests/place.test.js`. 🔎 One residue worth naming: `venueHemisphere` returns
-  `null` for a coordless venue *so the caller can decline to guess*, and
-  `data.js` then guesses `"south"` anyway. Defensible for an NZ-home collection,
-  dishonest the day it isn't. Original text: `[XS][js]` — `temporal.js` maps
-  `summer` to Dec–Feb, which inverts north of the equator. Smallest of the
-  three, and it falls out of the timezone work: a zone implies a hemisphere.
+- ✅ [0070-venue-timezone-delivered-adr-0043-ticked-2026](0070-venue-timezone-delivered-adr-0043-ticked-2026.md)
+- ✅ [0080-currency-is-nzd-by-construction-delivered-tick](0080-currency-is-nzd-by-construction-delivered-tick.md)
+- ✅ [0090-seasons-assume-the-southern-hemisphere-deliver](0090-seasons-assume-the-southern-hemisphere-deliver.md)
 
 ---
 
@@ -1163,31 +1046,7 @@ Harvested from `ROADMAP.md` by the following session, which found the box still
 *ticked* is itself the note worth keeping: an open item that is silently already
 closed sends the next session to redo it.
 
-- [x] ✅ **`tools/tag_allergens.py` has two holes — fixed `eb9b38f`.** Cheddar
-  plus 13 further named cheeses join the dairy rule as **STATED**; `tartare
-  sauce` joins egg as **DERIVED**; `tortilla`/`burrito`/`quesadilla` join gluten
-  as **DERIVED**, with a `corn tortilla`/`rice paper` exclusion so the rule does
-  not over-reach. **6 real missing tags were found and applied**: 3 ×
-  `contains-dairy` on Hell Pizza, 3 × `contains-egg` on fish dinners at KTC and
-  Takeaway @ Churton. Verified independently 2026-08-16 by re-running the sweep
-  on a clean tree: **`0 tag(s) missing — 0 STATED, 0 DERIVED`**, i.e. the corpus
-  is settled, not merely the tool patched.
-  ⚠️ **What deliberately stays open, and why a rule cannot close it:** three
-  `sprig-and-fern-tawa` Cheeseburger twin warnings. Those rows carry stub
-  descriptions, and [ADR 0025](decisions/) forbids restoring a *positive*
-  allergen claim from a stub — inferring presence from an absence of text is the
-  one direction the one-way rule does not permit. It needs a human reading the
-  physical menu, so it belongs to Theme 4's content backlog, not to tooling.
-  🔎 The original item asked for the diff to be treated as the *measure of how
-  long this had been wrong*: 6 tags across 55 venues and 1755 dish rows is a
-  small number, and the honest reading is that the hole was narrow rather than
-  that the corpus was fine — `cheddar` only bites where a menu names the variety
-  and never the word "cheese", which is a writing habit, not a cuisine.
-  Original text: `[S][tools]` — the dairy rule matches `cheese` but not bare
-  `cheddar`; no rule at all for `tartare sauce` (egg) or `tortilla` (gluten);
-  fixing them adds tags to existing records, so it is a data change as well as a
-  tools change (bump `DATA_VERSION`, expect `validate.py`'s allergen warnings to
-  move).
+- ✅ [0100-tools-tag-allergens-py-has-two-holes-fixed-eb9](0100-tools-tag-allergens-py-has-two-holes-fixed-eb9.md)
 
 ---
 
@@ -1197,211 +1056,30 @@ Harvested from `ROADMAP.md`. Three of the four items shipped; the fourth was
 answered by measurement and deliberately not built. Original text kept, because
 the value is in seeing what was asked for beside what landed.
 
-- [x] ✅ **A shared shortlist now lands on the dish you meant** (`b92270c`).
-  Original text: *"`share-codec.js` packs shortlist dishes as a bare array of
-  name strings; changing the element type would break every decoder already in
-  the wild, so it decodes through `slug(name)`. A shared shortlist naming a
-  disambiguated row (the Gold Card Cheeseburger) arrives as the bare-slug one.
-  Not a regression — precisely what it did before ids existed — but not fixed
-  either. Order lines were fixed, by appending a positional slot; the same trick
-  needs its own slot shape here."*
-  🔎 **The order-line trick did not transfer, and the reason generalises past
-  this repo.** An order line is a **positional array**, so its id became slot 4.
-  A shortlist group is a **keyed object** `{v,n,r,s,f,d}`, so the equivalent of
-  "append a slot" is a new **key**, not a new position. `d` stays a bare string
-  array byte for byte; the id rides in `k`, an optional array positionally
-  parallel to `d`, `null` where the id says nothing the name doesn't, and the
-  whole key omitted when no dish in the group carries one. Same invariant as the
-  order line's — an old decoder reads `d` and never looks at `k` — reached by a
-  different mechanism. `CODEC_VERSION` did not move.
-  ⚠️ **The alternative you reach for first is unsafe, and was checked rather
-  than assumed:** `decodeShortlistItems` reads each element through
-  `clip(raw ?? "")`, so a mixed-type element arrives at an old decoder as the
-  string `"Cheeseburger,cheeseburger-gold-card"` — **mis-stated, not degraded**.
-  🚩 **The producer had to land in the same commit or the feature was dead code
-  that every test still passed.** `groupForShare` was throwing the id away, and
-  `cart-ui`'s receive dialog would have printed `[object Object]` the moment it
-  stopped. Every `g.dishes` consumer in `site/js/` was checked; `app.js` builds
-  its own separate grouping and needed nothing.
-  **Evidence: a real browser, not a unit test.** A real click on the heart of
-  Sprig & Fern Tawa's $21 Gold Card Cheeseburger, then
-  `groupForShare → encodeShortlist → decodeShare → favKey`, landing on
-  `d:sprig-and-fern-tawa cheeseburger-gold-card` and never the $28 Mains key.
-  Red first: with the producer reverted, both burgers collapse onto one key.
-- [x] ✅ **`temporal.js` no longer deletes a pick written as a `dishId`**
-  (`727cea9`). Original text: *"`temporal.js:524-528` intersects `record.picks`
-  against a `Set` of live dish names, so a pick written as a `dishId` is deleted
-  at that gate and vanishes from the page silently. Harmless today (every pick in
-  the corpus is a name) and primed for whoever first writes one as an id."*
-  Now filtered through `findDish`, the single resolver, reaching an id, a
-  slug-as-id, a name and a `formerId`. The gate still does its real job — a pick
-  whose dish is genuinely out of season is still dropped, in every form, and
-  returns in December. Cost measured rather than assumed: O(dishes) → O(picks ×
-  dishes), which over the real corpus (55 records, 1781 dishes, 33 picks) is
-  **2.90 ms per `resolveRecord` pass**.
-- [x] ✅ **The retired `sprig-and-fern` test fixture — renamed** (`b92270c`), and
-  it was **worse than the item described**. The item said the id was stale and
-  "read as a mistake". In fact `renames.js:38` maps it to `sprig-and-fern-tawa`,
-  so those tests were exercising the venue-rename migration **by accident** —
-  passing for a reason nobody intended. Renamed to `fixture-venue` where the test
-  meant "any old venue id", and deliberately left where a test exercises the
-  migration on purpose (`ratings.test.js`, and one composition test in
-  `dish-id.test.js`).
-- [x] 🔎 **Cross-record `goesWith` refs — ANSWERED 2026-08-16, deliberately not
-  built.** Disposition: closed as *asked and answered*, not as *done*. The open
-  reopen-when condition lives on in `ROADMAP.md` under Theme 25; only the
-  analysis is archived here.
-  Original text: *"the other record is not loaded, so `validate.py`'s `ALL_NAMES`
-  pre-pass matches names and not ids. Widening it is a separate, larger change."*
-  Two findings, and the second says the item was aimed at the wrong thing:
-  1. There are **zero** cross-record `goesWith` refs in the corpus (7 same-record
-     ones, all resolving). The gate has nothing to catch.
-  2. **Widening `ALL_NAMES` would not achieve what the item wants.** The wire
-     format is `id#Display Name`, and `pairingLinks` renders the post-`#` text as
-     the chip's **visible label**. Writing `id#cheeseburger-gold-card` would
-     validate, and would even anchor correctly — and the chip would read
-     "cheeseburger-gold-card" to a human. So the real question is the **wire
-     format** (a ref carrying an id *and* a label), not the validator.
-  Reopen when a cross-record ref actually needs to point at one of the 3 venues
-  that carry duplicate dish names.
+- ✅ [0110-a-shared-shortlist-now-lands-on-the-dish-you-m](0110-a-shared-shortlist-now-lands-on-the-dish-you-m.md)
+- ✅ [0120-temporal-js-no-longer-deletes-a-pick-written-a](0120-temporal-js-no-longer-deletes-a-pick-written-a.md)
+- ✅ [0130-the-retired-sprig-and-fern-test-fixture-rename](0130-the-retired-sprig-and-fern-test-fixture-rename.md)
+- ✅ [0140-cross-record-goeswith-refs-answered-2026-08-16](0140-cross-record-goeswith-refs-answered-2026-08-16.md)
 
 ## Theme 27 — 27b, say which field matched (shipped 2026-08-16)
 
-- [x] ✅ **Shipped** (`80da634`). Original text: *"the result row already shows
-  'Te Aro · Malaysian'; making the matched part visibly the reason would let the
-  reader judge relevance themselves, which is the honest version of ranking and
-  may make 27a optional. Try this one first."*
-  `search()` returns `matchField` and `matchText`; `resultRow()` gained
-  `nameMatch`/`subMatch` (DOM nodes wrapped in `<mark>`, never `innerHTML`) and a
-  plain-text `note`. `buildIndex()` now stores `address`, `city`, `services` and
-  `phone` per entry so the check is **per field** rather than against the
-  flattened haystack.
-  **Accessibility, stated as the reason and not as a checkbox:** the `<mark>` is
-  a bonus for sighted readers and never the sole carrier — the wrapped word is
-  already inside the announced name, so a screen reader hears identical text
-  either way. The one case that would otherwise be screen-reader-invisible — a
-  match on a hidden field, with nothing on the row to highlight — is exactly the
-  case that gets the `note` as ordinary readable text. Bold as well as
-  background, so nothing depends on colour.
-  🔎 **The item's own measurement had gone stale within the day.** Re-run in a
-  real browser at 390 px: "Bar" reproduced its four cited venues exactly (with
-  "Bar" highlighted in the **name**, while Baylands Brewery and Dirty Little
-  Secret — genuinely `cuisine: Bar` — highlighted in the sub instead), and
-  "Courtenay Place" showed "Matched: address" on five venues while KC Cafe, whose
-  `area` *is* Courtenay Place, highlighted genuinely. But **"Pub" no longer
-  returns 6 places with 5 name-coincidences** — the corpus moved under the
-  measurement. The mechanism handled it correctly regardless.
+- ✅ [0150-shipped](0150-shipped.md)
 
 ### Theme 28 — 28d, 28f, 28g (resolved 2026-08-16)
 
-- [x] **28d — `available.note` is write-only** `[XS][js]` — ✅ **done
-  2026-08-16** (`82ddb4b`), as part of 28f. `menu.js` now reads `available` off
-  the resolved record — `resolveRecord` was already carrying it, so there was
-  nothing to plumb — and renders the note under the heading. Verified live in
-  headless Chrome at 390 px: The Borough's `Burger Wellington 2026` shows *"The
-  Borough's entry in Wellington On a Plate's Burger Wellington."*
-  Reassigned from `faves-inflight`, which had started it, because it is one
-  `el()` call inside the section-heading block 28f rewrote whole and two
-  sessions stacking two subtitles under one `<h2>` is worse than either alone.
-  🚩 **The verification is deliberately NOT a committed test.** The corpus's
-  only `available.note` has `to: "2026-08-23"`, so an assertion on it goes red
-  on its own within a week and gets switched off — the failure mode
-  `branch_check.mjs`'s header warns about. It was proved with a throwaway
-  script instead. If a second venue ever carries a note with no end date, that
-  is the one to write a real check against.
+- ✅ [0160-28d-available-note-is-write-only](0160-28d-available-note-is-write-only.md)
 
-- [x] **28f — the qualifier comes out of the heading** `[M][design]` — ✅
-  **done 2026-08-16** (`82ddb4b`, `b391f1b`), ADR 0057. Owner, from his phone:
-  *"don't put the time into the section heading because it makes the section
-  heading too big in the top section heading list."* The heading string was
-  doing two jobs that want opposite lengths — it is also the jump-nav chip, and
-  Sprig & Fern's `Gold Card (Mon–Fri 11:30–17:30, weekends 10:00–17:30)` was a
-  **53-character chip, wider than a 390 px screen**. Sections now carry `note`,
-  rendered as a `<p>` under the `<h2>`; the chip and anchor use the name alone.
-  Eleven sections across seven venues moved.
-  - **Owner ruled on the follow-up:** move the qualifiers, leave the glosses.
-    R&S Satay's `(Noodle Soup)`, `(Fried Noodles)`, `(Beef or Chicken)` stay —
-    they translate the dish rather than qualify the section, and as subtext
-    they would read as a serving rule. Takeaway at Churton's `Burgers
-    (Standard)` also stays: "Standard" is what tells it apart from `Gourmet
-    Burgers` three rows below, so as subtext it would say nothing.
-  - **Not `available.note`** — `check_available` refuses a note-only window,
-    and `available` is a *filter* object (`isAvailable`/`isRetired` act on it),
-    so a presentational string there would make a section's visibility look
-    conditional. The two now mean different things and both render.
-  - **Leaves 28c free.** `note` is prose and nothing parses it, which is the
-    honest state of the data: a weekday+interval rule is still inexpressible.
-    When 28c lands it adds a structured field beside this one, no migration.
+- ✅ [0170-28f-the-qualifier-comes-out-of-the-heading](0170-28f-the-qualifier-comes-out-of-the-heading.md)
 
-- [x] **28g — a section's anchor was derived from its heading** `[M][schema]` —
-  🔎 **found by 28f firing it, then owner-ruled and built**, ADR 0058
-  (`2f0da85`). Renaming those eleven headings invalidated every deep link to
-  them in the same commit, because the anchor was `slug(section.section)`. Same
-  fault as ADR 0051 one level up, where the ruling was *"identity must be
-  immutable"*.
-  🎯 **The owner was given three options and took the most expensive one,
-  against the recommendation** — record-the-finding was recommended; he chose
-  the schema change. Do not re-propose deferring it.
-  `sectionId` is now stored, immutable and unique per venue; `validate.py`
-  refuses a duplicate (valid HTML that silently makes the second section
-  unreachable) and a non-slug id; `tools/seed_section_ids.py` seeded 210 of 235
-  sections with nothing moving on the day it ran.
+- ✅ [0180-28g-a-section-s-anchor-was-derived-from-its-he](0180-28g-a-section-s-anchor-was-derived-from-its-he.md)
 
 ---
 
 ## Theme 29 + Theme 15x — the floating controls (shipped 2026-08-16)
 
-- [x] ✅ **The back-to-top button covered dish content** (`f619722`). Original
-  text: *"the floating ↑ sits over the 'French fries' row and hides the
-  right-hand end of its price. A fixed control over a scrolling list will always
-  overlap something, so the fix is not 'move it' but give the dish list enough
-  end padding, or let the control get out of the way while the list is moving.
-  Hiding a price is the part that matters."*
-  🔎 **The method is the finding.** A **full-document sweep in 37 px steps** at
-  two widths × two text sizes, 547–859 positions per menu — because a fixed
-  control's victim depends entirely on where you stop scrolling, and a single
-  sample is exactly what every eyeball report of this bug had been.
-
-  | Control × content | Width/text | Worst overlap | Reachable | Positions it owned the tap |
-  |---|---|---|---|---|
-  | `.to-top` × `.dish-price` | 390 / 16px | **100%** | **0 px** | 96 / 547 |
-  | `.to-top` × `.heart` (home) | 1280 / 24px | **94.6%** | 2.6 px | 34 / 125 |
-  | `.to-top` × anything | 1280 / 16 & 24px | none | — | 0 |
-
-  **The roadmap offered two fixes and only one was live.** End padding was
-  *already* sufficient: at the document end the button overlapped nothing in all
-  eight combinations, before *and* after. All the damage was mid-scroll.
-  **Implementation notes worth keeping.** Tucked with `opacity` + `transform`,
-  deliberately **not** `visibility`, `pointer-events: none` or `[hidden]` — all
-  three remove it from the tab order and the a11y tree. It stays focusable
-  off-screen on the skip-link pattern and refuses to tuck while it holds focus.
-  An **idle re-tuck was rejected on measurement**: it would also clear the page
-  at rest, but takes the control away between the reader deciding to tap and
-  reaching it. And the thing that was verified rather than reasoned about: a
-  `position: fixed` element parked below the viewport adds **no** scrollable
-  overflow (`scrollWidth 390 === innerWidth 390`), now asserted permanently.
-- [x] ✅ **The fixed/sticky audit** (`f619722`). `a.app-home-link` was
-  **81.7 × 31.9 px**, under the 44 px floor — now 44. The pinned contact bar,
-  toolbar and section titles occlude scrolling content **by design** (opaque
-  pinned headers) and are not defects; jump-nav landing clearance was measured at
-  **+5.5 px** (390/16px) and **+8.4 px** (390/24px) — passing, but thin.
-  `a.menu-sub-link` at 31.1 × 22.8 px was left alone: it is an already-documented
-  WCAG 2.5.8 *inline* exception, and the CSS comment says so.
-  ⚠️ One measurement was **not** acted on and is now its own open item: the order
-  pill eating a "Gluten free" chip's tap at *Very large* text.
-- [x] ✅ **15x — the desktop filter row** (`f619722`), asked for twice and never
-  built because it looks like a media query and is not: the controls live inside
-  a `<dialog>`, and **a closed dialog cannot render its children**. One
-  `#filter-controls` section now moves between the sheet and an inline host — a
-  DOM move, so state and listeners survive and there is never a second copy to
-  keep in step. The breakpoint lives in **JS only**; a CSS media query carrying a
-  second copy of the number could disagree with the move, and that failure mode
-  is a row styled as an inline panel while it is actually inside a closed dialog.
-  🚩 **The quirk that bit was not the predicted one.** Focus surviving the
-  narrow→wide re-parent worked first time. Going wide with the sheet **open** is
-  the hard case: everything outside an open modal `<dialog>` is inert, so it must
-  close first — but `close()` parks focus on the very button the move then hides.
-  Capture `activeElement` **before** the close, restore **after** the hiding.
+- ✅ [0190-the-back-to-top-button-covered-dish-content](0190-the-back-to-top-button-covered-dish-content.md)
+- ✅ [0200-the-fixed-sticky-audit](0200-the-fixed-sticky-audit.md)
+- ✅ [0210-15x-the-desktop-filter-row](0210-15x-the-desktop-filter-row.md)
 
 **What a headless run at 390 px could not show, stated so nobody reads the green
 as a phone test:** iOS Safari rubber-banding produces momentary negative `dy` at
@@ -1418,88 +1096,20 @@ the CSS root font size grows every `rem` box but does **not** move `rem`-based
 
 ## Theme 15y — the ⓘ disclosure goes click-only (shipped 2026-08-16)
 
-- [x] ✅ **15y — the ⓘ disclosure failed WCAG 2.2 SC 1.4.13 on its hover path**
-  ([ADR 0059](decisions/0059-the-info-disclosure-is-click-only.md), `SHELL .62`).
-  One CSS rule — `.caveat-btn:hover ~ .caveat-note` — carried two faults. It was
-  not **Hoverable** (the rule keyed on the button, and `margin-top` put a gap
-  between the two, so moving the pointer toward the note to read it made the
-  note vanish) and not **Dismissible** (`disclosure()` wires Escape only on the
-  click path). It had separately produced an infinite flicker in Settings, where
-  the note sits in flow: revealing it grew the centred sheet and moved the ⓘ
-  **54px** out from under a stationary pointer.
-  Three options went to the owner — close the gap, bridge it with a transparent
-  `::before` plus a hover-path Escape handler, or delete the reveal — because
-  going click-only trades a mouse affordance for compliance rather than being
-  the neutral fix. **He accepted the recommendation** and the reveal is gone,
-  taking the earlier flicker guard with it. 23 lines of CSS out, 16 of comment in.
-  🔎 **The regression guard is in `tests/disclosure-css.test.js`, not in a
-  browser, and that is the lasting finding.** The headless version — hover the
-  ⓘ, assert nothing appears — was built first and **passed with the deleted rule
-  put back**: a synthetic `Input.dispatchMouseEvent` does not raise CSS `:hover`
-  reliably in that harness. It read as coverage and proved nothing. When a check
-  cannot be made to fail on demand, the check is what is broken; ask whether the
-  property is one of the render at all, or of the source.
+- ✅ [0220-15y-the-i-disclosure-failed-wcag-2-2-sc-1-4-13](0220-15y-the-i-disclosure-failed-wcag-2-2-sc-1-4-13.md)
 
 ## Theme 2 — the ratings control, settled (2026-08-16)
 
-- [x] ✅ **Ratings UX — attempt 3 cancelled.** Owner, 2026-08-16: *"I've decided
-  to keep the current rating stars."* ADR 0019's **1–5 star tap/drag slider**
-  stays; there is no v3 and no superseding ADR.
-  **Kept so neither rejected design is re-proposed.** (1) The original **1–3
-  three-button** control (ADR 0013) read ambiguously and crowded the ♥. (2) Its
-  replacement, the **1–5 slider** (ADR 0019) — under the name, clear of the ♥,
-  `role="slider"` with full keyboard, browser-verified at 390 px — the owner
-  **also** rejected on review (2026-07-23), and three v3 paradigms were floated
-  (tap-only 5 stars · emoji faces · number pills 1–5) before he parked the
-  choice rather than have a third guess built. On 2026-07-24 he ruled "redesign
-  later, not now"; on 2026-08-16 he closed it outright in favour of what is
-  live. The underlying model was never in question — 1–5, per-profile, personal
-  ratings local to the device (ADR 0013/0019).
-  ⚠️ Note the **curated-vs-personal split** mentioned in the old text is itself
-  superseded: the curated household rating was withdrawn the same day (Theme 5),
-  because it was never what the owner asked for.
+- ✅ [0230-ratings-ux-attempt-3-cancelled](0230-ratings-ux-attempt-3-cancelled.md)
 
 ## Per-branch details provenance — Theme 19 (2026-08-16)
 
-- [x] ✅ **Derivation is venue-level, but provenance is now per-branch** —
-  **DONE 2026-08-16** (`434f6b1`,
-  [ADR 0063](decisions/0063-details-provenance-belongs-to-a-branch.md)).
-  Branch-wins, venue as the default — the `timezone` precedent, not the
-  address/phone/hours one. The pair moves **whole**: a branch's date welded to
-  the chain's method would describe a reading nobody performed. Pandan migrated
-  (Melling `official-site`, Press Hall `third-party`); its ⓘ now names the
-  branch. `test_validate` 79 → 83 mutations, each new one proved to catch a
-  hole. **Per-kind ageing deliberately not built** — the shape is ruled, the
-  numbers still cannot come from a corpus whose every date sits in one 48-hour
-  window. This unblocks the McDonald's/Subway third-party hours capture.
-  Original text:
-  `[S][schema]` — Pandan proves the gap: address and phone first-party from the
-  venue's own site, one branch's hours third-party from its landlord, and one
-  `detailsVerifiedBy` to describe both. The honest read (weakest wins) throws
-  away true information about the stronger facts. A per-branch
-  `detailsVerified`/`detailsVerifiedBy` would fix it; deferred because one record
-  is not an evidence base for a schema change, which is the same restraint
-  ADR 0037 applied to ageing the field.
+- ✅ [0240-derivation-is-venue-level-but-provenance-is-no](0240-derivation-is-venue-level-but-provenance-is-no.md)
 ✅ **Reo: the confidence-note strings — drafted and queued 2026-08-16**
 
 ## 31d — a warning before a link leaves the site — Theme 31 (2026-08-16)
 
-- [x] ✅ **31d — accessibility wording** — **DONE 2026-08-16** (`cfc9309`).
-  Every off-site link the menu screen renders — ordering, the venue's own
-  website and the pickup/maps link — now carries a visually-hidden
-  " (opens in a new window)": the literal **WCAG G201** wording, naming only the
-  guaranteed behaviour and never the app switch, exactly as this item argued.
-  Guarded by a **source** test (`tests/menu-link-warning.test.js`) because
-  `menu.js` touches `document` at module load and cannot be imported under
-  `node --test` in a zero-dependency repo — the same reasoning that made 15y's
-  guard a source test. Proved by deleting the warning and watching it fail.
-  Original text: WCAG **G201** advises warning
-  before a link opens a new window; there is **no** technique for "may switch to
-  a native app" — the standard predates it. The defensible reading: warn about
-  the guaranteed behaviour (leaving the site), never promise the app switch.
-  Also note both platforms let the user permanently choose "open in browser"
-  (Apple documents that iOS *"examines the user's recent choices"*), so **two
-  people with identical phones can correctly get different behaviour.**
+- ✅ [0250-31d-accessibility-wording](0250-31d-accessibility-wording.md)
 
 ### Theme 37 — cook mode and the recipe page (owner-raised 2026-08-16)
 
@@ -1694,57 +1304,7 @@ nested. Nothing was delivered upstream and nothing should be withdrawn there.
 
 ## `sync_check.mjs` — dead through a whole refactor, and the hazard it invented (closed 2026-08-16)
 
-- [x] 🚩 **`sync_check.mjs` aborts before its FIRST assertion — the guard proves
-  nothing at all** `[S][js]`. **DONE 2026-08-16 (wt: faves-cook)**.
-  ⚠️ **Measured 2026-08-16, and the title of this item was wrong.** It said
-  "before its last three assertions". Run on a clean `main`, the check prints
-  its banner and then dies at the **first UI interaction**, with **zero PASS
-  lines**:
-  `harness error: no element matching .settings-row containing "Sync across
-  your devices"`.
-  🔎 **Cause, and it is not the race below.** Commit `e745923` *"settings:
-  remove Transfer to another device, and fold Sync into Your data"* turned that
-  top-level row into a `<p class="settings-sub">` inside the Your-data panel
-  (`settings-ui.js:384`). `sync_check.mjs:405` still clicks `.settings-row`.
-  🛑 **The documented warning is itself stale, and it misleads in the dangerous
-  direction.** `CLAUDE.md`'s verify list says to watch for *"a wall of PASS
-  lines followed by 'harness error'"*. There is no wall of PASS lines — there
-  are none — so a reader matching the documented symptom concludes they are
-  looking at something else. **Fix `CLAUDE.md` in the same change.**
-  🔑 **Third sighting today of one shape: a record whose premise expired in
-  silence.** The scanner-inflation item (closed above) and the "source did not
-  move" hand-check are the other two. Here a *UI refactor* invalidated a *test's
-  selector* and a *doctrine file's description of the failure*, and none of the
-  three knew about the others.
-  ⚠️ **Everything below this line is now UNVERIFIED, not false.** The
-  overflow-menu race was real when observed, but the check cannot reach it any
-  more, so nothing has re-confirmed it since `e745923`. Fix the selector first,
-  then find out whether the race is still there:
-  the two-device sync check (Theme 9 v2) **was** passing every sync assertion
-  including
-  the headline one (a removed heart is removed on the other device, not
-  re-added), then **aborting on an overflow-menu interaction**, so
-  rating-replace, sync-off-leaves-data-intact and server-unreachable are
-  *written and never observed*. 🔎 **The trace points at a real product hazard,
-  not just a flaky check:** after a rating slider takes focus deep in a menu,
-  the header scrolls off; the check compensates, and it was still observed
-  failing — scroll snapping back to 879px on its own, and the ⋯ button's own
-  handler reporting **two** open/close cycles from **one** click. The suspect is
-  `menu.js`'s `reapply()` (`settings.subscribe(reapply)`, wrapped in
-  capture/restoreUiState), which a completed sync now triggers on every device
-  via `sync-start.js`'s `onApplied` hook and which is asynchronous relative to
-  the panel saying "Last synced…". **So a real person acting fast right after
-  their device finishes syncing may hit it.** Full evidence is in the check's
-  own header; an unwired `waitQuiet()` MutationObserver helper sits in
-  `openDevice()` as an untested starting point. Owner is `overflow-ui.js` /
-  `menu.js`, not the sync engine.
-  ⛔ **All of the above is now SUPERSEDED by the fix note at the top of this
-  item.** The suspect was wrong: `reapply()` and the sync engine were never
-  involved, and the owner is `sync_check.mjs` itself. Kept rather than deleted
-  because the *trace* was real and correctly recorded — it was the *diagnosis*
-  built on it that failed, which is the same lesson this repo already wrote down
-  when a peer's measurement and a peer's diagnosis were separated by two greps
-  (Theme 36).
+- ✅ [0260-sync-check-mjs-aborts-before-its-first-asserti](0260-sync-check-mjs-aborts-before-its-first-asserti.md)
 
 ## Theme 37 — the recipe-page pass: 37c, 37d, 37e, 37l, 37m (2026-08-16)
 
@@ -1759,109 +1319,19 @@ same rows. [ADR 0070] holds the schema and the tick-key rule;
 `tools/recipe_check.mjs` (22 assertions) is the guard. Verbatim items as they
 stood when claimed:
 
-- [x] **37c — the ingredients section should collapse** `[S][js][css]`.
-      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page pass.
-      Owner:
-      *"I should be able to collapse or hide the ingredients section"*. Once
-      everything is in the bowl the list is a wall of struck-through text
-      between the reader and the method. Use the house pattern — native
-      `<details>/<summary>`, as `addons-ui.js` already does — open by default.
-      ✅ **RULED 2026-08-16: remember it for ALL recipes** — one profile-scoped
-      preference, not one per recipe. Collapse once and every recipe opens
-      collapsed until you expand one. 🚩 The cost he accepted: opening an
-      *unfamiliar* recipe then hides the ingredients you have not bought yet.
-      If that bites, the fix is per-recipe state, not abandoning persistence.
+- ✅ [0270-37c-the-ingredients-section-should-collapse](0270-37c-the-ingredients-section-should-collapse.md)
 
 
-- [x] **37d — two columns for ingredients when there is room** `[S][css]`.
-      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page pass.
-      Owner: *"consider if the ingredients should go into two columns if there
-      is screen space"*. The screenshot that prompted it shows a laptop-width
-      window with the recipe held to a reading measure and most of the viewport
-      empty. CSS multi-column above a breakpoint, `break-inside: avoid` so a
-      tick and its line never split across the fold. **Note it is a
-      *consider*, not an instruction** — if the measure test says a two-column
-      ingredient list reads worse at that width, say so and don't ship it.
+- ✅ [0280-37d-two-columns-for-ingredients-when-there-is](0280-37d-two-columns-for-ingredients-when-there-is.md)
 
 
-- [x] **37e — a recipe should carry its attribution as a field** `[S][schema]
-      [js]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page
-      pass. Owner: *"Recipes should be able to be attributed, for example to
-      the Edmunds cookbook"* (the NZ cookbook is spelled **Edmonds**; the data
-      already has it right). Today attribution is buried in free prose — the
-      pudding's `description` reads *"A Clements family dessert since the early
-      1980s — adapted from the Edmonds cookbook"*. A field can be rendered
-      consistently, styled as a credit, and eventually searched; prose cannot.
-      🚩 **ADR 0047 applies**: this adds a field to `site/data/`, which every
-      phone downloads — so the screen that renders it (the recipe page's credit
-      line) ships in the *same* change, never after.
-      🔎 This is squarely inside CLAUDE.md's **Exception 1** — family
-      attributions in home recipes are owner-approved. A *source* credit
-      (a cookbook, a publication) is not personal data at all.
+- ✅ [0290-37e-a-recipe-should-carry-its-attribution-as-a](0290-37e-a-recipe-should-carry-its-attribution-as-a.md)
 
 
-- [x] **37l — a recipe with components needs grouped ingredients**
-      `[M][schema][js]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the
-      recipe-page pass. Owner, 2026-08-16: *"Some recipes have multiple
-      components. For example Booth's Ginger Crunch has the base and the icing,
-      look at how we should organise the ingredients to improve this."*
-      🔎 **The corpus is already doing this by hand, and the measurement says
-      so.** Four recipes fake grouping with a `"Component: "` prefix inside the
-      ingredient string itself: **Upside-Down Plum Cake 14 of 14 lines**,
-      Chocolate Self-Saucing Pudding 4 of 12, Sticky Date Pudding 3 of 10,
-      Booth's Ginger Crunch 4 of 9. A convention that four records invented
-      independently is a missing field, not a style choice — and the plum cake,
-      where *every* line carries a prefix, is the proof: the prefix is doing all
-      the structural work and the reader pays for it on every row.
-      **Shape to consider:** `ingredients` becomes either a flat list *or* a
-      list of `{ component, items[] }` groups (the same XOR pattern Theme 30
-      proposes for `menus`/`menu`), so ungrouped recipes are untouched and no
-      migration is forced.
-      🛑 **The trap that must be handled in the SAME change:** a tick is keyed
-      on a hash of the ingredient line's **raw text** ([ADR 0067]). Rewriting
-      `"Sauce: ½ cup brown sugar"` into `{component:"Sauce", text:"½ cup brown
-      sugar"}` changes that text, so **every existing tick on all four recipes
-      silently detaches** — they do not error, they just stop matching. Either
-      hash the component and the line together from the start, or accept the
-      loss knowingly and say so. Do not discover this after the data lands.
-      🔎 Sequence it with **37c/37d** (collapse, two columns): all three are
-      about making a long ingredient list readable, and grouping is the one that
-      makes the other two easier — a two-column list breaks far better on
-      component boundaries than mid-list.
+- ✅ [0300-37l-a-recipe-with-components-needs-grouped-ing](0300-37l-a-recipe-with-components-needs-grouped-ing.md)
 
 
-- [x] **37m — the tick boxes do not line up, in two different ways**
-      `[XS][css]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the
-      recipe-page pass. Owner, 2026-08-16: *"the ingredients tick boxes are not
-      lined up with the method steps. And the method steps tick boxes are not
-      lined up with the method step numbers."* Two complaints, two separate
-      causes, both found in `app.css` and both cheap.
-      🔎 **Vertical (number vs tick).** `.recipe-body .method li` correctly sets
-      `align-items: start`, and then
-      `.recipe-body .method li:has(.tick) { align-items: center; }` **overrides
-      it**. On a step that wraps to two lines, `center` puts the step number
-      halfway down the whole block while the tick box — `.tick` is
-      `align-items: flex-start` with a `margin-top: 0.28em` cap-height nudge —
-      stays on the first line. A one-line step looks fine, which is why this
-      survived: it only shows on the wrapped ones. **Fix: `start`.**
-      🔎 **Horizontal (ingredient tick vs method tick).** `.recipe-body .method
-      li` is `grid-template-columns: 1.6em 1fr`, so the number's gutter pushes
-      the method's tick 1.6em right. Meanwhile `.ingredients li:has(.tick)` sets
-      `padding-left: 0` (the bullet is dropped once a box is there), so the
-      ingredient tick sits hard against the margin. The two columns can never
-      agree. **Fix: give the ticked ingredients list the same `1.6em` leading
-      column** so both lists share one tick column down the page — an empty
-      gutter on the ingredients reads as alignment, which is the thing asked
-      for.
-      🔑 **Worth keeping: the second bug was introduced by the fix for a first.**
-      `padding-left: 0` and `content: none` were added deliberately, with a good
-      comment (*"The bullet and the box say the same thing; the box says it
-      better"*), and that change is what pulled the ingredient ticks out of line
-      with the method's. A local improvement that breaks a global alignment is
-      invisible to the person making it, because they are looking at one list.
-      🔎 Do this **with 37c/37d/37l**, not before: collapsing, two columns and
-      component grouping all move these same rows, and aligning them twice is
-      the waste.
+- ✅ [0310-37m-the-tick-boxes-do-not-line-up-in-two-diffe](0310-37m-the-tick-boxes-do-not-line-up-in-two-diffe.md)
 
 
 ### What the build added to them
@@ -1943,238 +1413,7 @@ them, and a future session should not re-attempt them as if it could.
 The original write-up follows verbatim: the owner's fetch authorisation, the
 per-batch findings, the pilot's transcription recipe, and the traps it named.
 
-- [x] **Menus still owed on six venues — and where each one lives**
-      `[M][content]`. ✅ **DISPOSITION 2026-08-17: DELIVERED.** All 18 venues
-      the owner authorised are resolved — 14 transcribed, 4 proven menuless —
-      so the state below is the record of how, not open work. The `[~]` it
-      carried through the batch is flipped here rather than in the roadmap,
-      because the roadmap now holds only the one-line pointer.
-      Researched 2026-08-16 and written down here so a fresh
-      session can start rather than repeat it.
-      ✅ **Subway (141) and The Victoria Tavern (138) DONE 2026-08-16** under
-      the two owner rulings recorded below — **10 of 14, 1,262 dishes.**
-      🔑 **Subway proved the dish-id split from the venue's own data.** The same
-      filling is sold as a sub, a wrap and a salad, and its own allergen guide
-      gives the three **different** allergen sets — soy is `●` on the Sweet
-      Onion Chicken Teriyaki *sub* and only `*` on the *wrap*, and the Chicken
-      Strips *salad* has no gluten row at all. 44 explicit `dishId`s; they are
-      three products, not one printed three times, and the difference is the
-      bread — which is the gluten.
-      🚩 **An inconsistency this pair created, named rather than left:** Subway
-      keeps 141 unpriced rows (owner-ruled), while The Victoria Tavern's agent
-      **dropped ~40 unpriced spirits** on the corpus convention that unpriced
-      lines are omitted (checked against `southern-cross` and
-      `the-borough-tawa`, neither of which carries a null-price row). Both are
-      defensible and they are opposite. 🎯 **Worth one ruling** — is an unpriced
-      row a *record of what the venue sells* or *noise until someone prices it*?
-      The answer changes what every future intake does with a spirits list.
-      The dropped rows are recoverable from the drinks PDF at any time.
-      ⏳ **Remaining 4, all needing a human, not a session:** `caffiend`,
-      `new-chapter-cafe`, `kaffee-eis`, `babaili-malatang` — each publishes a
-      website with **no menu on it**, so only a photo or an in-store visit
-      clears them.
-      ✅ **8 of the 14 DONE 2026-08-16 (wt: faves-menus) — 983 dishes.**
-      The Catch Sushi Bar 87 · Satay Kingdom 53 · Charley Noble 125 · Regal
-      Chinese 264 · Rock Yard Vietnamese 58 · Pizza Pomodoro 83 · Gong Cha 131 ·
-      Pizza Hut 133. Every price from the venue's own site or its own menu PDF.
-      🎯 **Pizza Hut raised a policy question its agent refused to settle alone,
-      and it will recur on every PDF-sourced venue.** Its first-party allergen
-      PDF grades each allergen `P` (present) or `T` (*"stored or used to
-      manufacture other items at the site"* — trace/cross-contact). `T` is
-      near-universal across the whole pizza line for tree-nuts, peanuts, sesame
-      and shellfish. Only `P` was tagged. [ADR 0025]'s *"when unsure, tag"*
-      points the other way — **but this is not uncertainty, it is the venue's own
-      graded signal**, and collapsing `T` into `contains-*` would fire those
-      tags on every pizza, which is a warning that carries no information.
-      The vocabulary has no *"may contain traces"* tier to hold it faithfully.
-      ⚑ **Owner's call, and it wants to be a batch-wide rule rather than a
-      per-venue one.** Same family as the `contains-fish` gap under Theme 5.
-      ⚠️ **And its prices may not be Johnsonville's.** The order pages show
-      prices without ever asking for an address, and the store page's "View
-      menu" button carries no href (a Vue handler), so the address flow could
-      not be driven. These are Pizza Hut NZ's default online prices; whether
-      they equal this branch's is unestablished. One in-store or phone check
-      clears it.
-      **The other 7 are accounted for, not abandoned** — see the two findings
-      below: 4 publish a site with **no menu on it**, and 3 need an owner call
-      (`pizza-hut` transcribable and in progress at close · `subway` publishes
-      no price anywhere · `the-victoria-tavern` reachable only with TLS
-      verification disabled). 🔑 **The recipe that made this repeatable:** a
-      venue's own ordering storefront on its own domain counts as
-      `official-site` — three of the seven came from TuckerFox/Pump'd/appropo
-      pages linked from the venue's own nav, and two agents independently found
-      the venue's *marketing homepage* price tiles **stale** against them
-      (Salmon Nigiri $6.50 vs $7.50; satay $16.00 vs $17.90). **Read the
-      ordering page, never the marketing tile.**
-      🔎 **The previous claim was released as ORPHANED, on evidence, not
-      impatience.** It read `CLAIMED 2026-08-16 12:14 UTC (wt: faves-menu-18)`.
-      Three independent facts say that session closed rather than paused:
-      `/Users/mike/worktrees/faves-menu-18` does not exist, `git branch -a`
-      carries no `menu-18` ref (local **or** remote), and its work is merged and
-      written up — the `SESSIONS.md` tail is its close record, naming the four
-      it landed and what it left. A claim outlives the session that wrote it,
-      so an orphaned one blocks the queue permanently unless something releases
-      it. 🔑 **The release test, for reuse: no worktree AND no branch AND a
-      close record.** Any one alone proves nothing — a live session between
-      commits has a clean tree, and a worktree can be recreated. Never release
-      a claim on elapsed time.
-      ✅ **4 of 18 done 2026-08-16: the Sprig + Fern taverns** — Petone 10,
-      Berhampore 19, Thorndon 20, Little Sprig Seatoun 16 = **65 dishes** where
-      there were none. Confirmed they are four separate kitchens: four menus
-      with zero overlap, Tawa's included. **The remaining 14 are open** and the
-      recipe below makes them repeatable.
-      🔑 **What the pilot learnt, and a brief for the next 14 must carry:**
-      - **The `/pages/<slug>` pages hold no menu at all** — every one is a link
-        to a per-venue PDF. This is PDF work, not page-scraping work.
-      - **`tag_allergens.py` writes NOTHING on any record with
-        `addOnGroups`.** It patches `tags` positionally and bails when the count
-        mismatches, so it exits clean having done nothing — a green run that
-        means "I declined". All four needed the tags applied by hand and the
-        tool re-run to zero to prove none were dropped. 🚩 This is the
-        decorative-guard pattern again, in the one tool whose silence is a
-        safety question: it *reports* the missing tags and cannot *apply* them.
-      - **It reads item text only, so it cannot see a section note.** Thorndon
-        prints "on a Sesame Bun" once above the burgers — all three burgers came
-        back untagged for sesame. Berhampore's "our pizza bases contain dairy"
-        likewise. **30+ tags were missed this way**; the sweep is a first pass,
-        never the answer.
-      - **Never trust PDF text extraction's ORDER.** `pypdf` emits
-        Berhampore description-before-name, which would have given a fried item
-        the polenta sticks' *"Vegan, DF, GF"* — a false SAFETY claim. Render to
-        PNG and read it visually. No `pdftotext`/poppler on this machine;
-        `pypdf` + `sips` works, and `qlmanage` covers the PDFs `sips` renders
-        black.
-      - **A dropped toppings line survives as a tag.** Thorndon's "Margherita"
-        arrived as a bare name with `contains-nuts` while every other pizza
-        carried its toppings in the name — the tag outlived the text that
-        justified it. Caught by reading the data, not by any gate.
-      🚩 **Two menus are years old and now say so.** Petone's PDF was exported
-      **2023-06-02** and Berhampore's **2023-12-21**; both carry that as
-      `verified`, so both correctly show the stale caveat. Recording the
-      document's own date rather than the day we read it is what makes that
-      caveat fire — ADR 0038's `/CreationDate` rule doing its job.
-      ⚑ **Little Sprig Seatoun's date is contested and left at 2026-06-29.**
-      The PDF's Canva `/Title` says *"Bar Snacks Menu (Oct 2025)"* but it was
-      exported 2026-06-29 and the venue's own filename calls it the 2026 menu.
-      The export date is the only full-precision date the document supports;
-      the conservative read would be older. Owner's call if it matters.
-      🚩 **Roughly a third of the allergen tags are judgement, not reading** —
-      croquettes assumed crumbed, calamari assumed floured, pizzas assumed
-      cheesed from a "dairy free cheese available" footer. Each is a small
-      safety bet, recorded in the session log. **`contains-egg` was DECLINED
-      twice** (croquettes, cheesecake) where the split is genuine; those are
-      the two most likely to be wrong in the dangerous direction.
-      🔎 **An inconsistency the pilot exposed rather than caused:** Tawa's
-      sausage dishes carry no `contains-gluten` while Seatoun's now do, on the
-      same reasoning (NZ sausages standardly contain wheat rusk). The corpus
-      disagrees with itself; nobody touched Tawa. Worth a sweep of its own.
-      🔎 **Unrelated but found here:** the no-JS fallback `<ul>` in
-      `site/index.html` is **35 venues behind** `site/data/index.json`. That is
-      a lockstep rule in CLAUDE.md going unenforced corpus-wide, not something
-      this batch introduced — and nothing checks it.
-      ✅ **RESOLVED 2026-08-16 — and the "35" was a measurement artefact.**
-      The fallback was never 35 behind: all **55** venues were listed, in
-      `index.json` order, names matching. The 35 came from counting
-      `restaurant.html?id=` hrefs against the 55 ids — but **a stub is
-      deliberately rendered without a link**, as a `<div class="card-body">`
-      carrying a "Menu coming soon" chip, because there is no menu to open. So
-      the count measured *venues with a menu*, not *venues in the list*, and
-      55 − 20 linked = 35. 🔑 **The same trap this file names one item above**
-      (*"a count derived from 'records with more than one branch' answers a
-      different question from 'records that are a chain', and reads identically
-      in prose"*) — and it caught a second reader, who reproduced the 35 exactly
-      before noticing the stubs.
-      🚩 **But there WAS a real defect underneath, and it is worse than a
-      stale list.** Nine venues had **finished menus rendered as unreachable
-      "Menu coming soon" cards** — `takeaway-at-churton`, `spices-indian`,
-      `thai-tara-express`, `satay-kingdom-cafe`, `the-catch-sushi-bar` and all
-      four Sprig + Fern taverns, the last four landed the day before. A reader
-      with no JavaScript was told those menus did not exist. That is a **status
-      drift**, not a membership drift, which is why a membership count could not
-      see it.
-      **`tools/check_fallback.py`** now gates it in CI and in the CLAUDE.md
-      verify list: same ids, same order, same names, **and a link on everything
-      that is not a `stub`**. Encoding the link rule is the point — it is what
-      stops the next reader re-measuring this wrong.
-
-      > 🚩 **"Publishes a website" is NOT "publishes a menu" — measured
-      > 2026-08-16, and it halves this item.** The parenthetical below reads a
-      > website as *"a fetchable first-party source"*. It is not one. Of the
-      > 14 remaining website-publishing venues, **four publish a site with no
-      > menu on it anywhere**: `new-chapter-cafe` (its own menu page says
-      > "Coming Soon" on all three categories, and the template still carries
-      > its own `<!-- TODO -->`), `kaffee-eis` (a Squarespace site whose
-      > "Our Gelato" page says *"we make more than 45 flavours"* and names
-      > none), `babaili-malatang` (an 8-page site with no menu entry in its own
-      > nav), and `caffiend` (Facebook only, menu tab login-gated). Each was
-      > checked exhaustively — sitemap, soft-404 detection by MD5, platform
-      > JSON endpoints, guessed paths, own social accounts — and each is a
-      > **decision, not an oversight**: only a photo or an in-store visit
-      > clears them, exactly like the fourteen that publish nothing. 🔑 **So the
-      > `stub` count splits three ways, not two: publishes nothing · publishes
-      > a site but no menu · publishes a menu.** The middle group is invisible
-      > to the reproducer below, which is why it was miscounted.
-      > 🔎 **And two "blocked" findings were REFUTED by going back to check.**
-      > `subway` was recorded hard-blocked on a click-only widget: its menu
-      > pages are in fact server-rendered and readable, and it publishes a
-      > first-party **NZ Allergen Web Guide (May 2026)** — but it publishes
-      > **no price anywhere**, first-party, by design (franchise pricing), so
-      > every price is legitimately `null`. `pizza-hut`'s 9.8 KB homepage is a
-      > Nuxt shell, and one level in, `/order/<category>/delivery` serves a
-      > complete price-bearing first-party menu. `the-victoria-tavern`'s
-      > HTTP 000 is **not a dead domain**: it is a live server with a
-      > self-signed Plesk placeholder certificate issued 2026-08-03, and its
-      > real menu PDFs are current (mains dated 2025-11-24). 🔑 **A prior
-      > session's "blocked" is a hypothesis, not a fact** — three of four
-      > survived only until someone re-tested them.
-      > 🔎 **The title understates the gap by five times — measured 2026-08-16.**
-      > Counted across all 55 venue records: **32 carry zero dishes**, not six.
-      > Of those, **18 publish a website** (a fetchable first-party source) and
-      > **14 publish nothing at all** — for those fourteen, only a photo or an
-      > in-store visit can ever clear them, so no amount of research will:
-      > `abrakebabra`, `cosmic-vape-and-coffee`, `cozy-cake-shop`,
-      > `crepes-a-go-go`, `dirty-little-secret`, `dragonfly`,
-      > `garage-project-leeds-street`, `goldings-free-dive`, `groundup-cafe`,
-      > `hotel-bristol`, `marigold-takeaway`, `moore-wilsons`, `simmer`,
-      > `wellington-sourdough`.
-      >
-      > Reproduce, don't re-type — the same lesson ADR 0041 already drew for
-      > dish-level gaps, one level up:
-      > ```sh
-      > python3 -c "import json,glob;[print(json.load(open(f))['id']) for f in sorted(glob.glob('site/data/restaurants/*.json')) if not sum(len(s.get('items',[])) for s in (json.load(open(f)).get('menu') or []))]"
-      > ```
-      > ✅ **RULED 2026-08-16: fetch all 18.** Asked under CLAUDE.md's standing
-      > rule (*"if I don't give them to you or tell you to fetch them they are
-      > not"*), because naming a URL in a roadmap is not that instruction. He
-      > gave it. **This is the fetch authorisation** — cite this line, and note
-      > it covers exactly the 18 venues that publish their own menu, not the 14
-      > that publish nothing.
-      > 🚩 **Scope discipline when you take it:** it is 18 venues, not the six
-      > this item's title names — derive the list from the reproducer above,
-      > never from the prose. Prices come from the venue's **own** published
-      > menu, never a delivery app. Run `python3 tools/tag_allergens.py` and
-      > `python3 tools/validate.py` after each, curate `priceBand` from the
-      > **food-only** median (`tools/drinks_gap.py --price-effect`), and append
-      > rather than overwrite per ADR 0023/0047.
-      > ⚠️ **A fetched PDF is as old as its document, not as fresh as the day
-      > you read it** — the `paper-menu` weakness ADR 0031 names, and the reason
-      > 1841's March-2025 menu still reads as current. Record the document's own
-      > date, not today's.
-      - **Four Sprig + Fern taverns**, all `stub`: `sprig-and-fern-petone`,
-        `sprig-and-fern-berhampore`, `sprig-and-fern-thorndon`,
-        `little-sprig-seatoun`. Each publishes **its own** food menu PDF at
-        `sprigandfern.co.nz/pages/<slug>`. They are separate franchises with
-        separate kitchens — which is why they are separate records and not
-        branches of one, the ADR 0011 assumption having broken here (this
-        session's `SESSIONS.md` entry records the finding).
-      - **The Victoria Tavern** and **Caffiend** are blocked on their own broken
-        web presence, not on our effort. Nothing to fetch until someone brings
-        back a photo of the menu — the `intake/` pipeline.
-
-      Two tool steps are **not optional** when any of these lands:
-      `python3 tools/tag_allergens.py` for the allergen sweep (ADR 0025 — the
-      burden falls on *not* tagging), and `python3 tools/seed_dish_ids.py`
-      after, or `validate.py` fails with **one error per dish** (ADR 0051).
+- ✅ [0320-menus-still-owed-on-six-venues-and-where-each](0320-menus-still-owed-on-six-venues-and-where-each.md)
 
 ## Theme 36g — ticks must leave the backup export (shipped 2026-08-16)
 
@@ -2360,130 +1599,8 @@ A body with zero timing assumptions inherits the flakiness anyway.
 
 The original filing follows verbatim.
 
-- [x] 🚩 **A killed browser check LEAKS ITS CHROME, and the orphans then break
-      every later run** `[S][js]` — **DELIVERED 2026-08-17 (`ecbc82e`)**; the
-      claim it carried (2026-08-16 22:38 UTC, wt: faves-hygiene) is discharged.
-      — the root cause behind the "flakiness" this
-      item was first filed under. **Found 2026-08-16, and only after a confident
-      wrong answer.**
-      🔎 **The mechanism.** `cook_check.mjs` (and by construction every tool on
-      `tools/lib/browser.mjs`) launches headless Chrome on a throwaway profile.
-      **If the check is killed mid-run — a timeout, a Ctrl-C, an agent giving up
-      — the Chrome survives.** Six orphans accumulated from killed runs and
-      pushed 1-minute load past **100**. At that load the check does not fail; it
-      **stalls silently** on a CDP call with a renderer spinning, and exits with
-      no summary line. `pgrep -f faves-cook-check` finds them; nothing cleans
-      them up automatically.
-      🛑 **So it produces the exact trap CLAUDE.md documents for `sync_check` —
-      a wall of PASS lines and no summary — from no code change at all.**
-      🔑 **The methodological lesson is the valuable half.** An agent bisected
-      this across five arms plus a control, and **every arm stalled at the
-      identical point (30 PASS), including the control at `0978a04~1`**. It
-      correctly concluded *"not my code"* — and then overreached to *"`cook_check`
-      cannot complete on this machine"*. It could not, because **the orphans were
-      still running underneath every arm of the bisect**, which the same agent
-      cleaned up only afterwards. **A bisect whose every arm carries the same
-      confound returns a uniform, confident, meaningless result — and its
-      *control* is what makes it look rigorous.** Verified by simply re-running
-      once the orphans were gone and load was 4.16: **`OK — 75 passed, 0
-      failed`**, including the two-timer assertion the agent reported as
-      unverifiable (*"a bell rings ONCE, even while a second timer keeps the
-      clock ticking"*).
-      🎯 **What to actually do:** make the harness reap its own browser on
-      abnormal exit (a `process.on("exit"/"SIGINT"/"SIGTERM")` kill of the child),
-      and add `pgrep -f faves-.*-check` to the verify list as the thing to check
-      when a browser tool stalls. Until then, **if a browser check ever stalls,
-      kill its Chrome before believing anything it or its successor tells you.**
-      ⚠️ **The original flakiness observation stands and is now explained**, but
-      one instance is still unaccounted for: four runs of the same commit during
-      integration gave **75/0, 73/2, 75/0, 75/0** with load in the 5.9–15.8 range
-      — well below the orphan-driven 100+. Whether that 73/2 shares this cause is
-      **not established**, and its two failing assertions were not captured.
-      Flakiness remains the failure mode that defeats our summary-line rule,
-      because a flaky run's summary line *is* present and the correct response is
-      indistinguishable from the wrong one: run it again.
-
-      ✅ **THE TWO FAILING ASSERTIONS ARE NOW NAMED**, which the first filing
-      could not do. They are the granted-notification pair:
-      *"a granted long timer raises ONE notification through the service
-      worker"* (`0 showNotification() call(s)`) and *"the notification carries
-      the recipe it has to reopen, and a tag so it cannot stack"*.
-      🔑 **The product is not implicated.** In the same failing scenario the bell
-      itself rings — `3 oscillator(s), 1 vibrate() call(s)` passes. `notify()`
-      correctly declines when the permission is not `granted`. **The check
-      poisons its own permission state**: `tools/cook_check.mjs:1301` pins the
-      origin to `denied` for the two-timer block (to stop a real prompt wedging
-      the run), and the later granted block at `:1353` calls
-      `setNotifications("granted")` on an origin already denied.
-      🎯 **Candidate fix, ONE line and DELIBERATELY NOT APPLIED:** `:1301`
-      `"denied"` → `"granted"` (a granted browser also never prompts, which was
-      the only reason for pinning), or move the `pair` block after the
-      `longTimer` scenarios. Verify by running to the summary line several times
-      before trusting it.
-      🛑 **Why it was left:** the agent proposing it reported the failure as
-      **deterministic** — *"`main` still ends at FAILED — 73 passed, 2 failed"*.
-      **Directly contradicted by measurement, and the agent re-asserted it four
-      times.** ELEVEN runs of the merged tree: **nine × `OK — 75 passed, 0
-      failed`, one × `73/2`, one × `harness error: Runtime.evaluate timed out
-      after 30s`.**
-
-      | Machine state | Runs | Result |
-      |---|---|---|
-      | load 5.9–15.8, integration | 4 | 75/0, **73/2**, 75/0, 75/0 |
-      | load ~4.2–4.6, 26 peer Chromes live | 4 | 75/0, **timeout**, 75/0, 75/0 |
-      | load 2.82, quiet | 3 | 75/0, 75/0, 75/0 |
-
-      🔑 **Both failures fell under contention; none on a quiet machine.** So the
-      permission-ordering mechanism at `:1301`/`:1353` is a credible explanation
-      of *why it fails when it fails*, and **contention is what decides whether
-      it fails at all**. "Deterministic" is wrong; "flaky, with a named
-      mechanism and a candidate fix" is the accurate description.
-      A fix whose premise is disproven
-      by six observations is not a fix yet, and shipping an unverified change to
-      a *guard* at the tail of a long session is the thing this repo keeps
-      writing ADRs about. 🚩 Note also that **26 Chrome processes** were live at
-      measurement time from peer sessions' own browser checks — the ordering
-      theory may still be right and merely intermittent under contention.
-      ⚠️ **So this agent was wrong three times about one check** — "my product
-      change broke it", then "the machine cannot run it", then "it fails
-      deterministically" — while being **right every time about the narrower
-      fact it had actually measured**. Separate a report's measurement from its
-      diagnosis; the measurements were all sound.
-      Original filing follows.
+- ✅ [0330-a-killed-browser-check-leaks-its-chrome-and-th](0330-a-killed-browser-check-leaks-its-chrome-and-th.md)
 
 ## Theme 28c — a section's serving window (shipped 2026-08-16)
 
-- [x] ✅ **28c — A section's time window is unreadable prose** — **DONE
-  2026-08-16** (wt: faves-schema30), [ADR 0081](decisions/0081-a-serving-window-annotates-it-never-filters.md).
-  `served` on a section, in exactly the shape of a venue's `hours`, so
-  `hours.js`'s week reasoning applies unchanged and there is one engine rather
-  than two (`segments()` exported, not copied). One extension: a null `open`
-  means "from opening", because *"served till 2pm"* states no start and writing
-  one would invent evidence. **It annotates; it never filters** — the argument
-  that settles it is that `#section-<id>` is a real anchor (ADR 0058), so a
-  filtered section makes a link someone was *sent* work at 1pm and fail at 1am,
-  the direct negation of Theme 34. 4 of 5 sections structured; 1841's Mains
-  left as prose because it restates the venue's own hours. Gold Lining's
-  weekend rows set to `[]` — the venue is closed Sat/Sun and a section must not
-  claim more than its venue does. `tools/served_check.mjs` drives it on a
-  **frozen clock**, 55 assertions, and eight reintroduced defects were each
-  caught. 🔎 **Two of those exposed decorative assertions in the new check
-  itself:** opacity *composites* rather than inherits, so a dimmed ancestor read
-  as 1.0 and the defect passed silently; and filtering the section out produced
-  a harness timeout with no FAIL line. Both fixed before the check was trusted.
-  the one clean, self-contained defect here. `available` accepts dates and
-  seasons only, so "Mon–Fri 11:30–17:30" is **inexpressible**.
-  ⚠️ **The next clause was stale and is corrected here: ZERO sections cram a
-  time window into the section NAME.** ADR 0057 moved every one of them into
-  `note` on 2026-08-16 — eleven lines below this item, 28d/28f are marked done
-  for doing exactly that. The real figure is **5 sections in 4 venues carrying a
-  window as prose in `section.note`** (`1841-bar-restaurant` mains + brunch,
-  `gold-lining-cafe` all-day-brunch, `sprig-and-fern-tawa` gold-card,
-  `the-borough-tawa` brunch). So 28c adds a field beside `note` and needs no
-  name migration at all — it is smaller than it was written. It remains true
-  that exactly one section in the
-  corpus uses `available` at all. `hours.js` already does weekday+interval
-  reasoning for the venue's own opening hours — the machinery exists and the
-  section schema cannot reach it. Consequence today: nothing checks the clock,
-  so a Gold Card price shows at 9pm on a Sunday with no indication it is not
-  available.
+- ✅ [0340-28c-a-section-s-time-window-is-unreadable-pros](0340-28c-a-section-s-time-window-is-unreadable-pros.md)

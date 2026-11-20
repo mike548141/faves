@@ -206,7 +206,7 @@ to the owner at close and answered:
 > owner's ruling *"if it isn't restored, it shouldn't be exported."* Claim
 > released 2026-08-17 (`wt: faves-cook` gone) and the item's self-contradicting
 > header — "Ruled, not yet built" above its own "✅ BUILT" — corrected with it.
-> ADR 0074. Detail → [`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+> ADR 0074. Detail → [`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 
 ### Sizing

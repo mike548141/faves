@@ -92,8 +92,9 @@ recipe and Cook at Home screens that offer cook mode.
 - **There is no roadmap harvest any more, and that is the point.** Since
   2026-08-17 the board is one file per item under `docs/roadmap/`: a done
   item flips to `[x]` **in its own file**, in the commit that finishes the
-  work, and nothing moves. `ROADMAP-DONE.md` is frozen as the pre-split
-  archive. The retired step is worth remembering for why it went — a
+  work, and nothing moves. The pre-split archive, once `ROADMAP-DONE.md`,
+  is frozen in `docs/roadmap/990-done-before-the-split/` (cut there
+  2026-11-20). The retired step is worth remembering for why it went — a
   harvest edited a block of one huge file, and an open `- [ ]` item
   sitting next to a closed one was the easiest thing in there to delete by
   accident. It happened on 2026-08-16 to an unfixed WCAG AA failure, which

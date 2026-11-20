@@ -95,6 +95,6 @@ two). Neither needs the word "and the rest" the way the merged row did.
   before this split (a pre-existing gap this ADR doesn't newly create or
   claim to fix).
 
-[Theme 15]: ../ROADMAP-DONE.md
+[Theme 15]: ../roadmap/990-done-before-the-split/README.md
 [ADR 0025]: 0025-settings-index-and-panels.md
 [ADR 0030]: 0030-personal-data-import-and-transfer.md

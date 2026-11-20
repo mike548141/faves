@@ -91,7 +91,7 @@ with an optional per-reading `method` override on a price-series entry.
 Per-price as the primary level, an object-valued `verified` and a confidence
 score all rejected — reasoning in the ADR. No backfill; applied to the two
 records whose provenance `SESSIONS.md` evidences. Design record →
-[`ROADMAP-DONE.md`](../../ROADMAP-DONE.md).
+[`../990-done-before-the-split/README.md`](../990-done-before-the-split/README.md).
 
 ✅ **g. The "needs a refresh" caveat reads the method, not the date** — shipped
 2026-08-09 (ADR [0036](../../decisions/0036-refresh-caveat-reads-the-method.md)).
