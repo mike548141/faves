@@ -5,7 +5,7 @@ entry is never edited or reordered once written. At session start read only
 the recent tail (`tail -60 docs/SESSIONS.md`); the full history is for
 grepping, not for loading whole. When the index outgrows its budget it
 **rotates**: the recent tail stays here, older entries move verbatim to
-[`SESSIONS.md`](SESSIONS.md) (grep on demand, never load
+[`SESSIONS-ARCHIVE.md`](sessions/2026-07-18-archived-000-faves-session-log-archive.md) (grep on demand, never load
 whole) — the current-truth/history split, same as `ROADMAP`→`ROADMAP-DONE`.
 A substantial session may also put full detail in `docs/sessions/` and carry
 a one-line pointer here. Convention adopted from `ros`/`tiki` (2026-07-08);
@@ -25,6 +25,14 @@ UTC, and its line marks the time with `~`: a commit time is when the entry
 was written, not when the session began, so read it as an upper bound. The
 heading inside each file keeps its date as written. From here on a session
 writes its detail file and adds one line at the bottom.
+
+**The rotated archive was cut the same way, 2026-11-20** (owner-approved:
+split, or move whole if a split would lose anything). `SESSIONS-ARCHIVE.md`
+is now 38 files in `docs/sessions/`, named `…-archived-NNN-…` in their old
+order, with one line each in the block below; `000` is its preamble. atelier's
+`archivecut.py --verify` rebuilds the old file from them byte for byte. The
+link to it in the preamble above is the one word the cut changed there: it now
+points at that `000` file, because the old file is gone.
 
 <!-- indexscan:maps dir=sessions match=*.md -->
 
@@ -288,3 +296,4 @@ filed `340/350`; two house hooks added. Detail:
 - [2026-11-16 · 0545 UTC](sessions/2026-11-16-0545-asks-tidy-applied.md) — the owner's asks tidied as he approved: five `🔀 Tidied` lines added to five board items, one commit each, none held (session `115f965c`)
 - [2026-11-16 · 0638 UTC](sessions/2026-11-16-0638-asks-markers-removed.md) — 🎯 removed from three asks the 2026-11-16 0545 tidy-up closed, one commit (`ade5dd10`), C0711 held: no 🎯 on its item (estate health sweep follow-up)
 - [2026-11-18 · 0420 UTC](sessions/2026-11-18-0420-recipe-photo-tap.md) — the owner's ask: a recipe's thumbnail on the Cook at Home list opens the recipe, and the bigger-photo viewer moves to the recipe page's hero (`970f814b`); restaurant dishes unchanged (session `38086646`)
+- [2026-11-20 · 1045 UTC](sessions/2026-11-20-1045-board-archive-cut.md) — the two frozen pre-split archives cut into their stores by atelier's archivecut (route a, byte-for-byte PASS; `a831b934`, CI green), the board index rebuilt in its new open-only form, and the move's knock-ons fixed
