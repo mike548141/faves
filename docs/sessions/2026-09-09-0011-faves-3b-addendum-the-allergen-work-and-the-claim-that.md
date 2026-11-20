@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 248+1 -->
+- [2026-09-09 · ~0011 UTC](2026-09-09-0011-faves-3b-addendum-the-allergen-work-and-the-claim-that.md) — 2026-09-09 — faves-3b addendum: the allergen work, and the claim that did not survive its own artefact
+
 ## 2026-09-09 — faves-3b addendum: the allergen work, and the claim that did not survive its own artefact
 
 `080/210` delivered (PR #37, ADR 0114) — and its central safety claim was

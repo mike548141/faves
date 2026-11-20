@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 95+1 -->
+- [2026-07-09 · 2026-07-09 (te reo second pass: menu + recipe screens)](2026-07-09-archived-028-2026-07-09-te-reo-second-pass-menu-recipe-scre.md) — archived entry, verbatim in its file
+
 - **2026-07-09 (te reo second pass: menu + recipe screens)**: Owner steer
   chose finishing the te reo coverage from the queue. Two feature commits,
   CDP-verified (headless Chrome at 390px, scripts from the scratchpad).

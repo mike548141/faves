@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 87+1 -->
+- [2026-07-08 · 2026-07-08 (relocate cheap-eats to a list filter + Fable UX review +](2026-07-08-archived-024-2026-07-08-relocate-cheap-eats-to-a-list-filte.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (relocate cheap-eats to a list filter + Fable UX review +
   owner decisions)**: Owner (rightly) flagged that "Cheap eats" belongs as a
   **main-list filter**, not buried in the picker. **Moved it**: `cheap` added

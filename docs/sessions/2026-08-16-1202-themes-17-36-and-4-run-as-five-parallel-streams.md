@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 204+1 -->
+- [2026-08-16 · ~1202 UTC](2026-08-16-1202-themes-17-36-and-4-run-as-five-parallel-streams.md) — 2026-08-16 — Themes 17, 36 and 4, run as five parallel streams
+
 ## 2026-08-16 — Themes 17, 36 and 4, run as five parallel streams
 
 An orchestrator session on the owner's queue: Theme 17 (cook mode), Theme 36

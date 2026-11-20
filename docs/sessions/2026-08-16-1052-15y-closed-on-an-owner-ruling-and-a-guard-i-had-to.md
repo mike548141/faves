@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 198+1 -->
+- [2026-08-16 · 1052 UTC](2026-08-16-1052-15y-closed-on-an-owner-ruling-and-a-guard-i-had-to.md) — 2026-08-16 10:52 UTC — 15y closed on an owner ruling, and a guard I had to throw away
+
 ## 2026-08-16 10:52 UTC — 15y closed on an owner ruling, and a guard I had to throw away
 
 Owner: *"RE 15y I accept your recommendation."* The ⓘ disclosure is click-only

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 161+1 -->
+- [2026-08-09 · ~0125 UTC](2026-08-09-0125-the-repo-goes-public.md) — 2026-08-09 (the repo goes public — Opus 5)
+
 - **2026-08-09 (the repo goes public — Opus 5)**: 🎉 **faves is public**:
   <https://github.com/mike548141/faves>. Flipped at `a207a15` on the owner's
   explicit instruction, with steps 5–8 applied in the same sitting and 9–12

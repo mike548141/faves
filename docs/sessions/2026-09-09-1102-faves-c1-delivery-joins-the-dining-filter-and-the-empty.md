@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 250+1 -->
+- [2026-09-09 · 1102 UTC](2026-09-09-1102-faves-c1-delivery-joins-the-dining-filter-and-the-empty.md) — 2026-09-09-1102 — faves-c1: Delivery joins the Dining filter, and the empty list it would have shipped
+
 ## 2026-09-09-1102 — faves-c1: Delivery joins the Dining filter, and the empty list it would have shipped
 
 **The ask, in full:** *"The All dining drop down on the main page needs Delivery

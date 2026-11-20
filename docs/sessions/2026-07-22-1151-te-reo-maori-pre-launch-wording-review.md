@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 129+1 -->
+- [2026-07-22 · ~1151 UTC](2026-07-22-1151-te-reo-maori-pre-launch-wording-review.md) — 2026-07-22 — Te reo Māori pre-launch wording review — Opus 4.8
+
 ## 2026-07-22 — Te reo Māori pre-launch wording review — Opus 4.8
 
 Ran the reo **wording review** owed since 2026-07-09 (worktree

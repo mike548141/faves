@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 120+1 -->
+- [2026-07-12 · ~0609 UTC](2026-07-12-0609-fable-opening-hours-researched-for-the-15-hour-less.md) — 2026-07-12 (Fable: opening hours researched for the 15 hour-less venues)
+
 - **2026-07-12 (Fable: opening hours researched for the 15 hour-less venues)**:
   Every venue record now has `hours`. Three parallel research agents swept
   official sites, socials, and aggregators; venue-own sources preferred.

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 235+1 -->
+- [2026-08-22 · 0250 UTC](2026-08-22-0250-daily-bakery-lower-hutt-new-venue-full-menu.md) — 2026-08-22 0250 UTC — Daily Bakery, Lower Hutt: new venue, full menu
+
 ## 2026-08-22 0250 UTC — Daily Bakery, Lower Hutt: new venue, full menu
 
 **Owner-directed intake, two mid-turn corrections.** The ask began as "Daily

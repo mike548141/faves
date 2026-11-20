@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 266+1 -->
+- [2026-09-29 · 0115 UTC](2026-09-29-0115-session-faves-ec-no-estimate-wording-and-the-footer-on.md) — 2026-09-29-0115 — session `faves-ec`: no estimate wording, and the footer on every page
+
 ## 2026-09-29-0115 — session `faves-ec`: no estimate wording, and the footer on every page
 
 - **Asked:** find every place Faves tells a reader a figure is inferred or

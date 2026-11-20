@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 47+1 -->
+- [2026-07-08 · 2026-07-08 (roadmap Theme 2, step 1 — coords + native maps)](2026-07-08-archived-004-2026-07-08-roadmap-theme-2-step-1-coords-nativ.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (roadmap Theme 2, step 1 — coords + native maps)**: Started
   the post-launch roadmap. Added optional `lat`/`lng` (WGS84) to the venue
   schema and geocoded all 12 venues from their addresses via OpenStreetMap

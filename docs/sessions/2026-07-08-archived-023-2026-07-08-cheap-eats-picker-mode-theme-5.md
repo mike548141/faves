@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 85+1 -->
+- [2026-07-08 · 2026-07-08 (cheap-eats picker mode, Theme 5)](2026-07-08-archived-023-2026-07-08-cheap-eats-picker-mode-theme-5.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (cheap-eats picker mode, Theme 5)**: Finished the last open
   piece of the price work — a **💸 "Cheap eats" toggle inside "Pick for us"**
   that narrows the shuffle to the **$** band. New pure predicate

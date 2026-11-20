@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 109+1 -->
+- [2026-07-12 · 2026-07-12 (Opus: UX queue — mobile contact bar collapse)](2026-07-12-archived-035-2026-07-12-opus-ux-queue-mobile-contact-bar-co.md) — archived entry, verbatim in its file
+
 - **2026-07-12 (Opus: UX queue — mobile contact bar collapse)**: First of the
   queued UX polish items. On a phone the tall contact card (call/pickup/hours)
   used to scroll off with the header, taking "call to order" with it down a long

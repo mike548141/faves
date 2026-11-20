@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 255+1 -->
+- [2026-09-20 · 1237 UTC](2026-09-20-1237-session-3e87e0bf-worker-the-stash-stack-gets-a-check.md) — 2026-09-20-1237 — session `3e87e0bf` (worker): the stash stack gets a check, and it is kept out of CI on purpose
+
 ## 2026-09-20-1237 — session `3e87e0bf` (worker): the stash stack gets a check, and it is kept out of CI on purpose
 
 *(Heading is **UTC** per the concurrency clause; the work is dated 2026-09-21

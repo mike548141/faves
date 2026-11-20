@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 165+1 -->
+- [2026-08-09 · ~0829 UTC](2026-08-09-0829-queue-run-four-items-a-stale-floor-fact-two-new-guards.md) — 2026-08-09 — Queue run: four items, a stale floor fact, two new guards — Opus 5
+
 ## 2026-08-09 — Queue run: four items, a stale floor fact, two new guards — Opus 5
 
 Orchestrated session, four worktrees, all merged and put away; branches

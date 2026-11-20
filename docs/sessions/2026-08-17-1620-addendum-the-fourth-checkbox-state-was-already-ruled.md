@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 225+1 -->
+- [2026-08-17 · 1620 UTC](2026-08-17-1620-addendum-the-fourth-checkbox-state-was-already-ruled.md) — 2026-08-17-1620 — addendum: the fourth checkbox state was already ruled, upstream, and I proposed it anyway
+
 ## 2026-08-17-1620 — addendum: the fourth checkbox state was already ruled, upstream, and I proposed it anyway
 
 **Correcting the entry above.** It records `340/110` — *"the board has no state

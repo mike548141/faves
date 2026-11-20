@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 240+1 -->
+- [2026-09-07 · 0141 UTC](2026-09-07-0141-an-orchestration-session-three-agents-and-four-verdicts.md) — 2026-09-07-0141 — an orchestration session: three agents, and four verdicts that were wrong
+
 ## 2026-09-07-0141 — an orchestration session: three agents, and four verdicts that were wrong
 
 **Session `faves-b1`, orchestrating.** No other faves session was live

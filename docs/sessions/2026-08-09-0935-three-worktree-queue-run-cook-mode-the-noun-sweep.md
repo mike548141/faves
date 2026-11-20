@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 167+1 -->
+- [2026-08-09 · ~0935 UTC](2026-08-09-0935-three-worktree-queue-run-cook-mode-the-noun-sweep.md) — 2026-08-09 — Three-worktree queue run: cook mode, the noun sweep, pathscan (orchestration) — Opus 5
+
 ## 2026-08-09 — Three-worktree queue run: cook mode, the noun sweep, pathscan (orchestration) — Opus 5
 
 Orchestrating session. Claimed three unclaimed roadmap items, ran each in

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 219+1 -->
+- [2026-08-16 · 2332 UTC](2026-08-16-2332-37k-reopened-by-the-owner-and-two-guards-broken-by-the.md) — 2026-08-16-2332 — 37k reopened by the owner, and two guards broken by the migration that fixed them
+
 ## 2026-08-16-2332 — 37k reopened by the owner, and two guards broken by the migration that fixed them
 
 Continuation of the block above, same session and worktree. Closed 17a and 37k,

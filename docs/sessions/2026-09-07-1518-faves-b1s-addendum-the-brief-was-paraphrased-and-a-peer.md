@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 244+1 -->
+- [2026-09-07 · 1518 UTC](2026-09-07-1518-faves-b1s-addendum-the-brief-was-paraphrased-and-a-peer.md) — 2026-09-07-1518 — faves-b1's addendum: the brief was paraphrased, and a peer took 38a mid-conversation
+
 ## 2026-09-07-1518 — faves-b1's addendum: the brief was paraphrased, and a peer took 38a mid-conversation
 
 **Session `faves-b1`, after its close entry above.** No build work; two

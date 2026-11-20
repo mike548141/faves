@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 193+1 -->
+- [2026-08-16 · 0917 UTC](2026-08-16-0917-a-url-for-every-section-and-an-i-that-fought-the.md) — 2026-08-16 09:17 UTC — a URL for every section, and an ⓘ that fought the pointer
+
 ## 2026-08-16 09:17 UTC — a URL for every section, and an ⓘ that fought the pointer
 
 Two owner items, taken in the shared `main` checkout alongside three other live

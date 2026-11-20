@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 239+1 -->
+- [2026-09-07 · 0020 UTC](2026-09-07-0020-two-owner-asks-and-both-turned-out-to-be-about.md) — 2026-09-07-0020 — two owner asks, and both turned out to be about something else
+
 ## 2026-09-07-0020 — two owner asks, and both turned out to be about something else
 
 **Same session (faves-24), continued after the close.** Two ad-hoc asks, both

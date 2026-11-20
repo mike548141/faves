@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 188+1 -->
+- [2026-08-16 · 0505 UTC](2026-08-16-0505-closing-two-rulings-recorded-and-3-5-gb-of-leaked.md) — 2026-08-16 05:05 UTC — closing: two rulings recorded, and 3.5 GB of leaked Chrome
+
 ## 2026-08-16 05:05 UTC — closing: two rulings recorded, and 3.5 GB of leaked Chrome
 
 **Owner ruling 1 — the facet links stay as they are.** Presented with the

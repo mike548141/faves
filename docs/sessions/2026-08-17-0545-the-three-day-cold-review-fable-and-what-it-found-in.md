@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 221+1 -->
+- [2026-08-17 · 0545 UTC](2026-08-17-0545-the-three-day-cold-review-fable-and-what-it-found-in.md) — 2026-08-17-0545 — the three-day cold review (Fable), and what it found in sync
+
 ## 2026-08-17-0545 — the three-day cold review (Fable), and what it found in sync
 
 Owner: *"do any cold reviews and Fable-dependent work, and check around the

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 177+1 -->
+- [2026-08-16 · 0120 UTC](2026-08-16-0120-the-collection-stops-being-wellingtons.md) — 2026-08-16 01:20 UTC — the collection stops being Wellington's
+
 ## 2026-08-16 01:20 UTC — the collection stops being Wellington's
 
 **Ask.** Owner: parts of the app and repo scope faves to Wellington, "which is

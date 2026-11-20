@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 157+1 -->
+- [2026-08-09 · ~0003 UTC](2026-08-09-0003-recipe-themes-the-pudding-halved-versions-on-about.md) — 2026-08-09 — Recipe themes, the pudding halved, versions on About — Opus 5
+
 ## 2026-08-09 — Recipe themes, the pudding halved, versions on About — Opus 5
 
 Owner round 3. Two themes recorded, two changes built and browser-verified.

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 149+1 -->
+- [2026-08-08 · ~0636 UTC](2026-08-08-0636-data-export-shipped-a-menu-refresh.md) — 2026-08-08 (data export shipped + a menu refresh — Opus 5 session)
+
 - **2026-08-08 (data export shipped + a menu refresh — Opus 5 session)**: Two
   owner asks, plus a live bug found on the way.
   **Roadmap first, then built it.** The owner asked for "save/export all data

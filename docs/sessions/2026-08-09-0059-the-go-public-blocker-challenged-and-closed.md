@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 160+1 -->
+- [2026-08-09 · ~0059 UTC](2026-08-09-0059-the-go-public-blocker-challenged-and-closed.md) — 2026-08-09 (the go-public blocker, challenged and closed — Opus 5)
+
 - **2026-08-09 (the go-public blocker, challenged and closed — Opus 5)**: Came in
   to execute the "rotate the PAT" blocker another session had named as the one
   thing between faves and public. **It didn't survive contact with the evidence.**

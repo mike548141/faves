@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 127+1 -->
+- [2026-07-22 · ~1125 UTC](2026-07-22-1125-device-local-profiles-theme-5-the-sanctioned-half.md) — 2026-07-22 — Device-local profiles (Theme 5, the sanctioned half) — Opus 4.8
+
 ## 2026-07-22 — Device-local profiles (Theme 5, the sanctioned half) — Opus 4.8
 
 Shipped **device-local profiles** (wt: faves-wave3-local-profiles; ADR 0012):

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 105+1 -->
+- [2026-07-10 · 2026-07-10 (Opus: Phase 7 deploy — prep + push; owner steps remain)](2026-07-10-archived-033-2026-07-10-opus-phase-7-deploy-prep-push-owner.md) — archived entry, verbatim in its file
+
 - **2026-07-10 (Opus: Phase 7 deploy — prep + push; owner steps remain)**:
   Owner chose to deploy to **Cloudflare Pages at `lets-eat.myspot.nz`**. Found
   the hosting was already config-as-code from 2026-07-07 (`tools/deploy.json`,

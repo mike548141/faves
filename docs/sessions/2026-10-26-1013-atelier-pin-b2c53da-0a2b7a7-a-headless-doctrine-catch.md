@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 276+1 -->
+- [2026-10-26 · ~1013 UTC](2026-10-26-1013-atelier-pin-b2c53da-0a2b7a7-a-headless-doctrine-catch.md) — 2026-10-26 — atelier pin `b2c53da` → `0a2b7a7`, a headless doctrine catch-up (session `6cdb3fe0`)
+
 ## 2026-10-26 — atelier pin `b2c53da` → `0a2b7a7`, a headless doctrine catch-up (session `6cdb3fe0`)
 
 Started on the owner's instruction to bring every repo behind on doctrine up

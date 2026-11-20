@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 243+1 -->
+- [2026-09-07 · 1216 UTC](2026-09-07-1216-theme-38-the-cold-review-delivered.md) — 2026-09-07-1216 — Theme 38: the cold review, delivered
+
 ## 2026-09-07-1216 — Theme 38: the cold review, delivered
 
 **Claim:** `490/010`, claimed on `main` (`de6d2b7`) before starting, as the item

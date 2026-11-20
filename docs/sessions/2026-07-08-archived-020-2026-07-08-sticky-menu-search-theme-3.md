@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 79+1 -->
+- [2026-07-08 · 2026-07-08 (sticky menu search, Theme 3)](2026-07-08-archived-020-2026-07-08-sticky-menu-search-theme-3.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (sticky menu search, Theme 3)**: Completed the last piece of
   the sticky-menu work — the search field now stays pinned. Wrapped the
   search + section jump-nav in one sticky `.menu-toolbar` (top:0, z 6);

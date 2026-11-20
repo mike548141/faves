@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 246+1 -->
+- [2026-09-08 · ~1350 UTC](2026-09-08-1350-faves-o1-addendum-the-last-four-items-and-an-ask-this.md) — 2026-09-09 — faves-o1 addendum: the last four items, and an ask this session got wrong
+
 ## 2026-09-09 — faves-o1 addendum: the last four items, and an ask this session got wrong
 
 **Session `faves-o1`, continuing the entry above.** Four more items landed after

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 172+1 -->
+- [2026-08-15 · ~0512 UTC](2026-08-15-0512-a-real-browser-guard-for-cook-mode-faves-cook-guard.md) — 2026-08-15 — A real-browser guard for cook mode (faves-cook-guard) — Opus 5
+
 ## 2026-08-15 — A real-browser guard for cook mode (faves-cook-guard) — Opus 5
 
 Closed the 🚩 on ROADMAP 17d: cook mode had no durable browser check of

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 229+1 -->
+- [2026-08-17 · 1900 UTC](2026-08-17-1900-addendum-5-the-allergen-chips-stop-shouting-owner.md) — 2026-08-17-1900 — addendum 5: the allergen chips stop shouting (owner ruling, mid-close)
+
 ## 2026-08-17-1900 — addendum 5: the allergen chips stop shouting (owner ruling, mid-close)
 
 **The ruling, from a screenshot** of a dish wearing two identical red warnings

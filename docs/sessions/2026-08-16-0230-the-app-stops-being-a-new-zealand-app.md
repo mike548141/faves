@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 179+1 -->
+- [2026-08-16 · 0230 UTC](2026-08-16-0230-the-app-stops-being-a-new-zealand-app.md) — 2026-08-16 02:30 UTC — the app stops being a New Zealand app
+
 ## 2026-08-16 02:30 UTC — the app stops being a New Zealand app
 
 Continuation of the session above. Five owner asks, taken in order; a worktree

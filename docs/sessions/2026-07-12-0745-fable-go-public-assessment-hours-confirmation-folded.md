@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 121+1 -->
+- [2026-07-12 · ~0745 UTC](2026-07-12-0745-fable-go-public-assessment-hours-confirmation-folded.md) — 2026-07-12 (Fable: go-public assessment; hours confirmation folded)
+
 - **2026-07-12 (Fable: go-public assessment; hours confirmation folded)**:
   Owner call: the Wellington Kebab Grill phone check is *not* an open
   action — hours confirmation folds into his general menu/details

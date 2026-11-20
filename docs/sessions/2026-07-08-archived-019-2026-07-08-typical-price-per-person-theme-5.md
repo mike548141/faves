@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 77+1 -->
+- [2026-07-08 · 2026-07-08 (typical price per person, Theme 5)](2026-07-08-archived-019-2026-07-08-typical-price-per-person-theme-5.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (typical price per person, Theme 5)**: Continuing
   autonomously through the roadmap (owner: "keep going until it's time for a
   new session"). Added a **$/$$/$$$ + ~$Npp** chip on home cards and the

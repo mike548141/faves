@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 81+1 -->
+- [2026-07-08 · 2026-07-08 (prominent back link, Theme 3)](2026-07-08-archived-021-2026-07-08-prominent-back-link-theme-3.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (prominent back link, Theme 3)**: Made the menu/recipe
   "← All restaurants" back link a proper bordered pill button (`.skip a`:
   inline-flex, ≥44 px, border + surface bg, accent hover on pointer devices)

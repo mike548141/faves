@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 89+1 -->
+- [2026-07-08 · 2026-07-08 (P1 batch + P2 price override + two-column panel + overflow](2026-07-08-archived-025-2026-07-08-p1-batch-p2-price-override-two-colu.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (P1 batch + P2 price override + two-column panel + overflow
   menu)**: Cleared the queued work in four commits, each verified in a real
   browser via CDP (Chrome headless, SW bypassed for fresh code).

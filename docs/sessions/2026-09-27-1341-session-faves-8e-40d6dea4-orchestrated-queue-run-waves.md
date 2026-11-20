@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 265+1 -->
+- [2026-09-27 · 1341 UTC](2026-09-27-1341-session-faves-8e-40d6dea4-orchestrated-queue-run-waves.md) — 2026-09-27-1341 — session `faves-8e` (`40d6dea4`): orchestrated queue run, waves 1–2
+
 ## 2026-09-27-1341 — session `faves-8e` (`40d6dea4`): orchestrated queue run, waves 1–2
 
 **Asked:** an orchestrated queue run: drain the board in doctrine order,

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 154+1 -->
+- [2026-08-08 · ~0830 UTC](2026-08-08-0830-settings-index-panels.md) — 2026-08-08 — Settings: index + panels (wt: faves-settings-ia) — Opus 5
+
 ## 2026-08-08 — Settings: index + panels (wt: faves-settings-ia) — Opus 5
 
 **Ask:** "The Settings UI is getting cluttered. Find a better experience for

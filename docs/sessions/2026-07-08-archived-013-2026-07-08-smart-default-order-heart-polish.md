@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 65+1 -->
+- [2026-07-08 · 2026-07-08 (smart default order + heart polish)](2026-07-08-archived-013-2026-07-08-smart-default-order-heart-polish.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (smart default order + heart polish)**: Owner idea — the
   home list should surface places you can actually order from now and sink
   the rest. New pure module `site/js/ranking.js`: `availabilityTier`

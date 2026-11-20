@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 189+1 -->
+- [2026-08-16 · 0630 UTC](2026-08-16-0630-dish-ids-made-immutable-sprig-fern-becomes-five-venues.md) — 2026-08-16 06:30 UTC — dish ids made immutable, Sprig + Fern becomes five venues, the filters get a sheet
+
 ## 2026-08-16 06:30 UTC — dish ids made immutable, Sprig + Fern becomes five venues, the filters get a sheet
 
 Theme 25, taken off the queue and claimed at 05:27 UTC, plus four things the

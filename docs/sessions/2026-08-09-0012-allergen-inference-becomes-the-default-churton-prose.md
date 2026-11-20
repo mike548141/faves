@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 159+1 -->
+- [2026-08-09 · ~0012 UTC](2026-08-09-0012-allergen-inference-becomes-the-default-churton-prose.md) — 2026-08-09 (allergen inference becomes the default + Churton prose — Opus 5, wt: faves-allergen-inference)
+
 - **2026-08-09 (allergen inference becomes the default + Churton prose — Opus 5,
   wt: faves-allergen-inference)**: 🎯 **Owner ruling**, verbatim: *"it is
   preferable that we infer information like allergens where the menu writer

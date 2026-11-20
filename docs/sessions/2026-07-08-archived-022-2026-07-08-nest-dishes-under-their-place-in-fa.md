@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 83+1 -->
+- [2026-07-08 · 2026-07-08 (nest dishes under their place in Favourites, Theme 3)](2026-07-08-archived-022-2026-07-08-nest-dishes-under-their-place-in-fa.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (nest dishes under their place in Favourites, Theme 3)**:
   Replaced the flat "Places / Dishes" favourites view with a **nested one**:
   group by `venueId` (first-seen order), each place a parent header

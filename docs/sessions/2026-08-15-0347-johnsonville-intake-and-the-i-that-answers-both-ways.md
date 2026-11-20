@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 169+1 -->
+- [2026-08-15 · ~0347 UTC](2026-08-15-0347-johnsonville-intake-and-the-i-that-answers-both-ways.md) — 2026-08-15 — Johnsonville intake, and the ⓘ that answers both ways (wt: menu-intake-freshness) — Opus 5
+
 ## 2026-08-15 — Johnsonville intake, and the ⓘ that answers both ways (wt: menu-intake-freshness) — Opus 5
 
 Three asks in one prompt: import the intake, stamp provenance from embedded

@@ -1,5 +1,11 @@
 # 2026-11-14 0340 UTC — eight food trucks added, and what they showed the model
 
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 293+1 -->
+- [2026-11-14 · 0340 UTC](2026-11-14-0340-eight-food-trucks-and-what-they-showed.md) — eight Frank Kitts Park food trucks added from the owner's photos, PR #134 carried in with its term scan run, HEIC read at intake, `520/040` filed with two model gaps (session `1bdd7eb4`)
+
+
 **Dispatched by** the owner, on the laptop (session `1bdd7eb4`): look at the
 design to see whether the data or architecture needs extending for food trucks
 and temporary sites, and add the trucks from his photographs taken that

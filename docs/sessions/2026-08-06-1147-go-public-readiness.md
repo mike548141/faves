@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 148+1 -->
+- [2026-08-06 · ~1147 UTC](2026-08-06-1147-go-public-readiness.md) — 2026-08-06 (go-public readiness — Opus session)
+
 - **2026-08-06 (go-public readiness — Opus session)**: Took the repo from
   "publishable but sequenced" to "one owner sitting away". The four queued
   pre-flip questions were put to the owner and all four ruled: **full

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 135+1 -->
+- [2026-07-23 · ~0436 UTC](2026-07-23-0436-roadmap-cross-device-sync-design-records.md) — 2026-07-23 (roadmap: cross-device sync design + records)
+
 - **2026-07-23 (roadmap: cross-device sync design + records)**: Owner asked
   whether iCloud/similar could sync a person's prefs across devices without
   standing up backend infra (flagged as a likely future enhancement). Verdict

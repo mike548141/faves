@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 202+1 -->
+- [2026-08-16 · 1152 UTC](2026-08-16-1152-addendum-the-worker-is-live-and-the-token-never-touched.md) — 2026-08-16 11:52 UTC — addendum: the Worker is live, and the token never touched this repo
+
 ## 2026-08-16 11:52 UTC — addendum: the Worker is live, and the token never touched this repo
 
 Owner ruled the deploy path: **install wrangler, mint a scoped token** — then,

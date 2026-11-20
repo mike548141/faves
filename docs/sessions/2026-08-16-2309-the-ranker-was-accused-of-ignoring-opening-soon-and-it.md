@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 215+1 -->
+- [2026-08-16 · 2309 UTC](2026-08-16-2309-the-ranker-was-accused-of-ignoring-opening-soon-and-it.md) — 2026-08-16-2309 — the ranker was accused of ignoring "opening soon", and it wasn't
+
 ## 2026-08-16-2309 — the ranker was accused of ignoring "opening soon", and it wasn't
 
 **Report:** a screenshot of the live home list (`lets-eat.myspot.nz`), with

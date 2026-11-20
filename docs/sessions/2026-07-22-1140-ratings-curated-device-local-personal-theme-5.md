@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 128+1 -->
+- [2026-07-22 · ~1140 UTC](2026-07-22-1140-ratings-curated-device-local-personal-theme-5.md) — 2026-07-22 — Ratings: curated + device-local personal (Theme 5) — Opus 4.8
+
 ## 2026-07-22 — Ratings: curated + device-local personal (Theme 5) — Opus 4.8
 
 Built ROADMAP Theme 5 "Ratings / feedback" as the recorded recommendation

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 253+1 -->
+- [2026-09-20 · 1120 UTC](2026-09-20-1120-session-3e87e0bf-kc-cafes-2015-prices-and-the.md) — 2026-09-20-1120 — session `3e87e0bf`: KC Cafe's 2015 prices, and the photograph I refused to read
+
 ## 2026-09-20-1120 — session `3e87e0bf`: KC Cafe's 2015 prices, and the photograph I refused to read
 
 Roadmap `500/050` part **(b)**, KC Cafe only, taken off the orchestrated queue.

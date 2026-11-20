@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 230+1 -->
+- [2026-08-18 · 0600 UTC](2026-08-18-0600-the-boards-vocabulary-is-not-ours-in-either-direction.md) — 2026-08-18-0600 — the board's vocabulary is not ours, in either direction
+
 ## 2026-08-18-0600 — the board's vocabulary is not ours, in either direction
 
 **Owner's ruling, and it corrects something this session did twice:**

@@ -1,5 +1,11 @@
 # 2026-11-16 0638 UTC — 🎯 removed from three asks the tidy-up closed, one held
 
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 297+1 -->
+- [2026-11-16 · 0638 UTC](2026-11-16-0638-asks-markers-removed.md) — 🎯 removed from three asks the 2026-11-16 0545 tidy-up closed, one commit (`ade5dd10`), C0711 held: no 🎯 on its item (estate health sweep follow-up)
+
+
 **Dispatched by** an estate health sweep (orchestrator session 58027096),
 working headless in a detached worktree off `origin/main`. It follows
 [the asks tidy applied at 0545 UTC on 2026-11-16](2026-11-16-0545-asks-tidy-applied.md):

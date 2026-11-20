@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 203+1 -->
+- [2026-08-16 · 1151 UTC](2026-08-16-1151-sixteen-owner-rulings-and-two-records-that-were-lying.md) — 2026-08-16 11:51 UTC — sixteen owner rulings, and two records that were lying
+
 ## 2026-08-16 11:51 UTC — sixteen owner rulings, and two records that were lying
 
 The owner asked for every gated theme to be put to him, and it was. Sixteen

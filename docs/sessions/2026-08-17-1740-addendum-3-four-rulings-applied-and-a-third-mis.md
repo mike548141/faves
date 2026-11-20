@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 227+1 -->
+- [2026-08-17 · 1740 UTC](2026-08-17-1740-addendum-3-four-rulings-applied-and-a-third-mis.md) — 2026-08-17-1740 — addendum 3: four rulings applied, and a third mis-recorded ruling found
+
 ## 2026-08-17-1740 — addendum 3: four rulings applied, and a third mis-recorded ruling found
 
 Four owner decisions taken at the close and applied. Recorded here rather than

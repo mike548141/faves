@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 150+1 -->
+- [2026-08-08 · ~0650 UTC](2026-08-08-0650-gold-lining-menu-from-photos.md) — 2026-08-07/08 (Gold Lining menu from photos — Opus session)
+
 - **2026-08-07/08 (Gold Lining menu from photos — Opus session)**: Owner
   photographed the printed BRUNCH and DRINK cards plus the cabinet, bakery,
   slice and blackboard displays in-store; transcribed to a full record.

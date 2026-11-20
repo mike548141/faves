@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 234+1 -->
+- [2026-08-22 · 0000 UTC](2026-08-22-0000-four-rulings-and-two-of-them-declined-the.md) — 2026-08-22-0000 — four rulings, and two of them declined the recommendation
+
 ## 2026-08-22-0000 — four rulings, and two of them declined the recommendation
 
 The owner answered the four questions this session put to him. **Two went

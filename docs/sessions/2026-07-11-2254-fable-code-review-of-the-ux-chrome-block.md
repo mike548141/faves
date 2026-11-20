@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 115+1 -->
+- [2026-07-11 · ~2254 UTC](2026-07-11-2254-fable-code-review-of-the-ux-chrome-block.md) — 2026-07-12 (Fable: code review of the UX/chrome block)
+
 - **2026-07-12 (Fable: code review of the UX/chrome block)**: The deferred
   review, scoped to `8706f23~1..HEAD` under `site/` (~1.19k insertions, 17
   files). Eight finder angles fanned out on Opus, every candidate verified

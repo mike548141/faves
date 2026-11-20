@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 168+1 -->
+- [2026-08-09 · ~1026 UTC](2026-08-09-1026-four-owner-rulings-applied-orchestration-cont.md) — 2026-08-09 — Four owner rulings, applied (orchestration, cont.) — Opus 5
+
 ## 2026-08-09 — Four owner rulings, applied (orchestration, cont.) — Opus 5
 
 The queue run's open questions were put to the owner and all four ruled.

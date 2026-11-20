@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 151+1 -->
+- [2026-08-08 · ~0711 UTC](2026-08-08-0711-sushi-bi-tj-katsu-and-subway.md) — 2026-08-08 (Sushi Bi, TJ Katsu and Subway — Opus session)
+
 - **2026-08-08 (Sushi Bi, TJ Katsu and Subway — Opus session)**: Owner asked
   for three additions. Two came in menu-complete, one as a stub, and the
   split was decided by what each venue actually publishes.

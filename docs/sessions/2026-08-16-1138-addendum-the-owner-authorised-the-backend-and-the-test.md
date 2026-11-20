@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 200+1 -->
+- [2026-08-16 · 1138 UTC](2026-08-16-1138-addendum-the-owner-authorised-the-backend-and-the-test.md) — 2026-08-16 11:38 UTC — addendum: the owner authorised the backend, and the test for the crypto was decorative
+
 ## 2026-08-16 11:38 UTC — addendum: the owner authorised the backend, and the test for the crypto was decorative
 
 Continues the entry above. Three rulings came back on what that entry raised, and

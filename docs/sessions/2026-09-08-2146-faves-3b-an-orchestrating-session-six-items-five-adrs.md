@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 247+1 -->
+- [2026-09-08 · 2146 UTC](2026-09-08-2146-faves-3b-an-orchestrating-session-six-items-five-adrs.md) — 2026-09-08-2146 → 2026-09-09 — faves-3b: an orchestrating session, six items, five ADRs, and a red `main` we put there
+
 ## 2026-09-08-2146 → 2026-09-09 — faves-3b: an orchestrating session, six items, five ADRs, and a red `main` we put there
 
 Eight sub-agents in worktrees, six PRs merged, no peer faves session live for

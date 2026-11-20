@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 164+1 -->
+- [2026-08-09 · ~0815 UTC](2026-08-09-0815-theme-13f-verified-carries-its-derivation.md) — 2026-08-09 (Theme 13f — `verified` carries its derivation — Opus 5, wt: faves-verified-derivation)
+
 - **2026-08-09 (Theme 13f — `verified` carries its derivation — Opus 5,
   wt: faves-verified-derivation)**: PRINCIPLES §9's retrofit ruling, applied
   to the flag §9 names. ADR **0031**.

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 97+1 -->
+- [2026-07-09 · 2026-07-09 (design: group ordering + backend stance)](2026-07-09-archived-029-2026-07-09-design-group-ordering-backend-stanc.md) — archived entry, verbatim in its file
+
 - **2026-07-09 (design: group ordering + backend stance)**: Owner floated
   "five people picking dishes on their own phones, landing on my order
   list" and asked about Bluetooth/WiFi sharing. Wrote it up rather than

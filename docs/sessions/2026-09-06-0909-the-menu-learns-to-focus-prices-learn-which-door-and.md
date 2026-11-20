@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 237+1 -->
+- [2026-09-06 · 0909 UTC](2026-09-06-0909-the-menu-learns-to-focus-prices-learn-which-door-and.md) — 2026-09-06-0909 — the menu learns to focus, prices learn which door, and the pantry gets read
+
 ## 2026-09-06-0909 — the menu learns to focus, prices learn which door, and the pantry gets read
 
 **Branch:** `worktree-menu-focus-filters` (pushed, not merged). Six commits.

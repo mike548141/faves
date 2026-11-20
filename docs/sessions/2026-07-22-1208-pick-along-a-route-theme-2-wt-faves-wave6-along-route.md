@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 130+1 -->
+- [2026-07-22 · ~1208 UTC](2026-07-22-1208-pick-along-a-route-theme-2-wt-faves-wave6-along-route.md) — 2026-07-23 — Pick along a route (Theme 2, wt: faves-wave6-along-route)
+
 ## 2026-07-23 — Pick along a route (Theme 2, wt: faves-wave6-along-route)
 
 Built the ROADMAP's recorded recommendation for **Pick along a route** —

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 111+1 -->
+- [2026-07-12 · 2026-07-12 (Opus: UX queue — About surface, Share this app, Pick-FAB](2026-07-12-archived-036-2026-07-12-opus-ux-queue-about-surface-share-t.md) — archived entry, verbatim in its file
+
 - **2026-07-12 (Opus: UX queue — About surface, Share this app, Pick-FAB
   auto-hide)**: Cleared the rest of the queued UX block. **About surface**
   (`about-ui.js`): the footer's inline privacy paragraph moved into an About

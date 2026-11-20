@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 136+1 -->
+- [2026-07-23 · ~0525 UTC](2026-07-23-0525-addendum-sync-claim-mechanism-passkey-prf.md) — 2026-07-23 (addendum: sync claim mechanism — passkey+PRF)
+
 - **2026-07-23 (addendum: sync claim mechanism — passkey+PRF)**: Owner asked
   whether an existing Google/Apple account would remove the need for the
   word-code/QR. Refined the ADR 0017 decision (addendum, not a rewrite): claim

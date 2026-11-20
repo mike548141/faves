@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 134+1 -->
+- [2026-07-23 · ~0248 UTC](2026-07-23-0248-fable-orchestrator-addendum-owner-q-a-wave-8.md) — 2026-07-22 (Fable orchestrator, addendum: owner Q&A + wave 8)
+
 - **2026-07-22 (Fable orchestrator, addendum: owner Q&A + wave 8)**: Worked
   the run's open decisions with the owner one by one. Rulings: Nearest-first
   goes pure distance (hearts badge-only there); per-profile language ratified;

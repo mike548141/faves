@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 231+1 -->
+- [2026-08-18 · 0700 UTC](2026-08-18-0700-the-peer-verified-the-finding-and-narrowed-it-we-had.md) — 2026-08-18-0700 — the peer verified the finding, and narrowed it; we had overstated it
+
 ## 2026-08-18-0700 — the peer verified the finding, and narrowed it; we had overstated it
 
 Atelier took all three items (`ef7f987`) and **verified `080` at the source

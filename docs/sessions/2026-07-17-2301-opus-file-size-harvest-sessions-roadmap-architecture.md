@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 124+1 -->
+- [2026-07-17 · ~2301 UTC](2026-07-17-2301-opus-file-size-harvest-sessions-roadmap-architecture.md) — 2026-07-18 (Opus: file-size harvest — SESSIONS/ROADMAP/ARCHITECTURE under budget)
+
 - **2026-07-18 (Opus: file-size harvest — SESSIONS/ROADMAP/ARCHITECTURE under
   budget)**: Focused file-size-hygiene session from atelier's roadmap (`sizescan`
   flagged three current-truth docs over budget); worktree `sessions-roadmap-harvest`,

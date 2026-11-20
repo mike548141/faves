@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 138+1 -->
+- [2026-07-23 · ~0549 UTC](2026-07-23-0549-backend-follow-on-cross-person-sharing-terminology.md) — 2026-07-23 (backend follow-on: cross-person sharing + terminology)
+
 - **2026-07-23 (backend follow-on: cross-person sharing + terminology)**: Owner
   weighed what a backend unlocks for third-party sharing. Rulings: (1) **Scenario
   1** (send picks to a family order) does **not** justify a backend — ADR 0009's

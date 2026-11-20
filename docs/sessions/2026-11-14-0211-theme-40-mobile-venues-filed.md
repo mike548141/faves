@@ -1,5 +1,11 @@
 # 2026-11-14 0211 UTC — Theme 40 filed: mobile venues, from the owner's ask
 
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 292+1 -->
+- [2026-11-14 · 0211 UTC](2026-11-14-0211-theme-40-mobile-venues-filed.md) — Theme 40 filed from the owner's ask: mobile venues, three open items, nothing built; leakscan/namescan term half left to CI (session `0129HcgnfVQXF2UANMbwdAKk`)
+
+
 **Dispatched by** the owner, in a cloud session on branch
 `claude/eloquent-archimedes-wlr13d`, with one message: file on the board
 that a food truck could be *"a branch where the location changes and the

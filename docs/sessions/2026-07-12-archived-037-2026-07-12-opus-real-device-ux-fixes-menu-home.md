@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 113+1 -->
+- [2026-07-12 · 2026-07-12 (Opus: real-device UX fixes — menu + home chrome)](2026-07-12-archived-037-2026-07-12-opus-real-device-ux-fixes-menu-home.md) — archived entry, verbatim in its file
+
 - **2026-07-12 (Opus: real-device UX fixes — menu + home chrome)**: A batch of
   seven fixes from device review. **Menu search** gained the home search's clear
   ✕ (wrapped in `.menu-search-field`; Esc clears). **Pinned toolbar** got

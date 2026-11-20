@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 103+1 -->
+- [2026-07-10 · 2026-07-10 (Opus: shareable shortlist links — Theme 1b fully closed)](2026-07-10-archived-032-2026-07-10-opus-shareable-shortlist-links-them.md) — archived entry, verbatim in its file
+
 - **2026-07-10 (Opus: shareable shortlist links — Theme 1b fully closed)**:
   Built the last parked Theme 1b piece — sharing a shortlist of favourites. The
   "codec already carries the type" turned out optimistic: the order shape

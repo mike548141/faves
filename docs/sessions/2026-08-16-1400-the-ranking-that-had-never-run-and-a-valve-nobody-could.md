@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 208+1 -->
+- [2026-08-16 · 1400 UTC](2026-08-16-1400-the-ranking-that-had-never-run-and-a-valve-nobody-could.md) — 2026-08-16 14:00 UTC — the ranking that had never run, and a valve nobody could read
+
 ## 2026-08-16 14:00 UTC — the ranking that had never run, and a valve nobody could read
 
 An orchestration session that took one item off the queue — 37g, the ADR 0068

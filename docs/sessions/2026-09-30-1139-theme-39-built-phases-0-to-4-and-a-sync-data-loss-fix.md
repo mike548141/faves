@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 269+1 -->
+- [2026-09-30 · ~1139 UTC](2026-09-30-1139-theme-39-built-phases-0-to-4-and-a-sync-data-loss-fix.md) — 2026-09-30 — Theme 39 built: phases 0 to 4, and a sync data-loss fix (session `faves-0b`)
+
 ## 2026-09-30 — Theme 39 built: phases 0 to 4, and a sync data-loss fix (session `faves-0b`)
 
 An orchestrated queue run over roadmap section `510`, on Opus 5.5, with Opus

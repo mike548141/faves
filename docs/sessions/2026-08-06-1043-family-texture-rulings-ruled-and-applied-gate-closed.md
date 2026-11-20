@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 147+1 -->
+- [2026-08-06 · ~1043 UTC](2026-08-06-1043-family-texture-rulings-ruled-and-applied-gate-closed.md) — 2026-08-06 (family-texture rulings — ruled and applied, gate closed)
+
 - **2026-08-06 (family-texture rulings — ruled and applied, gate closed)**:
   Owner walked through the review's four questions and ruled: Shane/Jesse
   attributions **keep, with their OK** (owner holds it; 11e's move-private

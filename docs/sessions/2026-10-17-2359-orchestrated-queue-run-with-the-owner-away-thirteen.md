@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 275+1 -->
+- [2026-10-17 · ~2359 UTC](2026-10-17-2359-orchestrated-queue-run-with-the-owner-away-thirteen.md) — 2026-10-18 — orchestrated queue run with the owner away: thirteen items landed (session `faves-b4`)
+
 ## 2026-10-18 — orchestrated queue run with the owner away: thirteen items landed (session `faves-b4`)
 
 *Interim entry, written before the close so an interruption cannot erase it;

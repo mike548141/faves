@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 141+1 -->
+- [2026-07-23 · ~0704 UTC](2026-07-23-0704-close-out-owner-q-a-answers-actioned-two-forward-inputs.md) — 2026-07-23 (close-out: owner Q&A answers actioned + two forward inputs)
+
 - **2026-07-23 (close-out: owner Q&A answers actioned + two forward inputs)**:
   Worked the three open questions from the close review. (1) Interim ratings —
   **keep the slider live** (no change). (2) Deep-link scroll — **smooth** (with

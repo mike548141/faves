@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 192+1 -->
+- [2026-08-16 · 0831 UTC](2026-08-16-0831-the-owners-afternoon-on-his-own-phone-and-an-outage-i.md) — 2026-08-16 08:31 UTC — the owner's afternoon on his own phone, and an outage I caused
+
 ## 2026-08-16 08:31 UTC — the owner's afternoon on his own phone, and an outage I caused
 
 Second half of the branch-picker session. The owner spent it using the live site

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 251+1 -->
+- [2026-09-09 · 1140 UTC](2026-09-09-1140-faves-c1-addendum-the-board-view-went-up-to-atelier-not.md) — 2026-09-09-1140 — faves-c1 addendum: the board view went up to atelier, not into this repo
+
 ## 2026-09-09-1140 — faves-c1 addendum: the board view went up to atelier, not into this repo
 
 The principal read the rendered board this session published and asked for it to

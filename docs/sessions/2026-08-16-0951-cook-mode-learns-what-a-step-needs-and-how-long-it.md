@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 196+1 -->
+- [2026-08-16 · 0951 UTC](2026-08-16-0951-cook-mode-learns-what-a-step-needs-and-how-long-it.md) — 2026-08-16 09:51 UTC — cook mode learns what a step needs, and how long it waits
+
 ## 2026-08-16 09:51 UTC — cook mode learns what a step needs, and how long it waits
 
 Seven owner items in one run, fed in while the work was in flight. Four shipped,

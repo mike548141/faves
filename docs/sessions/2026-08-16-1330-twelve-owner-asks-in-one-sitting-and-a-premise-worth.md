@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 207+1 -->
+- [2026-08-16 · 1330 UTC](2026-08-16-1330-twelve-owner-asks-in-one-sitting-and-a-premise-worth.md) — 2026-08-16 13:30 UTC — twelve owner asks in one sitting, and a premise worth checking
+
 ## 2026-08-16 13:30 UTC — twelve owner asks in one sitting, and a premise worth checking
 
 An orchestration session that started on the queue and was overtaken, happily,

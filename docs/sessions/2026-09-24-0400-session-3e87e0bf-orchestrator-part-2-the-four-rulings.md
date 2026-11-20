@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 261+1 -->
+- [2026-09-24 · 0400 UTC](2026-09-24-0400-session-3e87e0bf-orchestrator-part-2-the-four-rulings.md) — 2026-09-24-0400 — session `3e87e0bf` (orchestrator, part 2): the four rulings, the 68 rows, and a probe that refused the feature
+
 ## 2026-09-24-0400 — session `3e87e0bf` (orchestrator, part 2): the four rulings, the 68 rows, and a probe that refused the feature
 
 Continuation of `2026-09-20-1053`. Between the two, a peer (`26e43c41` /

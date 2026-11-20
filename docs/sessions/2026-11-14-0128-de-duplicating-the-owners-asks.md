@@ -1,5 +1,11 @@
 # 2026-11-14 0128 UTC — de-duplicating the owner's asks: one overtaken note
 
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 291+1 -->
+- [2026-11-14 · 0128 UTC](2026-11-14-0128-de-duplicating-the-owners-asks.md) — de-duplicating the owner's asks: one overtaken note on the Phase 1 menu-photo ask (session `f7071565`)
+
+
 **Dispatched by** an estate health sweep (orchestrator session 58027096),
 working headless in a detached worktree off `origin/main`. The owner's request,
 verbatim: *"scan the pending actions for me/questions for me/decisions waiting

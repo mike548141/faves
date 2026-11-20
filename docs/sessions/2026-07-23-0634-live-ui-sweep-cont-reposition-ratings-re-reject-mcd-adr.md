@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 140+1 -->
+- [2026-07-23 · ~0634 UTC](2026-07-23-0634-live-ui-sweep-cont-reposition-ratings-re-reject-mcd-adr.md) — 2026-07-23 (live-UI sweep, cont.: reposition, ratings re-reject, McD, ADR 0020)
+
 - **2026-07-23 (live-UI sweep, cont.: reposition, ratings re-reject, McD, ADR
   0020)**: Continuation of the live-feedback stream (the "live-UI defect sweep"
   entry earlier covers batch 1). Shipped: (1) **back-to-top repositioned** — on a

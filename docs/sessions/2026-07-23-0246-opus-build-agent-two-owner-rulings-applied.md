@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 133+1 -->
+- [2026-07-23 · ~0246 UTC](2026-07-23-0246-opus-build-agent-two-owner-rulings-applied.md) — 2026-07-23 (Opus build agent: two owner rulings applied)
+
 - **2026-07-23 (Opus build agent: two owner rulings applied)**: Applied the two
   `[~]` rulings from the 2026-07-23 owner Q&A (wt faves-wave8-rulings-apply).
   **(1) Address tap → pin, not directions** (ADR 0016, supersedes ADR 0010 part

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 274+1 -->
+- [2026-10-16 · ~0807 UTC](2026-10-16-0807-orchestrated-queue-run-interrupted-by-a-crash-and.md) — 2026-10-16 — orchestrated queue run, interrupted by a crash and recovered (session `faves-11`)
+
 ## 2026-10-16 — orchestrated queue run, interrupted by a crash and recovered (session `faves-11`)
 
 *Interim entry, written mid-run so a second interruption cannot erase it; the

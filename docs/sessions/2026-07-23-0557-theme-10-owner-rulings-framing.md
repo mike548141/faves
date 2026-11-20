@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 139+1 -->
+- [2026-07-23 · ~0557 UTC](2026-07-23-0557-theme-10-owner-rulings-framing.md) — 2026-07-23 (Theme 10 owner rulings + framing)
+
 - **2026-07-23 (Theme 10 owner rulings + framing)**: Owner resolved both Theme 10
   ⚑ calls. (a) **Share health-adjacent data across people? Yes — on explicit
   opt-in consent** per scope; so dietary/allergen sharing lives in Faves (not

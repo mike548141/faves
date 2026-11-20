@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 187+1 -->
+- [2026-08-16 · 0615 UTC](2026-08-16-0615-order-it-the-way-you-eat-it-add-ons-ship-with-their.md) — 2026-08-16 06:15 UTC — order it the way you eat it: add-ons ship with their safety rule
+
 ## 2026-08-16 06:15 UTC — order it the way you eat it: add-ons ship with their safety rule
 
 Theme 14a + 14d + 14e, taken as one unit because 14d says so and it was right.

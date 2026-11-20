@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 131+1 -->
+- [2026-07-22 · ~1219 UTC](2026-07-22-1219-split-precache-versioning.md) — 2026-07-23 — Split precache versioning (wt: faves-wave7-split-versioning) — Opus 4.8
+
 ## 2026-07-23 — Split precache versioning (wt: faves-wave7-split-versioning) — Opus 4.8
 
 Owner idea (ROADMAP, 2026-07-22): separate versions for app vs data vs config so

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 183+1 -->
+- [2026-08-16 · 0416 UTC](2026-08-16-0416-the-polish-pass-and-a-number-that-was-taken-twice.md) — 2026-08-16 04:16 UTC — the polish pass, and a number that was taken twice
+
 ## 2026-08-16 04:16 UTC — the polish pass, and a number that was taken twice
 
 **Ask.** The owner kept browsing and raising items; each was triaged on his

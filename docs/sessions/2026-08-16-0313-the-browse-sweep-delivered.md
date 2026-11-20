@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 181+1 -->
+- [2026-08-16 · 0313 UTC](2026-08-16-0313-the-browse-sweep-delivered.md) — 2026-08-16 03:13 UTC — the browse sweep, delivered
+
 ## 2026-08-16 03:13 UTC — the browse sweep, delivered
 
 **Ask.** Continuation of the session above: the owner kept browsing the live

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 222+1 -->
+- [2026-08-17 · 1114 UTC](2026-08-17-1114-searchable-vibes-a-scale-that-stopped-at-the-door-and.md) — 2026-08-17-1114 — searchable vibes, a scale that stopped at the door, and the pin comes home
+
 ## 2026-08-17-1114 — searchable vibes, a scale that stopped at the door, and the pin comes home
 
 Owner-driven throughout: five things he asked for or reported, in the order they

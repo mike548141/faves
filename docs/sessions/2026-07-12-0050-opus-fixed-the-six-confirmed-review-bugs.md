@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 116+1 -->
+- [2026-07-12 · ~0050 UTC](2026-07-12-0050-opus-fixed-the-six-confirmed-review-bugs.md) — 2026-07-12 (Opus: fixed the six confirmed review bugs)
+
 - **2026-07-12 (Opus: fixed the six confirmed review bugs)**: Worked the
   numbered findings from the Fable review above; the #7 cleanup set is left for
   next time. **1** `sw.js` install now keeps `addAll`'s guard by hand — a shell

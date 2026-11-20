@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 223+1 -->
+- [2026-08-17 · 1159 UTC](2026-08-17-1159-the-search-box-climbs-above-the-picks-and-a-that-only.md) — 2026-08-17-1159 — the search box climbs above the picks, and a ✕ that only speaks for one place
+
 ## 2026-08-17-1159 — the search box climbs above the picks, and a ✕ that only speaks for one place
 
 **Two asks off one screenshot of Cook at Home, and a third that arrived mid-

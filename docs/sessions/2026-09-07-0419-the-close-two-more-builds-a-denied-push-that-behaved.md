@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 242+1 -->
+- [2026-09-07 · 0419 UTC](2026-09-07-0419-the-close-two-more-builds-a-denied-push-that-behaved.md) — 2026-09-07-0419 — the close: two more builds, a denied push that behaved, and an ADR collision
+
 ## 2026-09-07-0419 — the close: two more builds, a denied push that behaved, and an ADR collision
 
 **Session `faves-b1`, final stretch.** Two agents on work the owner had ruled on

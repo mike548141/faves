@@ -1,5 +1,11 @@
 # 2026-11-20 1045 UTC — the pre-split archives cut into the stores, board index in its new form
 
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 299+1 -->
+- [2026-11-20 · 1045 UTC](2026-11-20-1045-board-archive-cut.md) — the two frozen pre-split archives cut into their stores by atelier's archivecut (route a, byte-for-byte PASS; `a831b934`, CI green), the board index rebuilt in its new open-only form, and the move's knock-ons fixed
+
+
 **Dispatched by** an estate health sweep (orchestrator session 19378351),
 working headless in a detached worktree off `origin/main`, to bring the board
 to atelier's current form: cut the two frozen pre-split archives into their

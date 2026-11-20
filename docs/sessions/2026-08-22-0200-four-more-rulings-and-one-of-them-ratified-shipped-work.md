@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 236+1 -->
+- [2026-08-22 · 0200 UTC](2026-08-22-0200-four-more-rulings-and-one-of-them-ratified-shipped-work.md) — 2026-08-22-0200 — four more rulings, and one of them ratified shipped work
+
 ## 2026-08-22-0200 — four more rulings, and one of them ratified shipped work
 
 A second round of questions, and the same pattern as the first: **two of the

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 241+1 -->
+- [2026-09-07 · 0235 UTC](2026-09-07-0235-the-same-session-continued-eleven-rulings-and-two.md) — 2026-09-07-0235 — the same session, continued: eleven rulings, and two claims of mine that were wrong
+
 ## 2026-09-07-0235 — the same session, continued: eleven rulings, and two claims of mine that were wrong
 
 **Session `faves-b1`, continuing.** The owner stayed live through the close, so

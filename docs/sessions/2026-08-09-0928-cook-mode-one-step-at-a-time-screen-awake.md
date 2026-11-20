@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 166+1 -->
+- [2026-08-09 · ~0928 UTC](2026-08-09-0928-cook-mode-one-step-at-a-time-screen-awake.md) — 2026-08-09 — Cook mode: one step at a time, screen awake (wt: faves-cook-mode) — Opus 5
+
 ## 2026-08-09 — Cook mode: one step at a time, screen awake (wt: faves-cook-mode) — Opus 5
 
 Shipped ROADMAP **17d** on its own worktree, branch only — no merge to

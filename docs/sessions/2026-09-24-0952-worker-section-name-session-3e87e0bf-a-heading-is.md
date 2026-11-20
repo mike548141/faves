@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 260+1 -->
+- [2026-09-24 · 0952 UTC](2026-09-24-0952-worker-section-name-session-3e87e0bf-a-heading-is.md) — 2026-09-24-0952 — worker `section-name` (session `3e87e0bf`): a heading is evidence the writer may read and may not use
+
 ## 2026-09-24-0952 — worker `section-name` (session `3e87e0bf`): a heading is evidence the writer may read and may not use
 
 Roadmap `470/060`, owner-ruled 2026-09-24: **option (3), both halves, data

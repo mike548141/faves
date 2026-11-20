@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 267+1 -->
+- [2026-09-29 · ~0815 UTC](2026-09-29-0815-the-title-i-and-on-the-spend-line.md) — 2026-09-29 — the title ⓘ, and "~" on the spend line
+
 ## 2026-09-29 — the title ⓘ, and "~" on the spend line
 
 - The ⓘ beside a venue or recipe name sat 3.9px below the name's capitals,

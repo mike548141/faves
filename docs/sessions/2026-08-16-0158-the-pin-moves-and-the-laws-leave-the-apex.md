@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 178+1 -->
+- [2026-08-16 · 0158 UTC](2026-08-16-0158-the-pin-moves-and-the-laws-leave-the-apex.md) — 2026-08-16 01:58 UTC — the pin moves, and the Laws leave the apex
+
 ## 2026-08-16 01:58 UTC — the pin moves, and the Laws leave the apex
 
 **Ask.** Owner, mid-session: "Check and move the atelier pin if needed." A

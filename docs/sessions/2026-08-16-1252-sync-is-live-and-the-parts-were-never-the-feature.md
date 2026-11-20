@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 205+1 -->
+- [2026-08-16 · 1252 UTC](2026-08-16-1252-sync-is-live-and-the-parts-were-never-the-feature.md) — 2026-08-16 12:52 UTC — sync is live, and the parts were never the feature
+
 ## 2026-08-16 12:52 UTC — sync is live, and the parts were never the feature
 
 Owner pushed back on the previous entry's careful distinction: *"havent we just

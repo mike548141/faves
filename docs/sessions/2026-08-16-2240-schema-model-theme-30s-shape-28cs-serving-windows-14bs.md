@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 217+1 -->
+- [2026-08-16 · 2240 UTC](2026-08-16-2240-schema-model-theme-30s-shape-28cs-serving-windows-14bs.md) — 2026-08-16-2240 — Schema & model: Theme 30's shape, 28c's serving windows, 14b's classifier
+
 ## 2026-08-16-2240 — Schema & model: Theme 30's shape, 28c's serving windows, 14b's classifier
 
 Owner handed a four-theme block (28 · 30 · 14 · 34), copied from a catalogue

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 67+1 -->
+- [2026-07-08 · 2026-07-08 (favourites influence the sort order)](2026-07-08-archived-014-2026-07-08-favourites-influence-the-sort-order.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (favourites influence the sort order)**: Owner follow-up:
   favourites should lift a place in the home order too — an open, nearby
   *favourite* (venue, or a venue holding a favourite dish) should sit

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 185+1 -->
+- [2026-08-16 · 0430 UTC](2026-08-16-0430-prices-in-your-own-money-and-an-automation-walked-back.md) — 2026-08-16 04:30 UTC — prices in your own money, and an automation walked back
+
 ## 2026-08-16 04:30 UTC — prices in your own money, and an automation walked back
 
 Continuation. Five owner asks; the last one is the one worth reading.

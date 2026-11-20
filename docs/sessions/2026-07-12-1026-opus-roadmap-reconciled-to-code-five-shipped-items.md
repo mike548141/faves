@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 123+1 -->
+- [2026-07-12 · ~1026 UTC](2026-07-12-1026-opus-roadmap-reconciled-to-code-five-shipped-items.md) — 2026-07-12 (Opus: ROADMAP reconciled to code — five shipped items marked done)
+
 - **2026-07-12 (Opus: ROADMAP reconciled to code — five shipped items marked
   done)**: Owner pushed back on "is that all the work you can do", rightly.
   Verified a green baseline (validate, check_no_deps, gen_sbom --check,

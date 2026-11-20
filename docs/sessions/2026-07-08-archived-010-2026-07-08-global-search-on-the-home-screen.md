@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 59+1 -->
+- [2026-07-08 · 2026-07-08 (global search on the home screen)](2026-07-08-archived-010-2026-07-08-global-search-on-the-home-screen.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (global search on the home screen)**: Built the roadmapped
   home-screen global search (Theme 3) — one box that finds a **place or a
   dish** by name across every venue and Cook at Home. New pure module

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 144+1 -->
+- [2026-07-28 · ~1139 UTC](2026-07-28-1139-family-texture-review.md) — 2026-07-28 (family-texture review — Fable session)
+
 - **2026-07-28 (family-texture review — Fable session)**: The queued Theme 8
   pre-public gate (owner ruling 2026-07-24), run as scoped review work per
   MODEL-ECONOMICS (Fable reviews; findings, not rewrites). Claimed on `main`

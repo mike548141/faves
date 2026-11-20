@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 126+1 -->
+- [2026-07-22 · ~1105 UTC](2026-07-22-1105-opus-wave2-multi-location-venues-nearest-first-fix.md) — 2026-07-22 (Opus: wave2 — multi-location venues + "Nearest first" fix)
+
 - **2026-07-22 (Opus: wave2 — multi-location venues + "Nearest first" fix)**:
   Worktree `faves-wave2-multi-location`. **Multi-location (Theme 2, ADR 0011):**
   shape (a) — one record + an optional `locations:[{label?, address, lat, lng,

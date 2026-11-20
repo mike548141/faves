@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 125+1 -->
+- [2026-07-22 · ~1033 UTC](2026-07-22-1033-opus-wave1-small-closers-drive-time-cook-at-home-grid.md) — 2026-07-22 (Opus: wave1 small closers — drive time + Cook-at-Home grid)
+
 - **2026-07-22 (Opus: wave1 small closers — drive time + Cook-at-Home grid)**:
   Worktree `faves-wave1-small-closers`; two claimed ROADMAP items. **Drive time
   (Theme 2):** the address-row maps handoff now requests *driving directions*

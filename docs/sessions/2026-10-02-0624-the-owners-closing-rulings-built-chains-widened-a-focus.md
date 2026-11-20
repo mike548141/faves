@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 272+1 -->
+- [2026-10-02 · ~0624 UTC](2026-10-02-0624-the-owners-closing-rulings-built-chains-widened-a-focus.md) — 2026-10-02 — the owner's closing rulings built, chains widened, a focus bug found twice (session `faves-77`)
+
 ## 2026-10-02 — the owner's closing rulings built, chains widened, a focus bug found twice (session `faves-77`)
 
 An orchestrated queue run (CONCURRENCY § *Orchestrated queue runs*) on Opus,

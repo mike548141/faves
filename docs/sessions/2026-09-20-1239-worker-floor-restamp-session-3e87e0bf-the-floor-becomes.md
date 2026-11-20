@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 256+1 -->
+- [2026-09-20 · 1239 UTC](2026-09-20-1239-worker-floor-restamp-session-3e87e0bf-the-floor-becomes.md) — 2026-09-20-1239 — worker `floor-restamp` (session `3e87e0bf`): the floor becomes a real copy, and the tool that was supposed to watch it cannot
+
 ## 2026-09-20-1239 — worker `floor-restamp` (session `3e87e0bf`): the floor becomes a real copy, and the tool that was supposed to watch it cannot
 
 Roadmap `340/060`, on the owner's 2026-09-21 ruling. `CLAUDE.md`'s doctrine

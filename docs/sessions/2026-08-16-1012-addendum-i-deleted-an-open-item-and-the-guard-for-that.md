@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 197+1 -->
+- [2026-08-16 · 1012 UTC](2026-08-16-1012-addendum-i-deleted-an-open-item-and-the-guard-for-that.md) — 2026-08-16 10:12 UTC — addendum: I deleted an open item, and the guard for that exact failure was out of scope
+
 ## 2026-08-16 10:12 UTC — addendum: I deleted an open item, and the guard for that exact failure was out of scope
 
 Correcting the entry above rather than leaving it to read as a clean close.

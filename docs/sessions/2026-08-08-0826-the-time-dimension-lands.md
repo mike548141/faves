@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 153+1 -->
+- [2026-08-08 · ~0826 UTC](2026-08-08-0826-the-time-dimension-lands.md) — 2026-08-08 (the time dimension lands — Opus 5 session)
+
 - **2026-08-08 (the time dimension lands — Opus 5 session)**: Owner is adding a
   rule to atelier that all data must carry a time dimension, and asked for faves
   to be updated to it — venue lifecycle dates, seasonal menus, dish and

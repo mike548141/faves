@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 53+1 -->
+- [2026-07-08 · 2026-07-08 (dish/venue photos + recommended pairings)](2026-07-08-archived-007-2026-07-08-dish-venue-photos-recommended-pairi.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (dish/venue photos + recommended pairings)**: Two owner
   ideas, both taken as "build now" (recommended options). **Pairings**
   ([ADR 0007]): optional `goesWith` per menu item (same-record dish name

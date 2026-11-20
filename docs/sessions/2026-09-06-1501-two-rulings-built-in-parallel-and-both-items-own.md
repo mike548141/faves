@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 238+1 -->
+- [2026-09-06 · 1501 UTC](2026-09-06-1501-two-rulings-built-in-parallel-and-both-items-own.md) — 2026-09-06-1501 — two rulings built in parallel, and both items' own numbers were wrong
+
 ## 2026-09-06-1501 — two rulings built in parallel, and both items' own numbers were wrong
 
 **Orchestration session (faves-24).** Two worktrees, two Opus agents, disjoint

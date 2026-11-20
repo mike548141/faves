@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 214+1 -->
+- [2026-08-16 · 2259 UTC](2026-08-16-2259-a-parser-that-has-to-prove-it-read-the-line-and-a-flake.md) — 2026-08-16-2259 — a parser that has to prove it read the line, and a flake that impersonates a regression
+
 ## 2026-08-16-2259 — a parser that has to prove it read the line, and a flake that impersonates a regression
 
 Opus orchestrator, worktree `faves-cook2` (branch `cook-recipes-17`), five

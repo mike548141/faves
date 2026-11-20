@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 69+1 -->
+- [2026-07-08 · 2026-07-08 (weighted favourite/distance metric + user settings)](2026-07-08-archived-015-2026-07-08-weighted-favourite-distance-metric.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (weighted favourite/distance metric + user settings)**:
   Owner asked whether favourites vs distance was balanced (does a favourite
   2 km away beat one 30 km away — yes, distance was already the within-fav

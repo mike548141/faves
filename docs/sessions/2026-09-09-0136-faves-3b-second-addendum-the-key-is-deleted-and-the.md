@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 249+1 -->
+- [2026-09-09 · ~0136 UTC](2026-09-09-0136-faves-3b-second-addendum-the-key-is-deleted-and-the.md) — 2026-09-09 — faves-3b second addendum: the key is deleted, and the warning that told the next session to undo a ruling
+
 ## 2026-09-09 — faves-3b second addendum: the key is deleted, and the warning that told the next session to undo a ruling
 
 Three things landed after the close was first written, all owner-initiated.

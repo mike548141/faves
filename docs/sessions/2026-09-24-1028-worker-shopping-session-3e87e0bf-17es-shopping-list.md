@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 262+1 -->
+- [2026-09-24 · 1028 UTC](2026-09-24-1028-worker-shopping-session-3e87e0bf-17es-shopping-list.md) — 2026-09-24-1028 — worker `shopping` (session `3e87e0bf`): 17e's shopping list, built as the tally with a different key
+
 ## 2026-09-24-1028 — worker `shopping` (session `3e87e0bf`): 17e's shopping list, built as the tally with a different key
 
 Roadmap `250/040`, the shopping-list bullet only. Branch `recipe-shopping-list`,

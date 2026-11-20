@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 273+1 -->
+- [2026-10-03 · ~0816 UTC](2026-10-03-0816-owner-rulings-on-compulsory-choices-filed-and-the.md) — 2026-10-03 — owner rulings on compulsory choices filed, and the configuration survey (session `faves-de`)
+
 ## 2026-10-03 — owner rulings on compulsory choices filed, and the configuration survey (session `faves-de`)
 
 - **Filed only, nothing built.** No change under `site/` or `data/`. The

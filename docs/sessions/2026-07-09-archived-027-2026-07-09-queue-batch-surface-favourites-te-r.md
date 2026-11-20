@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 93+1 -->
+- [2026-07-09 · 2026-07-09 (queue batch: surface favourites + te reo Māori toggle)](2026-07-09-archived-027-2026-07-09-queue-batch-surface-favourites-te-r.md) — archived entry, verbatim in its file
+
 - **2026-07-09 (queue batch: surface favourites + te reo Māori toggle)**:
   Picked up where the prior session stopped and cleared the two smallest
   "still open" favourites sub-items, then built the parked te reo toggle after

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 268+1 -->
+- [2026-09-30 · ~0621 UTC](2026-09-30-0621-sync-timings-and-the-design-for-scaling-data-session.md) — 2026-09-30 — sync timings, and the design for scaling data (session `faves-ad`)
+
 ## 2026-09-30 — sync timings, and the design for scaling data (session `faves-ad`)
 
 - **Asked and answered (read from the code, no change):** a local change

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 119+1 -->
+- [2026-07-12 · ~0412 UTC](2026-07-12-0412-fable-launch-recorded-owner-acceptance-progress.md) — 2026-07-12 (Fable: launch recorded — owner acceptance progress)
+
 - **2026-07-12 (Fable: launch recorded — owner acceptance progress)**:
   The site is launched: live at lets-eat.myspot.nz and the link is
   shared with family. Owner installed the PWA on iPhone — saves to the

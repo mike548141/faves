@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 163+1 -->
+- [2026-08-09 · ~0247 UTC](2026-08-09-0247-three-line-queue-run.md) — 2026-08-09 (three-line queue run — Fable 5 orchestrating, Opus 4.8 building)
+
 - **2026-08-09 (three-line queue run — Fable 5 orchestrating, Opus 4.8
   building)**: 🚀 **Theme 16 shipped, the device check exists, and the
   coordinate audit closed with a reversal.** Three claimed lines, each an

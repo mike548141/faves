@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 190+1 -->
+- [2026-08-16 · 0658 UTC](2026-08-16-0658-the-branch-picker-and-a-data-model-surveyed-before-it.md) — 2026-08-16 06:58 UTC — the branch picker, and a data model surveyed before it was designed
+
 ## 2026-08-16 06:58 UTC — the branch picker, and a data model surveyed before it was designed
 
 Ran alongside the Theme 25 session for the first half. The concurrency worked

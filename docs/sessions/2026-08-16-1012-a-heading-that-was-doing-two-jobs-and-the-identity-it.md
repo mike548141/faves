@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 194+1 -->
+- [2026-08-16 · 1012 UTC](2026-08-16-1012-a-heading-that-was-doing-two-jobs-and-the-identity-it.md) — 2026-08-16 10:12 UTC — a heading that was doing two jobs, and the identity it was quietly holding
+
 ## 2026-08-16 10:12 UTC — a heading that was doing two jobs, and the identity it was quietly holding
 
 Three sessions live in this repo at once. This one took a single owner

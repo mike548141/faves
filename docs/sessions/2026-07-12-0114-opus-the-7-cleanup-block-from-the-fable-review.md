@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 117+1 -->
+- [2026-07-12 · ~0114 UTC](2026-07-12-0114-opus-the-7-cleanup-block-from-the-fable-review.md) — 2026-07-12 (Opus: the #7 cleanup block from the Fable review)
+
 - **2026-07-12 (Opus: the #7 cleanup block from the Fable review)**: Cleared the
   quality/dedup set the review deferred, in five focused commits (each verified
   over CDP with the SW bypassed so tests hit current files, not stale cache — a

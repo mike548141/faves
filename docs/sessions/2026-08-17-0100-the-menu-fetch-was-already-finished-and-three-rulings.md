@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 212+1 -->
+- [2026-08-17 · 0100 UTC](2026-08-17-0100-the-menu-fetch-was-already-finished-and-three-rulings.md) — 2026-08-17-0100 — the menu fetch was already finished, and three rulings fell out of saying so
+
 ## 2026-08-17-0100 — the menu fetch was already finished, and three rulings fell out of saying so
 
 Asked for a full list of open work by theme, then told to do the second of the

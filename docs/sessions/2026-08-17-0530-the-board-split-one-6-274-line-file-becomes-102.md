@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 220+1 -->
+- [2026-08-17 · 0530 UTC](2026-08-17-0530-the-board-split-one-6-274-line-file-becomes-102.md) — 2026-08-17-0530 — the board split: one 6,274-line file becomes 102
+
 ## 2026-08-17-0530 — the board split: one 6,274-line file becomes 102
 
 Taken on a direct instruction from the owner, on the ruling he made 2026-08-16

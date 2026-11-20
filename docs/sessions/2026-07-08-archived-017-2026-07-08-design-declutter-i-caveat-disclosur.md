@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 73+1 -->
+- [2026-07-08 · 2026-07-08 (design declutter: ⓘ caveat disclosure + page footer)](2026-07-08-archived-017-2026-07-08-design-declutter-i-caveat-disclosur.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (design declutter: ⓘ caveat disclosure + page footer)**:
   Owner picked the "design declutter" pair from the roadmap's ready-to-build
   queue. Two small Theme 3 wins. (1) The menu screen's always-on "Menu items

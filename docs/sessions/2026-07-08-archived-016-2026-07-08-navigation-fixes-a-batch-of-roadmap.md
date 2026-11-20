@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 71+1 -->
+- [2026-07-08 · 2026-07-08 (navigation fixes + a batch of roadmap capture)](2026-07-08-archived-016-2026-07-08-navigation-fixes-a-batch-of-roadmap.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (navigation fixes + a batch of roadmap capture)**: Owner
   flagged that returning to the main list from the favourites view wasn't
   discoverable (pressing the toggle again works but isn't obvious) and

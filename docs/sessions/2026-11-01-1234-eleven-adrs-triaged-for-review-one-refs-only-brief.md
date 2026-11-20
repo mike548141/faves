@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 278+1 -->
+- [2026-11-01 · ~1234 UTC](2026-11-01-1234-eleven-adrs-triaged-for-review-one-refs-only-brief.md) — 2026-11-02 — eleven ADRs triaged for review, one refs-only brief written (a sub-agent of session `2be3482c`)
+
 ## 2026-11-02 — eleven ADRs triaged for review, one refs-only brief written (a sub-agent of session `2be3482c`)
 
 A brief-writing sub-agent on Opus 5.5, under the owner's instruction of

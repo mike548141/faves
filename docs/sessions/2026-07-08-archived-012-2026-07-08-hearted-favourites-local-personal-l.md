@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 63+1 -->
+- [2026-07-08 · 2026-07-08 (hearted favourites — local personal layer, part 2)](2026-07-08-archived-012-2026-07-08-hearted-favourites-local-personal-l.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (hearted favourites — local personal layer, part 2)**:
   Built the ♥ favourites feature (roadmap Theme 5), extending the same
   device-local layer as the order tally. Extracted `site/js/store.js`

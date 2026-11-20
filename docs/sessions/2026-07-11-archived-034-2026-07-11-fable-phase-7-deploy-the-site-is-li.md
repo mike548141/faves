@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 107+1 -->
+- [2026-07-11 · 2026-07-11 (Fable: Phase 7 deploy — the site is LIVE)](2026-07-11-archived-034-2026-07-11-fable-phase-7-deploy-the-site-is-li.md) — archived entry, verbatim in its file
+
 - **2026-07-11 (Fable: Phase 7 deploy — the site is LIVE)**: Repo re-checked
   post-atelier-adoption: verify suite green, pin bumped `1588fda → dfd5aec`
   (new RECORD.md doctrine: public records keep private repos generic — faves'

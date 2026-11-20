@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 271+1 -->
+- [2026-10-01 · ~1336 UTC](2026-10-01-1336-stale-sync-reads-fixed-live-the-old-hearts-guards-and.md) — 2026-10-02 — stale sync reads fixed live, the old-hearts guards, and three owner asks (session `faves-4f`)
+
 ## 2026-10-02 — stale sync reads fixed live, the old-hearts guards, and three owner asks (session `faves-4f`)
 
 An orchestrated queue run on Opus 5.5, with Sonnet and Opus workers in

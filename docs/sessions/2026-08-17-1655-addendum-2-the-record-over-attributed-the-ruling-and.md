@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 226+1 -->
+- [2026-08-17 · 1655 UTC](2026-08-17-1655-addendum-2-the-record-over-attributed-the-ruling-and.md) — 2026-08-17-1655 — addendum 2: the record over-attributed the ruling, and the transcript says so
+
 ## 2026-08-17-1655 — addendum 2: the record over-attributed the ruling, and the transcript says so
 
 Correcting the addendum above, which quoted atelier's board capture as if it

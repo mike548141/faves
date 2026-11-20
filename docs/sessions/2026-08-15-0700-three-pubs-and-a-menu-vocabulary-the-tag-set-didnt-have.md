@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 174+1 -->
+- [2026-08-15 · ~0700 UTC](2026-08-15-0700-three-pubs-and-a-menu-vocabulary-the-tag-set-didnt-have.md) — 2026-08-15 — Three pubs, and a menu vocabulary the tag set didn't have (wt: three-venues) — Opus 5
+
 ## 2026-08-15 — Three pubs, and a menu vocabulary the tag set didn't have (wt: three-venues) — Opus 5
 
 **Asked for:** 1841 in Johnsonville, The Borough in Tawa, Southern Cross in

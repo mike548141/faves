@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 49+1 -->
+- [2026-07-08 · 2026-07-08 (roadmap Theme 2, step 3 — "what's close")](2026-07-08-archived-005-2026-07-08-roadmap-theme-2-step-3-what-s-close.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (roadmap Theme 2, step 3 — "what's close")**: Cashed in the
   coordinates with the distance-sorted list. New `site/js/distance.js`
   (pure: haversine + `sortByDistance` + `formatDistance`) and a "📍 Near

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 195+1 -->
+- [2026-08-16 · 0946 UTC](2026-08-16-0946-four-sessions-one-repo-the-in-flight-residue-closed-and.md) — 2026-08-16 09:46 UTC — four sessions, one repo: the in-flight residue closed, and a guard that had the hole it was written to close
+
 ## 2026-08-16 09:46 UTC — four sessions, one repo: the in-flight residue closed, and a guard that had the hole it was written to close
 
 An orchestrating session (worktrees `faves-inflight` and `faves-chrome`) working

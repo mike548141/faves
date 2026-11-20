@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 118+1 -->
+- [2026-07-12 · ~0152 UTC](2026-07-12-0152-fable-doctrine-drift-why-a-session-asked-before.md) — 2026-07-12 (Fable: doctrine drift — why a session asked before committing)
+
 - **2026-07-12 (Fable: doctrine drift — why a session asked before committing)**:
   Investigated why a live session asked permission to commit despite the
   2026-07-10 standing grant. Root cause: `CONTRIBUTING.md` still said "only

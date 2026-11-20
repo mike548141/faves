@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 199+1 -->
+- [2026-08-16 · 1104 UTC](2026-08-16-1104-cross-device-sync-the-design-was-wrong-and-the-code.md) — 2026-08-16 11:04 UTC — cross-device sync: the design was wrong, and the code said so
+
 ## 2026-08-16 11:04 UTC — cross-device sync: the design was wrong, and the code said so
 
 **Owner-directed mid-session**: *"start with work that enables device syncing of

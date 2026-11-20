@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 216+1 -->
+- [2026-08-16 · ~2315 UTC](2026-08-16-2315-theme-20-engineering-hygiene-the-guards-that-guard-the.md) — 2026-08-17 — Theme 20 engineering hygiene: the guards that guard the guards
+
 ## 2026-08-17 — Theme 20 engineering hygiene: the guards that guard the guards
 
 Worktrees `faves-hygiene` (`hygiene-20`) and `faves-hyg-ci` (`hygiene-ci`, since

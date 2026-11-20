@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 186+1 -->
+- [2026-08-16 · 0445 UTC](2026-08-16-0445-a-filtered-list-that-says-so-and-lets-you-out.md) — 2026-08-16 04:45 UTC — a filtered list that says so, and lets you out
+
 ## 2026-08-16 04:45 UTC — a filtered list that says so, and lets you out
 
 **The report (owner).** The facet link works, *"but I'm left without a clear way

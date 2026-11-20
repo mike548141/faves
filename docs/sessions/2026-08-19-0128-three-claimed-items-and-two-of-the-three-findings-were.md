@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 233+1 -->
+- [2026-08-19 · 0128 UTC](2026-08-19-0128-three-claimed-items-and-two-of-the-three-findings-were.md) — 2026-08-19-0128 — three claimed items, and two of the three findings were wrong
+
 ## 2026-08-19-0128 — three claimed items, and two of the three findings were wrong
 
 An orchestrating session on Opus with two sub-agents in worktrees. The through

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 228+1 -->
+- [2026-08-17 · 1815 UTC](2026-08-17-1815-addendum-4-the-last-two-rulings-and-the-session-closes.md) — 2026-08-17-1815 — addendum 4: the last two rulings, and the session closes
+
 ## 2026-08-17-1815 — addendum 4: the last two rulings, and the session closes
 
 **1. The filter label is "Dining" — the owner's word** (`74ff51a`), after

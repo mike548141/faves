@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 252+1 -->
+- [2026-09-20 · 1114 UTC](2026-09-20-1114-sync-surfacing-an-allergen-flag-cleared-by-the-act-of.md) — 2026-09-20-1114 — sync-surfacing: an allergen flag cleared by the act of syncing, and an error screen with no door
+
 ## 2026-09-20-1114 — sync-surfacing: an allergen flag cleared by the act of syncing, and an error screen with no door
 
 Worker in an orchestrated queue run, on roadmap `150/030` — the 2026-08-17 cold

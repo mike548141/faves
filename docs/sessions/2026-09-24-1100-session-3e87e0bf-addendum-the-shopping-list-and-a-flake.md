@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 263+1 -->
+- [2026-09-24 · 1100 UTC](2026-09-24-1100-session-3e87e0bf-addendum-the-shopping-list-and-a-flake.md) — 2026-09-24-1100 — session `3e87e0bf` addendum: the shopping list, and a "flake" that was a defect in the check
+
 ## 2026-09-24-1100 — session `3e87e0bf` addendum: the shopping list, and a "flake" that was a defect in the check
 
 **`17e`'s shopping list shipped** — built as the item's own direction said, the

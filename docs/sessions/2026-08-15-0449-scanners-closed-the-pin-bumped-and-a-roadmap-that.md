@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 171+1 -->
+- [2026-08-15 · ~0449 UTC](2026-08-15-0449-scanners-closed-the-pin-bumped-and-a-roadmap-that.md) — 2026-08-15 — Scanners closed, the pin bumped, and a roadmap that stopped lying (wt: faves-scanner-close) — Opus 5
+
 ## 2026-08-15 — Scanners closed, the pin bumped, and a roadmap that stopped lying (wt: faves-scanner-close) — Opus 5
 
 Orchestration session, run alongside the live `intake-round-two` session and

@@ -1,5 +1,11 @@
 # 2026-11-18 0420 UTC — a recipe's photo opens the recipe; the viewer moves to the recipe page
 
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 298+1 -->
+- [2026-11-18 · 0420 UTC](2026-11-18-0420-recipe-photo-tap.md) — the owner's ask: a recipe's thumbnail on the Cook at Home list opens the recipe, and the bigger-photo viewer moves to the recipe page's hero (`970f814b`); restaurant dishes unchanged (session `38086646`)
+
+
 **Owner ask, 2026-11-18, verbatim:** *"When I click on the photo/image it should
 do the same thing as clicking on the title of the recipe i.e. it should open the
 recipe. But this feature would be good to have when you are on the recipe page

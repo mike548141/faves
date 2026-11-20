@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 209+1 -->
+- [2026-08-16 · 1442 UTC](2026-08-16-1442-seven-menus-a-guard-nobody-had-written-and-a-count-that.md) — 2026-08-16 14:42 UTC — seven menus, a guard nobody had written, and a count that lied twice
+
 ## 2026-08-16 14:42 UTC — seven menus, a guard nobody had written, and a count that lied twice
 
 An orchestration session (wt: `faves-menus`, branch `menus-14`) running two

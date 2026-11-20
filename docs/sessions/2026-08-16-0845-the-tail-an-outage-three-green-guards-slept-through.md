@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 191+1 -->
+- [2026-08-16 · 0845 UTC](2026-08-16-0845-the-tail-an-outage-three-green-guards-slept-through.md) — 2026-08-16 08:45 UTC — the tail: an outage three green guards slept through
+
 ## 2026-08-16 08:45 UTC — the tail: an outage three green guards slept through
 
 Appended after the close above, because the owner's feedback on the shipped

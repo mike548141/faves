@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 258+1 -->
+- [2026-09-24 · 0335 UTC](2026-09-24-0335-session-26e43c41-faves-62-close-the-owed-merge-landed.md) — 2026-09-24-0335 — session `26e43c41` (faves-62) close: the owed merge landed, by a peer, in the same checkout, at the same minute
+
 ## 2026-09-24-0335 — session `26e43c41` (faves-62) close: the owed merge landed, by a peer, in the same checkout, at the same minute
 
 Closing addendum to the 2026-09-20-2254 record. Asked "ready to close?" on

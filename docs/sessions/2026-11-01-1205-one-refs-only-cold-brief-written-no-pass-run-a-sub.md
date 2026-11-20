@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 277+1 -->
+- [2026-11-01 · ~1205 UTC](2026-11-01-1205-one-refs-only-cold-brief-written-no-pass-run-a-sub.md) — 2026-11-02 — one refs-only cold brief written, no pass run (a sub-agent of session `2be3482c`)
+
 ## 2026-11-02 — one refs-only cold brief written, no pass run (a sub-agent of session `2be3482c`)
 
 A brief-writing sub-agent on Opus 5.5, on the owner's instruction of

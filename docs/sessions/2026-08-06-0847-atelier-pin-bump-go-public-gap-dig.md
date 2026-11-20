@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 146+1 -->
+- [2026-08-06 · ~0847 UTC](2026-08-06-0847-atelier-pin-bump-go-public-gap-dig.md) — 2026-08-06 (atelier pin bump + go-public gap dig — Fable session)
+
 - **2026-08-06 (atelier pin bump + go-public gap dig — Fable session)**: The
   queued drift audit ran: ~250 atelier commits since `4f637b0` read at the
   publication-relevant surface, pin bumped to `33a540a` (owner-directed).

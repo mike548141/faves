@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 211+1 -->
+- [2026-08-16 · 1508 UTC](2026-08-16-1508-the-alarm-a-guard-that-had-been-dead-for-a-refactor-and.md) — 2026-08-16 15:08 UTC — the alarm, a guard that had been dead for a refactor, and four collisions between correct decisions
+
 ## 2026-08-16 15:08 UTC — the alarm, a guard that had been dead for a refactor, and four collisions between correct decisions
 
 Orchestration session on the primary checkout, one worktree (`faves-cook`),

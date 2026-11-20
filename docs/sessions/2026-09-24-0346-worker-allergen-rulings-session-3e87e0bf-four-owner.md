@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 259+1 -->
+- [2026-09-24 · 0346 UTC](2026-09-24-0346-worker-allergen-rulings-session-3e87e0bf-four-owner.md) — 2026-09-24-0346 — worker `allergen-rulings` (session `3e87e0bf`): four owner rulings executed, and the class table gets its first test
+
 ## 2026-09-24-0346 — worker `allergen-rulings` (session `3e87e0bf`): four owner rulings executed, and the class table gets its first test
 
 Branch `allergen-rulings`, worktree `/Users/mike/worktrees/faves-allergen-rulings`.

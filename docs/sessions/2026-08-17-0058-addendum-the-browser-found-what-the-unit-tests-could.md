@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 206+1 -->
+- [2026-08-17 · 0058 UTC](2026-08-17-0058-addendum-the-browser-found-what-the-unit-tests-could.md) — 2026-08-17 00:58 UTC — addendum: the browser found what the unit tests could not
+
 ## 2026-08-17 00:58 UTC — addendum: the browser found what the unit tests could not
 
 Closing note on the sync build. **Sync is live in production** — verified twice

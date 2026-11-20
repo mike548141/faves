@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 51+1 -->
+- [2026-07-08 · 2026-07-08 (live opening hours — the parked "Open now", expanded)](2026-07-08-archived-006-2026-07-08-live-opening-hours-the-parked-open.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (live opening hours — the parked "Open now", expanded)**:
   Owner asked for relative-time hours ("open for another 40 min"),
   open/closed status on the home list, and easy navigation of split

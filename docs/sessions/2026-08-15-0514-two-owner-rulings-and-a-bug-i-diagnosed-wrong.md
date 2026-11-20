@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 173+1 -->
+- [2026-08-15 · ~0514 UTC](2026-08-15-0514-two-owner-rulings-and-a-bug-i-diagnosed-wrong.md) — 2026-08-15 — Two owner rulings, and a bug I diagnosed wrong (wt: pandan-branches) — Opus 5
+
 ## 2026-08-15 — Two owner rulings, and a bug I diagnosed wrong (wt: pandan-branches) — Opus 5
 
 **1. The menu-conflict rule, ruled and recorded.** For any two menus of the same

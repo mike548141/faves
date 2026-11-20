@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 218+1 -->
+- [2026-08-17 · 0200 UTC](2026-08-17-0200-the-location-ask-rebuilt-hours-after-it-shipped.md) — 2026-08-17-0200 — the location ask, rebuilt hours after it shipped
+
 ## 2026-08-17-0200 — the location ask, rebuilt hours after it shipped
 
 The owner looked at [ADR 0069]'s inline pill on his phone and asked for

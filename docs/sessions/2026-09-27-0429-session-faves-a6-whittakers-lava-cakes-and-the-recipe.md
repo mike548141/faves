@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 264+1 -->
+- [2026-09-27 · 0429 UTC](2026-09-27-0429-session-faves-a6-whittakers-lava-cakes-and-the-recipe.md) — 2026-09-27-0429 — session `faves-a6`: Whittaker's lava cakes, and the recipe page rebuilt after it
+
 ## 2026-09-27-0429 — session `faves-a6`: Whittaker's lava cakes, and the recipe page rebuilt after it
 
 **Asked:** add <https://www.whittakers.co.nz/en_NZ/recipes/choc-lava-cakes>

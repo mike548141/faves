@@ -1,5 +1,11 @@
 # 2026-11-13 0749 UTC — the session log split into an index and 164 detail files
 
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 290+1 -->
+- [2026-11-13 · 0749 UTC](2026-11-13-0749-sessions-log-split.md) — the session log split into an index and 164 detail files, every byte proved to survive (session `84039f05`)
+
+
 **Dispatched by** an estate health sweep (orchestrator session e820bff5),
 working headless in a detached worktree off `origin/main`, as a follow-up to
 the owner's estate-wide health request, verbatim: *"I want you to bring each

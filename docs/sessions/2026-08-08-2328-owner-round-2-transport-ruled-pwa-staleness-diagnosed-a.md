@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 156+1 -->
+- [2026-08-08 · ~2328 UTC](2026-08-08-2328-owner-round-2-transport-ruled-pwa-staleness-diagnosed-a.md) — 2026-08-09 — Owner round 2: transport ruled, PWA staleness diagnosed, a CSS fix — Opus 5
+
 ## 2026-08-09 — Owner round 2: transport ruled, PWA staleness diagnosed, a CSS fix — Opus 5
 
 Follow-on to the same day's roadmap session. One ruling recorded, two themes

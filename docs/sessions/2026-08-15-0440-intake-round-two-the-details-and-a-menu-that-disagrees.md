@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 170+1 -->
+- [2026-08-15 · ~0440 UTC](2026-08-15-0440-intake-round-two-the-details-and-a-menu-that-disagrees.md) — 2026-08-15 — Intake round two: the details, and a menu that disagrees with itself (wt: intake-round-two) — Opus 5
+
 ## 2026-08-15 — Intake round two: the details, and a menu that disagrees with itself (wt: intake-round-two) — Opus 5
 
 Owner follow-ups to the morning's intake, plus a new restaurant. A parallel

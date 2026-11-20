@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 99+1 -->
+- [2026-07-10 · 2026-07-10 (Opus: Theme 1b group ordering — send/receive)](2026-07-10-archived-030-2026-07-10-opus-theme-1b-group-ordering-send-r.md) — archived entry, verbatim in its file
+
 - **2026-07-10 (Opus: Theme 1b group ordering — send/receive)**: Built the
   bulk of Theme 1b per ADR 0009. New pure `site/js/share-codec.js`: a
   versioned codec that packs an order into `#share=<base64url(JSON)>` — terse

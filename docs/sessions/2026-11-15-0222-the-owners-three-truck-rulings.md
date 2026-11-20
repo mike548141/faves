@@ -1,5 +1,11 @@
 # 2026-11-15 0222 UTC — the owner's three truck rulings, and the Food truck style
 
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 294+1 -->
+- [2026-11-15 · 0222 UTC](2026-11-15-0222-the-owners-three-truck-rulings.md) — the owner's three truck rulings recorded (`520/040` closed, `010` gains three spot kinds); the Dining and Style filters split by question, Cheap eats removed, and Theme 41 filed: provider, branch and menu, each with time, and written as ADR 0169; counter order back in Style (session `1bdd7eb4`)
+
+
 **Dispatched by** the owner, on the laptop, in the same session as
 `2026-11-14-0340` (session `1bdd7eb4`), answering the three calls that record
 put to him from `520/040`.

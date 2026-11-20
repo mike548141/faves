@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 254+1 -->
+- [2026-09-20 · 1053 UTC](2026-09-20-1053-session-3e87e0bf-an-orchestrating-session-an-eleven-day.md) — 2026-09-20-1053 → 2026-09-21 — session `3e87e0bf`: an orchestrating session, an eleven-day gap, and four items that were already answered somewhere else
+
 ## 2026-09-20-1053 → 2026-09-21 — session `3e87e0bf`: an orchestrating session, an eleven-day gap, and four items that were already answered somewhere else
 
 **Tier stated at open, not asked** (`ECONOMICS.md`, ruled 2026-09-19):

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 224+1 -->
+- [2026-08-17 · 1501 UTC](2026-08-17-1501-five-items-shipped-in-parallel-worktrees-and-four-of.md) — 2026-08-17-1501 — five items shipped in parallel worktrees, and four of them refuted their own brief
+
 ## 2026-08-17-1501 — five items shipped in parallel worktrees, and four of them refuted their own brief
 
 **Shape of the session:** Opus orchestrating, six sub-agents in six worktrees,

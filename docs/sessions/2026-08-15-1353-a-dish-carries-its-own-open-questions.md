@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 176+1 -->
+- [2026-08-15 · ~1353 UTC](2026-08-15-1353-a-dish-carries-its-own-open-questions.md) — 2026-08-15 — A dish carries its own open questions (wt: dish-needs) — Opus 5
+
 ## 2026-08-15 — A dish carries its own open questions (wt: dish-needs) — Opus 5
 
 **Asked for:** turn the roadmap's "go and check this dish" items into an

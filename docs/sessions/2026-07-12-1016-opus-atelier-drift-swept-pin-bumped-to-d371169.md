@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 122+1 -->
+- [2026-07-12 · ~1016 UTC](2026-07-12-1016-opus-atelier-drift-swept-pin-bumped-to-d371169.md) — 2026-07-12 (Opus: atelier drift swept, pin bumped to d371169)
+
 - **2026-07-12 (Opus: atelier drift swept, pin bumped to d371169)**:
   Session-start hygiene. Pull clean, visibility PRIVATE (verified). Drift
   b07087c → d371169: six commits, three touching `docs/method/` — <!-- pathscan:allow: atelier cross-repo path, historical — accurate as of this session log entry -->

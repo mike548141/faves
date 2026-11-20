@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 142+1 -->
+- [2026-07-23 · ~1047 UTC](2026-07-23-1047-mcdonalds-menu-branch-cap-menu-page-then-queue-and.md) — 2026-07-23 (McDonald's menu, branch cap, menu-page ⋯; then queue-and-close)
+
 - **2026-07-23 (McDonald's menu, branch cap, menu-page ⋯; then queue-and-close)**:
   More live feedback, worked then wound down at owner's request. **Shipped:**
   (1) **McDonald's menu** — enduring NZ items across 6 sections, `price: null`

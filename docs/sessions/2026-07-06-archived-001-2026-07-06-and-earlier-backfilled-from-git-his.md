@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 41+1 -->
+- [2026-07-06 · 2026-07-06 and earlier (backfilled from git history)](2026-07-06-archived-001-2026-07-06-and-earlier-backfilled-from-git-his.md) — archived entry, verbatim in its file
+
 - **2026-07-06 and earlier (backfilled from git history)**: Phase 0
   foundation — strategy/architecture/design/workplan + restaurant stubs.
   Built the home and menu screens (Phase 2/3), added five more venues and

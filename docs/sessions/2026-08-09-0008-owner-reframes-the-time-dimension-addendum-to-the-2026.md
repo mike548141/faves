@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 158+1 -->
+- [2026-08-09 · ~0008 UTC](2026-08-09-0008-owner-reframes-the-time-dimension-addendum-to-the-2026.md) — 2026-08-09 (owner reframes the time dimension — addendum to the 2026-08-08 session above)
+
 - **2026-08-09 (owner reframes the time dimension — addendum to the 2026-08-08
   session above)**: Owner clarified the *purpose*, which changes how the roadmap
   should read even though no code moved. Raw: *"capturing price trends is not the

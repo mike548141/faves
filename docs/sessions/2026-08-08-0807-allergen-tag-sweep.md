@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 152+1 -->
+- [2026-08-08 · ~0807 UTC](2026-08-08-0807-allergen-tag-sweep.md) — 2026-08-08 (allergen tag sweep — Opus 5 session, wt: faves-allergen-tagging)
+
 - **2026-08-08 (allergen tag sweep — Opus 5 session, wt: faves-allergen-tagging)**:
   The owner ruled on the two safety flags raised when the Churton menu landed,
   and both turned out to be fleet-wide rather than one record's problem.

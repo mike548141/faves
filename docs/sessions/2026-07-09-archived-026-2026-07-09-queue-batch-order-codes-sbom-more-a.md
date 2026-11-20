@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 91+1 -->
+- [2026-07-09 · 2026-07-09 (queue batch: order-codes, SBOM, more allergens, food](2026-07-09-archived-026-2026-07-09-queue-batch-order-codes-sbom-more-a.md) — archived entry, verbatim in its file
+
 - **2026-07-09 (queue batch: order-codes, SBOM, more allergens, food
   preferences)**: Worked through four ROADMAP items end-to-end, each committed
   separately with a real-browser check.

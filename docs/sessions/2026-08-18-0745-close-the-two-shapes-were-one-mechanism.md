@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 232+1 -->
+- [2026-08-18 · 0745 UTC](2026-08-18-0745-close-the-two-shapes-were-one-mechanism.md) — 2026-08-18-0745 — close: the two shapes were one mechanism
+
 ## 2026-08-18-0745 — close: the two shapes were one mechanism
 
 Atelier restructured `090` on this repo's parting observation (`4c102d6`) and the

@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 210+1 -->
+- [2026-08-16 · 1540 UTC](2026-08-16-1540-the-recipe-page-abouts-sediment-and-a-decline-that.md) — 2026-08-16 15:40 UTC — the recipe page, About's sediment, and a decline that concentrated on the need
+
 ## 2026-08-16 15:40 UTC — the recipe page, About's sediment, and a decline that concentrated on the need
 
 Orchestration session on the primary checkout, three worktrees, five agents, and

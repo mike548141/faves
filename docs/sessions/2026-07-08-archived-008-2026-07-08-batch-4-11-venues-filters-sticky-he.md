@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 55+1 -->
+- [2026-07-08 · 2026-07-08 (batch 4: +11 venues, filters, sticky headings, roadmap)](2026-07-08-archived-008-2026-07-08-batch-4-11-venues-filters-sticky-he.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (batch 4: +11 venues, filters, sticky headings, roadmap)**:
   Built the **"Open now" filter** (results-head toggle, reuses the hours
   engine; unknown-hours venues drop out) and **sticky menu section

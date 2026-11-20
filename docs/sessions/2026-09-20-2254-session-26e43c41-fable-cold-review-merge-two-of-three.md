@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 257+1 -->
+- [2026-09-20 · 2254 UTC](2026-09-20-2254-session-26e43c41-fable-cold-review-merge-two-of-three.md) — 2026-09-20-2254 — session `26e43c41` (Fable, cold review + merge): two of three worker branches merged, the pin bumped with the delta read, one branch left owed
+
 ## 2026-09-20-2254 — session `26e43c41` (Fable, cold review + merge): two of three worker branches merged, the pin bumped with the delta read, one branch left owed
 
 **Tier stated, not asked:** Fable, because the owner asked for the work best

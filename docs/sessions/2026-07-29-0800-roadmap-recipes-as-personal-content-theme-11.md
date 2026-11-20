@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 145+1 -->
+- [2026-07-29 · ~0800 UTC](2026-07-29-0800-roadmap-recipes-as-personal-content-theme-11.md) — 2026-07-29 (roadmap: recipes as personal content — Theme 11)
+
 - **2026-07-29 (roadmap: recipes as personal content — Theme 11)**: Owner
   steer captured — Cook at Home should stop publishing *all* 24 curated
   recipes to everyone; recipes should also live in the private personal layer

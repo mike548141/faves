@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 175+1 -->
+- [2026-08-15 · ~1333 UTC](2026-08-15-1333-drinks-and-the-price-band-they-quietly-broke.md) — 2026-08-15 — Drinks, and the price band they quietly broke (wt: drinks) — Opus 5
+
 ## 2026-08-15 — Drinks, and the price band they quietly broke (wt: drinks) — Opus 5
 
 **Owner ruling:** add all drinks. **Delivered:** 166 drinks — The Borough 81,

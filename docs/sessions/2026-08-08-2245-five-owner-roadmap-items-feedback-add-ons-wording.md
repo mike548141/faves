@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 155+1 -->
+- [2026-08-08 · ~2245 UTC](2026-08-08-2245-five-owner-roadmap-items-feedback-add-ons-wording.md) — 2026-08-09 — Five owner roadmap items: feedback, add-ons, wording — Opus 5
+
 ## 2026-08-09 — Five owner roadmap items: feedback, add-ons, wording — Opus 5
 
 Roadmap-only session; no code, no data, no version bumps. Five owner asks

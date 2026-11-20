@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 137+1 -->
+- [2026-07-23 · ~0547 UTC](2026-07-23-0547-live-ui-defect-sweep-ratings-redesign-mcdonalds.md) — 2026-07-23 (live-UI defect sweep + ratings redesign + McDonald's)
+
 - **2026-07-23 (live-UI defect sweep + ratings redesign + McDonald's)**: Owner
   fired a stream of live-site defects/asks; shipped incrementally, each pushed
   (= deployed). **Fixes:** (1) app-wide search deep-link now scrolls to the dish

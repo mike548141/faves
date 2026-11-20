@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 270+1 -->
+- [2026-10-01 · ~0703 UTC](2026-10-01-0703-the-import-tool-groundup-cafe-and-the-chatty-app-fixes.md) — 2026-10-01 — the import tool, Groundup Cafe, and the chatty-app fixes (session `faves-55`)
+
 ## 2026-10-01 — the import tool, Groundup Cafe, and the chatty-app fixes (session `faves-55`)
 
 An orchestrated queue run on Opus 5.5, with Opus and Sonnet workers in

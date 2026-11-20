@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 213+1 -->
+- [2026-08-17 · 2200 UTC](2026-08-17-2200-a-stale-handover-2-6-gb-of-debris-and-four-claims-that.md) — 2026-08-17-2200 — a stale handover, 2.6 GB of debris, and four claims that had to be proved
+
 ## 2026-08-17-2200 — a stale handover, 2.6 GB of debris, and four claims that had to be proved
 
 Opened on a handover note from a previous session warning that `sync_check.mjs`

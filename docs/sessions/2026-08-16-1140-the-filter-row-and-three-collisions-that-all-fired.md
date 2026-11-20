@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 201+1 -->
+- [2026-08-16 · 1140 UTC](2026-08-16-1140-the-filter-row-and-three-collisions-that-all-fired.md) — 2026-08-16 11:40 UTC — the filter row, and three collisions that all fired
+
 ## 2026-08-16 11:40 UTC — the filter row, and three collisions that all fired
 
 Owner, on the desktop filter row 15x shipped: *"truly horrible UI, it wastes a

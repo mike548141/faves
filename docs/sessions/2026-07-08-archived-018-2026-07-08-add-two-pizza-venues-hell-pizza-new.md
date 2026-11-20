@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 75+1 -->
+- [2026-07-08 · 2026-07-08 (add two pizza venues: Hell Pizza Newlands + Pizza Hut](2026-07-08-archived-018-2026-07-08-add-two-pizza-venues-hell-pizza-new.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (add two pizza venues: Hell Pizza Newlands + Pizza Hut
   Johnsonville)**: Owner asked to add "Hell Pizza, Newlands" and "Pizza Hutt
   in Johnsonville". The latter resolves to the chain **Pizza Hut** (every

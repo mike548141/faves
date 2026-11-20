@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 61+1 -->
+- [2026-07-08 · 2026-07-08 (order tally — Theme 1 flagship)](2026-07-08-archived-011-2026-07-08-order-tally-theme-1-flagship.md) — archived entry, verbatim in its file
+
 - **2026-07-08 (order tally — Theme 1 flagship)**: Built Job 3, "right,
   let's order" — the owner greenlit it (chose to continue this session
   rather than start fresh; continuing was cheaper since the data shapes,

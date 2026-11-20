@@ -1,3 +1,8 @@
+**From the retired session log**, word for word; only its link paths were re-pointed for this folder:
+
+<!-- archivecut:log-entry docs/SESSIONS.md 132+1 -->
+- [2026-07-22 · ~1227 UTC](2026-07-22-1227-fable-orchestrator-opus-build-agents-the-seven-wave.md) — 2026-07-22 (Fable orchestrator + Opus build agents: the seven-wave queue run)
+
 - **2026-07-22 (Fable orchestrator + Opus build agents: the seven-wave
   queue run)**: First orchestrated queue run on faves — Fable orchestrating
   (claims, merges, verification, deploys), sequential Opus agents building in
