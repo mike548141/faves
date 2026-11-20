@@ -60,10 +60,11 @@ STRATEGY + ARCHITECTURE + DESIGN + WORKPLAN + the SESSIONS tail. Roughly
 **53k tokens before any work happens.**
 
 Keep it that way. Bulk must not accumulate in the every-session read
-path: session narrative goes to `docs/SESSIONS.md` (append-only,
-tail-read only), completed build detail stays as terse checkmarks +
-notes in `WORKPLAN.md`, deliberation goes to `docs/decisions/` (read on
-demand, not every session). If `WORKPLAN.md` or `ROADMAP.md` ever bloats
+path: session narrative goes to its own file in `docs/sessions/` (one
+per session; only the newest few are read), completed build detail
+stays as terse checkmarks + notes in `WORKPLAN.md`, deliberation goes
+to `docs/decisions/` (read on demand, not every session). If
+`WORKPLAN.md` or `ROADMAP.md` ever bloats
 the read path the way `ros`'s roadmap once did (210 KB → split into
 lean + done + specs), split it the same way. The ceiling is soft — cost
 is linear, not a cliff — so never sacrifice clarity to hit a number; the

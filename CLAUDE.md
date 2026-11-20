@@ -396,9 +396,11 @@ alone.
 ## Where to start
 
 Read `docs/STRATEGY.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, then work
-from `docs/WORKPLAN.md`. Skim the tail of `docs/SESSIONS.md` for where the last
-session left off. A cold reviewer skips this step: the log is on the review
-rules' barred list (`../atelier/docs/method/REVIEW.md` rule 2). Do not deviate
+from `docs/WORKPLAN.md`. Read the newest few files in `docs/sessions/` for where
+the last sessions left off (`ls docs/sessions/[0-9]* | tail -5`; the folder is
+the session log, one file per session, named for its start). A cold reviewer
+skips this step: the log is on the review rules' barred list
+(`../atelier/docs/method/REVIEW.md` rule 2). Do not deviate
 from the architecture without recording the decision — a short ADR in
 `docs/decisions/` (see its README) for anything a future session might
 re-propose, and a line in `docs/ARCHITECTURE.md` if it changes the compact
@@ -1282,8 +1284,9 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   `docs/decisions/` (never edit an accepted one — supersede it).
   Reversible implementation choices get a code comment instead. Add a
   line under _Unreleased_ in `CHANGELOG.md` when a user-visible feature
-  or fix lands. Append a `docs/SESSIONS.md` entry (append-only, newest
-  last) before finishing a session.
+  or fix lands. Before finishing a session, write its file in
+  `docs/sessions/` (`<date>-<HHMM>-<slug>.md`, the start time in UTC;
+  atelier `RECORD.md` § *The session log*). There is no index to append to.
 - **Teardown waits for the worker to stop — now house doctrine.** Owner-ruled
   here 2026-09-07 (roadmap `340/240`), handed up as atelier `180/020` and
   adopted there 2026-10-18: atelier `CONCURRENCY.md` § *Orchestrated queue

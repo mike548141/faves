@@ -113,9 +113,9 @@ recipe and Cook at Home screens that offer cook mode.
   `main` auto-deploys to Cloudflare Pages, so a push is a deploy — and
   routine deploys are inside the doctrine floor (see `CLAUDE.md`).
   Don't end a session asking permission to commit, update
-  `CHANGELOG.md`, or append to `docs/SESSIONS.md` — those are part of
-  finishing the work, not favours to offer. Branching off `main` is
-  the one thing to ask about.
+  `CHANGELOG.md`, or write the session's file in `docs/sessions/` —
+  those are part of finishing the work, not favours to offer.
+  Branching off `main` is the one thing to ask about.
 - **Message style:** `area: imperative subject` (e.g. `picker: land on
   the filtered set`, `data: refresh KK Malaysian prices`, `a11y: fix
   dark-mode contrast on the call label`). Note how you verified it.
@@ -138,8 +138,8 @@ recipe and Cook at Home screens that offer cook mode.
 Run `tools/validate.py`, then exercise the change in a real browser at
 mobile width (both colour schemes). For anything non-trivial, run the
 mobile Lighthouse check — the bar is Performance ≥ 95, Accessibility 100,
-Best Practices 100, SEO ≥ 95. Append a `docs/SESSIONS.md` entry before
-you finish.
+Best Practices 100, SEO ≥ 95. Write the session's file in `docs/sessions/`
+(`<date>-<HHMM>-<slug>.md`, the start time in UTC) before you finish.
 
 ## Licence
 
