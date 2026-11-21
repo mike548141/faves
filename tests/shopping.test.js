@@ -291,7 +291,7 @@ test("deleting a profile does not take the household's shopping list with it", a
   const { createProfiles } = await import("../site/js/profiles.js");
   const storage = fakeStorage();
   const reg = createProfiles(storage);
-  const id = reg.create("Ruth");
+  const id = reg.create("Alex");
   const shop = createOrder(storage, SHOPPING_KEY);
   putRecipe(shop, { rid: RID, name: RECIPE.name, lines: recipeLines(RECIPE, "one") });
 

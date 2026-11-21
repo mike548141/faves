@@ -515,9 +515,9 @@ test("writeSnapshot replaces rather than merges, so an emptied list really empti
 
 test("writeSnapshot purges the stores of a profile deleted on the other device", async () => {
   const st = device({ favs: [venue("kk")] });
-  st.setItem(PROFILES_KEY, JSON.stringify({ v: 1, activeId: "default", profiles: [{ id: "default", name: "Me" }, { id: "p2", name: "Ruth" }] }));
+  st.setItem(PROFILES_KEY, JSON.stringify({ v: 1, activeId: "default", profiles: [{ id: "default", name: "Me" }, { id: "p2", name: "Alex" }] }));
   st.setItem(scopeKey("p2", "faves.favourites.v1"), JSON.stringify([venue("gone")]));
-  st.setItem(scopeKey("p2", "faves.notes.v1"), JSON.stringify({ r: "Ruth's note" }));
+  st.setItem(scopeKey("p2", "faves.notes.v1"), JSON.stringify({ r: "Alex's note" }));
 
   writeSnapshot(st, { profiles: [{ id: "default", name: "Me", favourites: [venue("kk")], ratings: {}, settings: null }] });
 

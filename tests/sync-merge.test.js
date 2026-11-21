@@ -280,7 +280,7 @@ test("which profile is active is a property of the device and is never taken fro
 test("a profile added on the other device arrives", () => {
   const theirs = {
     ...snap({}),
-    profiles: [...snap({}).profiles, { id: "p2", name: "Ruth", active: false, favourites: [], ratings: {}, settings: {} }],
+    profiles: [...snap({}).profiles, { id: "p2", name: "Alex", active: false, favourites: [], ratings: {}, settings: {} }],
   };
   const out = mergePersonal(null, snap({}), theirs);
   assert.equal(out.merged.profiles.length, 2);
@@ -290,7 +290,7 @@ test("a profile added on the other device arrives", () => {
 test("a profile deleted on this device is not resurrected by the other", () => {
   const two = {
     ...snap({}),
-    profiles: [...snap({}).profiles, { id: "p2", name: "Ruth", active: false, favourites: [], ratings: {}, settings: {} }],
+    profiles: [...snap({}).profiles, { id: "p2", name: "Alex", active: false, favourites: [], ratings: {}, settings: {} }],
   };
   const out = mergePersonal(two, snap({}), two); // base had two, mine now has one
   assert.deepEqual(out.merged.profiles.map((p) => p.id), ["default"]);
@@ -300,11 +300,11 @@ test("a profile deleted on the OTHER device is gone here too — not kept with i
   // The other direction of the test above. Until 2026-08-17 the mine-side
   // branch ignored base and merged the profile against an empty "theirs":
   // every heart read as removed-there, every setting as unset-there, and
-  // Ruth survived with `settings: {}` — the allergen list gone while her
+  // Alex survived with `settings: {}` — the allergen list gone while her
   // name still showed — then went back to the blob and re-appeared, empty,
   // on the device that had deleted her. Reproduced by the cold review.
   const ruth = {
-    id: "p2", name: "Ruth", active: false,
+    id: "p2", name: "Alex", active: false,
     favourites: [venue("kk")], ratings: { "v:kk": 4 },
     settings: { diet: { dietary: [], avoid: ["contains-nuts"] } },
   };
@@ -320,7 +320,7 @@ test("a profile deleted on the OTHER device is gone here too — not kept with i
 test("a profile NEW on this device keeps its hearts and its allergens on the way out", () => {
   // No base, theirs lacks it: an addition here, merged against nothing.
   const ruth = {
-    id: "p2", name: "Ruth", active: false,
+    id: "p2", name: "Alex", active: false,
     favourites: [venue("kk")], ratings: { "v:kk": 4 },
     settings: { diet: { dietary: [], avoid: ["contains-nuts"] } },
   };
@@ -335,12 +335,12 @@ test('two unpaired devices both minting profile "default" is reported, never ass
   // profiles.js mints the first profile as `default` on EVERY device, so an id
   // match across two devices that never synced is guaranteed, not evidence.
   const mine = snap({ id: "default", name: "Mike" });
-  const theirs = snap({ id: "default", name: "Ruth" });
+  const theirs = snap({ id: "default", name: "Alex" });
   const out = mergePersonal(null, mine, theirs);
   const c = out.conflicts.find((x) => x.kind === CONFLICT_PROFILE_IDENTITY);
   assert.ok(c, "expected a profile-identity conflict");
   assert.equal(c.mine, "Mike");
-  assert.equal(c.theirs, "Ruth");
+  assert.equal(c.theirs, "Alex");
 });
 
 test("once base carries the answer, the same pair is not asked again", () => {
