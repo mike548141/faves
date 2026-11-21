@@ -1,6 +1,9 @@
-- [x] **Your own recipes on the Cook at Home page, and labelled Private
+- [~] **Your own recipes on the Cook at Home page, and labelled Private
       wherever they appear** `[M] [menu][recipes]` — owner-raised
       2026-10-01 (session `faves-55`).
+
+  (claimed 2026-11-21-0530, session 45386cdd, primary checkout: one-line
+  neutralisation of a family name in a live doc, per his 2026-08-06 ruling)
 
   **His words:** *"In the list of recipes page, and on the recipe itself
   there should be the same tag to show if the recipe is a private one (user

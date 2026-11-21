@@ -64,11 +64,11 @@ line, so they overlap Open and Claimed.
 | ✅ [What the owner wants moved next (asked and answered 2026-08-16) — ✅ BOTH DONE](roadmap/480-what-the-owner-wants-moved-next-asked-and-answ/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 38 — a cold review of the data model AND the features, developed and planned (owner-raised 2026-09-07)](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/README.md) | 5 | 0 | 5 | 0 |
 | [Intake harvest audit — owner-raised 2026-09-08](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/README.md) | 2 | 0 | 0 | 0 |
-| [Theme 39 — scaling: partitions, deltas and user data (owner-raised 2026-09-30)](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/README.md) | 6 | 0 | 0 | 2 |
+| [Theme 39 — scaling: partitions, deltas and user data (owner-raised 2026-09-30)](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/README.md) | 6 | 1 | 0 | 2 |
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 0 | 1 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 90 | 0 | 14 | 8 |
+| **All sections** | 90 | 1 | 14 | 8 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -273,6 +273,7 @@ line, so they overlap Open and Claimed.
 - [ ] ⏳ [Move all user data to IndexedDB, in one go, when it pays](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/080-move-all-user-data-to-indexeddb-when-it-pays.md)
 - [ ] [Serve bucket versions from the core copy's KV metadata](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/220-bucket-versions-from-the-core-copys-metadata.md)
 - [ ] [Sync write cadence](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/240-sync-write-cadence.md)
+- [~] [Your own recipes on the Cook at Home page, and labelled Private…](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/300-your-recipes-on-the-cook-at-home-page-and-labelled.md)
 - [ ] ⏳ [Turn the KV mirror off after a clean week](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/410-turn-the-kv-mirror-off-after-a-clean-week.md)
 - [ ] 🔎 [Two flakes seen under heavy load on 2026-10-02, neither named](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/420-flakes-under-load-2026-10-02.md)
 
