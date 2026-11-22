@@ -1,4 +1,16 @@
-- [ ] ⏳ **Cold review owed: ADR 0169 and the HEIC EXIF reader**
+- [~] ⏳ **Cold review owed: ADR 0169 and the HEIC EXIF reader**
+      **Review pass claimed 2026-11-22T20:16Z** by a headless per-pass
+      orchestrator (Claude Opus 5.5; an off-tier orchestrator under rule
+      4, which holds the context partition, forms no finding and writes no
+      severity),
+      started by drain session `eca14b23` (Opus 5.5) in the owner's weekly
+      Fable drain. The reviewer is one Fable 5.1 sub-agent, tier checked at
+      selection. Neither session wrote the brief, built either subject or
+      is barred by it. The ⏳ wait below is met by the owner's drain order
+      of 2026-11-23 08:26 NZDT, verbatim: *"Start a fable drain or whatever
+      it is called now. Target 100% of weekly budget by 11.30am NZT todat"*
+      (it lapses at the reset, 2026-11-23 12:00 NZDT; a pass already
+      running may finish). The verdict is recorded here.
       `[M][review]` — filed 2026-11-15 at the close of session `1bdd7eb4`.
       ⏳ **Waits on the owner's Fable approval** (his standing ruling: no Fable
       work, reviews included, without it). Briefed 2026-11-15 (below); a
