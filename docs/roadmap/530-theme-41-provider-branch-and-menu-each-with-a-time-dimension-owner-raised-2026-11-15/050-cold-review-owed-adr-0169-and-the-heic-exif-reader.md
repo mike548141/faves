@@ -1,4 +1,30 @@
-- [~] ⏳ **Cold review owed: ADR 0169 and the HEIC EXIF reader**
+- [ ] 🎯 **Cold review owed: ADR 0169 and the HEIC EXIF reader**
+      ✅ **PASS RAN 2026-11-22 (UTC), Fable 5.1, act 1 and act 2, sibling
+      folded.** Verdict: the ADR stands as the owner's model and the reader
+      returns what the file holds on every real file; not yet fail-closed on
+      hostile input. **Tally: 0 MAJOR · 7 MINOR · 5 NOTE.** No standing
+      MAJOR, so the review cycle closes (`REVIEW.md` § *The lifecycle*).
+      Verdict, findings F1–F12, the folded sibling and the reviewer's log:
+      `docs/reviews/2026-11-15-1855-adr-0169-and-heic-exif-reader-cold.md`.
+
+      🎯 **Owed to the owner (asked here, not waited on), F1, MINOR:** ADR
+      0169 says a provider has at least one Branch and one Menu, but 10 of
+      66 venue files are stubs with an empty menu. (a) an empty Menu counts:
+      the rule is on the relationship, `validate.py` checks "at least one
+      menu" at stage 1, all 66 files stay valid; (b) a stub provider may have
+      no Menu while it is a stub, so the rule becomes conditional; (c)
+      enforce it as written and fill or retire the ten. Reviewer's
+      recommendation: (a), one sentence in the ADR, because it keeps his
+      rule unconditional at no data cost.
+
+      **Routing, the author's to apply (not the owner's):** F2 (cite
+      `renames.js` and the venue `formerIds` in consequence 1 before stage
+      1 is briefed, or truck hearts go dark); F5, F6, F7 (bound the `iloc`
+      and IFD walks, catch malformed input per file, add a fixture test:
+      one small change to `intake_exif.py` plus one test); F8, F9 (partial
+      multi-extent reads; format by suffix rather than bytes); NOTEs F3,
+      F4, F10, F11, F12. Not yet filed as items.
+
       **Review pass claimed 2026-11-22T20:16Z** by a headless per-pass
       orchestrator (Claude Opus 5.5; an off-tier orchestrator under rule
       4, which holds the context partition, forms no finding and writes no
@@ -31,7 +57,7 @@
   `docs/decisions/README.md` only gained the 0169 index line, which
   `check_decisions.py` gates.
 
-  review: queued
+  review: done 2026-11-22 (UTC), result above; was queued
   (`docs/reviews/2026-11-15-1855-adr-0169-and-heic-exif-reader-cold.md`,
   one pass over ADR 0169 and `426abe4e` together, with a held-back sibling).
   Brief written 2026-11-15 1855 UTC by a headless brief-writing session
