@@ -1,11 +1,11 @@
 # Cold pass — ADR 0169 (provider, branch and menu) and the HEIC EXIF reader
 
 **Board:** `docs/roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/050-cold-review-owed-adr-0169-and-the-heic-exif-reader.md`
-**Status:** BRIEF ONLY — the review has NOT run. Written 2026-11-15 1855
-UTC (2026-11-16 NZDT). **Fable-gated:** the pass runs only on the owner's
-explicit approval of Fable work at the time; this brief existing is not that
-approval. The verdict goes below a divider in this file (atelier
-`REVIEW.md` § *The lifecycle*).
+**Status:** REVIEWED, act 1 — verdict below the divider, 2026-11-22 UTC
+(Fable 5.1, under the owner's drain order of 2026-11-23 NZDT). 0 MAJOR, 7
+MINOR, 4 NOTE; decisions owed (F1 the owner's, the rest the author's). Act 2
+(the deferred sibling's reconcile) pending. Brief written 2026-11-15 1855
+UTC (2026-11-16 NZDT).
 
 ## Provenance
 
@@ -251,3 +251,315 @@ finding.
 this file, holds 12 entries. Open it only after your findings are durably
 written here; then fold it in below your verdict and delete it
 (`REVIEW.md` rule 1).
+
+---
+
+## Verdict — cold pass, act 1 (2026-11-22, UTC)
+
+**Reviewer:** Fable 5.1 (model id `claude-fable-5-1`), tier checked at
+selection. **Spawn:** a headless per-pass orchestrator (Claude Opus 5.5),
+itself started by drain session `eca14b23` (Opus 5.5), under the owner's
+weekly Fable drain order of 2026-11-23 08:26 NZDT, verbatim: *"Start a fable
+drain or whatever it is called now. Target 100% of weekly budget by 11.30am
+NZT todat"*. Both are off-tier orchestrators under `REVIEW.md` rule 4: they
+hold the context partition, formed no finding and wrote no severity. Neither
+wrote the brief or built either subject. This reviewer was not started or
+instructed by `1bdd7eb4`, `21a271a5` or `980835bb`. **Orchestrator direction
+received, process only:** the worktree path, the brief path, the barred set
+(the `.deferred.md` sibling removed from the worktree; board item `530/050`,
+Theme 41 item `010`, `docs/ROADMAP.md`, `docs/sessions/`, `docs/SESSIONS.md`,
+prior verdicts, commit bodies), the log path, the deliverable's shape and the
+release timing; no question about the delta, no pointer to risk. **No
+contact** from any barred session during the pass. **Tree:** worktree at
+`ba6b86b9` (detached); both landing commits are ancestors (`merge-base
+--is-ancestor` exit 0). **Reading order:** brief in full (the C-list is
+inline, so it was read before the reviewer's own assumptions were written;
+disclosed), atelier `REVIEW.md`, own assumptions logged, then the two commits
+body-free via `coldsweep.py --commit`, then the files. No session log, no
+board index, no prior verdict and no commit body was read. The one
+`coldsweep` warning: `--also-exclude` for the sibling matched no file,
+because the orchestrator had removed it; nothing was searched wide.
+
+### Scope covered
+
+Both subjects whole: ADR 0169 and the code in `c42b2cc1`; `tools/
+intake_exif.py` as it stands (unchanged since `426abe4e`), its consumer
+`tools/check_provenance.py`, the two other callers (`product_bursts.py`,
+`strip_exif.py`), the committed evidence record, the live intake material
+(read in place in the primary checkout; nothing copied into any tree), the
+rulings the ADR cites (`520/010`, `520/040`, `520/050`, `470/050`, Theme 30
+README), ADRs 0003, 0011, 0023, 0047, 0107, 0115, 0128, 0132, 0145/0146, 0153,
+0155, Theme 41's README and items `020`–`040` (as claims), and the verify
+list in `CLAUDE.md`. Left out, as non-goals: the `counter-order` put-back
+beyond its test and its touch on ADR 0169 (none); `gen_summaries.mjs`'s
+comment; the
+0169 index line's wording beyond checking it matches the ADR (it does). No
+non-goal fences off a risk the work carries.
+
+### Lens 1 — approach and assumptions (named first; the log has them)
+
+**A (ADR 0169).** The load-bearing assumption is that today's venue file is
+the degenerate case of the target model, so each stage leaves every file
+valid. It holds for branches (53 of 66 files carry no `locations[]` and ADR
+0011's seam makes the top level one branch; 10 are multi-branch) and fails
+for menus: **10 of 66 files are `status: "stub"` with `menu: []`** (measured
+on `site/data/restaurants/`). The ADR's invariant *"a Provider has at least
+one Branch and at least one Menu"* is the owner's words and is stated as
+holding today. Either an empty menu counts, or stubs are the exception, or
+stage 1 breaks 10 files, or the invariant is never checked and is prose (ADR
+0072's class). The ADR does not say which (F1). The other premises hold: the
+rejected hierarchy is what the data has (`locations[]` inside the venue, one
+`menu`); the three breaking cases are real (Rock Yard's truck is its own file;
+Theme 30's `menus[]` is unbuilt; the eight trucks carry `hours: null` and a
+sighting).
+
+**B (HEIC reader).** The assumption is that Apple's HEIC is the HEIF the walk
+expects: `meta` top-level, `iinf`/`iloc` in the versions handled, one extent
+per item, construction method 0, and the Exif item prefixed by a 4-byte TIFF
+header offset. On the 21 files that holds (step 5). The walk itself is more
+general than the author needed: synthetic files exercising `iinf` v0/v1,
+`infe` v2/v3, `iloc` v0/v1/v2, base offsets, index sizes, 8-byte offset and
+length fields, a `size==1` largesize box and a `size==0` last box all read
+correctly (step 6). Where it is narrower than the spec — one extent — it
+reads partially rather than returning `{}` (F8). Where the input is hostile
+or truncated, two paths do not fail closed (F5, F6).
+
+### Lens 2 — correctness and quality
+
+**A.** The ADR says what the owner said, with one widening (F3) and one
+cross-reference that reaches the wrong rule (F2). Decision 4's *"three kinds
+of evidence (owner-ruled 2026-11-15, 520/010)"*: the ruling's words are in
+`520/040` (*"sightings, announed/booked time & place, schedule"*) and carried
+into `520/010`; the citation is to the item that holds the build, acceptable.
+Decision 7's *"ruled 2026-09-08"* is `470/050`'s ruling, quoted whole there.
+Decision 5's *"absent means permanent"*, the relationship names, the staged
+order and decision 6's *"the order tally is the nearest object"* are the
+record's design, not his words; the status line says *"owner-directed"*,
+which is true of the model and should not be read onto those details.
+**B.** The reader returns what the file holds (C5, C6): 21/21 agree with an
+independent locator and with macOS's conversion on every field except the
+two sips alters (step 5). Honest `{}` on method 1, an unmatched item id and a
+bad TIFF header offset. Not honest: a partial dict on multi-extent items
+(F8), uncaught exceptions on 18 of 265 truncation points and one empty-box
+shape (F6), and a hang on a 32-bit `iloc` count (F5).
+
+### Lens 3 — completeness and harvest
+
+- No test anywhere exercises `read_heic_exif`, `_boxes` or `_parse_tiff`;
+  `strip_exif.py --selftest` cross-checks `read_jpeg_exif` only
+  (`strip_exif.py:376`, `:591`); CI runs `check_provenance.py` with no intake
+  material, so the HEIC path never runs there (F7).
+- `describe()` dispatches on the file suffix while `tools/lib/imagemeta.py`
+  `sniff()` already decides format by bytes; the repo has two answers to one
+  question (F9, V4).
+- `strip_exif.py:45` says *"No stdlib reader exists"* for HEIC; one now does,
+  in the same `tools/` directory (F10, V3).
+- The ADR's mirror sites: `docs/decisions/README.md:1974` matches the ADR;
+  `docs/ARCHITECTURE.md` owes no line (the ADR is a target model, not
+  current truth, and says so); `site/js/filters.js:117` cites it correctly.
+  Faves ADRs carry no `review:` line and no back-reference convention (2 of
+  168 carry one), so 0011/0003 lacking a "refined by" is not a miss here.
+- `520/040`'s account of the HEIC verification is wider than the comparison
+  supports (F11).
+
+### Lens 4 — security and privacy
+
+**A, design altitude.** The model adds no field today, so nothing new is
+collected or shipped. Two threats for the stages to carry: a sighting *"on
+whose evidence"* must never name a natural person in `site/data/` (F4); a
+mobile branch's registered address may be a depot or a home, which `520/010`
+already says and decision 5 answers by sourcing place from availability.
+Cook at Home's private homes stay reader-side (`470/050`); the ADR defers
+storage, so no collision with `CLAUDE.md`'s absolute rule or ADR 0046/0047.
+**B, code altitude.** Untrusted bytes parsed by hand, checked against CWE
+and ASVS V5 with fixtures, not memory: CWE-606/835 (loop bound from the
+input) is live (F5); CWE-125-class reads are safe in Python (slicing
+returns short, `struct.unpack_from` raises) but the raise is uncaught (F6);
+no memory amplification (reads are slices of the file); no path from a
+coordinate in the file to any tracked record (the record stores `gps:
+present|absent`, checked in `check_provenance.py:163`); `describe()` prints
+coordinates in table mode by design (ADR 0115, unchanged by this delta).
+**`/security-review`: discharged with grounds.** It scans the session's
+pending diff; this worktree's only pending change is the orchestrator's
+removal of the deferred sibling, whose diff is the sibling's text, and the
+pass may create no branch or worktree to stage the delta elsewhere. In its
+place: the fixture run (step 6) and a read-only security sub-read of scratch
+copies of the file and the diff by a `review-council:security-reviewer`
+agent on **Opus** (not Fable; it formed no finding of this verdict and its
+output was weighed as one input — step 9 in the log). It returned ten
+claims from reading alone; nine were then confirmed with fixtures (F5, F6,
+F8 carry them) and one (two `Exif` items: the last wins, `:218`) is by
+reading only. Its "what holds" list — the box walk always moves forward,
+slicing never raises, value bounds at `:115`, sub-IFD depth bounded to one —
+agrees with the fixtures.
+
+### C1–C7
+
+- **C1 — holds with one widening.** Every decision traces to the three
+  quoted passages or to a cited ruling; decision 6 says a meal is chosen
+  *"from one or more menus"* where he said *"from a menu"* (F3).
+- **C2 — holds.** ADR 0011's rejected *"separate record per branch"* is the
+  shape Rock Yard's truck has today; the ADR names it as interim and says
+  stage 1 supersedes 0011. ADR 0003's *"one sanctioned deviation"* is left
+  until `530/040`. Decision 8 defers to ADR 0047; no collision.
+- **C3 — not established.** True for branches; for menus it rests on how
+  `menu: []` on 10 stub files is read (F1). A claim about unbuilt stages
+  cannot be re-driven; its premise can, and it is incomplete.
+- **C4 — holds.** `520/010` (three kinds, option 3 rejected as the wrong
+  unit), `470/050` (homes as branches, 2026-09-08) and `520/040` (*"Rock Yard
+  Food Truck is a branch of Rock Yard Vietnamese Restaurant"*) say what the
+  ADR says they say.
+- **C5 — holds on well-formed input, with three exceptions.** The walk finds
+  the item through `meta`/`iinf`/`iloc` on every version tried and reads it
+  with the shared TIFF walk; it returns `{}` for method 1 and for a missing
+  item. It does not return `{}` for a multi-extent item (F8), and it raises
+  or hangs on malformed input (F5, F6).
+- **C6 — holds, and settles which side is right.** 21/21 identical on IFD0,
+  EXIF, position, refs and GPS date; GPS time-of-fix differs on 19 and
+  altitude on 5 because sips rewrites the rationals (seconds with denominator
+  100 become denominator 1). The reader reports the file's own values. The
+  record's "GPS identical" is true of position and date, not of every field
+  (F11).
+- **C7 — holds.** `judge()` returns `unbounded` when `newest_photo` is None;
+  all 19 HEIC rows in the committed record are dated; the live run against
+  the primary material reports 0 refused and no drift.
+
+### Re-run results
+
+All six lines reproduce at `ba6b86b9` with `python3` 3.14.6 and Node
+v24.18.0: `check_provenance.py --selftest` OK 15/15; `check_provenance.py`
+exit 0 (107 recorded, 107 absent in the worktree; 107 verified against the
+primary material with `--intake`); `strip_exif.py --selftest` 31/31;
+`check_decisions.py` clean, 168; `node --test tests/vibes.test.js` 14/14. C6
+re-driven on 21 files: result as the brief recorded, now with the cause.
+
+### Standing checklist
+
+- **V1.** F3, F11; the `owner-directed` status read onto design details
+  (lens 2). Elsewhere claims match evidence.
+- **V2.** All re-run lines reproduce; C6 re-driven; the brief's "no later
+  commit touches the file" re-checked.
+- **V3.** F10 (`strip_exif.py` header). Other mirrors checked clean.
+- **V4.** F9 (two ways to decide a file's format).
+- **V5.** F2 (a cross-reference that reaches a rule which does not cover the
+  case: ADR 0153 moves dish ids; hearts are keyed by venue id too). F1 (the
+  ADR agrees with itself only if `menu: []` is "a Menu").
+- **V6.** Run above; `/security-review` discharged with grounds; sub-read on
+  Opus as one input.
+- **V7.** Stated at the top; the brief states it too.
+
+### Findings
+
+**F1 — MINOR, for the owner.** The invariant *"at least one Branch and one
+Menu"* against 10 stub files with `menu: []` (`babaili-malatang`,
+`caffiend`, `cosmic-vape-and-coffee`, `cozy-cake-shop`,
+`goldings-free-dive`, `kaffee-eis`, `marigold-takeaway`, `moore-wilsons`,
+`new-chapter-cafe`, `wellington-sourdough`). The ADR says today's file is the
+degenerate case; for these it is not, unless an empty menu is a Menu.
+Options: (a) the invariant is on the relationship, so an empty Menu counts
+and `validate.py` checks "at least one menu" at stage 1 — all 66 files stay
+valid; (b) a stub Provider may have no Menu while `status` is `stub` — the
+invariant becomes conditional; (c) enforce it as written and retire or fill
+the ten. Recommendation: (a), stated in the ADR in one sentence, because it
+keeps his invariant unconditional and C3 true at no data cost.
+
+**F2 — MINOR.** Consequence 1, *"with `formerIds` keeping every heart (ADR
+0153)"*. A heart is keyed `d:<venueId> <dishId>` (`site/js/favourites.js:68`);
+ADR 0153's `formerIds` moves a retired **dish** id, and folding
+`rock-yard-food-truck` into `rock-yard-restaurant` retires a **venue** id.
+The mechanism for that is `site/js/renames.js`'s `RENAMED` table with the
+venue-level `formerIds` field (`validate.py:192`), which `520/040` names
+(*"`formerIds` and `renames.js` already let a later merge keep hearts"*) and
+the ADR dropped. A stage-1 builder following the ADR as written would leave
+every truck heart dark. Fix: cite `renames.js` and the venue `formerIds`
+beside ADR 0153 in the consequence. Recoverable afterwards (a later `RENAMED`
+entry re-migrates), which is why this is not MAJOR.
+
+**F3 — NOTE.** Decision 6 widens *"one or more dishes from a menu"* to *"from
+one or more menus"*. Say it is the record's reading or keep his words.
+
+**F4 — NOTE, design-altitude privacy, for stage 3.** A sighting carries *"on
+whose evidence"*. In `site/data/` that must name a channel or the business,
+never a natural person; `520/010` lists sources (the truck's own post, the
+owner, in person) without saying so. One sentence in the ADR or in `530/020`
+closes it before anything is built.
+
+**F5 — MINOR, security (CWE-606 / CWE-835).** `read_heic_exif`'s `iloc` loop
+runs `item_count` times (32-bit in v2) and `take()` never checks the box end
+`e` (`tools/intake_exif.py:226–243`). A file with `iloc` v2 and `item_count`
+0x00FFFFFF ran past a 5 s alarm; 0xFFFFFFFF would run for hours. Effect: a
+hang of `check_provenance.py` (live), `product_bursts.py` and `--for` on one
+hostile or corrupt file in `intake/`; CI is not reachable (no material).
+**Second path, same class (CWE-400):** an IFD0 of N entries all tagged
+`0x8769` and pointing back at IFD0 makes `_read_tiff` walk N entries N times
+(`:103`, `:117–119`; the recursion is bounded to one level, the fan-out is
+not). Measured: N=500 0.40 s, N=1000 1.18 s, N=2000 4.78 s; N=65535 (a 786 KB
+item, legal in HEIC) ran past a 5 s alarm and extrapolates to about 85
+minutes. JPEG's 64 KB APP1 cap kept this under a minute; HEIC lifts the cap,
+so the exposure is new with this delta. Fix: stop when `p >= e`, bound the
+`iloc` count by `(e - p) // 4`, and follow each sub-IFD pointer once (a
+`seen` set) with a cap on entries read. Recurrence prevention: the fixture
+test in F7, which already carries both cases.
+
+**F6 — MINOR.** Uncaught exceptions on malformed input, where the docstring
+promises `{}`: `struct.error` at `:166` (`_parse_tiff` on a block shorter
+than 8 bytes) and `:114` (`_read_tiff` when an entry's offset field is cut),
+`IndexError` at `:210` (`data[s]` on an empty child box at end of file),
+`struct.error` at `:180` (a `size==1` header with fewer than 16 bytes left)
+and at `:216` (an `infe` cut before its item id), and a `TypeError` raised
+through `parse_exif_dt` when `DateTimeOriginal` is stored with a SHORT type
+(`:132–135` accept any type for any tag, then `describe()` hands an `int` to
+`re.match`). Each was reproduced with a fixture. Measured on plain
+truncation: 18 of 265 cut points of a valid file raise. `describe()` and
+`check_provenance.scan_folder()` catch nothing, so one such HEIC aborts the
+whole provenance run instead of yielding a `captured: null` row — the state
+the tool's own comment calls "we have a file and it told us nothing". The
+`_parse_tiff` and type paths predate this delta (JPEG reaches them too).
+Fix: catch `(struct.error, IndexError)` at the two entry points and return
+`{}`; accept a tag only in its expected type.
+
+**F7 — MINOR, test evidence.** Nothing tests the HEIC reader; the selftest
+cited as verification does not call it; CI cannot reach it. A synthetic
+fixture (one `ftyp`, `meta` with `iinf`/`iloc`, `mdat` with a TIFF; ~60
+lines, stdlib only, no real photo) covers `iinf`/`infe`/`iloc` versions,
+multi-extent, the hostile count and truncation, and belongs on the verify
+list and in CI. The brief's own words: a hand-written parser feeding a
+guard, verified on one device's photos.
+
+**F8 — MINOR.** A spec-valid Exif item split across two or more extents is
+read from `ext[0]` only (`:243`): a dict with IFD0 and no date comes back, a
+partial read, not the documented `{}`. Apple writes one extent (21/21), so
+no live effect today. Fix: concatenate the extents, or return `{}` when
+`extent_count > 1` and say so in the docstring; while there, refuse a file
+that names two `Exif` items (`:218` lets the last one win silently).
+
+**F9 — MINOR, harvest.** `describe()` chooses the reader by suffix (`:320`)
+while `tools/lib/imagemeta.py` `sniff()` decides by bytes and `strip_exif.py`
+says *"never the extension"*. A HEIC named `.jpg` or `.png`, or a JPEG named
+`.heic`, is silently undated (measured), which is the failure class this
+delta fixed. Two JPEG-by-bytes `.png` files exist in `intake/ingredients/`
+today (products.py's store, outside `menu-sources.json`); none under
+`menus/`. Fix: dispatch on `imagemeta.sniff()`.
+
+**F10 — NOTE.** `strip_exif.py:45`, *"No stdlib reader exists"*, is false in
+this repo since `426abe4e`. The refuse-by-default decision still stands
+(reading EXIF is not proving a strip); only the reason is stale.
+
+**F11 — NOTE, V1 on `520/040`.** *"capture date, time, offset, device and GPS
+identical"* on *"all 19 photos"*: identical on position, refs and GPS date;
+GPS time-of-fix differs on 19 of 21 and altitude on 5, because macOS's
+conversion re-encodes the rationals. The reader is right and the sentence is
+wider than the check that produced it. (19 is the `menus/` count; two more
+HEICs sit under `recipes/`.)
+
+### Tally and verdict
+
+**0 MAJOR · 7 MINOR (F1, F2, F5, F6, F7, F8, F9) · 4 NOTE (F3, F4, F10,
+F11).** Both subjects stand: ADR 0169 records the owner's model without
+overreach beyond F3, and the reader returns what the file holds on every
+real file it has met. Owed before either is leaned on further: F1 is the
+owner's call, and F2 should be fixed in the ADR before stage 1 is briefed;
+F5, F6 and F7 together are one small change to `intake_exif.py` plus one
+fixture test. Per `REVIEW.md`, a pass with no MAJOR closes the cycle; the
+decisions are the owner's for F1 and the author's for the rest, recorded
+against this file.
