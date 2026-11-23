@@ -1,4 +1,4 @@
-- [ ] **Serve bucket versions from the core copy's KV metadata** `[L]
+- [x] **Serve bucket versions from the core copy's KV metadata** `[L]
       [worker]` — from the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **I**.
 
@@ -47,4 +47,23 @@
   **Recommendation for the owner:** close it unbuilt. It is `[L]` for a saving
   of a few storage reads per pull, and it trades away a check. 🎯 Put to him
   at the close of run f9ee6733.
+
+  ✅ **Closed unbuilt 2026-11-24 (owner, answering queue run f9ee6733's ask),
+  his words:** *"If I am understanding you correctly. You are saying we moved
+  from using Key value (KV) store to durable objects (like a S3 object?) and
+  the work in 510/220 is only about enhancing the performance of the old
+  method of using a KV store which is pointless since we no longer use it. If
+  that is correct then I accept your recommended option to close it as not
+  required with a clear explanation"*.
+  **The explanation, as he asked for it.** This item proposed keeping each
+  recipe bucket's version in the KV copy's metadata, so a sync pull would read
+  one KV record instead of all of them: 9 reads and ~227 KB down to 1 read
+  and ~3 KB. Since `340`, sync is answered by a **Durable Object**: not an S3
+  object but a small program Cloudflare runs per user, with its own private
+  database. A pull now reads **no** KV at all (measured above: 0 KV reads, 1
+  storage read), and a bucket question costs one row read inside that
+  object. KV survives only as a mirror copy being switched off (`410`). So the
+  saving this item was built for no longer exists; what is left is a few row
+  reads per pull, not worth a large build that also gives up a consistency
+  check.
 
