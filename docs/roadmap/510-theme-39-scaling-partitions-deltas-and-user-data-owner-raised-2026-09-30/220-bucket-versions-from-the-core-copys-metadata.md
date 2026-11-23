@@ -1,4 +1,4 @@
-- [~] **Serve bucket versions from the core copy's KV metadata** `[L]
+- [ ] **Serve bucket versions from the core copy's KV metadata** `[L]
       [worker]` — from the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **I**.
 
@@ -33,3 +33,21 @@
     "**Design ruling needed:**" line began with 🎯. To revert: git revert
     this repo's marker commit (listed in
     docs/sessions/2026-11-16-0638-asks-markers-removed.md).
+
+  🔎 **Re-measured 2026-11-23 (queue run f9ee6733), `chatty_check` on `main`
+  `dadd7d89`.** What the tool CAN say, for a user with no recipes (its stated
+  population): a pull 10 minutes stale is **1 request, 0 KV reads, 1 Durable
+  Object storage read**; one heart then flush is 3 requests, 0 KV reads, 1 KV
+  write (the mirror), 3 storage reads. What it CANNOT say: a recipe user's
+  pull, because no scenario holds recipe buckets. The code answers the shape
+  instead: since `340`, a bucket question costs the object **one storage read
+  per bucket asked about, and KV nothing** (`tools/chatty_check.mjs`, the
+  bucket break-probe; `sync.js` asks only about buckets it holds since `140`).
+  **So proposal I's headline is gone:** its 9 KV reads and 227 KB through the
+  Worker were the KV era. What is left to save is N storage reads to 1 for a
+  user holding N buckets, inside the user's own object, against a detection
+  the object's strong consistency may already make cheap.
+  **Recommendation for the owner:** close it unbuilt. It is `[L]` for a saving
+  of a few storage reads per pull, and it trades away a check. 🎯 Put to him
+  at the close of run f9ee6733.
+
