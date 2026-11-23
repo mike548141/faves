@@ -1,6 +1,8 @@
-- [ ] **Every browser check inherits the OS colour scheme unless it sets one**
+- [~] **Every browser check inherits the OS colour scheme unless it sets one**
       `[S][tools]` — found 2026-11-23 by queue run f9ee6733, from
       [`370`](370-recipe-check-reads-the-os-colour-scheme-as-light.md).
+
+  (claimed 2026-11-23-1501, session f9ee6733, worktree faves-qr-f9ee-scheme)
 
   `tools/lib/browser.mjs` sets no `prefers-color-scheme`, so a check that
   assumes the light theme (a contrast reading, a screenshot compared by eye, a

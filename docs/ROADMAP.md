@@ -33,7 +33,7 @@ line, so they overlap Open and Claimed.
 | ✅ [Theme 11 — Recipes as personal content (owner-raised 2026-07-29) — owner-gated](roadmap/170-theme-11-recipes-as-personal-content-owner-rai/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 12 — Export your data (owner-raised 2026-08-08)](roadmap/180-theme-12-export-your-data-owner-raised-2026-08/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 13 — What the time dimension unlocks (owner-raised 2026-08-08)](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/README.md) | 0 | 0 | 0 | 0 |
-| [Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/README.md) | 7 | 1 | 1 | 0 |
+| [Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/README.md) | 6 | 2 | 1 | 0 |
 | ✅ [Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/README.md) | 1 | 0 | 0 | 0 |
 | [Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/README.md) | 3 | 0 | 0 | 0 |
@@ -47,7 +47,7 @@ line, so they overlap Open and Claimed.
 | [Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/README.md) | 5 | 0 | 3 | 0 |
 | ✅ [Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)](roadmap/320-theme-24-cuisines-the-collection-does-not-cove/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 21 — from the owner's Airbnb guidebook (2026-08-16)](roadmap/330-theme-21-from-the-owner-s-airbnb-guidebook-202/README.md) | 3 | 0 | 0 | 0 |
-| [Theme 20 — Places from anywhere (owner-raised 2026-08-16)](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md) | 9 | 0 | 0 | 2 |
+| [Theme 20 — Places from anywhere (owner-raised 2026-08-16)](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md) | 8 | 1 | 0 | 2 |
 | [Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)](roadmap/350-theme-22-the-personal-layer-holistically-owner/README.md) | 3 | 0 | 0 | 0 |
 | ✅ [Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)](roadmap/360-theme-23-what-the-app-says-and-where-it-says-i/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 30 — a venue has *menus*, plural (owner-raised 2026-08-16)](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/README.md) | 1 | 0 | 0 | 0 |
@@ -64,11 +64,11 @@ line, so they overlap Open and Claimed.
 | ✅ [What the owner wants moved next (asked and answered 2026-08-16) — ✅ BOTH DONE](roadmap/480-what-the-owner-wants-moved-next-asked-and-answ/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 38 — a cold review of the data model AND the features, developed and planned (owner-raised 2026-09-07)](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/README.md) | 5 | 0 | 5 | 0 |
 | [Intake harvest audit — owner-raised 2026-09-08](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/README.md) | 2 | 0 | 0 | 0 |
-| [Theme 39 — scaling: partitions, deltas and user data (owner-raised 2026-09-30)](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/README.md) | 7 | 0 | 1 | 2 |
+| [Theme 39 — scaling: partitions, deltas and user data (owner-raised 2026-09-30)](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/README.md) | 6 | 1 | 1 | 2 |
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 89 | 1 | 16 | 8 |
+| **All sections** | 86 | 4 | 16 | 8 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -133,7 +133,7 @@ line, so they overlap Open and Claimed.
 - [ ] [A fee that is not a dish: takeaway containers and cups](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/150-a-fee-that-is-not-a-dish.md)
 - [ ] 🎯 [A swap is not an extra: name what it replaces](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/160-a-swap-is-not-an-extra.md)
 - [ ] [Data defects the configuration survey saw in passing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/180-data-defects-the-configuration-survey-saw.md)
-- [ ] [Multi-buy: "Two for $10.00"](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/190-multi-buy-two-for-ten.md)
+- [~] [Multi-buy: "Two for $10.00"](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/190-multi-buy-two-for-ten.md)
 - [~] [Apply the author-side findings of the 2026-11-01 swap cold review:…](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/200-apply-the-swap-review-author-findings.md)
 
 ## Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)
@@ -202,7 +202,7 @@ line, so they overlap Open and Claimed.
 - [ ] 🔎 [A gate that is on the verify list but not in CI went red on main, and…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/290-a-gate-not-in-ci-went-red-on-main-and-nobody-saw-it.md)
 - [ ] [🚩 List every tracked binary in .leakscanbinaries before leakscan starts…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/330-list-every-tracked-binary-before-leakscan-blocks.md)
 - [ ] [🚩 Write the closed list of this repo's personal-data exceptions…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/350-write-the-personal-data-closed-list-before-2027-03-08.md)
-- [ ] [Every browser check inherits the OS colour scheme unless it sets one](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/380-browser-checks-inherit-the-os-colour-scheme.md)
+- [~] [Every browser check inherits the OS colour scheme unless it sets one](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/380-browser-checks-inherit-the-os-colour-scheme.md)
 - [ ] 🔎 [A sticky element covered #overflow-btn while scrolled down a menu](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/390-a-sticky-element-covered-the-overflow-button-mid-menu.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
@@ -265,7 +265,7 @@ line, so they overlap Open and Claimed.
 
 - [ ] [Phase 5 — region partitions, and "your partitions" offline](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/060-phase-5-region-partitions-and-your-partitions-offline.md)
 - [ ] ⏳ [Move all user data to IndexedDB, in one go, when it pays](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/080-move-all-user-data-to-indexeddb-when-it-pays.md)
-- [ ] [Serve bucket versions from the core copy's KV metadata](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/220-bucket-versions-from-the-core-copys-metadata.md)
+- [~] [Serve bucket versions from the core copy's KV metadata](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/220-bucket-versions-from-the-core-copys-metadata.md)
 - [ ] [Sync write cadence](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/240-sync-write-cadence.md)
 - [ ] ⏳ [Turn the KV mirror off after a clean week](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/410-turn-the-kv-mirror-off-after-a-clean-week.md)
 - [ ] 🔎 [Two flakes seen under heavy load on 2026-10-02, neither named](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/420-flakes-under-load-2026-10-02.md)

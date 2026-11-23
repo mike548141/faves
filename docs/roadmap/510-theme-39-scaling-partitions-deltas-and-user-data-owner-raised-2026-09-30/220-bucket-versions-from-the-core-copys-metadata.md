@@ -1,6 +1,9 @@
-- [ ] **Serve bucket versions from the core copy's KV metadata** `[L]
+- [~] **Serve bucket versions from the core copy's KV metadata** `[L]
       [worker]` — from the `130` survey
       (session `faves-55`, 2026-10-01), its proposal **I**.
+
+  (claimed 2026-11-23-1501, session f9ee6733, primary checkout: the
+  chatty_check re-measure only, not the design)
 
   A recipe user's pull: 9 reads and about 227 KB through the Worker, down to 1
   read and about 3 KB.
