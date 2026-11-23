@@ -74,6 +74,12 @@ _SAUSAGE_TOKEN = (
     + r"sausages?(?!\s?rolls?\b)"
 )
 
+# See the `pizza` row below for why this is a lookahead on the token itself.
+_CUT_FROM_TURKISH = (
+    r"(?!\s+slices?\b[\s\w,/]{0,30}?\bcut\s+from\s+(?:the\s+|a\s+)?(?:\w+\s+)?"
+    r"turkish[ -]pizzas?\b)"
+)
+
 # (name, why this is one food, match, exclude, watch)
 #
 # `watch` is the point of the row: the allergens this class is ABOUT. It is
@@ -186,7 +192,15 @@ CLASSES = [
         # "turkish " precedes, and `calzones?` is untouched. It is spelled with
         # the same two fixed-width forms as the `turkish-pizza` match below, so
         # the two are exactly complementary rather than approximately so.
-        r"\b((?<!turkish )(?<!turkish-)pizzas?|calzones?)\b",
+        # 🔑 A SLICE THE MENU SAYS IS CUT FROM A TURKISH PIZZA (owner-ruled
+        # 2026-10-18, roadmap 470/030) is the same narrowing by the same
+        # reasoning, and it is a lookahead on the SAME token for the same reason
+        # as the lookbehinds: a veto in `exclude` would take the whole line.
+        # It reads what the menu PRINTS — "Pizza Slice  Chicken, cut from the
+        # Turkish pizza." — and nothing else: no venue name, no section, and
+        # `cut from` must be spelled, so "Pizza slice $4, Turkish pizza $18"
+        # (two items on one line) stays an ordinary pizza slice.
+        r"\b((?<!turkish )(?<!turkish-)pizzas?" + _CUT_FROM_TURKISH + r"|calzones?)\b",
         # A "pizza sauce" or "pizza spice" dip is not a pizza.
         r"\bpizza\s+(sauce|spice|seasoning)\b",
         ["contains-gluten", "contains-dairy"],

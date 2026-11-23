@@ -992,7 +992,7 @@
         {
           "name": "Pizza Slice",
           "dishId": "pizza-slice",
-          "desc": "Chicken.",
+          "desc": "Chicken, cut from the Turkish pizza.",
           "price": 4,
           "tags": [
             "contains-gluten"

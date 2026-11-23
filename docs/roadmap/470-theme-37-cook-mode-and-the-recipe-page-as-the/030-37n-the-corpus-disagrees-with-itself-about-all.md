@@ -1,4 +1,4 @@
-- [~] **37n — the corpus disagrees with itself about allergens** `[M][data]`
+- [x] **37n — the corpus disagrees with itself about allergens** `[M][data]`
       📌 **CLAIM RELEASED 2026-09-24 (session `3e87e0bf`) — the four owner
       rulings of 2026-09-21 are DELIVERED and merged** (`1afd916`, ADR 0122).
       The report stands at **1 split / 1 row**: `abrakebabra/pizza-slice`,
@@ -284,3 +284,42 @@
   is cut from Abrakebabra's Turkish pizza.** That settles the last
   disagreement row; next, record it (the slice inherits the Turkish pizza's
   tags) and wire `--strict` as its own item.
+
+  ✅ **Done 2026-11-23 (queue run f9ee6733): the last row is recorded and
+  the report is empty.** The owner's 2026-10-18 *"YES, the pizza slice is cut
+  from Abrakebabra's Turkish pizza"* is now printed by the menu record itself.
+  `abrakebabra/pizza-slice`'s `desc` reads *"Chicken, cut from the Turkish
+  pizza."* (it read *"Chicken."*), which is shown on the dish, so ADR 0047's
+  test (name the screen that renders it) holds and no field was invented.
+  Its tags are **unchanged**: `contains-gluten` only, which is exactly what
+  the Chicken Turkish Pizza row carries (and the slice is "Chicken", so the
+  chicken variant is the one compared; the six Turkish pizzas differ only in
+  `v`, `spicy-3` and the Cheese Lovers' `contains-dairy`, none of which a
+  chicken slice inherits). Nothing was added, so no claim of absence was
+  either: ADR 0122's rule that the report never asserts an absence is kept.
+  🔑 **The class narrows by what the menu prints, as ADR 0122 said it must.**
+  `tools/allergen_disagreements.py`'s `pizza` match gained one lookahead on
+  the `pizza` token, `_CUT_FROM_TURKISH`: a `slice` followed, within 30
+  word-characters, by *cut from (the|a) Turkish pizza* is not a cheese-topped
+  Italian pizza. It is a lookahead on the token and never an `exclude` (the
+  veto the ADR declines), no venue and no section heading is named or read
+  (`470/060` is not pre-empted), and `cut from` has to be spelled, so
+  *"Pizza slice 4, Turkish pizza 18"* stays an ordinary pizza slice. The row
+  now sits in the `turkish-pizza` class, watched for gluten, which it carries.
+  Evidence: `allergen_disagreements.py` before: 1 split, 1 row (`contains-dairy`:
+  52 of 53 carry it, `abrakebabra/pizza-slice` does not); after:
+  `0 class/allergen split(s); 0 distinct row(s)`. `test_allergen_disagreements.py`
+  20 cases + 11 break-probes becomes 25 + 14 and all 39 behave: the pinned
+  *"the Pizza Slice in Sides still reports"* case is replaced (its premise,
+  that the menu says nothing, no longer holds); four R5 cases pin the
+  slice (out of the cheese class, still watched for gluten), the line that
+  names a Turkish slice beside an Italian pizza, and the loose readings that
+  must stay pizzas (the two S1 `--strict` cases are 470/070's); b12
+  (narrowing removed), b13 (rebuilt as a veto) and b14 (`cut from`
+  dropped) are each caught, and only by their own cases.
+  `tag_allergens.py --explain --check` still clean: the desc edit changed no
+  tag and no tip. Summaries regenerated.
+  🎯 **For the owner, unprompted: the slice's description is a small
+  addition to what the venue printed** (*"Pizza Slice / Chicken"*), written
+  from his answer. If he would rather the card say only what the menu says,
+  the narrowing needs another home; the report would then name the row again.

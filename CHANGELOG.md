@@ -17,6 +17,10 @@ content freshness separately from this file.
   dish has no page of its own to go to.
 
 ### Fixed
+- **Abrakebabra's pizza slice now says what it is.** The $4 chicken pizza slice
+  is cut from the Turkish pizza, and its description now says so, so it is
+  grouped with the Turkish pizzas (wheat, no cheese assumed) rather than with
+  cheese-topped Italian pizzas. Its allergen tags are unchanged.
 - **Hei's vegan bao no longer warns about egg.** The menu says it is made with
   vegan mayo, and the allergen warning had read "mayo" as an egg emulsion. The
   egg warning is gone from both the dinner and the lunch Vegan bao.

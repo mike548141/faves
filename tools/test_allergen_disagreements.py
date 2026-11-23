@@ -137,16 +137,11 @@ CASES = {
         "the cheese-topped pizza on the same line left the pizza class — the " \\
         "narrowing vetoed the row instead of neutralising the word"
 ''',
-    "R1 the Pizza Slice in Sides still reports": '''
-    # DELIBERATE, and pinned so nobody silences it by reflex. Abrakebabra's
-    # $4 "Pizza Slice / Chicken." in the Sides section prints neither the word
-    # "Turkish" nor anything else that says which pizza it is cut from, so the
-    # narrowing — which reads what the menu prints — leaves it where it was.
-    # The report is the right home for a row nobody can call.
-    out = report()
-    assert "abrakebabra/pizza-slice" in out, \\
-        "the Pizza Slice stopped reporting — it was silenced, not decided"
-''',
+    # The slice WAS pinned here as deliberately still reporting, because the menu
+    # printed nothing that said which pizza it is cut from. The owner answered on
+    # 2026-10-18 (roadmap 470/030) and the record now prints it, so the pin is
+    # replaced by the R5 block below — which pins the narrowing to what the menu
+    # PRINTS, so the row cannot be silenced by anything else.
 
     # --- ruling 2: crumbed stops watching for egg -------------------------
     "R2 the crumbed class no longer watches for egg": '''
@@ -243,6 +238,75 @@ CASES = {
     "R4 a ham-slice line does not join the sausage class": '''
     assert not synthetic("Caramel slice, with slices of ham")["sausage"]
 ''',
+
+    # --- ruling 5: the Pizza Slice is cut from the Turkish pizza ----------
+    "R5 the Pizza Slice says what it is cut from and leaves the cheese class": '''
+    # Owner, 2026-10-18: yes, it is cut from Abrakebabra's Turkish pizza. The
+    # row's own text now says so, and the class reads only what the menu prints.
+    assert "abrakebabra/pizza-slice" not in ids("pizza"), \\
+        "the slice is still read as a cheese-topped Italian pizza"
+''',
+    "R5 the Pizza Slice is still watched for gluten": '''
+    # The half the narrowing must NOT take with it, as for the Turkish pizzas.
+    assert "abrakebabra/pizza-slice" in ids("turkish-pizza"), \\
+        "the slice left the cheese class and is watched for nothing"
+    row = next(r for r in ROWS if r[0] + "/" + r[2] == "abrakebabra/pizza-slice")
+    assert "contains-gluten" in row[5], "the slice lost its gluten tag"
+''',
+    # The mechanism probe for ruling 5. `b13` is its breaker.
+    "R5 a line naming a Turkish slice AND an Italian pizza keeps the Italian one": '''
+    c = synthetic("Pizza slice, cut from the Turkish pizza, or a Margherita pizza")
+    assert c["pizza"], \\
+        "the cheese-topped pizza on the same line left the pizza class — the " \\
+        "slice narrowing vetoed the row instead of neutralising the word"
+''',
+    # The loosest-reading probe for ruling 5. `b14` is its breaker.
+    "R5 a slice is not Turkish unless the menu says cut from a Turkish pizza": '''
+    for t in ("Pizza Slice  Chicken.",
+              "Pizza slice 4, Turkish pizza 18",
+              "Pizza slice, Turkish pizza available",
+              "Pizza slice, cut from a Margherita pizza",
+              "Pizza slice, cut from a pizza, Turkish pizza extra"):
+        assert synthetic(t)["pizza"], t + " left the pizza class"
+''',
+
+    # --- --strict: wired, because the report is empty ---------------------
+    "S1 --strict exits 0 on the real corpus": '''
+    r = subprocess.run([sys.executable, "tools/allergen_disagreements.py", "--strict"],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, "exit %d:\\n%s" % (r.returncode, r.stdout[-600:])
+    assert "0 class/allergen split(s)" in r.stdout, r.stdout[-300:]
+''',
+    "S1 --strict exits non-zero on a planted disagreement": '''
+    # A TEMPORARY COPY of the corpus with one dairy tag removed from one pizza,
+    # so a class that carries `contains-dairy` now splits. The tool reads
+    # `site/data/restaurants` relative to its cwd, so the copy is the whole
+    # plant — the real tree is never touched.
+    import json, pathlib, shutil, tempfile
+    tool = str(pathlib.Path("tools/allergen_disagreements.py").resolve())
+    with tempfile.TemporaryDirectory() as tmp:
+        dest = pathlib.Path(tmp) / "site" / "data" / "restaurants"
+        shutil.copytree("site/data/restaurants", dest)
+        path = dest / "pizza-hut.json"
+        rec = json.loads(path.read_text())
+        planted = None
+        for sec in rec["menu"]:
+            for it in sec["items"]:
+                if planted is None and "contains-dairy" in (it.get("tags") or []) \\
+                        and "pizza" in (it.get("name") or "").lower():
+                    it["tags"] = [t for t in it["tags"] if t != "contains-dairy"]
+                    planted = it["dishId"]
+        assert planted, "nothing to plant — the fixture moved"
+        path.write_text(json.dumps(rec))
+        r = subprocess.run([sys.executable, tool, "--strict"], cwd=tmp,
+                           capture_output=True, text=True)
+        assert planted in r.stdout, "the planted row was not reported: " + r.stdout[-400:]
+        assert r.returncode == 1, \\
+            "--strict exited %d on a planted disagreement" % r.returncode
+        plain = subprocess.run([sys.executable, tool], cwd=tmp,
+                               capture_output=True, text=True)
+        assert plain.returncode == 0, "the report without --strict must still exit 0"
+''',
 }
 
 # The sausage class's exclude slot and the lookbehind word list, as they read
@@ -255,17 +319,20 @@ CONTINENTAL = ('_NOT_RUSK_SAUSAGE = ("italian", "chorizo", "salami", "pepperoni"
 # listed as covered on purpose: those three widen the class, and the rows that
 # join (chorizo, sausage rolls, slices) carry no gluten tag, so the report
 # starts to fire. b7/b8 cannot do that — the rows they hide are tagged.
+# The pizza class's match, as it reads in the tool today.
+PIZZA_TOKEN = (r'r"\b((?<!turkish )(?<!turkish-)pizzas?" + _CUT_FROM_TURKISH + '
+               r'r"|calzones?)\b",')
 # bug label -> ([(old, new), …], {cases that must fail — and only these})
 BREAKERS = {
     "b1 the Turkish pizzas fall back into the cheese class": (
-        [(r'r"\b((?<!turkish )(?<!turkish-)pizzas?|calzones?)\b"',
-          r'r"\b(pizzas?|calzones?)\b"')],
+        [(PIZZA_TOKEN, PIZZA_TOKEN.replace("(?<!turkish )(?<!turkish-)", ""))],
         {"R1 a Turkish pizza is out of the cheese-by-default class",
-         "R1 the five untagged Turkish pizzas no longer report"},
+         "R1 the five untagged Turkish pizzas no longer report",
+         "R5 the Pizza Slice says what it is cut from and leaves the cheese class", "S1 --strict exits 0 on the real corpus"},
     ),
     "b2 the gluten half of the Turkish class is dropped": (
         [(r'r"\bturkish[ -]pizzas?\b"', r'r"\bturkish[ -]pizzas?-never\b"')],
-        {"R1 a Turkish pizza is still watched for gluten"},
+        {"R1 a Turkish pizza is still watched for gluten", "R5 the Pizza Slice is still watched for gluten"},
     ),
     "b3 the Italian sausage is VETOED instead of narrowed": (
         [('_NOT_RUSK_SAUSAGE = ("italian", "chorizo",',
@@ -277,7 +344,8 @@ BREAKERS = {
         [('_NOT_RUSK_SAUSAGE = ("italian", "chorizo",',
           '_NOT_RUSK_SAUSAGE = ("chorizo",')],
         {"R3 an Italian sausage is out of the wheat-rusk class",
-         "R3 no sausage row is reported for a missing gluten tag"},
+         "R3 no sausage row is reported for a missing gluten tag",
+         "S1 --strict exits 0 on the real corpus"},
     ),
     "b5 the crumbed class watches for egg again": (
         [("        # `contains-gluten` below is still the claim this row exists to police.\n"
@@ -285,14 +353,15 @@ BREAKERS = {
           "        # `contains-gluten` below is still the claim this row exists to police.\n"
           '        ["contains-gluten", "contains-egg"],')],
         {"R2 the crumbed class no longer watches for egg",
-         "R2 no crumbed row is reported for a missing egg tag"},
+         "R2 no crumbed row is reported for a missing egg tag",
+         "S1 --strict exits 0 on the real corpus"},
     ),
     "b6 the Turkish narrowing is VETOED instead of narrowed": (
-        [(r'r"\b((?<!turkish )(?<!turkish-)pizzas?|calzones?)\b"',
-          r'r"\b(pizzas?|calzones?)\b"'),
+        [(PIZZA_TOKEN, PIZZA_TOKEN.replace("(?<!turkish )(?<!turkish-)", "")),
          (r'r"\bpizza\s+(sauce|spice|seasoning)\b"',
           r'r"\bpizza\s+(sauce|spice|seasoning)\b|\bturkish\s+pizzas?\b"')],
-        {"R1 a line naming BOTH pizzas keeps the Italian one watched"},
+        {"R1 a line naming BOTH pizzas keeps the Italian one watched",
+         "R5 a line naming a Turkish slice AND an Italian pizza keeps the Italian one", "R5 a slice is not Turkish unless the menu says cut from a Turkish pizza"},
     ),
     "b7 the sausage ROLL is VETOED instead of narrowed": (
         [(SAUSAGE_NONE, SAUSAGE_NONE.replace("None,", 'r"\\bsausage\\s?rolls?\\b",'))],
@@ -309,17 +378,35 @@ BREAKERS = {
     "b9 a continental sausage is an ordinary NZ sausage again": (
         [(CONTINENTAL, '_NOT_RUSK_SAUSAGE = ("italian",)')],
         {"R4 a continental sausage by name is not a rusk sausage",
-         "R3 no sausage row is reported for a missing gluten tag"},
+         "R3 no sausage row is reported for a missing gluten tag",
+         "S1 --strict exits 0 on the real corpus"},
     ),
     "b10 a sausage roll is an ordinary NZ sausage again": (
         [('sausages?(?!\\s?rolls?\\b)"', 'sausages?"')],
         {"R4 a sausage roll alone is not a rusk sausage",
-         "R3 no sausage row is reported for a missing gluten tag"},
+         "R3 no sausage row is reported for a missing gluten tag",
+         "S1 --strict exits 0 on the real corpus"},
     ),
     "b11 the sausage class is WIDENED to any slice": (
         [('r"\\b(" + _SAUSAGE_TOKEN + r"|snarlers?', 'r"\\b(" + _SAUSAGE_TOKEN + r"|slices?|snarlers?')],
         {"R4 a ham-slice line does not join the sausage class",
-         "R3 no sausage row is reported for a missing gluten tag"},
+         "R3 no sausage row is reported for a missing gluten tag",
+         "S1 --strict exits 0 on the real corpus"},
+    ),
+    "b12 the slice narrowing is removed": (
+        [(" + _CUT_FROM_TURKISH + r\"|calzones", " + r\"|calzones")],
+        {"R1 a Turkish pizza is out of the cheese-by-default class",
+         "R5 the Pizza Slice says what it is cut from and leaves the cheese class", "S1 --strict exits 0 on the real corpus"},
+    ),
+    "b13 the slice narrowing is VETOED instead of narrowed": (
+        [(" + _CUT_FROM_TURKISH + r\"|calzones", " + r\"|calzones"),
+         (r'r"\bpizza\s+(sauce|spice|seasoning)\b"',
+          r'r"\bpizza\s+(sauce|spice|seasoning)\b|\bcut\s+from\s+the\s+turkish\b"')],
+        {"R5 a line naming a Turkish slice AND an Italian pizza keeps the Italian one"},
+    ),
+    "b14 any Turkish pizza near a slice silences it": (
+        [(r"\bcut\s+from\s+", "")],
+        {"R5 a slice is not Turkish unless the menu says cut from a Turkish pizza"},
     ),
 }
 
