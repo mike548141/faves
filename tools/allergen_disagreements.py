@@ -36,11 +36,12 @@ WHAT IT CANNOT SEE
   • Add-on options. They carry tags too (ADR 0048) and are read by default;
     pass `--dishes-only` to leave them out.
 
-EXIT CODE. Always 0, unless you ask for `--strict`. Disagreements exist right
-now by construction — that is the whole reason the item is open — so a check
-that exits non-zero would fire on every run from the day it landed, and this
-repo has repeatedly found that a check which always fires is a check nobody
-reads. When the corpus is swept clean, `--strict` in CI is what keeps it clean.
+EXIT CODE. 0, unless you ask for `--strict`. Until 2026-11-23 disagreements
+existed by construction, so a check that exited non-zero would have fired on
+every run, and this repo has repeatedly found that a check which always fires
+is a check nobody reads. The last row was ruled that day (roadmap 470/030), the
+report is empty, and `--strict` runs in CI (470/070): from here a split fails
+the build instead of waiting for a reader to find it.
 
     python3 tools/allergen_disagreements.py                 # the report
     python3 tools/allergen_disagreements.py --class sausage # one class

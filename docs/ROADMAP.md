@@ -60,7 +60,7 @@ line, so they overlap Open and Claimed.
 | ✅ [Recommended sequence](roadmap/440-recommended-sequence/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 35 — the search box as a split-flap board (owner-raised 2026-08-16)](roadmap/450-theme-35-the-search-box-as-a-split-flap-board/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 36 — cooking is not ordering (owner-raised 2026-08-16)](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/README.md) | 2 | 0 | 1 | 0 |
-| [Theme 37 — cook mode and the recipe page, as the owner reads them (owner-raised 2026-08-16)](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/README.md) | 1 | 1 | 0 | 1 |
+| [Theme 37 — cook mode and the recipe page, as the owner reads them (owner-raised 2026-08-16)](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/README.md) | 1 | 0 | 0 | 1 |
 | ✅ [What the owner wants moved next (asked and answered 2026-08-16) — ✅ BOTH DONE](roadmap/480-what-the-owner-wants-moved-next-asked-and-answ/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 38 — a cold review of the data model AND the features, developed and planned (owner-raised 2026-09-07)](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/README.md) | 5 | 0 | 5 | 0 |
 | [Intake harvest audit — owner-raised 2026-09-08](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/README.md) | 2 | 0 | 0 | 0 |
@@ -68,7 +68,7 @@ line, so they overlap Open and Claimed.
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 85 | 4 | 16 | 7 |
+| **All sections** | 85 | 3 | 16 | 7 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -244,7 +244,6 @@ line, so they overlap Open and Claimed.
 
 - ⏳ [WAITING ON THE OWNER — the build is done; what is left is his data…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/010-37k-a-style-of-dining-filter.md)
 - [ ] [✅ Cook at Home should use the venue/branch structure, so two houses are…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/050-cook-at-home-as-a-venue-with-branches-one-per-house.md)
-- [~] [Wire allergen_disagreements.py --strict into the gates, now the last…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/070-wire-allergen-disagreements-strict.md)
 
 ## Theme 38 — a cold review of the data model AND the features, developed and planned (owner-raised 2026-09-07)
 
