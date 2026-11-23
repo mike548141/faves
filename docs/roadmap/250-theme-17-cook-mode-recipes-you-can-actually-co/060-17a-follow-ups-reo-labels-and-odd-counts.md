@@ -1,5 +1,9 @@
-- [ ] **17a's follow-ups: te reo for the new labels, and odd people counts**
+- [~] **17a's follow-ups: te reo for the new labels, and odd people counts**
       `[S][ux]` — filed 2026-10-18 by `faves-b4` from 17a's hand-back.
+
+  (claimed 2026-11-23-1433, session f9ee6733, worktree faves-qr-f9ee-screen;
+  part 1 (te reo) only, parts 2 and 3 stay open)
+
   1. **Te reo.** "Makes", "Serve … people" and "Written for about N people"
      (ADR 0162) are English only. `site/js/reo.js` glosses the rest of the
      chrome from maoridictionary.co.nz, the owner-nominated source; these

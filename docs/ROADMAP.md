@@ -38,8 +38,8 @@ line, so they overlap Open and Claimed.
 | [Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/README.md) | 1 | 0 | 0 | 0 |
 | [Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/README.md) | 3 | 0 | 0 | 0 |
 | ✅ [Theme 16 — Staying current: PWA updates & a manual refresh (owner-raised 2026-08-09)](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/README.md) | 0 | 0 | 0 | 0 |
-| [Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/README.md) | 3 | 0 | 0 | 0 |
-| [Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/README.md) | 1 | 0 | 0 | 0 |
+| [Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/README.md) | 2 | 1 | 0 | 0 |
+| [Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/README.md) | 0 | 1 | 0 | 0 |
 | [Theme 19 — from the 2026-08-15 Johnsonville intake](roadmap/270-theme-19-from-the-2026-08-15-johnsonville-inta/README.md) | 2 | 0 | 0 | 0 |
 | ✅ [Automating the FX refresh — ✅ shipped 2026-08-16](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)](roadmap/290-theme-25-should-a-dish-have-an-id-owner-raised/README.md) | 0 | 0 | 0 | 0 |
@@ -52,7 +52,7 @@ line, so they overlap Open and Claimed.
 | ✅ [Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)](roadmap/360-theme-23-what-the-app-says-and-where-it-says-i/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 30 — a venue has *menus*, plural (owner-raised 2026-08-16)](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/README.md) | 1 | 0 | 0 | 0 |
 | ✅ [Theme 31 — the venue's own ordering app (owner-raised 2026-08-16)](roadmap/380-theme-31-the-venue-s-own-ordering-app-owner-ra/README.md) | 0 | 0 | 0 | 0 |
-| [Theme 32 — activity history: what changed, and what *you* changed (owner-raised 2026-08-16)](roadmap/390-theme-32-activity-history-what-changed-and-wha/README.md) | 1 | 0 | 0 | 0 |
+| [Theme 32 — activity history: what changed, and what *you* changed (owner-raised 2026-08-16)](roadmap/390-theme-32-activity-history-what-changed-and-wha/README.md) | 0 | 1 | 0 | 0 |
 | [Theme 33 — reservations (owner-raised 2026-08-16)](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/README.md) | 4 | 0 | 0 | 1 |
 | ✅ [Theme 34 — every section addressable by URL (owner-raised 2026-08-16)](roadmap/410-theme-34-every-section-addressable-by-url-owne/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Owner rulings — 2026-08-16 (close of the in-flight-residue session)](roadmap/420-owner-rulings-2026-08-16-close-of-the-in-fligh/README.md) | 0 | 0 | 0 | 0 |
@@ -68,7 +68,7 @@ line, so they overlap Open and Claimed.
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 88 | 3 | 16 | 7 |
+| **All sections** | 85 | 6 | 16 | 7 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -156,13 +156,13 @@ line, so they overlap Open and Claimed.
 
 - [ ] [17c — Quantities inside the step](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/030-17c-quantities-inside-the-step.md)
 - [ ] [17e — The rest of what the research turned up](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/040-17e-the-rest-of-what-the-research-turned-up.md)
-- [ ] [17a's follow-ups: te reo for the new labels, and odd people counts](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/060-17a-follow-ups-reo-labels-and-odd-counts.md)
+- [~] [17a's follow-ups: te reo for the new labels, and odd people counts](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/060-17a-follow-ups-reo-labels-and-odd-counts.md)
 
 ## Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)
 
 *[Narrative](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/README.md)*
 
-- [ ] [18b — Recipe quantities](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/010-18b-recipe-quantities.md)
+- [~] [18b — Recipe quantities](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/010-18b-recipe-quantities.md)
 
 ## Theme 19 — from the 2026-08-15 Johnsonville intake
 
@@ -221,7 +221,7 @@ line, so they overlap Open and Claimed.
 
 *[Narrative](roadmap/390-theme-32-activity-history-what-changed-and-wha/README.md)*
 
-- [ ] [32b — the screen](roadmap/390-theme-32-activity-history-what-changed-and-wha/020-32b-the-screen-m-design.md)
+- [~] [32b — the screen](roadmap/390-theme-32-activity-history-what-changed-and-wha/020-32b-the-screen-m-design.md)
 
 ## Theme 33 — reservations (owner-raised 2026-08-16)
 

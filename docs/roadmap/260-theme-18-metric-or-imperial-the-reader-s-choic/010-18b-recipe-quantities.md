@@ -1,4 +1,7 @@
-- [ ] **18b — Recipe quantities** `[M]` — **still blocked on 17a** and
+- [~] **18b — Recipe quantities** `[M]` — **still blocked on 17a** and
+
+  (claimed 2026-11-23-1433, session f9ee6733, worktree faves-qr-f9ee-units)
+
   deliberately out of scope for the 18a/18c build: strings cannot be
   converted, only structured quantities can. Note the trap that makes this
   harder than it looks — **a US cup (240 ml) is not a NZ/metric cup (250 ml)**,

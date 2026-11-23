@@ -1,4 +1,7 @@
-- [ ] **32b — the screen** `[M][design]`
+- [~] **32b — the screen** `[M][design]`
+
+  (claimed 2026-11-23-1433, session f9ee6733, worktree faves-qr-f9ee-screen)
+
 
 A reverse-chronological list, day-grouped, reachable from Settings (it belongs
 with "Your data", beside the export). Each row: the sentence, the time, and —
