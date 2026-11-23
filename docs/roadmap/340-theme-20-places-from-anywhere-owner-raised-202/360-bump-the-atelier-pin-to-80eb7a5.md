@@ -23,12 +23,12 @@
   the worktree trap marked closed upstream, and § *Checking the stamp above*
   now names `pins.py` as the tool verdict (atelier `320/160`, closed
   2026-11-18). `.githooks/pre-commit` is re-copied from atelier's
-  `tools/pre-commit.sample`, which adds the missing-`python3` guard; the
+  `tools/pre-commit.sample`, which adds the missing-`python3` guard; the <!-- pathscan:allow: atelier cross-repo path — exists in atelier's tree, not this repo's -->
   other two hooks were already identical to their samples.
 
   **The rest of the delta**, read for what newly binds a child (a read-only
-  digest of the `docs/method/` diff, hook samples and floor runs under the old
-  and new tools): everything is met except `docs/PERSONAL-DATA.md`, which is
+  digest of the `docs/method/` diff, hook samples and floor runs under the old <!-- pathscan:allow: atelier cross-repo path — exists in atelier's tree, not this repo's -->
+  and new tools): everything is met except `docs/PERSONAL-DATA.md`, which is <!-- pathscan:allow: the missing file is the finding (340/350) -->
   [`350`](350-write-the-personal-data-closed-list-before-2027-03-08.md) and
   needs the owner's grants. Dated gates checked: 2026-12-04 (board index
   form) passes; 2026-12-09 (`pins.py --check`, malformed allow-markers,
