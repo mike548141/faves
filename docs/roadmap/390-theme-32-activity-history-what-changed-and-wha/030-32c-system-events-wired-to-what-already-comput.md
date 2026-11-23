@@ -1,4 +1,6 @@
-- [ ] **32c — system events, wired to what already computes them** `[S][js]`
+- [~] **32c — system events, wired to what already computes them** `[S][js]`
+
+  (claimed 2026-11-23-1422, session f9ee6733, worktree faves-qr-f9ee-events)
 
 `versions.js` / `sw-update.js` / `cache-refresh.js` already know when the shell
 or data version moved and when a refresh was taken. Emit on those transitions.
