@@ -16,6 +16,11 @@ content freshness separately from this file.
   its frame). A restaurant dish's photo still opens the bigger photo, because a
   dish has no page of its own to go to.
 
+### Fixed
+- **Hei's vegan bao no longer warns about egg.** The menu says it is made with
+  vegan mayo, and the allergen warning had read "mayo" as an egg emulsion. The
+  egg warning is gone from both the dinner and the lunch Vegan bao.
+
 ### Added
 - **Food truck and Cook at home in the Dining filter.** Dining now answers
   how you get the food — Takeaway, Dine-in, Delivery, Food truck or Cook at

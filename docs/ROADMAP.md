@@ -21,7 +21,7 @@ line, so they overlap Open and Claimed.
 | ✅ [Owner rulings — 2026-07-23 (session Q&A, raw where quoted)](roadmap/050-owner-rulings-2026-07-23-session-q-a-raw-where/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Owner-reported — 2026-07-22](roadmap/060-owner-reported-2026-07-22/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 3 — UX & design pass](roadmap/070-theme-3-ux-design-pass/README.md) | 0 | 0 | 0 | 0 |
-| [Theme 4 — Content growth (ongoing, in parallel)](roadmap/080-theme-4-content-growth-ongoing-in-parallel/README.md) | 16 | 1 | 2 | 1 |
+| [Theme 4 — Content growth (ongoing, in parallel)](roadmap/080-theme-4-content-growth-ongoing-in-parallel/README.md) | 16 | 0 | 2 | 1 |
 | ✅ [Theme 4b — Meals vs dishes: pairings & "goes with"](roadmap/090-theme-4b-meals-vs-dishes-pairings-goes-with/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 4c — User contributions (request a place, report an update)](roadmap/100-theme-4c-user-contributions-request-a-place-re/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 5 — Richer dish data](roadmap/110-theme-5-richer-dish-data/README.md) | 1 | 0 | 1 | 0 |
@@ -68,7 +68,7 @@ line, so they overlap Open and Claimed.
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 85 | 6 | 16 | 7 |
+| **All sections** | 85 | 5 | 16 | 7 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -103,7 +103,6 @@ line, so they overlap Open and Claimed.
 - [ ] [🚩 The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
 - [ ] 🎯 [Which of the remaining 47 venues deliver?](roadmap/080-theme-4-content-growth-ongoing-in-parallel/230-which-of-the-remaining-47-venues-deliver.md)
 - [ ] [A photo for every item, eventually — OWNER GOAL 2026-09-28, not a…](roadmap/080-theme-4-content-growth-ongoing-in-parallel/240-a-photo-for-every-item-owner-goal.md)
-- [~] ["Vegan mayo" is tagged contains-egg, on a dish the venue calls vegan](roadmap/080-theme-4-content-growth-ongoing-in-parallel/300-vegan-mayo-is-tagged-egg.md)
 
 ## Theme 5 — Richer dish data
 

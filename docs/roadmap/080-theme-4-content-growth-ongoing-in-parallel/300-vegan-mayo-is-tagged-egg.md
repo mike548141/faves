@@ -1,4 +1,4 @@
-- [~] **"Vegan mayo" is tagged `contains-egg`, on a dish the venue calls
+- [x] **"Vegan mayo" is tagged `contains-egg`, on a dish the venue calls
       vegan** `[S][tools]` — found 2026-10-16 by the worker adding Hei
       (`080/290`), filed by `faves-11`.
 
@@ -58,3 +58,17 @@
   `contains-egg` from Hei's `vegan` and `vegan-lunch` rows (the venue's own
   "vegan mayo"), then `gen_summaries`. Unbuilt: the session closed under his
   "no new claims" instruction, so the next session takes it.
+
+  ✅ **Done 2026-11-23 (queue run f9ee6733).** Built the owner's REMOVE IT:
+  `contains-egg` is gone from Hei's `vegan` (dinner) and `vegan-lunch` rows in
+  `site/data/restaurants/hei.json`, tags `contains-egg, contains-soy` becoming
+  `contains-soy`, and nothing else in the file moved. Their tips needed no
+  edit: `--explain --apply` had already dropped the stale egg tip on
+  2026-10-18, and `tag_allergens.py --explain --check` reports every tip
+  current. `gen_summaries.mjs` was re-run (the summary and the catalogue
+  fingerprints moved; the search index did not, because it carries no
+  allergen tags). A change under `site/data/` bumps no version constant.
+  Evidence: `validate.py` valid (66 files), `seed_dish_ids.py --check`,
+  `gen_summaries.mjs --check`, `split_data.py --check` and `check_fallback.py`
+  clean. The tagger itself still reads a bare `mayo` as egg and still reads
+  `vegan mayo` as not, so a future refresh of Hei will not bring the tag back.

@@ -598,7 +598,6 @@
           "desc": "Eggplant & tofu, pickles with vegan mayo and salad on a pumpkin bao",
           "price": 13,
           "tags": [
-            "contains-egg",
             "contains-soy"
           ],
           "tagNotes": {"contains-soy": "The menu says “tofu”."}
@@ -1097,7 +1096,6 @@
           "desc": "Eggplant & tofu, pickles with vegan mayo and salad on a pumpkin bao",
           "price": 12,
           "tags": [
-            "contains-egg",
             "contains-soy"
           ],
           "tagNotes": {"contains-soy": "The menu says “tofu”."},
