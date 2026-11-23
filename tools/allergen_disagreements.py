@@ -197,8 +197,11 @@ CLASSES = [
         # 2026-10-18, roadmap 470/030) is the same narrowing by the same
         # reasoning, and it is a lookahead on the SAME token for the same reason
         # as the lookbehinds: a veto in `exclude` would take the whole line.
-        # It reads what the menu PRINTS — "Pizza Slice  Chicken, cut from the
-        # Turkish pizza." — and nothing else: no venue name, no section, and
+        # It reads what the DISH RECORD says — "Pizza Slice  Chicken, cut from
+        # the Turkish pizza." — and nothing else. The venue's own board says
+        # only "Chicken."; the "cut from" clause is the owner's answer written
+        # into the description, so the card a reader sees carries the reason
+        # its tags differ from a pizza's. No venue name, no section, and
         # `cut from` must be spelled, so "Pizza slice $4, Turkish pizza $18"
         # (two items on one line) stays an ordinary pizza slice.
         r"\b((?<!turkish )(?<!turkish-)pizzas?" + _CUT_FROM_TURKISH + r"|calzones?)\b",
