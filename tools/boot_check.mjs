@@ -354,6 +354,35 @@ async function run(opts) {
       await bootScreen(cdp, sessionId, driver, report, base, screen, venueId);
     }
 
+    // The harness's colour scheme is its own, never the laptop's (roadmap
+    // 340/380; lib/browser.mjs DEFAULT_COLOR_SCHEME). macOS here goes Dark at
+    // night and headless Chrome inherits it, so every check that assumed the
+    // light theme was asserting about the clock. The probes ask the PAGE, after
+    // a real navigation, and cover the three ways it could slip back to the OS:
+    // a fresh session, a `setEmulatedMedia` that names only another feature
+    // (cook_check's reduced motion — the call REPLACES the list), and a reset
+    // to `{ features: [] }`. The control asks for dark explicitly and must get
+    // it: without it, a probe reading a stale or broken `matchMedia` would pass.
+    // Only on a Dark machine is the first probe more than a tautology — break-
+    // probe it there (remove the default in lib/browser.mjs; it must fail).
+    const scheme = () => driver.evalPage(`({
+      dark: matchMedia("(prefers-color-scheme: dark)").matches,
+      light: matchMedia("(prefers-color-scheme: light)").matches,
+    })`);
+    const fmt = (v) => `dark=${v.dark} light=${v.light}`;
+    const fresh = await scheme();
+    report.check("colour scheme: a fresh page is LIGHT, whatever the OS is set to", !fresh.dark && fresh.light, fmt(fresh));
+    await cdp.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] }, sessionId);
+    const afterMotion = await scheme();
+    report.check("colour scheme: emulating another feature does not hand it back to the OS", !afterMotion.dark && afterMotion.light, fmt(afterMotion));
+    await cdp.send("Emulation.setEmulatedMedia", { features: [] }, sessionId);
+    const afterReset = await scheme();
+    report.check("colour scheme: resetting emulation restores light, not the OS scheme", !afterReset.dark && afterReset.light, fmt(afterReset));
+    await cdp.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-color-scheme", value: "dark" }] }, sessionId);
+    const asked = await scheme();
+    report.check("colour scheme: (control) asking for dark explicitly still gets dark", asked.dark && !asked.light, fmt(asked));
+    await cdp.send("Emulation.setEmulatedMedia", { features: [] }, sessionId);
+
     // The subheading facets are a route, not a label: tapping "Malaysian" on a
     // menu page has to land on a home list genuinely filtered to Malaysian,
     // with the dropdown above it saying the same. The unit tests cover each

@@ -995,7 +995,8 @@ async function run(opts) {
     // Dark mode is a supported theme, not a nicety, and the muted closure has
     // to clear AA in it too. Emulating the media query is enough: the tokens
     // live in `@media (prefers-color-scheme: dark)`, so nothing re-renders and
-    // the same DOM can be measured twice. `null` restores the OS setting, so a
+    // the same DOM can be measured twice. `null` restores the harness default (light,
+    // lib/browser.mjs; never the OS setting), so a
     // venue checked after a fixture is not silently checked in the dark.
     driver.setColorScheme = (scheme) =>
       cdp.send(

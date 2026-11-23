@@ -461,6 +461,32 @@ export const clickStats = {
   rescrollWorst: null,
 };
 
+// --- The colour scheme is the harness's to set, never the laptop's ---------
+// 🛑 Headless Chrome inherits the OS `prefers-color-scheme`, and this laptop's
+// macOS switches to Dark by itself at night — so any check that assumes the
+// light theme (a contrast reading, a colour asserted, a screenshot read by
+// eye) was asserting about the CLOCK. 340/370 found it in `recipe_check`, which
+// measured dark twice and failed every evening; 340/380 closes the class here,
+// once, instead of in each of the twenty-two checks.
+//
+// Two rules, both enforced in `Cdp.send` because every check makes its pages
+// and its emulation through it:
+//   1. A session just attached to a target is emulated LIGHT at once.
+//   2. `Emulation.setEmulatedMedia` REPLACES the whole feature list, so a check
+//      that set only `prefers-reduced-motion` (cook_check) or reset with
+//      `{ features: [] }` would silently drop back to the OS scheme. Every such
+//      call is rewritten to carry a colour scheme: the one the check named, or
+//      the default. A check that wants dark names it explicitly.
+// A tab made with `Target.createTarget` and never attached (cook_check's
+// background "other tab") is not emulated; nothing asserts about its colours.
+export const DEFAULT_COLOR_SCHEME = "light";
+
+export function withColorScheme(features, scheme = DEFAULT_COLOR_SCHEME) {
+  const list = Array.isArray(features) ? features : [];
+  if (list.some((f) => f?.name === "prefers-color-scheme")) return list;
+  return [...list, { name: "prefers-color-scheme", value: scheme }];
+}
+
 export class Cdp {
   #ws;
   #next = 1;
@@ -503,7 +529,26 @@ export class Cdp {
     for (const fn of this.#handlers.get(msg.method) ?? []) fn(msg.params, msg.sessionId);
   }
 
-  send(method, params = {}, sessionId, { timeoutMs = CDP_TIMEOUT_MS, soft = false } = {}) {
+  send(method, params = {}, sessionId, opts = {}) {
+    // The colour-scheme default (see DEFAULT_COLOR_SCHEME above). Both branches
+    // go through `#sendRaw`, so the default's own call cannot recurse.
+    if (method === "Emulation.setEmulatedMedia") {
+      params = { ...params, features: withColorScheme(params.features) };
+    } else if (method === "Target.attachToTarget") {
+      return this.#sendRaw(method, params, sessionId, opts).then(async (res) => {
+        await this.#sendRaw(
+          "Emulation.setEmulatedMedia",
+          { features: withColorScheme([]) },
+          res.sessionId,
+          opts
+        );
+        return res;
+      });
+    }
+    return this.#sendRaw(method, params, sessionId, opts);
+  }
+
+  #sendRaw(method, params, sessionId, { timeoutMs = CDP_TIMEOUT_MS, soft = false } = {}) {
     const id = this.#next++;
     const payload = { id, method, params };
     if (sessionId) payload.sessionId = sessionId;
