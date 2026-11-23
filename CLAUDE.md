@@ -1,7 +1,7 @@
 # Faves — instructions for AI builders
 
 <!-- stamp:begin source=docs/method/PROPAGATION.md region=floor -->
-## Doctrine — inherited from atelier (pinned `atelier@80eb7a5`)
+## Doctrine — inherited from atelier (pinned `atelier@07377af`)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -90,7 +90,7 @@ in atelier and is read on demand — never wholesale.
   your own item. (`PROPAGATION.md` § *Pointing up*.)
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
   session start run `A="${ATELIER_TOOLS:-$(git config hooks.atelierTools)}/..";
-  git -C "$A" fetch -q && git -C "$A" log --oneline 80eb7a5..origin/main` — the
+  git -C "$A" fetch -q && git -C "$A" log --oneline 07377af..origin/main` — the
   parent's published mainline (its remote is assumed to be `origin`), never
   whatever branch its checkout is parked on. The path comes from the hooks'
   tools setting, never `../`, so it resolves from a worktree too. A failed

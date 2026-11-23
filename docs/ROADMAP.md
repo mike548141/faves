@@ -68,7 +68,7 @@ line, so they overlap Open and Claimed.
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 86 | 1 | 16 | 8 |
+| **All sections** | 86 | 0 | 16 | 8 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
