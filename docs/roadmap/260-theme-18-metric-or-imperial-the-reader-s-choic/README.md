@@ -28,6 +28,12 @@ Distance dials, Near-me, the drive/walk hint), **recipe quantities** (17a), and
   hand-written `(NNN°F)` brackets out of `cook-at-home.json` — removed as a
   correction (we wrote the redundancy, the recipe didn't change).
 
+- ✅ **18b — Recipe quantities** `[M]` — **shipped 2026-11-23** (ADR 0170).
+  `cooking` is the third usage on ADR 0087's table; only the US converts
+  (cups, spoons, quarts, ounces, pounds — US cup 236.6 ml, so a NZ cup reads
+  5.7% more). Run after the 17a scaler; volume never becomes weight, and a line
+  with no honest US spelling is shown as written and marked. GB stays metric.
+
 **Default stays metric** — the app is New Zealand-first and the data is metric.
 This is a display preference for visitors, not a change of source of truth.
 Lockstep with **Theme 15b**'s wording sweep: both change user-facing unit copy,

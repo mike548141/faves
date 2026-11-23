@@ -1981,3 +1981,12 @@ deliberation those compact docs omit.
   branch kind permanent/temporary/mobile; a meal is not a menu; more than one
   provider may offer cooking at home. Storage not decided; staged migration,
   each stage its own ADR, today's venue file the degenerate case throughout.
+- [0170](0170-recipe-quantities-are-a-third-usage-and-only-the-us-converts.md) —
+  **Recipe quantities are a third usage, and only the US converts** (`260/010`,
+  18b). `cooking` joins `distance` and `oven` on ADR 0087's usage table; no new
+  setting. A US reader sees cups, tablespoons, teaspoons, quarts, ounces and
+  pounds: US cup 236.588 ml (not the 240 ml label cup), so a NZ cup reads 5.7%
+  more; spoons within 3% keep their words. Runs after the 17a scaler, rounds once,
+  never turns volume into weight, and returns a line it cannot spell within 8%
+  exactly as written, marked "as written". GB stays metric: CLDR has no cooking
+  usage and its GB volume row has no cup. A judgement, put to the owner.

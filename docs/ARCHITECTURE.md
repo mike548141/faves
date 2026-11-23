@@ -1479,7 +1479,12 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   language, the maps app, and `units` (metric | imperial), clamped/sanitised on
   read so a bad value can't break the sort. `units` is a **display** choice
   only: `units.js` converts km→miles and °C→°F at render, the stored dials stay
-  kilometres and the recipe data stays °C, so nothing stored drifts (ADR 0029);
+  kilometres and the recipe data stays °C, so nothing stored drifts (ADR 0029).
+  What it resolves to is a usage table `{distance, oven, cooking}` by region
+  (ADR 0087): `cooking` (ADR 0170) is recipe quantities, and only the US
+  converts — `cooking-units.js` rewrites a scaled ingredient line into US cups,
+  spoons, quarts, ounces and pounds, after the 17a scaler and never volume to
+  weight, and a line it cannot spell within 8% is shown as written and marked;
   `settings-ui.js` is the ⚙ dialog — an index of topic rows drilling into
   single-topic panels, each row subtitled with its current value, plus the
   profile switcher (ADR 0025). A new topic is one `TOPICS` entry + its panel.

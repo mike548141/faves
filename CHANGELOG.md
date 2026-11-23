@@ -30,9 +30,17 @@ content freshness separately from this file.
   row, just after "Your data": what you have changed on this device, newest
   first, day by day. Each line says what happened and when, and links to the
   dish or place if it is still on the menu. Removing a favourite shows as a
-  removal; nothing is ever erased from the list. Menu and app updates are kept
+  removal; nothing you do erases a line. Menu and app updates are kept
   out of sight until you ask for them. It started on 18 October 2026, and an
   empty list says so; it keeps the last 500 changes.
+- **Recipe quantities in US measures, for readers in the US.** A recipe's
+  ingredients now read in cups, tablespoons, teaspoons, ounces and pounds when
+  your device is in the US (or you chose *US customary* in Settings), and
+  stay as the recipe wrote them everywhere else. A New Zealand cup is 250 ml
+  and a US one is 236.6 ml, so "2¼ cups flour" reads "2⅜ cups"; the page, cook
+  mode, the shopping list and the recipe list all agree, and a line that has no
+  tidy US measure is shown as written and marked. Ticks, scales and the people
+  count carry straight over.
 - **Food truck and Cook at home in the Dining filter.** Dining now answers
   how you get the food — Takeaway, Dine-in, Delivery, Food truck or Cook at
   home — and Style answers what the experience is like: Quick eats, Counter
