@@ -28,3 +28,18 @@
 
   **Done when** `floor.py --plane ci` reports `pdlistscan` clean with files
   read, and each entry quotes its grant.
+
+  💬 **Answers so far, 2026-11-24 (queue run f9ee6733's close).**
+  - **Recipe attributions:** the owner, verbatim: *"I have moved the recipes
+    with family attributions into my private recipes so it stays private."*
+    Checked: no family name remains in `site/data/`. The five family-attributed
+    recipes are still named in `data/history/dishes/cook-at-home.json` and
+    `data/estimates/` (kept forever under ADR 0047, as the estimates README
+    says). Whether to remove them from those current files or list them as an
+    exception was put to him with an impact analysis; open.
+  - **Ownership records (ADR 0046):** asked whether to keep the permission
+    (the store `data/ownership.json` is empty: `{"edges": []}`), he picked
+    💬 *"Keep the permission (Recommended)"*: an answer to the options, not a
+    ruling in his words. The list should carry it, quoting ADR 0046's ruling
+    of 2026-08-16 and this pick.
+
