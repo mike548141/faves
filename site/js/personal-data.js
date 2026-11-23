@@ -62,6 +62,7 @@ import {
   UPGRADE_SNAPSHOT_KEY,
 } from "./user-schema.js";
 import { PERSIST_ASKED_KEY } from "./storage-persist.js";
+import { SEEN_VERSIONS_KEY } from "./system-events.js";
 import { RECIPES_KEY, sanitiseRecipes, sortedRecipes } from "./recipe-record.js";
 import { followMovesInProfile } from "./recipe-move.js";
 import { SAVED_ORDERS_KEY, sanitiseSavedOrders } from "./saved-orders.js";
@@ -245,6 +246,18 @@ const EXCLUDED = {
     why:
       "Whether this browser has already been asked to keep your Faves data. " +
       "Deliberately not exported: the answer belongs to this browser.",
+  },
+  // The app and menu versions this device last ran (roadmap 390/030,
+  // system-events.js): the baseline "the app was updated" is measured from. A
+  // fact about this browser's service worker, so it must not travel — restored
+  // onto another device it would log updates that never happened there. Spared
+  // by a replace, which writes this build's data and says nothing about which
+  // worker is running.
+  [SEEN_VERSIONS_KEY]: {
+    spare: true,
+    why:
+      "The app and menu versions this browser last ran, kept to notice when they " +
+      "change. Deliberately not exported: it describes this browser, not you.",
   },
 };
 

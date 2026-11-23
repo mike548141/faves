@@ -62,6 +62,7 @@ export async function forceRefresh({
   serviceWorker = globalThis.navigator?.serviceWorker,
   isOnline = () => globalThis.navigator?.onLine !== false,
   reload = () => globalThis.location.reload(),
+  onRefreshed = () => {},
 } = {}) {
   if (!isOnline()) return { ok: false, reason: "offline" };
   if (!cacheStorage?.keys) return { ok: false, reason: "unsupported" };
@@ -72,6 +73,14 @@ export async function forceRefresh({
     }
     const targets = refreshableCaches(await cacheStorage.keys());
     await Promise.all(targets.map((n) => cacheStorage.delete(n)));
+    // The caller's hook (the activity log's `cache.refreshed`, roadmap 390/030).
+    // Injected, never imported: this module must not reach the personal layer
+    // (rule 1), and a hook that throws must not stop the reload it precedes.
+    try {
+      onRefreshed({ cleared: targets.length });
+    } catch {
+      /* the refresh itself is what the person asked for */
+    }
     reload();
     return { ok: true, cleared: targets.length };
   } catch {

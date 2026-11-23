@@ -31,6 +31,7 @@ import { SYNC_LOG_KEY } from "../site/js/sync-log.js";
 import { SCHEMA_KEY, USER_SCHEMA, UPGRADE_SNAPSHOT_KEY } from "../site/js/user-schema.js";
 import { PERSIST_ASKED_KEY } from "../site/js/storage-persist.js";
 import { CONSENT_KEY } from "../site/js/geo-consent.js";
+import { SEEN_VERSIONS_KEY } from "../site/js/system-events.js";
 
 const SITE_JS = new URL("../site/js/", import.meta.url);
 
@@ -59,6 +60,7 @@ const CLASSIFIED = {
   "faves.sync.base.v1": "wiped", // a full second copy of the synced data
   "faves.sync.log.v1": "wiped", // names hearts
   "faves.upgrade.snapshot.v1": "wiped", // a whole copy of the data from before the last upgrade
+  "faves.seen-versions.v1": "wiped", // the update log's baseline; wiped, the next load re-seeds it and says nothing
   "faves.origin.v1": "session",
   "faves.sync.v1": "kept",
   "faves.schema.v1": "kept",
@@ -109,6 +111,7 @@ test("the constants the wipe leans on still spell the keys this table says", () 
     [UPGRADE_SNAPSHOT_KEY]: "faves.upgrade.snapshot.v1",
     [PERSIST_ASKED_KEY]: "faves.persist.asked.v1",
     [CONSENT_KEY]: "faves.geo.consent.v1",
+    [SEEN_VERSIONS_KEY]: "faves.seen-versions.v1",
     [CHECKLIST_BASE_KEY]: "faves.checklist.v1",
     [SAVED_ORDERS_BASE_KEY]: "faves.savedorders.v1",
     [ACTIVITY_BASE_KEY]: "faves.activity.v1",

@@ -16,6 +16,8 @@ import "./upgrade-start.js";
 import { createUpdateGate, createReloadGuard, isUpdateReady } from "./sw-update.js";
 import { showUpdateNotice } from "./update-notice.js";
 import { isTabStale } from "./store.js";
+// What the app did to itself, for the activity log (roadmap 390/030).
+import { observeVersions } from "./system-events.js";
 // The "reload this tab" notice (roadmap 510/110): listens for store.js marking
 // this tab stale, from the first write or storage event that shows it.
 import "./stale-tab-ui.js";
@@ -80,7 +82,13 @@ function wireUpdates(registration) {
 
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (guard.shouldReload()) location.reload();
+    else observeVersions();
   });
+
+  // A page under a controller asks it what it is running and logs the change
+  // since the last page did (app.updated / data.updated). With no controller
+  // yet — the first-ever load — the controllerchange above seeds the baseline.
+  observeVersions();
 
   // Check on resume. `visibilitychange` covers the standalone PWA coming back
   // from the app switcher; `focus` covers a desktop tab. Both are throttled

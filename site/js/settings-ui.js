@@ -68,6 +68,7 @@ import {
   summarisePersonalData,
 } from "./personal-data.js";
 import { forceRefresh } from "./cache-refresh.js";
+import { noteRefreshed } from "./system-events.js";
 import { currentVersions } from "./versions.js";
 import { importControls } from "./personal-io-ui.js";
 import { syncControls } from "./sync-ui.js";
@@ -601,7 +602,7 @@ function refreshResetSection() {
     refreshStatus.textContent = "Refreshing…";
     // Re-checked here, not just on the first tap: the connection can drop
     // between opening the confirm and confirming it.
-    const res = await forceRefresh();
+    const res = await forceRefresh({ onRefreshed: () => noteRefreshed() });
     refreshGo.disabled = false;
     if (res.ok) return; // the reload takes it from here
     refreshStatus.textContent =

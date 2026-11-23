@@ -292,6 +292,29 @@ async function run(opts) {
       String(shown).includes(String(NEW_PRICE)),
       String(shown).includes(String(NEW_PRICE)) ? "" : "the new price is not on the page"
     );
+    // The activity log's system event (roadmap 390/030): the page that first ran
+    // under the new generation logs ONE data.updated, from the generation the
+    // install held to the one the sync switched to, and a second load of the
+    // same generation logs nothing more. Read from the real localStorage.
+    const READ_UPDATES = `JSON.stringify(Object.keys(localStorage).filter((k) => k.endsWith("activity.v1"))
+      .flatMap((k) => JSON.parse(localStorage.getItem(k) || "[]")).filter((e) => e.kind === "data.updated"))`;
+    const updates = async () => JSON.parse(await h.driver.evalPage(READ_UPDATES));
+    const logged = await untilPresent(async () => {
+      const u = await updates();
+      return u.length ? u : false;
+    }, { label: "the activity log recorded the data update" });
+    report.check(
+      "the log holds ONE data.updated, naming the old and the new generation",
+      logged.length === 1 && logged[0].from === h.installed?.generation && logged[0].to === h.after?.generation,
+      JSON.stringify(logged)
+    );
+    await cdp.send("Page.navigate", { url: `${h.base}/restaurant.html?id=${MENU_VENUE}` }, h.sessionId);
+    await untilPresent(() => h.driver.evalPage(`document.querySelectorAll("[data-dish-id]").length > 0`), {
+      label: "the venue page rendered again",
+    });
+    await new Promise((r) => setTimeout(r, 1500)); // the version ask is a message round-trip after load
+    report.check("…and a second load of the same generation logs nothing more", (await updates()).length === 1,
+      JSON.stringify(await updates()));
     const venueHits = h.log.filter((u) => u.startsWith(`/data/restaurants/${MENU_VENUE}.json`));
     report.check(
       "…served from the store: no request for that venue's file",

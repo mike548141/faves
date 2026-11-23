@@ -1452,6 +1452,13 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   order tally, profile switch, settings. **`settings.change` names the dial, never
   the value** — enforced in `makeEntry` (a closed list of eight dials; from/to
   discarded), so no allergen or diet value can reach it. No screen yet (32b).
+  **System events (32c)**, `system-events.js`: `app.updated` and `data.updated`
+  (from/to the worker's own shell stamp and data generation, asked via
+  `askController`) are logged once per transition, measured from a device-level
+  baseline `faves.seen-versions.v1` (in `personal-data.js` `EXCLUDED`, so in
+  neither the backup nor sync; wiped by Delete everything, after which the next
+  load re-seeds it and logs nothing); `cache.refreshed` is logged by Settings'
+  refresh through `forceRefresh`'s injected `onRefreshed` hook.
 - **Favourites** (`faves.favourites.v1`): `favourites.js` — a set of
   hearted venues + dishes (denormalised so the view renders from storage
   alone; the deep-link href is derived from the shared `slug`).
