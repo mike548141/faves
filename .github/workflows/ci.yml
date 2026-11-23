@@ -255,6 +255,13 @@ jobs:
       # the id-first lookup and must fail (ADR 0099).
       - name: Prove history is joined to dishes by id, not by name
         run: python3 tools/test_split_data.py
+      # The intake reader's HEIC half was verified on one phone's photographs
+      # and nothing else (cold review 2026-11-15; roadmap 530/060). It reads
+      # bytes built inside the test, so it runs here where `intake/` is empty.
+      # Each hostile case has a watchdog: a regression is a named FAIL, not a
+      # hung job.
+      - name: Prove the intake reader survives hostile and damaged files
+        run: python3 tools/test_intake_exif.py
       # Estimates drive the cook-mode countdowns, and its safety invariant —
       # every step carrying `minutes` names its source — was enforced only when
       # a human typed the command. It is stdlib, offline and a second or two.

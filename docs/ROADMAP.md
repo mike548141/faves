@@ -66,9 +66,9 @@ line, so they overlap Open and Claimed.
 | [Intake harvest audit — owner-raised 2026-09-08](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/README.md) | 2 | 0 | 0 | 0 |
 | [Theme 39 — scaling: partitions, deltas and user data (owner-raised 2026-09-30)](roadmap/510-theme-39-scaling-partitions-deltas-and-user-data-owner-raised-2026-09-30/README.md) | 7 | 0 | 1 | 2 |
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
-| [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 1 | 1 | 0 |
+| [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 88 | 4 | 16 | 7 |
+| **All sections** | 88 | 3 | 16 | 7 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -293,4 +293,3 @@ line, so they overlap Open and Claimed.
 - [ ] [A menu is versioned like code](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/030-a-menu-is-versioned-like-code.md)
 - [ ] [Cook at Home is a provider; a recipe is a dish with a method](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/040-cook-at-home-is-a-provider-a-recipe-is-a-dish-with-a-method.md)
 - [ ] 🎯 [Cold review owed: ADR 0169 and the HEIC EXIF reader](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/050-cold-review-owed-adr-0169-and-the-heic-exif-reader.md)
-- [~] [Apply the author-side findings of the ADR 0169 / HEIC reader cold…](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/060-apply-the-heic-reader-review-findings.md)

@@ -781,6 +781,15 @@ python3 tools/check_provenance.py # a venue's `verified` is not FRESHER than the
                               # photos is CORRECT and a "newest photo wins" rule would
                               # refuse it. `--sweep` for the table, `--selftest` for the
                               # 9 break-probes, `--for` on intake_exif before you type
+python3 tools/test_intake_exif.py # the intake reader (HEIC and JPEG) on bytes BUILT in
+                              # the test — no photograph, no location (roadmap 530/060,
+                              # cold review F5 to F9). Valid iloc/infe versions; an Exif
+                              # item over several extents; hostile counts and looping
+                              # IFDs under a watchdog, so a hang is a named FAIL; every
+                              # byte-offset truncation must not raise; the reader chosen
+                              # by the file's BYTES, not its suffix. In CI. Each guard
+                              # was break-probed (reverted, watched fail); the three
+                              # iloc bounds are layered, so only removing all three fails
 python3 tools/check_images.py # no TRACKED image carries a location — or anything
                               # else the reader cannot vouch for (ADR 0128). An
                               # ALLOWLIST, not a GPS detector: XMP, IPTC, MakerNote,

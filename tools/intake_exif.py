@@ -67,6 +67,9 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lib import imagemeta  # noqa: E402  (sniff: the BYTES name the format, never the suffix)
+
 ROOT = Path(__file__).resolve().parent.parent
 INTAKE = ROOT / "intake"
 
@@ -89,57 +92,112 @@ GPS_TAGS = {
 # Byte width per TIFF type code; 0 marks a type we don't decode.
 TYPE_SIZE = {1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 7: 1, 9: 4, 10: 8}
 
+# The TIFF type each named tag must be stored as. A tag is accepted ONLY in its
+# expected type: `DateTimeOriginal` written as a SHORT is legal TIFF and is
+# nonsense as a date, and the old "any type for any tag" read handed an int to
+# a regex (review F6). Wrong type reads as absent, never as a guess.
+TAG_TYPES = {
+    "make": (2,), "model": (2,), "software": (2,), "edited": (2,),
+    "captured": (2,), "digitised": (2,), "offset": (2,),
+    "width": (3, 4), "height": (3, 4),
+    "lat_ref": (2,), "lng_ref": (2,), "gps_date": (2,),
+    "lat": (5,), "lng": (5,), "gps_time": (5,), "alt": (5,), "alt_ref": (1,),
+}
 
-def _read_tiff(buf, base, tag_map, out, endian, ifd_offset, follow=None):
+# One budget for a whole TIFF parse, counted in IFD entries DECLARED. A real
+# photo declares tens (an iPhone's three IFDs: well under 200); a hostile one
+# can declare 65535 per IFD, point many IFDs at each other, and make a
+# quadratic walk of a 786 KB HEIC item (review F5, measured at ~85 minutes).
+# JPEG's 64 KB APP1 cap kept that small; HEIC lifts the cap.
+MAX_IFD_ENTRIES = 4096
+
+
+class _Malformed(ValueError):
+    """The file is not what its own headers say. Always read as 'no EXIF'."""
+
+
+# What a reader may meet in hostile or merely damaged bytes. Deliberately NOT
+# TypeError or KeyError: those would be OUR bug, and hiding it as "no EXIF"
+# is how a reader goes quietly wrong on every file at once.
+_BAD_BYTES = (struct.error, IndexError, ValueError, OverflowError)
+
+
+def _read_tiff(buf, base, tag_map, out, endian, ifd_offset, follow=None, state=None):
     """Walk one IFD, pulling the tags named in tag_map into out.
 
     `follow` maps a tag number to (tag_map, out_dict) for sub-IFDs (Exif, GPS)
-    whose value is a pointer rather than data.
+    whose value is a pointer rather than data. `state` is shared by every IFD of
+    one parse: the offsets already walked (each IFD is read ONCE, so a pointer
+    back at IFD0 or at a sibling costs nothing) and the entry budget left.
     """
+    if state is None:
+        state = {"seen": set(), "left": MAX_IFD_ENTRIES}
+    if ifd_offset in state["seen"]:
+        return
+    state["seen"].add(ifd_offset)
     try:
         (count,) = struct.unpack_from(endian + "H", buf, base + ifd_offset)
     except struct.error:
         return
+    state["left"] -= count
+    if state["left"] < 0:
+        raise _Malformed("more IFD entries declared than any photo carries")
     for i in range(count):
         entry = base + ifd_offset + 2 + i * 12
         try:
             tag, typ, n = struct.unpack_from(endian + "HHI", buf, entry)
+            size = TYPE_SIZE.get(typ, 0) * n
+            if not size:
+                continue
+            # Values of 4 bytes or fewer sit inline in the entry; larger ones are
+            # a file offset. This is the one genuinely fiddly part of TIFF.
+            pos = entry + 8 if size <= 4 else base + struct.unpack_from(endian + "I", buf, entry + 8)[0]
+            if pos + size > len(buf):
+                continue
+            if follow and tag in follow:
+                sub_map, sub_out = follow[tag]
+                sub = struct.unpack_from(endian + "I", buf, pos if size > 4 else entry + 8)[0]
+                _read_tiff(buf, base, sub_map, sub_out, endian, sub, state=state)
+                continue
+            if tag not in tag_map:
+                continue
+            name = tag_map[tag]
+            if typ not in TAG_TYPES[name]:
+                continue
+            if typ == 2:  # ASCII, NUL-terminated
+                out[name] = buf[pos:pos + size].split(b"\x00")[0].decode("utf-8", "replace").strip()
+            elif typ == 5:  # RATIONAL — GPS coordinates arrive as three of these
+                vals = []
+                for j in range(n):
+                    num, den = struct.unpack_from(endian + "II", buf, pos + j * 8)
+                    vals.append(num / den if den else 0.0)
+                out[name] = vals if n > 1 else vals[0]
+            elif typ in (3, 4):
+                fmt = "H" if typ == 3 else "I"
+                vals = list(struct.unpack_from(endian + str(n) + fmt, buf, pos))
+                out[name] = vals if n > 1 else vals[0]
+            elif typ == 1:
+                out[name] = buf[pos] if n == 1 else list(buf[pos:pos + n])
         except struct.error:
-            return
-        size = TYPE_SIZE.get(typ, 0) * n
-        if not size:
-            continue
-        # Values of 4 bytes or fewer sit inline in the entry; larger ones are
-        # a file offset. This is the one genuinely fiddly part of TIFF.
-        pos = entry + 8 if size <= 4 else base + struct.unpack_from(endian + "I", buf, entry + 8)[0]
-        if pos + size > len(buf):
-            continue
-        if follow and tag in follow:
-            sub_map, sub_out = follow[tag]
-            _read_tiff(buf, base, sub_map, sub_out, endian, struct.unpack_from(endian + "I", buf, pos if size > 4 else entry + 8)[0])
-            continue
-        if tag not in tag_map:
-            continue
-        name = tag_map[tag]
-        if typ == 2:  # ASCII, NUL-terminated
-            out[name] = buf[pos:pos + size].split(b"\x00")[0].decode("utf-8", "replace").strip()
-        elif typ == 5:  # RATIONAL — GPS coordinates arrive as three of these
-            vals = []
-            for j in range(n):
-                num, den = struct.unpack_from(endian + "II", buf, pos + j * 8)
-                vals.append(num / den if den else 0.0)
-            out[name] = vals if n > 1 else vals[0]
-        elif typ in (3, 4):
-            fmt = "H" if typ == 3 else "I"
-            vals = list(struct.unpack_from(endian + str(n) + fmt, buf, pos))
-            out[name] = vals if n > 1 else vals[0]
-        elif typ == 1:
-            out[name] = buf[pos] if n == 1 else list(buf[pos:pos + n])
+            return  # an entry cut off by the end of the block: nothing after it exists
 
 
 def read_jpeg_exif(path):
-    """Return {ifd0, exif, gps} for a JPEG, or {} when it carries no EXIF."""
+    """Return {ifd0, exif, gps} for a JPEG, or {} when it carries no readable EXIF.
+
+    Never raises on malformed bytes (review F6): a damaged file reads as `{}`,
+    the same as one with no EXIF, so one bad file in `intake/` cannot abort a
+    run over the rest. (An unreadable FILE — permissions, vanished — is
+    `describe()`'s to report.)
+    """
     data = path.read_bytes()
+    try:
+        return _jpeg_exif(data)
+    except _BAD_BYTES:
+        return {}
+
+
+def _jpeg_exif(data):
     if data[:2] != b"\xff\xd8":
         return {}
     i = 2
@@ -159,14 +217,18 @@ def read_jpeg_exif(path):
 
 def _parse_tiff(buf):
     """{ifd0, exif, gps} from a bare TIFF block — the body of an EXIF payload,
-    whichever container (JPEG APP1, HEIC item) it arrived in."""
-    if buf[:2] not in (b"II", b"MM"):
+    whichever container (JPEG APP1, HEIC item) it arrived in. `{}` when the block
+    is too short to hold its own header, or malformed (an over-budget IFD)."""
+    if len(buf) < 8 or buf[:2] not in (b"II", b"MM"):
         return {}
     endian = "<" if buf[:2] == b"II" else ">"
     (ifd0_off,) = struct.unpack_from(endian + "I", buf, 4)
     ifd0, exif, gps = {}, {}, {}
-    _read_tiff(buf, 0, IFD0_TAGS, ifd0, endian, ifd0_off,
-               follow={0x8769: (EXIF_TAGS, exif), 0x8825: (GPS_TAGS, gps)})
+    try:
+        _read_tiff(buf, 0, IFD0_TAGS, ifd0, endian, ifd0_off,
+                   follow={0x8769: (EXIF_TAGS, exif), 0x8825: (GPS_TAGS, gps)})
+    except _Malformed:
+        return {}
     return {"ifd0": ifd0, "exif": exif, "gps": gps}
 
 
@@ -177,6 +239,8 @@ def _boxes(data, start, end):
         size, typ = struct.unpack_from(">I4s", data, i)
         hdr = 8
         if size == 1:
+            if i + 16 > end:  # a 64-bit size field cut short by the end of the box
+                return
             size, hdr = struct.unpack_from(">Q", data, i + 8)[0], 16
         elif size == 0:
             size = end - i
@@ -186,8 +250,87 @@ def _boxes(data, start, end):
         i += size
 
 
+def _field(data, p, n, e):
+    """`n` big-endian bytes at `p`, refusing to read past the end `e` of the box
+    they belong to (the old reads ran on into whatever followed)."""
+    if p < 0 or p + n > e or e > len(data):
+        raise _Malformed("a field runs past the end of its box")
+    return int.from_bytes(data[p:p + n], "big")
+
+
+def _exif_item_ids(data, s, e):
+    """The ids of every item the `iinf` box declares as type `Exif`."""
+    v = _field(data, s, 1, e)
+    p = s + 4 + (2 if v == 0 else 4)  # version/flags, then the entry count we do not trust
+    ids = set()
+    for t, s2, e2 in _boxes(data, p, e):
+        if t != b"infe":
+            continue
+        v2 = _field(data, s2, 1, e2)
+        if v2 < 2:
+            continue
+        width = 2 if v2 == 2 else 4
+        iid = _field(data, s2 + 4, width, e2)
+        q = s2 + 4 + width + 2  # item id, protection index
+        if q + 4 <= e2 and data[q:q + 4] == b"Exif":
+            ids.add(iid)
+    return ids
+
+
+def _item_extents(data, s, e):
+    """({item id: [(offset, length), ...]}, ids declared twice) from an `iloc` box.
+
+    Construction method 0 (file offsets) only. Every count read from the file is
+    checked against the bytes left in the box BEFORE it drives a loop, so a
+    hostile `item_count` or `extent_count` is refused in one comparison instead
+    of being run (review F5; 0xFFFFFFFF would have looped for hours).
+    """
+    v = _field(data, s, 1, e)
+    p = s + 4
+    off_sz, len_sz = _field(data, p, 1, e) >> 4, _field(data, p, 1, e) & 15
+    base_sz = _field(data, p + 1, 1, e) >> 4
+    idx_sz = (_field(data, p + 1, 1, e) & 15) if v in (1, 2) else 0
+    if any(sz not in (0, 4, 8) for sz in (off_sz, len_sz, base_sz, idx_sz)):
+        raise _Malformed("an iloc field width the spec does not allow")
+    p += 2
+    id_sz = 2 if v < 2 else 4
+    count = _field(data, p, id_sz, e)
+    p += id_sz
+    smallest_item = id_sz + (2 if v in (1, 2) else 0) + 2 + base_sz + 2
+    if count * smallest_item > e - p:
+        raise _Malformed("iloc declares more items than it has bytes for")
+    extents, seen, dups = {}, set(), set()
+    for _ in range(count):
+        iid = _field(data, p, id_sz, e)
+        p += id_sz
+        method = 0
+        if v in (1, 2):
+            method = _field(data, p, 2, e) & 15
+            p += 2
+        p += 2  # data reference index
+        base = _field(data, p, base_sz, e)
+        p += base_sz
+        n_ext = _field(data, p, 2, e)
+        p += 2
+        if n_ext * (idx_sz + off_sz + len_sz) > e - p:
+            raise _Malformed("iloc declares more extents than it has bytes for")
+        ext = []
+        for _ in range(n_ext):
+            p += idx_sz
+            off = _field(data, p, off_sz, e)
+            length = _field(data, p + off_sz, len_sz, e)
+            p += off_sz + len_sz
+            ext.append((base + off, length))
+        if iid in seen:
+            dups.add(iid)
+        seen.add(iid)
+        if method == 0 and ext:
+            extents[iid] = ext
+    return extents, dups
+
+
 def read_heic_exif(path):
-    """Return {ifd0, exif, gps} for a HEIC, or {} when it carries no EXIF.
+    """Return {ifd0, exif, gps} for a HEIC, or {} when it carries no readable EXIF.
 
     Why this exists: an iPhone photo taken straight out of the Photos library is
     HEIC, and until 2026-11-14 this tool listed `.heic` as intake material and
@@ -197,54 +340,47 @@ def read_heic_exif(path):
     says where its bytes are, and those bytes are a 4-byte offset followed by
     the same TIFF block a JPEG carries. Construction method 0 (file offsets)
     only; anything else reads as no EXIF, never as a guess.
+
+    `{}` is also the answer — never an exception, never a partial read — when
+    the file is damaged or hostile (review F5, F6, F8): a box or count that runs
+    past its parent, an item split over extents that run past the file, a file
+    naming two `Exif` items (which one is the photo's?), or an item id declared
+    twice in `iloc`. An Exif item split over SEVERAL extents is spec-valid and
+    is read whole, the extents joined in order.
     """
     data = path.read_bytes()
+    try:
+        return _heic_exif(data)
+    except _BAD_BYTES:
+        return {}
+
+
+def _heic_exif(data):
     if data[4:8] != b"ftyp":
         return {}
     meta = next(((s, e) for t, s, e in _boxes(data, 0, len(data)) if t == b"meta"), None)
     if not meta:
         return {}
-    exif_id, extents = None, {}
+    exif_ids, extents, dups = set(), {}, set()
     for t, s, e in _boxes(data, meta[0] + 4, meta[1]):  # meta is a full box
         if t == b"iinf":
-            v, p = data[s], s + 4
-            p += 2 if v == 0 else 4
-            for t2, s2, _e2 in _boxes(data, p, e):
-                if t2 != b"infe" or data[s2] < 2:
-                    continue
-                v2, q = data[s2], s2 + 4
-                iid = struct.unpack_from(">H" if v2 == 2 else ">I", data, q)[0]
-                q += (2 if v2 == 2 else 4) + 2  # item id, protection index
-                if data[q:q + 4] == b"Exif":
-                    exif_id = iid
+            exif_ids = _exif_item_ids(data, s, e)
         elif t == b"iloc":
-            v, p = data[s], s + 4
-            off_sz, len_sz = data[p] >> 4, data[p] & 15
-            base_sz, idx_sz = data[p + 1] >> 4, (data[p + 1] & 15) if v in (1, 2) else 0
-            p += 2
-
-            def take(n):
-                nonlocal p
-                val = int.from_bytes(data[p:p + n], "big") if n else 0
-                p += n
-                return val
-
-            for _ in range(take(2 if v < 2 else 4)):
-                iid = take(2 if v < 2 else 4)
-                method = take(2) & 15 if v in (1, 2) else 0
-                take(2)  # data reference index
-                base = take(base_sz)
-                n_ext = take(2)
-                ext = []
-                for _ in range(n_ext):
-                    take(idx_sz)
-                    ext.append((base + take(off_sz), take(len_sz)))
-                if method == 0 and ext:
-                    extents[iid] = ext[0]
-    if exif_id is None or exif_id not in extents:
+            extents, dups = _item_extents(data, s, e)
+    if len(exif_ids) != 1:  # none, or two: either way there is no one answer
         return {}
-    off, length = extents[exif_id]
-    payload = data[off:off + length]
+    (exif_id,) = exif_ids
+    if exif_id in dups or exif_id not in extents:
+        return {}
+    chunks, total = [], 0
+    for off, length in extents[exif_id]:
+        total += length
+        # An item cannot be longer than the file that holds it: this is what
+        # stops a few thousand extents of one big region becoming gigabytes.
+        if off + length > len(data) or total > len(data):
+            return {}
+        chunks.append(data[off:off + length])
+    payload = b"".join(chunks)
     if len(payload) < 4:
         return {}
     skip = 4 + struct.unpack_from(">I", payload, 0)[0]
@@ -273,14 +409,14 @@ def dms_to_deg(vals, ref):
 
 def parse_exif_dt(s, offset=None):
     """EXIF dates are 'YYYY:MM:DD HH:MM:SS'. Returns (iso_date, iso_datetime)."""
-    if not s:
+    if not s or not isinstance(s, str):
         return None, None
     m = re.match(r"^(\d{4}):(\d{2}):(\d{2})[ T](\d{2}):(\d{2}):(\d{2})", s)
     if not m:
         return None, None
     y, mo, d, h, mi, sec = m.groups()
     stamp = f"{y}-{mo}-{d}T{h}:{mi}:{sec}"
-    if offset:
+    if offset and isinstance(offset, str):
         stamp += offset
     return f"{y}-{mo}-{d}", stamp
 
@@ -312,13 +448,41 @@ def known_venues():
     return out
 
 
+# Which reader a file's BYTES call for (imagemeta.sniff, the same decision
+# strip_exif and check_images make). ISO-BMFF with a brand sniff does not know
+# still goes to the HEIC reader: it answers {} unless the structure is there.
+READERS = {"jpeg": read_jpeg_exif, "heif": read_heic_exif, "isobmff": read_heic_exif}
+PHOTO_SUFFIXES = (".jpg", ".jpeg", ".tif", ".tiff", ".heic")
+
+
 def describe(path, venues=None):
-    """One file's provenance, as a plain dict."""
+    """One file's provenance, as a plain dict.
+
+    The reader is chosen by the file's BYTES, never its suffix (review F9): a
+    HEIC called `.jpg` or a JPEG called `.png` used to read as undated, which is
+    the failure this tool exists to prevent. The suffix is only a fallback for
+    bytes sniffing cannot name (a PDF with junk before `%PDF`). A file that
+    cannot be read at all comes back as a row with `captured: None` and an
+    `unreadable` reason — one bad file never stops the run over the rest.
+    """
     rec = {"file": str(path.relative_to(ROOT) if ROOT in path.parents else path)}
     suffix = path.suffix.lower()
+    try:
+        with path.open("rb") as fh:
+            kind = imagemeta.sniff(fh.read(32))
+        st = path.stat()
+    except OSError as err:
+        rec.update(captured=None, unreadable=err.strerror or type(err).__name__,
+                   suggest_verifiedBy=None)
+        return rec
 
-    if suffix in (".jpg", ".jpeg", ".tif", ".tiff", ".heic"):
-        ex = read_heic_exif(path) if suffix == ".heic" else read_jpeg_exif(path)
+    if kind == "pdf" or (kind is None and suffix == ".pdf"):
+        kind = "pdf"
+        dates = read_pdf_dates(path)
+        rec["pdf_dates"] = dates
+        rec["captured"] = dates[0] if dates else None
+    elif kind in READERS or kind in ("tiff", "png") or (kind is None and suffix in PHOTO_SUFFIXES):
+        ex = READERS[kind](path) if kind in READERS else {}
         ifd0, exif, gps = ex.get("ifd0", {}), ex.get("exif", {}), ex.get("gps", {})
         date, stamp = parse_exif_dt(exif.get("captured"), exif.get("offset"))
         rec["captured"] = date
@@ -336,14 +500,9 @@ def describe(path, venues=None):
             rec["edited"] = edited
         if exif.get("width"):
             rec["pixels"] = f"{exif.get('width')}x{exif.get('height')}"
-    elif suffix == ".pdf":
-        dates = read_pdf_dates(path)
-        rec["pdf_dates"] = dates
-        rec["captured"] = dates[0] if dates else None
     else:
         rec["captured"] = None
 
-    st = path.stat()
     rec["file_mtime"] = datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d")
     rec["bytes"] = st.st_size
 
@@ -359,7 +518,7 @@ def describe(path, venues=None):
     # `verifiedBy` is still written by hand.
     if rec.get("lat") is not None and rec.get("device"):
         rec["suggest_verifiedBy"] = "in-store"
-    elif suffix == ".pdf":
+    elif kind == "pdf":
         rec["suggest_verifiedBy"] = "paper-menu"
     elif rec.get("captured"):
         rec["suggest_verifiedBy"] = "paper-menu"
@@ -412,7 +571,7 @@ def _rows_for(vid, base=None):
                 continue
             d = describe(f)
             rows.append({"file": f.name,
-                         "kind": "pdf" if f.suffix.lower() == ".pdf" else "photo",
+                         "kind": "pdf" if "pdf_dates" in d else "photo",
                          "captured": d.get("captured"), "capturedAt": d.get("captured_at"),
                          "device": d.get("device"),
                          "gps": "present" if d.get("lat") is not None else "absent"})
@@ -542,6 +701,8 @@ def main():
         near = f"  ~{r['nearest']['metres']}m from {r['nearest']['name']}" if r.get("nearest") else ""
         print(f"{Path(r['file']).name:<34} {r.get('captured') or '(no date)':<12} {loc:<22} "
               f"{r.get('device') or '—':<22} {r.get('suggest_verifiedBy') or '—'}{near}")
+        if r.get("unreadable"):
+            print(f"{'':<34} ⚠ unreadable: {r['unreadable']}")
         if r.get("edited"):
             print(f"{'':<34} ⚠ re-saved {r['edited']} — metadata may have been rewritten")
     return 0
