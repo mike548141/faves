@@ -1,4 +1,4 @@
-- [ ] **37n — the corpus disagrees with itself about allergens** `[M][data]`
+- [~] **37n — the corpus disagrees with itself about allergens** `[M][data]`
       📌 **CLAIM RELEASED 2026-09-24 (session `3e87e0bf`) — the four owner
       rulings of 2026-09-21 are DELIVERED and merged** (`1afd916`, ADR 0122).
       The report stands at **1 split / 1 row**: `abrakebabra/pizza-slice`,
@@ -76,6 +76,10 @@
          gap, and [`110/040`](../110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
          — a salmon add-on carrying no allergen warning at all — is exactly this
          class, found by accident rather than by mechanism.
+
+  (claimed 2026-11-23-1419, session f9ee6733, worktree faves-qr-f9ee-
+  allergen: record the owner's 2026-10-18 YES, the slice inherits the
+  Turkish pizza's tags)
 
       ⏸️ **NOT STARTED THIS SESSION, deliberately, and the reason is
       sequencing not effort.** Two agents were already live on 2026-09-07 and

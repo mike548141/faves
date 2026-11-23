@@ -1,6 +1,9 @@
-- [ ] **"Vegan mayo" is tagged `contains-egg`, on a dish the venue calls
+- [~] **"Vegan mayo" is tagged `contains-egg`, on a dish the venue calls
       vegan** `[S][tools]` — found 2026-10-16 by the worker adding Hei
       (`080/290`), filed by `faves-11`.
+
+  (claimed 2026-11-23-1419, session f9ee6733, worktree faves-qr-f9ee-
+  allergen: the owner's 2026-10-18 REMOVE IT)
 
   Hei's lunch "Vegan" bao is made with vegan mayo. The tagger reads `mayo` as
   egg, so the dish carries the venue's own `vg` and a derived `contains-egg`
