@@ -1,6 +1,8 @@
-- [ ] 🔎 **`chatty_check`'s three install budgets are red on `main`, and were
+- [~] 🔎 **`chatty_check`'s three install budgets are red on `main`, and were
       before 2026-11-23** `[S][tools]` — found 2026-11-23 by queue run
       f9ee6733 while re-measuring `220`.
+
+  (claimed 2026-11-23-1522, session f9ee6733, primary checkout)
 
   `node tools/chatty_check.mjs --no-probe`, same machine, same hour:
 
