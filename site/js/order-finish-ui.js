@@ -25,7 +25,7 @@ import { el } from "./dom.js";
 import { order, lineKey } from "./cart.js";
 import { dishId } from "./dish-id.js";
 import { selectionKey, optionId, optionPrice, owedSentence, feeClause } from "./addons.js";
-import { finishChoice, answeredBy, selectionWithTags } from "./order-finish.js";
+import { finishChoice, answeredBy, selectionWithTags, pendingSelection, own } from "./order-finish.js";
 import { configurationWarning } from "./addon-warning.js";
 import { settings } from "./settings.js";
 import { effectiveAvoid } from "./dietary.js";
@@ -33,6 +33,7 @@ import { formatMoney, venueCurrency } from "./place.js";
 
 /** lineKey → { open, picks: { [groupId]: optionId, or [optionId, ...] for a pick-many group } } */
 const drafts = new Map();
+const newDraft = () => ({ open: true, picks: {} });
 let seq = 0;
 
 const joinNames = (names) =>
@@ -58,14 +59,14 @@ export function finishControl(item, info, record, hooks = {}) {
     btn.setAttribute("aria-label", `Choose ${joinNames(names)} for ${item.name}`);
     btn.dataset.line = key;
     btn.addEventListener("click", () => {
-      drafts.set(key, { open: true, picks: {} });
+      drafts.set(key, newDraft());
       showOpen(true);
     });
     root.replaceChildren(btn);
   }
 
   function showOpen(focusFirst) {
-    const draft = drafts.get(key) || { open: true, picks: {} };
+    const draft = drafts.get(key) || newDraft();
     drafts.set(key, draft);
     const sheetId = `finish-${++seq}`;
     const firstInput = new Map();
@@ -95,14 +96,14 @@ export function finishControl(item, info, record, hooks = {}) {
           name: `${sheetId}-${g.id}`,
           value: option.name,
           checked: many(g)
-            ? (draft.picks[g.id] || []).includes(optionId(option))
-            : draft.picks[g.id] === optionId(option),
+            ? (own(draft.picks, g.id) || []).includes(optionId(option))
+            : own(draft.picks, g.id) === optionId(option),
         });
         if (!firstInput.has(g.id)) firstInput.set(g.id, input);
         inputsOf.get(g.id).push([input, optionId(option)]);
         input.addEventListener("change", () => {
           if (many(g)) {
-            const cur = new Set(draft.picks[g.id] || []);
+            const cur = new Set(own(draft.picks, g.id) || []);
             if (input.checked) cur.add(optionId(option));
             else cur.delete(optionId(option));
             draft.picks[g.id] = [...cur];
@@ -159,14 +160,14 @@ export function finishControl(item, info, record, hooks = {}) {
       // disabled, never silently ignored. (A radio cannot over-pick.)
       for (const g of info.groups) {
         if (!many(g)) continue;
-        const atCap = (draft.picks[g.id] || []).length >= room(g);
-        for (const [input, id] of inputsOf.get(g.id) || []) input.disabled = atCap && !(draft.picks[g.id] || []).includes(id);
+        const atCap = (own(draft.picks, g.id) || []).length >= room(g);
+        for (const [input, id] of inputsOf.get(g.id) || []) input.disabled = atCap && !(own(draft.picks, g.id) || []).includes(id);
       }
       done.setAttribute("aria-disabled", String(stillMissing.length > 0));
       done.classList.toggle("is-blocked", stillMissing.length > 0);
       need.hidden = stillMissing.length === 0;
       need.textContent = stillMissing.length
-        ? `To finish this, ${owedSentence(stillMissing, item.options)}.`
+        ? `To finish this, ${owedSentence(stillMissing, pendingSelection(info, draft.picks))}.`
         : "";
     }
 

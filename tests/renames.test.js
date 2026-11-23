@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import {
   RENAMED,
   canonicalVenueId,
+  isVenueId,
   migrateEntries,
   migrateRatingKeys,
 } from "../site/js/renames.js";
@@ -82,4 +83,13 @@ test("migrateRatingKeys leaves keys it doesn't recognise alone", () => {
   assert.deepEqual(migrateRatingKeys(before), { "weird-key": 1, "v:burgerfuel": 4 });
   assert.equal(migrateRatingKeys(null), null);
   assert.equal(migrateRatingKeys([1, 2]).length, 2); // an array is not a rating map
+});
+
+test("isVenueId: the shape of an id in index.json, and nothing a URL could bend", () => {
+  for (const id of ["kk-malaysian", "burgerfuel-johnsonville", "a", "1841-bar-restaurant"]) assert.equal(isVenueId(id), true, id);
+  for (const id of ["", "-x", "Not A Venue", "a/b", "../x", "x.json", "x?y", "a".repeat(65), null, undefined, 7, {}]) {
+    assert.equal(isVenueId(id), false, String(id));
+  }
+  // Every id the corpus has ever renamed FROM is still of the shape (a stored line keeps working).
+  for (const [from, to] of Object.entries(RENAMED)) assert.equal(isVenueId(from) && isVenueId(to), true, from);
 });

@@ -8,7 +8,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import { createOrder, finishItems, lineKey } from "../site/js/cart.js";
-import { unfinishedOf, finishChoice, answeredBy, selectionWithTags, summariseUnfinished } from "../site/js/order-finish.js";
+import { unfinishedOf, finishChoice, answeredBy, selectionWithTags, summariseUnfinished, pendingSelection, own } from "../site/js/order-finish.js";
 import { configurationWarning } from "../site/js/addon-warning.js";
 import { selectionKey } from "../site/js/addons.js";
 
@@ -245,4 +245,68 @@ test("the summary says whether the total is short, and only when a choice can co
   const free = { item: info.item, groups: info.groups, extra: { min: 0, max: 0 } };
   assert.deepEqual(summariseUnfinished([{ line: line(), info: free }]), { count: 1, qty: 1, shortBy: false });
   assert.deepEqual(summariseUnfinished([]), { count: 0, qty: 0, shortBy: false });
+});
+
+// --- review F2: a stored pick the venue no longer offers is not an answer -------
+
+const gone = { group: "sauce", id: "chef-special", name: "Chef special", price: 3 };
+
+test("F2: a required group whose only stored pick has left the menu is UNFINISHED, as recall says", () => {
+  // The probe from the review: the venue's data moved under a line already on the sheet.
+  const stale = line({ price: 21, options: [gone] });
+  const info = unfinishedOf(RECORD, stale);
+  assert.ok(info, "the sheet must not read 'Chef special' out as a finished dish");
+  assert.deepEqual(info.groups.map((g) => g.id), ["sauce"]);
+  assert.deepEqual(info.held, { sauce: [] }, "the vanished pick is not held");
+  assert.deepEqual(info.have, { sauce: 0 });
+  assert.deepEqual(info.stale, [gone]);
+  // Control: the same line holding a pick that DOES resolve is complete.
+  assert.equal(unfinishedOf(RECORD, line({ options: [{ group: "sauce", id: "satay", name: "Satay", price: 2 }] })), null);
+  // A stale pick in an OPTIONAL group is nobody's concern here.
+  assert.equal(unfinishedOf(RECORD, line({ options: [{ group: "sauce", id: "satay", name: "Satay", price: 2 }, { group: "extras", id: "retired", name: "Retired", price: 1 }] })), null);
+});
+
+test("F2: finishing replaces the stale pick, and its price leaves the line with it", () => {
+  const stale = line({ price: 21, options: [gone] });
+  const res = finishChoice(RECORD, stale, { sauce: "satay" });
+  assert.equal(res.ok, true);
+  assert.deepEqual(res.options.map((o) => o.id), ["satay"], "the venue no longer sells chef-special");
+  assert.equal(res.price, 20, "21 − 3 (stale) + 2 (satay)");
+  assert.equal(unfinishedOf(RECORD, { ...stale, options: res.options, price: res.price }), null);
+  // Other options the line held stay, in order.
+  const withEgg = line({ price: 24, options: [{ group: "extras", id: "egg", name: "Fried egg", price: 1.5 }, gone] });
+  assert.deepEqual(finishChoice(RECORD, withEgg, { sauce: "sweet-sour" }).options.map((o) => o.id), ["egg", "sweet-sour"]);
+});
+
+// --- review F7: the finish sentence counts the draft, not just the stored line ---
+
+test("F7: pendingSelection is the stored picks plus the draft's, each on offer once", () => {
+  const info = unfinishedOf(RECORD, line());
+  assert.deepEqual(pendingSelection(info, {}), []);
+  assert.deepEqual(pendingSelection(info, { sauce: "satay" }), [{ group: "sauce", id: "satay" }]);
+  assert.deepEqual(pendingSelection(info, { sauce: "ranch" }), [], "an option not on offer is not counted");
+  const stale = unfinishedOf(RECORD, line({ options: [gone] }));
+  assert.deepEqual(pendingSelection(stale, {}), [], "a stale stored pick is not counted either");
+});
+
+// --- review F12b: a group id is data; "constructor" must not read as a pick ------
+
+test("F12b: a group whose id is a lowercase Object.prototype name does not break the picks maps", () => {
+  const rec = {
+    ...RECORD,
+    addOnGroups: [{ id: "constructor", name: "Sauce", select: "one", required: true, options: RECORD.addOnGroups[0].options }, ...RECORD.addOnGroups.slice(1)],
+    menu: [{ ...RECORD.menu[0], items: RECORD.menu[0].items.map((i) => (i.dishId === "stir-fry-vegetables" ? { ...i, addOns: ["constructor"] } : i)) }],
+  };
+  const l = line();
+  const info = unfinishedOf(rec, l);
+  assert.deepEqual(info.groups.map((g) => g.id), ["constructor"]);
+  assert.equal(own({}, "constructor"), undefined);
+  assert.equal(own({ constructor: "satay" }, "constructor"), "satay");
+  // An empty picks map must read as unanswered, not as `Object` (truthy, no .find / .includes).
+  assert.deepEqual(answeredBy(info, {}).missing.map((g) => g.id), ["constructor"]);
+  assert.deepEqual(pendingSelection(info, {}), []);
+  assert.equal(finishChoice(rec, l, {}).ok, false);
+  const ok = finishChoice(rec, l, { constructor: "satay" });
+  assert.equal(ok.ok, true);
+  assert.deepEqual(ok.options.map((o) => o.id), ["satay"]);
 });

@@ -32,6 +32,7 @@ import { FAR_KM, FAV_BOOST_KM } from "./defaults.js";
 import { UNITS, DEFAULT_UNITS, unitUsage } from "./units.js";
 import { localLanguage, localUnits } from "./locale.js";
 import { activity, changedDials } from "./activity.js";
+import { isVenueId } from "./renames.js";
 
 const KEY = "faves.settings.v1";
 
@@ -168,11 +169,10 @@ function cleanKeys(arr, allowed) {
   return out;
 }
 
-// A venue id as `site/data/index.json` writes them — the same shape `slug()`
-// produces. Shape-checked rather than checked against the corpus: the store is
-// pure and must not need the menu index to sanitise itself, and an id for a
-// venue that has since been renamed costs one stale entry, not a broken read.
-const VENUE_ID_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
+// A venue id is shape-checked (renames.js `isVenueId`), not checked against the
+// corpus: the store is pure and must not need the menu index to sanitise itself,
+// and an id for a venue that has since been renamed costs one stale entry, not a
+// broken read.
 // Capped well above the corpus (~50 places) so an ordinary reader can never
 // reach it, and low enough that a corrupt or hostile import can't grow the
 // settings blob without bound — this list is the only unbounded field here.
@@ -185,7 +185,7 @@ function cleanVenueIds(arr) {
   if (!Array.isArray(arr)) return [];
   const seen = new Set();
   for (const x of arr) {
-    if (typeof x === "string" && VENUE_ID_RE.test(x)) seen.add(x);
+    if (isVenueId(x)) seen.add(x);
     if (seen.size >= PICKS_CLOSED_MAX) break;
   }
   return [...seen];

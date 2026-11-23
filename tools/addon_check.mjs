@@ -507,6 +507,12 @@ const OPT_VENUE = "sprig-and-fern-berhampore";
 // never show whether the total is honest about what it is missing).
 const FIN_ID = `${REQ_VENUE}-finish-fixture`;
 const FIN_SAUCE_COST = 2;
+// The same record with the sauce group made "choose two" (ADR 0163): the only way
+// to see what the finish control SAYS once one of two is ticked (review F7).
+const FINMANY_ID = `${REQ_VENUE}-finish-many-fixture`;
+// A venue id the fetch has no file for, and one that is not an id at all (F6, F12a).
+const FIN_GONE_ID = "gone-venue-fixture";
+const FIN_BAD_ID = "Not A Venue!";
 const OPT_DISH = "Mini Pizza + Fries";
 
 // --- 200/120 (ADR 0159): a MUST-SEE group ------------------------------------
@@ -744,6 +750,16 @@ async function run(opts) {
         ...x,
         items: x.items.map((i) => (i.name === REQ_DISH ? { ...i, tags: ["v"], tagNotes: undefined } : i)),
       })),
+    }),
+  );
+  overlay.set(
+    `/data/restaurants/${FINMANY_ID}.json`,
+    JSON.stringify({
+      ...reqVenue,
+      id: FINMANY_ID,
+      addOnGroups: reqVenue.addOnGroups.map((g) =>
+        g.id !== finSauce.id ? g : { ...g, required: false, select: "many", min: 2, max: 3 },
+      ),
     }),
   );
   // 200/120: the optional record with ONE group flagged must-see.
@@ -2527,6 +2543,77 @@ async function run(opts) {
       fin.lines.length === 1 && fin.lines[0].count === "3" && !fin.lines[0].unfinished && fin.focus?.cls === "order-note-btn",
       JSON.stringify({ lines: fin.lines, focus: fin.focus }),
     );
+
+    // Review F2: the venue's data moved under a line already on the sheet — its one
+    // sauce is no longer offered. The sheet judged "one stored pick in the group" and
+    // called it finished; recall says "no longer offered" about the same line.
+    const finGone = { group: finSauce.id, id: "chef-special", name: "Chef special", price: 3 };
+    await stage([finLine({ options: [finGone], price: finDishDef.price + 3 })]);
+    await openFinSheet("the order button, for the vanished-option case");
+    await untilPresent(async () => await driver.evalPage(`!!document.querySelector("dialog.order-sheet .order-line.is-unfinished")`), {
+      label: "the line whose only sauce left the menu to be flagged",
+    });
+    fin = await driver.evalPage(sheetFin);
+    report.check(
+      "(aa) F2: a required group whose one stored pick the venue no longer offers is FLAGGED, not read out as finished",
+      fin.lines[0]?.unfinished === true && /Needs a choice: Sauce/.test(fin.lines[0]?.warn || ""),
+      JSON.stringify(fin.lines),
+    );
+
+    // Review F7: "choose two", one ticked in the DRAFT. The sentence counts it, as the
+    // menu's picker does ("choose 1 more"), not the stored line alone ("choose 2").
+    await stage([finLine({ venueId: FINMANY_ID })]);
+    await openFinSheet("the order button, for the choose-two case");
+    await untilPresent(async () => await driver.evalPage(`!!document.querySelector("dialog.order-sheet .order-line.is-unfinished")`), {
+      label: "the choose-two line to be flagged",
+    });
+    await driver.click("dialog.order-sheet .order-finish-open");
+    const needTwo = (await driver.evalPage(sheetFin)).form?.need;
+    await driver.click("dialog.order-sheet .addon-option", REQ_OPTION);
+    const needOne = (await driver.evalPage(sheetFin)).form?.need;
+    report.check(
+      "(aa) F7: the finish control's sentence counts what is ticked — 'choose 2' becomes 'choose 1 more' after one pick",
+      /choose 2 under .*Sauce/.test(needTwo || "") && /choose 1 more under .*Sauce/.test(needOne || ""),
+      JSON.stringify({ before: needTwo, after: needOne }),
+    );
+
+    // Review F6 and F12a: a venue the sheet cannot load. One id has no file (the
+    // fetch fails: the caption must say the lines were not checked); one is not an id
+    // at all (a share link's venueId is only clipped, so it must not become a request).
+    await stage([
+      finLine({ venueId: FIN_GONE_ID, venueName: "Ghost cafe" }),
+      finLine({ venueId: FIN_BAD_ID, venueName: "Not a place", name: "Not a dish", dishId: "not-a-dish" }),
+    ]);
+    await openFinSheet("the order button, for the unloadable-venue case");
+    const uncheckedSel = "dialog.order-sheet .order-unchecked-note";
+    await untilPresent(async () => await driver.evalPage(`!!document.querySelector(${JSON.stringify(uncheckedSel + ":not([hidden])")})`), {
+      label: "the 'couldn't load every menu' caption",
+    });
+    // The failed fetch for the real-shaped id is asynchronous: wait until it has been
+    // MADE, or the "never requested" half below would pass on a page that asked nothing.
+    await untilPresent(
+      async () =>
+        await driver.evalPage(
+          `performance.getEntriesByType("resource").some((e) => e.name.includes(${JSON.stringify(FIN_GONE_ID)}))`,
+        ),
+      { label: `the sheet's request for ${FIN_GONE_ID}` },
+    );
+    const unchecked = await driver.evalPage(`(() => {
+      const c = document.querySelector(${JSON.stringify(uncheckedSel)});
+      const asked = performance.getEntriesByType("resource").map((e) => decodeURIComponent(e.name)).filter((n) => n.includes("/data/restaurants/"));
+      return { shown: !!c && !c.hidden, text: c ? c.textContent : null, asked };
+    })()`);
+    report.check(
+      "(aa) F6: a venue whose record will not load is SAID, in words — the lines are not silently passed as complete",
+      unchecked.shown && /Couldn't load every menu/.test(unchecked.text || ""),
+      JSON.stringify(unchecked),
+    );
+    report.check(
+      "(aa) F12a: the failed id WAS asked for (control: the instrument sees fetches), and the id that is not one was NEVER requested",
+      unchecked.asked.some((n) => n.includes(FIN_GONE_ID)) && !unchecked.asked.some((n) => /Not A Venue|Not%20A%20Venue/i.test(n)),
+      JSON.stringify(unchecked.asked),
+    );
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
 
     // A venue whose choice is FREE: nothing for the total to be short by.
     // (The real record: all three sauces cost nothing.)

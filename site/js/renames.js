@@ -38,6 +38,19 @@ export const RENAMED = Object.freeze({
   "sprig-and-fern": "sprig-and-fern-tawa",
 });
 
+// A venue id as `site/data/index.json` writes them — the same shape `slug()`
+// produces. Shape-checked rather than checked against the corpus, so the callers
+// that must sanitise a value from outside (a stored list, a shared link) stay
+// pure and need no menu index.
+const VENUE_ID_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
+
+/**
+ * Is `id` shaped like a venue id? Says nothing about whether the venue exists.
+ * The one definition: settings.js's closed-picks list and the order sheet's record
+ * fetch (a shared link's `venueId` is only length-clipped, review F12a) both ask it.
+ */
+export const isVenueId = (id) => typeof id === "string" && VENUE_ID_RE.test(id);
+
 /**
  * The current id for a venue id of any age. Unknown ids pass straight through —
  * this resolves renames, it does not validate existence.

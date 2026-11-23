@@ -33,7 +33,7 @@ line, so they overlap Open and Claimed.
 | ✅ [Theme 11 — Recipes as personal content (owner-raised 2026-07-29) — owner-gated](roadmap/170-theme-11-recipes-as-personal-content-owner-rai/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 12 — Export your data (owner-raised 2026-08-08)](roadmap/180-theme-12-export-your-data-owner-raised-2026-08/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 13 — What the time dimension unlocks (owner-raised 2026-08-08)](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/README.md) | 0 | 0 | 0 | 0 |
-| [Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/README.md) | 6 | 1 | 1 | 0 |
+| [Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/README.md) | 6 | 0 | 1 | 0 |
 | ✅ [Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)](roadmap/220-theme-26-saved-orders-the-usual-owner-raised-2/README.md) | 1 | 0 | 0 | 0 |
 | [Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/README.md) | 3 | 0 | 0 | 0 |
@@ -68,7 +68,7 @@ line, so they overlap Open and Claimed.
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 87 | 2 | 16 | 8 |
+| **All sections** | 87 | 1 | 16 | 8 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -133,7 +133,6 @@ line, so they overlap Open and Claimed.
 - [ ] [A fee that is not a dish: takeaway containers and cups](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/150-a-fee-that-is-not-a-dish.md)
 - [ ] 🎯 [A swap is not an extra: name what it replaces](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/160-a-swap-is-not-an-extra.md)
 - [ ] [Data defects the configuration survey saw in passing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/180-data-defects-the-configuration-survey-saw.md)
-- [~] [Apply the author-side findings of the 2026-11-01 swap cold review:…](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/200-apply-the-swap-review-author-findings.md)
 
 ## Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)
 

@@ -140,6 +140,8 @@
   F2, F7, F12 fixes with tests; F6 one harness assertion; F11 ADR 0168 is
   stale against the 2026-10-18 ruling; F5, F8, F9, F10 record only. The
   follow-ups item is not yet filed.
+  F2, F6, F7 and F12 were handled in
+  [`200`](200-apply-the-swap-review-author-findings.md), filed 2026-11-23.
 
   - 🔀 Tidied 2026-11-16 (C0103, verified high; Mike approved 2026-11-16):
     this item grouped two matters and only one is answered. Answered: may a

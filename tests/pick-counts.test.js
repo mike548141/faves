@@ -22,7 +22,7 @@ import {
   isMustSee,
   isRequired,
 } from "../site/js/addons.js";
-import { unfinishedOf, answeredBy, finishChoice } from "../site/js/order-finish.js";
+import { unfinishedOf, answeredBy, finishChoice, pendingSelection } from "../site/js/order-finish.js";
 import { planRecall } from "../site/js/saved-recall.js";
 
 const opt = (id, extra = {}) => ({ name: id[0].toUpperCase() + id.slice(1), id, tags: [], ...extra });
@@ -256,4 +256,18 @@ test("planRecall: past the cap is still skipped, and the fee is priced from the 
   const p2 = planRecall(fee, RECORD);
   assert.equal(p2.lines[0].price, 60, "52 + 2 beyond the 1 included x $4");
   assert.equal(p2.changed.length, 1, "and it is reported against the 52 the reader saved");
+});
+
+// Review F7: the sheet's "choose 2 under …" counted the STORED line, so a half-ticked
+// group still read as untouched. Same sentence function, the draft passed with it.
+test("F7: the finish sentence counts what is ticked in the draft, the way the menu picker does", () => {
+  const l = line("cheese-two-dish", [], 24);
+  const info = unfinishedOf(RECORD, l);
+  const sentence = (picks) => owedSentence(answeredBy(info, picks).missing, pendingSelection(info, picks));
+  assert.equal(sentence({}), "choose 2 under “Choose two”");
+  assert.equal(sentence({ "cheese-two": ["brie"] }), "choose 1 more under “Choose two”", "one of two ticked");
+  // The line already holding one, and one more ticked in the draft: nothing is left to say.
+  const half = unfinishedOf(RECORD, line("cheese-two-dish", lo(TWO, "brie"), 24));
+  assert.equal(owedSentence(answeredBy(half, {}).missing, pendingSelection(half, {})), "choose 1 more under “Choose two”");
+  assert.deepEqual(answeredBy(half, { "cheese-two": ["blue"] }).missing, []);
 });

@@ -15,6 +15,7 @@ import { dishId } from "./dish-id.js";
 import { displayPrice, formatMoney } from "./place.js";
 import { saveRow } from "./saved-orders-ui.js";
 import { loadRestaurant } from "./data.js";
+import { isVenueId } from "./renames.js";
 import { unfinishedOf, summariseUnfinished } from "./order-finish.js";
 import { finishControl, pruneDrafts } from "./order-finish-ui.js";
 import { joinRules, minQtyOf, minWords, shortBy, UNITS } from "./dish-rules.js";
@@ -533,6 +534,13 @@ export function initOrderUI() {
   function ensureRecords() {
     for (const id of new Set(order.items().map((i) => i.venueId))) {
       if (venueRecords.has(id) || loading.has(id)) continue;
+      // A share link's venueId is clipped to a length, never shape-checked, so it
+      // is not a request to make: it cannot name a menu, and the sheet says it
+      // could not check that line, as for any venue whose load failed (F12a).
+      if (!isVenueId(id)) {
+        venueRecords.set(id, null);
+        continue;
+      }
       loading.add(id);
       loadRestaurant(id)
         .then((r) => venueRecords.set(id, r))

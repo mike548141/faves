@@ -17,6 +17,12 @@ content freshness separately from this file.
   dish has no page of its own to go to.
 
 ### Fixed
+- **The order sheet no longer calls a dish finished when its only sauce has left
+  the menu.** If a venue stopped offering the sauce you had chosen, the sheet
+  still read the dish out as complete. It now flags it as needing a choice, and
+  choosing again replaces the old one. The finish box also counts what you have
+  ticked so far ("choose 1 more" after one of two), and a shared link naming
+  something that is not a venue no longer makes the sheet go looking for it.
 - **Abrakebabra's pizza slice now says what it is.** The $4 chicken pizza slice
   is cut from the Turkish pizza, and its description now says so, so it is
   grouped with the Turkish pizzas (wheat, no cheese assumed) rather than with

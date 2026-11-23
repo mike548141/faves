@@ -19,6 +19,14 @@ import { groupsFor, missingRequired, owed, extraFee, optionId, optionPrice, line
 const cents = (n) => Math.round(n * 100) / 100;
 
 /**
+ * `map[key]` only when `key` is the map's OWN. A group id is data (the validator's
+ * id shape admits `constructor`), and a plain object answers `{}["constructor"]`
+ * with Object itself: truthy, no `includes`, and the finish control dies on it
+ * (review F12b). Every read of a groupId-keyed picks map goes through this.
+ */
+export const own = (map, key) => (map && Object.hasOwn(map, key) ? map[key] : undefined);
+
+/**
  * What a stored `line` still owes, judged against the venue's live `record`:
  * `null` when it is complete, or cannot be judged (the dish has left the menu);
  * otherwise
@@ -29,17 +37,24 @@ const cents = (n) => Math.round(n * 100) / 100;
  * offered order: a required pick-one group with no pick (ADR 0156), or a pick-many
  * group short of its `min` (ADR 0163). `owed` and `have` say, per group id, how
  * many more picks it needs and how many the line already holds in it, and `held`
- * the ids it holds (a pick-many group is not offered those again). `extra` is what answering them can add to the
- * line's price, as a range over the options on offer — `max > 0` means the
- * line's stored price is NOT what the dish will cost, and the sheet must say so
- * rather than total it as if it were.
+ * the ids it holds (a pick-many group is not offered those again). Only options
+ * the live group still offers count as held. `stale` are the line's stored picks
+ * in those groups that it no longer offers. `extra` is what answering them can
+ * add to the line's price, as a range over the options on offer — `max > 0` means
+ * the line's stored price is NOT what the dish will cost, and the sheet must say
+ * so rather than total it as if it were.
  */
 export function unfinishedOf(record, line) {
   if (!record || !line) return null;
   const found = findDish(record, dishId(line));
   if (!found) return null;
   const groups = groupsFor(record, found.section, found.item);
-  const missing = missingRequired(groups, line.options);
+  // Only options the live group still offers count as an answer (review F2): a
+  // required group whose one stored pick has left the menu is unanswered, and the
+  // sheet must say so rather than read out a dish the kitchen cannot make — the
+  // same verdict `planRecall` gives the identical line ("no longer offered").
+  const held0 = resolvingOptions(groups, line.options);
+  const missing = missingRequired(groups, held0);
   if (missing.length === 0) return null;
   let min = 0;
   let max = 0;
@@ -47,10 +62,10 @@ export function unfinishedOf(record, line) {
   const have = {};
   const held = {};
   for (const g of missing) {
-    need[g.id] = owed(g, line.options);
-    held[g.id] = (line.options || []).filter((o) => o.group === g.id).map(optionId);
+    need[g.id] = owed(g, held0);
+    held[g.id] = held0.filter((o) => o.group === g.id).map(optionId);
     have[g.id] = held[g.id].length;
-    const prices = remainingOptions(g, line.options)
+    const prices = remainingOptions(g, held0)
       .map((o) => optionPrice(g, o))
       .sort((a, b) => a - b);
     if (prices.length === 0) continue;
@@ -63,7 +78,18 @@ export function unfinishedOf(record, line) {
     min += fee;
     max += fee;
   }
-  return { item: found.item, groups: missing, owed: need, have, held, extra: { min: cents(min), max: cents(max) } };
+  // The stored picks of the groups still owed that no longer resolve: finishing
+  // replaces them, since they are options the venue no longer sells.
+  const owedIds = new Set(missing.map((g) => g.id));
+  const stale = (line.options || []).filter((o) => owedIds.has(o.group) && !held0.includes(o));
+  return { item: found.item, groups: missing, owed: need, have, held, stale, extra: { min: cents(min), max: cents(max) } };
+}
+
+/** The stored options that still resolve to an option of the same live group. */
+function resolvingOptions(groups, options) {
+  return (options || []).filter((o) =>
+    (groups || []).some((g) => g.id === o?.group && (g.options || []).some((x) => optionId(x) === optionId(o))),
+  );
 }
 
 /** The group's options the line does not already hold (a pick-many group's chosen ones are not offered twice). */
@@ -120,10 +146,14 @@ export function finishChoice(record, line, picks) {
       (s, g) => s + feeDelta(g, info.have[g.id] || 0, added.filter((a) => a.group === g.id).length),
       0,
     );
+  // A stored pick the venue no longer offers is replaced, not kept beside the
+  // new one: its own price leaves the line with it (review F2).
+  const gone = new Set(info.stale || []);
+  const goneCost = [...gone].reduce((s, o) => s + (typeof o.price === "number" ? o.price : 0), 0);
   return {
     ok: true,
-    options: [...(line.options || []), ...lineOptions(added)],
-    price: typeof line.price === "number" ? cents(line.price + extra) : null,
+    options: [...(line.options || []).filter((o) => !gone.has(o)), ...lineOptions(added)],
+    price: typeof line.price === "number" ? cents(line.price + extra - goneCost) : null,
     added,
   };
 }
@@ -138,7 +168,7 @@ export function answeredBy(info, picks) {
   const added = [];
   const missing = [];
   for (const g of info.groups) {
-    const want = picks?.[g.id];
+    const want = own(picks, g.id);
     if (g.select === "many") {
       const open = new Map((g.options || []).filter((o) => !new Set(info.held?.[g.id] || []).has(optionId(o))).map((o) => [optionId(o), o]));
       const ids = [...new Set(Array.isArray(want) ? want : [])].filter((id) => open.has(id));
@@ -162,6 +192,26 @@ export function answeredBy(info, picks) {
     added.push({ group: g.id, id: optionId(opt), name: opt.name, price: optionPrice(g, opt), tags: opt.tags || [], ...swapField(g) });
   }
   return { added, missing };
+}
+
+/**
+ * The line's answers to `info`'s groups as the picker's words count them: what the
+ * line already holds there, plus what the half-made `picks` have ticked (only
+ * options on offer, none twice). The sentence "choose 1 more under …" is `owed`
+ * over THIS, not over the stored line alone, or a half-ticked group still reads as
+ * untouched (review F7). `{ group, id }` pairs, never stored on a line.
+ */
+export function pendingSelection(info, picks) {
+  const out = [];
+  for (const g of info.groups) {
+    const held = info.held?.[g.id] || [];
+    for (const id of held) out.push({ group: g.id, id });
+    const offered = new Set((g.options || []).map(optionId));
+    const want = own(picks, g.id);
+    const ids = g.select === "many" ? (Array.isArray(want) ? want : []) : want ? [want] : [];
+    for (const id of new Set(ids)) if (offered.has(id) && !held.includes(id)) out.push({ group: g.id, id });
+  }
+  return out;
 }
 
 /**

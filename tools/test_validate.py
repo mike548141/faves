@@ -1015,6 +1015,16 @@ CASES = {
     "a swap stated by the section note is legal": (
         _swap(desc="Beef patty with fries.", note="All burgers come in a milk bun."), "clean", None),
     "the match is case-insensitive": (_swap(desc="Beef patty in a Milk Bun."), "clean", None),
+    "a swap is stated as a whole word, not inside a longer one": (
+        _swap(desc="Beef patty with fries, served with a bundle of onion rings."), "error",
+        r"add-on group 'sauces': replaces 'milk bun', but",
+    ),
+    "…the same word inside \"bundle\" cannot state a one-word component": (
+        _swap("bun", desc="Beef patty with a bundle of fries."), "error",
+        r"add-on group 'sauces': replaces 'bun', but",
+    ),
+    "…and the whole word, or its start of a sentence, still does": (
+        _swap("bun", desc="Bun, patty and fries."), "clean", None),
     "replaces on a pick-many group": (
         _breaks(lambda g, d: (g.update(replaces="milk bun"), _first_item(d).update(desc="A milk bun."))),
         "error", r"add-on group 'sauces': replaces only applies to a pick-one group",

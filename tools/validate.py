@@ -1398,7 +1398,8 @@ def check_replaces_stated(rid, data, defs):
     The picker would print "instead of the milk bun" under the owner's name for a
     venue's option, and a venue's food is not ours to describe. So every dish that
     offers a `replaces` group must state the phrase itself — in its own `desc` or
-    in its section's `note` — compared case-insensitively. Not stated in ONE of the
+    in its section's `note` — compared case-insensitively, as whole words (review
+    F12c: "bun" is not stated by "bundle"). Not stated in ONE of the
     dishes sharing a group is an error, not a warning: the group's wording would be
     a claim about that dish that nothing on its menu supports, and the fix is to
     leave `replaces` out (or give that dish its own group), never to guess."""
@@ -1415,7 +1416,9 @@ def check_replaces_stated(rid, data, defs):
                 said = " ".join(
                     str(x) for x in (item.get("desc"), section.get("note")) if isinstance(x, str)
                 ).lower()
-                if r.strip().lower() not in said:
+                # Whole words: "bun" must not be satisfied by "bundle" (review F12c),
+                # which would pass a wording gate on text that says nothing of it.
+                if not re.search(rf"(?<!\w){re.escape(r.strip().lower())}(?!\w)", said):
                     err(rid, f"add-on group {g.get('id')!r}: replaces {r!r}, but "
                              f"{item.get('name')!r} (section {section.get('section')!r}) does not "
                              "say so in its desc or its section note — the menu must state what "
