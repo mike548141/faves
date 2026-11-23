@@ -26,6 +26,13 @@ content freshness separately from this file.
   egg warning is gone from both the dinner and the lunch Vegan bao.
 
 ### Added
+- **An activity history in Settings.** Settings now has an "Activity history"
+  row, just after "Your data": what you have changed on this device, newest
+  first, day by day. Each line says what happened and when, and links to the
+  dish or place if it is still on the menu. Removing a favourite shows as a
+  removal; nothing is ever erased from the list. Menu and app updates are kept
+  out of sight until you ask for them. It started on 18 October 2026, and an
+  empty list says so; it keeps the last 500 changes.
 - **Food truck and Cook at home in the Dining filter.** Dining now answers
   how you get the food — Takeaway, Dine-in, Delivery, Food truck or Cook at
   home — and Style answers what the experience is like: Quick eats, Counter

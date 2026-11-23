@@ -365,6 +365,31 @@ const MI = {
   "cook.stepDone": "Kua oti tēnei hipanga", // draft — "this step is finished"
   "cook.read": "Pānui ā-waha", // draft — "read aloud"
   "cook.readStop": "Kāti", // draft — "stop"
+  // The activity screen (Theme 32b; roadmap 390/020) and the recipe labels
+  // (roadmap 250/060 part 1) were checked against maoridictionary.co.nz on
+  // 2026-11-24, and ONE string earned a gloss. "Yesterday" -> `inanahi`, a
+  // headword of its own, glossed "yesterday." (location), fetched from
+  // /search?keywords=yesterday. It is a day heading, so it carries the key on
+  // the element (activity-ui.js) and translate() marks it lang="mi".
+  "activity.yesterday": "Inanahi", // draft — "yesterday"
+  // 🚩 KEYED, ENGLISH-ONLY, and why — nothing below was composed to fill a gap.
+  //   • Recipe labels: `recipe.stat.yield` ("Makes"), `recipe.serve` ("Serve"),
+  //     `recipe.stat.serves` ("Serves"): the dictionary has no headword for a
+  //     recipe's yield or for serving a meal to people. `rato` is "to serve,
+  //     service, provide" (the sense of service, not of a table); a search for
+  //     "makes" returns only "to make" in other senses and nothing for "yield".
+  //   • `recipe.people` ("people"): `tāngata` IS attested ("people, men,
+  //     persons, human beings", /search?keywords=tangata), but sitting beside the
+  //     English "Serve" it would print "Serve 4 tāngata", a sentence in two
+  //     languages. Held back until "Serve" has a gloss; this is a taste call
+  //     about a reader's screen, not a safety one, and is easily reversed.
+  //   • "Written for about N people" and every activity sentence are
+  //     interpolated, which the engine does not swap (see the header).
+  //   • `activity.title` ("Activity history"): `mahi` is "work … activity" in a
+  //     long list, `hītori` is "history" — neither is the phrase, and joining
+  //     them would be composing. `activity.today`: `āianei` is "now, today, at
+  //     present, soon", where "now" leads, so a heading reading "Now" would be a
+  //     different claim. Both wait for a fluent speaker (docs/reo-review-queue.md).
 };
 
 let current = "en";

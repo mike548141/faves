@@ -3121,6 +3121,61 @@ body.faves-view .to-top {
   font-size: 1.5rem;
   line-height: 1;
 }
+/* ---------- Activity history (Theme 32b) ----------
+   One row = a sentence and its time; a row with a link is the whole row, so the
+   target is the full width and at least 44 px tall (the sentence wraps, the
+   time never does). `min-width: 0` on the text lets a long dish name wrap
+   instead of widening the sheet at 390 px. */
+.activity-toggle-row {
+  margin-bottom: var(--space-3);
+}
+.activity-day-head {
+  margin-top: var(--space-4);
+}
+.activity-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.activity-rows > li {
+  border-bottom: 1px solid var(--line);
+}
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-2) 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+.activity-link:hover {
+  background: var(--surface-2);
+}
+.activity-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.activity-link .activity-text {
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.2em;
+}
+.activity-time {
+  flex: none;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  white-space: nowrap;
+}
+.activity-chevron {
+  flex: none;
+  color: var(--ink-soft);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
 /* The profile switcher above the rows — present only when there's someone to
    switch to, so a single-profile device sees a clean list. */
 .settings-switcher {

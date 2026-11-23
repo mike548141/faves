@@ -27,6 +27,8 @@
 //     tested entirely in sync-ui.js/sync.js; this file only places its panel as
 //     a section of "Your data". It had a top-level row of its own until the
 //     owner moved it in here on 2026-08-16.
+//   • Activity history — what the person has changed, newest first (Theme 32b;
+//     activity-ui.js owns every pixel inside it, as sync-ui.js does for sync).
 //   • Refresh & reset — which version of the menus and app this device is
 //     running, a full refresh of them, or a reset of this profile's
 //     preferences. Split from "Your data" (Theme 15): its one-line summary
@@ -71,6 +73,7 @@ import { forceRefresh } from "./cache-refresh.js";
 import { noteRefreshed } from "./system-events.js";
 import { currentVersions } from "./versions.js";
 import { importControls } from "./personal-io-ui.js";
+import { activityPanel } from "./activity-ui.js";
 import { syncControls } from "./sync-ui.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
@@ -1010,6 +1013,7 @@ export function initSettingsUI() {
   const syncCtl = syncControls();
   const data = dataSection(syncCtl);
   const storage = refreshResetSection();
+  const activityCtl = activityPanel();
   // "Local" heads all three localisation lists: it is the default, and it is
   // the answer most readers want without knowing they want it (ADR 0045).
   const localOption = { key: LOCAL, label: "Local — match where I am" };
@@ -1345,6 +1349,11 @@ export function initSettingsUI() {
       summary: (s) => localeSummary(settings.raw(), s),
     },
     { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save a copy, bring one back, or sync your devices" },
+    // The activity log (Theme 32b), straight after "Your data": what is in that
+    // data, seen as a history. Its summary is fixed text — a live count would
+    // go stale between the sheet's own repaints, and a row that is sometimes
+    // wrong is worse than one that only says what the panel is.
+    { key: "activity", title: "Activity history", i18n: "activity.title", panel: activityCtl.panel, summary: () => "What you’ve changed, newest first", onOpen: activityCtl.onOpen },
     // `onOpen` re-reads the version stamps each time the panel is shown — see
     // readVersions() for why a once-at-boot read would go stale on a first visit.
     { key: "refreshReset", title: "Refresh & reset", i18n: "settings.refreshResetTitle", panel: storage.panel, summary: () => "Refresh the offline copy, or reset your preferences", onOpen: storage.refresh },
@@ -1452,6 +1461,7 @@ export function initSettingsUI() {
     people.hidePanels(false);
     data.close(); // …which closes the sync section nested inside it
     storage.close();
+    activityCtl.close();
     index.hidden = false;
     renderTitle();
     back.hidden = true;

@@ -52,7 +52,7 @@ line, so they overlap Open and Claimed.
 | ✅ [Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)](roadmap/360-theme-23-what-the-app-says-and-where-it-says-i/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 30 — a venue has *menus*, plural (owner-raised 2026-08-16)](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/README.md) | 1 | 0 | 0 | 0 |
 | ✅ [Theme 31 — the venue's own ordering app (owner-raised 2026-08-16)](roadmap/380-theme-31-the-venue-s-own-ordering-app-owner-ra/README.md) | 0 | 0 | 0 | 0 |
-| [Theme 32 — activity history: what changed, and what *you* changed (owner-raised 2026-08-16)](roadmap/390-theme-32-activity-history-what-changed-and-wha/README.md) | 0 | 1 | 0 | 0 |
+| ✅ [Theme 32 — activity history: what changed, and what *you* changed (owner-raised 2026-08-16)](roadmap/390-theme-32-activity-history-what-changed-and-wha/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 33 — reservations (owner-raised 2026-08-16)](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/README.md) | 4 | 0 | 0 | 1 |
 | ✅ [Theme 34 — every section addressable by URL (owner-raised 2026-08-16)](roadmap/410-theme-34-every-section-addressable-by-url-owne/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Owner rulings — 2026-08-16 (close of the in-flight-residue session)](roadmap/420-owner-rulings-2026-08-16-close-of-the-in-fligh/README.md) | 0 | 0 | 0 | 0 |
@@ -68,7 +68,7 @@ line, so they overlap Open and Claimed.
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 85 | 4 | 16 | 7 |
+| **All sections** | 85 | 3 | 16 | 7 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -216,12 +216,6 @@ line, so they overlap Open and Claimed.
 *[Narrative](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/README.md)*
 
 - [ ] [💡 30g — a delivery price is a SERVICE FEE, not a second price](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/010-30g-a-delivery-price-is-a-service-fee-not-a-se.md)
-
-## Theme 32 — activity history: what changed, and what *you* changed (owner-raised 2026-08-16)
-
-*[Narrative](roadmap/390-theme-32-activity-history-what-changed-and-wha/README.md)*
-
-- [~] [32b — the screen](roadmap/390-theme-32-activity-history-what-changed-and-wha/020-32b-the-screen-m-design.md)
 
 ## Theme 33 — reservations (owner-raised 2026-08-16)
 

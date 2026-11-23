@@ -676,6 +676,26 @@ node tools/geo_check.mjs      # the location ask (ADR 0083). The tickbox on the
                               # table (tests/geo-consent.test.js) green. It also
                               # pins the pill's ABSENCE, which is the assertion
                               # most likely to rot silently
+node tools/activity_check.mjs # the activity screen, Settings > "Activity history"
+                              # (Theme 32b, roadmap 390/020), in headless Chrome at
+                              # 390 px. An empty log must SAY it is empty and name the
+                              # day Faves started keeping it (18 October 2026) — an
+                              # empty history that does not say why reads as broken.
+                              # A real heart tapped on a menu must reach the screen,
+                              # newest first, linked to its dish; un-hearting adds a
+                              # removal ABOVE the add (the owner's honest-log ruling:
+                              # nothing is erased). The app's own entries are counted
+                              # and hidden until the toggle, a dish that left its menu
+                              # keeps its sentence and loses its link, and no row or
+                              # control is under 44 px or widens the sheet. With the
+                              # language on te reo, "Yesterday" is the looked-up word
+                              # and carries lang="mi". 28 assertions; probed by
+                              # defaulting the toggle on and dropping the link (7 fail).
+                              # `--shots DIR` writes 390 px screenshots to LOOK at. It
+                              # records ONE event through the real UI and writes the
+                              # rest straight into the log, so it proves the screen,
+                              # not that the recorder writes the right things — that
+                              # is tests/activity-wiring.test.js. Not in CI.
 python3 tools/test_tag_allergens.py # the allergen tagger still writes what it finds
 python3 tools/tag_allergens.py --explain --check # every allergen tag's tip
                               # (`tagNotes`) still quotes what the menu says now —
@@ -1094,7 +1114,7 @@ wall of PASS and no summary line.
 number is dated because it has been wrong here four times.) `.github/workflows/ci.yml` runs `node --test`, the Python gates,
 and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
 boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It does
-**not** run `sync_check` · `cook_check` · `device_check` · `addon_check` ·
+**not** run `activity_check` · `sync_check` · `cook_check` · `device_check` · `addon_check` ·
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
 `note_check` · `served_check` · `geo_check` · `picks_check` · `focus_check` ·
 `distance_check` · `midnight_check` · `precache_check` · `rename_check` ·

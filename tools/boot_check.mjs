@@ -235,6 +235,10 @@ const SETTINGS_ROWS = [
   // the coverage that sync's UI is reachable at all, so the section it became
   // is asserted separately below (SETTINGS_DATA_SECTIONS) rather than dropped.
   "Your data",
+  // The activity log's screen (Theme 32b), straight after "Your data". Its
+  // content is asserted in tools/activity_check.mjs; this line is only that the
+  // row is still on the index.
+  "Activity history",
   "Refresh & reset",
 ];
 
