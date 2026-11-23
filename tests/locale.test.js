@@ -29,10 +29,12 @@ test("the timezone wins, because it is the one that travels", () => {
   assert.equal(deviceCountry(AT("Europe/London", "en-NZ")), "GB");
   assert.equal(localCurrency(null, AT("Europe/London", "en-NZ")), "GBP");
   // …and the units half: that same phone gets Britain's own usage — miles on
-  // the road, °C in the oven — not New Zealand's metric and not America's °F.
+  // the road, °C in the oven and grams in the bowl — not New Zealand's metric
+  // and not America's °F.
   assert.deepEqual(localUnits(AT("Europe/London", "en-NZ")), {
     distance: "imperial",
     oven: "metric",
+    cooking: "metric",
   });
 });
 
@@ -67,8 +69,11 @@ test("units resolve per KIND of measure, not to one word", () => {
   // a 180°C bake, which is the bug that was shipped.
   assert.equal(localUnits(AT("Europe/London", "en-GB")).distance, "imperial");
   assert.equal(localUnits(AT("Europe/London", "en-GB")).oven, "metric");
+  // …and in the kitchen it is metric too (ADR 0170). CLDR has no cooking usage;
+  // a British recipe reads in grams and millilitres.
+  assert.equal(localUnits(AT("Europe/London", "en-GB")).cooking, "metric");
 
-  // The US is imperial in both, which is what the picker's one word means.
+  // The US is imperial in all three, which is what the picker's one word means.
   assert.deepEqual(localUnits(AT("America/New_York", "en-US")), IMPERIAL_USAGE);
 
   // Everywhere else, and the no-signal case, are metric throughout.
@@ -84,6 +89,10 @@ test("a resolved usage table cannot be mutated by whoever received it", () => {
   assert.throws(() => {
     "use strict";
     gb.oven = "imperial";
+  });
+  assert.throws(() => {
+    "use strict";
+    gb.cooking = "imperial";
   });
   assert.equal(localUnits(AT("Europe/London", "en-GB")).oven, "metric");
 });

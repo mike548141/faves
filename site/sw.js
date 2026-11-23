@@ -154,6 +154,7 @@ const SHELL = [
   "js/toast.js",
   "js/ui-state.js",
   "js/units.js",
+  "js/cooking-units.js",
   "js/update-notice.js",
   "js/upgrade-start.js",
   "js/user-schema.js",

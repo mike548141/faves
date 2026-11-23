@@ -40,7 +40,7 @@ test("the imperial option says US customary, because that is what it is", () => 
   // gets a °F oven — the exact bug this theme exists to close. The label has
   // to name the place, and the picker must never grow a third, UK, option:
   // "UK" is something Local DOES, never a thing a reader chooses.
-  assert.equal(UNIT_OPTIONS.find((o) => o.key === "imperial").label, "US customary (miles, °F)");
+  assert.equal(UNIT_OPTIONS.find((o) => o.key === "imperial").label, "US customary (miles, °F, cups)");
   assert.deepEqual(UNIT_OPTIONS.map((o) => o.key), ["metric", "imperial"]);
 });
 
@@ -55,10 +55,19 @@ test("unitUsage: a table passes through, one field at a time", () => {
   assert.deepEqual(unitUsage({ distance: "imperial", oven: "metric" }), {
     distance: "imperial",
     oven: "metric",
+    cooking: "metric",
   });
   assert.deepEqual(unitUsage({ distance: "metric", oven: "imperial" }), {
     distance: "metric",
     oven: "imperial",
+    cooking: "metric",
+  });
+  // The third kind of measure (recipe quantities, ADR 0170) is read on its own
+  // too, and a table written before it existed reads metric for it.
+  assert.deepEqual(unitUsage({ cooking: "imperial" }), {
+    distance: "metric",
+    oven: "metric",
+    cooking: "imperial",
   });
 });
 
@@ -69,14 +78,18 @@ test("unitUsage: anything unrecognisable reads metric rather than throwing", () 
   assert.deepEqual(unitUsage(undefined), METRIC_USAGE);
   assert.deepEqual(unitUsage(null), METRIC_USAGE);
   assert.deepEqual(unitUsage({}), METRIC_USAGE);
-  assert.deepEqual(unitUsage({ distance: "imperial" }), { distance: "imperial", oven: "metric" });
+  assert.deepEqual(unitUsage({ distance: "imperial" }), {
+    distance: "imperial",
+    oven: "metric",
+    cooking: "metric",
+  });
 });
 
 test("unitsLabel: the two chooseable words read back exactly as chosen", () => {
   assert.equal(unitsLabel("metric"), "Metric (km, °C)");
-  assert.equal(unitsLabel("imperial"), "US customary (miles, °F)");
+  assert.equal(unitsLabel("imperial"), "US customary (miles, °F, cups)");
   assert.equal(unitsLabel(METRIC_USAGE), "Metric (km, °C)");
-  assert.equal(unitsLabel(IMPERIAL_USAGE), "US customary (miles, °F)");
+  assert.equal(unitsLabel(IMPERIAL_USAGE), "US customary (miles, °F, cups)");
 });
 
 test("unitsLabel: a mixed table is described, never given an option's name", () => {
@@ -84,6 +97,12 @@ test("unitsLabel: a mixed table is described, never given an option's name", () 
   // are on a setting they could have picked, and they could not have.
   assert.equal(unitsLabel({ distance: "imperial", oven: "metric" }), "Miles, °C");
   assert.equal(unitsLabel({ distance: "metric", oven: "imperial" }), "Kilometres, °F");
+  // A table that differs ONLY in the kitchen is mixed too: it must not be
+  // named after the all-metric option and hide the cups.
+  assert.equal(
+    unitsLabel({ distance: "metric", oven: "metric", cooking: "imperial" }),
+    "Kilometres, °C, cups"
+  );
 });
 
 test("a GB usage table reads miles on the road AND °C in the oven", () => {

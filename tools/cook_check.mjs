@@ -124,6 +124,9 @@ import { NOTIFY_OVER_SECONDS, wantsNotification } from "../site/js/alarm.js";
 // pass by agreeing with a wrong copy of the arithmetic.
 import { ingredientBlocks, ingredientKeys } from "../site/js/ingredients.js";
 import { SCALES, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
+// …and the reader's measures (18b, ADR 0170), computed the same way.
+import { convertLine } from "../site/js/cooking-units.js";
+import { IMPERIAL_USAGE } from "../site/js/units.js";
 
 // The scale this check drives, taken from the app's own list rather than named
 // twice. `scaleFor` falls back to 1× for a key it doesn't know, silently — so a
@@ -542,6 +545,14 @@ async function run(opts) {
 
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
+    // New Zealand, pinned. The default units setting is "local" and resolves
+    // from the device's timezone, so on a US runner every quantity would arrive
+    // in cups and ounces and the scaler-only expectations in §12b would fail for
+    // a reason that has nothing to do with cook mode (ADR 0170). §12b moves it on
+    // purpose, once, and puts it back.
+    const setZone = (timezoneId) =>
+      cdp.send("Emulation.setTimezoneOverride", { timezoneId }, sessionId);
+    await setZone("Pacific/Auckland");
     await cdp.send(
       "Emulation.setDeviceMetricsOverride",
       { ...VIEW, deviceScaleFactor: 1, mobile: false },
@@ -1269,6 +1280,46 @@ async function run(opts) {
         );
         await press("Escape");
         await closed();
+
+        // 18b (ADR 0170): the same step for a reader in the US. Cook mode builds
+        // its lines in its own function (`shownLine`), not the recipe page's, so
+        // the page's assertions say nothing about it — a US reader would read
+        // "250g" at the bench under a page that read "9 oz".
+        await setZone("America/Chicago");
+        await goto(recipeUrl, ".cook-start");
+        await click(".scale-btn", TWO.label);
+        await openCook();
+        await press("Home");
+        for (let i = 0; i < oneXStep.index; i++) await click(".cook-next");
+        const usX = await snap();
+        const wantUs = oneXStep.keys.map((key) => {
+          const line = lineOf.get(key) || { text: key, component: null };
+          const t = convertLine(scaleLineStatus(line.text, two).text, IMPERIAL_USAGE).text;
+          return line.component ? `${line.component}: ${t}` : t;
+        });
+        const gotUs = usX.ingText.map((s) => s.replace(/\s*as written\s*$/, "").trim());
+        const usDiff = wantUs.findIndex((w, i) => gotUs[i] !== w);
+        report.check(
+          "for a reader in the US a step's ingredients are scaled, THEN shown in US measures",
+          gotUs.length === wantUs.length && usDiff < 0,
+          usDiff < 0
+            ? `${gotUs.length} line(s) match the module exactly, e.g. “${gotUs[0]}”`
+            : `line ${usDiff + 1}: got “${gotUs[usDiff]}” · want “${wantUs[usDiff]}”`
+        );
+        if (wantUs.some((w, i) => w !== want[i])) {
+          report.check(
+            "…and at least one line really reads differently from the New Zealand render of it",
+            gotUs.some((g, i) => g !== got[i]),
+            `${gotUs.filter((g, i) => g !== got[i]).length} of ${gotUs.length} line(s) differ`
+          );
+        } else {
+          // Logged, never silent: a skipped assertion reads exactly like a
+          // passing one in a wall of PASS.
+          report.step(`SKIPPED the US-differs assertion — nothing in “${recipe.name}” step ${oneXStep.index + 1} changes on US measures`);
+        }
+        await press("Escape");
+        await closed();
+        await setZone("Pacific/Auckland");
       }
     }
 

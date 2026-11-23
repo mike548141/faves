@@ -107,13 +107,14 @@ test("units: defaults to local, keeps imperial, rejects anything else", () => {
   assert.equal(s.raw().units, LOCAL);
   // `get().units` is a USAGE TABLE, always, LOCAL or not (ADR 0087) — one
   // shape for every consumer, so nobody downstream can compare it to a word.
-  assert.deepEqual(Object.keys(s.get().units).sort(), ["distance", "oven"]);
+  assert.deepEqual(Object.keys(s.get().units).sort(), ["cooking", "distance", "oven"]);
   s.set({ units: "imperial" });
-  assert.deepEqual(s.get().units, { distance: "imperial", oven: "imperial" });
+  assert.deepEqual(s.get().units, { distance: "imperial", oven: "imperial", cooking: "imperial" });
   assert.equal(s.raw().units, "imperial", "the WORD is what gets stored");
   assert.deepEqual(createSettings(storage).get().units, {
     distance: "imperial",
     oven: "imperial",
+    cooking: "imperial",
   }); // persists
   s.set({ units: "furlongs" });
   assert.equal(s.raw().units, LOCAL);
@@ -347,7 +348,7 @@ test("the three localisation settings default to local, and resolve away", () =>
   assert.equal(s.raw().currency, LOCAL);
   // No consumer should ever see the word "local" in a resolved value...
   assert.notEqual(s.get().lang, LOCAL);
-  assert.deepEqual(Object.keys(s.get().units).sort(), ["distance", "oven"]);
+  assert.deepEqual(Object.keys(s.get().units).sort(), ["cooking", "distance", "oven"]);
   // ...except currency, which cannot be resolved without knowing WHICH venue's
   // price is being rendered and which rates loaded. place.js does that per price.
   assert.equal(s.get().currency, LOCAL);
@@ -359,7 +360,7 @@ test("an explicit choice survives resolution untouched", () => {
   assert.equal(s.get().lang, "mi");
   // "Untouched" means the CHOICE survives, not its spelling: the resolved
   // value is the table that word has always meant.
-  assert.deepEqual(s.get().units, { distance: "imperial", oven: "imperial" });
+  assert.deepEqual(s.get().units, { distance: "imperial", oven: "imperial", cooking: "imperial" });
   assert.equal(s.get().currency, "GBP");
   assert.deepEqual(s.raw(), { ...s.raw(), lang: "mi", units: "imperial", currency: "GBP" });
 });

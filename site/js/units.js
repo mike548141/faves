@@ -13,7 +13,9 @@
 //
 // What the caller passes is a USAGE TABLE, not a word (ADR 0087). Each kind of
 // measure answers for itself, because Britain is the case a single word cannot
-// carry: miles on the road, °C in the oven.
+// carry: miles on the road, °C in the oven. Recipe quantities are the third
+// kind (`cooking`, ADR 0170); their conversion lives in cooking-units.js, which
+// reads this table and needs a quantity parser this file has no use for.
 
 // The vocabulary a reader can CHOOSE, and what the store keeps. Two words, and
 // deliberately not three — "UK" is something Local *does*, never an option on
@@ -28,14 +30,14 @@ export const DEFAULT_UNITS = "metric"; // New Zealand first; the data is metric
 // always been: °F ovens are a US usage, not a British one.
 export const UNIT_OPTIONS = [
   { key: "metric", label: "Metric (km, °C)" },
-  { key: "imperial", label: "US customary (miles, °F)" },
+  { key: "imperial", label: "US customary (miles, °F, cups)" },
 ];
 
 // One entry per KIND of measure Faves shows. Frozen because these are shared
 // constants handed out by `unitUsage` — a caller that mutated one would change
 // what every other reader on the page sees.
-export const METRIC_USAGE = Object.freeze({ distance: "metric", oven: "metric" });
-export const IMPERIAL_USAGE = Object.freeze({ distance: "imperial", oven: "imperial" });
+export const METRIC_USAGE = Object.freeze({ distance: "metric", oven: "metric", cooking: "metric" });
+export const IMPERIAL_USAGE = Object.freeze({ distance: "imperial", oven: "imperial", cooking: "imperial" });
 
 const KM_PER_MILE = 1.609344; // exact, by international agreement
 const YARDS_PER_MILE = 1760;
@@ -51,7 +53,7 @@ const one = (v) => (v === "imperial" ? "imperial" : "metric");
  */
 export function unitUsage(units) {
   if (units && typeof units === "object") {
-    return { distance: one(units.distance), oven: one(units.oven) };
+    return { distance: one(units.distance), oven: one(units.oven), cooking: one(units.cooking) };
   }
   return units === "imperial" ? IMPERIAL_USAGE : METRIC_USAGE;
 }
@@ -67,10 +69,12 @@ export function unitUsage(units) {
  */
 export function unitsLabel(units) {
   const u = unitUsage(units);
-  if (u.distance === u.oven) return UNIT_OPTIONS.find((o) => o.key === u.distance)?.label ?? "";
+  if (u.distance === u.oven && u.oven === u.cooking) {
+    return UNIT_OPTIONS.find((o) => o.key === u.distance)?.label ?? "";
+  }
   const road = u.distance === "imperial" ? "Miles" : "Kilometres";
   const oven = u.oven === "imperial" ? "°F" : "°C";
-  return `${road}, ${oven}`;
+  return `${road}, ${oven}${u.cooking === "imperial" ? ", cups" : ""}`;
 }
 
 const isImperialDistance = (units) => unitUsage(units).distance === "imperial";

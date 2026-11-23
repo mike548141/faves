@@ -26,6 +26,7 @@ import { heartButton, ownerLabel } from "./favourites-ui.js";
 import { settings } from "./settings.js";
 import { effectiveAvoid, declaredClaims } from "./dietary.js";
 import { convertTemperatures } from "./units.js";
+import { convertLine } from "./cooking-units.js";
 import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
 import { cookButton } from "./cook-ui.js";
@@ -315,13 +316,26 @@ function render(collection, item) {
   parts.push(el("div", { className: "cook-start-row recipe-actions" }, [cook, shop, noteControl(rid, item.name)]));
 
   const blocks = ingredientBlocks(item.ingredients);
+  // Read once: the ingredient quantities below and the oven temperatures in the
+  // method are two kinds of measure from one table (ADR 0087, ADR 0170).
+  const units = settings.get().units;
   if (blocks.length) {
     // Always shown. It used to fold away behind a ▴ that was remembered for
     // every recipe (37c); the owner removed it on 2026-09-29: "I don't think we
     // need this at all. The ingredients dont need a hide feature."
     const scale = scaleFor(scaleKey);
     // Every line's verdict, computed once so the picker and the list agree.
-    const verdicts = blocks.flatMap((b) => b.lines.map((l) => scaleLineStatus(l.text, scale)));
+    // The scaler runs first, in the author's own units, and the reader's
+    // measures are applied to what it produced (ADR 0170): the scaler's exact
+    // round trip is proven there, and a figure is rounded to a US spelling once,
+    // after every multiplication, not between them. `unconverted` is the same
+    // doctrine as `blocked` — a line still carrying a metric amount in a US
+    // reader's list is marked, never left to look finished.
+    const verdicts = blocks.flatMap((b) => b.lines.map((l) => {
+      const v = scaleLineStatus(l.text, scale);
+      const u = convertLine(v.text, units);
+      return { ...v, text: u.text, unconverted: u.status === "unconverted" };
+    }));
     // Whether this recipe CAN be scaled is asked at a fixed reference scale, not
     // the one on screen: at 13 people from a recipe for 12 no line may scale
     // (nothing writes 13/12 of a cup), and a picker offered only while
@@ -382,6 +396,22 @@ function render(collection, item) {
         }));
       }
     }
+    // A second reason a line can be "as written", for a reader on US measures:
+    // no US spelling within a few per cent (a range, a second amount, 5 g of
+    // salt). Counted apart from the scaler's refusals above, which are only
+    // about the scale the reader chose; a line both refuses is counted once.
+    const unconverted = verdicts.filter(
+      (v) => v.unconverted && !(v.status === "blocked" && scaleKey !== DEFAULT_SCALE)
+    ).length;
+    if (unconverted) {
+      listBody.push(el("p", {
+        className: "scale-note",
+        textContent:
+          unconverted === 1
+            ? "1 line below is marked — it has no tidy US measure, so it is shown as written."
+            : `${unconverted} lines below are marked — they have no tidy US measure, so they are shown as written.`,
+      }));
+    }
     let vi = 0;
     for (const b of blocks) {
       // A component heading is h3 under the "Ingredients" h2 — a real heading,
@@ -417,7 +447,7 @@ function render(collection, item) {
           li.classList.add("has-note");
           li.append(btn, note);
         }
-        if (v.status === "blocked" && scaleKey !== DEFAULT_SCALE) {
+        if ((v.status === "blocked" && scaleKey !== DEFAULT_SCALE) || v.unconverted) {
           li.classList.add("is-unscaled");
           // Marked in TEXT as well as in colour: the whole point is that this
           // line disagrees with the scale the reader chose, and a colour alone
@@ -439,7 +469,6 @@ function render(collection, item) {
     // Oven temperatures live inside the step text, so an imperial reader gets
     // the °C swapped for °F as the step is built (units.js, ADR 0029). The
     // stored recipe is untouched; settings.subscribe below repaints on a flip.
-    const units = settings.get().units;
     const ol = el("ol", { className: "method" });
     item.steps.forEach((step, index) => {
       const row = tickRow(rid, "s", step, convertTemperatures(step, units), { steps: item.steps, index });

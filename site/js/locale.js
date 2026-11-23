@@ -120,15 +120,21 @@ const COUNTRY_CURRENCY = {
 // °C. A single word cannot say that, and the word we had said °F.
 //
 // The short list IS the exception list: anywhere absent is metric throughout,
-// which is why it is stated this way round. Only the two usages Faves
+// which is why it is stated this way round. Only the three usages Faves
 // actually renders are listed — a table with entries no screen reads would be
 // a claim we never check.
+//
+// `cooking` (recipe quantities, ADR 0170) is the third. CLDR has no cooking
+// usage at all; its nearest are mass and fluid volume, and only the US
+// answers in cups, tablespoons and teaspoons. GB is metric there ON PURPOSE —
+// see the ADR before "correcting" it: CLDR's mass entry names pounds and
+// ounces for GB too, and a British recipe still reads in grams and millilitres.
 //
 // Supersedes the interim GB → metric of 2026-08-17 (`f253812`), which fixed
 // the °F oven by giving Britain metres as well. This is the same ruling done
 // once: GB keeps its °C oven AND gets its miles back.
 const REGION_USAGE = {
-  GB: Object.freeze({ distance: "imperial", oven: "metric" }),
+  GB: Object.freeze({ distance: "imperial", oven: "metric", cooking: "metric" }),
   US: IMPERIAL_USAGE,
 };
 
@@ -189,7 +195,7 @@ export function localCurrency(available = null, opts = {}) {
 }
 
 /**
- * The usage table for a "local" units setting: `{distance, oven}`, each
+ * The usage table for a "local" units setting: `{distance, oven, cooking}`, each
  * "metric" or "imperial" (units.js reads it; ADR 0087).
  *
  * Region is the only signal available. Browsers expose no OS measurement-system

@@ -30,6 +30,7 @@
 import { el } from "./dom.js";
 import { ingredientBlocks, ingredientKeys } from "./ingredients.js";
 import { DEFAULT_SCALE, scaleFor, scaleLabel as labelFor, scaleLineStatus } from "./quantity.js";
+import { convertLine } from "./cooking-units.js";
 import { translate } from "./reo.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
@@ -165,8 +166,14 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
   function shownLine(key, units) {
     const line = lineOf.get(key) || { text: key, component: null };
     const v = scaleLineStatus(line.text, scale);
-    const text = line.component ? `${line.component}: ${v.text}` : v.text;
-    return { text: convertTemperatures(text, units), blocked: scaled && v.status === "blocked" };
+    // Scaled first, then the reader's measures (ADR 0170) — the same order the
+    // recipe page uses, so the page and cook mode never disagree on a quantity.
+    const u = convertLine(v.text, units);
+    const text = line.component ? `${line.component}: ${u.text}` : u.text;
+    return {
+      text: convertTemperatures(text, units),
+      blocked: (scaled && v.status === "blocked") || u.status === "unconverted",
+    };
   }
 
   let index = 0;

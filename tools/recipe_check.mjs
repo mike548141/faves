@@ -110,6 +110,9 @@ import {
 // expectation hand-typed here would only prove the tool and the page agreed on
 // the day it was written.
 import { recipeLines } from "../site/js/shopping.js";
+// …and the reader's measures (18b, ADR 0170), for the same reason.
+import { convertLine } from "../site/js/cooking-units.js";
+import { IMPERIAL_USAGE } from "../site/js/units.js";
 import { recipeStats } from "../site/js/recipe-stats.js";
 import { ALLERGEN, TAG_LIMIT, TAG_SHOW_ALL, isChipTag, isAllergen, tagLabel, traceEntries } from "../site/js/tags.js";
 
@@ -135,7 +138,7 @@ const HEIGHT = 844;
 // summary line cannot be reached by a run that fell out of the middle: this
 // repo has shipped a wall of PASS lines followed by a harness error and no
 // verdict more than once (sync_check.mjs, still). Add an assertion, bump this.
-const EXPECTED_ASSERTIONS = 66;
+const EXPECTED_ASSERTIONS = 77;
 
 const HELP = `Faves recipe-page check — verify the ingredient list's layout in a real browser.
 
@@ -367,6 +370,29 @@ async function run(opts) {
     .sort(byLines)[0];
   if (!shopFixture) throw new Error(`no part-scalable recipe fixture in ${COLLECTION} for 17e`);
 
+  // 18b's fixtures. The first line has to scale at 2× AND read differently on US
+  // measures: the tick assertions read line one, and a first line that is
+  // "Pinch of salt" (or "2 tbsp", which a US spoon leaves alone) would pass them
+  // while proving nothing. The second is a recipe the converter must MARK.
+  const usLine = (text) => convertLine(text, IMPERIAL_USAGE);
+  const firstLineOf = (i) => ingredientBlocks(i.ingredients).flatMap((b) => b.lines)[0];
+  const unitsFixture = [...items]
+    .filter((i) => {
+      const first = firstLineOf(i);
+      if (!first || scaleLineStatus(first.text, scaleFor("double")).status !== "scaled") return false;
+      const doubled = scaleLineStatus(first.text, scaleFor("double")).text;
+      return usLine(first.text).text !== first.text && usLine(doubled).text !== doubled;
+    })
+    .sort(byLines)[0];
+  if (!unitsFixture) throw new Error(`no US-convertible recipe fixture in ${COLLECTION} for 18b`);
+  const unconvertedIn = (i) =>
+    ingredientBlocks(i.ingredients).flatMap((b) => b.lines)
+      .filter((l) => usLine(l.text).status === "unconverted").length;
+  const unconvertedFixture = [...items]
+    .filter((i) => unconvertedIn(i) >= 1 && ingredientCount(i.ingredients) >= 4)
+    .sort(byLines)[0];
+  if (!unconvertedFixture) throw new Error(`no recipe with a line the US converter refuses in ${COLLECTION}`);
+
   // The counter-example: nothing to scale at all. May legitimately not exist —
   // handled at the assertion rather than thrown here, so its absence is
   // reported as unproven instead of aborting a run that is otherwise complete.
@@ -397,6 +423,9 @@ async function run(opts) {
     console.log(`  scaling  ${scaleFixture.name} (${count(scaleFixture, "double", "scaled")} scale at 2×)`);
     console.log(`  blocked  ${blockedFixture.name} (${count(blockedFixture, "half", "blocked")} refused at ½×,` +
       ` ${count(blockedFixture, "half", "scaled")} scaled)`);
+    console.log(`  units    ${unitsFixture.name} (first line “${firstLineOf(unitsFixture).text}” → ` +
+      `“${usLine(firstLineOf(unitsFixture).text).text}” on US measures)`);
+    console.log(`  refused  ${unconvertedFixture.name} (${unconvertedIn(unconvertedFixture)} line(s) with no US spelling)`);
     console.log(`  none     ${unscalableFixture ? unscalableFixture.name : "— no fixture in corpus"}`);
     console.log(`  widths   ${NARROW}px, ${MID}px and ${WIDE}px, set explicitly`);
     console.log(`  profile  ${profileDir} (fresh — no service worker, no storage)\n`);
@@ -415,6 +444,14 @@ async function run(opts) {
     await cdp.send("Runtime.enable", {}, sessionId);
     // The DOM domain is what makes the pseudo-element measurable at all.
     await cdp.send("DOM.enable", {}, sessionId);
+    // New Zealand, pinned. The default units setting is "local" and resolves from
+    // the device's timezone, so on a US runner every quantity below would arrive
+    // in cups and ounces and the scaler-only expectations would fail for a reason
+    // that is nothing to do with the page (ADR 0170). Section 9b moves it on
+    // purpose, and puts it back.
+    const setZone = (timezoneId) =>
+      cdp.send("Emulation.setTimezoneOverride", { timezoneId }, sessionId);
+    await setZone("Pacific/Auckland");
 
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
     const { evalPage, settle, click, press } = driver;
@@ -1609,6 +1646,143 @@ async function run(opts) {
       thrown.length === 0,
       thrown.length ? thrown.join("\n        ") : "none"
     );
+
+    // --- 9b. Recipe quantities in the reader's measures (18b, ADR 0170) -----
+    //
+    // Four claims no unit test can see. The reader's region reaches the page
+    // through the SETTINGS and the timezone, not through `convertLine`'s own
+    // argument, so a wiring slip leaves every conversion test green. A tick must
+    // survive a change of units exactly as it survives a change of scale — the
+    // same silent failure, from the same cause (keying on the render). A line the
+    // converter refuses must be marked in words, never left looking converted. And
+    // Britain must NOT be converted: it is the case a one-word units setting got
+    // wrong twice (ADR 0087), and the cheapest regression for this feature to make.
+    await rootFont(16);
+    await size(NARROW);
+    const rawLines = ingredientBlocks(unitsFixture.ingredients).flatMap((b) => b.lines).map((l) => l.text);
+    const usLines = rawLines.map((t) => usLine(t).text);
+    const shownLines = () =>
+      evalPage(`[...document.querySelectorAll(".recipe-body .ingredients .tick-text")].map((e) => e.textContent)`);
+    const firstTicked = () => evalPage(`!!document.querySelector(".recipe-body .ingredients .tick-box")?.checked`);
+    const setUnits = (word) =>
+      evalPage(`import("/js/settings.js").then((m) => { m.settings.set({ units: ${JSON.stringify(word)} }); return true; })`);
+
+    await setZone("Pacific/Auckland");
+    await goto(url(unitsFixture));
+    report.check(
+      "a New Zealand reader sees every ingredient line exactly as the recipe wrote it",
+      (await shownLines()).join("|") === rawLines.join("|"),
+      `${rawLines.length} lines · first “${rawLines[0]}”`
+    );
+    // Tick line one, on NZ measures. Ticks outlive a page load and an earlier
+    // section may have ticked this same recipe's first line, so it is made ticked
+    // rather than toggled — a bare click here would UNtick it and the assertions
+    // below would fail for a reason that is the harness's, not the page's.
+    if (!(await firstTicked())) await click(".recipe-body .ingredients .tick-box");
+
+    // The reader's region moves to the US: a real reload, as arriving there would be.
+    await setZone("America/Chicago");
+    await goto(url(unitsFixture));
+    const us = await shownLines();
+    report.check(
+      "a reader in the US sees the same lines in US measures, all of them, as the module says",
+      us.join("|") === usLines.join("|") && usLines.some((t, i) => t !== rawLines[i]),
+      `“${rawLines[0]}” → “${us[0]}” · ${usLines.filter((t, i) => t !== rawLines[i]).length} of ${rawLines.length} lines changed`
+    );
+    // 🔑 THE ONE THAT FAILS SILENTLY. `line.key` is the raw text, so the tick
+    // hashes something no unit change touches (checklist.js: "HASH THE DATA,
+    // NEVER THE RENDER").
+    report.check(
+      "a tick made on NZ measures is STILL TICKED after the reader's units change to US",
+      (await firstTicked()) === true,
+      `checkbox checked=${await firstTicked()} after NZ → US, text now “${us[0]}”`
+    );
+
+    // And live, with the page open: the Settings store repaints it (no reload).
+    await setUnits("metric");
+    await settle();
+    const backMetric = await shownLines();
+    report.check(
+      "choosing Metric repaints the open page to the recipe's own words, and the tick stays",
+      backMetric.join("|") === rawLines.join("|") && (await firstTicked()) === true,
+      `first “${backMetric[0]}” · ticked=${await firstTicked()}`
+    );
+    await setUnits("imperial");
+    await settle();
+    const liveUs = await shownLines();
+    report.check(
+      "choosing US customary repaints it in US measures, and the tick stays",
+      liveUs.join("|") === usLines.join("|") && (await firstTicked()) === true,
+      `first “${liveUs[0]}” · ticked=${await firstTicked()}`
+    );
+    await setUnits("local");
+
+    // Scale and units compose, in that order, and the tick survives both at once.
+    await goto(url(unitsFixture));
+    await click(".scale-row .scale-btn:nth-child(3)"); // 2×
+    await settle();
+    const firstUs = firstLineOf(unitsFixture);
+    const wantUs2 = usLine(scaleLineStatus(firstUs.text, scaleFor("double")).text).text;
+    const gotUs2 = (await shownLines())[0];
+    report.check(
+      "2× and US measures compose: the scaler runs first, the US spelling is taken once from its result",
+      gotUs2 === wantUs2 && gotUs2 !== usLines[0],
+      `“${firstUs.text}” → ×2 → “${gotUs2}” (expected “${wantUs2}”; at 1× it reads “${usLines[0]}”)`
+    );
+    report.check(
+      "…and the tick made at 1× on NZ measures survives the scale AND the units",
+      (await firstTicked()) === true,
+      `checkbox checked=${await firstTicked()}`
+    );
+
+    // The shopping list is read in a shop, so it carries the reader's measures too.
+    await goto(url(unitsFixture));
+    await evalPage(`localStorage.removeItem("faves.shopping.v1")`);
+    await goto(url(unitsFixture));
+    const wantShop = recipeLines(unitsFixture, "one", IMPERIAL_USAGE).map((l) => l.text);
+    await click(".shop-add");
+    await settle();
+    const shopped = await evalPage(`JSON.parse(localStorage.getItem("faves.shopping.v1") || "[]").map((i) => i.name)`);
+    report.check(
+      "adding a recipe to the shopping list on US measures writes the US amounts",
+      shopped.join("|") === wantShop.join("|") && wantShop.some((t, i) => t !== rawLines[i]),
+      `${shopped.length} of ${wantShop.length} lines · first “${shopped[0]}”`
+    );
+    await evalPage(`localStorage.removeItem("faves.shopping.v1")`);
+
+    // A line with no honest US spelling: marked, in words, with its own count.
+    const refused = unconvertedIn(unconvertedFixture);
+    await goto(url(unconvertedFixture));
+    const marked = await evalPage(`(() => ({
+      lis: document.querySelectorAll(".recipe-body .ingredients li.is-unscaled").length,
+      words: [...document.querySelectorAll(".recipe-body .scale-mark")].map((e) => e.textContent),
+      note: document.querySelector(".recipe-body .scale-note")?.textContent ?? null,
+    }))()`);
+    report.check(
+      "every line the US converter refused is marked “as written”, in words, and counted in a note",
+      marked.lis === refused && marked.words.length === refused &&
+        marked.words.every((w) => w === "as written") && /no tidy US measure/.test(marked.note || ""),
+      `${marked.lis} marked of ${refused} refused · note ${marked.note ? `“${marked.note}”` : "MISSING"}`
+    );
+    await setZone("Pacific/Auckland");
+    await goto(url(unconvertedFixture));
+    const nzMarks = await evalPage(`document.querySelectorAll(".recipe-body .ingredients li.is-unscaled").length`);
+    report.check(
+      "…and a New Zealand reader of the same recipe sees none, because nothing was refused",
+      nzMarks === 0,
+      `${nzMarks} marked`
+    );
+
+    // Britain: miles on the road, °C in the oven, grams in the bowl — nothing converted.
+    await setZone("Europe/London");
+    await goto(url(unitsFixture));
+    const gb = await shownLines();
+    report.check(
+      "a reader in Britain sees the lines as written: the kitchen is metric there, though the road is not",
+      gb.join("|") === rawLines.join("|"),
+      `first “${gb[0]}” (the US reads “${usLines[0]}”)`
+    );
+    await setZone("Pacific/Auckland");
 
     // The summary below is only honest if the run reached the end of the list
     // it set out to check. A harness error exits 2 before ever getting here;

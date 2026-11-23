@@ -27,6 +27,7 @@ import { el } from "./dom.js";
 import { dishId } from "./dish-id.js";
 import { parseRecipeId } from "./checklist.js";
 import { canonicalVenueId } from "./renames.js";
+import { settings } from "./settings.js";
 import {
   SHOPPING_KEY,
   putRecipe,
@@ -247,7 +248,10 @@ export function initShoppingEntry() {
  */
 export function shoppingButton(item, { venueId, rid, scale }) {
   const scaleKey = () => (typeof scale === "function" ? scale() : scale);
-  if (!recipeLines(item, scaleKey()).length) return null;
+  // The amounts are written in the reader's measures (ADR 0170), read at the
+  // tap like the scale: the list a shopper carries must say what the page does.
+  const linesNow = () => recipeLines(item, scaleKey(), settings.get().units);
+  if (!linesNow().length) return null;
 
   // No `data-i18n` on any of these. Every string here is composed in JS and two
   // of them swap under the reader's tap, which is exactly the shape reo.js's
@@ -276,7 +280,7 @@ export function shoppingButton(item, { venueId, rid, scale }) {
   ]);
 
   function paint() {
-    const lines = recipeLines(item, scaleKey());
+    const lines = linesNow();
     const state = recipeState(shopping.items(), rid, lines);
     // ONE button, whose label always names what a tap will do. An `aria-pressed`
     // toggle is the right ARIA shape for "on the list / not on the list", and it
@@ -313,7 +317,7 @@ export function shoppingButton(item, { venueId, rid, scale }) {
   }
 
   btn.addEventListener("click", () => {
-    const lines = recipeLines(item, scaleKey());
+    const lines = linesNow();
     if (recipeState(shopping.items(), rid, lines) === "absent") {
       putRecipe(shopping, { rid, name: item.name, lines });
     } else {
@@ -324,7 +328,7 @@ export function shoppingButton(item, { venueId, rid, scale }) {
     // `onlyListed` — bring the amounts of what is ON the list up to date and add
     // nothing, so a line the shopper took off ("I already have butter") stays
     // off. Re-adding it here would make the ✕ a button that undoes itself.
-    putRecipe(shopping, { rid, name: item.name, lines: recipeLines(item, scaleKey()), onlyListed: true });
+    putRecipe(shopping, { rid, name: item.name, lines: linesNow(), onlyListed: true });
   });
 
   paint();

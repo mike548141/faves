@@ -66,6 +66,7 @@ import { dishId } from "./dish-id.js";
 import { ingredientBlocks } from "./ingredients.js";
 import { recipeId } from "./checklist.js";
 import { DEFAULT_SCALE, scaleFor, scaleLineStatus } from "./quantity.js";
+import { convertQuantities } from "./cooking-units.js";
 
 /** Device-level, like `faves.order.v1`. Never profile-scoped — see the header. */
 export const SHOPPING_KEY = "faves.shopping.v1";
@@ -81,11 +82,13 @@ export const SHOPPING_KEY = "faves.shopping.v1";
  *
  * @returns {{key: string, text: string}[]}
  */
-export function recipeLines(item, scaleKey = DEFAULT_SCALE) {
+export function recipeLines(item, scaleKey = DEFAULT_SCALE, units) {
   const scale = scaleFor(scaleKey);
   return ingredientBlocks(item?.ingredients).flatMap((b) =>
     b.lines.map((l) => {
-      const text = scaleLineStatus(l.text, scale).text;
+      // In the reader's measures too (ADR 0170): a US shopper reads ounces and
+      // cups. `units` is optional and absent means metric, as everywhere.
+      const text = convertQuantities(scaleLineStatus(l.text, scale).text, units);
       return { key: l.key, text: b.component ? `${b.component}: ${text}` : text };
     })
   );

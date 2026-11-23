@@ -20,6 +20,7 @@ import {
 } from "./locations.js";
 import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures, formatDial, widenDialTo } from "./units.js";
+import { convertQuantities } from "./cooking-units.js";
 import {
   openStatus,
   groupWeek,
@@ -1643,6 +1644,10 @@ function renderRecipeDetail(item) {
     body.push(el("p", { className: "recipe-credit", textContent: item.attribution }));
   }
   const blocks = ingredientBlocks(item.ingredients);
+  // The same reader's measures the recipe's own page shows (ADR 0170). Unscaled
+  // here, so no scaler verdict: a line with no US spelling simply stays as the
+  // recipe wrote it, and the page it opens into is where that is marked.
+  const units = settings.get().units;
   if (blocks.length) {
     body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }));
     for (const block of blocks) {
@@ -1658,7 +1663,7 @@ function renderRecipeDetail(item) {
         // No ⓘ on an ingredient here (owner, 2026-09-29, ADR 0139): this row
         // is a preview, a note's panel had no room to open in it, and the note
         // still reads behind its ⓘ on the recipe's own page.
-        const li = el("li", { textContent: line.text });
+        const li = el("li", { textContent: convertQuantities(line.text, units) });
         ul.append(li);
       }
       body.push(ul);
@@ -1668,7 +1673,6 @@ function renderRecipeDetail(item) {
     // Oven temperatures live inside the step text, so an imperial reader gets
     // the °C swapped for °F as the step is built (units.js, ADR 0029). The
     // stored recipe is untouched; a settings change re-runs this whole render.
-    const units = settings.get().units;
     const ol = el("ol", { className: "method" });
     for (const step of item.steps) {
       ol.append(el("li", { textContent: convertTemperatures(step, units) }));
