@@ -163,7 +163,22 @@ Object.assign(BUDGETS, {
   // The request counts are this branch's own and exact: one new shell file
   // (js/live-stores.js) is one more request on a cold install (295 -> 296) and on
   // an update (126 -> 127), as the sw.js SHELL list says.
-  coldReq: 296, coldGz: 1200, // 268 req, 1,072 KB
+  // coldReq 296 -> 313, coldGz 1200 -> 1236, updReq 127 -> 132 on 2026-11-23
+  // (roadmap 510/450). Every increment attributed, none of it a regression:
+  //   • to 31b7ba20 (+9 req, 1200 -> 1213 KB; update +1): eight venues added
+  //     since 2026-10-18 (ah-mas-kitchen, baxters-catering, garuda-truck,
+  //     ngon-spot, nonys-coffee-and-gelato, rock-yard-food-truck, taj-on-wheels,
+  //     yalla-fried-chicken), each one precached menu, and js/photo-viewer.js,
+  //     the one SHELL entry added (125 -> 126);
+  //   • to dadd7d89 (+8 req, 1213 -> 1231 KB; update +4): four SHELL entries
+  //     (system-events.js 390/030, activity-view.js + activity-ui.js 390/020,
+  //     cooking-units.js 260/010; 126 -> 130). Four install requests; the other
+  //     four are the home page importing them — INFERRED from the count, not
+  //     traced request by request.
+  // Requests exact (no margin: each is a file that should be there); gzip the
+  // measured 1231 + 5 KB, the margin the 2026-10-18 setting used. Measured
+  // both before and after on one machine, same hour.
+  coldReq: 313, coldGz: 1236, // 268 req, 1,072 KB
   // The UPDATE install (510/270, ADR 0150), measured 2026-10-01 on 510-270:
   // deploy B changes js/app.js and SHELL_VERSION, nothing else. On "no-cache":
   // 114 req, 107 of them 304, 225 KB raw, 66 KB gzip — sw.js, app.js, the
@@ -174,7 +189,7 @@ Object.assign(BUDGETS, {
   // request; a 304 is what makes it cheap.
   // (The same day's HTML change to startPagesServer moved coldGz 1,072 → 1,085
   // KB: the install's index.html is now a 200, as on Pages.)
-  updReq: 127, updGz: 73, // 114 req, 66 KB
+  updReq: 132, updGz: 73, // 114 req, 66 KB (updReq 127 -> 132: see coldReq)
   // warm/menu tightened 2026-10-01 with 510/180 (the data check's window
   // persisted, ~3 min): measured on 510-sw, 3 runs agreed. Was 2 req (catalogue
   // + the sw.js update check) and 1. On the no-store instrument the one request

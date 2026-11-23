@@ -1,4 +1,4 @@
-- [~] 🔎 **`chatty_check`'s three install budgets are red on `main`, and were
+- [x] 🔎 **`chatty_check`'s three install budgets are red on `main`, and were
       before 2026-11-23** `[S][tools]` — found 2026-11-23 by queue run
       f9ee6733 while re-measuring `220`.
 
@@ -23,3 +23,16 @@
   (the comment block above `BUDGETS` says how each was set), then either
   re-baseline with every increment attributed, as that block requires, or
   shrink what grew. Not loosened here: half the overrun is unexplained.
+
+  ✅ **Done 2026-11-23 (queue run f9ee6733): every increment attributed, then
+  re-baselined.** The part before the run is content, not a regression: eight
+  venues added since the budgets were set on 2026-10-18 (`2d002f9b`; 58 → 66
+  menu files, each precached) and one SHELL entry, `js/photo-viewer.js`
+  (125 → 126). That is +9 cold requests exactly and the +1 update request.
+  The run's four SHELL entries are above. Budgets: `coldReq` 296 → 313,
+  `coldGz` 1200 → 1236 (measured 1231 + 5 KB, the 2026-10-18 margin),
+  `updReq` 127 → 132, each with its reasons in the comment above `BUDGETS`.
+  The home page's share of the run's +8 cold requests is inferred from the
+  count, not traced request by request, and the comment says so. Re-run on
+  `main` at `123e5499` with the break-probes: **45 passed, 0 failed**.
+
