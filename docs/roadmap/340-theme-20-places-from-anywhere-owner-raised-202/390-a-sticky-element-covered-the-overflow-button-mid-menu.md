@@ -1,6 +1,8 @@
-- [ ] 🔎 **A sticky element covered `#overflow-btn` while scrolled down a menu**
+- [~] 🔎 **A sticky element covered `#overflow-btn` while scrolled down a menu**
       `[S][css]` — seen 2026-11-23 by a queue-run worker (f9ee6733) building
       `tools/activity_check.mjs`.
+
+  (claimed 2026-11-23-1523, session f9ee6733, worktree faves-qr-f9ee-sticky)
 
   **What was seen.** Driving the real page, the harness's hit-test reported
   `#overflow-btn` covered by a sticky element while the menu was scrolled
