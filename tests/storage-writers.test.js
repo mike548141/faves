@@ -47,6 +47,7 @@ const WRITERS = {
   "geo-consent.js": "its own key: the location ask's “don't ask again”",
   "geo.js": "sessionStorage: the last “Near me” origin, this tab only",
   "storage-persist.js": "its own key: that this browser was asked to keep the data (510/090)",
+  "system-events.js": "its own key: the app and menu versions this browser last ran, the baseline app.updated / data.updated are measured from (390/030) — device-level, never exported or synced",
 };
 
 // THE SECOND RULE (roadmap 510/110, owner-ruled "Old tab stops writing"): a tab
@@ -158,6 +159,7 @@ test("in a tab behind storage, every writer leaves storage exactly as it was", a
     const { createTimerStore } = await import("../site/js/cook.js");
     const { writeConsent, suppressAsk } = await import("../site/js/geo-consent.js");
     const { createPersistence } = await import("../site/js/storage-persist.js");
+    const { noteVersions, noteRefreshed } = await import("../site/js/system-events.js");
     const { createSync } = await import("../site/js/sync.js");
     const { appendSyncLog } = await import("../site/js/sync-log.js");
     const { applyPersonalData, collectPersonalData } = await import("../site/js/personal-data.js");
@@ -198,6 +200,12 @@ test("in a tab behind storage, every writer leaves storage exactly as it was", a
           manager: { persist: async () => true, persisted: async () => false },
           win: { navigator: { standalone: true } },
         }).requestOnce(),
+      "system-events.js": () => {
+        // Both of its writes: seeding the version baseline (no stored one, so a
+        // current tab would write it) and the refresh entry in the activity log.
+        noteVersions({ shell: "2026-11-24.1", data: "g-stale" }, { storage: store.safeStorage() });
+        noteRefreshed();
+      },
       "sync.js": async () => {
         const s = createSync({ fetchImpl: async (u) => (fetched.push(u), { status: 500, headers: new Map() }), setTimer: null });
         const res = await s.syncNow();
