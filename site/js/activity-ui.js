@@ -15,7 +15,7 @@
 // stated priority is "more importantly user changes").
 //
 // IT SAYS THE THREE THINGS A LOG OWES ITS READER, in words, on the screen:
-//   • nothing is ever erased from it (the owner's "honest log" ruling,
+//   • nothing a person does erases an entry (the owner's "honest log" ruling,
 //     ADR 0164: a removal shows as a removal), and it never leaves this device;
 //   • it keeps only the last ACTIVITY_CAP entries (no silent cap);
 //   • when it started, so an empty screen does not read as a broken one.
@@ -84,8 +84,8 @@ export function activityPanel() {
     className: "settings-note",
     "data-i18n": "activity.intro",
     textContent:
-      "What you’ve changed on this device, newest first. It stays on this device, and nothing is ever " +
-      "erased from it: removing a favourite shows up here as a removal.",
+      "What you’ve changed on this device, newest first. It stays on this device, and nothing you do " +
+      "erases an entry: removing a favourite shows up here as a removal.",
   });
   const toggle = el("button", {
     type: "button",

@@ -206,7 +206,7 @@ async function run(opts) {
     report.check("the cap is stated (no silent cap)", /last 500 changes/.test(empty.foot), empty.foot);
     report.check(
       "the honest-log rule is stated on the screen in words",
-      await driver.evalPage(`/nothing is ever erased/i.test(document.querySelector(".activity-panel .settings-note")?.textContent || "")`),
+      await driver.evalPage(`/nothing you do erases an entry/i.test(document.querySelector(".activity-panel .settings-note")?.textContent || "")`),
       "the intro sentence"
     );
     report.check(
