@@ -1,7 +1,7 @@
 # Faves — instructions for AI builders
 
 <!-- stamp:begin source=docs/method/PROPAGATION.md region=floor -->
-## Doctrine — inherited from atelier (pinned `atelier@2a6d7a4`)
+## Doctrine — inherited from atelier (pinned `atelier@80eb7a5`)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -35,8 +35,8 @@ in atelier and is read on demand — never wholesale.
   `AskUserQuestion`), never buried in prose; with no device (a non-interactive
   run, a scheduled batch, a harness without one) the same content goes in
   prose. The account must have *reached* the principal before the choice is
-  put — always as a finished message of its own, ahead of the device, in every
-  view (one extra turn) — and the device carries only the choice; never trim
+  put — always written out as text first, then the device carries the choice
+  alone, in the same turn; never end the turn between them — and never trim
   the account to fit. Give the real options, each with its pros, cons,
   impacts, risks, costs and any other consideration that bears on the choice,
   plus **a recommendation** with its reasoning shown. Every fact in the ask is
@@ -89,29 +89,33 @@ in atelier and is read on demand — never wholesale.
   hand-up in the first line, open the PR before you stop, and touch nothing but
   your own item. (`PROPAGATION.md` § *Pointing up*.)
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
-  session start run `git -C "../atelier" fetch -q && git -C
-  "../atelier" log --oneline 2a6d7a4..origin/main` — the parent's published
-  mainline (its remote is assumed to be `origin`), never whatever branch its
-  checkout is parked on. A fetch error is *no result*, not *no drift*; any
-  output means the house doctrine moved — read it, then bump the pin above
-  deliberately.
-- **Estate resources — point up, don't re-derive:** providers & account plans,
+  session start run `A="${ATELIER_TOOLS:-$(git config hooks.atelierTools)}/..";
+  git -C "$A" fetch -q && git -C "$A" log --oneline 80eb7a5..origin/main` — the
+  parent's published mainline (its remote is assumed to be `origin`), never
+  whatever branch its checkout is parked on. The path comes from the hooks'
+  tools setting, never `../`, so it resolves from a worktree too. A failed
+  command is *no result*, not *no drift*; any output means the house doctrine
+  moved — read it, then bump the pin above deliberately.
+- **Estate resources — one home, the estate root:** providers & account plans,
   financial constraints & plan entitlements, licences, credentials and the
   estate inventory live in the operator's **private estate-root repo**
-  (atelier's private counterpart). Reference it for these; never re-derive
-  them locally or copy its contents down. The **expected toolbox** (which
-  tools to expect, and how to find them) is atelier's: `method/TOOLBOX.md`.
-  The root is a private repo like any other: it may be named, and in a
-  public tree what it holds and its condition go by type only
-  (`RECORD.md` § *The record is public*).
+  (atelier's private counterpart) and nowhere else. Every other repo reads them
+  there, never re-derives them or copies the root's contents down, and writes a
+  fact of this kind it learns (an invoice, a mail, a provider's page, the
+  principal's word; never a secret's value) up to the root with its source and
+  date; where the root cannot be reached, it holds the fact in its own record
+  marked owed to the root. The **expected toolbox** (which tools to expect, and
+  how to find them) is atelier's: `method/TOOLBOX.md`. The root is a private
+  repo like any other: it may be named, and in a public tree what it holds and
+  its condition go by type only (`RECORD.md` § *The record is public*).
 - **This repo's visibility:** **PUBLIC** since 2026-08-09 (`a207a15`, Theme
   8) — a push *is* publication, to the world, immediately and irreversibly;
   git history is public too, so a secret committed and then removed is still
   disclosed and must be **rotated**, never just deleted. Content is
   publication-bound: no personal data beyond the two owner-approved
   exceptions below (recipe attributions; `data/` ownership records under ADR
-  0046's provenance rule). Verify:
-  `gh repo view mike548141/faves --json visibility`.
+  0046's provenance rule).
+  Verify: `gh repo view mike548141/faves --json visibility`.
 <!-- stamp:end -->
 
 ---
@@ -121,8 +125,9 @@ in atelier and is read on demand — never wholesale.
 Everything from here down is **ours**. The block above is atelier's canonical
 `floor` region copied word for word between machine-readable `stamp:begin` /
 `stamp:end` markers; the only differences permitted in it are the four
-placeholders a child fills (`<SHA>`, `<atelier-path>`, `<visibility fact>`,
-`<owner/repo>`). Not one line of it is ours to reword, compress or drop. A
+placeholders a child fills (`<atelier-path>`, `<SHA>`, `<visibility fact>`,
+`<visibility check>`; the last replaced `<owner/repo>` at the 80eb7a5 bump).
+Not one line of it is ours to reword, compress or drop. A
 line of it we believe is wrong goes **up** — atelier's board, via
 § *Pointing up* — never out.
 
@@ -227,7 +232,7 @@ exactly the evidence the source rejects.)
 ## Source & drift — read the pin, never a separate baseline
 
 The floor's command is now correct and is used as written. Two operating notes
-that are ours, and one trap that is still live:
+that are ours, and one trap the house has since closed:
 
 - The `<pin>` in the range is **the pin SHA in the heading above** — never a
   separately-written baseline. Until 2026-08-09 this line hard-coded
@@ -249,6 +254,11 @@ that are ours, and one trap that is still live:
   wrong: read as stdout only it is *empty*, byte-identical to a clean run;
   read as all output, the `fatal:` line trips *"any output means the house
   doctrine moved"*. From a worktree, use the absolute path.
+  ✅ **Closed upstream, seen at the 80eb7a5 bump (2026-11-23):** the floor's
+  command now takes the atelier path from `hooks.atelierTools` (*"never
+  `../`, so it resolves from a worktree too"*), so the command as written in
+  the block works from a worktree. The bullet stays as history; the hand
+  check below still wants an absolute `$A`.
 
 ## The two deliberate forks — retired 2026-09-21, and why they existed
 
@@ -324,11 +334,15 @@ stricter form — do not name the estate root, or any other private repo, here
 from the brief that dispatched it, not a ruling; whether to keep it is the
 owner's, and the question is in that session's report.
 
-## Checking the stamp above — by hand, because no tool can
+## Checking the stamp above — `pins.py`, and by hand
 
-🛑 **`stampscan` cannot verify this block from here, and that is atelier's open
-finding, not a gap in our discipline.** Two obstacles, both recorded in
-atelier `320/160` (still `[ ]` open as at 2026-09-21):
+✅ **The tool verdict is `pins.py --floor --child .`** (offline; exit 0
+verbatim, 1 differs, 2 no answer). atelier closed `320/160` on 2026-11-18 by
+building it: `pins.py` reads the floor at this repo's own pin and puts each
+placeholder's fill back before comparing. Until then no tool could pass a
+compliant child, for the two reasons below, which are kept because they are
+why `stampscan` itself still cannot (it keeps its source confinement on
+purpose). The two obstacles, as recorded in atelier `320/160`:
 
 1. **Source confinement.** A stamp names its canonical text as
    `source=<repo-relative-path>` and `resolve_source()` rejects anything
@@ -345,8 +359,8 @@ atelier `320/160` (still `[ ]` open as at 2026-09-21):
 was the only instrument that could pass a compliant child. Since then atelier's
 `pins.py --child <this checkout>` also compares the copy with the floor at the
 pin (report-only until 2026-12-09, failing the fleet check from then;
-`PROPAGATION.md` § *The safety floor never narrows*), and at the 2a6d7a4 bump
-both read clean. They are two instruments, not one, so run both **every pin
+`PROPAGATION.md` § *The safety floor never narrows*), and at the 2a6d7a4 and
+80eb7a5 bumps both read clean. They are two instruments, not one, so run both **every pin
 bump** — the one moment the parent's region can have moved, so it costs
 nothing extra:
 
@@ -382,7 +396,7 @@ for tag, i1, i2, j1, j2 in sm.get_opcodes():
     for l in copy[j1:j2]:
         print("  +", l)
 print("residual placeholders in the copy:",
-      [l for l in copy if re.search(r"<(SHA|atelier-path|visibility fact|owner/repo)>", l)])
+      [l for l in copy if re.search(r"<(SHA|atelier-path|visibility fact|visibility check)>", l)])
 print("lines at or over 86 columns:", [l for l in copy if len(l) >= 86])
 EOF
 ```
