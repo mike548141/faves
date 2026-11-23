@@ -29,7 +29,9 @@
 #
 # WHAT THIS REPO DECIDES — in `.atelier-floor.json` at the repo root, never here:
 # where its records live, the licence it asserts, and any check it runs advisory
-# or disabled (with a stated reason). Those are visible estate-wide via
+# or disabled (with a stated reason). A check of the repo's OWN goes in its
+# `local` block, which the floor runs from this same hook (tools/README.md,
+# "`local` in `.atelier-floor.json`"). Those are visible estate-wide via
 # `floorfleet`. To opt out of a check, declare it there — deleting a line here
 # would be invisible the moment it was done, which is the failure mode the whole
 # design replaces.
@@ -59,6 +61,23 @@ if [ ! -f "$tools_dir/floor.py" ]; then
     echo >&2 "  The scanners live in atelier's tools/. Point them out with:"
     echo >&2 "    git config hooks.atelierTools <atelier-path>/tools   (create-repo bakes this in)"
     echo >&2 "  or set ATELIER_TOOLS in the environment."
+    exit 1
+fi
+
+# The interpreter, guarded the same way (ADR 0008 cold pass, EP9). Without this
+# the run below fails with a bare `python3: command not found` and the only
+# actionable line a contributor ever sees is the --no-verify bypass at the
+# bottom — so the one machine that cannot scan is also the one told how to skip
+# scanning. Fail-closed was never in doubt; what was missing is the remedy that
+# is not the bypass.
+if ! command -v python3 >/dev/null 2>&1; then
+    echo >&2 "pre-commit: python3 not found on PATH — BLOCKING (fail closed)."
+    echo >&2 "  atelier's scanners are Python 3, stdlib only — no packages to install."
+    echo >&2 "  Install it, then retry:"
+    echo >&2 "    macOS:  brew install python   (or use the python.org installer)"
+    echo >&2 "    Debian/Ubuntu:  sudo apt install python3"
+    echo >&2 "  Already installed elsewhere? Put it on this shell's PATH — git runs"
+    echo >&2 "  hooks with a login-shell PATH that may not match your terminal's."
     exit 1
 fi
 
