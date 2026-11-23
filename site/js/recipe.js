@@ -137,11 +137,11 @@ function peoplePicker(serves, estimated, now) {
   };
   return el("div", { className: "people-picker" }, [
     el("div", { className: "people-row", role: "group", "aria-labelledby": labelId }, [
-      el("span", { className: "people-label", id: labelId, textContent: "Serve" }),
+      el("span", { className: "people-label", id: labelId, "data-i18n": "recipe.serve", textContent: "Serve" }),
       make("less", lessTo, "\u2212", `Fewer people, ${lessTo}`),
       el("span", { className: "people-count", "data-people": "count", textContent: now.text }),
       make("more", moreTo, "+", `More people, ${moreTo}`),
-      el("span", { className: "people-unit", textContent: "people" }),
+      el("span", { className: "people-unit", "data-i18n": "recipe.people", textContent: "people" }),
     ]),
     el("p", { className: "people-basis", textContent:
       `Written for ${estimated ? "about " : ""}${serves} people. ` +
@@ -249,7 +249,7 @@ function render(collection, item) {
       // not from the margin, and "hotcakesas written" is not a sentence.
       if (c.note) dd.append(" ", el("span", { className: "scale-mark", textContent: c.note }));
       dl.append(el("div", { className: c.wide ? "recipe-stat is-wide" : "recipe-stat", "data-stat": c.key }, [
-        el("dt", { className: "recipe-stat-label", textContent: c.label }),
+        el("dt", { className: "recipe-stat-label", "data-i18n": `recipe.stat.${c.key}`, textContent: c.label }),
         dd,
       ]));
     }

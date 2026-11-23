@@ -165,3 +165,23 @@ cooking for yourself at home is the next step; then a speaker's eye.
 🔎 **`toggle.cheapEats` / "Kai utu-iti" was retired the same day, not
 re-queued.** The owner removed the Cheap eats button (*"I dont think its useful
 as it is"*), so no screen shows the string. Same rule as `toggle.nearMe` above.
+
+## Recipe labels and the activity screen — owed (roadmap `250/060`, `390/020`, 2026-11-24)
+
+Looked up on maoridictionary.co.nz; **one** string was glossed
+(`activity.yesterday` → *"Inanahi"*, a headword glossed "yesterday."). The rest
+stay English with their keys, because the dictionary does not attest the sense
+and none was composed.
+
+| key | English | what the dictionary gave | why it waits |
+|---|---|---|---|
+| `recipe.stat.yield` | Makes | nothing for a recipe's yield; "makes" returns "to make" in other senses | no headword |
+| `recipe.serve`, `recipe.stat.serves` | Serve, Serves | `rato` "to serve, service, provide, allocate, distribute" | the sense of service, not of food at a table |
+| `recipe.people` | people | `tāngata` "people, men, persons, human beings" | attested, held back: beside English "Serve" it reads as two languages in one phrase |
+| `activity.today` | Today | `āianei` "now, today, at present, soon" | "now" leads the entry; a heading "Now" is a different claim |
+| `activity.title` | Activity history | `mahi` "work, … activity, …"; `hītori` "history" | the phrase is not a headword, and joining the two is composing |
+
+The activity sentences ("Added {name} to your favourites" and so on) and "Written
+for about N people" are interpolated, which the engine does not swap; the
+sentences are keyed (`activity.s.*`) so a speaker's whole-sentence gloss can drop
+in without a code change.
