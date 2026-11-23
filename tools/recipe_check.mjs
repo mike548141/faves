@@ -1119,12 +1119,18 @@ async function run(opts) {
         page,
       };
     })()`);
+    // Light is EMULATED, never left to the OS: headless Chrome inherits the
+    // machine's scheme, and macOS switches to Dark at night, so an unset
+    // "light" reading measured dark twice and failed every evening (340/370).
+    const light_ = [{ name: "prefers-color-scheme", value: "light" }];
+    await cdp.send("Emulation.setEmulatedMedia", { features: light_ }, sessionId);
+    await sleep(200);
     const light = await contrast();
     await cdp.send("Emulation.setEmulatedMedia",
       { features: [{ name: "prefers-color-scheme", value: "dark" }] }, sessionId);
     await sleep(200);
     const dark = await contrast();
-    await cdp.send("Emulation.setEmulatedMedia", { features: [] }, sessionId);
+    await cdp.send("Emulation.setEmulatedMedia", { features: light_ }, sessionId);
     report.check(
       "the picker is legible (≥ 4.5:1) in light AND in dark, and dark really switched",
       Math.min(light.btn, light.count, dark.btn, dark.count) >= 4.5 && dark.page !== light.page,

@@ -1,4 +1,4 @@
-- [~] **`recipe_check` measures "light" in whatever scheme the OS is in, so
+- [x] **`recipe_check` measures "light" in whatever scheme the OS is in, so
       it fails every night** `[S][tools]` — found 2026-11-23 by queue run
       f9ee6733 (a worker saw it fail on untouched `main`).
 
@@ -14,3 +14,10 @@
   depends on the hour is the shape this repo's own notes say gets a check
   switched off. **The fix:** emulate `prefers-color-scheme: light` for the
   light reading, and restore light rather than the OS default after.
+
+  ✅ **Done 2026-11-23 (queue run f9ee6733).** The light reading now emulates
+  `prefers-color-scheme: light` and the check restores light, not the OS
+  default, after the dark one. Same machine, same OS Dark setting:
+  **86 passed, 0 failed**, page luminance 0.918 → 0.007 (was 0.007 → 0.007).
+  The unfixed check failing on that machine is the break-probe. The class,
+  every other check, is [`380`](380-browser-checks-inherit-the-os-colour-scheme.md).
