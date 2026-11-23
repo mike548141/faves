@@ -24,6 +24,10 @@
       one small change to `intake_exif.py` plus one test); F8, F9 (partial
       multi-extent reads; format by suffix rather than bytes); NOTEs F3,
       F4, F10, F11, F12. Not yet filed as items.
+      ✅ **F5–F9 applied 2026-11-23** in [`060`](060-apply-the-heic-reader-review-findings.md)
+      (queue run f9ee6733): 43 hostile and valid cases, and the reader reads
+      all 418 real intake files exactly as before. F1 (the owner's) and F2
+      (needs a record beside the accepted ADR) are what is left here.
 
       **Review pass claimed 2026-11-22T20:16Z** by a headless per-pass
       orchestrator (Claude Opus 5.5; an off-tier orchestrator under rule
