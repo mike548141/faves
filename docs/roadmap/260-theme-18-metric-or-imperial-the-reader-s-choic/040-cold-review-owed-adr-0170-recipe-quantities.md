@@ -1,4 +1,4 @@
-- [ ] ⏳ **Cold review owed: ADR 0170 and the recipe-quantity converter**
+- [x] **~~Cold review owed~~ Withdrawn, not owed: ADR 0170 and the recipe-quantity converter**
       `[M][review]` — filed 2026-11-23 at the landing of
       [`010`](010-18b-recipe-quantities.md) by queue run f9ee6733, whose
       worker built it, so neither may take the pass (`REVIEW.md` rule 4).
@@ -19,3 +19,13 @@
 
   **Not owed, and why:** the `recipe_check` / `cook_check` timezone pin is a
   harness change those checks' own runs verify.
+
+  ✅ **Withdrawn 2026-11-24 — it never qualified.** The owner, verbatim, on
+  being asked about it: *"I ALSO THINK WE WILL HAVE TO LOOK AT WHAT YOU ARE
+  ORDERING FABLE REVIEWS ON BECAUSE IF THIS IS WAHT I SUSPECT IT IS THEN IT
+  SHOULD BE AN OBVIOUS NO THIS NEVER WOULD EVER QUALIFY FOR A FABLE REVIEW"*.
+  It is what he suspected: a conversion only a US-region reader sees,
+  reversible, unit-tested and browser-checked. Filing it was the queue run's
+  over-reading of `REVIEW.md`'s triggers, not his call. The wider question is
+  [`340/420`](../340-theme-20-places-from-anywhere-owner-raised-202/420-audit-the-waiting-review-queue.md).
+

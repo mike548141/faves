@@ -39,7 +39,7 @@ line, so they overlap Open and Claimed.
 | [Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/README.md) | 3 | 0 | 0 | 0 |
 | ✅ [Theme 16 — Staying current: PWA updates & a manual refresh (owner-raised 2026-08-09)](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/README.md) | 3 | 0 | 0 | 0 |
-| [Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/README.md) | 1 | 0 | 0 | 1 |
+| ✅ [Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 19 — from the 2026-08-15 Johnsonville intake](roadmap/270-theme-19-from-the-2026-08-15-johnsonville-inta/README.md) | 2 | 0 | 0 | 0 |
 | ✅ [Automating the FX refresh — ✅ shipped 2026-08-16](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)](roadmap/290-theme-25-should-a-dish-have-an-id-owner-raised/README.md) | 0 | 0 | 0 | 0 |
@@ -47,7 +47,7 @@ line, so they overlap Open and Claimed.
 | [Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/README.md) | 5 | 0 | 3 | 0 |
 | ✅ [Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)](roadmap/320-theme-24-cuisines-the-collection-does-not-cove/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 21 — from the owner's Airbnb guidebook (2026-08-16)](roadmap/330-theme-21-from-the-owner-s-airbnb-guidebook-202/README.md) | 3 | 0 | 0 | 0 |
-| [Theme 20 — Places from anywhere (owner-raised 2026-08-16)](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md) | 7 | 1 | 1 | 2 |
+| [Theme 20 — Places from anywhere (owner-raised 2026-08-16)](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md) | 8 | 1 | 1 | 2 |
 | [Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)](roadmap/350-theme-22-the-personal-layer-holistically-owner/README.md) | 3 | 0 | 0 | 0 |
 | ✅ [Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)](roadmap/360-theme-23-what-the-app-says-and-where-it-says-i/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 30 — a venue has *menus*, plural (owner-raised 2026-08-16)](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/README.md) | 1 | 0 | 0 | 0 |
@@ -68,7 +68,7 @@ line, so they overlap Open and Claimed.
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 87 | 1 | 17 | 8 |
+| **All sections** | 87 | 1 | 17 | 7 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -156,12 +156,6 @@ line, so they overlap Open and Claimed.
 - [ ] [17e — The rest of what the research turned up](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/040-17e-the-rest-of-what-the-research-turned-up.md)
 - [ ] [17a's follow-ups: te reo for the new labels, and odd people counts](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/060-17a-follow-ups-reo-labels-and-odd-counts.md)
 
-## Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)
-
-*[Narrative](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/README.md)*
-
-- [ ] ⏳ [Cold review owed: ADR 0170 and the recipe-quantity converter](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/040-cold-review-owed-adr-0170-recipe-quantities.md)
-
 ## Theme 19 — from the 2026-08-15 Johnsonville intake
 
 *[Narrative](roadmap/270-theme-19-from-the-2026-08-15-johnsonville-inta/README.md)*
@@ -201,6 +195,7 @@ line, so they overlap Open and Claimed.
 - [ ] [🚩 List every tracked binary in .leakscanbinaries before leakscan starts…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/330-list-every-tracked-binary-before-leakscan-blocks.md)
 - [~] [🚩 Write the closed list of this repo's personal-data exceptions…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/350-write-the-personal-data-closed-list-before-2027-03-08.md)
 - [ ] 🎯 [One family-attributed recipe was never moved and is still published](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/410-the-brownie-with-an-initial-attribution-is-still-published.md)
+- [ ] 🔥 [Audit the waiting review queue: drop what never earned a Fable review](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/420-audit-the-waiting-review-queue.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
