@@ -45,3 +45,31 @@
     ruling in his words. The list should carry it, quoting ADR 0046's ruling
     of 2026-08-16 and this pick.
 
+  ✅ **Built 2026-11-24 (queue run f9ee6733); the done-when is not met, so
+  the item stays open.** `docs/PERSONAL-DATA.md` is written, in atelier's
+  shape, with **one** entry: PD1, ADR 0046's ownership and contact
+  permission, quoting the ADR's record of the 2026-08-16 ruling and the owner's
+  pick *"Keep the permission (Recommended)"*, said
+  plainly to be a pick from options and not his words. It names the narrowest
+  files (`data/ownership.json`, `data/entities/*.json`, `data/people/*.json`,
+  the record stores, and the registry check's own fixtures), says the store is
+  currently unused, and a closing section says recipe family attributions are
+  not a grant: five moved private and were removed (`340/400`), and the one
+  still-published title is `340/410`'s question. `CLAUDE.md`'s exception-1
+  sentence now says that, and points at the list.
+  - ⚠️ **Not clean yet, and why.** `pdlistscan` reads the list (the no-list
+    finding is gone) but still reports **12** warnings, all
+    `unlisted-marker`: `leakscan:allow:nz-address` and `nz-phone` markers on
+    synthetic venue fixtures in `tests/anywhere-branch.test.js`,
+    `tests/search.test.js` and `tools/test_validate.py`. A marker is not a
+    grant, and the list is closed, so naming those files would be a second
+    entry that only the owner can grant. They are invented venue addresses and
+    phones, not people. They warn until 2027-03-08 and block from then.
+    🎯 Options for him: grant a "synthetic test fixtures" entry; or have the
+    fixtures rewritten so the shape-detectors no longer match and the markers
+    go; or ask atelier to stop counting markers on invented data (atelier's own
+    list excludes its fixtures).
+  - ⚠️ **Not asked here:** the hosting account name stands in this repo (clone
+    commands, the visibility check). atelier lists it as its own entry on the
+    owner's words of 2026-10-03; this repo's list does not, and the owner has
+    not been asked.

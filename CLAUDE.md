@@ -444,11 +444,12 @@ Guard postures (cheap-failure vs. forbids-the-act) are declared in `docs/GUARDS.
   absolute. **In the app's dataset (`site/data/`) and every screen: no
   personal data at all.** Allergen tagging is a product feature, not a
   personal disclosure.
-  - **Exception 1 (owner-approved 2026-07-06):** home recipes in the
-    Cook at Home collection may keep family attributions in their
-    titles/notes (e.g. "Booth's Ginger Crunch", "a Clements family
-    dessert") at the owner's discretion — it's a public site and that
-    call is his.
+  - **Exception 1 (owner-approved 2026-07-06), narrowed:** Cook at Home
+    recipes used to keep family attributions in titles and notes. Five
+    family recipes moved to the owner's private recipes on 2026-10-01 and left
+    the research store on 2026-11-24 (roadmap 340/400, ADR 0171). One
+    still-published title is an open question for him (roadmap 340/410). Add
+    no new attribution of the kind.
   - **Exception 2 (owner ruled 2026-08-16, ADR 0046):** the research
     store `data/` may record ownership and contact details — **name,
     email, phone** — for the people and organisations behind a venue,
@@ -458,6 +459,7 @@ Guard postures (cheap-failure vs. forbids-the-act) are declared in `docs/GUARDS.
     `tools/registry.py` errors without one. Never served, never
     precached, never referenced from `site/`. Still never a person's
     home address, date of birth, or health.
+  - The closed list is `docs/PERSONAL-DATA.md` (atelier's `pdlistscan`).
 - **The app ships only what it renders (ADR 0047).** `site/data/` is a
   precached payload: a field added there is downloaded by every phone
   whether a screen reads it or not. Data no screen shows — superseded
