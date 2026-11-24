@@ -72,3 +72,10 @@
   `gen_summaries.mjs --check`, `split_data.py --check` and `check_fallback.py`
   clean. The tagger itself still reads a bare `mayo` as egg and still reads
   `vegan mayo` as not, so a future refresh of Hei will not bring the tag back.
+
+  ✅ **Confirmed by the owner 2026-11-24.** Told that the 2026-10-18 answer
+  this rests on came in the same question box as a pizza-slice answer he does
+  not recognise (`470/030`), and offered "put the warning back" or "keep it
+  removed", he picked 💬 *"Keep it removed"*. The removal stands on his
+  confirmation.
+
