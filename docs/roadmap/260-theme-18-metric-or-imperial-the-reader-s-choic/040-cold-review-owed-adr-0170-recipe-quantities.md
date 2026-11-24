@@ -20,11 +20,9 @@
   **Not owed, and why:** the `recipe_check` / `cook_check` timezone pin is a
   harness change those checks' own runs verify.
 
-  ✅ **Withdrawn 2026-11-24 — it never qualified.** The owner, verbatim, on
-  being asked about it: *"I ALSO THINK WE WILL HAVE TO LOOK AT WHAT YOU ARE
-  ORDERING FABLE REVIEWS ON BECAUSE IF THIS IS WAHT I SUSPECT IT IS THEN IT
-  SHOULD BE AN OBVIOUS NO THIS NEVER WOULD EVER QUALIFY FOR A FABLE REVIEW"*.
-  It is what he suspected: a conversion only a US-region reader sees,
+  ✅ **Withdrawn 2026-11-24 — it never qualified.** Asked about it, the owner
+  said that work of this kind should obviously never qualify for a Fable
+  review. It is what he suspected: a conversion only a US-region reader sees,
   reversible, unit-tested and browser-checked. Filing it was the queue run's
   over-reading of `REVIEW.md`'s triggers, not his call. The wider question is
   [`340/420`](../340-theme-20-places-from-anywhere-owner-raised-202/420-audit-the-waiting-review-queue.md).

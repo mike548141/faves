@@ -2,12 +2,11 @@
       review** `[S][review]` — owner-raised 2026-11-24 at the close of queue
       run f9ee6733.
 
-  **His words, verbatim:** *"I ALSO THINK WE WILL HAVE TO LOOK AT WHAT YOU ARE
-  ORDERING FABLE REVIEWS ON BECAUSE IF THIS IS WAHT I SUSPECT IT IS THEN IT
-  SHOULD BE AN OBVIOUS NO THIS NEVER WOULD EVER QUALIFY FOR A FABLE REVIEW -
-  NO WONDER THERE ARE SO MANY FUCKING WAITING REVIEWS FOR IMPORTANT THINGS IF
-  YOU STACK THE QUEUE WITH BULLSHIT"*. Said of `260/040` (a US-only,
-  reversible units conversion), withdrawn the same day.
+  **What he said, in substance:** the queue run is filing Fable reviews on
+  work that should obviously never qualify, and that is why so many reviews
+  of important work are left waiting. Said of `260/040` (a US-only,
+  reversible units conversion), withdrawn the same day. His exact words are in
+  the session transcript (f9ee6733), not in this public file.
 
   **The work:** list every open ⏳ / "cold review owed" item in this repo, and
   for each say what it would protect against (silent harm, an irreversible or
