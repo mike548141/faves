@@ -1,10 +1,7 @@
-- [~] **Wire `allergen_disagreements.py --strict` into the gates, now the
+- [ ] **Wire `allergen_disagreements.py --strict` into the gates, now the
       last row is ruled** `[S][tools]` — filed 2026-11-23 by queue run
       f9ee6733, as [`030`](030-37n-the-corpus-disagrees-with-itself-about-all.md)
       asks (*"wire `--strict` as its own item"*).
-
-  (re-opened and claimed 2026-11-24-1014, session f9ee6733, worktree faves-
-  qr-f9ee-slice: taking --strict back out of CI with 030's revert)
 
   (claimed 2026-11-23-1419, session f9ee6733, worktree faves-qr-f9ee-allergen)
 
@@ -38,3 +35,11 @@
   Not verified here: the new CI step has not run on a runner, and CI is only
   the pushed result's to say (it needs no network or browser, and runs in
   under a second).
+
+  ↩️ **Un-wired 2026-11-24 (queue run f9ee6733).** Its premise, the
+  pizza-slice answer in [`030`](030-37n-the-corpus-disagrees-with-itself-about-all.md),
+  is disputed by the owner and treated as not given, so the report has one
+  row again and `--strict` would fail every build. The CI step and the verify
+  list line are removed; the `--strict` flag itself stays in the tool.
+  **Re-wire** when the slice row is settled by evidence.
+

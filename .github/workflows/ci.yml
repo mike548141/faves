@@ -209,13 +209,6 @@ jobs:
       # it was meant to be, never that a phone is showing a wrong allergen.
       - name: Prove the allergen disagreement classes still hold
         run: python3 tools/test_allergen_disagreements.py
-      # …and the report itself, as a gate, now that it is empty (roadmap
-      # 470/070): the last row, a pizza slice, was ruled by the owner and the
-      # menu now says what it is cut from. From here a dish class that
-      # disagrees with itself fails the build instead of waiting for a reader.
-      # The planted-disagreement probe is in the test step above.
-      - name: No dish class disagrees with itself about an allergen
-        run: python3 tools/allergen_disagreements.py --strict
       # The add-on option tagger's suite sat RED on main from 2026-09-20 to
       # 09-27 because nothing ran it: a data sweep (7a62c57) added a tag to a
       # row its fixture quoted byte for byte, and four cases stopped being

@@ -1,4 +1,4 @@
-- [~] **37n — the corpus disagrees with itself about allergens** `[M][data]`
+- [ ] **37n — the corpus disagrees with itself about allergens** `[M][data]`
       📌 **CLAIM RELEASED 2026-09-24 (session `3e87e0bf`) — the four owner
       rulings of 2026-09-21 are DELIVERED and merged** (`1afd916`, ADR 0122).
       The report stands at **1 split / 1 row**: `abrakebabra/pizza-slice`,
@@ -76,10 +76,6 @@
          gap, and [`110/040`](../110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
          — a salmon add-on carrying no allergen warning at all — is exactly this
          class, found by accident rather than by mechanism.
-
-  (re-opened and claimed 2026-11-24-1014, session f9ee6733, worktree faves-
-  qr-f9ee-slice: reverting the pizza-slice change: the owner says he never
-  gave the 2026-10-18 answer)
 
   (claimed 2026-11-23-1419, session f9ee6733, worktree faves-qr-f9ee-
   allergen: record the owner's 2026-10-18 YES, the slice inherits the
@@ -327,3 +323,19 @@
   addition to what the venue printed** (*"Pizza Slice / Chicken"*), written
   from his answer. If he would rather the card say only what the menu says,
   the narrowing needs another home; the report would then name the row again.
+
+  ↩️ **Reverted 2026-11-24 (queue run f9ee6733), and the answer above is
+  disputed.** Asked at the run's close, the owner said, verbatim: *"I dont
+  remember saying this"*, and then *"You keep saying I specified this pizza
+  thing and I did not. So as I never said that adjust accordingly"*. The
+  record above rests on a structured pick in session `f9595793`
+  (2026-10-18): the question *"Is Abrakebabra's $4 "Pizza Slice / Chicken"
+  (Sides) cut from its Turkish pizza?"* and the option *"Yes, Turkish pizza"*.
+  On his word it is treated as **not given**. So the slice's description is
+  back to the menu's own *"Chicken."*, `allergen_disagreements.py` no longer
+  reads a "cut from" clause, and its report is back to **1 split / 1 row,
+  `abrakebabra/pizza-slice`**, its test pinning that row again (31 cases).
+  `--strict` is out of CI again ([`070`](070-wire-allergen-disagreements-strict.md)).
+  **Open:** which pizza the slice is cut from, settled by the venue or a photo;
+  not to be put to the owner as a memory question again.
+

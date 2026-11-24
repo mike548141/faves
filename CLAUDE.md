@@ -709,10 +709,10 @@ python3 tools/test_allergen_disagreements.py # …and the CLASS TABLE its read-o
                               # food, each a regex, and NOTHING tested any of
                               # them — a class narrowed to nothing just makes
                               # the report SHORTER, which reads as progress.
-                              # 25 cases + 14 break-probes (2026-11-23; it was
-                              # 20 + 11, and 14 + 6 before that), and the breakers
+                              # 20 cases + 11 break-probes (2026-10-18; it was
+                              # 14 + 6), and the breakers
                               # assert the covered cases fail AND THAT NO OTHER
-                              # ONE DOES. Four of the first eleven are about the
+                              # ONE DOES. Four of the eleven are about the
                               # MECHANISM, not the outcome: this tool's
                               # `exclude` vetoes a row's membership of the whole
                               # class, so b3/b6 rebuild each 2026-09-21
@@ -724,14 +724,6 @@ python3 tools/test_allergen_disagreements.py # …and the CLASS TABLE its read-o
                               # narrowings (470/030). On today's corpus the veto
                               # and the lookbehind print an IDENTICAL report,
                               # so no outcome test can tell them apart
-python3 tools/allergen_disagreements.py --strict # …and the REPORT is a gate now
-                              # (roadmap 470/070, 2026-11-23): no dish class
-                              # disagrees with itself about an allergen. Exit 1
-                              # on any split; plain, it still exits 0. The last
-                              # row, Abrakebabra's pizza slice, was ruled by the
-                              # owner and now says what it is cut from. In CI.
-                              # Its planted-disagreement probe is one of
-                              # test_allergen_disagreements.py's cases above
 python3 tools/test_tag_addon_options.py # …and the add-on option tagger still REFUSES
                               # what it must (ADR 0092). Half its cases assert an
                               # ABSENCE of writing — "Spinach still carries no tags" —
