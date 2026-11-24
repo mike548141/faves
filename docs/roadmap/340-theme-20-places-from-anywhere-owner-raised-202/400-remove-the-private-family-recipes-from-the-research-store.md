@@ -1,4 +1,4 @@
-- [~] **Remove the five family recipes the owner made private from the
+- [x] **Remove the five family recipes the owner made private from the
       research store** `[S][data]` — owner's answer 2026-11-24, at the close
       of queue run f9ee6733.
 
@@ -24,3 +24,33 @@
   record naming them; a short record of the exception to ADR 0047; every data
   gate green after. **Not here:** docs and code comments elsewhere that name
   the old title are `510/440`'s open question.
+
+  ✅ **Done 2026-11-24 (queue run f9ee6733).** "The five" are the five rows
+  that were in `data/history/dishes/cook-at-home.json`: the recipes moved to
+  the owner's private cookbook on 2026-10-01 by commit 5cdf29e9. Removed: 5 rows
+  from that history file (now `rows: []`, note rewritten), 5 entries from
+  `data/estimates/recipes.json` (25 to 20), and the estimates README prose
+  rewritten to name none of them. The ids carry a name, so they are not listed
+  here. One more `data/` mention, a provenance line in
+  `data/intake/recipe-sources.json` naming one of the five as a precedent, was
+  neutralised. ADR 0171 records the exception to ADR 0047 and says git history
+  keeps the old text.
+  - **Brownie, not touched.** The estimates README also listed a sixth recipe
+    with an initial for a title. It was not among the five moved, is **still
+    published** in `site/data/`, and its estimate is unchanged. A separate
+    item, `340/410`, covers it.
+  - **Left alone, and why.** `data/intake/name-index.json` (one line, a thigh
+    dish under a first name) is a derived index of the private intake exports,
+    rebuilt by `tools/intake_index.py` and checked by `--check`; editing it
+    would fail that check. `tools/recipe-moves.json` and the `REDACTIONS` keys
+    in `tools/intake_index.py` are functional.
+  - **Forced outside `data/`:** `tests/move-recipes.test.js` (the real-plan
+    case resolved the five against the repo; it now asserts the tool refuses,
+    and the command-line case uses a plan of two still-published recipes) and
+    a comment in `tools/move_recipes.mjs`.
+  - ⚠️ **A gate fires on purpose.** `tools/split_data.py --check` reports
+    *"held 5 departed dish row(s) at HEAD and now holds 0 — history was
+    destroyed, not relocated"* on this change, and has no allowance for a
+    deliberate removal. It reads clean once committed (HEAD compares with
+    itself) but a CI run that passes the pre-push state will fail. Narrowing
+    that gate is not this item's call.

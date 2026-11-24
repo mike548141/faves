@@ -5,8 +5,8 @@ Nothing here is served, precached, or read by anything under `site/`. It is the
 produced them land here first, so they are auditable before any of them reach a
 phone.
 
-One file today: `recipes.json`, covering the 24 recipes in
-`site/data/restaurants/cook-at-home.json`, keyed by `dishId`.
+One file today: `recipes.json`, covering the 20 recipes in
+`site/data/restaurants/cook-at-home.json` that carry an estimate, keyed by `dishId`.
 
 ## Why it exists
 
@@ -93,29 +93,35 @@ recipe says.
 
 1. **These are one assistant's estimates from recipe text, not times measured by
    cooking the food.** Nobody creamed the butter with a stopwatch.
-2. **The family recipes have no published source to check against.** Booth's
-   Ginger Crunch, Shane's Ribs, B's Dope-As Brownie, Jesse's Garlic Chicken
-   Thighs and the Famous Brade Green Chicken Curry are the owner's, and a
-   serving count borrowed from someone else's published recipe would be a claim
-   about *that* recipe, not this one.
-3. **Several rest on one number.** Where the protein is unquantified ("Chicken",
-   "Pork ribs", "Mussels") the serving estimate rests on the sauce volume alone.
+2. **The home recipes have no published source to check against.** They are
+   the owner's own, and a serving count borrowed from someone else's published
+   recipe would be a claim about *that* recipe, not this one.
+3. **Several rest on one number.** Where the protein is unquantified ("Mussels",
+   "Chicken") the serving estimate rests on the sauce volume alone.
    Each of those says "Weak:" in its own working.
 4. **They must render labelled as estimates, never bare.** A bare "Serves 8"
    claims the recipe says so. It does not.
-5. **Booth's Ginger Crunch has no method at all** — `steps` is empty — so it has
-   no total and no step estimates. Only the owner can close that.
+5. **A recipe with no method has no total.** Where a recipe's `steps` are
+   empty it carries no total and no step estimates, because a total would
+   invent the method as well as its duration. Only the owner can close that.
 
 ## The record covers recipes the app may not ship
 
-The owner ruled on 2026-08-16 (Theme 11e) that family-attributed recipes go
-private by default, so five of these 24 — Booth's Ginger Crunch, B's Dope-As
-Brownie, Shane's Ribs, Jesse's Garlic Chicken Thighs and the Famous Brade Green
-Chicken Curry — are due to leave `site/data/`. **Their estimates stay here.**
-The record keeps everything forever (ADR 0047), which is exactly why the
-derivation landed here before it landed on a phone.
+The owner ruled on 2026-08-16 (Theme 11e) that recipes with family attributions
+go private by default. Five recipes were moved into his own cookbook on
+2026-10-01 (roadmap 510/050) and left `site/data/`. Their estimates stayed
+here for a time, under the keep-forever rule (ADR 0047). **On 2026-11-24, at the
+owner's answer (roadmap 340/400, ADR 0171), their estimates were removed from
+this store**, along with their rows in `data/history/dishes/cook-at-home.json`:
+they are his private recipes now, and this record is public. Git history keeps
+the old text.
 
-So `--check` treats the two directions differently, and deliberately:
+A sixth recipe the earlier version of this paragraph listed was **not** moved
+and is still published, so it and its estimate stay exactly as they were. Whether
+its title is a personal attribution is its own open question (roadmap 340/410).
+
+The principle stands for any recipe that leaves the payload later, and is why
+`--check` treats the two directions differently, and deliberately:
 
 - **Recorded here, not in the payload → a warning, exit 0.** It names the count
   and the ids. A gate that failed on the privacy split would be firing on the
@@ -129,12 +135,12 @@ So `--check` treats the two directions differently, and deliberately:
 A check nobody has watched fail is decoration. `--check` was deliberately
 broken four ways on 2026-08-16. What each printed:
 
-**1. The privacy split simulated** — the five family recipes removed from
+**1. The privacy split simulated** — five recipes removed from
 `cook-at-home.json`. Exit **0**:
 
 > ⚠️ 5 recipe(s) no longer in the shipped payload; estimates retained in the
-> record: b-s-dope-as-brownie, booth-s-ginger-crunch, … · estimates check:
-> clean. 1 warning(s), which do not fail.
+> record: <five ids> · estimates check: clean. 1 warning(s), which do not
+> fail.
 
 **2. A wrong `dishId`** — `mussels` renamed to `mussels-and-fries` in this
 file. Exit **1**, caught from the other direction, with the warning beside it:
@@ -146,10 +152,10 @@ file. Exit **1**, caught from the other direction, with the warning beside it:
 > tiramisu: 7 step estimate(s) against 8 recipe step(s) — the recipe changed
 > under the record
 
-**4. The safety invariant breached** — the `source` deleted from the curry's
-estimated 20-minute simmer. Exit **1**:
+**4. The safety invariant breached** — the `source` deleted from one
+recipe's estimated 20-minute simmer. Exit **1**:
 
-> 🛑 SAFETY: famous-brade-green-chicken-curry step 5 has minutes 20 but source
+> 🛑 SAFETY: <dishId> step 5 has minutes 20 but source
 > None, not one of ['estimated', 'stated'] — its countdown would run with no way
 > to mark it an estimate (see this tool's header)
 
@@ -178,7 +184,7 @@ the screen that renders it, which is the ADR 0047 test:
   it; BBQ Prawns and Caramel Banana stay without one. ✅
 - **`time` (string)** — the same two render sites, joined into the same meta
   line. Thirteen recipes gain it, formatted like the nine already there
-  ("~45 min"). Chicken Noodle Soup and Ginger Crunch stay without one. ✅
+  ("~45 min"). Chicken Noodle Soup and one recipe with no method stay without one. ✅
 - **`servesEstimated`, `timeEstimated` (boolean)** — the same two render sites.
   They pick the wording below, and nothing else reads them. ✅
 

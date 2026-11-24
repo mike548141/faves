@@ -232,7 +232,7 @@ test("something that is not a backup is refused", () => {
   assert.equal(moveBackup(deviceBackup(), { moves: [] }, SOURCES).ok, false);
 });
 
-test("the real plan names exactly the owner's five, and each resolves in site/data or data/history", () => {
+test("the real plan names exactly the owner's five", () => {
   const plan = JSON.parse(readFileSync(join(ROOT, "tools/recipe-moves.json"), "utf8"));
   assert.deepEqual(plan.moves.map((m) => m.from.dishId).sort(), [
     "booth-s-ginger-crunch",
@@ -241,15 +241,16 @@ test("the real plan names exactly the owner's five, and each resolves in site/da
     "jesse-s-garlic-chicken-thighs",
     "shane-s-ribs",
   ]);
+  // The published copies and the history rows were removed on 2026-11-24
+  // (roadmap 340/400, ADR 0171), so the plan no longer resolves against the
+  // repo and the tool refuses for it by design.
   const read = (p) => (existsSync(join(ROOT, p)) ? JSON.parse(readFileSync(join(ROOT, p), "utf8")) : null);
   const { recipes, missing } = personalCopies(plan, {
     venue: read(`site/data/restaurants/${plan.venueId}.json`),
     history: read(`data/history/dishes/${plan.venueId}.json`),
   });
-  assert.deepEqual(missing, []);
-  assert.deepEqual(Object.keys(recipes).sort(), plan.moves.map((m) => m.to).sort());
-  // Ingredients, not steps: some published recipes carry no steps.
-  for (const r of Object.values(recipes)) assert.ok(r.name && r.ingredients?.length, r.dishId);
+  assert.deepEqual(Object.keys(recipes), []);
+  assert.deepEqual(missing.slice().sort(), plan.moves.map((m) => m.from.dishId).sort());
 });
 
 // --- the command line: where it may write, and what it may print ----------
@@ -290,18 +291,29 @@ test("the tool writes outside any repo, prints counts and never the contents, an
   const out = join(dir, "moved.json");
   const r = run([input, "--out", out, "--plan", join(dir, "plan.json")]);
   assert.equal(r.status, 1, "a missing plan is refused");
-  // The real plan against the real data: the CLI's own source lookup.
-  const ok = run([input, "--out", out]);
+  // The real plan names recipes removed on 2026-11-24 (roadmap 340/400), so
+  // the CLI must refuse it, and write nothing.
+  const real = run([input, "--out", out]);
+  assert.equal(real.status, 1, "the real plan is refused: its recipes are gone");
+  assert.match(real.stderr, /in neither site\/data nor data\/history/);
+  assert.equal(existsSync(out), false);
+  // A plan naming two recipes that are still published: the CLI's own source lookup.
+  const planPath = join(dir, "two.json");
+  writeFileSync(planPath, JSON.stringify({
+    venueId: "cook-at-home",
+    moves: ["chocolate-chewy-cookies", "gingerbread-cookies"].map((id) => ({ from: { venueId: "cook-at-home", dishId: id }, to: `u:${id}` })),
+  }));
+  const ok = run([input, "--out", out, "--plan", planPath]);
   assert.equal(ok.status, 0, ok.stderr);
-  assert.match(ok.stdout, /recipes added to the active person's cookbook: 5 \(5 of 5 now there\)/);
+  assert.match(ok.stdout, /recipes added to the active person's cookbook: 2 \(2 of 2 now there\)/);
   assert.match(ok.stdout, /still on an old id: 0/);
   for (const secret of ["less sugar", "Sam", "Kai", "kai's", "flour", "lettuce", "My Own"]) {
     assert.equal(ok.stdout.includes(secret) || ok.stderr.includes(secret), false, `printed "${secret}"`);
   }
   assert.equal(parsePersonalData(readFileSync(out, "utf8")).ok, true);
   // Never overwrites — and run on its own output, writes the same bytes.
-  assert.equal(run([input, "--out", out]).status, 1);
+  assert.equal(run([input, "--out", out, "--plan", planPath]).status, 1);
   const again = join(dir, "moved-again.json");
-  assert.equal(run([out, "--out", again]).status, 0);
+  assert.equal(run([out, "--out", again, "--plan", planPath]).status, 0);
   assert.equal(readFileSync(again, "utf8"), readFileSync(out, "utf8"));
 });

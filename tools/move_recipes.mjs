@@ -72,6 +72,9 @@
 //     That edit also has to drop "Booth's Ginger Crunch" and "Shane's Ribs"
 //     from the venue's `picks`, and update every check and test that uses
 //     one of the five as a fixture.
+//     The published copies and the history rows were removed on 2026-11-24
+//     (roadmap 340/400, ADR 0171), so this tool now refuses for the five by
+//     design: the move is done.
 //  8. Delete both backup files once satisfied. Until step 7 the original is
 //     the way back: Replace-import it on A and sync reverses the move.
 // ────────────────────────────────────────────────────────────────────────────

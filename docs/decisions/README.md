@@ -1990,3 +1990,9 @@ deliberation those compact docs omit.
   never turns volume into weight, and returns a line it cannot spell within 8%
   exactly as written, marked "as written". GB stays metric: CLDR has no cooking
   usage and its GB volume row has no cup. A judgement, put to the owner.
+- [0171](0171-family-recipes-the-owner-made-private-leave-the-research-store.md) —
+  **Family recipes the owner made private leave the research store** (`340/400`).
+  Narrows ADR 0047's keep-forever rule for five records: their history rows and
+  estimates are removed from `data/`, on the owner's pick "Remove completely".
+  Git history keeps the old text, accepted. The tool that read those rows
+  refuses for them by design.
