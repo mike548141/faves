@@ -71,7 +71,7 @@ unlisted one.
 owner approval of 2026-07-06 (`CLAUDE.md` § *Hard constraints*, exception 1) is
 not carried here. Five such recipes were moved into the owner's private recipes
 on 2026-10-01 and left `site/data/`; on 2026-11-24, at his answer, they were
-removed from the research store as well (roadmap `340/400`, ADR 0171). One
-still-published recipe title carries an initial and is an open question for him
-(roadmap `340/410`); until he answers it, it is not an entry here and a session
-adds no new attribution of the kind.
+removed from the research store as well (roadmap `340/400`, ADR 0171). The
+still-published "B's Dope-As Brownie" carries an initial, not a family name,
+and is no personal data (the owner, 2026-11-24, roadmap `340/410`), so it needs
+no entry here. A session adds no new attribution of the kind.

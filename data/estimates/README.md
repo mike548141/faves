@@ -117,8 +117,9 @@ they are his private recipes now, and this record is public. Git history keeps
 the old text.
 
 A sixth recipe the earlier version of this paragraph listed was **not** moved
-and is still published, so it and its estimate stay exactly as they were. Whether
-its title is a personal attribution is its own open question (roadmap 340/410).
+and is still published, so it and its estimate stay exactly as they were. Its
+title is an initial, not a family name, and holds no personal data (the owner,
+2026-11-24; roadmap 340/410, closed).
 
 The principle stands for any recipe that leaves the payload later, and is why
 `--check` treats the two directions differently, and deliberately:

@@ -447,9 +447,9 @@ Guard postures (cheap-failure vs. forbids-the-act) are declared in `docs/GUARDS.
   - **Exception 1 (owner-approved 2026-07-06), narrowed:** Cook at Home
     recipes used to keep family attributions in titles and notes. Five
     family recipes moved to the owner's private recipes on 2026-10-01 and left
-    the research store on 2026-11-24 (roadmap 340/400, ADR 0171). One
-    still-published title is an open question for him (roadmap 340/410). Add
-    no new attribution of the kind.
+    the research store on 2026-11-24 (roadmap 340/400, ADR 0171). The
+    still-published "B's Dope-As Brownie" is an initial, not a family name: no
+    personal data (owner, 2026-11-24). Add no new attribution of the kind.
   - **Exception 2 (owner ruled 2026-08-16, ADR 0046):** the research
     store `data/` may record ownership and contact details — **name,
     email, phone** — for the people and organisations behind a venue,

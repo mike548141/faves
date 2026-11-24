@@ -73,3 +73,8 @@
     commands, the visibility check). atelier lists it as its own entry on the
     owner's words of 2026-10-03; this repo's list does not, and the owner has
     not been asked.
+
+  ✏️ **Corrected 2026-11-24:** the still-published brownie's title is an
+  initial, not a family name, and holds no personal data. The owner,
+  verbatim: *"if your talking about "B's Dope-As Brownie" that is not a family
+  name there is no PII"*. `340/410` is closed on that.

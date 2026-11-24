@@ -47,7 +47,7 @@ line, so they overlap Open and Claimed.
 | [Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/README.md) | 5 | 0 | 3 | 0 |
 | ✅ [Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)](roadmap/320-theme-24-cuisines-the-collection-does-not-cove/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 21 — from the owner's Airbnb guidebook (2026-08-16)](roadmap/330-theme-21-from-the-owner-s-airbnb-guidebook-202/README.md) | 3 | 0 | 0 | 0 |
-| [Theme 20 — Places from anywhere (owner-raised 2026-08-16)](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md) | 8 | 1 | 1 | 2 |
+| [Theme 20 — Places from anywhere (owner-raised 2026-08-16)](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md) | 7 | 1 | 0 | 2 |
 | [Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)](roadmap/350-theme-22-the-personal-layer-holistically-owner/README.md) | 3 | 0 | 0 | 0 |
 | ✅ [Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)](roadmap/360-theme-23-what-the-app-says-and-where-it-says-i/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 30 — a venue has *menus*, plural (owner-raised 2026-08-16)](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/README.md) | 1 | 0 | 0 | 0 |
@@ -68,7 +68,7 @@ line, so they overlap Open and Claimed.
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 87 | 1 | 17 | 7 |
+| **All sections** | 86 | 1 | 16 | 7 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -194,7 +194,6 @@ line, so they overlap Open and Claimed.
 - [ ] 🔎 [A gate that is on the verify list but not in CI went red on main, and…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/290-a-gate-not-in-ci-went-red-on-main-and-nobody-saw-it.md)
 - [ ] [🚩 List every tracked binary in .leakscanbinaries before leakscan starts…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/330-list-every-tracked-binary-before-leakscan-blocks.md)
 - [~] [🚩 Write the closed list of this repo's personal-data exceptions…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/350-write-the-personal-data-closed-list-before-2027-03-08.md)
-- [ ] 🎯 [One family-attributed recipe was never moved and is still published](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/410-the-brownie-with-an-initial-attribution-is-still-published.md)
 - [ ] 🔥 [Audit the waiting review queue: drop what never earned a Fable review](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/420-audit-the-waiting-review-queue.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)

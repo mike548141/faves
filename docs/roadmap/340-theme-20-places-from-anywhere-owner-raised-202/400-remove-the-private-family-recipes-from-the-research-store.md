@@ -54,3 +54,8 @@
     deliberate removal. It reads clean once committed (HEAD compares with
     itself) but a CI run that passes the pre-push state will fail. Narrowing
     that gate is not this item's call.
+
+  ✏️ **Corrected 2026-11-24:** the still-published brownie's title is an
+  initial, not a family name, and holds no personal data. The owner,
+  verbatim: *"if your talking about "B's Dope-As Brownie" that is not a family
+  name there is no PII"*. `340/410` is closed on that.
