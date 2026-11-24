@@ -1,7 +1,10 @@
-- [x] **Wire `allergen_disagreements.py --strict` into the gates, now the
+- [~] **Wire `allergen_disagreements.py --strict` into the gates, now the
       last row is ruled** `[S][tools]` — filed 2026-11-23 by queue run
       f9ee6733, as [`030`](030-37n-the-corpus-disagrees-with-itself-about-all.md)
       asks (*"wire `--strict` as its own item"*).
+
+  (re-opened and claimed 2026-11-24-1014, session f9ee6733, worktree faves-
+  qr-f9ee-slice: taking --strict back out of CI with 030's revert)
 
   (claimed 2026-11-23-1419, session f9ee6733, worktree faves-qr-f9ee-allergen)
 

@@ -47,7 +47,7 @@ line, so they overlap Open and Claimed.
 | [Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/README.md) | 5 | 0 | 3 | 0 |
 | ✅ [Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)](roadmap/320-theme-24-cuisines-the-collection-does-not-cove/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 21 — from the owner's Airbnb guidebook (2026-08-16)](roadmap/330-theme-21-from-the-owner-s-airbnb-guidebook-202/README.md) | 3 | 0 | 0 | 0 |
-| [Theme 20 — Places from anywhere (owner-raised 2026-08-16)](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md) | 6 | 2 | 0 | 2 |
+| [Theme 20 — Places from anywhere (owner-raised 2026-08-16)](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md) | 7 | 2 | 1 | 2 |
 | [Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)](roadmap/350-theme-22-the-personal-layer-holistically-owner/README.md) | 3 | 0 | 0 | 0 |
 | ✅ [Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)](roadmap/360-theme-23-what-the-app-says-and-where-it-says-i/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 30 — a venue has *menus*, plural (owner-raised 2026-08-16)](roadmap/370-theme-30-a-venue-has-menus-plural-owner-raised/README.md) | 1 | 0 | 0 | 0 |
@@ -60,7 +60,7 @@ line, so they overlap Open and Claimed.
 | ✅ [Recommended sequence](roadmap/440-recommended-sequence/README.md) | 0 | 0 | 0 | 0 |
 | ✅ [Theme 35 — the search box as a split-flap board (owner-raised 2026-08-16)](roadmap/450-theme-35-the-search-box-as-a-split-flap-board/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 36 — cooking is not ordering (owner-raised 2026-08-16)](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/README.md) | 2 | 0 | 1 | 0 |
-| [Theme 37 — cook mode and the recipe page, as the owner reads them (owner-raised 2026-08-16)](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/README.md) | 1 | 0 | 0 | 1 |
+| [Theme 37 — cook mode and the recipe page, as the owner reads them (owner-raised 2026-08-16)](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/README.md) | 1 | 2 | 0 | 1 |
 | ✅ [What the owner wants moved next (asked and answered 2026-08-16) — ✅ BOTH DONE](roadmap/480-what-the-owner-wants-moved-next-asked-and-answ/README.md) | 0 | 0 | 0 | 0 |
 | [Theme 38 — a cold review of the data model AND the features, developed and planned (owner-raised 2026-09-07)](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/README.md) | 5 | 0 | 5 | 0 |
 | [Intake harvest audit — owner-raised 2026-09-08](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/README.md) | 2 | 0 | 0 | 0 |
@@ -68,7 +68,7 @@ line, so they overlap Open and Claimed.
 | [Theme 40 — mobile venues: food trucks, roadside stalls and market days (owner-raised 2026-11-14)](roadmap/520-theme-40-mobile-venues-food-trucks-roadside-stalls-and-market-days-owner-raised-2026-11-14/README.md) | 3 | 0 | 0 | 0 |
 | [Theme 41 — provider, branch and menu, each with a time dimension (owner-raised 2026-11-15)](roadmap/530-theme-41-provider-branch-and-menu-each-with-a-time-dimension-owner-raised-2026-11-15/README.md) | 4 | 0 | 1 | 0 |
 | ✅ [Done before the split](roadmap/990-done-before-the-split/README.md) | 0 | 0 | 0 | 0 |
-| **All sections** | 84 | 2 | 16 | 8 |
+| **All sections** | 85 | 4 | 17 | 8 |
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 
@@ -201,6 +201,7 @@ line, so they overlap Open and Claimed.
 - [ ] [🚩 List every tracked binary in .leakscanbinaries before leakscan starts…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/330-list-every-tracked-binary-before-leakscan-blocks.md)
 - [~] [🚩 Write the closed list of this repo's personal-data exceptions…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/350-write-the-personal-data-closed-list-before-2027-03-08.md)
 - [~] [Remove the five family recipes the owner made private from the…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/400-remove-the-private-family-recipes-from-the-research-store.md)
+- [ ] 🎯 [One family-attributed recipe was never moved and is still published](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/410-the-brownie-with-an-initial-attribution-is-still-published.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
@@ -237,7 +238,9 @@ line, so they overlap Open and Claimed.
 *[Narrative](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/README.md)*
 
 - ⏳ [WAITING ON THE OWNER — the build is done; what is left is his data…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/010-37k-a-style-of-dining-filter.md)
+- [~] [37n — the corpus disagrees with itself about allergens](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/030-37n-the-corpus-disagrees-with-itself-about-all.md)
 - [ ] [✅ Cook at Home should use the venue/branch structure, so two houses are…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/050-cook-at-home-as-a-venue-with-branches-one-per-house.md)
+- [~] [Wire allergen_disagreements.py --strict into the gates, now the last…](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/070-wire-allergen-disagreements-strict.md)
 
 ## Theme 38 — a cold review of the data model AND the features, developed and planned (owner-raised 2026-09-07)
 
