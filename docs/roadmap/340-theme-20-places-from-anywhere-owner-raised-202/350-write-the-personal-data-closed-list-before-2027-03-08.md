@@ -1,7 +1,9 @@
-- [ ] 🚩 **Write the closed list of this repo's personal-data exceptions
+- [~] 🚩 **Write the closed list of this repo's personal-data exceptions
       (`PERSONAL-DATA.md` under `docs/`), before atelier's `pdlistscan`
       blocks on 2027-03-08** `[M][docs]` — found 2026-11-13 by an estate
       health sweep session at the pin bump to `2a6d7a4`.
+
+  (claimed 2026-11-24-0947, session f9ee6733, worktree faves-qr-f9ee-private)
 
   **What changed.** This repo now declares `"visibility": "public"` in
   `.atelier-floor.json` (it has been public since 2026-08-09; the declaration
